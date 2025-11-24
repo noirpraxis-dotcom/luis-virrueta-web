@@ -6,9 +6,9 @@ const LanguageSelector = () => {
   const [currentLang, setCurrentLang] = useState('en')
 
   const languages = [
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'es', name: 'Español', flag: '🇪🇸' },
-    { code: 'cs', name: 'Čeština', flag: '🇨🇿' }
+    { code: 'en', name: 'English', flag: 'EN' },
+    { code: 'es', name: 'Español', flag: 'ES' },
+    { code: 'cs', name: 'Čeština', flag: 'CZ' }
   ]
 
   const handleLanguageChange = (langCode) => {
@@ -31,7 +31,9 @@ const LanguageSelector = () => {
         whileHover={{ scale: 1.05 }}
         className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-md border border-white/20 rounded-full hover:bg-white/10 transition-all duration-300"
       >
-        <span className="text-2xl">{currentLanguage.flag}</span>
+        <svg className="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
         <span className="text-white/80 text-sm font-light tracking-wider uppercase" style={{ fontFamily: 'Gotham, sans-serif' }}>
           {currentLanguage.code}
         </span>
@@ -56,7 +58,9 @@ const LanguageSelector = () => {
                   currentLang === lang.code ? 'text-amber-400' : 'text-white/75 hover:text-white'
                 }`}
               >
-                <span className="text-xl">{lang.flag}</span>
+                <span className="text-sm font-semibold tracking-wider" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                  {lang.flag}
+                </span>
                 <span className="text-sm font-light tracking-wide" style={{ fontFamily: 'Gotham, sans-serif' }}>
                   {lang.name}
                 </span>

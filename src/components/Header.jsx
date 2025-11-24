@@ -23,13 +23,14 @@ const Header = ({ menuItems }) => {
                 letterSpacing: '0.18em',
               }}
               transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
-              className="text-white text-[2.75rem] font-light tracking-[0.15em] cursor-pointer relative"
+              className="text-[2.75rem] font-light tracking-[0.15em] cursor-pointer relative"
               style={{ fontFamily: 'Gotham, sans-serif' }}
             >
-              Greenleaf
+              <span className="text-emerald-500">Green</span>
+              <span className="text-white">leaf</span>
               {/* Underline decorativo */}
               <motion.div 
-                className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white to-transparent opacity-0"
+                className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-0"
                 whileHover={{ opacity: 0.5 }}
                 transition={{ duration: 0.3 }}
               />
@@ -47,7 +48,11 @@ const Header = ({ menuItems }) => {
                 >
                   <Link to={item.href}>
                     <motion.div
-                      className="text-white/70 hover:text-white transition-colors duration-400 text-[0.9rem] font-light tracking-[0.2em] uppercase relative cursor-pointer"
+                      className={`transition-colors duration-400 text-[0.9rem] font-light tracking-[0.2em] uppercase relative cursor-pointer ${
+                        item.name === 'Store' 
+                          ? 'text-emerald-500 hover:text-emerald-400 px-5 py-2 border-2 border-emerald-500 rounded-full hover:bg-emerald-500/10' 
+                          : 'text-white/70 hover:text-white'
+                      }`}
                       style={{ fontFamily: 'Gotham, sans-serif' }}
                       whileHover={{ y: -2 }}
                       transition={{ duration: 0.2 }}
