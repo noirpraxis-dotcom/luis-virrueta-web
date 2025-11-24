@@ -26,11 +26,11 @@ const Header = ({ menuItems }) => {
               className="text-[2.75rem] font-light tracking-[0.15em] cursor-pointer relative"
               style={{ fontFamily: 'Gotham, sans-serif' }}
             >
-              <span className="bg-gradient-to-r from-emerald-400 via-emerald-500 to-emerald-600 bg-clip-text text-transparent animate-gradient">Green</span>
+              <span className="bg-gradient-to-r from-[#8dc1ab] via-[#8dc1ab] to-[#7ab09a] bg-clip-text text-transparent animate-gradient">Green</span>
               <span className="text-white">leaf</span>
               {/* Underline decorativo */}
               <motion.div 
-                className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-0"
+                className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#8dc1ab] to-transparent opacity-0"
                 whileHover={{ opacity: 0.5 }}
                 transition={{ duration: 0.3 }}
               />
@@ -50,7 +50,7 @@ const Header = ({ menuItems }) => {
                     <motion.div
                       className={`transition-colors duration-400 text-[0.9rem] font-light tracking-[0.2em] uppercase relative cursor-pointer whitespace-nowrap ${
                         item.name.toLowerCase().includes('store') || item.name.toLowerCase().includes('tienda') || item.name.toLowerCase().includes('obchod')
-                          ? 'text-emerald-500 hover:text-emerald-400 px-5 py-2 border-2 border-emerald-500 rounded-full hover:bg-emerald-500/10 flex items-center gap-2' 
+                          ? 'text-[#8dc1ab] hover:text-[#7ab09a] px-5 py-2 border-2 border-[#8dc1ab] rounded-full hover:bg-[#8dc1ab]/10 flex items-center gap-2' 
                           : 'text-white/70 hover:text-white'
                       }`}
                       style={{ fontFamily: 'Gotham, sans-serif' }}
