@@ -41,6 +41,7 @@ const VideoBackground = () => {
           className="w-full h-screen object-cover block"
           style={{ 
             objectPosition: 'center center',
+            objectFit: 'cover',
           }}
         />
       )}

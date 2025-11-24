@@ -15,6 +15,9 @@ export default {
         'elegant-white': '#F5F5F5',
         'elegant-gray': '#E8E8E8',
       },
+      spacing: {
+        '40': '10rem', // 160px para el header más elegante
+      },
     },
   },
   plugins: [],

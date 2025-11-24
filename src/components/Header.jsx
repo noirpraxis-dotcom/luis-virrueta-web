@@ -12,8 +12,8 @@ const Header = ({ menuItems }) => {
       className="fixed top-0 left-0 right-0 z-50 hidden lg:block"
     >
       <nav className="bg-black/95 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-[90rem] mx-auto px-12 lg:px-16">
-          <div className="flex justify-between items-center h-30">
+        <div className="max-w-[90rem] mx-auto px-16 lg:px-20">
+          <div className="flex justify-between items-center h-32">
             {/* Logo */}
             <motion.div 
               whileHover={{ 
@@ -21,7 +21,7 @@ const Header = ({ menuItems }) => {
                 letterSpacing: '0.18em',
               }}
               transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
-              className="text-white text-4xl font-light tracking-[0.15em] cursor-pointer relative"
+              className="text-white text-[2.75rem] font-light tracking-[0.15em] cursor-pointer relative"
               style={{ fontFamily: 'Gotham, sans-serif' }}
             >
               Greenleaf
@@ -34,7 +34,7 @@ const Header = ({ menuItems }) => {
             </motion.div>
 
             {/* Menu Items - más separados del logo */}
-            <ul className="flex space-x-12 items-center">
+            <ul className="flex space-x-14 items-center">
               {menuItems.map((item, index) => (
                 <li 
                   key={index} 
@@ -44,7 +44,7 @@ const Header = ({ menuItems }) => {
                 >
                   <motion.a
                     href={item.href}
-                    className="text-white/70 hover:text-white transition-colors duration-400 text-sm font-light tracking-[0.2em] uppercase relative"
+                    className="text-white/70 hover:text-white transition-colors duration-400 text-[0.9rem] font-light tracking-[0.2em] uppercase relative"
                     style={{ fontFamily: 'Gotham, sans-serif' }}
                     whileHover={{ y: -2 }}
                     transition={{ duration: 0.2 }}
@@ -73,7 +73,7 @@ const Header = ({ menuItems }) => {
                         duration: 0.35, 
                         ease: [0.4, 0, 0.2, 1]
                       }}
-                      className="absolute top-full left-0 mt-4 bg-black backdrop-blur-xl rounded-xl shadow-2xl py-3 min-w-[320px] border border-white/30"
+                      className="absolute top-full left-0 mt-6 bg-black backdrop-blur-xl rounded-xl shadow-2xl py-4 min-w-[340px] border border-white/30"
                       style={{
                         boxShadow: '0 10px 40px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1)'
                       }}
@@ -93,7 +93,7 @@ const Header = ({ menuItems }) => {
                         >
                           <motion.a
                             href={subItem.href}
-                            className="block px-5 py-3 text-white/75 hover:text-white transition-colors duration-200 text-sm font-light tracking-wide relative overflow-hidden group"
+                            className="block px-6 py-3.5 text-white/75 hover:text-white transition-colors duration-200 text-[0.875rem] font-light tracking-wide relative overflow-hidden group"
                             style={{ fontFamily: 'Gotham, sans-serif' }}
                             whileHover={{ x: 4 }}
                           >
