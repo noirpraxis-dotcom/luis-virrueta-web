@@ -12,8 +12,8 @@ const Header = ({ menuItems }) => {
       className="fixed top-0 left-0 right-0 z-50 hidden lg:block"
     >
       <nav className="bg-black/95 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-8 lg:px-12">
-          <div className="flex justify-between items-center h-24">
+        <div className="max-w-[90rem] mx-auto px-12 lg:px-16">
+          <div className="flex justify-between items-center h-28">
             {/* Logo */}
             <motion.div 
               whileHover={{ 
@@ -33,8 +33,8 @@ const Header = ({ menuItems }) => {
               />
             </motion.div>
 
-            {/* Menu Items */}
-            <ul className="flex space-x-10 items-center">
+            {/* Menu Items - más separados del logo */}
+            <ul className="flex space-x-12 items-center">
               {menuItems.map((item, index) => (
                 <li 
                   key={index} 
