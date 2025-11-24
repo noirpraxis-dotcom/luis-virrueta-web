@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { CinematicTitle, GradientLine, BackdropBlurCard } from '../elementos/ElementosReutilizables'
+import { GradientLine, BackdropBlurCard } from '../elementos/ElementosReutilizables'
 
 const EmotionBodyBeliefPage = () => {
   const introRef = useRef(null)
@@ -68,13 +68,15 @@ const EmotionBodyBeliefPage = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-center mb-16"
           >
-            <CinematicTitle>Emotion, Body & Belief Code</CinematicTitle>
+            <h1 className="text-5xl lg:text-6xl font-light text-stone-800 mb-6 tracking-wide" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+              Emotion, Body & Belief Code
+            </h1>
             
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="mt-6 text-stone-600 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed italic"
+              className="mt-6 text-stone-600 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
               Globally established energy healing methods developed since the 1990s by Dr. Bradley Nelson
@@ -132,7 +134,9 @@ const EmotionBodyBeliefPage = () => {
             >
               <BackdropBlurCard className="aspect-[4/5] bg-gradient-to-br from-emerald-100 to-amber-100 flex items-center justify-center">
                 <div className="text-center p-12">
-                  <div className="text-8xl mb-6">✨</div>
+                  <svg className="w-24 h-24 text-stone-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
                   <p className="text-stone-500 text-lg">Photo Space</p>
                   <p className="text-stone-400 text-sm mt-2">Replace with your image</p>
                 </div>
@@ -201,9 +205,14 @@ const EmotionBodyBeliefPage = () => {
                   {/* Statistic (if exists) */}
                   {code.statistic && (
                     <div className="bg-white/70 border-l-4 border-rose-400 rounded-r-lg p-6 mb-6">
-                      <p className="text-stone-800 font-medium text-lg">
-                        📊 {code.statistic}
-                      </p>
+                      <div className="flex items-center gap-3">
+                        <svg className="w-6 h-6 text-rose-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        <p className="text-stone-800 font-medium text-lg">
+                          {code.statistic}
+                        </p>
+                      </div>
                     </div>
                   )}
 
@@ -217,7 +226,9 @@ const EmotionBodyBeliefPage = () => {
                   {/* Metaphor */}
                   <div className="bg-white/50 rounded-xl p-6 lg:p-8 border border-stone-200">
                     <div className="flex items-start gap-4">
-                      <span className="text-3xl">💫</span>
+                      <svg className="w-6 h-6 text-amber-500 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
                       <p className="text-stone-700 text-lg leading-relaxed italic" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                         {code.metaphor}
                       </p>

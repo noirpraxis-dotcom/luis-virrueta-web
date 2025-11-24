@@ -162,7 +162,7 @@ const Store = () => {
               className="group relative bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer border border-amber-600/10"
             >
               {/* Imagen */}
-              <div className="relative h-80 overflow-hidden">
+              <div className="relative aspect-[16/9] overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-amber-100 to-stone-200" />
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -170,8 +170,10 @@ const Store = () => {
                   className="relative h-full flex items-center justify-center"
                 >
                   <div className="text-center p-8">
-                    <div className="w-32 h-32 mx-auto mb-4 bg-amber-600/10 rounded-full flex items-center justify-center">
-                      <span className="text-5xl">✨</span>
+                    <div className="w-20 h-20 mx-auto mb-3 bg-amber-600/10 rounded-full flex items-center justify-center">
+                      <svg className="w-10 h-10 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
                     </div>
                     <p className="text-stone-500 text-sm tracking-wider" style={{ fontFamily: 'Gotham, sans-serif' }}>
                       {product.category}
