@@ -1,5 +1,6 @@
 import Home from '../components/Home'
 import Hero from '../components/Hero'
+import CountriesSection from '../components/CountriesSection'
 
 const HomePage = () => {
   return (
@@ -9,6 +10,9 @@ const HomePage = () => {
       
       {/* Nombre cinematográfico con botón Ver más */}
       <Hero />
+      
+      {/* Sección de países cinematográfica */}
+      <CountriesSection />
     </>
   )
 }
