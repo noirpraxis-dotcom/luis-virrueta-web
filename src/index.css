@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Montserrat', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Gotham font fallback */
+@font-face {
+  font-family: 'Gotham';
+  src: local('Inter'), local('system-ui');
+  font-weight: 100 900;
+}
+
+@layer utilities {
+  .text-elegant {
+    font-family: 'Cormorant Garamond', serif;
+    letter-spacing: 0.05em;
+  }
+}
