@@ -3,6 +3,7 @@ import Header from './components/Header'
 import MobileMenu from './components/MobileMenu'
 import ToggleButton from './components/ToggleButton'
 import Home from './components/Home'
+import Hero from './components/Hero'
 import About from './components/About'
 
 function App() {
@@ -49,12 +50,15 @@ function App() {
 
       {/* Contenido principal */}
       <main className="relative z-0">
-        {/* Home Section - con video y preview */}
+        {/* 1. Home Section - Solo video limpio a pantalla completa */}
         <div className="lg:pt-28">
           <Home />
         </div>
         
-        {/* About Section - Página completa separada */}
+        {/* 2. Hero Section - Nombre cinematográfico sobre fondo negro */}
+        <Hero />
+        
+        {/* 3. About Section - Página completa con toda la información */}
         <About />
         
         {/* Aquí irán más secciones */}
