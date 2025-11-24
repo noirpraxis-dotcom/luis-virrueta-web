@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import LanguageSelector from './LanguageSelector'
 
 const Header = ({ menuItems }) => {
   const [hoveredItem, setHoveredItem] = useState(null)
@@ -35,7 +36,8 @@ const Header = ({ menuItems }) => {
             </motion.div>
 
             {/* Menu Items - más separados del logo */}
-            <ul className="flex space-x-14 items-center">
+            <div className="flex items-center gap-8">
+              <ul className="flex space-x-14 items-center">
               {menuItems.map((item, index) => (
                 <li 
                   key={index} 
@@ -124,7 +126,11 @@ const Header = ({ menuItems }) => {
                   )}
                 </li>
               ))}
-            </ul>
+              </ul>
+              
+              {/* Language Selector */}
+              <LanguageSelector />
+            </div>
           </div>
         </div>
       </nav>

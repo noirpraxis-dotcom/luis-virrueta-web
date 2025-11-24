@@ -5,6 +5,7 @@ import MobileMenu from './components/MobileMenu'
 import ToggleButton from './components/ToggleButton'
 import HomePage from './pages/HomePage'
 import AboutPage from './pages/AboutPage'
+import StorePage from './pages/StorePage'
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -14,21 +15,21 @@ function App() {
     { name: 'About', href: '/about' },
     { 
       name: 'Healing sessions', 
-      href: '#healing-sessions',
+      href: '/healing-sessions',
       subItems: [
-        { name: 'Emotion, Body and Belief Code', href: '#emotion-body-belief' },
-        { name: 'Past life regressions', href: '#past-life-regressions' },
-        { name: 'Ilyari somatic transmissions', href: '#ilyari-somatic' },
-        { name: 'Healing for animals', href: '#healing-animals' }
+        { name: 'Emotion, Body and Belief Code', href: '/healing-sessions#emotion-body-belief' },
+        { name: 'Past life regressions', href: '/healing-sessions#past-life-regressions' },
+        { name: 'Ilyari somatic transmissions', href: '/healing-sessions#ilyari-somatic' },
+        { name: 'Healing for animals', href: '/healing-sessions#healing-animals' },
+        { name: 'Session prices', href: '/healing-sessions#session-prices' }
       ]
     },
-    { name: 'Session prices', href: '#session-prices' },
-    { name: 'Personal creation', href: '#personal-creation' },
+    { name: 'Personal creation', href: '/personal-creation' },
     { 
       name: 'Store', 
-      href: '#store',
+      href: '/store',
       subItems: [
-        { name: 'Courses', href: '#courses' }
+        { name: 'Courses', href: '/store#courses' }
       ]
     },
   ]
@@ -63,6 +64,13 @@ function App() {
             <Route path="/about" element={
               <div className="lg:pt-28">
                 <AboutPage />
+              </div>
+            } />
+
+            {/* Página Store: Tienda con productos */}
+            <Route path="/store" element={
+              <div className="lg:pt-28">
+                <StorePage />
               </div>
             } />
             
