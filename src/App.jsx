@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Header from './components/Header'
 import MobileMenu from './components/MobileMenu'
 import ToggleButton from './components/ToggleButton'
-import VideoBackground from './components/VideoBackground'
+import Home from './components/Home'
 import About from './components/About'
 
 function App() {
@@ -47,15 +47,17 @@ function App() {
         menuItems={menuItems} 
       />
 
-      {/* Contenido principal - con padding solo en desktop grande donde el header es visible */}
-      <main className="relative z-0 lg:pt-28">
-        {/* Video/Image Background */}
-        <VideoBackground />
+      {/* Contenido principal */}
+      <main className="relative z-0">
+        {/* Home Section - con video y preview */}
+        <div className="lg:pt-28">
+          <Home />
+        </div>
         
-        {/* About Section */}
+        {/* About Section - Página completa separada */}
         <About />
         
-        {/* Aquí irá más contenido */}
+        {/* Aquí irán más secciones */}
       </main>
     </div>
   )
