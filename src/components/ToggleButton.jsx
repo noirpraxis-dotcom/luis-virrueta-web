@@ -4,117 +4,88 @@ const ToggleButton = ({ isOpen, onClick }) => {
   return (
     <motion.button
       onClick={onClick}
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{ delay: 0.3, type: "spring", stiffness: 260, damping: 20 }}
-      whileHover={{ scale: 1.08 }}
-      whileTap={{ scale: 0.92 }}
-      className="fixed bottom-0 right-0 z-[60] lg:hidden"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5, duration: 0.6 }}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
+      className="fixed bottom-8 right-8 z-[60] lg:hidden group"
       aria-label="Toggle Menu"
     >
-      {/* Curva orgánica en esquina inferior derecha */}
+      {/* Contenedor principal */}
       <div className="relative">
-        {/* Forma de curva - esquina inferior derecha */}
+        {/* Círculo principal - diseño minimalista elegante */}
         <motion.div
-          animate={{ rotate: isOpen ? 15 : 0 }}
-          transition={{ duration: 0.4, ease: "easeInOut" }}
-          className="relative"
-          style={{
-            width: '110px',
-            height: '110px',
+          animate={{
+            rotate: isOpen ? 180 : 0,
           }}
+          transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
+          className="relative w-16 h-16 rounded-full bg-black/95 backdrop-blur-xl shadow-2xl flex items-center justify-center border border-white/10"
         >
-          {/* SVG con curva personalizada */}
-          <svg
-            viewBox="0 0 110 110"
-            className="absolute bottom-0 right-0"
-            style={{ width: '110px', height: '110px' }}
-          >
-            <defs>
-              <linearGradient id="curveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style={{ stopColor: '#000000', stopOpacity: 1 }} />
-                <stop offset="50%" style={{ stopColor: '#1a1a1a', stopOpacity: 1 }} />
-                <stop offset="100%" style={{ stopColor: '#000000', stopOpacity: 1 }} />
-              </linearGradient>
-              <filter id="shadow">
-                <feDropShadow dx="0" dy="-2" stdDeviation="8" floodOpacity="0.5"/>
-              </filter>
-            </defs>
-            {/* Curva orgánica */}
-            <path
-              d="M 110 110 L 110 35 Q 110 0, 75 0 L 0 0 L 0 110 Z"
-              fill="url(#curveGradient)"
-              filter="url(#shadow)"
-              className="drop-shadow-2xl"
-            />
-            {/* Borde sutil elegante */}
-            <path
-              d="M 110 35 Q 110 0, 75 0"
-              stroke="rgba(245, 245, 245, 0.3)"
-              strokeWidth="1.5"
-              fill="none"
-            />
-          </svg>
-
-          {/* Efecto de brillo */}
-          <div 
-            className="absolute bottom-0 right-0 opacity-30"
-            style={{
-              width: '110px',
-              height: '110px',
-              background: 'radial-gradient(circle at 70% 70%, rgba(255,255,255,0.15) 0%, transparent 60%)',
-            }}
-          />
+          {/* Gradiente sutil de brillo */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/5 via-transparent to-transparent" />
           
-          {/* Hamburger Icon - posicionado en la curva */}
-          <div 
-            className="absolute flex flex-col justify-between"
-            style={{
-              bottom: '28px',
-              right: '28px',
-              width: '32px',
-              height: '22px',
-            }}
-          >
+          {/* Borde interno decorativo */}
+          <div className="absolute inset-[3px] rounded-full border border-white/5" />
+
+          {/* Hamburger Icon - Centrado perfectamente */}
+          <div className="relative flex flex-col items-center justify-center w-7 h-5">
+            {/* Línea superior */}
             <motion.span
               animate={{
                 rotate: isOpen ? 45 : 0,
                 y: isOpen ? 8 : 0,
+                scaleX: isOpen ? 1 : 0.85,
               }}
-              transition={{ duration: 0.3 }}
-              className="w-full h-0.5 bg-elegant-white rounded-full origin-center"
+              transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
+              className="absolute top-0 w-full h-[2px] bg-white rounded-full origin-center"
             />
+            
+            {/* Línea media */}
             <motion.span
               animate={{
                 opacity: isOpen ? 0 : 1,
-                x: isOpen ? -10 : 0,
+                scaleX: isOpen ? 0 : 1,
               }}
               transition={{ duration: 0.2 }}
-              className="w-full h-0.5 bg-elegant-white rounded-full"
+              className="absolute top-1/2 -translate-y-1/2 w-full h-[2px] bg-white rounded-full"
             />
+            
+            {/* Línea inferior */}
             <motion.span
               animate={{
                 rotate: isOpen ? -45 : 0,
                 y: isOpen ? -8 : 0,
+                scaleX: isOpen ? 1 : 0.85,
               }}
-              transition={{ duration: 0.3 }}
-              className="w-full h-0.5 bg-elegant-white rounded-full origin-center"
+              transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
+              className="absolute bottom-0 w-full h-[2px] bg-white rounded-full origin-center"
             />
           </div>
+
+          {/* Indicador de estado cuando está cerrado */}
+          <motion.div
+            animate={{
+              opacity: isOpen ? 0 : 1,
+              scale: isOpen ? 0 : 1,
+            }}
+            transition={{ duration: 0.2 }}
+            className="absolute -top-1 -right-1 w-2 h-2 bg-white rounded-full shadow-lg shadow-white/50"
+          />
         </motion.div>
 
-        {/* Anillo exterior animado - solo cuando está cerrado */}
+        {/* Anillo exterior animado - efecto pulsante sutil */}
         <motion.div
           animate={{
-            scale: isOpen ? 0 : [1, 1.15, 1],
-            opacity: isOpen ? 0 : [0.3, 0.5, 0.3],
+            scale: isOpen ? 0 : [1, 1.2, 1],
+            opacity: isOpen ? 0 : [0, 0.3, 0],
           }}
-          transition={{ 
+          transition={{
             duration: 2,
             repeat: isOpen ? 0 : Infinity,
             ease: "easeInOut"
           }}
-          className="absolute bottom-5 right-5 w-14 h-14 rounded-full border-2 border-elegant-white pointer-events-none"
+          className="absolute inset-0 rounded-full border border-white pointer-events-none"
         />
       </div>
     </motion.button>
