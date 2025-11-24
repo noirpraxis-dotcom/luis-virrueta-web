@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const MobileMenu = ({ isOpen, onClose, menuItems }) => {
   const [expandedItem, setExpandedItem] = useState(null)
