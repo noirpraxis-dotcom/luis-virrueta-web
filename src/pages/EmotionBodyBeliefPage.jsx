@@ -105,8 +105,8 @@ const EmotionBodyBeliefPage = () => {
               className="space-y-6"
             >
               <h2 
-                className="text-3xl lg:text-4xl font-light text-stone-800 mb-6"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                className="text-4xl lg:text-5xl font-light text-stone-800 mb-6 tracking-wide"
+                style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}
               >
                 Deep Healing at the Energetic Level
               </h2>
@@ -156,8 +156,8 @@ const EmotionBodyBeliefPage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-4xl lg:text-5xl font-light text-stone-800 mb-6"
-            style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            className="text-5xl lg:text-6xl font-light text-stone-800 mb-6 tracking-wide"
+            style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}
           >
             What Can The Codes Do For You?
           </motion.h2>
@@ -253,8 +253,8 @@ const EmotionBodyBeliefPage = () => {
           <BackdropBlurCard className="bg-gradient-to-br from-emerald-50 to-amber-50 border-2 border-emerald-200">
             <div className="p-12 text-center">
               <h3 
-                className="text-3xl lg:text-4xl font-light text-stone-800 mb-6"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                className="text-4xl lg:text-5xl font-light text-stone-800 mb-6 tracking-wide"
+                style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}
               >
                 Ready to Begin Your Healing Journey?
               </h3>

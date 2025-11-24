@@ -1,6 +1,7 @@
 import Home from '../components/Home'
 import Hero from '../components/Hero'
 import CountriesSection from '../components/CountriesSection'
+import Testimonials from '../components/Testimonials'
 
 const HomePage = () => {
   return (
@@ -13,6 +14,9 @@ const HomePage = () => {
       
       {/* Sección de países cinematográfica */}
       <CountriesSection />
+      
+      {/* Testimonios con carrusel */}
+      <Testimonials />
     </>
   )
 }
