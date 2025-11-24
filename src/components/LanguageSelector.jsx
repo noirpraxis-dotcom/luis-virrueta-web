@@ -1,24 +1,23 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
+import { useLanguage } from '../context/LanguageContext'
 
 const LanguageSelector = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [currentLang, setCurrentLang] = useState('en')
+  const { currentLanguage, changeLanguage } = useLanguage()
 
   const languages = [
     { code: 'en', name: 'English', flag: 'EN' },
     { code: 'es', name: 'Español', flag: 'ES' },
-    { code: 'cs', name: 'Čeština', flag: 'CZ' }
+    { code: 'cz', name: 'Čeština', flag: 'CZ' }
   ]
 
   const handleLanguageChange = (langCode) => {
-    setCurrentLang(langCode)
+    changeLanguage(langCode)
     setIsOpen(false)
-    // Aquí irá la lógica de cambio de idioma cuando tengas las traducciones
-    console.log('Language changed to:', langCode)
   }
 
-  const currentLanguage = languages.find(lang => lang.code === currentLang)
+  const currentLang = languages.find(lang => lang.code === currentLanguage)
 
   return (
     <div 
@@ -35,7 +34,7 @@ const LanguageSelector = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <span className="text-white/80 text-sm font-light tracking-wider uppercase" style={{ fontFamily: 'Gotham, sans-serif' }}>
-          {currentLanguage.code}
+          {currentLang?.code.toUpperCase()}
         </span>
       </motion.button>
 
@@ -55,7 +54,7 @@ const LanguageSelector = () => {
                 onClick={() => handleLanguageChange(lang.code)}
                 whileHover={{ x: 4, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
                 className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
-                  currentLang === lang.code ? 'text-amber-400' : 'text-white/75 hover:text-white'
+                  currentLanguage === lang.code ? 'text-amber-400' : 'text-white/75 hover:text-white'
                 }`}
               >
                 <span className="text-sm font-semibold tracking-wider" style={{ fontFamily: 'Gotham, sans-serif' }}>
@@ -64,7 +63,7 @@ const LanguageSelector = () => {
                 <span className="text-sm font-light tracking-wide" style={{ fontFamily: 'Gotham, sans-serif' }}>
                   {lang.name}
                 </span>
-                {currentLang === lang.code && (
+                {currentLanguage === lang.code && (
                   <span className="ml-auto text-amber-400">✓</span>
                 )}
               </motion.button>

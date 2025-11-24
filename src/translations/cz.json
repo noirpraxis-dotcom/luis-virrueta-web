@@ -1,0 +1,185 @@
+{
+  "menu": {
+    "home": "Domů",
+    "about": "O Mně",
+    "healingSessions": "Léčebné Sezení",
+    "healingSessionsShort": "Léčení",
+    "emotionCode": "Emoční, Tělový a Přesvědčovací Kód",
+    "pastLife": "Regrese do Minulých Životů",
+    "ilyari": "Ilyari Somatické Transmise",
+    "animals": "Léčení pro Zvířata",
+    "sessionPrices": "Ceny Sezení",
+    "personalCreation": "Osobní Tvorba",
+    "personalCreationShort": "Tvorba",
+    "books": "Knihy",
+    "store": "Obchod",
+    "courses": "Kurzy"
+  },
+  "hero": {
+    "seeMore": "Zobrazit Více",
+    "scrollDown": "Posuň Dolů"
+  },
+  "countries": {
+    "title": "PRACOVALA JSEM S LIDMI Z"
+  },
+  "about": {
+    "title": "O Mně",
+    "subtitle": "Energetická Léčitelka a Duchovní Průvodce",
+    "intro": "Vítejte v mém prostoru léčení a transformace. Jsem Zuzana, věnuji se vedení duší na jejich cestě sebepoznání a léčení.",
+    "description": "Více než deset let pracuji s energetickými léčebnými modalitami, pomáhám lidem uvolnit emocionální bloky, vyléčit minulá traumata a znovu se spojit se svým autentickým já. Můj přístup kombinuje starodávnou moudrost s moderními technikami a vytváří personalizovanou léčebnou zkušenost pro každého jednotlivce.",
+    "mission": "Mým posláním je vám umožnit, abyste se stali architektem své vlastní léčebné cesty. Prostřednictvím jemného vedení a silné energetické práce odemkneme dveře k vaší vnitřní moudrosti a přirozeným léčitelským schopnostem.",
+    "certifications": "Certifikovaná Praktikantka",
+    "experience": "Více než 10 Let Zkušeností",
+    "clients": "Více než 500 Klientů po Celém Světě"
+  },
+  "books": {
+    "title": "Moje Knihy",
+    "subtitle": "Slova, která osvětlují cestu k léčení a sebepoznání. Každá kniha je darem, volně sdíleným s těmi, kteří hledají moudrost.",
+    "pages": "stran",
+    "language": "Jazyk",
+    "ctaButton": "Získejte Zdarma + Podpořte",
+    "comingSoon": "Další knihy již brzy...",
+    "featured": "Doporučeno"
+  },
+  "bookDetail": {
+    "backToBooks": "Zpět na Knihy",
+    "by": "od",
+    "supportersCount": "čtenářů podpořilo tuto práci",
+    "chooseContribution": "Vyberte si Váš Příspěvek",
+    "contributionText": "Tato kniha je nabízena jako dar těm, kteří hledají moudrost. Pokud rezonuje s vaší cestou, zvažte podporu jejího vzniku.",
+    "coffee": "Kupte mi kávu",
+    "support": "Podpořte mou práci",
+    "generous": "Štědrý podporovatel",
+    "mostPopular": "Nejoblíbenější",
+    "customAmount": "Nebo zadejte vlastní částku",
+    "supportButton": "Podpořit částkou",
+    "downloadButton": "a Stáhnout",
+    "selectAmount": "Vyberte částku pro pokračování",
+    "continueWithout": "Pokračovat bez příspěvku",
+    "helpText": "Vaše podpora pomáhá vytvářet více zdrojů pro léčení a růst",
+    "thankYou": "Děkuji!",
+    "thankYouMessage": "Vaše štědrost pomáhá šířit moudrost a léčení k dalším duším. Vaše kniha se připravuje ke stažení...",
+    "downloading": "Vaše kniha se stahuje...",
+    "format": "Formát",
+    "chapters": "Kapitoly"
+  },
+  "store": {
+    "title": "Léčebná Sezení",
+    "subtitle": "Transformační energetická léčebná sezení navržená tak, aby vám pomohla uvolnit to, co vám už neslouží, a vstoupit do vašeho nejvyššího potenciálu.",
+    "learnMore": "Více Info",
+    "category": "Léčebné Sezení",
+    "duration": "Trvání"
+  },
+  "productDetail": {
+    "backToStore": "Zpět do Obchodu",
+    "aboutSession": "O Tomto Sezení",
+    "benefits": "Výhody",
+    "whatToExpect": "Co Očekávat",
+    "idealFor": "Toto Sezení je Ideální Pro",
+    "faq": "Často Kladené Otázky",
+    "bookSession": "Rezervujte si Sezení",
+    "fullName": "Celé Jméno",
+    "email": "E-mail",
+    "phone": "Telefonní Číslo",
+    "preferredDate": "Preferované Datum",
+    "preferredTime": "Preferovaný Čas",
+    "selectTime": "Vyberte čas",
+    "additionalNotes": "Další Poznámky",
+    "notesPlaceholder": "Jakékoli konkrétní obavy nebo otázky, kterým byste se chtěli během sezení věnovat...",
+    "total": "Celkem",
+    "paymentSecure": "Platba bude zpracována bezpečně",
+    "completeBooking": "Dokončit Rezervaci a Zaplatit",
+    "termsText": "Rezervací souhlasíte s našimi podmínkami. Obdržíte potvrzovací e-mail s podrobnostmi o sezení.",
+    "required": "*"
+  },
+  "products": {
+    "emotionCode": {
+      "name": "Sezení Emocionálního Kódu",
+      "short": "Emoční Kód",
+      "description": "Uvolněte zachycené emoce, které mohou způsobovat fyzické a emocionální problémy.",
+      "fullDescription": "Emoční kód je silná a jednoduchá metoda vyvinutá Dr. Bradleym Nelsonem k identifikaci a uvolňování zachycených emocí. Tyto zachycené emoce jsou tvořeny energií a mohou způsobovat bolest, poruchy a nemoci. Mohou vás také blokovat od lásky, štěstí a úspěchu.",
+      "benefits": [
+        "Uvolnění emocionálního zavazadla z minulých událostí",
+        "Snížení fyzického nepohodlí a bolesti",
+        "Zlepšení vztahů a komunikace",
+        "Zvýšení celkové emocionální pohody",
+        "Vyčištění mentální mlhy a zmatku",
+        "Zvýšení energetických hladin"
+      ],
+      "whatToExpect": [
+        "Úvodní konzultace k pochopení vašich obav",
+        "Svalové testování k identifikaci zachycených emocí",
+        "Jemné uvolnění zachycených emocí pomocí magnetů",
+        "Diskuse o zjištěních a doporučeních",
+        "Následná pomoc pro integraci"
+      ],
+      "idealFor": [
+        "Kdokoli, kdo zažívá emocionální zahlcení",
+        "Ti s nevysvětlitelným fyzickým nepohodlím",
+        "Lidé, kteří se snaží zlepšit vztahy",
+        "Jednotlivci na cestě sebepoznání",
+        "Kdokoli připravený pustit minulost"
+      ],
+      "faq": [
+        {
+          "question": "Kolik sezení budu potřebovat?",
+          "answer": "To se liší podle jednotlivce. Někteří lidé zažívají významné změny v jednom sezení, zatímco jiní mají prospěch ze série sezení. Budeme diskutovat o vašem pokroku a potřebách během každého sezení."
+        },
+        {
+          "question": "Probíhá to osobně nebo na dálku?",
+          "answer": "Sezení mohou probíhat jak osobně, tak na dálku přes videohovor. Energetická práce není omezena vzdáleností a vzdálená sezení jsou stejně účinná."
+        },
+        {
+          "question": "Jak se mám připravit?",
+          "answer": "Přijďte s otevřenou myslí a srdcem. Před a po sezení zůstaňte hydratovaní. Je užitečné mít konkrétní problémy nebo obavy, kterým byste se chtěli věnovat."
+        }
+      ]
+    },
+    "bodyCode": {
+      "name": "Sezení Tělového Kódu",
+      "short": "Tělový Kód",
+      "description": "Objevte a opravte nerovnováhy v těle.",
+      "fullDescription": "Tělový kód je sofistikovaná a komplexní technika energetického léčení navržená k identifikaci a nápravě nerovnováh v šesti klíčových oblastech: Energie, Okruhy a Systémy, Toxiny, Patogeny, Nevyváženosti a Výživa a Životní Styl.",
+      "benefits": [
+        "Vyvážení energetických systémů v celém těle",
+        "Řešení kořenových příčin fyzických problémů",
+        "Holistický léčebný přístup",
+        "Personalizovaná léčba pro vaše potřeby",
+        "Zlepšení celkové funkce těla",
+        "Zvýšení vitality a pohody"
+      ],
+      "whatToExpect": [
+        "Komplexní posouzení tělových systémů",
+        "Identifikace specifických nerovnováh",
+        "Cílená náprava nalezených problémů",
+        "Podrobné vysvětlení zjištění",
+        "Personalizovaná doporučení pro trvalou pohodu"
+      ],
+      "idealFor": [
+        "Ti s chronickými fyzickými problémy",
+        "Lidé hledající komplexní léčení",
+        "Kdokoli, kdo chce optimalizovat zdraví",
+        "Jednotlivci s tajemnými příznaky",
+        "Ti, kteří jsou odhodláni k hluboké léčebné práci"
+      ],
+      "faq": [
+        {
+          "question": "V čem se to liší od Emocionálního kódu?",
+          "answer": "Zatímco Emoční kód se zaměřuje konkrétně na zachycené emoce, Tělový kód řeší šest různých typů nerovnováh včetně emocí, strukturálních problémů, toxinů, patogenů a dalších. Je to komplexnější systém."
+        },
+        {
+          "question": "Může to nahradit lékařskou léčbu?",
+          "answer": "Tělový kód je doplňková léčebná modalita a neměl by nahrazovat lékařskou péči. Vždy se poraďte se svým poskytovatelem zdravotní péče ohledně zdravotních obav."
+        }
+      ]
+    }
+  },
+  "times": [
+    "9:00",
+    "10:30",
+    "12:00",
+    "14:00",
+    "15:30",
+    "17:00"
+  ]
+}

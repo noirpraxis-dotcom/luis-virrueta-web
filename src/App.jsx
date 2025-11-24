@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { LanguageProvider, useLanguage } from './context/LanguageContext'
 import Header from './components/Header'
 import MobileMenu from './components/MobileMenu'
 import ToggleButton from './components/ToggleButton'
@@ -10,35 +11,38 @@ import BooksPage from './pages/BooksPage'
 import BookDetailPage from './pages/BookDetailPage'
 import ProductDetailPage from './pages/ProductDetailPage'
 
-function App() {
+const AppContent = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { t } = useLanguage()
 
   const menuItems = [
-    { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
+    { name: t('menu.home'), href: '/' },
+    { name: t('menu.about'), href: '/about' },
     { 
-      name: 'Healing sessions', 
+      name: t('menu.healingSessions'), 
+      nameShort: t('menu.healingSessionsShort'),
       href: '/healing-sessions',
       subItems: [
-        { name: 'Emotion, Body and Belief Code', href: '/healing-sessions#emotion-body-belief' },
-        { name: 'Past life regressions', href: '/healing-sessions#past-life-regressions' },
-        { name: 'Ilyari somatic transmissions', href: '/healing-sessions#ilyari-somatic' },
-        { name: 'Healing for animals', href: '/healing-sessions#healing-animals' },
-        { name: 'Session prices', href: '/healing-sessions#session-prices' }
+        { name: t('menu.emotionCode'), href: '/healing-sessions#emotion-body-belief' },
+        { name: t('menu.pastLife'), href: '/healing-sessions#past-life-regressions' },
+        { name: t('menu.ilyari'), href: '/healing-sessions#ilyari-somatic' },
+        { name: t('menu.animals'), href: '/healing-sessions#healing-animals' },
+        { name: t('menu.sessionPrices'), href: '/healing-sessions#session-prices' }
       ]
     },
     { 
-      name: 'Personal creation', 
+      name: t('menu.personalCreation'),
+      nameShort: t('menu.personalCreationShort'),
       href: '/personal-creation',
       subItems: [
-        { name: 'Books', href: '/books' }
+        { name: t('menu.books'), href: '/books' }
       ]
     },
     { 
-      name: 'Store', 
+      name: t('menu.store'), 
       href: '/store',
       subItems: [
-        { name: 'Courses', href: '/store#courses' }
+        { name: t('menu.courses'), href: '/store#courses' }
       ]
     },
   ]
@@ -109,6 +113,14 @@ function App() {
         </main>
       </div>
     </Router>
+  )
+}
+
+function App() {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   )
 }
 

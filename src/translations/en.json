@@ -1,0 +1,185 @@
+{
+  "menu": {
+    "home": "Home",
+    "about": "About",
+    "healingSessions": "Healing Sessions",
+    "healingSessionsShort": "Healing",
+    "emotionCode": "Emotion, Body and Belief Code",
+    "pastLife": "Past Life Regressions",
+    "ilyari": "Ilyari Somatic Transmissions",
+    "animals": "Healing for Animals",
+    "sessionPrices": "Session Prices",
+    "personalCreation": "Personal Creation",
+    "personalCreationShort": "Creation",
+    "books": "Books",
+    "store": "Store",
+    "courses": "Courses"
+  },
+  "hero": {
+    "seeMore": "See More",
+    "scrollDown": "Scroll Down"
+  },
+  "countries": {
+    "title": "I HAVE WORKED WITH PEOPLE FROM"
+  },
+  "about": {
+    "title": "About Me",
+    "subtitle": "Energy Healer & Spiritual Guide",
+    "intro": "Welcome to my space of healing and transformation. I am Zuzana, dedicated to guiding souls on their journey of self-discovery and healing.",
+    "description": "For over a decade, I have been working with energy healing modalities, helping people release emotional blocks, heal past traumas, and reconnect with their authentic selves. My approach combines ancient wisdom with modern techniques, creating a personalized healing experience for each individual.",
+    "mission": "My mission is to empower you to become the architect of your own healing journey. Through gentle guidance and powerful energy work, we'll unlock the doors to your inner wisdom and innate healing abilities.",
+    "certifications": "Certified Practitioner",
+    "experience": "10+ Years Experience",
+    "clients": "500+ Clients Worldwide"
+  },
+  "books": {
+    "title": "My Books",
+    "subtitle": "Words that illuminate the path to healing and self-discovery. Each book is a gift, freely shared with those who seek wisdom.",
+    "pages": "pages",
+    "language": "Language",
+    "ctaButton": "Get Your Free Copy + Support",
+    "comingSoon": "More books coming soon...",
+    "featured": "Featured"
+  },
+  "bookDetail": {
+    "backToBooks": "Back to Books",
+    "by": "by",
+    "supportersCount": "readers have supported this work",
+    "chooseContribution": "Choose Your Contribution",
+    "contributionText": "This book is offered as a gift to those seeking wisdom. If it resonates with your journey, consider supporting its creation.",
+    "coffee": "Buy me a coffee",
+    "support": "Support my work",
+    "generous": "Generous supporter",
+    "mostPopular": "Most Popular",
+    "customAmount": "Or enter a custom amount",
+    "supportButton": "Support with",
+    "downloadButton": "& Download",
+    "selectAmount": "Select an amount to continue",
+    "continueWithout": "Continue without contribution",
+    "helpText": "Your support helps create more resources for healing and growth",
+    "thankYou": "Thank You!",
+    "thankYouMessage": "Your generosity helps spread wisdom and healing to more souls. Your book is being prepared for download...",
+    "downloading": "Your book is downloading...",
+    "format": "Format",
+    "chapters": "Chapters"
+  },
+  "store": {
+    "title": "Healing Sessions",
+    "subtitle": "Transformative energy healing sessions designed to help you release what no longer serves you and step into your highest potential.",
+    "learnMore": "Learn More",
+    "category": "Healing Session",
+    "duration": "Duration"
+  },
+  "productDetail": {
+    "backToStore": "Back to Store",
+    "aboutSession": "About This Session",
+    "benefits": "Benefits",
+    "whatToExpect": "What to Expect",
+    "idealFor": "This Session is Ideal For",
+    "faq": "Frequently Asked Questions",
+    "bookSession": "Book Your Session",
+    "fullName": "Full Name",
+    "email": "Email",
+    "phone": "Phone Number",
+    "preferredDate": "Preferred Date",
+    "preferredTime": "Preferred Time",
+    "selectTime": "Select a time",
+    "additionalNotes": "Additional Notes",
+    "notesPlaceholder": "Any specific concerns or questions you'd like to address during the session...",
+    "total": "Total",
+    "paymentSecure": "Payment will be processed securely",
+    "completeBooking": "Complete Booking & Pay",
+    "termsText": "By booking, you agree to our terms and conditions. You'll receive a confirmation email with session details.",
+    "required": "*"
+  },
+  "products": {
+    "emotionCode": {
+      "name": "Emotion Code Session",
+      "short": "Emotion Code",
+      "description": "Release trapped emotions that may be creating physical and emotional problems.",
+      "fullDescription": "The Emotion Code is a powerful and simple method developed by Dr. Bradley Nelson to identify and release trapped emotions. These trapped emotions are made of energy, and they can create pain, malfunction, and disease. They can also block you from love, happiness and success.",
+      "benefits": [
+        "Release emotional baggage from past events",
+        "Reduce physical discomfort and pain",
+        "Improve relationships and communication",
+        "Enhance overall emotional well-being",
+        "Clear mental fog and confusion",
+        "Boost energy levels"
+      ],
+      "whatToExpect": [
+        "Initial consultation to understand your concerns",
+        "Muscle testing to identify trapped emotions",
+        "Gentle release of trapped emotions using magnets",
+        "Discussion of findings and recommendations",
+        "Follow-up guidance for integration"
+      ],
+      "idealFor": [
+        "Anyone experiencing emotional overwhelm",
+        "Those with unexplained physical discomfort",
+        "People seeking to improve relationships",
+        "Individuals on a path of self-discovery",
+        "Anyone ready to release the past"
+      ],
+      "faq": [
+        {
+          "question": "How many sessions will I need?",
+          "answer": "This varies by individual. Some people experience significant shifts in one session, while others benefit from a series of sessions. We'll discuss your progress and needs during each session."
+        },
+        {
+          "question": "Is this done in person or remotely?",
+          "answer": "Sessions can be done both in person and remotely via video call. Energy work is not limited by distance, and remote sessions are equally effective."
+        },
+        {
+          "question": "What should I do to prepare?",
+          "answer": "Come with an open mind and heart. Stay hydrated before and after the session. It's helpful to have specific issues or concerns you'd like to address."
+        }
+      ]
+    },
+    "bodyCode": {
+      "name": "Body Code Session",
+      "short": "Body Code",
+      "description": "Discover and correct imbalances in the body.",
+      "fullDescription": "The Body Code is a sophisticated and comprehensive energy healing technique designed to identify and correct imbalances in six key areas: Energies, Circuits & Systems, Toxins, Pathogens, Misalignments, and Nutrition & Lifestyle.",
+      "benefits": [
+        "Balance energy systems throughout the body",
+        "Address root causes of physical issues",
+        "Holistic healing approach",
+        "Personalized treatment for your needs",
+        "Improve overall body function",
+        "Enhance vitality and wellness"
+      ],
+      "whatToExpect": [
+        "Comprehensive assessment of body systems",
+        "Identification of specific imbalances",
+        "Targeted correction of issues found",
+        "Detailed explanation of findings",
+        "Personalized recommendations for ongoing wellness"
+      ],
+      "idealFor": [
+        "Those with chronic physical issues",
+        "People seeking comprehensive healing",
+        "Anyone wanting to optimize health",
+        "Individuals with mysterious symptoms",
+        "Those committed to deep healing work"
+      ],
+      "faq": [
+        {
+          "question": "How is this different from Emotion Code?",
+          "answer": "While Emotion Code focuses specifically on trapped emotions, Body Code addresses six different types of imbalances including emotions, structural issues, toxins, pathogens, and more. It's a more comprehensive system."
+        },
+        {
+          "question": "Can this replace medical treatment?",
+          "answer": "Body Code is a complementary healing modality and should not replace medical care. Always consult with your healthcare provider for medical concerns."
+        }
+      ]
+    }
+  },
+  "times": [
+    "9:00 AM",
+    "10:30 AM",
+    "12:00 PM",
+    "2:00 PM",
+    "3:30 PM",
+    "5:00 PM"
+  ]
+}

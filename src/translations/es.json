@@ -1,0 +1,185 @@
+{
+  "menu": {
+    "home": "Inicio",
+    "about": "Sobre Mí",
+    "healingSessions": "Sesiones de Sanación",
+    "healingSessionsShort": "Sesiones",
+    "emotionCode": "Código de Emoción, Cuerpo y Creencias",
+    "pastLife": "Regresiones a Vidas Pasadas",
+    "ilyari": "Transmisiones Somáticas Ilyari",
+    "animals": "Sanación para Animales",
+    "sessionPrices": "Precios de Sesiones",
+    "personalCreation": "Creación Personal",
+    "personalCreationShort": "Creación",
+    "books": "Libros",
+    "store": "Tienda",
+    "courses": "Cursos"
+  },
+  "hero": {
+    "seeMore": "Ver Más",
+    "scrollDown": "Desplázate"
+  },
+  "countries": {
+    "title": "HE TRABAJADO CON PERSONAS DE"
+  },
+  "about": {
+    "title": "Sobre Mí",
+    "subtitle": "Sanadora Energética y Guía Espiritual",
+    "intro": "Bienvenido a mi espacio de sanación y transformación. Soy Zuzana, dedicada a guiar almas en su viaje de autodescubrimiento y sanación.",
+    "description": "Durante más de una década, he trabajado con modalidades de sanación energética, ayudando a las personas a liberar bloqueos emocionales, sanar traumas del pasado y reconectar con su ser auténtico. Mi enfoque combina sabiduría ancestral con técnicas modernas, creando una experiencia de sanación personalizada para cada individuo.",
+    "mission": "Mi misión es empoderarte para que te conviertas en el arquitecto de tu propio viaje de sanación. A través de una guía suave y un trabajo energético poderoso, desbloquearemos las puertas a tu sabiduría interior y capacidades de sanación innatas.",
+    "certifications": "Practicante Certificada",
+    "experience": "Más de 10 Años de Experiencia",
+    "clients": "Más de 500 Clientes en Todo el Mundo"
+  },
+  "books": {
+    "title": "Mis Libros",
+    "subtitle": "Palabras que iluminan el camino hacia la sanación y el autodescubrimiento. Cada libro es un regalo, compartido libremente con quienes buscan sabiduría.",
+    "pages": "páginas",
+    "language": "Idioma",
+    "ctaButton": "Obtén tu Copia Gratis + Apoya",
+    "comingSoon": "Más libros próximamente...",
+    "featured": "Destacado"
+  },
+  "bookDetail": {
+    "backToBooks": "Volver a Libros",
+    "by": "por",
+    "supportersCount": "lectores han apoyado este trabajo",
+    "chooseContribution": "Elige tu Contribución",
+    "contributionText": "Este libro se ofrece como un regalo para quienes buscan sabiduría. Si resuena con tu camino, considera apoyar su creación.",
+    "coffee": "Invítame un café",
+    "support": "Apoya mi trabajo",
+    "generous": "Apoyo generoso",
+    "mostPopular": "Más Popular",
+    "customAmount": "O ingresa una cantidad personalizada",
+    "supportButton": "Apoyar con",
+    "downloadButton": "y Descargar",
+    "selectAmount": "Selecciona una cantidad para continuar",
+    "continueWithout": "Continuar sin contribución",
+    "helpText": "Tu apoyo ayuda a crear más recursos para la sanación y el crecimiento",
+    "thankYou": "¡Gracias!",
+    "thankYouMessage": "Tu generosidad ayuda a difundir sabiduría y sanación a más almas. Tu libro se está preparando para descargar...",
+    "downloading": "Tu libro se está descargando...",
+    "format": "Formato",
+    "chapters": "Capítulos"
+  },
+  "store": {
+    "title": "Sesiones de Sanación",
+    "subtitle": "Sesiones de sanación energética transformadoras diseñadas para ayudarte a liberar lo que ya no te sirve y avanzar hacia tu máximo potencial.",
+    "learnMore": "Más Info",
+    "category": "Sesión de Sanación",
+    "duration": "Duración"
+  },
+  "productDetail": {
+    "backToStore": "Volver a Tienda",
+    "aboutSession": "Sobre Esta Sesión",
+    "benefits": "Beneficios",
+    "whatToExpect": "Qué Esperar",
+    "idealFor": "Esta Sesión es Ideal Para",
+    "faq": "Preguntas Frecuentes",
+    "bookSession": "Reserva tu Sesión",
+    "fullName": "Nombre Completo",
+    "email": "Correo Electrónico",
+    "phone": "Número de Teléfono",
+    "preferredDate": "Fecha Preferida",
+    "preferredTime": "Hora Preferida",
+    "selectTime": "Selecciona una hora",
+    "additionalNotes": "Notas Adicionales",
+    "notesPlaceholder": "Cualquier inquietud o pregunta específica que te gustaría abordar durante la sesión...",
+    "total": "Total",
+    "paymentSecure": "El pago se procesará de forma segura",
+    "completeBooking": "Completar Reserva y Pagar",
+    "termsText": "Al reservar, aceptas nuestros términos y condiciones. Recibirás un correo de confirmación con los detalles de la sesión.",
+    "required": "*"
+  },
+  "products": {
+    "emotionCode": {
+      "name": "Sesión de Código de Emoción",
+      "short": "Código Emocional",
+      "description": "Libera emociones atrapadas que pueden estar creando problemas físicos y emocionales.",
+      "fullDescription": "El Código de Emoción es un método poderoso y simple desarrollado por el Dr. Bradley Nelson para identificar y liberar emociones atrapadas. Estas emociones atrapadas están hechas de energía y pueden crear dolor, mal funcionamiento y enfermedad. También pueden bloquearte del amor, la felicidad y el éxito.",
+      "benefits": [
+        "Libera el equipaje emocional de eventos pasados",
+        "Reduce el malestar y dolor físico",
+        "Mejora las relaciones y la comunicación",
+        "Mejora el bienestar emocional general",
+        "Despeja la confusión mental",
+        "Aumenta los niveles de energía"
+      ],
+      "whatToExpect": [
+        "Consulta inicial para entender tus preocupaciones",
+        "Test muscular para identificar emociones atrapadas",
+        "Liberación suave de emociones usando imanes",
+        "Discusión de hallazgos y recomendaciones",
+        "Guía de seguimiento para la integración"
+      ],
+      "idealFor": [
+        "Cualquiera que experimente abrumación emocional",
+        "Aquellos con malestar físico inexplicable",
+        "Personas que buscan mejorar relaciones",
+        "Individuos en un camino de autodescubrimiento",
+        "Cualquiera listo para liberar el pasado"
+      ],
+      "faq": [
+        {
+          "question": "¿Cuántas sesiones necesitaré?",
+          "answer": "Esto varía según el individuo. Algunas personas experimentan cambios significativos en una sesión, mientras que otras se benefician de una serie de sesiones. Discutiremos tu progreso y necesidades durante cada sesión."
+        },
+        {
+          "question": "¿Se hace en persona o remotamente?",
+          "answer": "Las sesiones pueden hacerse tanto en persona como remotamente por videollamada. El trabajo energético no está limitado por la distancia, y las sesiones remotas son igualmente efectivas."
+        },
+        {
+          "question": "¿Qué debo hacer para prepararme?",
+          "answer": "Ven con una mente y corazón abiertos. Mantente hidratado antes y después de la sesión. Es útil tener problemas o preocupaciones específicas que te gustaría abordar."
+        }
+      ]
+    },
+    "bodyCode": {
+      "name": "Sesión de Código Corporal",
+      "short": "Código Corporal",
+      "description": "Descubre y corrige desequilibrios en el cuerpo.",
+      "fullDescription": "El Código Corporal es una técnica sofisticada y completa de sanación energética diseñada para identificar y corregir desequilibrios en seis áreas clave: Energías, Circuitos y Sistemas, Toxinas, Patógenos, Desalineaciones y Nutrición y Estilo de Vida.",
+      "benefits": [
+        "Equilibra los sistemas energéticos del cuerpo",
+        "Aborda las causas raíz de problemas físicos",
+        "Enfoque de sanación holístico",
+        "Tratamiento personalizado para tus necesidades",
+        "Mejora la función corporal general",
+        "Aumenta la vitalidad y el bienestar"
+      ],
+      "whatToExpect": [
+        "Evaluación completa de sistemas corporales",
+        "Identificación de desequilibrios específicos",
+        "Corrección dirigida de problemas encontrados",
+        "Explicación detallada de hallazgos",
+        "Recomendaciones personalizadas para bienestar continuo"
+      ],
+      "idealFor": [
+        "Aquellos con problemas físicos crónicos",
+        "Personas que buscan sanación integral",
+        "Cualquiera que quiera optimizar su salud",
+        "Individuos con síntomas misteriosos",
+        "Aquellos comprometidos con trabajo de sanación profundo"
+      ],
+      "faq": [
+        {
+          "question": "¿En qué se diferencia del Código de Emoción?",
+          "answer": "Mientras que el Código de Emoción se enfoca específicamente en emociones atrapadas, el Código Corporal aborda seis tipos diferentes de desequilibrios incluyendo emociones, problemas estructurales, toxinas, patógenos y más. Es un sistema más completo."
+        },
+        {
+          "question": "¿Puede esto reemplazar el tratamiento médico?",
+          "answer": "El Código Corporal es una modalidad de sanación complementaria y no debe reemplazar la atención médica. Siempre consulta con tu proveedor de atención médica para preocupaciones médicas."
+        }
+      ]
+    }
+  },
+  "times": [
+    "9:00 AM",
+    "10:30 AM",
+    "12:00 PM",
+    "2:00 PM",
+    "3:30 PM",
+    "5:00 PM"
+  ]
+}
