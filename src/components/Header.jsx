@@ -13,7 +13,7 @@ const Header = ({ menuItems }) => {
     >
       <nav className="bg-black/95 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-[90rem] mx-auto px-12 lg:px-16">
-          <div className="flex justify-between items-center h-26">
+          <div className="flex justify-between items-center h-30">
             {/* Logo */}
             <motion.div 
               whileHover={{ 
