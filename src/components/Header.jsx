@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const Header = ({ menuItems }) => {
   const [hoveredItem, setHoveredItem] = useState(null)
@@ -42,15 +43,16 @@ const Header = ({ menuItems }) => {
                   onMouseEnter={() => setHoveredItem(index)}
                   onMouseLeave={() => setHoveredItem(null)}
                 >
-                  <motion.a
-                    href={item.href}
-                    className="text-white/70 hover:text-white transition-colors duration-400 text-[0.9rem] font-light tracking-[0.2em] uppercase relative"
-                    style={{ fontFamily: 'Gotham, sans-serif' }}
-                    whileHover={{ y: -2 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {item.name}
-                  </motion.a>
+                  <Link to={item.href}>
+                    <motion.div
+                      className="text-white/70 hover:text-white transition-colors duration-400 text-[0.9rem] font-light tracking-[0.2em] uppercase relative cursor-pointer"
+                      style={{ fontFamily: 'Gotham, sans-serif' }}
+                      whileHover={{ y: -2 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {item.name}
+                    </motion.div>
+                  </Link>
                   
                   {/* Hover underline effect - más elegante */}
                   <motion.div
