@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { CinematicTitle, GradientLine } from '../elementos/ElementosReutilizables'
 
 const Store = () => {
   const ref = useRef(null)
+  const navigate = useNavigate()
   const isInView = useInView(ref, { once: true, amount: 0.2 })
   const [selectedProduct, setSelectedProduct] = useState(null)
 
@@ -286,14 +288,27 @@ const Store = () => {
                 ))}
               </ul>
 
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full py-5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white rounded-full text-lg tracking-[0.2em] uppercase font-light transition-all duration-300 shadow-lg hover:shadow-xl"
-                style={{ fontFamily: 'Gotham, sans-serif' }}
-              >
-                Book Session
-              </motion.button>
+              <div className="space-y-4">
+                <motion.button
+                  onClick={() => {
+                    setSelectedProduct(null)
+                    navigate(`/store/${selectedProduct.id}`)
+                  }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full py-5 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-full text-lg tracking-[0.2em] uppercase font-light transition-all duration-300 shadow-lg hover:shadow-xl"
+                  style={{ fontFamily: 'Gotham, sans-serif' }}
+                >
+                  View Full Details & Book
+                </motion.button>
+
+                <button
+                  onClick={() => setSelectedProduct(null)}
+                  className="w-full py-3 text-stone-500 hover:text-stone-700 text-sm transition-colors"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </motion.div>
         </motion.div>

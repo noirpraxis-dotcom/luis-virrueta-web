@@ -6,6 +6,9 @@ import ToggleButton from './components/ToggleButton'
 import HomePage from './pages/HomePage'
 import AboutPage from './pages/AboutPage'
 import StorePage from './pages/StorePage'
+import BooksPage from './pages/BooksPage'
+import BookDetailPage from './pages/BookDetailPage'
+import ProductDetailPage from './pages/ProductDetailPage'
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -24,7 +27,13 @@ function App() {
         { name: 'Session prices', href: '/healing-sessions#session-prices' }
       ]
     },
-    { name: 'Personal creation', href: '/personal-creation' },
+    { 
+      name: 'Personal creation', 
+      href: '/personal-creation',
+      subItems: [
+        { name: 'Books', href: '/books' }
+      ]
+    },
     { 
       name: 'Store', 
       href: '/store',
@@ -71,6 +80,27 @@ function App() {
             <Route path="/store" element={
               <div className="lg:pt-28">
                 <StorePage />
+              </div>
+            } />
+
+            {/* Página Store: Detalle de producto individual */}
+            <Route path="/store/:productId" element={
+              <div className="lg:pt-28">
+                <ProductDetailPage />
+              </div>
+            } />
+
+            {/* Página Books: Biblioteca de libros */}
+            <Route path="/books" element={
+              <div className="lg:pt-28">
+                <BooksPage />
+              </div>
+            } />
+
+            {/* Página Book Detail: Detalle de libro con donación */}
+            <Route path="/books/:bookId" element={
+              <div className="lg:pt-28">
+                <BookDetailPage />
               </div>
             } />
             
