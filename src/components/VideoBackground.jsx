@@ -23,7 +23,7 @@ const VideoBackground = () => {
           loop
           muted
           playsInline
-          className="w-full h-screen lg:h-auto object-cover lg:object-contain"
+          className="w-full h-screen object-cover"
           style={{ 
             objectPosition: 'center center',
           }}
@@ -31,14 +31,14 @@ const VideoBackground = () => {
           <source src="/video.mp4" type="video/mp4" />
         </motion.video>
       ) : (
-        // Image Background - Móvil/Tablet: pantalla completa con centro visible. Desktop: imagen completa
+        // Image Background - Pantalla completa en todos los dispositivos, centro siempre visible
         <motion.img
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
           src="/portada.jpg"
           alt="Portada"
-          className="w-full h-screen lg:h-auto object-cover lg:object-contain block"
+          className="w-full h-screen object-cover block"
           style={{ 
             objectPosition: 'center center',
           }}
