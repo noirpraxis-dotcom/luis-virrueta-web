@@ -22,7 +22,7 @@ const HealingSessionsPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Header - Elegant white background like About */}
+      {/* Hero Header - Same style as STORE */}
       <section className="relative py-20 lg:py-32 px-6 lg:px-20 bg-white">
         <div className="max-w-6xl mx-auto text-center">
           <motion.div
@@ -30,14 +30,24 @@ const HealingSessionsPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 
-              className="text-5xl lg:text-6xl font-light text-stone-800 mb-6 tracking-wide"
-              style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}
+            <motion.h1
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
+              className="text-stone-800 text-6xl lg:text-8xl font-light tracking-[0.2em] mb-8"
+              style={{ fontFamily: 'Gotham, sans-serif' }}
             >
-              Healing Sessions
-            </h1>
-            <GradientLine />
-            <p className="text-stone-600 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed mt-8">
+              HEALING SESSIONS
+            </motion.h1>
+            
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 1.5, delay: 0.3 }}
+              className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-80 mb-8"
+            />
+            
+            <p className="text-stone-600 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed">
               Discover transformative healing modalities that work at the energetic level to release trapped emotions, correct imbalances, and reprogram limiting beliefs.
             </p>
           </motion.div>
@@ -72,10 +82,12 @@ const HealingSessionsPage = () => {
   )
 }
 
-// Emotion, Body & Belief Code Section
+// Emotion, Body & Belief Code Section - RESTORED ORIGINAL LAYOUT
 const EmotionBodyBeliefSection = () => {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.2 })
+  const introRef = useRef(null)
+  const codesRef = useRef(null)
+  const isIntroInView = useInView(introRef, { once: true, amount: 0.3 })
+  const isCodesInView = useInView(codesRef, { once: true, amount: 0.2 })
 
   const codes = [
     {
@@ -90,6 +102,7 @@ const EmotionBodyBeliefSection = () => {
       borderColor: 'border-rose-200',
       description: 'The EMOTION CODE performs a deep cleansing of the repressed emotions you unconsciously carry with you. This emotional baggage comes from old or recent wounds and traumas, it can be inherited or absorbed from others, and it continuously affects your mental state and physical health.',
       statistic: '80% of energetic imbalances in human beings are caused by unprocessed emotions.',
+      metaphor: "Receiving an Emotion Code session is like finally releasing a heavy backpack you've been carrying for a long time, allowing your whole being to straighten, breathe, and heal."
     },
     {
       title: 'BODY CODE',
@@ -102,6 +115,7 @@ const EmotionBodyBeliefSection = () => {
       bgColor: 'bg-emerald-50',
       borderColor: 'border-emerald-200',
       description: 'The BODY CODE corrects a multitude of energetic imbalances in your body and mind, promoting overall harmonization of your organism at all levels. A balanced, energetically clean body is capable of performing powerful healing processes and regeneration.',
+      metaphor: 'A Body Code session is like thoroughly cleaning and organizing a room, allowing fresh air to circulate again!'
     },
     {
       title: 'BELIEF CODE',
@@ -114,16 +128,18 @@ const EmotionBodyBeliefSection = () => {
       bgColor: 'bg-amber-50',
       borderColor: 'border-amber-200',
       description: 'The BELIEF CODE reprograms negative subconscious beliefs that limit your thoughts, feelings, and actions. When these mental programs are neutralized together with the trauma that created them, subconscious blocks dissolve and a new path opens in your life.',
-    },
+      insight: 'Once you align your subconscious truth (the inner programming) with your conscious will (what you truly want in life), you can finally guide your life in the right direction.',
+      metaphor: 'A Belief Code session is like weeding the garden of your mind and allowing healthy thought patterns to take root, which then reflect naturally in your daily feelings and actions.'
+    }
   ]
 
   return (
     <div className="max-w-7xl mx-auto">
+      {/* Title */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
         className="text-center mb-16"
       >
         <h2 
@@ -132,40 +148,188 @@ const EmotionBodyBeliefSection = () => {
         >
           Emotion, Body & Belief Code
         </h2>
-        <GradientLine />
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="mt-6 text-stone-600 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed italic"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
+        >
+          Globally established energy healing methods developed since the 1990s by Dr. Bradley Nelson
+        </motion.p>
+        <GradientLine className="mt-8" />
       </motion.div>
 
-      <div ref={ref} className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Introduction Section with Image Space */}
+      <motion.div
+        ref={introRef}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isIntroInView ? 1 : 0 }}
+        transition={{ duration: 0.8 }}
+        className="mb-20"
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Text Content */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: isIntroInView ? 1 : 0, x: isIntroInView ? 0 : -30 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="space-y-6"
+          >
+            <h3
+              className="text-3xl lg:text-4xl font-light text-stone-800 mb-6"
+              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            >
+              Deep Healing at the Energetic Level
+            </h3>
+
+            <p className="text-stone-700 leading-relaxed text-lg">
+              The Codes allow us to work with the deepest layers of your being — those that know they need help and, above all, <span className="font-medium text-emerald-600">what kind of help they require</span>.
+            </p>
+
+            <p className="text-stone-700 leading-relaxed text-lg">
+              My role is to ask the right questions, receive the answers, and act according to the guidance that comes through, releasing from your field, body, and mind whatever is creating imbalance. In this way, we address and heal <span className="font-medium text-emerald-600">the root cause of your issue</span>.
+            </p>
+
+            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-6 lg:p-8">
+              <p className="text-stone-800 text-lg leading-relaxed italic" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                "When your energetic blueprint comes into alignment, your physical body naturally heals."
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Image Placeholder */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: isIntroInView ? 1 : 0, x: isIntroInView ? 0 : 30 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            <BackdropBlurCard className="aspect-[4/5] bg-gradient-to-br from-emerald-100 to-amber-100 flex items-center justify-center">
+              <div className="text-center p-12">
+                <svg className="w-24 h-24 text-emerald-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                <p className="text-stone-500 text-lg">Photo Space</p>
+                <p className="text-stone-400 text-sm mt-2">Replace with your image</p>
+              </div>
+            </BackdropBlurCard>
+          </motion.div>
+        </div>
+      </motion.div>
+
+      {/* What Can The Codes Do Section */}
+      <div className="text-center mb-16">
+        <motion.h3
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-4xl lg:text-5xl font-light text-stone-800 mb-6 tracking-wide"
+          style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}
+        >
+          What Can The Codes Do For You?
+        </motion.h3>
+        <GradientLine className="mx-auto" />
+      </div>
+
+      {/* The Three Codes - Original Full Layout */}
+      <div ref={codesRef} className="space-y-20 mb-20">
         {codes.map((code, index) => (
           <motion.div
             key={code.title}
             initial={{ opacity: 0, y: 50 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: index * 0.2 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8, delay: index * 0.2 }}
           >
-            <BackdropBlurCard className={`h-full ${code.borderColor} border-2`}>
-              <div className={`${code.bgColor} p-6 rounded-t-2xl`}>
-                <div className={`bg-gradient-to-br ${code.color} w-16 h-16 rounded-full flex items-center justify-center text-white mx-auto mb-4`}>
-                  {code.icon}
+            <BackdropBlurCard className={`${code.bgColor} border-2 ${code.borderColor}`}>
+              <div className="p-8 lg:p-12">
+                {/* Header with Icon */}
+                <div className="flex items-center gap-6 mb-8">
+                  <motion.div
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    className={`p-4 bg-gradient-to-br ${code.color} text-white rounded-2xl shadow-lg`}
+                  >
+                    {code.icon}
+                  </motion.div>
+                  <h4
+                    className="text-3xl lg:text-4xl font-light text-stone-800"
+                    style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                  >
+                    {code.title}
+                  </h4>
                 </div>
-                <h3 className="text-2xl font-bold text-stone-800 text-center mb-2">
-                  {code.title}
-                </h3>
-              </div>
-              <div className="p-6">
-                <p className="text-stone-600 leading-relaxed mb-4">
+
+                {/* Description */}
+                <p className="text-stone-700 text-lg leading-relaxed mb-6">
                   {code.description}
                 </p>
+
+                {/* Statistic (if exists) */}
                 {code.statistic && (
-                  <p className="text-sm text-stone-500 italic">
-                    {code.statistic}
+                  <div className="bg-white/70 border-l-4 border-rose-400 rounded-r-lg p-6 mb-6">
+                    <p className="text-stone-800 font-medium text-lg flex items-center gap-2">
+                      <svg className="w-5 h-5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                      {code.statistic}
+                    </p>
+                  </div>
+                )}
+
+                {/* Insight (if exists) */}
+                {code.insight && (
+                  <p className="text-stone-700 text-lg leading-relaxed mb-6">
+                    {code.insight}
                   </p>
                 )}
+
+                {/* Metaphor */}
+                <div className="bg-white/50 rounded-xl p-6 lg:p-8 border border-stone-200">
+                  <div className="flex items-start gap-4">
+                    <svg className="w-8 h-8 text-amber-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    <p className="text-stone-700 text-lg leading-relaxed italic" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                      {code.metaphor}
+                    </p>
+                  </div>
+                </div>
               </div>
             </BackdropBlurCard>
           </motion.div>
         ))}
       </div>
+
+      {/* CTA Section */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
+        <BackdropBlurCard className="bg-gradient-to-br from-emerald-50 to-amber-50 border-2 border-emerald-200">
+          <div className="p-12 text-center">
+            <h4
+              className="text-3xl lg:text-4xl font-light text-stone-800 mb-6"
+              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            >
+              Ready to Begin Your Healing Journey?
+            </h4>
+            <p className="text-stone-600 text-lg mb-8">
+              Experience the transformative power of the Codes and unlock your body's natural ability to heal.
+            </p>
+            <motion.a
+              href="/store"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-block px-12 py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-full font-medium tracking-wide text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              Book Your Session
+            </motion.a>
+          </div>
+        </BackdropBlurCard>
+      </motion.div>
     </div>
   )
 }
