@@ -10,7 +10,8 @@ import StorePage from './pages/StorePage'
 import BooksPage from './pages/BooksPage'
 import BookDetailPage from './pages/BookDetailPage'
 import ProductDetailPage from './pages/ProductDetailPage'
-import EmotionBodyBeliefPage from './pages/EmotionBodyBeliefPage'
+import HealingSessionsPage from './pages/HealingSessionsPage'
+import PersonalCreationPage from './pages/PersonalCreationPage'
 
 const AppContent = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -24,7 +25,7 @@ const AppContent = () => {
       nameShort: t('menu.healingSessionsShort'),
       href: '/healing-sessions',
       subItems: [
-        { name: t('menu.emotionCode'), href: '/healing-sessions/emotion-body-belief' },
+        { name: t('menu.emotionCode'), href: '/healing-sessions#emotion-body-belief' },
         { name: t('menu.pastLife'), href: '/healing-sessions#past-life-regressions' },
         { name: t('menu.ilyari'), href: '/healing-sessions#ilyari-somatic' },
         { name: t('menu.animals'), href: '/healing-sessions#healing-animals' },
@@ -36,7 +37,7 @@ const AppContent = () => {
       nameShort: t('menu.personalCreationShort'),
       href: '/personal-creation',
       subItems: [
-        { name: t('menu.books'), href: '/books' }
+        { name: t('menu.books'), href: '/personal-creation#books' }
       ]
     },
     { 
@@ -109,10 +110,17 @@ const AppContent = () => {
               </div>
             } />
 
-            {/* Página Emotion, Body & Belief Code */}
-            <Route path="/healing-sessions/emotion-body-belief" element={
+            {/* Página Healing Sessions: Todas las subsecciones en una página */}
+            <Route path="/healing-sessions" element={
               <div className="lg:pt-28">
-                <EmotionBodyBeliefPage />
+                <HealingSessionsPage />
+              </div>
+            } />
+
+            {/* Página Personal Creation: Todas las subsecciones en una página */}
+            <Route path="/personal-creation" element={
+              <div className="lg:pt-28">
+                <PersonalCreationPage />
               </div>
             } />
             

@@ -98,26 +98,35 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                     className="relative"
                   >
                     <div>
-                      <motion.a
-                        href={item.href}
-                        onClick={item.subItems ? (e) => {
-                          e.preventDefault()
-                          setExpandedItem(expandedItem === index ? null : index)
-                        } : onClose}
-                        whileHover={{ x: 10, scale: 1.05 }}
-                        className="block text-elegant-gray hover:text-white text-3xl font-medium tracking-wide transition-colors duration-300 py-2"
-                        style={{ fontFamily: 'Gotham, sans-serif' }}
-                      >
-                        {item.name}
-                        {item.subItems && (
+                      {item.subItems ? (
+                        <motion.button
+                          onClick={() => setExpandedItem(expandedItem === index ? null : index)}
+                          whileHover={{ x: 10, scale: 1.05 }}
+                          className="block text-elegant-gray hover:text-white text-3xl font-medium tracking-wide transition-colors duration-300 py-2 text-left w-full"
+                          style={{ fontFamily: 'Gotham, sans-serif' }}
+                        >
+                          {item.name}
                           <motion.span
                             animate={{ rotate: expandedItem === index ? 180 : 0 }}
                             className="inline-block ml-2"
                           >
                             ▼
                           </motion.span>
-                        )}
-                      </motion.a>
+                        </motion.button>
+                      ) : (
+                        <Link
+                          to={item.href}
+                          onClick={onClose}
+                        >
+                          <motion.div
+                            whileHover={{ x: 10, scale: 1.05 }}
+                            className="block text-elegant-gray hover:text-white text-3xl font-medium tracking-wide transition-colors duration-300 py-2"
+                            style={{ fontFamily: 'Gotham, sans-serif' }}
+                          >
+                            {item.name}
+                          </motion.div>
+                        </Link>
+                      )}
 
                       {/* Submenú */}
                       <AnimatePresence>
@@ -136,14 +145,14 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                                 animate={{ x: 0, opacity: 1 }}
                                 transition={{ delay: subIndex * 0.1 }}
                               >
-                                <a
-                                  href={subItem.href}
+                                <Link
+                                  to={subItem.href}
                                   onClick={onClose}
                                   className="block text-elegant-gray hover:text-white text-xl py-1 transition-colors duration-200"
                                   style={{ fontFamily: 'Gotham, sans-serif' }}
                                 >
                                   - {subItem.name}
-                                </a>
+                                </Link>
                               </motion.li>
                             ))}
                           </motion.ul>

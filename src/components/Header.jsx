@@ -108,16 +108,16 @@ const Header = ({ menuItems }) => {
                             delay: hoveredItem === index ? subIndex * 0.05 : 0
                           }}
                         >
-                          <motion.a
-                            href={subItem.href}
-                            className="block px-6 py-3.5 text-white/75 hover:text-white transition-colors duration-200 text-[0.875rem] font-light tracking-wide relative overflow-hidden group"
-                            style={{ fontFamily: 'Gotham, sans-serif' }}
-                            whileHover={{ x: 4 }}
-                          >
-                            {/* Efecto de fondo en hover */}
-                            <motion.div 
-                              className="absolute inset-0 bg-white/5"
-                              initial={{ x: '-100%' }}
+                          <Link to={subItem.href}>
+                            <motion.div
+                              className="block px-6 py-3.5 text-white/75 hover:text-white transition-colors duration-200 text-[0.875rem] font-light tracking-wide relative overflow-hidden group"
+                              style={{ fontFamily: 'Gotham, sans-serif' }}
+                              whileHover={{ x: 4 }}
+                            >
+                              {/* Efecto de fondo en hover */}
+                              <motion.div 
+                                className="absolute inset-0 bg-white/5"
+                                initial={{ x: '-100%' }}
                               whileHover={{ x: 0 }}
                               transition={{ duration: 0.3 }}
                             />
@@ -130,7 +130,8 @@ const Header = ({ menuItems }) => {
                               whileHover={{ scale: 1 }}
                               transition={{ duration: 0.2 }}
                             />
-                          </motion.a>
+                          </motion.div>
+                          </Link>
                         </motion.li>
                       ))}
                     </motion.ul>
