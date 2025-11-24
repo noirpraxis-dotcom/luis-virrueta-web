@@ -20,10 +20,15 @@ function App() {
         { name: 'Healing for animals', href: '#healing-animals' }
       ]
     },
-    { name: 'Courses', href: '#courses' },
     { name: 'Session prices', href: '#session-prices' },
     { name: 'Personal creation', href: '#personal-creation' },
-    { name: 'Store', href: '#store' },
+    { 
+      name: 'Store', 
+      href: '#store',
+      subItems: [
+        { name: 'Courses', href: '#courses' }
+      ]
+    },
   ]
 
   return (
@@ -42,7 +47,7 @@ function App() {
       />
 
       {/* Contenido principal - con padding solo en desktop grande donde el header es visible */}
-      <main className="relative z-0 lg:pt-28">
+      <main className="relative z-0 lg:pt-22">
         {/* Video/Image Background */}
         <VideoBackground />
         
