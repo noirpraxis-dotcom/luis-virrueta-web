@@ -26,7 +26,7 @@ const Header = ({ menuItems }) => {
               className="text-[2.75rem] font-light tracking-[0.15em] cursor-pointer relative"
               style={{ fontFamily: 'Gotham, sans-serif' }}
             >
-              <span className="text-emerald-500">Green</span>
+              <span className="bg-gradient-to-r from-emerald-400 via-emerald-500 to-emerald-600 bg-clip-text text-transparent animate-gradient">Green</span>
               <span className="text-white">leaf</span>
               {/* Underline decorativo */}
               <motion.div 
