@@ -47,7 +47,7 @@ function App() {
       />
 
       {/* Contenido principal - con padding solo en desktop grande donde el header es visible */}
-      <main className="relative z-0 lg:pt-32">
+      <main className="relative z-0 lg:pt-28">
         {/* Video/Image Background */}
         <VideoBackground />
         

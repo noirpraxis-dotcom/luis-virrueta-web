@@ -65,7 +65,7 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
             transition={{ type: "spring", duration: 0.5 }}
             className="absolute inset-0 flex items-center justify-center"
           >
-            <div className="relative w-full h-full bg-gradient-to-br from-black via-gray-900 to-black flex flex-col items-center justify-center p-8">
+            <div className="relative w-full h-full bg-gradient-to-br from-black via-gray-900 to-black flex flex-col items-center justify-start pt-24 p-8">
               {/* Efectos decorativos */}
               <div className="absolute inset-0 opacity-10">
                 <div className="absolute top-0 left-0 w-64 h-64 bg-elegant-white rounded-full blur-3xl" />
@@ -87,7 +87,7 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
               <motion.ul
                 variants={menuVariants}
                 initial="closed"
-                animate="open"
+                animate={isOpen ? "open" : "closed"}
                 exit="closed"
                 className="space-y-6 z-10 w-full max-w-md"
               >
@@ -161,15 +161,7 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                 ))}
               </motion.ul>
 
-              {/* Close hint */}
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.5 }}
-                transition={{ delay: 1 }}
-                className="absolute bottom-8 text-elegant-gray text-sm z-10"
-              >
-                Toca fuera para cerrar
-              </motion.p>
+
             </div>
           </motion.nav>
         </motion.div>

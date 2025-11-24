@@ -13,7 +13,7 @@ const Header = ({ menuItems }) => {
     >
       <nav className="bg-black/95 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-[90rem] mx-auto px-16 lg:px-20">
-          <div className="flex justify-between items-center h-32">
+          <div className="flex justify-between items-center h-28">
             {/* Logo */}
             <motion.div 
               whileHover={{ 
@@ -73,6 +73,8 @@ const Header = ({ menuItems }) => {
                         duration: 0.35, 
                         ease: [0.4, 0, 0.2, 1]
                       }}
+                      onMouseEnter={() => setHoveredItem(index)}
+                      onMouseLeave={() => setHoveredItem(null)}
                       className="absolute top-full left-0 mt-6 bg-black backdrop-blur-xl rounded-xl shadow-2xl py-4 min-w-[340px] border border-white/30"
                       style={{
                         boxShadow: '0 10px 40px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1)'
