@@ -13,7 +13,7 @@ const Header = ({ menuItems }) => {
     >
       <nav className="bg-black/95 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-[90rem] mx-auto px-12 lg:px-16">
-          <div className="flex justify-between items-center h-22">
+          <div className="flex justify-between items-center h-25">
             {/* Logo */}
             <motion.div 
               whileHover={{ 
@@ -60,27 +60,47 @@ const Header = ({ menuItems }) => {
                     className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white to-transparent origin-center"
                   />
 
-                  {/* Submenu dropdown */}
+                  {/* Submenu dropdown - mejorado con mejor visibilidad */}
                   {item.subItems && (
                     <motion.ul
-                      initial={{ opacity: 0, y: -10 }}
+                      initial={{ opacity: 0, y: -15, scale: 0.95 }}
                       animate={{ 
                         opacity: hoveredItem === index ? 1 : 0,
-                        y: hoveredItem === index ? 0 : -10,
+                        y: hoveredItem === index ? 0 : -15,
+                        scale: hoveredItem === index ? 1 : 0.95,
                         display: hoveredItem === index ? 'block' : 'none'
                       }}
-                      transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
-                      className="absolute top-full left-1/2 -translate-x-1/2 mt-4 bg-black/98 backdrop-blur-xl rounded-xl shadow-2xl py-3 min-w-[280px] border border-white/10"
+                      transition={{ 
+                        duration: 0.4, 
+                        ease: [0.76, 0, 0.24, 1],
+                        opacity: { duration: 0.3 }
+                      }}
+                      className="absolute top-full left-1/2 -translate-x-1/2 mt-6 bg-black/100 backdrop-blur-xl rounded-2xl shadow-2xl py-4 min-w-[300px] border border-white/20"
+                      style={{
+                        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.8), 0 0 1px rgba(255, 255, 255, 0.1) inset'
+                      }}
                     >
+                      {/* Pequeña flecha decorativa arriba */}
+                      <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-black border-t border-l border-white/20 rotate-45" />
+                      
                       {item.subItems.map((subItem, subIndex) => (
                         <motion.li 
                           key={subIndex}
-                          whileHover={{ x: 4 }}
-                          transition={{ duration: 0.2 }}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ 
+                            opacity: hoveredItem === index ? 1 : 0,
+                            x: hoveredItem === index ? 0 : -10
+                          }}
+                          transition={{ 
+                            duration: 0.3,
+                            delay: subIndex * 0.05
+                          }}
+                          whileHover={{ x: 6, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
+                          className="rounded-lg mx-2"
                         >
                           <a
                             href={subItem.href}
-                            className="block px-6 py-3 text-white/60 hover:text-white transition-all duration-300 text-sm font-light tracking-wide"
+                            className="block px-6 py-3.5 text-white/80 hover:text-white transition-all duration-300 text-sm font-light tracking-wide"
                             style={{ fontFamily: 'Gotham, sans-serif' }}
                           >
                             {subItem.name}
