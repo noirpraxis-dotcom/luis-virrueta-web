@@ -3,6 +3,7 @@ import Header from './components/Header'
 import MobileMenu from './components/MobileMenu'
 import ToggleButton from './components/ToggleButton'
 import VideoBackground from './components/VideoBackground'
+import About from './components/About'
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -50,6 +51,9 @@ function App() {
       <main className="relative z-0 lg:pt-28">
         {/* Video/Image Background */}
         <VideoBackground />
+        
+        {/* About Section */}
+        <About />
         
         {/* Aquí irá más contenido */}
       </main>
