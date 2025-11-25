@@ -106,9 +106,11 @@ const EmotionBodyBeliefSection = ({ t }) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
         </svg>
       ),
-      color: 'from-rose-400 to-pink-500',
-      bgColor: 'bg-gradient-to-br from-rose-50 to-pink-50',
-      borderColor: 'border-rose-300/50',
+      color: 'from-amber-300 to-amber-400',
+      bgColor: 'bg-gradient-to-br from-stone-50 via-amber-50/30 to-stone-50',
+      borderColor: 'border-amber-200/40',
+      iconColor: 'text-amber-600',
+      accentColor: 'amber-500',
       description: t('healingSessions.emotionBodyBelief.emotionCode.description'),
       statistic: '80%',
       metaphor: t('healingSessions.emotionBodyBelief.emotionCode.benefit')
@@ -122,9 +124,11 @@ const EmotionBodyBeliefSection = ({ t }) => {
           <circle cx="12" cy="12" r="1.5" fill="currentColor" />
         </svg>
       ),
-      color: 'from-emerald-400 to-teal-500',
-      bgColor: 'bg-gradient-to-br from-emerald-50 to-teal-50',
-      borderColor: 'border-emerald-300/50',
+      color: 'from-[#8dc1ab] to-[#7ab09a]',
+      bgColor: 'bg-gradient-to-br from-stone-50 via-[#8dc1ab]/8 to-stone-50',
+      borderColor: 'border-[#8dc1ab]/30',
+      iconColor: 'text-[#8dc1ab]',
+      accentColor: '[#8dc1ab]',
       description: t('healingSessions.emotionBodyBelief.bodyCode.description'),
       metaphor: t('healingSessions.emotionBodyBelief.bodyCode.benefit')
     },
@@ -136,9 +140,11 @@ const EmotionBodyBeliefSection = ({ t }) => {
           <circle cx="12" cy="12" r="2" strokeWidth="1.2" />
         </svg>
       ),
-      color: 'from-amber-400 to-orange-500',
-      bgColor: 'bg-gradient-to-br from-amber-50 to-orange-50',
-      borderColor: 'border-amber-300/50',
+      color: 'from-stone-300 to-stone-400',
+      bgColor: 'bg-gradient-to-br from-stone-50 via-stone-100/30 to-stone-50',
+      borderColor: 'border-stone-300/40',
+      iconColor: 'text-stone-600',
+      accentColor: 'stone-500',
       description: t('healingSessions.emotionBodyBelief.beliefCode.description'),
       insight: '',
       metaphor: t('healingSessions.emotionBodyBelief.beliefCode.benefit')
@@ -172,8 +178,8 @@ const EmotionBodyBeliefSection = ({ t }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.4 }}
-          className="text-xl lg:text-2xl text-stone-600 max-w-4xl mx-auto leading-relaxed font-light"
-          style={{ fontFamily: 'Cormorant Garamond, serif' }}
+          className="text-lg lg:text-xl text-stone-700 max-w-4xl mx-auto leading-relaxed"
+          style={{ fontFamily: 'Gotham, sans-serif' }}
         >
           {t('healingSessions.emotionBodyBelief.intro')}
         </motion.p>
@@ -294,9 +300,9 @@ const EmotionBodyBeliefSection = ({ t }) => {
 
                 {/* Statistic (if exists) */}
                 {code.statistic && (
-                  <div className="bg-white/80 backdrop-blur-sm border-l-4 border-rose-400 rounded-r-xl p-7 mb-8 shadow-sm">
+                  <div className={`bg-white/80 backdrop-blur-sm border-l-4 border-${code.accentColor} rounded-r-xl p-7 mb-8 shadow-sm`}>
                     <p className="text-stone-800 font-medium text-xl flex items-center gap-3" style={{ fontFamily: 'Gotham, sans-serif' }}>
-                      <svg className="w-6 h-6 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className={`w-6 h-6 text-${code.accentColor}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                       </svg>
                       {code.statistic}
@@ -314,7 +320,7 @@ const EmotionBodyBeliefSection = ({ t }) => {
                 {/* Metaphor */}
                 <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 lg:p-10 border border-stone-200/50 shadow-sm">
                   <div className="flex items-start gap-6">
-                    <svg className="w-10 h-10 text-amber-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className={`w-10 h-10 text-${code.iconColor || 'amber-500'} flex-shrink-0`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 3l1.5 4.5h4.5l-3.6 2.7 1.4 4.3-3.8-2.8-3.8 2.8 1.4-4.3-3.6-2.7h4.5z" />
                       <circle cx="12" cy="12" r="2" strokeWidth="1" />
                     </svg>
@@ -1043,8 +1049,8 @@ const SessionNavigator = ({ t }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.4 }}
-          className="text-stone-600 text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-light"
-          style={{ fontFamily: 'Cormorant Garamond, serif' }}
+          className="text-stone-700 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed"
+          style={{ fontFamily: 'Gotham, sans-serif' }}
         >
           {t('healingSessions.navigator.subtitle')}
         </motion.p>
