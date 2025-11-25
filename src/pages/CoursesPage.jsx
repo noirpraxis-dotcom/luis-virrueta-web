@@ -147,49 +147,26 @@ const CoursesPage = () => {
                     <p>{t('courses.emotionCode.bonus.description')}</p>
                   </div>
 
-                  {/* Direct Links - Simple and Elegant */}
-                  <div className="pt-8 space-y-4">
-                    <p className="text-center text-stone-600 font-medium mb-6">
-                      The links below will take you to the official page where you can purchase the certification course:
+                  {/* Single CTA Button */}
+                  <div className="pt-8 text-center">
+                    <p className="text-stone-600 font-medium mb-6" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                      Ready to begin your journey as a certified healer?
                     </p>
-                    <div className="space-y-3">
-                      <motion.a
-                        href="https://discoverhealing.com/product/the-emotion-code-certification-program/ref/p65hl/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ x: 5 }}
-                        className="flex items-center justify-between p-4 bg-gradient-to-r from-[#8dc1ab]/5 to-transparent rounded-xl hover:from-[#8dc1ab]/10 transition-all duration-300 border border-[#8dc1ab]/20 hover:border-[#8dc1ab]/40"
-                      >
-                        <span className="text-stone-800 font-medium" style={{ fontFamily: 'Gotham, sans-serif' }}>
-                          🇬🇧 I want to study in English
-                        </span>
-                        <ExternalLink className="w-5 h-5 text-[#8dc1ab]" />
-                      </motion.a>
-                      <motion.a
-                        href="https://discoverhealing.com/es/product/the-emotion-code-certification-program/ref/p65hl/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ x: 5 }}
-                        className="flex items-center justify-between p-4 bg-gradient-to-r from-[#8dc1ab]/5 to-transparent rounded-xl hover:from-[#8dc1ab]/10 transition-all duration-300 border border-[#8dc1ab]/20 hover:border-[#8dc1ab]/40"
-                      >
-                        <span className="text-stone-800 font-medium" style={{ fontFamily: 'Gotham, sans-serif' }}>
-                          🇪🇸 I want to study in Spanish
-                        </span>
-                        <ExternalLink className="w-5 h-5 text-[#8dc1ab]" />
-                      </motion.a>
-                      <motion.a
-                        href="https://myablefy.com/epl/SpJyVrJhMzhWVF_V5jxx"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ x: 5 }}
-                        className="flex items-center justify-between p-4 bg-gradient-to-r from-[#8dc1ab]/5 to-transparent rounded-xl hover:from-[#8dc1ab]/10 transition-all duration-300 border border-[#8dc1ab]/20 hover:border-[#8dc1ab]/40"
-                      >
-                        <span className="text-stone-800 font-medium" style={{ fontFamily: 'Gotham, sans-serif' }}>
-                          🇨🇿 I want to study in Czech
-                        </span>
-                        <ExternalLink className="w-5 h-5 text-[#8dc1ab]" />
-                      </motion.a>
-                    </div>
+                    <motion.a
+                      href="https://discoverhealing.com/product/the-emotion-code-certification-program/ref/p65hl/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-[#8dc1ab] to-[#7ab09a] text-white rounded-2xl font-medium tracking-wider shadow-xl hover:shadow-2xl transition-all duration-300"
+                      style={{ letterSpacing: '0.1em', fontFamily: 'Gotham, sans-serif' }}
+                    >
+                      <span>Enroll in the Certification Program</span>
+                      <ExternalLink className="w-5 h-5" />
+                    </motion.a>
+                    <p className="text-sm text-stone-500 mt-4" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                      Course is taught in English
+                    </p>
                   </div>
                 </div>
               </div>

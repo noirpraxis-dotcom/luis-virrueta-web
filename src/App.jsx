@@ -19,6 +19,7 @@ import TermsConditionsPage from './pages/TermsConditionsPage'
 import CookiePolicyPage from './pages/CookiePolicyPage'
 import CookieBanner from './components/CookieBanner'
 import Footer from './components/Footer'
+import WhatsAppButton from './components/WhatsAppButton'
 
 const AppContent = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -176,6 +177,9 @@ const AppContent = () => {
 
         {/* Cookie Banner - aparece solo si no ha dado consentimiento */}
         <CookieBanner />
+
+        {/* WhatsApp Button - flotante en todas las páginas */}
+        <WhatsAppButton />
       </div>
     </Router>
   )
