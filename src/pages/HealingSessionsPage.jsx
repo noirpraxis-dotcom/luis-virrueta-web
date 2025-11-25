@@ -741,12 +741,12 @@ const SessionNavigator = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
-      bgColor: 'bg-[#faf8f5]',
-      borderColor: 'border-[#d4c5b0]',
-      hoverBorder: 'hover:border-[#b8a88d]',
-      accentColor: '#b8a88d',
-      buttonBg: 'bg-[#b8a88d]',
-      buttonHover: 'hover:bg-[#a39478]'
+      bgColor: 'bg-stone-50',
+      borderColor: 'border-stone-200',
+      hoverBorder: 'hover:border-[#8dc1ab]',
+      accentColor: '#8dc1ab',
+      buttonBg: 'bg-[#8dc1ab]',
+      buttonHover: 'hover:bg-[#7ab09a]'
     },
     {
       id: 'ilyari-somatic',
@@ -762,12 +762,12 @@ const SessionNavigator = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
         </svg>
       ),
-      bgColor: 'bg-amber-50',
-      borderColor: 'border-amber-200',
-      hoverBorder: 'hover:border-amber-500',
-      accentColor: '#d97706',
-      buttonBg: 'bg-amber-600',
-      buttonHover: 'hover:bg-amber-700'
+      bgColor: 'bg-stone-50',
+      borderColor: 'border-stone-200',
+      hoverBorder: 'hover:border-[#8dc1ab]',
+      accentColor: '#8dc1ab',
+      buttonBg: 'bg-[#8dc1ab]',
+      buttonHover: 'hover:bg-[#7ab09a]'
     },
     {
       id: 'healing-animals',
@@ -783,12 +783,12 @@ const SessionNavigator = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
-      bgColor: 'bg-[#f8f6f3]',
-      borderColor: 'border-[#d9cfc3]',
-      hoverBorder: 'hover:border-[#c4b5a4]',
-      accentColor: '#c4b5a4',
-      buttonBg: 'bg-[#c4b5a4]',
-      buttonHover: 'hover:bg-[#afa08f]'
+      bgColor: 'bg-stone-50',
+      borderColor: 'border-stone-200',
+      hoverBorder: 'hover:border-[#8dc1ab]',
+      accentColor: '#8dc1ab',
+      buttonBg: 'bg-[#8dc1ab]',
+      buttonHover: 'hover:bg-[#7ab09a]'
     }
   ]
 
