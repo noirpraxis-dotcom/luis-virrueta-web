@@ -22,7 +22,7 @@ const PersonalCreationPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Header - Same style as STORE */}
+      {/* Hero Header - Elegant Introduction */}
       <section className="relative py-32 lg:py-40 px-6 lg:px-20 bg-white">
         <div className="max-w-6xl mx-auto text-center">
           <motion.div
@@ -45,12 +45,51 @@ const PersonalCreationPage = () => {
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ duration: 1.5, delay: 0.3 }}
-              className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-80 mb-8"
+              className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-80 mb-12"
             />
             
-            <p className="text-stone-600 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed">
-              Explore my books, writings, and creative projects that share wisdom and inspiration for your spiritual journey.
-            </p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.5 }}
+              className="text-stone-600 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed mb-8"
+            >
+              This is where I share my writing and music.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.7 }}
+              className="max-w-4xl mx-auto space-y-6 mb-12"
+            >
+              <p className="text-lg lg:text-xl text-stone-700 leading-relaxed">
+                When I create, I become a sequence of connections, a current capable of sending me something my other selves already know. In that flow, focus is so complete that I forget myself within it, until it releases me and I notice it — but it's already gone.
+              </p>
+
+              <p className="text-lg lg:text-xl text-stone-700 leading-relaxed">
+                It's the moment when the observing part of my self glimpses the traces of that other part, the one who created without the need to observe.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.9 }}
+              className="relative max-w-3xl mx-auto"
+            >
+              <div className="border-l-2 border-amber-600/30 pl-6 py-4">
+                <p className="text-lg lg:text-xl text-stone-600 leading-relaxed italic mb-3">
+                  "Therein lies the strange tension: Consciousness in flow is blind, because it sees through everything. Whereas consciousness at a distance is watchful, but only of the memory of that flow."
+                </p>
+                <p 
+                  className="text-sm text-amber-700 font-light tracking-wider"
+                  style={{ fontFamily: 'Gotham, sans-serif' }}
+                >
+                  — AUREN
+                </p>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -114,28 +153,43 @@ const BooksSection = () => {
     <div className="max-w-7xl mx-auto">
       {/* Title Section */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="text-center mb-16"
+        transition={{ duration: 1, delay: 0.2, ease: [0.76, 0, 0.24, 1] }}
+        className="text-center mb-20 lg:mb-24"
       >
+        {/* Decorative element above title */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1.2, delay: 0.3 }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-600/30 to-transparent mx-auto w-32 mb-8"
+        />
+
         <h2 
-          className="text-4xl lg:text-5xl font-light text-stone-800 mb-6 tracking-wide"
-          style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}
+          className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-[0.15em]"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          My Books
+          My <span className="italic text-amber-700">Books</span>
         </h2>
+        
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-8 text-stone-600 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed"
-          style={{ fontFamily: 'Cormorant Garamond, serif' }}
+          transition={{ duration: 1, delay: 0.5 }}
+          className="text-stone-700 text-xl lg:text-2xl max-w-4xl mx-auto leading-relaxed"
         >
           Words that illuminate the path to healing and self-discovery.
+          <br className="hidden lg:block" />
           Each book is a gift, freely shared with those who seek wisdom.
         </motion.p>
-        <GradientLine className="mt-12" />
+
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1.5, delay: 0.7 }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-96 mt-12"
+        />
       </motion.div>
 
       {/* Books Grid */}
@@ -180,11 +234,11 @@ const BooksSection = () => {
                     {book.title}
                   </h3>
                   
-                  <p className="text-amber-600 text-sm font-medium italic mb-4">
+                  <p className="text-amber-600 text-base font-medium italic mb-4">
                     {book.subtitle}
                   </p>
 
-                  <p className="text-stone-600 leading-relaxed mb-6">
+                  <p className="text-stone-700 text-base leading-relaxed mb-6">
                     {book.description}
                   </p>
 
@@ -319,8 +373,7 @@ const MusicSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
-          className="text-stone-600 text-xl lg:text-2xl max-w-4xl mx-auto leading-relaxed font-light"
-          style={{ fontFamily: 'Cormorant Garamond, serif' }}
+          className="text-stone-700 text-xl lg:text-2xl max-w-4xl mx-auto leading-relaxed"
         >
           Sacred sounds and vocal transmissions crafted to touch the soul,
           <br className="hidden lg:block" />
@@ -387,10 +440,7 @@ const MusicSection = () => {
                   {video.title}
                 </h3>
                 
-                <p 
-                  className="text-stone-600 leading-relaxed text-base lg:text-lg font-light"
-                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                >
+                <p className="text-stone-700 leading-relaxed text-base lg:text-lg">
                   {video.description}
                 </p>
 
