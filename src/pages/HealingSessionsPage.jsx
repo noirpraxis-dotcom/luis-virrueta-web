@@ -1,6 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { Sparkles } from 'lucide-react'
 import { GradientLine, BackdropBlurCard } from '../elementos/ElementosReutilizables'
 
 const HealingSessionsPage = () => {
