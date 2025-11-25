@@ -231,7 +231,7 @@ const PricesPage = () => {
                       <div className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity duration-500" />
                     </motion.button>
                   </div>
-                </BackdropBlurCard>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -326,7 +326,7 @@ const PricesPage = () => {
                       <div className="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition-opacity duration-500" />
                     </motion.button>
                   </div>
-                </BackdropBlurCard>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -398,7 +398,7 @@ const PricesPage = () => {
                   <div className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity duration-500" />
                 </motion.button>
               </div>
-            </BackdropBlurCard>
+            </div>
           </motion.div>
         </div>
       </section>
