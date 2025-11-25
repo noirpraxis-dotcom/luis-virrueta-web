@@ -2,8 +2,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { CinematicTitle, GradientLine, BackdropBlurCard } from '../elementos/ElementosReutilizables'
+import { useLanguage } from '../context/LanguageContext'
 
 const ProductDetailPage = () => {
+  const { t } = useLanguage()
   const { productId } = useParams()
   const navigate = useNavigate()
   const [selectedDate, setSelectedDate] = useState('')
@@ -298,7 +300,7 @@ const ProductDetailPage = () => {
           className="flex items-center gap-2 text-stone-600 hover:text-emerald-600 transition-colors duration-300"
         >
           <span className="text-xl">←</span>
-          <span className="tracking-wide">Back to Store</span>
+          <span className="tracking-wide">{t('productDetail.backToStore')}</span>
         </button>
       </motion.div>
 
@@ -358,7 +360,7 @@ const ProductDetailPage = () => {
 
               <div>
                 <h3 className="text-xl font-medium text-stone-800 mb-3">
-                  About This Session
+                  {t('productDetail.aboutSession')}
                 </h3>
                 <p className="text-stone-600 leading-relaxed">
                   {product.fullDescription}
@@ -368,7 +370,7 @@ const ProductDetailPage = () => {
               {/* Benefits */}
               <div>
                 <h3 className="text-xl font-medium text-stone-800 mb-4">
-                  Benefits
+                  {t('productDetail.benefits')}
                 </h3>
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {product.benefits.map((benefit, index) => (
@@ -401,7 +403,7 @@ const ProductDetailPage = () => {
                   className="text-3xl font-light text-stone-800 mb-8"
                   style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 >
-                  What to Expect
+                  {t('productDetail.whatToExpect')}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                   {product.whatToExpect.map((step, index) => (
@@ -429,7 +431,7 @@ const ProductDetailPage = () => {
                 className="text-3xl font-light text-stone-800 mb-6 text-center"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                This Session is Ideal For
+                {t('productDetail.idealFor')}
               </h2>
               <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
                 {product.ideal.map((item, index) => (
@@ -453,7 +455,7 @@ const ProductDetailPage = () => {
               className="text-3xl font-light text-stone-800 mb-8 text-center"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
-              Frequently Asked Questions
+              {t('productDetail.faq')}
             </h2>
             <div className="max-w-3xl mx-auto space-y-6">
               {product.faq.map((item, index) => (
@@ -483,7 +485,7 @@ const ProductDetailPage = () => {
                   className="text-3xl font-light text-stone-800 mb-8 text-center"
                   style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 >
-                  Book Your Session
+                  {t('productDetail.bookSession')}
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -491,7 +493,7 @@ const ProductDetailPage = () => {
                     {/* Name */}
                     <div>
                       <label className="block text-stone-700 mb-2 font-medium">
-                        Full Name *
+                        {t('productDetail.fullName')} {t('productDetail.required')}
                       </label>
                       <input
                         type="text"
@@ -506,7 +508,7 @@ const ProductDetailPage = () => {
                     {/* Email */}
                     <div>
                       <label className="block text-stone-700 mb-2 font-medium">
-                        Email *
+                        {t('productDetail.email')} {t('productDetail.required')}
                       </label>
                       <input
                         type="email"
@@ -521,7 +523,7 @@ const ProductDetailPage = () => {
                     {/* Phone */}
                     <div>
                       <label className="block text-stone-700 mb-2 font-medium">
-                        Phone Number *
+                        {t('productDetail.phone')} {t('productDetail.required')}
                       </label>
                       <input
                         type="tel"
@@ -536,7 +538,7 @@ const ProductDetailPage = () => {
                     {/* Preferred Date */}
                     <div>
                       <label className="block text-stone-700 mb-2 font-medium">
-                        Preferred Date *
+                        {t('productDetail.preferredDate')} {t('productDetail.required')}
                       </label>
                       <input
                         type="date"
@@ -551,7 +553,7 @@ const ProductDetailPage = () => {
                   {/* Time */}
                   <div>
                     <label className="block text-stone-700 mb-2 font-medium">
-                      Preferred Time *
+                      {t('productDetail.preferredTime')} {t('productDetail.required')}
                     </label>
                     <select
                       required
@@ -559,7 +561,7 @@ const ProductDetailPage = () => {
                       onChange={(e) => setSelectedTime(e.target.value)}
                       className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:border-emerald-500 focus:outline-none transition-colors"
                     >
-                      <option value="">Select a time</option>
+                      <option value="">{t('productDetail.selectTime')}</option>
                       <option value="9:00 AM">9:00 AM</option>
                       <option value="10:30 AM">10:30 AM</option>
                       <option value="12:00 PM">12:00 PM</option>
@@ -572,27 +574,27 @@ const ProductDetailPage = () => {
                   {/* Notes */}
                   <div>
                     <label className="block text-stone-700 mb-2 font-medium">
-                      Additional Notes (Optional)
+                      {t('productDetail.additionalNotes')}
                     </label>
                     <textarea
                       value={formData.notes}
                       onChange={(e) => setFormData({...formData, notes: e.target.value})}
                       rows="4"
                       className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:border-emerald-500 focus:outline-none transition-colors resize-none"
-                      placeholder="Any specific concerns or questions you'd like to address during the session..."
+                      placeholder={t('productDetail.notesPlaceholder')}
                     />
                   </div>
 
                   {/* Total */}
                   <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-6">
                     <div className="flex justify-between items-center">
-                      <span className="text-lg text-stone-700">Total:</span>
+                      <span className="text-lg text-stone-700">{t('productDetail.total')}:</span>
                       <span className="text-3xl font-light text-emerald-600">
                         ${product.price}
                       </span>
                     </div>
                     <p className="text-sm text-stone-600 mt-2">
-                      Payment will be processed securely
+                      {t('productDetail.paymentSecure')}
                     </p>
                   </div>
 
@@ -603,12 +605,11 @@ const ProductDetailPage = () => {
                     whileTap={{ scale: 0.98 }}
                     className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-4 rounded-lg font-medium tracking-wide transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/25"
                   >
-                    Complete Booking & Pay
+                    {t('productDetail.completeBooking')}
                   </motion.button>
 
                   <p className="text-xs text-stone-500 text-center">
-                    By booking, you agree to our terms and conditions. 
-                    You'll receive a confirmation email with session details.
+                    {t('productDetail.termsText')}
                   </p>
                 </form>
               </div>

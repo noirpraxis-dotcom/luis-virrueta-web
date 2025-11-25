@@ -2,8 +2,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { CinematicTitle, GradientLine, BackdropBlurCard } from '../elementos/ElementosReutilizables'
+import { useLanguage } from '../context/LanguageContext'
 
 const BookDetailPage = () => {
+  const { t } = useLanguage()
   const { bookId } = useParams()
   const navigate = useNavigate()
   const [selectedAmount, setSelectedAmount] = useState(null)
@@ -32,19 +34,19 @@ const BookDetailPage = () => {
     { 
       value: 5, 
       label: '$5',
-      description: 'Buy me a coffee',
+      description: t('bookDetail.coffee'),
       popular: false
     },
     { 
       value: 15, 
       label: '$15',
-      description: 'Support my work',
+      description: t('bookDetail.supportWork'),
       popular: true // Este es el más popular
     },
     { 
       value: 30, 
       label: '$30',
-      description: 'Generous supporter',
+      description: t('bookDetail.generousSupporter'),
       popular: false
     }
   ]
@@ -83,7 +85,7 @@ const BookDetailPage = () => {
           className="flex items-center gap-2 text-stone-600 hover:text-emerald-600 transition-colors duration-300"
         >
           <span className="text-xl">←</span>
-          <span className="tracking-wide">Back to Books</span>
+          <span className="tracking-wide">{t('bookDetail.backToBooks')}</span>
         </button>
       </motion.div>
 
@@ -104,7 +106,7 @@ const BookDetailPage = () => {
                   <div className="h-full flex items-center justify-center">
                     <div className="text-center p-12">
                       <div className="text-9xl mb-6">📖</div>
-                      <p className="text-stone-400">Cover coming soon</p>
+                      <p className="text-stone-400">{t('bookDetail.coverComingSoon')}</p>
                     </div>
                   </div>
                 </div>
@@ -206,12 +208,11 @@ const BookDetailPage = () => {
                   className="text-3xl lg:text-4xl font-light text-stone-800 text-center mb-4"
                   style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 >
-                  Choose Your Contribution
+                  {t('bookDetail.chooseContribution')}
                 </h2>
                 
                 <p className="text-stone-600 text-center mb-8 max-w-2xl mx-auto">
-                  This book is offered as a gift to those seeking wisdom. 
-                  If it resonates with your journey, consider supporting its creation.
+                  {t('bookDetail.contributionText')}
                 </p>
 
                 {/* Suggested Amounts */}
@@ -233,7 +234,7 @@ const BookDetailPage = () => {
                     >
                       {amount.popular && (
                         <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-medium">
-                          Most Popular
+                          {t('bookDetail.mostPopular')}
                         </div>
                       )}
                       
@@ -284,8 +285,8 @@ const BookDetailPage = () => {
                     }`}
                   >
                     {selectedAmount || customAmount 
-                      ? `Support with $${selectedAmount || customAmount} & Download 🌱`
-                      : 'Select an amount to continue'
+                      ? `${t('bookDetail.supportAndDownload').replace('{amount}', selectedAmount || customAmount)} 🌱`
+                      : t('bookDetail.selectAmount')
                     }
                   </motion.button>
 
@@ -295,13 +296,13 @@ const BookDetailPage = () => {
                     whileHover={{ scale: 1.01 }}
                     className="w-full py-3 text-stone-500 hover:text-stone-700 text-sm transition-colors duration-300"
                   >
-                    Continue without contribution
+                    {t('bookDetail.continueWithout')}
                   </motion.button>
                 </div>
 
                 {/* Small Persuasive Text */}
                 <p className="text-xs text-stone-400 text-center mt-6">
-                  Your support helps create more resources for healing and growth
+                  {t('bookDetail.supportHelps')}
                 </p>
               </div>
             </BackdropBlurCard>
@@ -328,11 +329,10 @@ const BookDetailPage = () => {
                 <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
               </svg>
               <h3 className="text-2xl font-light mb-4" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-                Thank You!
+                {t('bookDetail.thankYou')}
               </h3>
               <p className="text-stone-600">
-                Your generosity helps spread wisdom and healing to more souls.
-                Your book is being prepared for download...
+                {t('bookDetail.thankYouMessage')}
               </p>
             </motion.div>
           </motion.div>

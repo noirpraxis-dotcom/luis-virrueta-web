@@ -40,7 +40,9 @@
     "language": "Language",
     "ctaButton": "Get Your Free Copy + Support",
     "comingSoon": "More books coming soon...",
-    "featured": "Featured"
+    "featured": "Featured",
+    "coverComingSoon": "Cover coming soon",
+    "readMoreSupport": "Read More & Support"
   },
   "bookDetail": {
     "backToBooks": "Back to Books",
@@ -49,9 +51,13 @@
     "chooseContribution": "Choose Your Contribution",
     "contributionText": "This book is offered as a gift to those seeking wisdom. If it resonates with your journey, consider supporting its creation.",
     "coffee": "Buy me a coffee",
-    "support": "Support my work",
-    "generous": "Generous supporter",
+    "supportWork": "Support my work",
+    "generousSupporter": "Generous supporter",
     "mostPopular": "Most Popular",
+    "supportAndDownload": "Support with",
+    "download": "& Download 🌱",
+    "supportHelps": "Your support helps create more resources for healing and growth",
+    "coverComingSoon": "Cover coming soon",
     "customAmount": "Or enter a custom amount",
     "supportButton": "Support with",
     "downloadButton": "& Download",
