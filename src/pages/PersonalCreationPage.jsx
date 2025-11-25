@@ -245,23 +245,26 @@ const MusicSection = () => {
   const isInView = useInView(containerRef, { once: true, amount: 0.2 })
 
   // Featured videos from your YouTube channel
-  // Para agregar más videos, simplemente añade el ID del video de YouTube
-  // El ID es la parte después de "v=" en la URL o el final de youtu.be/
   const videos = [
     {
-      id: 'VIDEO_ID_1', // Reemplazar con IDs reales
-      title: 'Song Title 1',
-      description: 'Beautiful melody that touches the soul...'
+      id: 'mc2cOVnPBIY',
+      title: 'Featured Song',
+      description: 'A heartfelt musical expression carrying healing vibrations and light.'
     },
     {
-      id: 'VIDEO_ID_2',
-      title: 'Song Title 2',
-      description: 'A journey through sound and emotion...'
+      id: '9d1ALXBay_w',
+      title: 'Musical Journey',
+      description: 'Melodies that touch the soul and open pathways to inner peace.'
     },
     {
-      id: 'VIDEO_ID_3',
-      title: 'Song Title 3',
-      description: 'Healing frequencies and harmonies...'
+      id: 'U-yQzUeB-4s',
+      title: 'Healing Harmonies',
+      description: 'Sound frequencies designed to bring balance and tranquility.'
+    },
+    {
+      id: 'lLJji7_W1ZU',
+      title: 'Vocal Expression',
+      description: 'Pure voice carrying messages of love and transformation.'
     },
   ]
 
