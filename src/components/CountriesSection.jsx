@@ -30,7 +30,7 @@ const CountriesSection = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentCountryIndex((prevIndex) => (prevIndex + 1) % countries.length)
-    }, 2000) // Cambia cada 2 segundos
+    }, 1200) // Cambia cada 1.2 segundos (más rápido)
 
     return () => clearInterval(interval)
   }, [countries.length])
