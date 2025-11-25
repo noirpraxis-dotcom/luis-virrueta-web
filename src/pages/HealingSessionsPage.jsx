@@ -60,39 +60,39 @@ const HealingSessionsPage = () => {
 
       {/* Quick Session Navigator - NEW */}
       <section className="py-16 lg:py-20 px-6 lg:px-20 bg-gradient-to-b from-white to-stone-50">
-        <SessionNavigator />
+        <SessionNavigator t={t} />
       </section>
 
       {/* Emotion, Body & Belief Code Section */}
       <section id="emotion-body-belief" className="py-20 lg:py-32 px-6 lg:px-20 bg-gradient-to-b from-stone-50 to-white">
-        <EmotionBodyBeliefSection />
+        <EmotionBodyBeliefSection t={t} />
       </section>
 
       {/* Past Life Regressions Section */}
       <section id="past-life-regressions" className="py-20 lg:py-32 px-6 lg:px-20 bg-white">
-        <PastLifeSection />
+        <PastLifeSection t={t} />
       </section>
 
       {/* Ilyari Somatic Section */}
       <section id="ilyari-somatic" className="py-20 lg:py-32 px-6 lg:px-20 bg-gradient-to-b from-stone-50 to-white">
-        <IlyariSection />
+        <IlyariSection t={t} />
       </section>
 
       {/* Healing for Animals Section */}
       <section id="healing-animals" className="py-20 lg:py-32 px-6 lg:px-20 bg-white">
-        <AnimalsSection />
+        <AnimalsSection t={t} />
       </section>
 
       {/* Session Prices CTA */}
       <section id="session-prices" className="py-20 lg:py-32 px-6 lg:px-20 bg-gradient-to-b from-stone-50 to-white">
-        <SessionPricesCTA />
+        <SessionPricesCTA t={t} />
       </section>
     </div>
   )
 }
 
 // Emotion, Body & Belief Code Section - RESTORED ORIGINAL LAYOUT
-const EmotionBodyBeliefSection = () => {
+const EmotionBodyBeliefSection = ({ t }) => {
   const introRef = useRef(null)
   const codesRef = useRef(null)
   const isIntroInView = useInView(introRef, { once: true, amount: 0.3 })
@@ -100,7 +100,7 @@ const EmotionBodyBeliefSection = () => {
 
   const codes = [
     {
-      title: 'EMOTION CODE',
+      title: t('healingSessions.emotionBodyBelief.emotionCode.title'),
       icon: (
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -109,12 +109,12 @@ const EmotionBodyBeliefSection = () => {
       color: 'from-rose-400 to-pink-600',
       bgColor: 'bg-rose-50',
       borderColor: 'border-rose-200',
-      description: 'The EMOTION CODE performs a deep cleansing of the repressed emotions you unconsciously carry with you. This emotional baggage comes from old or recent wounds and traumas, it can be inherited or absorbed from others, and it continuously affects your mental state and physical health.',
-      statistic: '80% of energetic imbalances in human beings are caused by unprocessed emotions.',
-      metaphor: "Receiving an Emotion Code session is like finally releasing a heavy backpack you've been carrying for a long time, allowing your whole being to straighten, breathe, and heal."
+      description: t('healingSessions.emotionBodyBelief.emotionCode.description'),
+      statistic: '80%',
+      metaphor: t('healingSessions.emotionBodyBelief.emotionCode.benefit')
     },
     {
-      title: 'BODY CODE',
+      title: t('healingSessions.emotionBodyBelief.bodyCode.title'),
       icon: (
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -123,11 +123,11 @@ const EmotionBodyBeliefSection = () => {
       color: 'from-emerald-400 to-teal-600',
       bgColor: 'bg-emerald-50',
       borderColor: 'border-emerald-200',
-      description: 'The BODY CODE corrects a multitude of energetic imbalances in your body and mind, promoting overall harmonization of your organism at all levels. A balanced, energetically clean body is capable of performing powerful healing processes and regeneration.',
-      metaphor: 'A Body Code session is like thoroughly cleaning and organizing a room, allowing fresh air to circulate again!'
+      description: t('healingSessions.emotionBodyBelief.bodyCode.description'),
+      metaphor: t('healingSessions.emotionBodyBelief.bodyCode.benefit')
     },
     {
-      title: 'BELIEF CODE',
+      title: t('healingSessions.emotionBodyBelief.beliefCode.title'),
       icon: (
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -136,9 +136,9 @@ const EmotionBodyBeliefSection = () => {
       color: 'from-amber-400 to-orange-600',
       bgColor: 'bg-amber-50',
       borderColor: 'border-amber-200',
-      description: 'The BELIEF CODE reprograms negative subconscious beliefs that limit your thoughts, feelings, and actions. When these mental programs are neutralized together with the trauma that created them, subconscious blocks dissolve and a new path opens in your life.',
-      insight: 'Once you align your subconscious truth (the inner programming) with your conscious will (what you truly want in life), you can finally guide your life in the right direction.',
-      metaphor: 'A Belief Code session is like weeding the garden of your mind and allowing healthy thought patterns to take root, which then reflect naturally in your daily feelings and actions.'
+      description: t('healingSessions.emotionBodyBelief.beliefCode.description'),
+      insight: '',
+      metaphor: t('healingSessions.emotionBodyBelief.beliefCode.benefit')
     }
   ]
 
@@ -162,7 +162,7 @@ const EmotionBodyBeliefSection = () => {
           className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Emotion, Body & <span className="italic text-amber-700">Belief Code</span>
+          {t('healingSessions.emotionBodyBelief.title')}
         </h2>
 
         <motion.p
@@ -172,7 +172,7 @@ const EmotionBodyBeliefSection = () => {
           className="text-xl lg:text-2xl text-stone-600 max-w-4xl mx-auto leading-relaxed font-light"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Globally established energy healing methods developed since the 1990s by Dr. Bradley Nelson
+          {t('healingSessions.emotionBodyBelief.intro')}
         </motion.p>
 
         <motion.div
@@ -203,20 +203,20 @@ const EmotionBodyBeliefSection = () => {
               className="text-3xl lg:text-4xl font-light text-stone-800 mb-6"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
-              Deep Healing at the Energetic Level
+              {t('healingSessions.emotionBodyBelief.subtitle')}
             </h3>
 
             <p className="text-stone-700 leading-relaxed text-lg">
-              The Codes allow us to work with the deepest layers of your being — those that know they need help and, above all, <span className="font-medium text-emerald-600">what kind of help they require</span>.
+              {t('healingSessions.emotionBodyBelief.intro2')}
             </p>
 
             <p className="text-stone-700 leading-relaxed text-lg">
-              My role is to ask the right questions, receive the answers, and act according to the guidance that comes through, releasing from your field, body, and mind whatever is creating imbalance. In this way, we address and heal <span className="font-medium text-emerald-600">the root cause of your issue</span>.
+              {t('healingSessions.emotionBodyBelief.intro3')}
             </p>
 
             <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-6 lg:p-8">
               <p className="text-stone-800 text-lg leading-relaxed italic" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-                "When your energetic blueprint comes into alignment, your physical body naturally heals."
+                "{t('healingSessions.emotionBodyBelief.intro4')}"
               </p>
             </div>
           </motion.div>
@@ -358,7 +358,7 @@ const EmotionBodyBeliefSection = () => {
 }
 
 // Past Life Regressions Section
-const PastLifeSection = () => {
+const PastLifeSection = ({ t }) => {
   const titleRef = useRef(null)
   const contentRef = useRef(null)
   const cardsRef = useRef(null)
@@ -387,7 +387,7 @@ const PastLifeSection = () => {
           className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Past Life <span className="italic text-amber-700">Regressions</span>
+          {t('healingSessions.pastLife.title')}
         </h2>
 
         <motion.p
@@ -397,7 +397,7 @@ const PastLifeSection = () => {
           className="text-xl lg:text-2xl text-stone-600 max-w-4xl mx-auto leading-relaxed font-light"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Past life regressions allow you to regain memories of a previous existence that are still impacting your present life.
+          {t('healingSessions.pastLife.intro')}
         </motion.p>
 
         <motion.div
@@ -418,11 +418,11 @@ const PastLifeSection = () => {
       >
         <div className="space-y-8 text-center">
           <p className="text-lg lg:text-xl text-stone-700 leading-relaxed">
-            Many of us suffer from traumas that haven't been caused by anything in our present life and seek healing. During a regression, we bring these old wounds into awareness and work constructively with them until the trauma is processed and released.
+            {t('healingSessions.pastLife.paragraph1')}
           </p>
 
           <p className="text-lg lg:text-xl text-stone-700 leading-relaxed">
-            Additionally, many people undergo past life regressions simply to remember who they once were and how it can aid them in their current life. This is how past-life regressions serve as a wonderful accelerator for your spiritual growth.
+            {t('healingSessions.pastLife.paragraph2')}
           </p>
         </div>
       </motion.div>
@@ -523,7 +523,7 @@ const PastLifeSection = () => {
 }
 
 // Ilyari Somatic Section
-const IlyariSection = () => {
+const IlyariSection = ({ t }) => {
   const titleRef = useRef(null)
   const contentRef = useRef(null)
   const lineagesRef = useRef(null)
@@ -541,8 +541,8 @@ const IlyariSection = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
         </svg>
       ),
-      title: 'Lyran-Vegan Flame Spiral Codex',
-      description: 'a sacred geometry that restores your body to a living resonance and coherence field.',
+      title: t('healingSessions.ilyari.lineage1.title'),
+      description: t('healingSessions.ilyari.lineage1.description'),
       bgColor: 'bg-rose-50',
       iconColor: 'text-rose-600',
       borderColor: 'border-rose-200',
@@ -554,8 +554,8 @@ const IlyariSection = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
         </svg>
       ),
-      title: 'Sirian B Liquid Light Currents',
-      description: 'soft, fluid codes that recalibrate and soothe, singing your auric field back into harmonic balance.',
+      title: t('healingSessions.ilyari.lineage2.title'),
+      description: t('healingSessions.ilyari.lineage2.description'),
       bgColor: 'bg-cyan-50',
       iconColor: 'text-cyan-600',
       borderColor: 'border-cyan-200',
@@ -567,8 +567,8 @@ const IlyariSection = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
         </svg>
       ),
-      title: 'Arcturian Geometric Code Streaming',
-      description: 'intelligent light patterns that "write" or "etch" into the quantum field around you, encoding your true essence remembrance and renewal into your being.',
+      title: t('healingSessions.ilyari.lineage3.title'),
+      description: t('healingSessions.ilyari.lineage3.description'),
       bgColor: 'bg-indigo-50',
       iconColor: 'text-indigo-600',
       borderColor: 'border-indigo-200',
@@ -597,7 +597,7 @@ const IlyariSection = () => {
           className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Ilyari: <span className="italic text-amber-700">Embodied Light Transmission</span>
+          {t('healingSessions.ilyari.title')}
         </h2>
 
         <motion.p
@@ -607,7 +607,7 @@ const IlyariSection = () => {
           className="text-xl lg:text-2xl text-stone-600 max-w-4xl mx-auto leading-relaxed font-light"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Ilyari is a unique personal healing modality that flows through me as spontaneous body movement.
+          {t('healingSessions.ilyari.intro')}
         </motion.p>
 
         <motion.div
@@ -729,7 +729,7 @@ const IlyariSection = () => {
 }
 
 // Healing for Animals Section
-const AnimalsSection = () => {
+const AnimalsSection = ({ t }) => {
   const titleRef = useRef(null)
   const contentRef = useRef(null)
   const isTitleInView = useInView(titleRef, { once: true, amount: 0.3 })
@@ -756,7 +756,7 @@ const AnimalsSection = () => {
           className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Healing for <span className="italic text-amber-700">Animals</span>
+          {t('healingSessions.animals.title')}
         </h2>
 
         <motion.p
@@ -766,7 +766,7 @@ const AnimalsSection = () => {
           className="text-xl lg:text-2xl text-stone-600 max-w-4xl mx-auto leading-relaxed font-light"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Many of us see our animals as true family, so it's only natural we want them to be happy, vibrant, and physically well.
+          {t('healingSessions.animals.intro')}
         </motion.p>
 
         <motion.div
@@ -818,7 +818,7 @@ const AnimalsSection = () => {
 }
 
 // Session Prices Section
-const SessionPricesCTA = () => {
+const SessionPricesCTA = ({ t }) => {
   const ref = useRef(null)
   const navigate = useNavigate()
   const isInView = useInView(ref, { once: true, amount: 0.3 })
@@ -923,7 +923,7 @@ const SessionPricesCTA = () => {
 }
 
 // Session Navigator - Interactive Intelligent Guide (Home-style elegance)
-const SessionNavigator = () => {
+const SessionNavigator = ({ t }) => {
   const containerRef = useRef(null)
   const isInView = useInView(containerRef, { once: true, amount: 0.2 })
 
