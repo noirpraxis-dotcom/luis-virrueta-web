@@ -12,6 +12,7 @@ import BookDetailPage from './pages/BookDetailPage'
 import ProductDetailPage from './pages/ProductDetailPage'
 import HealingSessionsPage from './pages/HealingSessionsPage'
 import PersonalCreationPage from './pages/PersonalCreationPage'
+import PricesPage from './pages/PricesPage'
 
 const AppContent = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -21,20 +22,20 @@ const AppContent = () => {
     { name: t('menu.home'), href: '/' },
     { name: t('menu.about'), href: '/about' },
     { 
-      name: t('menu.healingSessions'), 
-      nameShort: t('menu.healingSessionsShort'),
+      name: 'Sessions',
+      nameShort: 'Sessions',
       href: '/healing-sessions',
       subItems: [
         { name: t('menu.emotionCode'), href: '/healing-sessions#emotion-body-belief' },
         { name: t('menu.pastLife'), href: '/healing-sessions#past-life-regressions' },
         { name: t('menu.ilyari'), href: '/healing-sessions#ilyari-somatic' },
-        { name: t('menu.animals'), href: '/healing-sessions#healing-animals' },
-        { name: t('menu.sessionPrices'), href: '/healing-sessions#session-prices' }
+        { name: t('menu.animals'), href: '/healing-sessions#healing-animals' }
       ]
     },
+    { name: 'Prices', href: '/prices' },
     { 
-      name: t('menu.personalCreation'),
-      nameShort: t('menu.personalCreationShort'),
+      name: 'Creation',
+      nameShort: 'Creation',
       href: '/personal-creation',
       subItems: [
         { name: t('menu.books'), href: '/personal-creation#books' }
@@ -114,6 +115,13 @@ const AppContent = () => {
             <Route path="/healing-sessions" element={
               <div className="lg:pt-28">
                 <HealingSessionsPage />
+              </div>
+            } />
+
+            {/* Página Prices: Precios de sesiones */}
+            <Route path="/prices" element={
+              <div className="lg:pt-28">
+                <PricesPage />
               </div>
             } />
 
