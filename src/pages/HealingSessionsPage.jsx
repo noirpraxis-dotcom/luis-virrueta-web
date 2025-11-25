@@ -103,12 +103,12 @@ const EmotionBodyBeliefSection = ({ t }) => {
       title: t('healingSessions.emotionBodyBelief.emotionCode.title'),
       icon: (
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
         </svg>
       ),
-      color: 'from-rose-400 to-pink-600',
-      bgColor: 'bg-rose-50',
-      borderColor: 'border-rose-200',
+      color: 'from-rose-400 to-pink-500',
+      bgColor: 'bg-gradient-to-br from-rose-50 to-pink-50',
+      borderColor: 'border-rose-300/50',
       description: t('healingSessions.emotionBodyBelief.emotionCode.description'),
       statistic: '80%',
       metaphor: t('healingSessions.emotionBodyBelief.emotionCode.benefit')
@@ -117,12 +117,14 @@ const EmotionBodyBeliefSection = ({ t }) => {
       title: t('healingSessions.emotionBodyBelief.bodyCode.title'),
       icon: (
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          <circle cx="12" cy="12" r="9" strokeWidth="1.2" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 6v6l4 2" />
+          <circle cx="12" cy="12" r="1.5" fill="currentColor" />
         </svg>
       ),
-      color: 'from-emerald-400 to-teal-600',
-      bgColor: 'bg-emerald-50',
-      borderColor: 'border-emerald-200',
+      color: 'from-emerald-400 to-teal-500',
+      bgColor: 'bg-gradient-to-br from-emerald-50 to-teal-50',
+      borderColor: 'border-emerald-300/50',
       description: t('healingSessions.emotionBodyBelief.bodyCode.description'),
       metaphor: t('healingSessions.emotionBodyBelief.bodyCode.benefit')
     },
@@ -130,12 +132,13 @@ const EmotionBodyBeliefSection = ({ t }) => {
       title: t('healingSessions.emotionBodyBelief.beliefCode.title'),
       icon: (
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 2l2.4 7.2h7.6l-6 4.8 2.3 7-6.3-4.8-6.3 4.8 2.3-7-6-4.8h7.6z" />
+          <circle cx="12" cy="12" r="2" strokeWidth="1.2" />
         </svg>
       ),
-      color: 'from-amber-400 to-orange-600',
-      bgColor: 'bg-amber-50',
-      borderColor: 'border-amber-200',
+      color: 'from-amber-400 to-orange-500',
+      bgColor: 'bg-gradient-to-br from-amber-50 to-orange-50',
+      borderColor: 'border-amber-300/50',
       description: t('healingSessions.emotionBodyBelief.beliefCode.description'),
       insight: '',
       metaphor: t('healingSessions.emotionBodyBelief.beliefCode.benefit')
@@ -265,34 +268,35 @@ const EmotionBodyBeliefSection = ({ t }) => {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8, delay: index * 0.2 }}
           >
-            <BackdropBlurCard className={`${code.bgColor} border-2 ${code.borderColor}`}>
-              <div className="p-8 lg:p-12">
+            <BackdropBlurCard className={`${code.bgColor} border ${code.borderColor} shadow-xl hover:shadow-2xl transition-shadow duration-500`}>
+              <div className="p-10 lg:p-16">
                 {/* Header with Icon */}
-                <div className="flex items-center gap-6 mb-8">
+                <div className="flex items-center gap-8 mb-10">
                   <motion.div
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    className={`p-4 bg-gradient-to-br ${code.color} text-white rounded-2xl shadow-lg`}
+                    whileHover={{ scale: 1.05, rotate: 3 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                    className={`p-5 bg-gradient-to-br ${code.color} text-white rounded-3xl shadow-lg backdrop-blur-sm`}
                   >
                     {code.icon}
                   </motion.div>
                   <h4
-                    className="text-3xl lg:text-4xl font-light text-stone-800"
-                    style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                    className="text-4xl lg:text-5xl font-light text-stone-800 tracking-wide"
+                    style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.02em' }}
                   >
                     {code.title}
                   </h4>
                 </div>
 
                 {/* Description */}
-                <p className="text-stone-700 text-lg leading-relaxed mb-6">
+                <p className="text-stone-700 text-xl leading-loose mb-8" style={{ fontFamily: 'Gotham, sans-serif', lineHeight: '1.8' }}>
                   {code.description}
                 </p>
 
                 {/* Statistic (if exists) */}
                 {code.statistic && (
-                  <div className="bg-white/70 border-l-4 border-rose-400 rounded-r-lg p-6 mb-6">
-                    <p className="text-stone-800 font-medium text-lg flex items-center gap-2">
-                      <svg className="w-5 h-5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="bg-white/80 backdrop-blur-sm border-l-4 border-rose-400 rounded-r-xl p-7 mb-8 shadow-sm">
+                    <p className="text-stone-800 font-medium text-xl flex items-center gap-3" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                      <svg className="w-6 h-6 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                       </svg>
                       {code.statistic}
@@ -302,18 +306,19 @@ const EmotionBodyBeliefSection = ({ t }) => {
 
                 {/* Insight (if exists) */}
                 {code.insight && (
-                  <p className="text-stone-700 text-lg leading-relaxed mb-6">
+                  <p className="text-stone-700 text-xl leading-loose mb-8" style={{ fontFamily: 'Gotham, sans-serif', lineHeight: '1.8' }}>
                     {code.insight}
                   </p>
                 )}
 
                 {/* Metaphor */}
-                <div className="bg-white/50 rounded-xl p-6 lg:p-8 border border-stone-200">
-                  <div className="flex items-start gap-4">
-                    <svg className="w-8 h-8 text-amber-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 lg:p-10 border border-stone-200/50 shadow-sm">
+                  <div className="flex items-start gap-6">
+                    <svg className="w-10 h-10 text-amber-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 3l1.5 4.5h4.5l-3.6 2.7 1.4 4.3-3.8-2.8-3.8 2.8 1.4-4.3-3.6-2.7h4.5z" />
+                      <circle cx="12" cy="12" r="2" strokeWidth="1" />
                     </svg>
-                    <p className="text-stone-700 text-lg leading-relaxed italic" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                    <p className="text-stone-700 text-xl leading-loose italic" style={{ fontFamily: 'Cormorant Garamond, serif', lineHeight: '1.9', fontSize: '1.25rem' }}>
                       {code.metaphor}
                     </p>
                   </div>
@@ -938,8 +943,11 @@ const SessionNavigator = ({ t }) => {
       ],
       action: t('healingSessions.navigator.emotionBodyBeliefAction'),
       icon: (
-        <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        <svg className="w-14 h-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <circle cx="12" cy="12" r="8" strokeWidth="0.8" opacity="0.3" />
+          <circle cx="12" cy="12" r="5" strokeWidth="0.8" opacity="0.5" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} d="M12 2v4M12 18v4M22 12h-4M6 12H2" />
+          <circle cx="12" cy="12" r="2" fill="currentColor" opacity="0.8" />
         </svg>
       ),
       bgColor: 'bg-stone-50',
@@ -959,8 +967,10 @@ const SessionNavigator = ({ t }) => {
       ],
       action: t('healingSessions.navigator.pastLifeAction'),
       icon: (
-        <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <svg className="w-14 h-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} d="M12 2C8 2 6 4 6 6v4c0 2-2 4-2 4v8c0 2 2 4 6 4h4c4 0 6-2 6-4v-8s-2-2-2-4V6c0-2-2-4-6-4z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} d="M8 10h8M12 10v6" opacity="0.5" />
+          <circle cx="12" cy="14" r="1.5" fill="currentColor" opacity="0.6" />
         </svg>
       ),
       bgColor: 'bg-stone-50',
@@ -980,8 +990,11 @@ const SessionNavigator = ({ t }) => {
       ],
       action: t('healingSessions.navigator.ilyariAction'),
       icon: (
-        <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        <svg className="w-14 h-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} d="M12 3c-1.5 3-1.5 5.5-1.5 7.5 0 2 1.5 3.5 1.5 3.5s1.5-1.5 1.5-3.5c0-2 0-4.5-1.5-7.5z" />
+          <circle cx="12" cy="12" r="8" strokeWidth="0.8" opacity="0.2" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} d="M8 8c-2 2-2 4-2 6s2 4 4 4M16 8c2 2 2 4 2 6s-2 4-4 4" opacity="0.4" />
+          <circle cx="12" cy="12" r="1.5" fill="currentColor" opacity="0.7" />
         </svg>
       ),
       bgColor: 'bg-stone-50',
@@ -1001,8 +1014,12 @@ const SessionNavigator = ({ t }) => {
       ],
       action: t('healingSessions.navigator.animalsAction'),
       icon: (
-        <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <svg className="w-14 h-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <ellipse cx="12" cy="15" rx="4" ry="5" strokeWidth="0.8" fill="currentColor" opacity="0.2" />
+          <circle cx="8" cy="9" r="2.5" strokeWidth="0.8" fill="currentColor" opacity="0.3" />
+          <circle cx="16" cy="9" r="2.5" strokeWidth="0.8" fill="currentColor" opacity="0.3" />
+          <circle cx="6" cy="13" r="2" strokeWidth="0.8" fill="currentColor" opacity="0.3" />
+          <circle cx="18" cy="13" r="2" strokeWidth="0.8" fill="currentColor" opacity="0.3" />
         </svg>
       ),
       bgColor: 'bg-stone-50',
@@ -1074,7 +1091,7 @@ const SessionNavigator = ({ t }) => {
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: 1 } : {}}
         transition={{ duration: 0.8, delay: 0.3 }}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10"
+        className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 xl:gap-5"
       >
         {sessions.map((session, index) => (
           <motion.div
@@ -1088,39 +1105,44 @@ const SessionNavigator = ({ t }) => {
             }}
             className="group"
           >
-            <div className={`relative ${session.bgColor} rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl border-2 ${session.borderColor} ${session.hoverBorder} transition-all duration-500 h-full`}>
-              {/* Subtle decorative element */}
-              <div className="absolute top-0 right-0 w-32 h-32 opacity-20">
+            <div className={`relative bg-white rounded-3xl overflow-hidden shadow-2xl hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.2)] border border-stone-200/50 hover:border-[#8dc1ab]/30 transition-all duration-700 h-full backdrop-blur-xl flex flex-col`}>
+              {/* Cinematic gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-stone-50/50 via-white to-stone-50/30 pointer-events-none" />
+              
+              {/* Elegant corner decoration */}
+              <div className="absolute top-0 right-0 w-32 h-32 opacity-[0.07]">
                 <svg viewBox="0 0 100 100" className="w-full h-full">
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="0.5" style={{ color: session.accentColor }} />
-                  <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" strokeWidth="0.5" style={{ color: session.accentColor }} />
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="0.3" style={{ color: session.accentColor }} />
+                  <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" strokeWidth="0.3" style={{ color: session.accentColor }} />
+                  <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" strokeWidth="0.3" style={{ color: session.accentColor }} />
                 </svg>
               </div>
               
-              <div className="relative p-8 lg:p-10">
-                {/* Icon - Elegant SVG in circular frame */}
+              <div className="relative p-8 xl:p-10 flex flex-col flex-1">
+                {/* Icon - Cinematic circular frame */}
                 <motion.div
-                  whileHover={{ scale: 1.05, rotate: 5 }}
-                  transition={{ duration: 0.3 }}
-                  className="w-20 h-20 rounded-full flex items-center justify-center mb-6 border-2 shadow-md"
+                  whileHover={{ scale: 1.08, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                  className="w-20 h-20 xl:w-24 xl:h-24 rounded-full flex items-center justify-center mb-6 border-[3px] shadow-2xl bg-gradient-to-br from-white to-stone-50 backdrop-blur-xl mx-auto"
                   style={{ 
                     borderColor: session.accentColor,
-                    color: session.accentColor 
+                    color: session.accentColor,
+                    boxShadow: `0 10px 40px -10px ${session.accentColor}40`
                   }}
                 >
                   {session.icon}
                 </motion.div>
 
-                {/* Title */}
+                {/* Title - Ultra legible */}
                 <h3 
-                  className="text-2xl lg:text-3xl font-light text-stone-800 mb-8 leading-tight tracking-wide"
-                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                  className="text-2xl xl:text-3xl font-light text-stone-800 mb-6 leading-tight tracking-wide text-center"
+                  style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.03em', lineHeight: '1.3' }}
                 >
                   {session.title}
                 </h3>
 
-                {/* Questions with elegant checkmarks */}
-                <div className="space-y-4 mb-10">
+                {/* Questions with cinematic checkmarks */}
+                <div className="space-y-4 mb-8 flex-1">
                   {session.questions.map((question, qIndex) => (
                     <motion.div
                       key={qIndex}
@@ -1130,54 +1152,62 @@ const SessionNavigator = ({ t }) => {
                         duration: 0.6, 
                         delay: 0.7 + index * 0.15 + qIndex * 0.1 
                       }}
-                      className="flex items-start gap-3 group-hover:translate-x-1 transition-transform duration-300"
+                      className="flex items-start gap-3 group-hover:translate-x-1 transition-transform duration-500"
                     >
                       <div 
-                        className="mt-1 w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 border"
+                        className="mt-1 w-5 h-5 xl:w-6 xl:h-6 rounded-full flex items-center justify-center flex-shrink-0 border-[2px] shadow-md"
                         style={{ 
                           borderColor: session.accentColor,
-                          backgroundColor: `${session.accentColor}15`
+                          backgroundColor: `${session.accentColor}15`,
+                          boxShadow: `0 4px 12px ${session.accentColor}20`
                         }}
                       >
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: session.accentColor }}>
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        <svg className="w-3 h-3 xl:w-3.5 xl:h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: session.accentColor }}>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
-                      <p className="text-stone-700 text-base lg:text-lg font-light leading-relaxed" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                      <p className="text-stone-700 text-base xl:text-lg font-light leading-relaxed" style={{ fontFamily: 'Gotham, sans-serif', lineHeight: '1.6', letterSpacing: '0.01em' }}>
                         {question}
                       </p>
                     </motion.div>
                   ))}
                 </div>
 
-                {/* Elegant divider */}
+                {/* Cinematic divider */}
                 <motion.div
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
-                  className="h-px mb-8"
+                  transition={{ duration: 1, delay: 0.4, ease: [0.76, 0, 0.24, 1] }}
+                  className="h-[2px] mb-6"
                   style={{ 
-                    background: `linear-gradient(to right, transparent, ${session.accentColor}40, transparent)` 
+                    background: `linear-gradient(to right, transparent, ${session.accentColor}30, ${session.accentColor}60, ${session.accentColor}30, transparent)` 
                   }}
                 />
 
-                {/* Then text and Action Button */}
-                <div className="text-center">
-                  <p className="text-stone-500 text-sm uppercase tracking-[0.2em] mb-6 font-light" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                {/* Then text and Action Button - Ultra Pro */}
+                <div className="text-center mt-auto">
+                  <p className="text-stone-500 text-xs uppercase tracking-[0.3em] mb-6 font-light" style={{ fontFamily: 'Gotham, sans-serif' }}>
                     Then
                   </p>
                   
                   <motion.button
                     onClick={() => handleNavigate(session.id)}
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    whileTap={{ scale: 0.97 }}
-                    className={`w-full ${session.buttonBg} ${session.buttonHover} text-white py-4 px-6 rounded-full font-light text-lg tracking-wide shadow-lg transition-all duration-500 flex items-center justify-center gap-3 group`}
-                    style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                    whileHover={{ scale: 1.04, y: -3 }}
+                    whileTap={{ scale: 0.96 }}
+                    className={`w-full ${session.buttonBg} ${session.buttonHover} text-white py-4 xl:py-5 px-6 rounded-full font-light text-lg xl:text-xl tracking-wide shadow-2xl transition-all duration-700 flex items-center justify-center gap-3 group relative overflow-hidden`}
+                    style={{ 
+                      fontFamily: 'Cormorant Garamond, serif', 
+                      letterSpacing: '0.08em',
+                      boxShadow: `0 20px 50px -15px ${session.accentColor}60`
+                    }}
                   >
-                    <span>{session.action}</span>
-                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    {/* Button glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    
+                    <span className="relative">{session.action}</span>
+                    <svg className="w-5 h-5 xl:w-6 xl:h-6 group-hover:translate-x-2 transition-transform duration-500 relative" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </motion.button>
                 </div>
