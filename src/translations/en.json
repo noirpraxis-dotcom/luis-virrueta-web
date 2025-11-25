@@ -26,9 +26,8 @@
   "about": {
     "title": "About Me",
     "subtitle": "Energy Healer & Spiritual Guide",
-    "intro": "Welcome to my space of healing and transformation. I am Zuzana, dedicated to guiding souls on their journey of self-discovery and healing.",
-    "description": "For over a decade, I have been working with energy healing modalities, helping people release emotional blocks, heal past traumas, and reconnect with their authentic selves. My approach combines ancient wisdom with modern techniques, creating a personalized healing experience for each individual.",
-    "mission": "My mission is to empower you to become the architect of your own healing journey. Through gentle guidance and powerful energy work, we'll unlock the doors to your inner wisdom and innate healing abilities.",
+    "description": "Zuzana Erdösová is a certified Past Life Regression therapist, energy healer trained in the Emotion Code, Body Code, and Belief Code methods, a Star Magic Healing facilitator Level 2, and a channeler of Ilyari (somatic transmission of light codes). As a former university researcher with two doctorates in Linguistics and Latin American Studies, her vocation and passion lie in exploring both the intuitive and scientific aspects of energy healing. Zuzana is also the author of numerous scientific articles, book chapters, and six solo-authored books, including \"Thinking Otherness: The Mexican Indigenous Community Through Five Sources of Knowledge\" and \"Evolved Proverbs: Updated Wisdom for The Life You Truly Want to Live.\" She is also a translator, singer, and lyricist, and a great enthusiast of horses. She enjoys speaking and working in several languages (English, Spanish, and her native Czech), and living in intercultural environments surrounded by beautiful nature.",
+    "certificationsTitle": "CERTIFICATIONS",
     "certifications": "Certified Practitioner",
     "experience": "10+ Years Experience",
     "clients": "500+ Clients Worldwide"
@@ -173,6 +172,94 @@
           "answer": "Body Code is a complementary healing modality and should not replace medical care. Always consult with your healthcare provider for medical concerns."
         }
       ]
+    }
+  },
+  "testimonials": {
+    "title": "Testimonials",
+    "testimonial1": {
+      "text": "I gave myself completely to the past life experience. Zuzana inspired me a lot of confidence, I felt at all times her professionalism and the love she gives. The experience is so real - I could see in great detail the stages of a previous life and feel the contact with my spiritual guide. At the end I was very ecstatic with the experience, I just wanted it to have an impact on me. To this day I still reflect on what I experienced. I am able to understand many aspects of my current life, my purpose, and I converse with my spirit guide on a daily basis. I only have words of gratitude.",
+      "author": "Rodrigo J.",
+      "location": "Santiago de Chile"
+    },
+    "testimonial2": {
+      "text": "With great attention, Zuzana investigated until she reached the very roots of my inner imbalance. It was surprising for me to feel the energy of the imbalances leaving my body! The ramifications were so complex that one could get lost, but Zuzana was asking all the right questions and seeing the underlying links with great insight. For certain issues, the result was immediate, while others took several weeks to manifest. It is incredible to witness all the changes that entered my life after the sessions. My past cleared and new paths were opened. I am grateful to Zuzana for her empathy, passion and professional approach that makes everything possible.",
+      "author": "Marie D.",
+      "location": "Vancouver, Canada"
+    },
+    "testimonial3": {
+      "text": "I am the owner of Sid, a 9 year old Jack Russell terrier. He is very active and playful despite his age, but suddenly, he lost interest in fetching the ball and going for walks. He would just lie around, indifferent to his surroundings. It was breaking my heart to see him like this, so I contacted Zuzana. It was amazing to watch her work with Sid and it was even more incredible to see the results several days later. Sid's condition gradually returned to normal: his energy was back. If Sid needs help in the future, I would love to have Zuzana working on him again. I even requested a session for myself!",
+      "author": "Daniela and Sid",
+      "location": "Olomouc, Czech Republic"
+    }
+  },
+  "personalCreation": {
+    "title": "PERSONAL CREATION",
+    "intro": "This is where I share my writing and music.",
+    "paragraph1": "When I create, I become a sequence of connections, a current capable of sending me something my other selves already know. In that flow, focus is so complete that I forget myself within it, until it releases me and I notice it — but it's already gone.",
+    "paragraph2": "It's the moment when the observing part of my self glimpses the traces of that other part, the one who created without the need to observe.",
+    "quote": "Therein lies the strange tension: Consciousness in flow is blind, because it sees through everything. Whereas consciousness at a distance is watchful, but only of the memory of that flow.",
+    "quoteAuthor": "AUREN"
+  },
+  "healingSessions": {
+    "emotionBodyBelief": {
+      "title": "EMOTION, BODY & BELIEF CODE",
+      "intro": "Emotion Code, Body Code and Belief Code are globally established energy healing methods developed since the 1990s by Dr. Bradley Nelson and his team in the USA.",
+      "intro2": "The Codes allow us to work with the deepest layers of your being — those that know they need help and, above all, what kind of help they require.",
+      "intro3": "My role is to ask the right questions, receive the answers, and act according to the guidance that comes through, releasing from your field, body, and mind whatever is creating imbalance. In this way, we address and heal the root cause of your issue.",
+      "intro4": "When your energetic blueprint comes into alignment, your physical body naturally heals.",
+      "subtitle": "What can the Codes do for you?",
+      "emotionCode": {
+        "title": "EMOTION CODE",
+        "description": "The EMOTION CODE performs a deep cleansing of the repressed emotions you unconsciously carry with you. This emotional baggage comes from old or recent wounds and traumas, it can be inherited or absorbed from others, and it continuously affects your mental state and physical health. It is estimated that around 80% of energetic imbalances in human beings are caused by unprocessed emotions.",
+        "benefit": "Receiving an Emotion Code session is like finally releasing a heavy backpack you've been carrying for a long time, allowing your whole being to straighten, breathe, and heal."
+      },
+      "bodyCode": {
+        "title": "BODY CODE",
+        "description": "The BODY CODE corrects a multitude of energetic imbalances in your body and mind, promoting overall harmonization of your organism at all levels. A balanced, energetically clean body is capable of performing powerful healing processes and regeneration.",
+        "benefit": "A Body Code session is like thoroughly cleaning and organizing a room, allowing fresh air to circulate again!"
+      },
+      "beliefCode": {
+        "title": "BELIEF CODE",
+        "description": "The BELIEF CODE reprograms negative subconscious beliefs that limit your thoughts, feelings, and actions. When these mental programs are neutralized together with the trauma that created them, subconscious blocks dissolve and a new path opens in your life. Once you align your subconscious truth (the inner programming) with your conscious will (what you truly want in life), you can finally guide your life in the right direction.",
+        "benefit": "A Belief Code session is like weeding the garden of your mind and allowing healthy thought patterns to take root, which then reflect naturally in your daily feelings and actions."
+      }
+    },
+    "pastLife": {
+      "title": "PAST LIFE REGRESSIONS",
+      "intro": "Past life regressions allow you to regain memories of a previous existence that are still impacting your present life.",
+      "paragraph1": "Many of us suffer from traumas that haven't been caused by anything in our present life and seek healing. During a regression, we bring these old wounds into awareness and work constructively with them until the trauma is processed and released.",
+      "paragraph2": "Additionally, many people undergo past life regressions simply to remember who they once were and how it can aid them in their current life. This is how past-life regressions serve as a wonderful accelerator for your spiritual growth.",
+      "onlineTitle": "If my office is far from where you live, an online session is a convenient alternative.",
+      "onlineDescription": "It reduces the time and cost of travel and gives you the opportunity to enjoy the experience in the comfort and privacy of your home.",
+      "onlineEffective": "An online regression is equally effective as one conducted in person. All you need is a quiet, dimly lit room, headphones with a good microphone, and a stable internet connection."
+    },
+    "ilyari": {
+      "title": "Ilyari: Embodied Light Transmission",
+      "intro": "Ilyari is a unique personal healing modality that flows through me as spontaneous body movement.",
+      "paragraph1": "As the healing lightcodes flow through my channel, the body movements distribute them where they are needed most: whether to ease your physical symptom, release emotional stagnation, or recalibrate and upgrade your entire energy field into greater harmony.",
+      "paragraph2": "These transmissions are deeply felt and intuitively guided. Not choreographed, not rehearsed, but received in the moment as a direct transmission of light.",
+      "lineagesIntro": "The healing you receive through Ilyari is woven from star lineages braided through my soul stream, expressed as a unique movement dialect. It carries the frequencies of:",
+      "lineage1": {
+        "title": "Lyran-Vegan Flame Spiral Codex",
+        "description": "a sacred geometry that restores your body to a living resonance and coherence field."
+      },
+      "lineage2": {
+        "title": "Sirian B Liquid Light Currents",
+        "description": "soft, fluid codes that recalibrate and soothe, singing your auric field back into harmonic balance."
+      },
+      "lineage3": {
+        "title": "Arcturian Geometric Code Streaming",
+        "description": "intelligent light patterns that \"write\" or \"etch\" into the quantum field around you, encoding your true essence remembrance and renewal into your being."
+      },
+      "sessionsTitle": "Ilyari sessions",
+      "sessionsDescription": "Each Ilyari session is a live, channeled transmission of healing light that unfolds in its own timing. Most sessions last 20–30 minutes and conclude naturally when the energetic work is complete.",
+      "sessionsNote": "If more healing is called for beyond that point, I seal the field with the appropriate codes, and we'll explore next steps together (such as continuing the process in a follow-up session)."
+    },
+    "animals": {
+      "title": "HEALING FOR ANIMALS",
+      "intro": "Many of us see our animals as true family, so it's only natural we want them to be happy, vibrant, and physically well.",
+      "description": "If your pet or any other domesticated animal is facing health or behavioral challenges, the Emotion Code, Body Code, and Ilyari transmissions can offer gentle and effective support.",
+      "note": "I can work with your four-legged, two-legged, or no-legged companion as long as you are their rightful owner."
     }
   },
   "times": [

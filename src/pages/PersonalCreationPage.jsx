@@ -2,8 +2,10 @@ import { motion, useInView } from 'framer-motion'
 import { useRef, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { GradientLine, BackdropBlurCard } from '../elementos/ElementosReutilizables'
+import { useLanguage } from '../context/LanguageContext'
 
 const PersonalCreationPage = () => {
+  const { t } = useLanguage()
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -37,8 +39,7 @@ const PersonalCreationPage = () => {
               className="text-stone-800 font-light tracking-[0.2em] mb-8"
               style={{ fontFamily: 'Gotham, sans-serif' }}
             >
-              <div className="text-3xl lg:text-4xl mb-2 opacity-60">PERSONAL</div>
-              <div className="text-6xl lg:text-8xl">CREATION</div>
+              <div className="text-6xl lg:text-8xl">{t('personalCreation.title')}</div>
             </motion.h1>
             
             <motion.div
@@ -54,7 +55,7 @@ const PersonalCreationPage = () => {
               transition={{ duration: 1, delay: 0.5 }}
               className="text-stone-600 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed mb-8"
             >
-              This is where I share my writing and music.
+              {t('personalCreation.intro')}
             </motion.p>
 
             <motion.div
@@ -64,11 +65,11 @@ const PersonalCreationPage = () => {
               className="max-w-4xl mx-auto space-y-6 mb-12"
             >
               <p className="text-lg lg:text-xl text-stone-700 leading-relaxed">
-                When I create, I become a sequence of connections, a current capable of sending me something my other selves already know. In that flow, focus is so complete that I forget myself within it, until it releases me and I notice it — but it's already gone.
+                {t('personalCreation.paragraph1')}
               </p>
 
               <p className="text-lg lg:text-xl text-stone-700 leading-relaxed">
-                It's the moment when the observing part of my self glimpses the traces of that other part, the one who created without the need to observe.
+                {t('personalCreation.paragraph2')}
               </p>
             </motion.div>
 
@@ -80,13 +81,13 @@ const PersonalCreationPage = () => {
             >
               <div className="border-l-2 border-amber-600/30 pl-6 py-4">
                 <p className="text-lg lg:text-xl text-stone-600 leading-relaxed italic mb-3">
-                  "Therein lies the strange tension: Consciousness in flow is blind, because it sees through everything. Whereas consciousness at a distance is watchful, but only of the memory of that flow."
+                  "{t('personalCreation.quote')}"
                 </p>
                 <p 
                   className="text-sm text-amber-700 font-light tracking-wider"
                   style={{ fontFamily: 'Gotham, sans-serif' }}
                 >
-                  — AUREN
+                  — {t('personalCreation.quoteAuthor')}
                 </p>
               </div>
             </motion.div>

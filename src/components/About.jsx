@@ -6,8 +6,10 @@ import {
   GradientLine, 
   DecorativeBlur 
 } from '../elementos/ElementosReutilizables'
+import { useLanguage } from '../context/LanguageContext'
 
 const About = () => {
+  const { t } = useLanguage()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
 
@@ -43,7 +45,7 @@ const About = () => {
             className="text-stone-800 text-6xl lg:text-8xl font-light tracking-[0.2em]"
             style={{ fontFamily: 'Gotham, sans-serif' }}
           >
-            ABOUT
+            {t('about.title').toUpperCase()}
           </motion.h1>
           
           <motion.div
@@ -114,19 +116,7 @@ const About = () => {
               className="space-y-8"
             >
               <p className="text-stone-700 text-xl leading-relaxed font-light tracking-wide" style={{ fontFamily: 'Gotham, sans-serif' }}>
-                Zuzana Erdösová is a <span className="text-amber-700 font-normal">certified Past Life Regression therapist</span>, energy healer trained in the <span className="text-amber-700 font-normal">Emotion Code, Body Code, and Belief Code</span> methods, a <span className="text-amber-700 font-normal">Star Magic Healing facilitator Level 2</span>, and a channeler of <span className="text-amber-700 font-normal">Ilyari</span> (somatic transmission of light codes).
-              </p>
-
-              <p className="text-stone-600 text-lg leading-relaxed font-light tracking-wide" style={{ fontFamily: 'Gotham, sans-serif' }}>
-                As a former university researcher with two doctorates in <span className="text-amber-700 font-normal">Linguistics and Latin American Studies</span>, her vocation and passion lie in exploring both the intuitive and scientific aspects of energy healing.
-              </p>
-
-              <p className="text-stone-600 text-lg leading-relaxed font-light tracking-wide" style={{ fontFamily: 'Gotham, sans-serif' }}>
-                Zuzana is also the author of numerous scientific articles, book chapters, and six solo-authored books, including <em className="text-amber-800">"Thinking Otherness: The Mexican Indigenous Community Through Five Sources of Knowledge"</em> and <em className="text-amber-800">"Evolved Proverbs: Updated Wisdom for The Life You Truly Want to Live."</em>
-              </p>
-
-              <p className="text-stone-600 text-lg leading-relaxed font-light tracking-wide" style={{ fontFamily: 'Gotham, sans-serif' }}>
-                She is also a translator, singer, and lyricist, and a great enthusiast of horses. She enjoys speaking and working in several languages (English, Spanish, and her native Czech), and living in intercultural environments surrounded by beautiful nature.
+                {t('about.description')}
               </p>
             </motion.div>
           </motion.div>
@@ -152,7 +142,7 @@ const About = () => {
               className="text-4xl lg:text-6xl font-light text-stone-800 mb-6 tracking-[0.15em]"
               style={{ fontFamily: 'Gotham, sans-serif' }}
             >
-              CERTIFICATIONS
+              {t('about.certificationsTitle') || 'CERTIFICATIONS'}
             </h2>
 
             <motion.div

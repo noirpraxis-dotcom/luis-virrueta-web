@@ -26,9 +26,8 @@
   "about": {
     "title": "Sobre Mí",
     "subtitle": "Sanadora Energética y Guía Espiritual",
-    "intro": "Bienvenido a mi espacio de sanación y transformación. Soy Zuzana, dedicada a guiar almas en su viaje de autodescubrimiento y sanación.",
-    "description": "Durante más de una década, he trabajado con modalidades de sanación energética, ayudando a las personas a liberar bloqueos emocionales, sanar traumas del pasado y reconectar con su ser auténtico. Mi enfoque combina sabiduría ancestral con técnicas modernas, creando una experiencia de sanación personalizada para cada individuo.",
-    "mission": "Mi misión es empoderarte para que te conviertas en el arquitecto de tu propio viaje de sanación. A través de una guía suave y un trabajo energético poderoso, desbloquearemos las puertas a tu sabiduría interior y capacidades de sanación innatas.",
+    "description": "Zuzana Erdösová es terapeuta certificada en Regresiones a Vidas Pasadas, sanadora energética formada en los métodos Emotion Code, Body Code y Belief Code, facilitadora de Star Magic Healing (Nivel 2) y canalizadora de Ilyari (transmisión somática de códigos de luz). Como ex profesora e investigadora universitaria con dos doctorados en Lingüística y Estudios Latinoamericanos, su vocación y pasión se centran en explorar tanto los aspectos intuitivos como los científicos de la sanación energética. Zuzana es también autora de numerosos artículos científicos, capítulos de libros y seis libros de autoría individual, entre ellos \"Pensar la otredad. La comunidad originaria mexicana desde cinco fuentes de conocimiento\" y \"Proverbios evolucionados: Sabiduría actualizada para la vida que realmente quieres vivir.\" Además, es traductora, cantante y letrista, y una gran entusiasta de los caballos. Disfruta hablar y trabajar en varios idiomas (inglés, español y su lengua materna, el checo) y vivir en entornos interculturales rodeados de una naturaleza hermosa.",
+    "certificationsTitle": "CERTIFICACIONES",
     "certifications": "Practicante Certificada",
     "experience": "Más de 10 Años de Experiencia",
     "clients": "Más de 500 Clientes en Todo el Mundo"
@@ -173,6 +172,94 @@
           "answer": "El Código Corporal es una modalidad de sanación complementaria y no debe reemplazar la atención médica. Siempre consulta con tu proveedor de atención médica para preocupaciones médicas."
         }
       ]
+    }
+  },
+  "testimonials": {
+    "title": "Testimonios",
+    "testimonial1": {
+      "text": "Me entregué por completo a la experiencia de vidas pasadas. Zuzana me inspiraba mucha confianza, sentí en todo momento su profesionalismo y el amor que entrega. La experiencia es tan real - pude ver con mucho detalle las etapas de una vida anterior y sentir el contacto con mi guía espiritual. Al final estaba muy extasiado con la experiencia, solo quería que repercutiera sobre mí. Hasta el día de hoy reflexiono en torno a lo vivido. Logro comprender muchos aspectos de mi vida actual, de mi propósito, y converso con mis guía espiritual a diario. Solo tengo palabras de agradecimiento.",
+      "author": "Rodrigo J.",
+      "location": "Santiago de Chile"
+    },
+    "testimonial2": {
+      "text": "He tenido la suerte de recibir tres sesiones de Body Code con Zuzana. Con mucha atención y detalle, Zuzana va indagando hasta llegar a la raíz de las posibles causas que provocan desequilibrio corporal, emocional y/o energético. Lo interesante (y sorprendente) de las sesiones ha sido la resonancia que sentí en mi cuerpo a medida que iban surgiendo las causas y razones de mi desequilibrio. Las ramificaciones son complejas y están a tantos niveles, que uno se puede perder, pero Zuzana con mucha perspicacia y atención hace las preguntas necesarias y ve los vínculos subyacentes, que permiten después hacer un trabajo de liberación energético profundo y potente  para eliminar las causas del malestar. Para ciertas cosas, el resultado es inmediato. Lo más increíble para mí, ha sido ver después de dos meses, todo lo que ha cambiado en mi vida al trabajar la temática que consulté con ella. Siento que se limpiaron memorias y se abrieron caminos inesperados. Le soy increíblemente agradecida por su sensibilidad, su pasión, su seriedad con el trabajo y su conexión que lo permite todo!",
+      "author": "Marie D.",
+      "location": "Vancouver, Canadá"
+    },
+    "testimonial3": {
+      "text": "Soy la dueña de Sid, un Jack Russell terrier de casi 9 años, que es muy activo y juguetón a pesar de su edad. Cuando tienes un perro travieso en casa, enseguida te das cuenta de que algo le está pasando. Sid perdió el interés por traer la pelota, no quería salir de paseo y en casa se quedaba tumbado y desinteresado por su entorno. Me rompía el corazón verlo así, así que contacté a Zuzana. Ella trabajó con Sid durante una hora y era impresionante observar su trabajo. Esta sensación mía se reforzó aún más cuando a los pocos días llegó el efecto de la terapia. La condición de Sid volvió gradualmente a la normalidad: se emocionaba por salir de paseo y traía las pelotas lanzadas. Su energía había vuelto. También recibimos notas de la sesión en un Pdf, así que tenemos registro de lo que andaba mal con Sid y qué más podemos hacer por él. Yo también solicité mi propia sesión. Y si a Sid le aquejara algo en el futuro, me encantaría que Zuzana volviera a atenderlo.",
+      "author": "Daniela y Sid",
+      "location": "Olomouc, República Checa"
+    }
+  },
+  "personalCreation": {
+    "title": "CREACIÓN PERSONAL",
+    "intro": "Aquí comparto mi escritura y mi música.",
+    "paragraph1": "Cuando creo, me convierto en una secuencia de conexiones, una corriente capaz de enviarme algo que mis otros yoes ya conocen. En ese flujo, la concentración es tan total que me olvido de mí misma dentro de él, hasta que me libera y lo noto — pero ya se ha ido.",
+    "paragraph2": "Es el momento en que la parte observadora de mí vislumbra las huellas de la otra parte, la que creó sin necesidad de observar.",
+    "quote": "Ahí reside la extraña tensión: la consciencia en flujo es ciega, porque ve a través de todo. Mientras que la consciencia a distancia observa, pero sólo la memoria de ese flujo.",
+    "quoteAuthor": "AUREN"
+  },
+  "healingSessions": {
+    "emotionBodyBelief": {
+      "title": "CÓDIGO EMOCIONAL, CORPORAL & DE CREENCIAS",
+      "intro": "Emotion Code, Body Code y Belief Code son métodos de sanación energética reconocidos a nivel mundial, desarrollados desde los años noventa por el Dr. Bradley Nelson y su equipo en Estados Unidos.",
+      "intro2": "Los Códigos permiten trabajar con las capas más profundas de ti - las partes tuyas que saben que necesitan ayuda y, sobre todo, qué tipo de ayuda requieren.",
+      "intro3": "Mi papel consiste en hacer las preguntas adecuadas, recibir las respuestas y actuar según las instrucciones que llegan, liberando de tu campo, cuerpo y mente aquello que los desequilibra. Así llegamos a sanar la causa raíz de tu problema. Cuando tu trasfondo energético se alinea, tu cuerpo físico sana de manera natural.",
+      "intro4": "",
+      "subtitle": "¿Qué pueden hacer los Códigos por ti?",
+      "emotionCode": {
+        "title": "CÓDIGO EMOCIONAL",
+        "description": "El CÓDIGO EMOCIONAL realiza una limpieza profunda de las emociones reprimidas que llevas inconscientemente contigo. Este bagaje emocional llamadado \"emociones atrapadas\" proviene de heridas y traumas tanto antiguos como recientes. Puede ser incluso heredado o absorbido de otros. Las emociones atrapadas afectan de manera continua tu estado mental y tu salud física. Se estima que alrededor del 80 % de los desequilibrios energéticos en el ser humano se deben a emociones no procesadas.",
+        "benefit": "Recibir una sesión de Código Emocional es como por fin soltar una mochila pesada que has estado cargando durante mucho tiempo, y permitir que todo tu ser se enderece, respire y sane."
+      },
+      "bodyCode": {
+        "title": "CÓDIGO CORPORAL",
+        "description": "El CÓDIGO CORPORAL corrige cientos de posibles desequilibrios energéticos en tu cuerpo y mente, promoviendo una armonización integral de tu organismo en todos los niveles. Un cuerpo equilibrado y energéticamente limpio es capaz de activar poderosos procesos de sanación y regeneración.",
+        "benefit": "Una sesión del Código Corporal se siente como limpiar y ordenar a fondo una habitación, permitiendo que el aire fresco vuelva a circular."
+      },
+      "beliefCode": {
+        "title": "CÓDIGO DE CREENCIAS",
+        "description": "EL CÓDIGO DE CREENCIAS sabe reprogramar las creencias subconscientes que influyen negativamente en tus pensamientos, emociones y acciones. Cuando estos programas mentales se neutralizan junto con el trauma que les dio origen, los bloqueos subconscientes se disuelven y se abre un nuevo camino en tu vida. Al alinear tu verdad subconsciente (la programación interna) con tu voluntad consciente (lo que realmente deseas en tu vida), por fin puedes dirigir tu vida en la dirección deseada.",
+        "benefit": "Una sesión del Código de Creencias es como desmalezar el jardín de tu mente y permitir que arraiguen patrones de pensamiento sanos, que luego se reflejarán de forma natural en tus percepciones y acciones cotidianas."
+      }
+    },
+    "pastLife": {
+      "title": "REGRESIONES A VIDAS PASADAS",
+      "intro": "Las regresiones a vidas pasadas permiten recuperar memorias de existencias anteriores que aún están influyendo en tu vida actual.",
+      "paragraph1": "Muchas personas sufren traumas que no han sido causados por nada en su vida presente y buscan sanarlos. Durante una regresión, traemos esas experiencias antiguas a la conciencia y trabajamos con ellas de manera constructiva, hasta que el trauma se procesa y libera.",
+      "paragraph2": "Además, muchas personas realizan regresiones simplemente para recordar quiénes fueron alguna vez y descubrir cómo ese conocimiento puede ayudarlas en su vida actual. De esta manera, las regresiones actúan como un hermoso acelerador de tu crecimiento espiritual.",
+      "onlineTitle": "Si mi consultorio te queda lejos, una sesión en línea es una buena alternativa.",
+      "onlineDescription": "Reduce el costo y el tiempo de traslado, y te permite disfrutar de la experiencia en la comodidad y privacidad de tu hogar.",
+      "onlineEffective": "Una regresión en línea es igual de segura y efectiva que una realizada en persona. Solo necesitas una habitación tranquila y con poca luz, auriculares con buen micrófono y una conexión a internet estable."
+    },
+    "ilyari": {
+      "title": "Ilyari: Transmisión de Luz Encarnada",
+      "intro": "Ilyari es una modalidad de sanación única y personal que se manifiesta en mí en forma de movimiento corporal espontáneo.",
+      "paragraph1": "Mientras los códigos de luz sandores fluyen a través de mí, los movimientos los distribuyen hacia donde más se necesita: para aliviar un síntoma físico, liberar estancamiento emocional o recalibrar y elevar todo tu campo energético hacia una mayor armonía.",
+      "paragraph2": "Estas transmisiones son guiadas de manera intuitiva. No son coreografiadas ni ensayadas, sino recibidas en el momento como una transmisión directa de luz.",
+      "lineagesIntro": "La sanación que recibes a través de Ilyari está tejida desde linajes estelares entrelazados en la corriente de mi alma, y se expresa como un dialecto único hecho movimiento. Ilyari porta las siguientes frecuencias:",
+      "lineage1": {
+        "title": "Código de la Llama Espiral de Lyra-Vega",
+        "description": "flujo de geometría sagrada que restaura tu cuerpo en un campo de resonancia viviente y coherente."
+      },
+      "lineage2": {
+        "title": "Corrientes de la Luz Líquida de Sirius B",
+        "description": "códigos suaves y fluidos que recalibran y serenan, cantando a tu campo áurico hasta devolverle el equilibrio armónico."
+      },
+      "lineage3": {
+        "title": "Transmisión de los códigos geométricos arcturianos",
+        "description": "patrones de luz inteligente que se \"escriben\" o \"graban\" en el campo cuántico que te rodea, codificando el recuerdo de tu esencia pura y la renovación en tu ser."
+      },
+      "sessionsTitle": "Sesiones de Ilyari",
+      "sessionsDescription": "Cada sesión de Ilyari es una transmisión canalizada en vivo, la que se desarrolla en su propio tiempo. La mayoría de las sesiones duran entre 20 y 30 minutos y concluyen de forma natural cuando el trabajo energético ha sido completado.",
+      "sessionsNote": "Si se requiere más sanación después de ese punto, sello el campo con los códigos apropiados y exploramos juntos los siguientes pasos (como continuar el proceso en una sesión posterior)."
+    },
+    "animals": {
+      "title": "SANACIÓN PARA ANIMALES",
+      "intro": "Muchos de nosotros vemos a nuestros animales como miembros reales de la familia, así que es natural que queramos verlos felices, llenos de vida y en buen estado físico.",
+      "description": "Si tu mascota u otro animal domesticado está enfrentando problemas de salud o de comportamiento, el Código de la Emoción, el Código del Cuerpo y las transmisiones Ilyari pueden ofrecer un apoyo suave y eficaz.",
+      "note": "Puedo trabajar con tu compañero de cuatro patas, dos patas o sin patas, siempre que seas su legítimo dueño."
     }
   },
   "times": [

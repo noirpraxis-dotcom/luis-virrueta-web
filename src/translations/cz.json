@@ -26,9 +26,8 @@
   "about": {
     "title": "O Mně",
     "subtitle": "Energetická Léčitelka a Duchovní Průvodce",
-    "intro": "Vítejte v mém prostoru léčení a transformace. Jsem Zuzana, věnuji se vedení duší na jejich cestě sebepoznání a léčení.",
-    "description": "Více než deset let pracuji s energetickými léčebnými modalitami, pomáhám lidem uvolnit emocionální bloky, vyléčit minulá traumata a znovu se spojit se svým autentickým já. Můj přístup kombinuje starodávnou moudrost s moderními technikami a vytváří personalizovanou léčebnou zkušenost pro každého jednotlivce.",
-    "mission": "Mým posláním je vám umožnit, abyste se stali architektem své vlastní léčebné cesty. Prostřednictvím jemného vedení a silné energetické práce odemkneme dveře k vaší vnitřní moudrosti a přirozeným léčitelským schopnostem.",
+    "description": "Zuzana Erdösová je certifikovaná regresionistka do minulých životů a energetická léčitelka vyškolená v metodách Emoční, Tělesný a Myšlenkový kód, a Star Magic Healing (úroveň 2). Tyto metody kombinuje s channelingem Ilyari, což je somatický přenos světelných kódů. Jako bývalou univerzitní badatelku se dvěma doktoráty v oborech lingvistika a latinskoamerická studia ji fascinuje propojení jak intuitivní, tak vědecké stránky energetického uzdravování. Zuzana je také autorkou řady vědeckých článků, knižních kapitol a šesti samostatných knih, jako jsou \"Aktualizovaná přísloví. Mentální hygiena na míru životu, který doopravdy chceš žít\" nebo \"Ústní tradice ze San Martín Tilcajete jak ji vyprávěla teta Maco. Znovunalezené dědictví zapotécké vesnice z Oaxaky\". Je rovněž překladatelka, zpěvačka a textařka a velká milovnice koní. Ráda mluví a pracuje v několika jazycích (kromě své rodné češtiny také v angličtině a španělštině) a baví ji žít v kulturně různorodém prostředí obklopena krásnou přírodou.",
+    "certificationsTitle": "CERTIFIKÁTY",
     "certifications": "Certifikovaná Praktikantka",
     "experience": "Více než 10 Let Zkušeností",
     "clients": "Více než 500 Klientů po Celém Světě"
@@ -173,6 +172,94 @@
           "answer": "Tělový kód je doplňková léčebná modalita a neměl by nahrazovat lékařskou péči. Vždy se poraďte se svým poskytovatelem zdravotní péče ohledně zdravotních obav."
         }
       ]
+    }
+  },
+  "testimonials": {
+    "title": "Svědectví",
+    "testimonial1": {
+      "text": "Úplně jsem se ponořil do zkušenosti s minulými životy. Zuzana ve mně vzbouzela velkou důvěru, celou dobu jsem cítil její profesionální a láskyplný přístup. Byl to velmi realistický zážitek - byl jsem schopný do detailu vnímat různé fáze jednoho mého minulého života a navázat přímý kontakt se svým duchovním průvodcem. Na konci jsem byl tím zážitkem tak uchvácený, že jsem nechtěl nic jiného, než aby ve mně začal rezonovat. Dodnes přemýšlím o tom, co jsem zažil. Teď už chápu účel mého současného života a celou řadu jeho aspektů, a denně hovořím se svým duchovním průvodcem. Velké diky.",
+      "author": "Rodrigo J.",
+      "location": "Santiago de Chile"
+    },
+    "testimonial2": {
+      "text": "Absolvovala jsem tři sezení metody Body Code. Zuzana pozorně a se smyslem pro detail pátrala po příčinách mé tělesné, emoční a energetické nerovnováhy. Překvapilo mě, jak jsem v reálném čase na vlastním těle pociťovala napravování jednotlivých příčin! Ty byly složité a existovaly na tolika úrovních, že se v nich šlo snadno ztratit, ale Zuzana má vhled, kladla nezbytné otázky a spatřovala vazby, díky nimž nakonec byla schopna uvolnit hluboké a mocné energetické kořeny mých problémů. U některých věcí byl výsledek okamžitý, u jiných se změny projevily postupně. Nejneuvěřitelnější pro mě bylo ohlédnout se zpět po dvou měsících a uvědomit si, co všechno se v mém životě díky našim sezením změnilo. Cítím, že se mi pročistila minulost a otevřely se přede mnou nečekané cesty. Jsem Zuzaně ohromně vděčná za její citlivost, seriózní přístup a vášeň pro její práci, díky níž je možné úplně všechno!",
+      "author": "Marie D.",
+      "location": "Vancouver, Kanada"
+    },
+    "testimonial3": {
+      "text": "Jsem majitelkou skoro 9letého Jack Russellova teriéra Sida, který je i přes svůj věk velmi živý, hravý a aktivní. Když máte doma aktivního neposedu, rychle si všimnete, že s ním není něco v pořádku. Sid ztratil zájem o házení míčku, nechtěl chodit ven, a když byl doma, jen ležel bez zájmu o okolí. Jako jeho pánovi mi to doslova trhalo srdce, proto jsem nakontaktovala Zuzanu. Ta s ním pracovala něco přes hodinu a její práce mě velmi zaujala. Tento pocit se ještě umocnil, když jsem viděla kýžený výsledek na svém psovi. Účinky terapie se dostavily do pár dnů. Sidův stav se postupně v průběhu týdne vrátil do standardu, kdy se nemohl dočkat, až půjdeme ven, a nosil všechny míčky. Jeho energie byla zpátky. Ještě jsme od Zuzany dostali shrnutí v podobě Pdf souboru, takže víme, s čím měl Sid problém, a na co dalšího se můžeme zaměřit. O terapii jsem poprosila také pro sebe. A v případě, kdy Sid v budoucnu nebude ve své kůži, budu ráda, pokud mu Zuzana opět věnuje svůj čas a péči.",
+      "author": "Daniela a Sid",
+      "location": "Olomouc, Česká republika"
+    }
+  },
+  "personalCreation": {
+    "title": "OSOBNÍ TVORBA",
+    "intro": "Zde sdílím své knihy, texty a hudbu.",
+    "paragraph1": "V tvořivém módu se ze mě stává sled různých spojení – jako proud, který mi přináší to, co má jiná já už dávno znají. V tom toku jsem tak soustředěná, že sama sebe zapomínám. Když mě proud propustí, ihned si ho všimnu, ale to už je pryč.",
+    "paragraph2": "Je to chvíle, kdy má pozorující část zahlédla stopy mé druhé části, která tvoří bez potřeby pozorovat.",
+    "quote": "V tom spočívá zvláštní napětí: proudící vědomí je slepé, protože vidí skrz. Vědomí pozorující z odstupu je zase schopno zachytit jen vzpomínku na proud, ne proud sám.",
+    "quoteAuthor": "AUREN"
+  },
+  "healingSessions": {
+    "emotionBodyBelief": {
+      "title": "EMOČNÍ, TĚLESNÝ & MYŠLENKOVÝ KÓD",
+      "intro": "Emoční kód (Emotion Code), Tělesný kód (Body Code) a Myšlenkový kód (Belief Code) jsou celosvětově uznávané energetické metody, které od devadesátých let v USA rozvíjí Dr. Bradley Nelson a jeho tým.",
+      "intro2": "Tyto tři Kódy nám umožňují pracovat s vašimi nejhlubšími vrstvami, které vědí, že potřebují pomoc a dokážou si o ni velmi přesně říct. Mou úlohou je klást správné otázky, přijímat odpovědi a jednat podle nich, aby se z vašeho pole, těla a mysli uvolnilo vše, co v nich způsobuje nerovnováhu. Tím se dostaneme přímo ke kořeni vašeho problému. Ve chvíli, kdy je váš energetický design znovu v rovnováze, se i vaše fyzické tělo začne přirozeně uzdravovat.",
+      "intro3": "",
+      "intro4": "",
+      "subtitle": "Co pro vás mohou Kódy udělat?",
+      "emotionCode": {
+        "title": "EMOČNÍ KÓD",
+        "description": "EMOČNÍ KÓD hloubkově čistí nezpracované a potlačené emoce, které si s sebou nevědomky nesete. Tyto nezpracované emoce mohou být velice staré, dokonce zděděné či převzaté od jiných lidí, a vskrytu stále ovlivňují váš duševní stav i fyzické zdraví. Odhaduje se, že přibližně 80 % energetických nerovnováh u člověka je způsobeno právě nezpracovanými emocemi.",
+        "benefit": "Sezení Emočního kódu je pocit, jako byste po letech shodili ze zad těžký batoh, a konečně se narovnali a zhluboka nadechli."
+      },
+      "bodyCode": {
+        "title": "TĚLESNÝ KÓD",
+        "description": "TĚLESNÝ KÓD je schopen napravit stovky typů energetických nerovnováh, které ve vašem těle mohou vzniknout, a umožňuje celkovou harmonizaci vašeho organismu na všech možných úrovních. Vyvážené a energeticky čisté tělo je pak schopno samo sebe velmi efektivně zregenerovat.",
+        "benefit": "Sezení Tělesného kódu je jako když přijdete do rozházené a zanesené místnosti a důkladně ji uklidíte, urovnáte a vyvětráte."
+      },
+      "beliefCode": {
+        "title": "MYŠLENKOVÝ KÓD",
+        "description": "MYŠLENKOVÝ KÓD umí přeprogramovat škodlivá přesvědčení ve vašem podvědomí, která negativně ovlivňují vaše myšlení, emoce a jednání. Když se tyto mentální programy neutralizují společně s traumatem, které jim dalo vzniknout, rozpustí se podvědomé bloky a v životě se vám otevře nová cesta. Jakmile sladíte to, čemu podvědomě věříte (vnitřní naprogramování), se svou vědomou vůlí (tím, co v životě chcete), konečně můžete dát svému životu ten správný směr.",
+        "benefit": "Sezení Myšlenkového kódu je jako byste si v hlavě vypleli zahrádku a dovolili v ní zakořenit zdravému myšlenkovému nastavení, které se pak přirozeně promítne do vašeho každodenního cítění a jednání."
+      }
+    },
+    "pastLife": {
+      "title": "REGRESE DO MINULÝCH ŽIVOTŮ",
+      "intro": "Regrese do minulých životů je způsob, jak si vyvolat vzpomínky na dřívější existenci, která dosud ovlivňuje váš současný život.",
+      "paragraph1": "Mnoho lidí si v sobě nese traumata, která nevznikla v jejich současném životě, a hledají způsob, jak je uzdravit. Během regrese si na tuto dávnou zkušenost vzpomeneme, uvědomíme si ji, a konstruktivně s ní pracujeme, dokud trauma není zpracováno a neodejde.",
+      "paragraph2": "Mnozí lidé si také volí regresi, aby si vzpomněli na to, kým kdy byli, a pochopili, jak jim toto poznání může pomoci v jejich současném životě. Proto vám regrese do minulých životů může posloužit jako krásný urychlovač vašeho duchovního růstu.",
+      "onlineTitle": "Pokud to ke mně máte daleko, online sezení pro vás může být pohodlnou alternativou.",
+      "onlineDescription": "Šetří čas a náklady na cestování, ale nejen to - umožňuje vám vychutnat si tuto zkušenost v soukromí a pohodlí vašeho domova.",
+      "onlineEffective": "Regrese online je stejně účinná jako ta vedená osobně. Stačí vám klidná, tlumeně osvětlená místnost, sluchátka s kvalitním mikrofonem a stabilní připojení k internetu."
+    },
+    "ilyari": {
+      "title": "Ilyari: Přenos Světla skrze tělesný pohyb",
+      "intro": "Ilyari se u mě projevuje jako spontánní pohyb celého těla se silným uzdravujícím účinkem na pole člověka, na kterém pracuji.",
+      "paragraph1": "Kódy Ilyari proudí skrze fyzické pohyby tam, kde je jich nejvíce třeba: aby uzdravily příčinu vašeho fyzického symptomu, uvolnily potlačené emoce, nebo překalibrovaly a povznesly vaše energetické pole na vyšší uroveň harmonie.",
+      "paragraph2": "Každý přenos je veden intuicí. Není nacvičený podle choreografie, nýbrž přijímán v reálném čase tak, jak ke mně světelné kódy přicházejí.",
+      "lineagesIntro": "Ilyari je unikátní jazyk vyjádřený pohybem. Představuje pletivo hvězdných linií, ze kterých se odvozuje má duše, a nese tyto frekvence:",
+      "lineage1": {
+        "title": "Lyransko-Veganský kodex plamenné spirály",
+        "description": "proud posvátné geometrie, která vaše tělo obnovuje coby živé a koherentní rezonanční pole."
+      },
+      "lineage2": {
+        "title": "Proudy tekutého světla ze Siria B",
+        "description": "jemně plynoucí kódy, které zklidňují a uvádějí vaši auru do původní harmonie."
+      },
+      "lineage3": {
+        "title": "Arkturiánské geometrické kódy",
+        "description": "přenos inteligentních světelných vzorů, které se \"vpisují\" do kvantového pole kolem vás, a tím vás regenerují a obnovují paměť vaší původní podstaty."
+      },
+      "sessionsTitle": "Sezení s Ilyari",
+      "sessionsDescription": "Každý přenos léčivého světla probíhá v reálném čase a odvíjí se svým vlastním tempem. Většina sezení trvá 20–30 minut a spontánně končí ve chvíli, kdy je energetická práce dokončena.",
+      "sessionsNote": "Pokud je i po této době zapotřebí dalšího léčení, uzavřu vaše energetické pole pomocí odpovídajících kódů a společně se domluvíme na dalším postupu."
+    },
+    "animals": {
+      "title": "UZDRAVOVÁNÍ ZVÍŘAT",
+      "intro": "Pro mnohé z nás jsou naši zvířecí společníci plnohodnotní členové rodiny, a jako takové je chceme vidět šťastné, plné energie a v dobré fyzické kondici.",
+      "description": "Pokud má vaše domácí zvíře či zvířátko potíže se zdravím nebo s chováním, mohou jemně a účinně pomoci metody Emoční kód, Tělesný kód a také přenosy Ilyari.",
+      "note": "Ráda budu pracovat na vašem čtyřnohém, dvounohém či beznohém kamarádovi - stačí, jste-li jeho právoplatným majitelem."
     }
   },
   "times": [
