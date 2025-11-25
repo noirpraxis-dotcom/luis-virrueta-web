@@ -16,8 +16,9 @@
     "courses": "Kurzy"
   },
   "hero": {
-    "seeMore": "Zobrazit Více",
-    "scrollDown": "Posuň Dolů"
+    "subtitle": "Certifikovaná terapeutka regrese do minulých životů, energetická léčitelka a kanál Ilyari. Bývalá univerzitní badatelka se dvěma doktoráty zkoumající intuitivní a vědecké aspekty energetického léčení.",
+    "seeMore": "Zobrazit více",
+    "scrollDown": "Posunout dolů"
   },
   "countries": {
     "title": "PRACOVALA JSEM S LIDMI Z",
@@ -201,6 +202,11 @@
     "quoteAuthor": "AUREN"
   },
   "healingSessions": {
+    "hero": {
+      "healing": "LÉČIVÁ",
+      "sessions": "SEZENÍ",
+      "description": "Objevte transformační léčivé modality, které pracují na energetické úrovni k uvolnění uvězněných emocí, korekci nerovnováh a přeprogramování omezujících přesvědčení."
+    },
     "emotionBodyBelief": {
       "title": "EMOČNÍ, TĚLESNÝ & MYŠLENKOVÝ KÓD",
       "intro": "Emoční kód (Emotion Code), Tělesný kód (Body Code) a Myšlenkový kód (Belief Code) jsou celosvětově uznávané energetické metody, které od devadesátých let v USA rozvíjí Dr. Bradley Nelson a jeho tým.",

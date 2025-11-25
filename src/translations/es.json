@@ -16,7 +16,8 @@
     "courses": "Cursos"
   },
   "hero": {
-    "seeMore": "Ver Más",
+    "subtitle": "Terapeuta certificada en Regresión a Vidas Pasadas, sanadora energética y canalizadora de Ilyari. Antigua investigadora universitaria con dos doctorados que explora los aspectos intuitivos y científicos de la sanación energética.",
+    "seeMore": "Ver más",
     "scrollDown": "Desplázate"
   },
   "countries": {
@@ -201,6 +202,11 @@
     "quoteAuthor": "AUREN"
   },
   "healingSessions": {
+    "hero": {
+      "healing": "SESIONES DE",
+      "sessions": "SANACIÓN",
+      "description": "Descubre modalidades de sanación transformadoras que trabajan a nivel energético para liberar emociones atrapadas, corregir desequilibrios y reprogramar creencias limitantes."
+    },
     "emotionBodyBelief": {
       "title": "CÓDIGO EMOCIONAL, CORPORAL & DE CREENCIAS",
       "intro": "Emotion Code, Body Code y Belief Code son métodos de sanación energética reconocidos a nivel mundial, desarrollados desde los años noventa por el Dr. Bradley Nelson y su equipo en Estados Unidos.",

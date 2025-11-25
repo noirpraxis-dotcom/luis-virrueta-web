@@ -16,6 +16,7 @@
     "courses": "Courses"
   },
   "hero": {
+    "subtitle": "Certified Past Life Regression therapist, energy healer, and channeler of Ilyari. Former university researcher with two doctorates exploring the intuitive and scientific aspects of energy healing.",
     "seeMore": "See More",
     "scrollDown": "Scroll Down"
   },
@@ -201,6 +202,11 @@
     "quoteAuthor": "AUREN"
   },
   "healingSessions": {
+    "hero": {
+      "healing": "HEALING",
+      "sessions": "SESSIONS",
+      "description": "Discover transformative healing modalities that work at the energetic level to release trapped emotions, correct imbalances, and reprogram limiting beliefs."
+    },
     "emotionBodyBelief": {
       "title": "EMOTION, BODY & BELIEF CODE",
       "intro": "Emotion Code, Body Code and Belief Code are globally established energy healing methods developed since the 1990s by Dr. Bradley Nelson and his team in the USA.",

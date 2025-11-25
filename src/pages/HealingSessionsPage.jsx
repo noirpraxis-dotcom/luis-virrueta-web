@@ -40,8 +40,8 @@ const HealingSessionsPage = () => {
               className="text-stone-800 font-light tracking-[0.2em] mb-8"
               style={{ fontFamily: 'Gotham, sans-serif' }}
             >
-              <div className="text-3xl lg:text-4xl mb-2 opacity-60">HEALING</div>
-              <div className="text-6xl lg:text-8xl">SESSIONS</div>
+              <div className="text-3xl lg:text-4xl mb-2 opacity-60">{t('healingSessions.hero.healing')}</div>
+              <div className="text-6xl lg:text-8xl">{t('healingSessions.hero.sessions')}</div>
             </motion.h1>
             
             <motion.div
@@ -52,7 +52,7 @@ const HealingSessionsPage = () => {
             />
             
             <p className="text-stone-600 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed">
-              Discover transformative healing modalities that work at the energetic level to release trapped emotions, correct imbalances, and reprogram limiting beliefs.
+              {t('healingSessions.hero.description')}
             </p>
           </motion.div>
         </div>

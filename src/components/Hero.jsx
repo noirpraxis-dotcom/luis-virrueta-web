@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
+import { useLanguage } from '../context/LanguageContext'
 
 const Hero = () => {
+  const { t } = useLanguage()
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.3 })
+  const isInView = useInView(ref, { once: true, margin: "-150px" })
 
   return (
     <section 
@@ -49,8 +51,7 @@ const Hero = () => {
           className="text-white/80 text-xl lg:text-2xl font-light leading-relaxed tracking-wide mb-16 max-w-4xl mx-auto"
           style={{ fontFamily: 'Gotham, sans-serif' }}
         >
-          Certified Past Life Regression therapist, energy healer, and channeler of Ilyari. 
-          Former university researcher with two doctorates exploring the intuitive and scientific aspects of energy healing.
+          {t('hero.subtitle')}
         </motion.p>
 
         {/* Botón "Ver más" elegante */}
@@ -64,7 +65,7 @@ const Hero = () => {
           className="inline-flex items-center gap-3 px-10 py-5 bg-white/5 backdrop-blur-md border border-amber-600/30 rounded-full text-white/90 text-sm tracking-[0.25em] uppercase font-light hover:bg-white/10 hover:border-amber-600/50 transition-all duration-500 shadow-2xl group"
           style={{ fontFamily: 'Gotham, sans-serif' }}
         >
-          <span>Ver más</span>
+          <span>{t('hero.seeMore')}</span>
           <motion.svg
             className="w-5 h-5"
             fill="none"

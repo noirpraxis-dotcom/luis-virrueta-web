@@ -3,8 +3,10 @@ import { useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CinematicTitle, GradientLine } from '../elementos/ElementosReutilizables'
+import { useLanguage } from '../context/LanguageContext'
 
 const Store = () => {
+  const { t } = useLanguage()
   const ref = useRef(null)
   const navigate = useNavigate()
   const isInView = useInView(ref, { once: true, amount: 0.2 })
@@ -146,7 +148,7 @@ const Store = () => {
             className="text-stone-600 text-lg lg:text-xl font-light tracking-wide mt-8 max-w-2xl mx-auto"
             style={{ fontFamily: 'Gotham, sans-serif' }}
           >
-            Explore our healing sessions and transformative experiences
+            {t('store.subtitle')}
           </motion.p>
         </div>
 
@@ -211,7 +213,7 @@ const Store = () => {
                     className="text-stone-700 hover:text-amber-700 text-sm tracking-wider uppercase font-light flex items-center gap-2 transition-colors"
                     style={{ fontFamily: 'Gotham, sans-serif' }}
                   >
-                    Learn More
+                    {t('store.learnMore')}
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
