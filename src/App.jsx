@@ -13,6 +13,11 @@ import ProductDetailPage from './pages/ProductDetailPage'
 import HealingSessionsPage from './pages/HealingSessionsPage'
 import PersonalCreationPage from './pages/PersonalCreationPage'
 import PricesPage from './pages/PricesPage'
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
+import TermsConditionsPage from './pages/TermsConditionsPage'
+import CookiePolicyPage from './pages/CookiePolicyPage'
+import CookieBanner from './components/CookieBanner'
+import Footer from './components/Footer'
 
 const AppContent = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -132,10 +137,35 @@ const AppContent = () => {
                 <PersonalCreationPage />
               </div>
             } />
+
+            {/* Páginas Legales */}
+            <Route path="/privacy-policy" element={
+              <div className="lg:pt-28">
+                <PrivacyPolicyPage />
+              </div>
+            } />
+
+            <Route path="/terms-conditions" element={
+              <div className="lg:pt-28">
+                <TermsConditionsPage />
+              </div>
+            } />
+
+            <Route path="/cookie-policy" element={
+              <div className="lg:pt-28">
+                <CookiePolicyPage />
+              </div>
+            } />
             
             {/* Aquí irán más rutas/páginas */}
           </Routes>
         </main>
+
+        {/* Footer - aparece en todas las páginas */}
+        <Footer />
+
+        {/* Cookie Banner - aparece solo si no ha dado consentimiento */}
+        <CookieBanner />
       </div>
     </Router>
   )
