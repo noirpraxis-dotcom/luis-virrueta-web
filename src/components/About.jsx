@@ -152,6 +152,108 @@ const About = () => {
             </motion.div>
           </motion.div>
         </div>
+
+        {/* Certifications Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 1.3 }}
+          className="mt-32 lg:mt-40"
+        >
+          {/* Section Title */}
+          <div className="text-center mb-20">
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={isInView ? { scaleX: 1 } : {}}
+              transition={{ duration: 1.2, delay: 1.4 }}
+              className="h-px bg-gradient-to-r from-transparent via-amber-600/30 to-transparent mx-auto w-32 mb-8"
+            />
+            
+            <h2 
+              className="text-4xl lg:text-6xl font-light text-stone-800 mb-6 tracking-[0.15em]"
+              style={{ fontFamily: 'Gotham, sans-serif' }}
+            >
+              CERTIFICATIONS
+            </h2>
+
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={isInView ? { scaleX: 1 } : {}}
+              transition={{ duration: 1.5, delay: 1.6 }}
+              className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-80 mt-8"
+            />
+          </div>
+
+          {/* Emotion, Body & Belief Code Certificates */}
+          <div className="mb-24">
+            <motion.h3
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 1, delay: 1.7 }}
+              className="text-2xl lg:text-4xl font-light text-stone-800 mb-12 text-center tracking-wide"
+              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            >
+              Emotion, Body & <span className="italic text-amber-700">Belief Code</span>
+            </motion.h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+              {[1, 2, 3].map((num, index) => (
+                <motion.div
+                  key={num}
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.8, delay: 1.8 + index * 0.15 }}
+                  className="group relative"
+                >
+                  <div className="relative overflow-hidden rounded-2xl shadow-xl border-2 border-stone-200 hover:border-amber-600/40 transition-all duration-500 hover:shadow-2xl bg-white">
+                    <img 
+                      src={`/${num}.jpg`}
+                      alt={`Certification ${num}`}
+                      className="w-full h-auto object-contain"
+                    />
+                    {/* Hover overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-amber-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Hypnotherapy & Energy Healing Certificates */}
+          <div>
+            <motion.h3
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 1, delay: 2.3 }}
+              className="text-2xl lg:text-4xl font-light text-stone-800 mb-12 text-center tracking-wide"
+              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            >
+              Hypnotherapy & <span className="italic text-amber-700">Energy Healing</span>
+            </motion.h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
+              {[4, 5].map((num, index) => (
+                <motion.div
+                  key={num}
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.8, delay: 2.4 + index * 0.15 }}
+                  className="group relative"
+                >
+                  <div className="relative overflow-hidden rounded-2xl shadow-xl border-2 border-stone-200 hover:border-amber-600/40 transition-all duration-500 hover:shadow-2xl bg-white">
+                    <img 
+                      src={`/${num}.jpg`}
+                      alt={`Certification ${num}`}
+                      className="w-full h-auto object-contain"
+                    />
+                    {/* Hover overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-amber-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   )
