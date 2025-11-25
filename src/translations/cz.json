@@ -12,7 +12,9 @@
     "personalCreation": "Osobní Tvorba",
     "personalCreationShort": "Tvorba",
     "books": "Knihy",
+    "music": "Hudba",
     "store": "Obchod",
+    "prices": "Ceny",
     "courses": "Kurzy"
   },
   "hero": {
@@ -71,7 +73,7 @@
     "chapters": "Kapitoly"
   },
   "store": {
-    "title": "Léčebná Sezení",
+    "title": "Obchod",
     "subtitle": "Transformační energetická léčebná sezení navržená tak, aby vám pomohla uvolnit to, co vám už neslouží, a vstoupit do vašeho nejvyššího potenciálu.",
     "learnMore": "Více Info",
     "category": "Léčebné Sezení",

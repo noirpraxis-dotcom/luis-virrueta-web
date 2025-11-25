@@ -131,7 +131,7 @@ const Store = () => {
             className="text-stone-800 text-6xl lg:text-8xl font-light tracking-[0.2em] mb-8"
             style={{ fontFamily: 'Gotham, sans-serif' }}
           >
-            STORE
+            {t('store.title').toUpperCase()}
           </motion.h1>
           
           <motion.div

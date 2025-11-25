@@ -110,6 +110,7 @@ const PersonalCreationPage = () => {
 
 // Books Section - RESTORED ORIGINAL LAYOUT
 const BooksSection = () => {
+  const { t } = useLanguage()
   const containerRef = useRef(null)
   const navigate = useNavigate()
   const isInView = useInView(containerRef, { once: true, amount: 0.2 })

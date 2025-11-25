@@ -12,7 +12,9 @@
     "personalCreation": "Creación Personal",
     "personalCreationShort": "Creación",
     "books": "Libros",
+    "music": "Música",
     "store": "Tienda",
+    "prices": "Precios",
     "courses": "Cursos"
   },
   "hero": {
@@ -71,7 +73,7 @@
     "chapters": "Capítulos"
   },
   "store": {
-    "title": "Sesiones de Sanación",
+    "title": "Tienda",
     "subtitle": "Sesiones de sanación energética transformadoras diseñadas para ayudarte a liberar lo que ya no te sirve y avanzar hacia tu máximo potencial.",
     "learnMore": "Más Info",
     "category": "Sesión de Sanación",

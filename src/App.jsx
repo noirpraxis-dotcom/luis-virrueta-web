@@ -27,8 +27,8 @@ const AppContent = () => {
     { name: t('menu.home'), href: '/' },
     { name: t('menu.about'), href: '/about' },
     { 
-      name: 'Sessions',
-      nameShort: 'Sessions',
+      name: t('menu.healingSessions'),
+      nameShort: t('menu.healingSessionsShort'),
       href: '/healing-sessions',
       subItems: [
         { name: t('menu.emotionCode'), href: '/healing-sessions#emotion-body-belief' },
@@ -37,17 +37,17 @@ const AppContent = () => {
         { name: t('menu.animals'), href: '/healing-sessions#healing-animals' }
       ]
     },
-    { name: 'Prices', href: '/prices' },
+    { name: t('menu.prices'), href: '/prices' },
     { 
-      name: 'Creation',
-      nameShort: 'Creation',
+      name: t('menu.personalCreation'),
+      nameShort: t('menu.personalCreationShort'),
       href: '/personal-creation',
       subItems: [
         { name: t('menu.books'), href: '/personal-creation#books' },
-        { name: 'Music', href: '/personal-creation#music' }
+        { name: t('menu.music'), href: '/personal-creation#music' }
       ]
     },
-    { name: 'Courses', href: '/store#courses' },
+    { name: t('menu.courses'), href: '/store#courses' },
     { 
       name: t('menu.store'), 
       href: '/store',

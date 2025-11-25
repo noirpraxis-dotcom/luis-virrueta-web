@@ -12,7 +12,9 @@
     "personalCreation": "Personal Creation",
     "personalCreationShort": "Creation",
     "books": "Books",
+    "music": "Music",
     "store": "Store",
+    "prices": "Prices",
     "courses": "Courses"
   },
   "hero": {
@@ -71,7 +73,7 @@
     "chapters": "Chapters"
   },
   "store": {
-    "title": "Healing Sessions",
+    "title": "Store",
     "subtitle": "Transformative energy healing sessions designed to help you release what no longer serves you and step into your highest potential.",
     "learnMore": "Learn More",
     "category": "Healing Session",
