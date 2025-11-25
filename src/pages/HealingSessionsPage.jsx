@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Sparkles, User, Hourglass, PawPrint } from 'lucide-react'
+import { Sparkles, User, Hourglass, PawPrint, Heart, Flame } from 'lucide-react'
 import { GradientLine, BackdropBlurCard } from '../elementos/ElementosReutilizables'
 import { useLanguage } from '../context/LanguageContext'
 
@@ -942,7 +942,7 @@ const SessionNavigator = ({ t }) => {
         t('healingSessions.navigator.emotionBodyBeliefQ3')
       ],
       action: 'View More',
-      icon: User,
+      icon: Heart,
       bgColor: 'bg-stone-50',
       borderColor: 'border-stone-200',
       hoverBorder: 'hover:border-[#8dc1ab]',
@@ -976,7 +976,7 @@ const SessionNavigator = ({ t }) => {
         t('healingSessions.navigator.ilyariQ3')
       ],
       action: 'View More',
-      icon: User,
+      icon: Flame,
       bgColor: 'bg-stone-50',
       borderColor: 'border-stone-200',
       hoverBorder: 'hover:border-[#8dc1ab]',
