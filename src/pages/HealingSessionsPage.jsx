@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Sparkles } from 'lucide-react'
+import { Sparkles, User, Hourglass, PawPrint } from 'lucide-react'
 import { GradientLine, BackdropBlurCard } from '../elementos/ElementosReutilizables'
 import { useLanguage } from '../context/LanguageContext'
 
@@ -941,15 +941,8 @@ const SessionNavigator = ({ t }) => {
         t('healingSessions.navigator.emotionBodyBeliefQ2'),
         t('healingSessions.navigator.emotionBodyBeliefQ3')
       ],
-      action: t('healingSessions.navigator.emotionBodyBeliefAction'),
-      icon: (
-        <svg className="w-14 h-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <circle cx="12" cy="12" r="8" strokeWidth="0.8" opacity="0.3" />
-          <circle cx="12" cy="12" r="5" strokeWidth="0.8" opacity="0.5" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} d="M12 2v4M12 18v4M22 12h-4M6 12H2" />
-          <circle cx="12" cy="12" r="2" fill="currentColor" opacity="0.8" />
-        </svg>
-      ),
+      action: 'View More',
+      icon: User,
       bgColor: 'bg-stone-50',
       borderColor: 'border-stone-200',
       hoverBorder: 'hover:border-[#8dc1ab]',
@@ -965,14 +958,8 @@ const SessionNavigator = ({ t }) => {
         t('healingSessions.navigator.pastLifeQ2'),
         t('healingSessions.navigator.pastLifeQ3')
       ],
-      action: t('healingSessions.navigator.pastLifeAction'),
-      icon: (
-        <svg className="w-14 h-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} d="M12 2C8 2 6 4 6 6v4c0 2-2 4-2 4v8c0 2 2 4 6 4h4c4 0 6-2 6-4v-8s-2-2-2-4V6c0-2-2-4-6-4z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} d="M8 10h8M12 10v6" opacity="0.5" />
-          <circle cx="12" cy="14" r="1.5" fill="currentColor" opacity="0.6" />
-        </svg>
-      ),
+      action: 'View More',
+      icon: Hourglass,
       bgColor: 'bg-stone-50',
       borderColor: 'border-stone-200',
       hoverBorder: 'hover:border-[#8dc1ab]',
@@ -988,15 +975,8 @@ const SessionNavigator = ({ t }) => {
         t('healingSessions.navigator.ilyariQ2'),
         t('healingSessions.navigator.ilyariQ3')
       ],
-      action: t('healingSessions.navigator.ilyariAction'),
-      icon: (
-        <svg className="w-14 h-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} d="M12 3c-1.5 3-1.5 5.5-1.5 7.5 0 2 1.5 3.5 1.5 3.5s1.5-1.5 1.5-3.5c0-2 0-4.5-1.5-7.5z" />
-          <circle cx="12" cy="12" r="8" strokeWidth="0.8" opacity="0.2" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} d="M8 8c-2 2-2 4-2 6s2 4 4 4M16 8c2 2 2 4 2 6s-2 4-4 4" opacity="0.4" />
-          <circle cx="12" cy="12" r="1.5" fill="currentColor" opacity="0.7" />
-        </svg>
-      ),
+      action: 'View More',
+      icon: User,
       bgColor: 'bg-stone-50',
       borderColor: 'border-stone-200',
       hoverBorder: 'hover:border-[#8dc1ab]',
@@ -1012,16 +992,8 @@ const SessionNavigator = ({ t }) => {
         t('healingSessions.navigator.animalsQ2'),
         t('healingSessions.navigator.animalsQ3')
       ],
-      action: t('healingSessions.navigator.animalsAction'),
-      icon: (
-        <svg className="w-14 h-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <ellipse cx="12" cy="15" rx="4" ry="5" strokeWidth="0.8" fill="currentColor" opacity="0.2" />
-          <circle cx="8" cy="9" r="2.5" strokeWidth="0.8" fill="currentColor" opacity="0.3" />
-          <circle cx="16" cy="9" r="2.5" strokeWidth="0.8" fill="currentColor" opacity="0.3" />
-          <circle cx="6" cy="13" r="2" strokeWidth="0.8" fill="currentColor" opacity="0.3" />
-          <circle cx="18" cy="13" r="2" strokeWidth="0.8" fill="currentColor" opacity="0.3" />
-        </svg>
-      ),
+      action: 'View More',
+      icon: PawPrint,
       bgColor: 'bg-stone-50',
       borderColor: 'border-stone-200',
       hoverBorder: 'hover:border-[#8dc1ab]',
@@ -1130,13 +1102,13 @@ const SessionNavigator = ({ t }) => {
                     boxShadow: `0 10px 40px -10px ${session.accentColor}40`
                   }}
                 >
-                  {session.icon}
+                  <session.icon className="w-10 h-10 xl:w-12 xl:h-12" strokeWidth={1.5} />
                 </motion.div>
 
                 {/* Title - Ultra legible */}
                 <h3 
-                  className="text-2xl xl:text-3xl font-light text-stone-800 mb-6 leading-tight tracking-wide text-center"
-                  style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.03em', lineHeight: '1.3' }}
+                  className="text-xl xl:text-2xl font-light text-stone-800 mb-6 leading-tight tracking-wide text-center px-2"
+                  style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.02em', lineHeight: '1.35' }}
                 >
                   {session.title}
                 </h3>
@@ -1185,20 +1157,16 @@ const SessionNavigator = ({ t }) => {
                   }}
                 />
 
-                {/* Then text and Action Button - Ultra Pro */}
+                {/* Action Button - Ultra Pro */}
                 <div className="text-center mt-auto">
-                  <p className="text-stone-500 text-xs uppercase tracking-[0.3em] mb-6 font-light" style={{ fontFamily: 'Gotham, sans-serif' }}>
-                    Then
-                  </p>
-                  
                   <motion.button
                     onClick={() => handleNavigate(session.id)}
                     whileHover={{ scale: 1.04, y: -3 }}
                     whileTap={{ scale: 0.96 }}
-                    className={`w-full ${session.buttonBg} ${session.buttonHover} text-white py-4 xl:py-5 px-6 rounded-full font-light text-lg xl:text-xl tracking-wide shadow-2xl transition-all duration-700 flex items-center justify-center gap-3 group relative overflow-hidden`}
+                    className={`w-full ${session.buttonBg} ${session.buttonHover} text-white py-4 xl:py-5 px-6 rounded-full font-medium text-base xl:text-lg tracking-wide shadow-2xl transition-all duration-700 flex items-center justify-center gap-3 group relative overflow-hidden`}
                     style={{ 
-                      fontFamily: 'Cormorant Garamond, serif', 
-                      letterSpacing: '0.08em',
+                      fontFamily: 'Gotham, sans-serif', 
+                      letterSpacing: '0.05em',
                       boxShadow: `0 20px 50px -15px ${session.accentColor}60`
                     }}
                   >
@@ -1206,7 +1174,7 @@ const SessionNavigator = ({ t }) => {
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                     
                     <span className="relative">{session.action}</span>
-                    <svg className="w-5 h-5 xl:w-6 xl:h-6 group-hover:translate-x-2 transition-transform duration-500 relative" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5 xl:w-5 xl:h-5 group-hover:translate-x-2 transition-transform duration-500 relative" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </motion.button>
