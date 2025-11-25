@@ -52,7 +52,7 @@ const PricesPage = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Header - Same style as STORE */}
-      <section className="relative py-20 lg:py-32 px-6 lg:px-20 bg-white">
+      <section className="relative py-32 lg:py-40 px-6 lg:px-20 bg-white">
         <div className="max-w-6xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

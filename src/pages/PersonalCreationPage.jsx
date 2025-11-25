@@ -23,7 +23,7 @@ const PersonalCreationPage = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Header - Same style as STORE */}
-      <section className="relative py-20 lg:py-32 px-6 lg:px-20 bg-white">
+      <section className="relative py-32 lg:py-40 px-6 lg:px-20 bg-white">
         <div className="max-w-6xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -34,10 +34,11 @@ const PersonalCreationPage = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-              className="text-stone-800 text-6xl lg:text-8xl font-light tracking-[0.2em] mb-8"
+              className="text-stone-800 font-light tracking-[0.2em] mb-8"
               style={{ fontFamily: 'Gotham, sans-serif' }}
             >
-              PERSONAL CREATION
+              <div className="text-3xl lg:text-4xl mb-2 opacity-60">PERSONAL</div>
+              <div className="text-6xl lg:text-8xl">CREATION</div>
             </motion.h1>
             
             <motion.div
