@@ -67,10 +67,6 @@ const PersonalCreationPage = () => {
               <p className="text-lg lg:text-xl text-stone-700 leading-relaxed">
                 {t('personalCreation.paragraph1')}
               </p>
-
-              <p className="text-lg lg:text-xl text-stone-700 leading-relaxed">
-                {t('personalCreation.paragraph2')}
-              </p>
             </motion.div>
 
             <motion.div

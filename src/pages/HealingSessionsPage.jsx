@@ -874,20 +874,10 @@ const SessionPricesCTA = ({ t }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 1, delay: 0.4 }}
-            className="text-xl lg:text-2xl text-stone-700 leading-relaxed mb-6 font-light max-w-3xl mx-auto"
+            className="text-xl lg:text-2xl text-stone-700 leading-relaxed mb-12 font-light max-w-3xl mx-auto"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             Every session is designed to unlock deeper layers of healing, release what no longer serves you, and guide you toward lasting transformation.
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 1, delay: 0.6 }}
-            className="text-lg lg:text-xl text-stone-600 leading-relaxed mb-12 font-light italic max-w-2xl mx-auto"
-            style={{ fontFamily: 'Cormorant Garamond, serif' }}
-          >
-            Discover flexible options tailored to meet you wherever you are on your path.
           </motion.p>
 
           {/* Central decorative element */}
