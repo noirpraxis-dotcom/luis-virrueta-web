@@ -20,7 +20,8 @@
     "scrollDown": "Scroll Down"
   },
   "countries": {
-    "title": "I HAVE WORKED WITH PEOPLE FROM"
+    "title": "I HAVE WORKED WITH PEOPLE FROM",
+    "question": "And where are you from?"
   },
   "about": {
     "title": "About Me",

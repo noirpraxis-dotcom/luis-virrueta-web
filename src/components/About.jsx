@@ -129,36 +129,15 @@ const About = () => {
                 She is also a translator, singer, and lyricist, and a great enthusiast of horses. She enjoys speaking and working in several languages (English, Spanish, and her native Czech), and living in intercultural environments surrounded by beautiful nature.
               </p>
             </motion.div>
-
-            {/* Credenciales elegantes estilo light */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 1, delay: 1.1 }}
-              className="flex flex-wrap gap-3 pt-8"
-            >
-              {['Past Life Regression', 'Energy Healing', 'Star Magic Level 2', 'Ilyari Channeler'].map((badge, index) => (
-                <motion.span
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ duration: 0.5, delay: 1.2 + index * 0.1 }}
-                  className="px-6 py-3 bg-white/70 backdrop-blur-sm border border-amber-600/30 rounded-full text-amber-800 text-sm tracking-[0.15em] uppercase font-light shadow-md hover:bg-white hover:border-amber-600/50 hover:shadow-lg transition-all duration-300"
-                  style={{ fontFamily: 'Gotham, sans-serif' }}
-                >
-                  {badge}
-                </motion.span>
-              ))}
-            </motion.div>
           </motion.div>
         </div>
 
-        {/* Certifications Section */}
+        {/* Certifications Section - Positioned higher for visibility */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 1.3 }}
-          className="mt-32 lg:mt-40"
+          transition={{ duration: 1, delay: 1.1 }}
+          className="mt-20 lg:mt-24"
         >
           {/* Section Title */}
           <div className="text-center mb-20">

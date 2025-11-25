@@ -1,29 +1,32 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
+import { useLanguage } from '../context/LanguageContext'
 
 const CountriesSection = () => {
-  const countries = [
-    'United States',
-    'Mexico',
-    'Spain',
-    'Germany',
-    'France',
-    'Italy',
-    'Czech Republic',
-    'United Kingdom',
-    'Canada',
-    'Brazil',
-    'Argentina',
-    'Australia',
-    'Japan',
-    'Netherlands',
-    'Switzerland',
-    'Austria',
-    'Portugal',
-    'Poland',
-    'Sweden',
-    'Norway'
-  ]
+  const { t, language } = useLanguage()
+  
+  const countriesData = {
+    en: [
+      'Mexico', 'Great Britain', 'Czechia', 'Slovakia', 'USA', 'Peru', 'Chile', 'Australia',
+      'Japan', 'Austria', 'Colombia', 'Bulgaria', 'Ecuador', 'Israel', 'France', 'Russia',
+      'Cuba', 'Ukraine', 'Iraq', 'Italy', 'Uruguay', 'Morocco', 'Spain', 'Taiwan',
+      'Emirates', 'Iran', 'Dominican Republic', 'Belize', 'Argentina', 'Germany', 'Canada', 'India'
+    ],
+    es: [
+      'México', 'Reino Unido', 'Chequia', 'Eslovaquia', 'EE. UU.', 'Perú', 'Chile', 'Australia',
+      'Japón', 'Austria', 'Colombia', 'Bulgaria', 'Ecuador', 'Israel', 'Francia', 'Rusia',
+      'Cuba', 'Ucrania', 'Irak', 'Italia', 'Uruguay', 'Marruecos', 'España', 'Taiwán',
+      'Emiratos', 'Irán', 'República Dominicana', 'Belice', 'Argentina', 'Alemania', 'Canadá', 'India'
+    ],
+    cz: [
+      'Mexika', 'Velké Británie', 'Česka', 'Slovenska', 'USA', 'Peru', 'Chile', 'Austrálie',
+      'Japonska', 'Rakouska', 'Kolumbie', 'Bulharska', 'Ekvádoru', 'Izraele', 'Francie', 'Ruska',
+      'Kuby', 'Ukrajiny', 'Iráku', 'Itálie', 'Uruguaye', 'Maroka', 'Španělska', 'Tchaj-wanu',
+      'Emirátů', 'Íránu', 'Dominikánské republiky', 'Belize', 'Argentiny', 'Německa', 'Kanady', 'Indie'
+    ]
+  }
+  
+  const countries = countriesData[language] || countriesData.en
 
   const [currentCountryIndex, setCurrentCountryIndex] = useState(0)
 
@@ -58,27 +61,15 @@ const CountriesSection = () => {
       </div>
 
       <div className="relative max-w-6xl mx-auto px-6 lg:px-12 text-center">
-        {/* Texto principal - Primera línea */}
+        {/* Texto principal usando traducciones */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.5, ease: [0.76, 0, 0.24, 1] }}
-          className="mb-6"
-        >
-          <h2 className="text-white text-4xl lg:text-6xl font-light tracking-[0.25em] leading-tight" style={{ fontFamily: 'Gotham, sans-serif' }}>
-            I HAVE WORKED
-          </h2>
-        </motion.div>
-
-        {/* Segunda línea */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.5, delay: 0.2, ease: [0.76, 0, 0.24, 1] }}
           className="mb-16"
         >
           <h2 className="text-white text-4xl lg:text-6xl font-light tracking-[0.25em] leading-tight" style={{ fontFamily: 'Gotham, sans-serif' }}>
-            WITH PEOPLE FROM
+            {t('countries.title')}
           </h2>
         </motion.div>
 
@@ -131,7 +122,7 @@ const CountriesSection = () => {
           className="mt-20"
         >
           <h2 className="text-white/90 text-3xl lg:text-5xl font-light tracking-[0.3em] italic" style={{ fontFamily: 'Gotham, sans-serif' }}>
-            And where are you from?
+            {t('countries.question')}
           </h2>
         </motion.div>
 
