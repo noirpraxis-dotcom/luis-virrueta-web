@@ -80,9 +80,9 @@ const HealingSessionsPage = () => {
         <AnimalsSection />
       </section>
 
-      {/* Session Prices Section */}
+      {/* Session Prices CTA */}
       <section id="session-prices" className="py-20 lg:py-32 px-6 lg:px-20 bg-gradient-to-b from-stone-50 to-white">
-        <SessionPricesSection />
+        <SessionPricesCTA />
       </section>
     </div>
   )
@@ -567,136 +567,107 @@ const AnimalsSection = () => {
 }
 
 // Session Prices Section
-const SessionPricesSection = () => {
+const SessionPricesCTA = () => {
   const ref = useRef(null)
+  const navigate = useNavigate()
   const isInView = useInView(ref, { once: true, amount: 0.3 })
 
-  const prices = [
-    {
-      title: 'Single Session',
-      price: '$80',
-      duration: '60-90 minutes',
-      features: [
-        'Energy healing session',
-        'Detailed report of findings',
-        'Personalized recommendations',
-        'Email support for questions'
-      ],
-      color: 'from-emerald-400 to-teal-600',
-      borderColor: 'border-emerald-200'
-    },
-    {
-      title: 'Package of 3 Sessions',
-      price: '$210',
-      duration: 'Save $30',
-      features: [
-        'Three complete sessions',
-        'Priority scheduling',
-        'Extended follow-up support',
-        'Progress tracking between sessions'
-      ],
-      color: 'from-amber-400 to-orange-600',
-      borderColor: 'border-amber-200',
-      popular: true
-    },
-    {
-      title: 'Package of 5 Sessions',
-      price: '$320',
-      duration: 'Save $80',
-      features: [
-        'Five complete sessions',
-        'Priority scheduling',
-        'Ongoing email support',
-        'Comprehensive healing journey'
-      ],
-      color: 'from-purple-400 to-indigo-600',
-      borderColor: 'border-purple-200'
-    }
-  ]
-
   return (
-    <div className="max-w-7xl mx-auto">
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 30 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8 }}
-        className="text-center mb-16"
-      >
-        <h2 
-          className="text-4xl lg:text-5xl font-light text-stone-800 mb-6 tracking-wide"
-          style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}
+    <section className="py-20 lg:py-32 relative" id="prices">
+      {/* Subtle background with overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-stone-50 via-amber-50/30 to-stone-100 opacity-60" />
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 40 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+          transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+          className="max-w-4xl mx-auto text-center"
         >
-          Session Prices
-        </h2>
-        <GradientLine />
-        <p className="text-stone-600 text-lg mt-6 max-w-2xl mx-auto">
-          Invest in your healing journey with flexible options designed to support deep transformation.
-        </p>
-      </motion.div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {prices.map((option, index) => (
+          {/* Top decorative line */}
           <motion.div
-            key={option.title}
-            initial={{ opacity: 0, y: 50 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: index * 0.2 }}
-            className="relative"
-          >
-            {option.popular && (
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-orange-600 text-white px-4 py-1 rounded-full text-sm font-medium">
-                Most Popular
-              </div>
-            )}
-            <BackdropBlurCard className={`h-full ${option.borderColor} border-2 ${option.popular ? 'shadow-2xl' : ''}`}>
-              <div className="p-8">
-                <div className={`bg-gradient-to-br ${option.color} w-16 h-16 rounded-full flex items-center justify-center text-white mx-auto mb-4`}>
-                  <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                  </svg>
-                </div>
-                
-                <h3 className="text-2xl font-semibold text-stone-800 text-center mb-2">
-                  {option.title}
-                </h3>
-                
-                <div className="text-center mb-2">
-                  <span className="text-4xl font-bold text-stone-800">{option.price}</span>
-                </div>
-                
-                <p className="text-center text-stone-500 mb-6 text-sm">{option.duration}</p>
-                
-                <ul className="space-y-3 mb-8">
-                  {option.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-stone-600">
-                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`w-full bg-gradient-to-r ${option.color} text-white py-3 rounded-full font-medium hover:shadow-lg transition-all duration-300`}
-                >
-                  Book Now
-                </motion.button>
-              </div>
-            </BackdropBlurCard>
-          </motion.div>
-        ))}
-      </div>
+            initial={{ scaleX: 0 }}
+            animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
+            transition={{ duration: 1.2, delay: 0.2 }}
+            className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-32 mb-10"
+          />
 
-      <div className="mt-12 text-center">
-        <p className="text-stone-500 text-sm">
-          All sessions can be conducted remotely. Payment plans available upon request.
-        </p>
+          {/* Main Title */}
+          <h2 
+            className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 leading-tight tracking-wide"
+            style={{ fontFamily: 'Cormorant Garamond, serif' }}
+          >
+            Your Healing Journey <br className="hidden lg:block" />
+            is an <span className="italic text-amber-700">Investment</span> in You
+          </h2>
+
+          {/* Compelling Copy */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 1, delay: 0.4 }}
+            className="text-xl lg:text-2xl text-stone-700 leading-relaxed mb-6 font-light max-w-3xl mx-auto"
+            style={{ fontFamily: 'Cormorant Garamond, serif' }}
+          >
+            Every session is designed to unlock deeper layers of healing, release what no longer serves you, and guide you toward lasting transformation.
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 1, delay: 0.6 }}
+            className="text-lg lg:text-xl text-stone-600 leading-relaxed mb-12 font-light italic max-w-2xl mx-auto"
+            style={{ fontFamily: 'Cormorant Garamond, serif' }}
+          >
+            Discover flexible options tailored to meet you wherever you are on your path.
+          </motion.p>
+
+          {/* Central decorative element */}
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={isInView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="w-20 h-20 mx-auto mb-12"
+          >
+            <div className="w-full h-full rounded-full border-2 border-amber-600/30 flex items-center justify-center relative">
+              <div className="absolute inset-2 rounded-full border border-amber-600/20" />
+              <Sparkles className="w-8 h-8 text-amber-600" />
+            </div>
+          </motion.div>
+
+          {/* CTA Button */}
+          <motion.button
+            onClick={() => navigate('/prices')}
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 1, delay: 1 }}
+            whileHover={{ scale: 1.05, y: -3 }}
+            whileTap={{ scale: 0.98 }}
+            className="group bg-[#8dc1ab] hover:bg-[#7ab09a] text-white py-5 px-12 rounded-full font-light text-xl lg:text-2xl tracking-wide shadow-xl hover:shadow-2xl transition-all duration-500 inline-flex items-center gap-4 mx-auto"
+            style={{ fontFamily: 'Cormorant Garamond, serif' }}
+          >
+            <span>Explore Session Packages</span>
+            <svg 
+              className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </motion.button>
+
+          {/* Bottom decorative line */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
+            transition={{ duration: 1.5, delay: 1.2 }}
+            className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-96 mt-16"
+          />
+        </motion.div>
       </div>
-    </div>
+    </section>
   )
 }
 

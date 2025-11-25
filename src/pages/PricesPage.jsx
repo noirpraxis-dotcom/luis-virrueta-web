@@ -17,8 +17,11 @@ const PricesPage = () => {
         'Personalized recommendations',
         'Email support for questions'
       ],
-      color: 'from-[#8dc1ab] to-teal-600',
-      borderColor: 'border-[#8dc1ab]'
+      bgColor: 'bg-[#8dc1ab]',
+      hoverBg: 'hover:bg-[#7ab09a]',
+      borderColor: 'border-stone-200',
+      iconBg: 'bg-[#8dc1ab]/20',
+      iconColor: 'text-[#8dc1ab]'
     },
     {
       title: 'Package of 3 Sessions',
@@ -30,8 +33,11 @@ const PricesPage = () => {
         'Extended follow-up support',
         'Progress tracking between sessions'
       ],
-      color: 'from-amber-400 to-orange-600',
-      borderColor: 'border-amber-200',
+      bgColor: 'bg-amber-600',
+      hoverBg: 'hover:bg-amber-700',
+      borderColor: 'border-stone-200',
+      iconBg: 'bg-amber-600/20',
+      iconColor: 'text-amber-600',
       popular: true
     },
     {
@@ -44,8 +50,11 @@ const PricesPage = () => {
         'Ongoing email support',
         'Comprehensive healing journey'
       ],
-      color: 'from-purple-400 to-indigo-600',
-      borderColor: 'border-purple-200'
+      bgColor: 'bg-stone-700',
+      hoverBg: 'hover:bg-stone-800',
+      borderColor: 'border-stone-200',
+      iconBg: 'bg-stone-700/20',
+      iconColor: 'text-stone-700'
     }
   ]
 
@@ -96,43 +105,56 @@ const PricesPage = () => {
                 className="relative"
               >
                 {option.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-orange-600 text-white px-4 py-1 rounded-full text-sm font-medium z-10">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-amber-600 text-white px-6 py-2 rounded-full text-sm font-medium z-10 shadow-lg">
                     Most Popular
                   </div>
                 )}
-                <BackdropBlurCard className={`h-full ${option.borderColor} border-2 ${option.popular ? 'shadow-2xl' : ''}`}>
-                  <div className="p-8">
-                    <div className={`bg-gradient-to-br ${option.color} w-16 h-16 rounded-full flex items-center justify-center text-white mx-auto mb-4`}>
-                      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                <BackdropBlurCard className={`h-full ${option.borderColor} border-2 ${option.popular ? 'shadow-2xl scale-105' : 'shadow-lg'} hover:shadow-xl transition-all duration-300`}>
+                  <div className="p-8 lg:p-10">
+                    <div className={`${option.iconBg} w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 border-2 ${option.borderColor} shadow-md`}>
+                      <svg className={`w-10 h-10 ${option.iconColor}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                       </svg>
                     </div>
                     
-                    <h3 className="text-2xl font-semibold text-stone-800 text-center mb-2">
+                    <h3 
+                      className="text-2xl lg:text-3xl font-light text-stone-800 text-center mb-4 tracking-wide"
+                      style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                    >
                       {option.title}
                     </h3>
                     
                     <div className="text-center mb-2">
-                      <span className="text-4xl font-bold text-stone-800">{option.price}</span>
+                      <span className="text-5xl font-light text-stone-800" style={{ fontFamily: 'Cormorant Garamond, serif' }}>{option.price}</span>
                     </div>
                     
-                    <p className="text-center text-stone-500 mb-6 text-sm">{option.duration}</p>
+                    <p className="text-center text-stone-500 mb-8 text-base font-light italic" style={{ fontFamily: 'Cormorant Garamond, serif' }}>{option.duration}</p>
                     
-                    <ul className="space-y-3 mb-8">
+                    {/* Decorative divider */}
+                    <motion.div
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 0.3 }}
+                      className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mb-8"
+                    />
+                    
+                    <ul className="space-y-4 mb-10">
                       {option.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-start gap-2 text-stone-600">
-                          <svg className="w-5 h-5 text-[#8dc1ab] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        <li key={idx} className="flex items-start gap-3 text-stone-600">
+                          <svg className={`w-5 h-5 flex-shrink-0 mt-0.5 ${option.iconColor}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                           </svg>
-                          <span className="text-sm">{feature}</span>
+                          <span className="text-base font-light leading-relaxed" style={{ fontFamily: 'Cormorant Garamond, serif' }}>{feature}</span>
                         </li>
                       ))}
                     </ul>
                     
                     <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className={`w-full bg-gradient-to-r ${option.color} text-white py-3 rounded-full font-medium hover:shadow-lg transition-all duration-300`}
+                      whileHover={{ scale: 1.03, y: -2 }}
+                      whileTap={{ scale: 0.97 }}
+                      className={`w-full ${option.bgColor} ${option.hoverBg} text-white py-4 rounded-full font-light text-lg tracking-wide shadow-lg hover:shadow-xl transition-all duration-300`}
+                      style={{ fontFamily: 'Cormorant Garamond, serif' }}
                     >
                       Book Now
                     </motion.button>
