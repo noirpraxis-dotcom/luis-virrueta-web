@@ -148,26 +148,25 @@ const Store = () => {
             >
               {/* Imagen */}
               <div className="relative aspect-[16/9] overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-100 to-stone-200" />
-                <motion.div
+                <motion.img
+                  src={product.image}
+                  alt={product.name}
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.6 }}
-                  className="relative h-full flex items-center justify-center"
-                >
-                  <div className="text-center p-8">
-                    <div className="w-20 h-20 mx-auto mb-3 bg-amber-600/10 rounded-full flex items-center justify-center">
-                      <svg className="w-10 h-10 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                    </div>
-                    <p className="text-stone-500 text-sm tracking-wider" style={{ fontFamily: 'Gotham, sans-serif' }}>
-                      {product.category}
-                    </p>
-                  </div>
-                </motion.div>
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
 
                 {/* Overlay en hover */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                {/* Category badge overlay */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="bg-white/95 backdrop-blur-sm px-6 py-3 rounded-full">
+                    <p className="text-stone-700 text-sm font-medium tracking-wider" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                      {product.category}
+                    </p>
+                  </div>
+                </div>
                 
                 {/* Badge de duración */}
                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full">

@@ -107,16 +107,16 @@ const CoursesPage = () => {
         </div>
       </section>
 
-      {/* Main Content */}
-      <section className="py-20 lg:py-32 px-6 lg:px-20">
+      {/* Main Content - Moved higher and simplified */}
+      <section className="py-12 lg:py-20 px-6 lg:px-20">
         <div className="max-w-5xl mx-auto">
-          {/* Emotion Code Certification Section */}
+          {/* Emotion Code Certification Section - Now more prominent */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="mb-20"
+            className="mb-16"
           >
             <div className="bg-white rounded-3xl shadow-2xl border border-stone-200/50 overflow-hidden">
               <div className="p-10 lg:p-16">
@@ -146,53 +146,53 @@ const CoursesPage = () => {
                     <p className="text-stone-800 font-medium mb-4">{t('courses.emotionCode.bonus.title')}</p>
                     <p>{t('courses.emotionCode.bonus.description')}</p>
                   </div>
+
+                  {/* Direct Links - Simple and Elegant */}
+                  <div className="pt-8 space-y-4">
+                    <p className="text-center text-stone-600 font-medium mb-6">
+                      The links below will take you to the official page where you can purchase the certification course:
+                    </p>
+                    <div className="space-y-3">
+                      <motion.a
+                        href="https://discoverhealing.com/product/the-emotion-code-certification-program/ref/p65hl/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ x: 5 }}
+                        className="flex items-center justify-between p-4 bg-gradient-to-r from-[#8dc1ab]/5 to-transparent rounded-xl hover:from-[#8dc1ab]/10 transition-all duration-300 border border-[#8dc1ab]/20 hover:border-[#8dc1ab]/40"
+                      >
+                        <span className="text-stone-800 font-medium" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                          🇬🇧 I want to study in English
+                        </span>
+                        <ExternalLink className="w-5 h-5 text-[#8dc1ab]" />
+                      </motion.a>
+                      <motion.a
+                        href="https://discoverhealing.com/es/product/the-emotion-code-certification-program/ref/p65hl/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ x: 5 }}
+                        className="flex items-center justify-between p-4 bg-gradient-to-r from-[#8dc1ab]/5 to-transparent rounded-xl hover:from-[#8dc1ab]/10 transition-all duration-300 border border-[#8dc1ab]/20 hover:border-[#8dc1ab]/40"
+                      >
+                        <span className="text-stone-800 font-medium" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                          🇪🇸 I want to study in Spanish
+                        </span>
+                        <ExternalLink className="w-5 h-5 text-[#8dc1ab]" />
+                      </motion.a>
+                      <motion.a
+                        href="https://myablefy.com/epl/SpJyVrJhMzhWVF_V5jxx"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ x: 5 }}
+                        className="flex items-center justify-between p-4 bg-gradient-to-r from-[#8dc1ab]/5 to-transparent rounded-xl hover:from-[#8dc1ab]/10 transition-all duration-300 border border-[#8dc1ab]/20 hover:border-[#8dc1ab]/40"
+                      >
+                        <span className="text-stone-800 font-medium" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                          🇨🇿 I want to study in Czech
+                        </span>
+                        <ExternalLink className="w-5 h-5 text-[#8dc1ab]" />
+                      </motion.a>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
-
-          {/* Course Links Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="mb-20"
-          >
-            <h3 
-              className="text-3xl lg:text-4xl font-light text-stone-800 mb-12 text-center"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
-              {t('courses.links.title')}
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {currentLinks.map((link, index) => (
-                <motion.a
-                  key={index}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={{ y: -5, scale: 1.02 }}
-                  className="group bg-white rounded-2xl shadow-xl hover:shadow-2xl border border-stone-200/50 hover:border-[#8dc1ab]/30 transition-all duration-500 p-8 text-center"
-                >
-                  <div className="text-6xl mb-4">{link.flag}</div>
-                  <h4 
-                    className="text-xl font-medium text-stone-800 mb-4"
-                    style={{ fontFamily: 'Gotham, sans-serif' }}
-                  >
-                    {link.language}
-                  </h4>
-                  <div className="flex items-center justify-center gap-2 text-[#8dc1ab] group-hover:text-[#7ab09a] transition-colors">
-                    <span style={{ fontFamily: 'Gotham, sans-serif' }}>{t('courses.links.button')}</span>
-                    <ExternalLink className="w-5 h-5" />
-                  </div>
-                </motion.a>
-              ))}
             </div>
           </motion.div>
 
