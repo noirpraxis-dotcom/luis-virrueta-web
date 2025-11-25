@@ -393,6 +393,32 @@
       "description": "Zahrnuje přípravné vedení a řízenou meditaci."
     }
   },
+  "courses": {
+    "heroSmall": "ZAČNI SVOU CESTU",
+    "heroLarge": "UZDRAVOVATELE",
+    "subtitle": "Staň se praktikem Emotion Code®",
+    "emotionCode": {
+      "title": "Staň se praktikem Emotion Code®",
+      "intro": "Chtěl by ses naučit, jak pomoci sám sobě i svým blízkým metodou Emočního kódu®, a k tomu si vytvořit nový příjem díky práci s klienty?",
+      "callout": "Pokud ano, tak je to skvělá zpráva, protože svět tě potřebuje víc než kdy jindy.",
+      "description1": "V současnosti existuje přibližně 10 000 certifikovaných praktiků Emočního kódu® ve více než 80 zemích světa, ale to v dnešní době nestačí. Budoucnost patří energetickému uzdravování a stále více lidí tyto alternativy začíná aktivně vyhledávat.",
+      "description2": "Zaregistruj se a za pouhých pár měsíců budeš připraven začít legálně nabízet své služby jako praktik Emočního kódu.",
+      "cta": "Ráda ti pomůžu s prvními kroky.",
+      "bonus": {
+        "title": "✨ Speciální bonus pro tebe",
+        "description": "Pokud si certifikační kurz zakoupíš přes můj partnerský odkaz (níže), obdržíš ode mě zdarma jedno Emotion Code® sezení, při kterém uvolníme emoční zátěž, která by mohla bránit hladkému průběhu tvého studia."
+      }
+    },
+    "links": {
+      "title": "Vyber si jazyk studia",
+      "button": "Začít studovat"
+    },
+    "contact": {
+      "title": "Máš otázky?",
+      "description": "Napiš mi a ráda ti odpovím.",
+      "button": "Kontaktuj mě"
+    }
+  },
   "times": [
     "9:00",
     "10:30",
@@ -400,5 +426,6 @@
     "14:00",
     "15:30",
     "17:00"
-  ]
+  ],
+  "lang": "cz"
 }

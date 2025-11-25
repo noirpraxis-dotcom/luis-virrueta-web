@@ -394,6 +394,32 @@
       "description": "Just as effective as a in-person session. Includes pre-session preparation and personalized guidance."
     }
   },
+  "courses": {
+    "heroSmall": "BEGIN YOUR",
+    "heroLarge": "HEALER'S JOURNEY",
+    "subtitle": "Become an Emotion Code® Practitioner",
+    "emotionCode": {
+      "title": "Become an Emotion Code® Practitioner",
+      "intro": "Would you like to learn how to heal yourself, support your loved ones, and at the same time generate income by guiding others through their healing journeys with the Emotion Code®?",
+      "callout": "Wonderful, the world needs you now more than ever!",
+      "description1": "There are currently around 10,000 certified Emotion Code® practitioners in over 80 countries, but that's not enough for the times we're living in. The future lies in vibrational healing, and more and more people are turning to energetic alternatives to elevate their physical and mental well-being to a whole new level.",
+      "description2": "Enroll now and, in just a few months, you'll be ready to begin offering your services professionally and legally.",
+      "cta": "I'd love to help you get started on this path!",
+      "bonus": {
+        "title": "✨ Special Bonus for You",
+        "description": "If you make your purchase through my affiliate link (below), you'll receive a free Emotion Code® session, where we'll release any emotional baggage that may be interfering, so your learning process flows with ease and zero resistance."
+      }
+    },
+    "links": {
+      "title": "Choose Your Study Language",
+      "button": "Start Learning"
+    },
+    "contact": {
+      "title": "Do you have any questions?",
+      "description": "Feel free to write to me, I'll be happy to help.",
+      "button": "Contact Me"
+    }
+  },
   "times": [
     "9:00 AM",
     "10:30 AM",
@@ -401,5 +427,6 @@
     "2:00 PM",
     "3:30 PM",
     "5:00 PM"
-  ]
+  ],
+  "lang": "en"
 }

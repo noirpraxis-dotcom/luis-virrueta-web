@@ -39,7 +39,8 @@ const PersonalCreationPage = () => {
               className="text-stone-800 font-light tracking-[0.2em] mb-8"
               style={{ fontFamily: 'Gotham, sans-serif' }}
             >
-              <div className="text-6xl lg:text-8xl">{t('personalCreation.title')}</div>
+              <div className="text-3xl lg:text-4xl mb-2 opacity-60">PERSONAL</div>
+              <div className="text-6xl lg:text-8xl">CREATION</div>
             </motion.h1>
             
             <motion.div
@@ -53,7 +54,8 @@ const PersonalCreationPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.5 }}
-              className="text-stone-600 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed mb-8"
+              className="text-stone-900 text-base lg:text-lg max-w-3xl mx-auto leading-relaxed mb-8 font-normal"
+              style={{ fontFamily: 'Gotham, sans-serif' }}
             >
               {t('personalCreation.intro')}
             </motion.p>

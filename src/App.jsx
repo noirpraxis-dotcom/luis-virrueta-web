@@ -13,6 +13,7 @@ import ProductDetailPage from './pages/ProductDetailPage'
 import HealingSessionsPage from './pages/HealingSessionsPage'
 import PersonalCreationPage from './pages/PersonalCreationPage'
 import PricesPage from './pages/PricesPage'
+import CoursesPage from './pages/CoursesPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import TermsConditionsPage from './pages/TermsConditionsPage'
 import CookiePolicyPage from './pages/CookiePolicyPage'
@@ -47,15 +48,8 @@ const AppContent = () => {
         { name: t('menu.music'), href: '/personal-creation#music' }
       ]
     },
-    { name: t('menu.courses'), href: '/store#courses' },
-    { 
-      name: t('menu.store'), 
-      href: '/store',
-      subItems: [
-        { name: t('menu.courses'), href: '/store#courses' },
-        { name: t('menu.books'), href: '/personal-creation#books' }
-      ]
-    },
+    { name: t('menu.courses'), href: '/courses' },
+    { name: t('menu.store'), href: '/store' }
   ]
 
   return (
@@ -137,6 +131,20 @@ const AppContent = () => {
             <Route path="/personal-creation" element={
               <div className="lg:pt-28">
                 <PersonalCreationPage />
+              </div>
+            } />
+
+            {/* Página Courses */}
+            <Route path="/courses" element={
+              <div className="lg:pt-28">
+                <CoursesPage />
+              </div>
+            } />
+
+            {/* Páginas Legales */}
+            <Route path="/privacy-policy" element={
+              <div className="lg:pt-28">
+                <CoursesPage />
               </div>
             } />
 

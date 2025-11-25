@@ -394,6 +394,32 @@
       "description": "Igual de efectiva que una sesión presencial. Incluye preparación previa y orientación personalizada."
     }
   },
+  "courses": {
+    "heroSmall": "INICIA TU CAMINO",
+    "heroLarge": "DE SANADOR",
+    "subtitle": "Conviértete en Practicante del Código de la Emoción",
+    "emotionCode": {
+      "title": "Conviértete en Practicante del Emotion Code®",
+      "intro": "¿Te gustaría aprender a sanarte a ti mismo, ayudar a tus seres queridos y al mismo tiempo generar ingresos acompañando a otros en su proceso de sanación con el Emotion Code®?",
+      "callout": "¡Maravilloso, el mundo te necesita más que nunca!",
+      "description1": "Actualmente hay alrededor de 10 mil practicantes certificados en el Emotion Code® en más de 80 países, pero eso no es suficiente para los tiempos que estamos viviendo. El futuro está en la sanación vibracional, y cada vez más personas buscan alternativas energéticas para elevar su estado de salud física y mental a otro nivel.",
+      "description2": "Inscríbete y en solo unos meses, estarás listo para comenzar y ofrecer tus servicios de forma profesional y legal.",
+      "cta": "¡Me encantaría ayudarte a iniciar el viaje!",
+      "bonus": {
+        "title": "✨ Bonus Especial para Ti",
+        "description": "Si realizas tu compra a través de mi enlace de afiliada (abajo), recibirás una sesión gratuita de Emotion Code, en la que liberaremos el bagaje emocional que pueda estar interfiriendo, para que tu aprendizaje del método fluya con facilidad y sin resistencia."
+      }
+    },
+    "links": {
+      "title": "Elige Tu Idioma de Estudio",
+      "button": "Comenzar a Estudiar"
+    },
+    "contact": {
+      "title": "¿Tienes dudas?",
+      "description": "Escríbeme con confianza.",
+      "button": "Contáctame"
+    }
+  },
   "times": [
     "9:00 AM",
     "10:30 AM",
@@ -401,5 +427,6 @@
     "2:00 PM",
     "3:30 PM",
     "5:00 PM"
-  ]
+  ],
+  "lang": "es"
 }
