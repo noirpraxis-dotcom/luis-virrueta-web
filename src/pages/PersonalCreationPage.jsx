@@ -239,7 +239,7 @@ const BooksSection = () => {
   )
 }
 
-// Music Section - YouTube Videos Integration
+// Music Section - YouTube Videos Integration - PREMIUM DESIGN
 const MusicSection = () => {
   const containerRef = useRef(null)
   const isInView = useInView(containerRef, { once: true, amount: 0.2 })
@@ -248,23 +248,23 @@ const MusicSection = () => {
   const videos = [
     {
       id: 'mc2cOVnPBIY',
-      title: 'Featured Song',
-      description: 'A heartfelt musical expression carrying healing vibrations and light.'
+      title: 'Soul Journey',
+      description: 'An intimate vocal expression channeling healing frequencies through sacred sound and intention.'
     },
     {
       id: '9d1ALXBay_w',
-      title: 'Musical Journey',
-      description: 'Melodies that touch the soul and open pathways to inner peace.'
+      title: 'Celestial Harmonies',
+      description: 'Ethereal melodies woven with light codes, designed to elevate consciousness and restore inner balance.'
     },
     {
       id: 'U-yQzUeB-4s',
-      title: 'Healing Harmonies',
-      description: 'Sound frequencies designed to bring balance and tranquility.'
+      title: 'Healing Resonance',
+      description: 'Vibrational sound medicine that penetrates the heart space, releasing blockages and inviting peace.'
     },
     {
       id: 'lLJji7_W1ZU',
-      title: 'Vocal Expression',
-      description: 'Pure voice carrying messages of love and transformation.'
+      title: 'Voice of Light',
+      description: 'Pure vocal transmission carrying ancient wisdom and transformative energy for the awakened soul.'
     },
   ]
 
@@ -273,19 +273,19 @@ const MusicSection = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
+        staggerChildren: 0.15,
+        delayChildren: 0.4
       }
     }
   }
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 40 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.6,
+        duration: 0.8,
         ease: [0.76, 0, 0.24, 1]
       }
     }
@@ -293,49 +293,73 @@ const MusicSection = () => {
 
   return (
     <div className="max-w-7xl mx-auto">
-      {/* Title Section */}
+      {/* Title Section - PREMIUM */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="text-center mb-16"
+        transition={{ duration: 1, delay: 0.2, ease: [0.76, 0, 0.24, 1] }}
+        className="text-center mb-20 lg:mb-24"
       >
+        {/* Decorative element above title */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1.2, delay: 0.3 }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-600/30 to-transparent mx-auto w-32 mb-8"
+        />
+
         <h2 
-          className="text-4xl lg:text-5xl font-light text-stone-800 mb-6 tracking-wide"
-          style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}
+          className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-[0.15em]"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          My Music
+          Musical <span className="italic text-amber-700">Offerings</span>
         </h2>
+        
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-8 text-stone-600 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed"
+          transition={{ duration: 1, delay: 0.5 }}
+          className="text-stone-600 text-xl lg:text-2xl max-w-4xl mx-auto leading-relaxed font-light"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Songs, melodies, and vocal expressions that carry healing vibrations.
-          Each piece is an offering of love and light through sound.
+          Sacred sounds and vocal transmissions crafted to touch the soul,
+          <br className="hidden lg:block" />
+          heal the heart, and elevate the spirit through divine frequencies.
         </motion.p>
-        <GradientLine className="mt-12" />
+
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1.5, delay: 0.7 }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-96 mt-12"
+        />
       </motion.div>
 
-      {/* Videos Grid */}
+      {/* Videos Grid - PREMIUM DESIGN */}
       <motion.div
         ref={containerRef}
         variants={containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10"
+        className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-12"
       >
         {videos.map((video, index) => (
           <motion.div
             key={index}
             variants={itemVariants}
+            whileHover={{ y: -8 }}
+            transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
             className="group"
           >
-            <BackdropBlurCard className="overflow-hidden h-full">
-              {/* YouTube Video Embed */}
-              <div className="relative aspect-video bg-stone-100 overflow-hidden">
+            <div className="relative bg-white rounded-2xl overflow-hidden shadow-xl border border-stone-200/50 hover:shadow-2xl hover:border-amber-600/20 transition-all duration-500">
+              {/* Decorative corner accent */}
+              <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-amber-600/10 to-transparent rounded-bl-full z-10" />
+              
+              {/* YouTube Video Embed with premium frame */}
+              <div className="relative aspect-video bg-gradient-to-br from-stone-100 to-amber-50/20 overflow-hidden">
+                {/* Elegant border overlay */}
+                <div className="absolute inset-0 border-b border-amber-600/10 z-10" />
+                
                 <iframe
                   src={`https://www.youtube.com/embed/${video.id}`}
                   title={video.title}
@@ -345,52 +369,98 @@ const MusicSection = () => {
                 />
               </div>
 
-              {/* Video Info */}
-              <div className="p-6">
+              {/* Video Info - Premium Layout */}
+              <div className="relative p-8 lg:p-10">
+                {/* Decorative line above title */}
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="h-px bg-gradient-to-r from-amber-600/50 via-amber-600/20 to-transparent w-16 mb-6"
+                />
+
                 <h3 
-                  className="text-xl font-semibold text-stone-800 mb-3 group-hover:text-amber-600 transition-colors duration-300"
-                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                  className="text-2xl lg:text-3xl font-light text-stone-800 mb-5 tracking-wide group-hover:text-amber-700 transition-colors duration-500 leading-tight"
+                  style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.02em' }}
                 >
                   {video.title}
                 </h3>
                 
-                <p className="text-stone-600 leading-relaxed text-sm">
+                <p 
+                  className="text-stone-600 leading-relaxed text-base lg:text-lg font-light"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                >
                   {video.description}
                 </p>
+
+                {/* Decorative dots */}
+                <div className="flex gap-1.5 mt-6 opacity-40">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="w-1 h-1 bg-amber-600 rounded-full" />
+                  ))}
+                </div>
               </div>
-            </BackdropBlurCard>
+
+              {/* Subtle glow effect on hover */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="absolute inset-0 bg-gradient-to-t from-amber-600/5 to-transparent pointer-events-none"
+              />
+            </div>
           </motion.div>
         ))}
       </motion.div>
 
-      {/* Link to Full YouTube Channel */}
+      {/* Link to Full YouTube Channel - PREMIUM */}
       <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ delay: 0.6 }}
-        className="mt-16 text-center"
+        transition={{ duration: 0.8, delay: 0.3 }}
+        className="mt-20 lg:mt-24 text-center"
       >
+        {/* Decorative element above button */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, delay: 0.4 }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-600/30 to-transparent mx-auto w-48 mb-12"
+        />
+
         <motion.a
           href="https://www.youtube.com/@lasun7929/videos"
           target="_blank"
           rel="noopener noreferrer"
-          whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.95 }}
-          className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-full font-medium hover:shadow-xl transition-all duration-300"
+          whileHover={{ scale: 1.03, y: -3 }}
+          whileTap={{ scale: 0.97 }}
+          className="inline-flex items-center gap-4 px-10 py-5 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white rounded-full font-light text-lg tracking-wide hover:shadow-2xl hover:shadow-amber-500/30 transition-all duration-500 group"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <svg className="w-7 h-7 group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
             <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
           </svg>
-          <span>Visit My YouTube Channel</span>
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          <span>Explore Full Collection</span>
+          <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
         </motion.a>
 
-        <p className="text-stone-500 italic max-w-2xl mx-auto leading-relaxed mt-8">
-          Explore more videos, subscribe, and join the journey through sound and healing.
-        </p>
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.7 }}
+          className="text-stone-500 text-lg font-light max-w-2xl mx-auto leading-relaxed mt-10"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
+        >
+          Subscribe to receive new musical transmissions and continue
+          <br className="hidden lg:block" />
+          your journey through the realm of healing sound.
+        </motion.p>
       </motion.div>
     </div>
   )
