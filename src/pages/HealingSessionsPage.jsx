@@ -715,8 +715,17 @@ const SessionNavigator = () => {
         'Limiting beliefs holding you back?'
       ],
       action: 'Energy Healing',
-      icon: '💝',
-      color: 'rose'
+      icon: (
+        <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+      ),
+      bgColor: 'bg-stone-50',
+      borderColor: 'border-stone-200',
+      hoverBorder: 'hover:border-[#8dc1ab]',
+      accentColor: '#8dc1ab',
+      buttonBg: 'bg-[#8dc1ab]',
+      buttonHover: 'hover:bg-[#7ab09a]'
     },
     {
       id: 'past-life-regressions',
@@ -727,8 +736,17 @@ const SessionNavigator = () => {
         'Curious about your soul\'s journey?'
       ],
       action: 'Explore Past Lives',
-      icon: '⏳',
-      color: 'purple'
+      icon: (
+        <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+      bgColor: 'bg-amber-50',
+      borderColor: 'border-amber-200',
+      hoverBorder: 'hover:border-amber-600',
+      accentColor: '#d97706',
+      buttonBg: 'bg-amber-600',
+      buttonHover: 'hover:bg-amber-700'
     },
     {
       id: 'ilyari-somatic',
@@ -739,8 +757,17 @@ const SessionNavigator = () => {
         'Want to connect with higher frequencies?'
       ],
       action: 'Receive Light Codes',
-      icon: '✨',
-      color: 'amber'
+      icon: (
+        <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        </svg>
+      ),
+      bgColor: 'bg-orange-50',
+      borderColor: 'border-orange-200',
+      hoverBorder: 'hover:border-orange-500',
+      accentColor: '#ea580c',
+      buttonBg: 'bg-orange-500',
+      buttonHover: 'hover:bg-orange-600'
     },
     {
       id: 'healing-animals',
@@ -751,8 +778,17 @@ const SessionNavigator = () => {
         'Want to support their wellbeing energetically?'
       ],
       action: 'Help Your Pet',
-      icon: '🐾',
-      color: 'emerald'
+      icon: (
+        <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+      bgColor: 'bg-stone-100',
+      borderColor: 'border-stone-300',
+      hoverBorder: 'hover:border-stone-500',
+      accentColor: '#57534e',
+      buttonBg: 'bg-stone-600',
+      buttonHover: 'hover:bg-stone-700'
     }
   ]
 
@@ -830,16 +866,25 @@ const SessionNavigator = () => {
             }}
             className="group"
           >
-            <div className="relative bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl border border-stone-200/50 hover:border-amber-600/30 transition-all duration-500 h-full">
-              {/* Decorative blur effect */}
-              <div className="absolute -top-20 -right-20 w-64 h-64 bg-gradient-to-br from-amber-400/10 to-orange-400/10 rounded-full blur-3xl" />
+            <div className={`relative ${session.bgColor} rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl border-2 ${session.borderColor} ${session.hoverBorder} transition-all duration-500 h-full`}>
+              {/* Subtle decorative element */}
+              <div className="absolute top-0 right-0 w-32 h-32 opacity-20">
+                <svg viewBox="0 0 100 100" className="w-full h-full">
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="0.5" style={{ color: session.accentColor }} />
+                  <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" strokeWidth="0.5" style={{ color: session.accentColor }} />
+                </svg>
+              </div>
               
               <div className="relative p-8 lg:p-10">
-                {/* Icon - Large and elegant */}
+                {/* Icon - Elegant SVG in circular frame */}
                 <motion.div
-                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  whileHover={{ scale: 1.05, rotate: 5 }}
                   transition={{ duration: 0.3 }}
-                  className="text-6xl lg:text-7xl mb-6"
+                  className="w-20 h-20 rounded-full flex items-center justify-center mb-6 border-2 shadow-md"
+                  style={{ 
+                    borderColor: session.accentColor,
+                    color: session.accentColor 
+                  }}
                 >
                   {session.icon}
                 </motion.div>
@@ -852,7 +897,7 @@ const SessionNavigator = () => {
                   {session.title}
                 </h3>
 
-                {/* Questions with checkmarks */}
+                {/* Questions with elegant checkmarks */}
                 <div className="space-y-4 mb-10">
                   {session.questions.map((question, qIndex) => (
                     <motion.div
@@ -865,8 +910,14 @@ const SessionNavigator = () => {
                       }}
                       className="flex items-start gap-3 group-hover:translate-x-1 transition-transform duration-300"
                     >
-                      <div className={`mt-1 w-5 h-5 rounded-full bg-gradient-to-br from-${session.color}-400 to-${session.color}-500 flex items-center justify-center flex-shrink-0`}>
-                        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div 
+                        className="mt-1 w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 border"
+                        style={{ 
+                          borderColor: session.accentColor,
+                          backgroundColor: `${session.accentColor}15`
+                        }}
+                      >
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: session.accentColor }}>
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
@@ -877,13 +928,16 @@ const SessionNavigator = () => {
                   ))}
                 </div>
 
-                {/* Divider */}
+                {/* Elegant divider */}
                 <motion.div
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 0.4 }}
-                  className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mb-8"
+                  className="h-px mb-8"
+                  style={{ 
+                    background: `linear-gradient(to right, transparent, ${session.accentColor}40, transparent)` 
+                  }}
                 />
 
                 {/* Then text and Action Button */}
@@ -896,7 +950,7 @@ const SessionNavigator = () => {
                     onClick={() => handleNavigate(session.id)}
                     whileHover={{ scale: 1.03, y: -2 }}
                     whileTap={{ scale: 0.97 }}
-                    className={`w-full bg-gradient-to-r from-${session.color}-400 to-${session.color}-500 text-white py-4 px-6 rounded-full font-light text-lg tracking-wide hover:shadow-xl hover:shadow-${session.color}-500/30 transition-all duration-500 flex items-center justify-center gap-3 group`}
+                    className={`w-full ${session.buttonBg} ${session.buttonHover} text-white py-4 px-6 rounded-full font-light text-lg tracking-wide shadow-lg transition-all duration-500 flex items-center justify-center gap-3 group`}
                     style={{ fontFamily: 'Cormorant Garamond, serif' }}
                   >
                     <span>{session.action}</span>
