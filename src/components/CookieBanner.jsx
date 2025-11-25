@@ -1,8 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useLanguage } from '../context/LanguageContext'
 
 const CookieBanner = () => {
+  const { t } = useLanguage()
   const [showBanner, setShowBanner] = useState(false)
   const [showCustomize, setShowCustomize] = useState(false)
 
@@ -77,18 +79,17 @@ const CookieBanner = () => {
                           className="text-white text-lg font-light tracking-wide"
                           style={{ fontFamily: 'Gotham, sans-serif' }}
                         >
-                          We value your privacy
+                          {t('cookies.title')}
                         </h3>
                       </div>
                       <p className="text-white/70 text-sm leading-relaxed max-w-2xl">
-                        We use cookies to enhance your experience, analyze site traffic, and personalize content. 
-                        By clicking "Accept All", you consent to our use of cookies.{' '}
+                        {t('cookies.description')}{' '}
                         <Link 
                           to="/privacy-policy" 
                           className="text-[#8dc1ab] hover:text-[#7ab09a] underline transition-colors"
                           onClick={() => setShowBanner(false)}
                         >
-                          Learn more
+                          {t('cookies.learnMore')}
                         </Link>
                       </p>
                     </div>
@@ -102,7 +103,7 @@ const CookieBanner = () => {
                         className="px-6 py-2.5 text-white/70 hover:text-white border border-white/20 hover:border-white/40 rounded-full text-sm font-light tracking-wide transition-all duration-300"
                         style={{ fontFamily: 'Gotham, sans-serif' }}
                       >
-                        Reject All
+                        {t('cookies.rejectAll')}
                       </motion.button>
 
                       <motion.button
@@ -112,7 +113,7 @@ const CookieBanner = () => {
                         className="px-6 py-2.5 text-white/70 hover:text-white border border-white/20 hover:border-white/40 rounded-full text-sm font-light tracking-wide transition-all duration-300"
                         style={{ fontFamily: 'Gotham, sans-serif' }}
                       >
-                        Customize
+                        {t('cookies.customize')}
                       </motion.button>
 
                       <motion.button
@@ -122,12 +123,12 @@ const CookieBanner = () => {
                         className="px-8 py-2.5 bg-[#8dc1ab] text-black rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-[#7ab09a]"
                         style={{ fontFamily: 'Gotham, sans-serif' }}
                       >
-                        Accept All
+                        {t('cookies.acceptAll')}
                       </motion.button>
                     </div>
                   </div>
                 ) : (
-                  <CustomizePreferences onSave={handleCustomSave} onBack={() => setShowCustomize(false)} />
+                  <CustomizePreferences onSave={handleCustomSave} onBack={() => setShowCustomize(false)} t={t} />
                 )}
               </div>
             </div>
@@ -138,7 +139,7 @@ const CookieBanner = () => {
   )
 }
 
-const CustomizePreferences = ({ onSave, onBack }) => {
+const CustomizePreferences = ({ onSave, onBack, t }) => {
   const [preferences, setPreferences] = useState({
     necessary: true,
     analytics: true,
@@ -161,10 +162,10 @@ const CustomizePreferences = ({ onSave, onBack }) => {
           className="text-white text-xl font-light tracking-wide mb-2"
           style={{ fontFamily: 'Gotham, sans-serif' }}
         >
-          Cookie Preferences
+          {t('cookies.preferencesTitle')}
         </h3>
         <p className="text-white/60 text-sm">
-          Choose which cookies you want to accept
+          {t('cookies.preferencesDescription')}
         </p>
       </div>
 
@@ -172,9 +173,9 @@ const CustomizePreferences = ({ onSave, onBack }) => {
         {/* Necessary Cookies */}
         <div className="flex items-start justify-between gap-4 p-4 bg-white/5 rounded-lg border border-white/10">
           <div className="flex-1">
-            <h4 className="text-white text-sm font-medium mb-1">Necessary Cookies</h4>
+            <h4 className="text-white text-sm font-medium mb-1">{t('cookies.necessary')}</h4>
             <p className="text-white/60 text-xs leading-relaxed">
-              Required for the website to function properly. Cannot be disabled.
+              {t('cookies.necessaryDesc')}
             </p>
           </div>
           <div className="flex items-center">
@@ -187,9 +188,9 @@ const CustomizePreferences = ({ onSave, onBack }) => {
         {/* Analytics Cookies */}
         <div className="flex items-start justify-between gap-4 p-4 bg-white/5 rounded-lg border border-white/10">
           <div className="flex-1">
-            <h4 className="text-white text-sm font-medium mb-1">Analytics Cookies</h4>
+            <h4 className="text-white text-sm font-medium mb-1">{t('cookies.analytics')}</h4>
             <p className="text-white/60 text-xs leading-relaxed">
-              Help us understand how visitors interact with our website.
+              {t('cookies.analyticsDesc')}
             </p>
           </div>
           <button
@@ -207,9 +208,9 @@ const CustomizePreferences = ({ onSave, onBack }) => {
         {/* Marketing Cookies */}
         <div className="flex items-start justify-between gap-4 p-4 bg-white/5 rounded-lg border border-white/10">
           <div className="flex-1">
-            <h4 className="text-white text-sm font-medium mb-1">Marketing Cookies</h4>
+            <h4 className="text-white text-sm font-medium mb-1">{t('cookies.marketing')}</h4>
             <p className="text-white/60 text-xs leading-relaxed">
-              Used to track visitors across websites for advertising purposes.
+              {t('cookies.marketingDesc')}
             </p>
           </div>
           <button
@@ -233,7 +234,7 @@ const CustomizePreferences = ({ onSave, onBack }) => {
           className="px-6 py-2.5 text-white/70 hover:text-white border border-white/20 hover:border-white/40 rounded-full text-sm font-light tracking-wide transition-all duration-300"
           style={{ fontFamily: 'Gotham, sans-serif' }}
         >
-          Back
+          {t('cookies.back')}
         </motion.button>
 
         <motion.button
@@ -243,7 +244,7 @@ const CustomizePreferences = ({ onSave, onBack }) => {
           className="px-8 py-2.5 bg-[#8dc1ab] text-black rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-[#7ab09a]"
           style={{ fontFamily: 'Gotham, sans-serif' }}
         >
-          Save Preferences
+          {t('cookies.savePreferences')}
         </motion.button>
       </div>
     </motion.div>

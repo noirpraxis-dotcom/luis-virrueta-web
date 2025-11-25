@@ -44,18 +44,21 @@ const detectLanguage = () => {
 }
 
 export const LanguageProvider = ({ children }) => {
-  const [currentLanguage, setCurrentLanguage] = useState('en') // Forzado a inglés inicialmente
+  const [currentLanguage, setCurrentLanguage] = useState(() => {
+    // Inicializar con el idioma guardado o detectado
+    const savedLanguage = localStorage.getItem('preferredLanguage')
+    if (savedLanguage && ['en', 'es', 'cz'].includes(savedLanguage)) {
+      return savedLanguage
+    }
+    // Detectar automáticamente en primera carga
+    return detectLanguage()
+  })
 
   useEffect(() => {
-    // Detectar idioma solo en primera carga si no hay preferencia guardada
+    // Guardar el idioma detectado si no hay preferencia guardada
     const savedLanguage = localStorage.getItem('preferredLanguage')
     if (!savedLanguage) {
-      // Por ahora forzamos inglés, más adelante se puede activar la detección
-      // const detectedLanguage = detectLanguage()
-      // setCurrentLanguage(detectedLanguage)
-      setCurrentLanguage('en')
-    } else {
-      setCurrentLanguage(savedLanguage)
+      localStorage.setItem('preferredLanguage', currentLanguage)
     }
   }, [])
 

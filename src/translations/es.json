@@ -17,6 +17,24 @@
     "prices": "Precios",
     "courses": "Cursos"
   },
+  "cookies": {
+    "title": "Valoramos tu privacidad",
+    "description": "Utilizamos cookies para mejorar tu experiencia, analizar el tráfico del sitio y personalizar el contenido. Al hacer clic en \"Aceptar todo\", consientes nuestro uso de cookies.",
+    "learnMore": "Más información",
+    "acceptAll": "Aceptar todo",
+    "rejectAll": "Rechazar todo",
+    "customize": "Personalizar",
+    "preferencesTitle": "Preferencias de cookies",
+    "preferencesDescription": "Elige qué cookies deseas aceptar",
+    "necessary": "Cookies necesarias",
+    "necessaryDesc": "Necesarias para que el sitio web funcione correctamente. No se pueden desactivar.",
+    "analytics": "Cookies analíticas",
+    "analyticsDesc": "Nos ayudan a comprender cómo interactúan los visitantes con nuestro sitio web.",
+    "marketing": "Cookies de marketing",
+    "marketingDesc": "Se utilizan para rastrear visitantes en sitios web con fines publicitarios.",
+    "back": "Atrás",
+    "savePreferences": "Guardar preferencias"
+  },
   "hero": {
     "subtitle": "Terapeuta certificada en Regresión a Vidas Pasadas, sanadora energética y canalizadora de Ilyari. Antigua investigadora universitaria con dos doctorados que explora los aspectos intuitivos y científicos de la sanación energética.",
     "seeMore": "Ver más",

@@ -17,6 +17,24 @@
     "prices": "Prices",
     "courses": "Courses"
   },
+  "cookies": {
+    "title": "We value your privacy",
+    "description": "We use cookies to enhance your experience, analyze site traffic, and personalize content. By clicking \"Accept All\", you consent to our use of cookies.",
+    "learnMore": "Learn more",
+    "acceptAll": "Accept All",
+    "rejectAll": "Reject All",
+    "customize": "Customize",
+    "preferencesTitle": "Cookie Preferences",
+    "preferencesDescription": "Choose which cookies you want to accept",
+    "necessary": "Necessary Cookies",
+    "necessaryDesc": "Required for the website to function properly. Cannot be disabled.",
+    "analytics": "Analytics Cookies",
+    "analyticsDesc": "Help us understand how visitors interact with our website.",
+    "marketing": "Marketing Cookies",
+    "marketingDesc": "Used to track visitors across websites for advertising purposes.",
+    "back": "Back",
+    "savePreferences": "Save Preferences"
+  },
   "hero": {
     "subtitle": "Certified Past Life Regression therapist, energy healer, and channeler of Ilyari. Former university researcher with two doctorates exploring the intuitive and scientific aspects of energy healing.",
     "seeMore": "See More",
