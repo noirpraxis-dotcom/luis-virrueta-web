@@ -762,12 +762,12 @@ const SessionNavigator = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
         </svg>
       ),
-      bgColor: 'bg-[#f5f5f0]',
-      borderColor: 'border-[#d4d1c6]',
-      hoverBorder: 'hover:border-[#a8a595]',
-      accentColor: '#a8a595',
-      buttonBg: 'bg-[#a8a595]',
-      buttonHover: 'hover:bg-[#938f7f]'
+      bgColor: 'bg-orange-50',
+      borderColor: 'border-orange-200',
+      hoverBorder: 'hover:border-orange-500',
+      accentColor: '#ea580c',
+      buttonBg: 'bg-orange-600',
+      buttonHover: 'hover:bg-orange-700'
     },
     {
       id: 'healing-animals',
