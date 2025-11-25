@@ -97,21 +97,36 @@ const Testimonials = () => {
   return (
     <section className="relative py-20 lg:py-32 px-6 lg:px-20 bg-gradient-to-b from-stone-50 to-white overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        {/* Section Title */}
+        {/* Section Title - Cinematic Style */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
           className="text-center mb-16 lg:mb-20"
         >
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, delay: 0.2 }}
+            className="h-px bg-gradient-to-r from-transparent via-amber-600/30 to-transparent mx-auto w-24 lg:w-32 mb-6 lg:mb-8"
+          />
+          
           <h2 
-            className="text-5xl lg:text-6xl font-light text-stone-800 mb-6 tracking-wide"
-            style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}
+            className="text-4xl sm:text-5xl lg:text-7xl font-light text-stone-800 mb-6 lg:mb-8 tracking-[0.15em] lg:tracking-[0.2em] uppercase px-4"
+            style={{ fontFamily: 'Gotham, sans-serif' }}
           >
             Testimonials
           </h2>
-          <div className="w-24 h-px bg-gradient-to-r from-transparent via-emerald-500 to-transparent mx-auto" />
+          
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.5, delay: 0.4 }}
+            className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-48 lg:w-80"
+          />
         </motion.div>
 
         {/* Carousel Container */}
@@ -182,7 +197,7 @@ const Testimonials = () => {
                   </svg>
 
                   {/* Testimonial Text */}
-                  <p className="text-stone-700 text-lg lg:text-xl leading-relaxed mb-8 italic" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                  <p className="text-stone-700 text-base lg:text-lg leading-relaxed mb-8" style={{ fontFamily: 'Gotham, sans-serif', fontWeight: '300' }}>
                     "{testimonials[currentIndex].text}"
                   </p>
 
@@ -205,16 +220,16 @@ const Testimonials = () => {
           </AnimatePresence>
         </div>
 
-        {/* Navigation Arrows - Desktop */}
-        <div className="hidden lg:flex absolute top-1/2 -translate-y-1/2 left-0 right-0 justify-between pointer-events-none z-10">
+        {/* Navigation Arrows - Desktop & Mobile */}
+        <div className="flex absolute top-1/2 -translate-y-1/2 left-2 right-2 lg:left-0 lg:right-0 justify-between pointer-events-none z-10 max-w-7xl mx-auto px-0 lg:px-4">
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => paginate(-1)}
             disabled={isTransitioning}
-            className="pointer-events-auto -ml-6 w-14 h-14 bg-white/95 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center hover:bg-emerald-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-2 border-stone-100"
+            className="pointer-events-auto w-12 h-12 lg:w-14 lg:h-14 bg-white/95 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center hover:bg-emerald-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-2 border-stone-100"
           >
-              <svg className="w-7 h-7 text-stone-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-6 h-6 lg:w-7 lg:h-7 text-stone-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
               </svg>
             </motion.button>
@@ -223,9 +238,9 @@ const Testimonials = () => {
               whileTap={{ scale: 0.9 }}
               onClick={() => paginate(1)}
               disabled={isTransitioning}
-              className="pointer-events-auto -mr-6 w-14 h-14 bg-white/95 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center hover:bg-emerald-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-2 border-stone-100"
+              className="pointer-events-auto w-12 h-12 lg:w-14 lg:h-14 bg-white/95 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center hover:bg-emerald-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-2 border-stone-100"
             >
-              <svg className="w-7 h-7 text-stone-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-6 h-6 lg:w-7 lg:h-7 text-stone-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
               </svg>
             </motion.button>

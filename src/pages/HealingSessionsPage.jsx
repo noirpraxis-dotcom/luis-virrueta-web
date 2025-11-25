@@ -1163,32 +1163,50 @@ const SessionNavigator = ({ t }) => {
                     onClick={() => handleNavigate(session.id)}
                     whileHover={{ scale: 1.04, y: -3 }}
                     whileTap={{ scale: 0.96 }}
-                    className={`w-full ${session.buttonBg} ${session.buttonHover} text-white py-4 xl:py-5 px-6 rounded-full font-medium text-base xl:text-lg tracking-wide shadow-2xl transition-all duration-700 flex items-center justify-center gap-3 group relative overflow-hidden`}
+                    className="w-full text-white py-4 xl:py-5 px-6 rounded-full font-medium text-base xl:text-lg tracking-wide transition-all duration-700 flex items-center justify-center gap-3 group relative overflow-hidden"
                     style={{ 
                       fontFamily: 'Gotham, sans-serif', 
                       letterSpacing: '0.05em',
-                      boxShadow: `0 20px 50px -15px ${session.accentColor}60`
+                      boxShadow: `
+                        0 4px 20px -4px ${session.accentColor}80,
+                        0 10px 40px -8px ${session.accentColor}60,
+                        0 20px 60px -12px ${session.accentColor}40,
+                        inset 0 1px 0 rgba(255,255,255,0.3),
+                        inset 0 -1px 0 rgba(0,0,0,0.2)
+                      `,
+                      background: `linear-gradient(135deg, #8dc1ab 0%, #7ab09a 50%, #8dc1ab 100%)`,
+                      backgroundSize: '200% 200%',
+                      animation: 'gradient-shift-button 4s ease infinite'
                     }}
                   >
                     {/* Continuous shimmer animation */}
                     <div 
-                      className="absolute inset-0 opacity-30"
+                      className="absolute inset-0 opacity-40"
                       style={{
-                        background: `linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)`,
+                        background: `linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)`,
                         animation: 'shimmer 3s infinite',
                         backgroundSize: '200% 100%'
                       }}
                     />
                     
                     {/* Hover glow effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                     
-                    {/* Pulsing glow behind button */}
+                    {/* Enhanced pulsing glow behind button */}
                     <div 
-                      className="absolute -inset-1 rounded-full blur-lg opacity-20"
+                      className="absolute -inset-2 rounded-full blur-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-700"
+                      style={{
+                        background: `radial-gradient(circle, ${session.accentColor}FF 0%, ${session.accentColor}80 50%, transparent 100%)`,
+                        animation: 'pulse-glow-enhanced 2s ease-in-out infinite'
+                      }}
+                    />
+                    
+                    {/* Subtle ambient glow always visible */}
+                    <div 
+                      className="absolute -inset-1 rounded-full blur-xl opacity-30"
                       style={{
                         background: session.accentColor,
-                        animation: 'pulse-glow 2s ease-in-out infinite'
+                        animation: 'pulse-glow 3s ease-in-out infinite'
                       }}
                     />
                     

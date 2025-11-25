@@ -24,11 +24,35 @@ const Hero = () => {
       </div>
 
       <div className="relative max-w-5xl mx-auto px-6 lg:px-12 text-center">
+        {/* Logo elegante arriba del nombre con animación de rotación */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+          className="flex justify-center mb-12"
+        >
+          <motion.img 
+            src="/logo.png" 
+            alt="Greenleaf Lightworks" 
+            className="h-28 lg:h-36 w-auto opacity-80 drop-shadow-xl"
+            animate={{ 
+              rotate: [0, -180, -180, -360]
+            }}
+            transition={{
+              duration: 8,
+              times: [0, 0.25, 0.5, 0.75],
+              repeat: Infinity,
+              repeatDelay: 2,
+              ease: "easeInOut"
+            }}
+          />
+        </motion.div>
+
         {/* Título cinematográfico */}
         <motion.h1
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
+          transition={{ duration: 1.2, delay: 0.2, ease: [0.76, 0, 0.24, 1] }}
           className="text-white text-6xl lg:text-8xl font-light tracking-[0.2em] mb-8"
           style={{ fontFamily: 'Gotham, sans-serif' }}
         >

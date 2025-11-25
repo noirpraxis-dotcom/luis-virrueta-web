@@ -70,3 +70,28 @@ body {
     transform: scale(1.05);
   }
 }
+
+/* Animación de degradado elegante para botones */
+@keyframes gradient-shift-button {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Animación de resplandor mejorado para hover */
+@keyframes pulse-glow-enhanced {
+  0%, 100% {
+    transform: scale(0.9);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+}

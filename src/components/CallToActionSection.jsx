@@ -32,25 +32,11 @@ const CallToActionSection = () => {
       </div>
 
       <div className="relative max-w-5xl mx-auto">
-        {/* Logo elegante arriba del título */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-          className="flex justify-center mb-12"
-        >
-          <img 
-            src="/logo.png" 
-            alt="Greenleaf Lightworks" 
-            className="h-20 lg:h-28 w-auto opacity-80 drop-shadow-xl"
-          />
-        </motion.div>
-
         {/* Main Heading - Centered and Elegant */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 0.2, ease: [0.76, 0, 0.24, 1] }}
+          transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
           className="text-center mb-20"
         >
           <motion.h2
