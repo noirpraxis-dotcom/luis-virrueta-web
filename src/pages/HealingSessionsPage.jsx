@@ -142,29 +142,43 @@ const EmotionBodyBeliefSection = () => {
 
   return (
     <div className="max-w-7xl mx-auto">
-      {/* Title */}
+      {/* Title Section - Home style elegance */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="text-center mb-16"
+        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+        className="text-center mb-16 lg:mb-20"
       >
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1.2, delay: 0.2 }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-600/30 to-transparent mx-auto w-32 mb-8"
+        />
+
         <h2 
-          className="text-4xl lg:text-5xl font-light text-stone-800 mb-6 tracking-wide"
-          style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}
+          className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Emotion, Body & Belief Code
+          Emotion, Body & <span className="italic text-amber-700">Belief Code</span>
         </h2>
+
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-6 text-stone-600 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed italic"
+          transition={{ duration: 1, delay: 0.4 }}
+          className="text-xl lg:text-2xl text-stone-600 max-w-4xl mx-auto leading-relaxed font-light"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
           Globally established energy healing methods developed since the 1990s by Dr. Bradley Nelson
         </motion.p>
-        <GradientLine className="mt-8" />
+
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1.5, delay: 0.6 }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-96 mt-10"
+        />
       </motion.div>
 
       {/* Introduction Section with Image Space */}
@@ -343,226 +357,460 @@ const EmotionBodyBeliefSection = () => {
 
 // Past Life Regressions Section
 const PastLifeSection = () => {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.3 })
+  const titleRef = useRef(null)
+  const contentRef = useRef(null)
+  const cardsRef = useRef(null)
+  const isTitleInView = useInView(titleRef, { once: true, amount: 0.3 })
+  const isContentInView = useInView(contentRef, { once: true, amount: 0.2 })
+  const isCardsInView = useInView(cardsRef, { once: true, amount: 0.2 })
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-7xl mx-auto">
+      {/* Title Section - Home style elegance */}
       <motion.div
-        ref={ref}
+        ref={titleRef}
         initial={{ opacity: 0, y: 30 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8 }}
-        className="text-center mb-16"
+        animate={isTitleInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+        className="text-center mb-16 lg:mb-20"
       >
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={isTitleInView ? { scaleX: 1 } : {}}
+          transition={{ duration: 1.2, delay: 0.2 }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-600/30 to-transparent mx-auto w-32 mb-8"
+        />
+
         <h2 
-          className="text-4xl lg:text-5xl font-light text-stone-800 mb-6 tracking-wide"
-          style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}
+          className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Past Life Regressions
+          Past Life <span className="italic text-amber-700">Regressions</span>
         </h2>
-        <GradientLine />
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={isTitleInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 0.4 }}
+          className="text-xl lg:text-2xl text-stone-600 max-w-4xl mx-auto leading-relaxed font-light"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
+        >
+          Past life regressions allow you to regain memories of a previous existence that are still impacting your present life.
+        </motion.p>
+
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={isTitleInView ? { scaleX: 1 } : {}}
+          transition={{ duration: 1.5, delay: 0.6 }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-96 mt-10"
+        />
       </motion.div>
 
-      <BackdropBlurCard className="border-2 border-purple-200">
-        <div className="p-8 lg:p-12">
-          <div className="flex items-center justify-center mb-8">
-            <div className="bg-gradient-to-br from-purple-400 to-indigo-600 w-20 h-20 rounded-full flex items-center justify-center text-white">
-              <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
-          
-          <p className="text-stone-700 text-lg leading-relaxed mb-6 text-center max-w-3xl mx-auto">
-            Journey through time to explore your soul's history. Past life regression therapy helps you understand current patterns, relationships, and challenges by revealing their origins in previous incarnations.
+      {/* Main Content - Clear readable paragraphs */}
+      <motion.div
+        ref={contentRef}
+        initial={{ opacity: 0, y: 40 }}
+        animate={isContentInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+        className="max-w-5xl mx-auto mb-20"
+      >
+        <div className="space-y-8 text-center">
+          <p className="text-lg lg:text-xl text-stone-700 leading-relaxed">
+            Many of us suffer from traumas that haven't been caused by anything in our present life and seek healing. During a regression, we bring these old wounds into awareness and work constructively with them until the trauma is processed and released.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-            <div className="bg-purple-50 p-6 rounded-xl">
-              <h3 className="text-xl font-semibold text-stone-800 mb-3">What to Expect</h3>
-              <ul className="space-y-2 text-stone-600">
-                <li className="flex items-start gap-2">
-                  <span className="text-purple-500 mt-1">•</span>
-                  <span>Deep relaxation and guided meditation</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-purple-500 mt-1">•</span>
-                  <span>Vivid memories and emotional insights</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-purple-500 mt-1">•</span>
-                  <span>Understanding of current life patterns</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-purple-50 p-6 rounded-xl">
-              <h3 className="text-xl font-semibold text-stone-800 mb-3">Benefits</h3>
-              <ul className="space-y-2 text-stone-600">
-                <li className="flex items-start gap-2">
-                  <span className="text-purple-500 mt-1">•</span>
-                  <span>Release karmic patterns and blockages</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-purple-500 mt-1">•</span>
-                  <span>Heal relationships and phobias</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-purple-500 mt-1">•</span>
-                  <span>Connect with your soul's purpose</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <p className="text-lg lg:text-xl text-stone-700 leading-relaxed">
+            Additionally, many people undergo past life regressions simply to remember who they once were and how it can aid them in their current life. This is how past-life regressions serve as a wonderful accelerator for your spiritual growth.
+          </p>
         </div>
-      </BackdropBlurCard>
+      </motion.div>
+
+      {/* Online Sessions Info - Two elegant cards */}
+      <motion.div
+        ref={cardsRef}
+        initial={{ opacity: 0, y: 40 }}
+        animate={isCardsInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto"
+      >
+        {/* Card 1: Benefits of Online Sessions */}
+        <BackdropBlurCard className="border-2 border-stone-200 hover:border-amber-600/30 transition-colors duration-500">
+          <div className="p-8 lg:p-10">
+            {/* Decorative icon */}
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={isCardsInView ? { scale: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="w-16 h-16 rounded-full bg-amber-600/10 border-2 border-amber-600/30 flex items-center justify-center mx-auto mb-6"
+            >
+              <svg className="w-8 h-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+            </motion.div>
+
+            <h3 
+              className="text-2xl lg:text-3xl font-light text-stone-800 text-center mb-6 tracking-wide"
+              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            >
+              Comfort of <span className="italic text-amber-700">Home</span>
+            </h3>
+
+            <div className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mb-6" />
+
+            <p className="text-base lg:text-lg text-stone-700 leading-relaxed text-center">
+              If my office is far from where you live, an online session is a convenient alternative. It reduces the time and cost of travel and gives you the opportunity to enjoy the experience in the comfort and privacy of your home.
+            </p>
+          </div>
+        </BackdropBlurCard>
+
+        {/* Card 2: What You Need */}
+        <BackdropBlurCard className="border-2 border-stone-200 hover:border-amber-600/30 transition-colors duration-500">
+          <div className="p-8 lg:p-10">
+            {/* Decorative icon */}
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={isCardsInView ? { scale: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="w-16 h-16 rounded-full bg-amber-600/10 border-2 border-amber-600/30 flex items-center justify-center mx-auto mb-6"
+            >
+              <svg className="w-8 h-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </motion.div>
+
+            <h3 
+              className="text-2xl lg:text-3xl font-light text-stone-800 text-center mb-6 tracking-wide"
+              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            >
+              Equally <span className="italic text-amber-700">Effective</span>
+            </h3>
+
+            <div className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mb-6" />
+
+            <p className="text-base lg:text-lg text-stone-700 leading-relaxed text-center mb-6">
+              An online regression is equally effective as one conducted in person. All you need is:
+            </p>
+
+            <ul className="space-y-3">
+              {[
+                'A quiet, dimly lit room',
+                'Headphones with a good microphone',
+                'A stable internet connection'
+              ].map((item, index) => (
+                <motion.li
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={isCardsInView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+                  className="flex items-start gap-3"
+                >
+                  <svg className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-stone-700 leading-relaxed">
+                    {item}
+                  </span>
+                </motion.li>
+              ))}
+            </ul>
+          </div>
+        </BackdropBlurCard>
+      </motion.div>
     </div>
   )
 }
 
 // Ilyari Somatic Section
 const IlyariSection = () => {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.3 })
+  const titleRef = useRef(null)
+  const contentRef = useRef(null)
+  const lineagesRef = useRef(null)
+  const sessionsRef = useRef(null)
+  const isTitleInView = useInView(titleRef, { once: true, amount: 0.3 })
+  const isContentInView = useInView(contentRef, { once: true, amount: 0.2 })
+  const isLineagesInView = useInView(lineagesRef, { once: true, amount: 0.2 })
+  const isSessionsInView = useInView(sessionsRef, { once: true, amount: 0.2 })
+
+  const lineages = [
+    {
+      icon: (
+        <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
+        </svg>
+      ),
+      title: 'Lyran-Vegan Flame Spiral Codex',
+      description: 'a sacred geometry that restores your body to a living resonance and coherence field.',
+      bgColor: 'bg-rose-50',
+      iconColor: 'text-rose-600',
+      borderColor: 'border-rose-200',
+      hoverBorder: 'hover:border-rose-400'
+    },
+    {
+      icon: (
+        <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+        </svg>
+      ),
+      title: 'Sirian B Liquid Light Currents',
+      description: 'soft, fluid codes that recalibrate and soothe, singing your auric field back into harmonic balance.',
+      bgColor: 'bg-cyan-50',
+      iconColor: 'text-cyan-600',
+      borderColor: 'border-cyan-200',
+      hoverBorder: 'hover:border-cyan-400'
+    },
+    {
+      icon: (
+        <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+        </svg>
+      ),
+      title: 'Arcturian Geometric Code Streaming',
+      description: 'intelligent light patterns that "write" or "etch" into the quantum field around you, encoding your true essence remembrance and renewal into your being.',
+      bgColor: 'bg-indigo-50',
+      iconColor: 'text-indigo-600',
+      borderColor: 'border-indigo-200',
+      hoverBorder: 'hover:border-indigo-400'
+    }
+  ]
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-7xl mx-auto">
+      {/* Title Section - Home style elegance */}
       <motion.div
-        ref={ref}
+        ref={titleRef}
         initial={{ opacity: 0, y: 30 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8 }}
-        className="text-center mb-16"
+        animate={isTitleInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+        className="text-center mb-16 lg:mb-20"
       >
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={isTitleInView ? { scaleX: 1 } : {}}
+          transition={{ duration: 1.2, delay: 0.2 }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-600/30 to-transparent mx-auto w-32 mb-8"
+        />
+
         <h2 
-          className="text-4xl lg:text-5xl font-light text-stone-800 mb-6 tracking-wide"
-          style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}
+          className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Ilyari Somatic Therapy
+          Ilyari: <span className="italic text-amber-700">Embodied Light Transmission</span>
         </h2>
-        <GradientLine />
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={isTitleInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 0.4 }}
+          className="text-xl lg:text-2xl text-stone-600 max-w-4xl mx-auto leading-relaxed font-light"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
+        >
+          Ilyari is a unique personal healing modality that flows through me as spontaneous body movement.
+        </motion.p>
+
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={isTitleInView ? { scaleX: 1 } : {}}
+          transition={{ duration: 1.5, delay: 0.6 }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-96 mt-10"
+        />
       </motion.div>
 
-      <BackdropBlurCard className="border-2 border-blue-200">
-        <div className="p-8 lg:p-12">
-          <div className="flex items-center justify-center mb-8">
-            <div className="bg-gradient-to-br from-blue-400 to-cyan-600 w-20 h-20 rounded-full flex items-center justify-center text-white">
-              <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      {/* Main Content - Clear readable text */}
+      <motion.div
+        ref={contentRef}
+        initial={{ opacity: 0, y: 40 }}
+        animate={isContentInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+        className="max-w-5xl mx-auto mb-20 space-y-8 text-center"
+      >
+        <p className="text-lg lg:text-xl text-stone-700 leading-relaxed">
+          As the healing lightcodes flow through my channel, the body movements distribute them where they are needed most: whether to ease your physical symptom, release emotional stagnation, or recalibrate and upgrade your entire energy field into greater harmony.
+        </p>
+
+        <p className="text-lg lg:text-xl text-stone-700 leading-relaxed">
+          These transmissions are deeply felt and intuitively guided. Not choreographed, not rehearsed, but received in the moment as a direct transmission of light.
+        </p>
+
+        <p className="text-lg lg:text-xl text-stone-700 leading-relaxed">
+          The healing you receive through Ilyari is woven from star lineages braided through my soul stream, expressed as a unique movement dialect. It carries the frequencies of:
+        </p>
+      </motion.div>
+
+      {/* Star Lineages - Three cards */}
+      <motion.div
+        ref={lineagesRef}
+        initial={{ opacity: 0, y: 40 }}
+        animate={isLineagesInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}
+        className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10 max-w-6xl mx-auto mb-20"
+      >
+        {lineages.map((lineage, index) => (
+          <BackdropBlurCard key={index} className={`border-2 ${lineage.borderColor} ${lineage.hoverBorder} transition-all duration-500 hover:shadow-xl`}>
+            <div className="p-8 lg:p-10">
+              {/* Icon in circular frame */}
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={isLineagesInView ? { scale: 1, rotate: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.4 + index * 0.1 }}
+                className={`w-20 h-20 rounded-full ${lineage.bgColor} border-2 ${lineage.borderColor} flex items-center justify-center mx-auto mb-6 shadow-md`}
+              >
+                <div className={lineage.iconColor}>
+                  {lineage.icon}
+                </div>
+              </motion.div>
+
+              {/* Title */}
+              <h3 
+                className="text-xl lg:text-2xl font-light text-stone-800 text-center mb-4 tracking-wide leading-tight"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                {lineage.title}
+              </h3>
+
+              <div className={`h-px bg-gradient-to-r from-transparent via-${lineage.borderColor.replace('border-', '')} to-transparent mb-4`} />
+
+              {/* Description */}
+              <p className="text-base text-stone-700 leading-relaxed text-center">
+                {lineage.description}
+              </p>
+            </div>
+          </BackdropBlurCard>
+        ))}
+      </motion.div>
+
+      {/* Ilyari Sessions Info */}
+      <motion.div
+        ref={sessionsRef}
+        initial={{ opacity: 0, y: 40 }}
+        animate={isSessionsInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+        className="max-w-4xl mx-auto"
+      >
+        <BackdropBlurCard className="border-2 border-stone-200">
+          <div className="p-8 lg:p-12">
+            {/* Icon */}
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={isSessionsInView ? { scale: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="w-20 h-20 rounded-full bg-amber-600/10 border-2 border-amber-600/30 flex items-center justify-center mx-auto mb-8"
+            >
+              <svg className="w-10 h-10 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
+            </motion.div>
+
+            <h3 
+              className="text-3xl lg:text-4xl font-light text-stone-800 text-center mb-8 tracking-wide"
+              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            >
+              Ilyari <span className="italic text-amber-700">Sessions</span>
+            </h3>
+
+            <div className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mb-8" />
+
+            <div className="space-y-6 text-center">
+              <p className="text-base lg:text-lg text-stone-700 leading-relaxed">
+                Each Ilyari session is a live, channeled transmission of healing light that unfolds in its own timing. Most sessions last 20–30 minutes and conclude naturally when the energetic work is complete.
+              </p>
+
+              <p className="text-base lg:text-lg text-stone-700 leading-relaxed">
+                If more healing is called for beyond that point, I seal the field with the appropriate codes, and we'll explore next steps together (such as continuing the process in a follow-up session).
+              </p>
             </div>
           </div>
-          
-          <p className="text-stone-700 text-lg leading-relaxed mb-6 text-center max-w-3xl mx-auto">
-            Ilyari is a holistic somatic therapy that integrates body awareness, emotional release, and energetic healing. Through gentle touch and conscious breathing, we unlock stored trauma and restore your body's natural flow.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-            <div className="bg-blue-50 p-6 rounded-xl text-center">
-              <div className="text-3xl mb-2">🌊</div>
-              <h3 className="text-lg font-semibold text-stone-800 mb-2">Body Wisdom</h3>
-              <p className="text-stone-600 text-sm">Listen to what your body is telling you</p>
-            </div>
-
-            <div className="bg-blue-50 p-6 rounded-xl text-center">
-              <div className="text-3xl mb-2">💫</div>
-              <h3 className="text-lg font-semibold text-stone-800 mb-2">Energy Flow</h3>
-              <p className="text-stone-600 text-sm">Restore natural circulation and vitality</p>
-            </div>
-
-            <div className="bg-blue-50 p-6 rounded-xl text-center">
-              <div className="text-3xl mb-2">🌸</div>
-              <h3 className="text-lg font-semibold text-stone-800 mb-2">Gentle Release</h3>
-              <p className="text-stone-600 text-sm">Safe space for emotional processing</p>
-            </div>
-          </div>
-        </div>
-      </BackdropBlurCard>
+        </BackdropBlurCard>
+      </motion.div>
     </div>
   )
 }
 
 // Healing for Animals Section
 const AnimalsSection = () => {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.3 })
+  const titleRef = useRef(null)
+  const contentRef = useRef(null)
+  const isTitleInView = useInView(titleRef, { once: true, amount: 0.3 })
+  const isContentInView = useInView(contentRef, { once: true, amount: 0.2 })
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-7xl mx-auto">
+      {/* Title Section - Home style elegance */}
       <motion.div
-        ref={ref}
+        ref={titleRef}
         initial={{ opacity: 0, y: 30 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8 }}
-        className="text-center mb-16"
+        animate={isTitleInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+        className="text-center mb-16 lg:mb-20"
       >
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={isTitleInView ? { scaleX: 1 } : {}}
+          transition={{ duration: 1.2, delay: 0.2 }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-600/30 to-transparent mx-auto w-32 mb-8"
+        />
+
         <h2 
-          className="text-4xl lg:text-5xl font-light text-stone-800 mb-6 tracking-wide"
-          style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}
+          className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Healing for Animals
+          Healing for <span className="italic text-amber-700">Animals</span>
         </h2>
-        <GradientLine />
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={isTitleInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 0.4 }}
+          className="text-xl lg:text-2xl text-stone-600 max-w-4xl mx-auto leading-relaxed font-light"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
+        >
+          Many of us see our animals as true family, so it's only natural we want them to be happy, vibrant, and physically well.
+        </motion.p>
+
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={isTitleInView ? { scaleX: 1 } : {}}
+          transition={{ duration: 1.5, delay: 0.6 }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-96 mt-10"
+        />
       </motion.div>
 
-      <BackdropBlurCard className="border-2 border-green-200">
-        <div className="p-8 lg:p-12">
-          <div className="flex items-center justify-center mb-8">
-            <div className="bg-gradient-to-br from-green-400 to-emerald-600 w-20 h-20 rounded-full flex items-center justify-center text-white">
-              <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      {/* Main Content */}
+      <motion.div
+        ref={contentRef}
+        initial={{ opacity: 0, y: 40 }}
+        animate={isContentInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+        className="max-w-5xl mx-auto"
+      >
+        <BackdropBlurCard className="border-2 border-stone-200 hover:border-amber-600/30 transition-colors duration-500">
+          <div className="p-8 lg:p-12">
+            {/* Icon */}
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={isContentInView ? { scale: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="w-20 h-20 rounded-full bg-amber-600/10 border-2 border-amber-600/30 flex items-center justify-center mx-auto mb-8"
+            >
+              <svg className="w-10 h-10 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
               </svg>
-            </div>
-          </div>
-          
-          <p className="text-stone-700 text-lg leading-relaxed mb-6 text-center max-w-3xl mx-auto">
-            Animals are incredibly sensitive to energy and emotions. Energy healing can help your beloved pets release trauma, reduce anxiety, heal physical ailments, and restore their natural joy and vitality.
-          </p>
+            </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-            <div>
-              <h3 className="text-xl font-semibold text-stone-800 mb-4">Common Issues Addressed</h3>
-              <div className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <svg className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <p className="text-stone-600">Behavioral problems and anxiety</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <svg className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <p className="text-stone-600">Physical pain and chronic conditions</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <svg className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <p className="text-stone-600">Trauma from abuse or abandonment</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <svg className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <p className="text-stone-600">Loss of energy and vitality</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-green-50 p-6 rounded-xl">
-              <h3 className="text-xl font-semibold text-stone-800 mb-4">How It Works</h3>
-              <p className="text-stone-600 leading-relaxed mb-4">
-                Sessions can be conducted remotely - I don't need to be physically present with your animal. Through energy connection, I can identify and release trapped emotions, correct imbalances, and restore harmony.
+            <div className="space-y-8 text-center max-w-4xl mx-auto">
+              <p className="text-lg lg:text-xl text-stone-700 leading-relaxed">
+                If your pet or any other domesticated animal is facing health or behavioral challenges, the Emotion Code, Body Code, and Ilyari transmissions can offer gentle and effective support.
               </p>
-              <p className="text-stone-600 leading-relaxed">
-                Most animals show noticeable improvements within days of their session, becoming more peaceful, playful, and healthy.
+
+              <div className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent" />
+
+              <p className="text-lg lg:text-xl text-stone-700 leading-relaxed">
+                I can work with your four-legged, two-legged, or no-legged companion as long as you are their rightful owner.
               </p>
             </div>
           </div>
-        </div>
-      </BackdropBlurCard>
+        </BackdropBlurCard>
+      </motion.div>
     </div>
   )
 }
