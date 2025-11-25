@@ -36,14 +36,14 @@ const Hero = () => {
             alt="Greenleaf Lightworks" 
             className="h-28 lg:h-36 w-auto opacity-80 drop-shadow-xl"
             animate={{ 
-              rotate: [0, -180, -180, -360]
+              rotate: [0, -360, -360, -720]
             }}
             transition={{
-              duration: 8,
-              times: [0, 0.25, 0.5, 0.75],
+              duration: 3.5,
+              times: [0, 0.4, 0.6, 1],
               repeat: Infinity,
               repeatDelay: 2,
-              ease: "easeInOut"
+              ease: [0.65, 0, 0.35, 1]
             }}
           />
         </motion.div>

@@ -95,38 +95,57 @@ const Testimonials = () => {
   }, [])
 
   return (
-    <section className="relative py-20 lg:py-32 px-6 lg:px-20 bg-gradient-to-b from-stone-50 to-white overflow-hidden">
-      <div className="max-w-7xl mx-auto">
-        {/* Section Title - Cinematic Style */}
+    <section className="relative py-20 lg:py-32 px-6 lg:px-20 bg-gradient-to-br from-stone-50 via-[#8dc1ab]/8 to-stone-100 overflow-hidden">
+      {/* Decorative blur effects - soft green tones */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 0.03, scale: 1 }}
+          transition={{ duration: 2 }}
+          className="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-[#8dc1ab]/30 rounded-full blur-3xl"
+        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 0.02, scale: 1 }}
+          transition={{ duration: 2, delay: 0.3 }}
+          className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-[#7ab09a]/20 rounded-full blur-3xl"
+        />
+      </div>
+
+      <div className="relative max-w-7xl mx-auto">
+        {/* Section Title - Elegant Style matching CallToActionSection */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
+          transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
           className="text-center mb-16 lg:mb-20"
         >
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2, delay: 0.2 }}
-            className="h-px bg-gradient-to-r from-transparent via-amber-600/30 to-transparent mx-auto w-24 lg:w-32 mb-6 lg:mb-8"
-          />
-          
-          <h2 
-            className="text-4xl sm:text-5xl lg:text-7xl font-light text-stone-800 mb-6 lg:mb-8 tracking-[0.15em] lg:tracking-[0.2em] uppercase px-4"
-            style={{ fontFamily: 'Gotham, sans-serif' }}
+          <motion.h2
+            className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 leading-tight"
+            style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             Testimonials
-          </h2>
+          </motion.h2>
           
           <motion.div
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 1.5, delay: 0.4 }}
-            className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-48 lg:w-80"
+            transition={{ duration: 1.5, delay: 0.3 }}
+            className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-80 mb-10"
           />
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="text-stone-600 text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-light"
+            style={{ fontFamily: 'Cormorant Garamond, serif' }}
+          >
+            Hear from those who have experienced transformation
+          </motion.p>
         </motion.div>
 
         {/* Carousel Container */}
@@ -166,7 +185,7 @@ const Testimonials = () => {
                   transition={{ delay: 0.3 }}
                   className="relative aspect-square lg:aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl order-1 lg:order-1 max-w-md mx-auto lg:mx-0"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-200 to-amber-200 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#8dc1ab]/20 via-[#8dc1ab]/10 to-stone-100 flex items-center justify-center">
                     <div className="text-center p-12">
                       <svg className="w-24 h-24 text-stone-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -177,8 +196,8 @@ const Testimonials = () => {
                   </div>
                   
                   {/* Service Badge */}
-                  <div className="absolute top-6 left-6 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full">
-                    <p className="text-emerald-600 text-sm font-medium tracking-wide">
+                  <div className="absolute top-6 left-6 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full border border-[#8dc1ab]/30">
+                    <p className="text-[#7ab09a] text-sm font-medium tracking-wide">
                       {testimonials[currentIndex].service}
                     </p>
                   </div>
@@ -192,7 +211,7 @@ const Testimonials = () => {
                   className="order-2 lg:order-2"
                 >
                   {/* Quote Icon */}
-                  <svg className="w-12 h-12 text-emerald-400 mb-6" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-12 h-12 text-[#8dc1ab] mb-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
                   </svg>
 
@@ -202,7 +221,7 @@ const Testimonials = () => {
                   </p>
 
                   {/* Author Info */}
-                  <div className="border-l-4 border-emerald-500 pl-6">
+                  <div className="border-l-4 border-[#8dc1ab] pl-6">
                     <p className="text-stone-800 font-medium text-lg mb-1" style={{ fontFamily: 'Gotham, sans-serif' }}>
                       {testimonials[currentIndex].name}
                     </p>
@@ -227,9 +246,9 @@ const Testimonials = () => {
             whileTap={{ scale: 0.9 }}
             onClick={() => paginate(-1)}
             disabled={isTransitioning}
-            className="pointer-events-auto w-12 h-12 lg:w-14 lg:h-14 bg-white/95 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center hover:bg-emerald-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-2 border-stone-100"
+            className="pointer-events-auto w-12 h-12 lg:w-14 lg:h-14 bg-white/95 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center hover:bg-[#8dc1ab]/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-2 border-[#8dc1ab]/20"
           >
-              <svg className="w-6 h-6 lg:w-7 lg:h-7 text-stone-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-6 h-6 lg:w-7 lg:h-7 text-[#7ab09a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
               </svg>
             </motion.button>
@@ -238,9 +257,9 @@ const Testimonials = () => {
               whileTap={{ scale: 0.9 }}
               onClick={() => paginate(1)}
               disabled={isTransitioning}
-              className="pointer-events-auto w-12 h-12 lg:w-14 lg:h-14 bg-white/95 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center hover:bg-emerald-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-2 border-stone-100"
+              className="pointer-events-auto w-12 h-12 lg:w-14 lg:h-14 bg-white/95 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center hover:bg-[#8dc1ab]/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-2 border-[#8dc1ab]/20"
             >
-              <svg className="w-6 h-6 lg:w-7 lg:h-7 text-stone-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-6 h-6 lg:w-7 lg:h-7 text-[#7ab09a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
               </svg>
             </motion.button>
@@ -262,8 +281,8 @@ const Testimonials = () => {
               }}
               className={`transition-all duration-300 rounded-full ${
                 index === currentIndex
-                  ? 'w-8 h-2 bg-emerald-500'
-                  : 'w-2 h-2 bg-stone-300 hover:bg-stone-400'
+                  ? 'w-8 h-2 bg-[#8dc1ab]'
+                  : 'w-2 h-2 bg-stone-300 hover:bg-[#7ab09a]'
               }`}
             />
           ))}
