@@ -103,14 +103,17 @@ const EmotionBodyBeliefSection = ({ t }) => {
       title: t('healingSessions.emotionBodyBelief.emotionCode.title'),
       icon: (
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+          {/* Elegant heart with energy waves */}
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} opacity="0.6" d="M2 12h4M18 12h4M12 2v4M12 18v4" />
+          <circle cx="12" cy="12" r="2.5" strokeWidth={1} />
         </svg>
       ),
-      color: 'from-amber-300 to-amber-400',
-      bgColor: 'bg-gradient-to-br from-stone-50 via-amber-50/30 to-stone-50',
-      borderColor: 'border-amber-200/40',
-      iconColor: 'text-amber-600',
-      accentColor: 'amber-500',
+      color: 'from-[#8dc1ab] to-[#7ab09a]',
+      bgColor: 'bg-gradient-to-br from-stone-50 via-[#8dc1ab]/8 to-stone-50',
+      borderColor: 'border-[#8dc1ab]/30',
+      iconColor: 'text-[#8dc1ab]',
+      accentColor: '[#8dc1ab]',
       description: t('healingSessions.emotionBodyBelief.emotionCode.description'),
       statistic: '80%',
       metaphor: t('healingSessions.emotionBodyBelief.emotionCode.benefit')
@@ -119,9 +122,13 @@ const EmotionBodyBeliefSection = ({ t }) => {
       title: t('healingSessions.emotionBodyBelief.bodyCode.title'),
       icon: (
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <circle cx="12" cy="12" r="9" strokeWidth="1.2" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 6v6l4 2" />
-          <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+          {/* Elegant human silhouette with energy centers */}
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 3c1.5 0 2.5 1 2.5 2.5S13.5 8 12 8s-2.5-1-2.5-2.5S10.5 3 12 3z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 8v4M12 12c-2 0-3.5 1-4.5 2.5v5.5M12 12c2 0 3.5 1 4.5 2.5v5.5" />
+          <circle cx="12" cy="10" r="0.8" fill="currentColor" opacity="0.7" />
+          <circle cx="12" cy="13" r="0.8" fill="currentColor" opacity="0.7" />
+          <circle cx="12" cy="16" r="0.8" fill="currentColor" opacity="0.7" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} opacity="0.5" d="M8 10c-1-0.5-2-0.5-3 0M16 10c1-0.5 2-0.5 3 0" />
         </svg>
       ),
       color: 'from-[#8dc1ab] to-[#7ab09a]',
@@ -136,15 +143,19 @@ const EmotionBodyBeliefSection = ({ t }) => {
       title: t('healingSessions.emotionBodyBelief.beliefCode.title'),
       icon: (
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 2l2.4 7.2h7.6l-6 4.8 2.3 7-6.3-4.8-6.3 4.8 2.3-7-6-4.8h7.6z" />
-          <circle cx="12" cy="12" r="2" strokeWidth="1.2" />
+          {/* Elegant brain/mind with neural connections */}
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M9.5 3C7 3 5 5 5 7.5c0 1.5.7 2.8 1.7 3.7-.5.8-.7 1.8-.7 2.8 0 3 2.5 5.5 5.5 5.5h1c3 0 5.5-2.5 5.5-5.5 0-1-.3-2-.7-2.8 1-.9 1.7-2.2 1.7-3.7C19 5 17 3 14.5 3c-1 0-2 .4-2.5 1-.5-.6-1.5-1-2.5-1z" />
+          <circle cx="9" cy="8" r="1.2" fill="currentColor" opacity="0.6" />
+          <circle cx="15" cy="8" r="1.2" fill="currentColor" opacity="0.6" />
+          <circle cx="12" cy="12" r="1.2" fill="currentColor" opacity="0.6" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} opacity="0.5" d="M9 8l3 4m3-4l-3 4" />
         </svg>
       ),
-      color: 'from-stone-300 to-stone-400',
-      bgColor: 'bg-gradient-to-br from-stone-50 via-stone-100/30 to-stone-50',
-      borderColor: 'border-stone-300/40',
-      iconColor: 'text-stone-600',
-      accentColor: 'stone-500',
+      color: 'from-[#8dc1ab] to-[#7ab09a]',
+      bgColor: 'bg-gradient-to-br from-stone-50 via-[#8dc1ab]/8 to-stone-50',
+      borderColor: 'border-[#8dc1ab]/30',
+      iconColor: 'text-[#8dc1ab]',
+      accentColor: '[#8dc1ab]',
       description: t('healingSessions.emotionBodyBelief.beliefCode.description'),
       insight: '',
       metaphor: t('healingSessions.emotionBodyBelief.beliefCode.benefit')
