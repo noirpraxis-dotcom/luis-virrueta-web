@@ -67,30 +67,32 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
             transition={{ type: "spring", duration: 0.5 }}
             className="absolute inset-0 flex items-center justify-center"
           >
-            <div className="relative w-full h-full bg-gradient-to-br from-black via-gray-900 to-black flex flex-col items-center justify-start pt-20 p-8">
-              {/* Efectos decorativos */}
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-0 left-0 w-64 h-64 bg-[#8dc1ab] rounded-full blur-3xl" />
-                <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#8dc1ab] rounded-full blur-3xl" />
+            <div className="relative w-full h-full bg-black/98 backdrop-blur-xl flex flex-col items-center justify-center p-8">
+              {/* Efectos decorativos mejorados */}
+              <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#8dc1ab]/20 rounded-full blur-[100px] animate-pulse" />
+                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#8dc1ab]/15 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
               </div>
 
-              {/* Language Selector - Top Right */}
+              {/* Language Selector - Top Right with elegant background */}
               <motion.div
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                className="absolute top-8 right-8 z-20"
+                className="absolute top-6 right-6 z-20"
               >
-                <LanguageSelector />
+                <div className="bg-white/5 backdrop-blur-md rounded-full border border-white/10 p-1">
+                  <LanguageSelector />
+                </div>
               </motion.div>
 
-              {/* Menu Items */}
+              {/* Menu Items - Ultra Elegant */}
               <motion.ul
                 variants={menuVariants}
                 initial="closed"
                 animate={isOpen ? "open" : "closed"}
                 exit="closed"
-                className="space-y-4 z-10 w-full max-w-md"
+                className="space-y-1 z-10 w-full max-w-md"
               >
                 {menuItems.map((item, index) => {
                   const isStore = item.name.toLowerCase().includes('store') || 
@@ -107,17 +109,20 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                         {item.subItems ? (
                           <motion.button
                             onClick={() => setExpandedItem(expandedItem === index ? null : index)}
-                            whileHover={{ x: 5 }}
-                            className="block text-white/80 hover:text-white text-2xl font-light tracking-wider transition-colors duration-300 py-3 text-left w-full uppercase"
+                            whileHover={{ x: 8, scale: 1.02 }}
+                            className="block text-white/70 hover:text-white text-xl font-light tracking-[0.3em] transition-all duration-300 py-4 text-left w-full uppercase relative group"
                             style={{ fontFamily: 'Gotham, sans-serif' }}
                           >
-                            {item.name}
-                            <motion.span
-                              animate={{ rotate: expandedItem === index ? 180 : 0 }}
-                              className="inline-block ml-2 text-sm"
-                            >
-                              ▼
-                            </motion.span>
+                            <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 rounded-lg transition-all duration-300" />
+                            <span className="relative z-10 flex items-center justify-between">
+                              {item.name}
+                              <motion.span
+                                animate={{ rotate: expandedItem === index ? 180 : 0 }}
+                                className="inline-block text-xs opacity-50"
+                              >
+                                ▼
+                              </motion.span>
+                            </span>
                           </motion.button>
                         ) : (
                           <Link
@@ -126,52 +131,58 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                           >
                             {isStore ? (
                               <motion.div
-                                whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(141, 193, 171, 0.4)' }}
-                                whileTap={{ scale: 0.95 }}
-                                className="flex items-center justify-center gap-3 bg-[#8dc1ab] text-black px-8 py-4 rounded-full text-xl font-medium tracking-wider transition-all duration-300 uppercase border-2 border-[#8dc1ab] hover:bg-[#7ab09a] hover:border-[#7ab09a]"
+                                whileHover={{ scale: 1.03, boxShadow: '0 0 30px rgba(141, 193, 171, 0.5)' }}
+                                whileTap={{ scale: 0.97 }}
+                                className="flex items-center justify-center gap-3 bg-gradient-to-r from-[#8dc1ab] to-[#7ab09a] text-black px-10 py-5 rounded-full text-base font-medium tracking-[0.25em] transition-all duration-300 uppercase shadow-lg shadow-[#8dc1ab]/20 border-2 border-[#8dc1ab] hover:border-white/30 my-6"
                                 style={{ fontFamily: 'Gotham, sans-serif' }}
                               >
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                 </svg>
                                 {item.name}
                               </motion.div>
                             ) : (
                               <motion.div
-                                whileHover={{ x: 5 }}
-                                className="block text-white/80 hover:text-white text-2xl font-light tracking-wider transition-colors duration-300 py-3 uppercase"
+                                whileHover={{ x: 8, scale: 1.02 }}
+                                className="block text-white/70 hover:text-white text-xl font-light tracking-[0.3em] transition-all duration-300 py-4 uppercase relative group"
                                 style={{ fontFamily: 'Gotham, sans-serif' }}
                               >
-                                {item.name}
+                                <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 rounded-lg transition-all duration-300" />
+                                <span className="relative z-10">{item.name}</span>
                               </motion.div>
                             )}
                           </Link>
                         )}
 
-                        {/* Submenú */}
+                        {/* Submenú Elegante */}
                         <AnimatePresence>
                           {item.subItems && expandedItem === index && (
                             <motion.ul
                               initial={{ height: 0, opacity: 0 }}
                               animate={{ height: "auto", opacity: 1 }}
                               exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.3 }}
-                              className="overflow-hidden ml-6 mt-3 space-y-2"
+                              transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
+                              className="overflow-hidden ml-8 mt-2 mb-3 space-y-1 bg-white/5 backdrop-blur-sm rounded-lg p-3 border border-white/10"
                             >
                               {item.subItems.map((subItem, subIndex) => (
                                 <motion.li
                                   key={subIndex}
                                   initial={{ x: -20, opacity: 0 }}
                                   animate={{ x: 0, opacity: 1 }}
-                                  transition={{ delay: subIndex * 0.1 }}
+                                  transition={{ delay: subIndex * 0.08 }}
                                 >
                                   <Link
                                     to={subItem.href}
                                     onClick={onClose}
-                                    className="block text-white/60 hover:text-white text-base py-2 transition-colors duration-200 font-light tracking-wide"
-                                    style={{ fontFamily: 'Gotham, sans-serif' }}
                                   >
-                                    • {subItem.name}
+                                    <motion.div
+                                      whileHover={{ x: 4, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
+                                      className="block text-white/60 hover:text-[#8dc1ab] text-sm py-3 px-3 transition-all duration-200 font-light tracking-wider rounded-md"
+                                      style={{ fontFamily: 'Gotham, sans-serif' }}
+                                    >
+                                      <span className="text-[#8dc1ab]/50 mr-2">•</span>
+                                      {subItem.name}
+                                    </motion.div>
                                   </Link>
                                 </motion.li>
                               ))}
@@ -180,11 +191,13 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                         </AnimatePresence>
                       </div>
 
-                      {/* Línea decorativa sutil */}
+                      {/* Línea decorativa ultra sutil */}
                       {!isStore && (
                         <motion.div
                           initial={{ scaleX: 0 }}
-                          className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mt-2"
+                          animate={{ scaleX: 1 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="h-px bg-gradient-to-r from-transparent via-white/5 to-transparent"
                         />
                       )}
                     </motion.li>
