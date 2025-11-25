@@ -46,6 +46,7 @@ const AppContent = () => {
         { name: t('menu.books'), href: '/personal-creation#books' }
       ]
     },
+    { name: 'Courses', href: '/store#courses' },
     { 
       name: t('menu.store'), 
       href: '/store',
