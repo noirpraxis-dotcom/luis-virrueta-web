@@ -59,6 +59,11 @@ const PersonalCreationPage = () => {
       <section id="books" className="py-20 lg:py-32 px-6 lg:px-20 bg-gradient-to-b from-stone-50 to-white">
         <BooksSection />
       </section>
+
+      {/* Music Section */}
+      <section id="music" className="py-20 lg:py-32 px-6 lg:px-20 bg-gradient-to-b from-white to-stone-50">
+        <MusicSection />
+      </section>
     </div>
   )
 }
@@ -228,6 +233,160 @@ const BooksSection = () => {
       >
         <p className="text-stone-500 italic max-w-2xl mx-auto leading-relaxed">
           These books are offered with love and trust in your generosity. Pay what feels right for you.
+        </p>
+      </motion.div>
+    </div>
+  )
+}
+
+// Music Section - YouTube Videos Integration
+const MusicSection = () => {
+  const containerRef = useRef(null)
+  const isInView = useInView(containerRef, { once: true, amount: 0.2 })
+
+  // Featured videos from your YouTube channel
+  // Para agregar más videos, simplemente añade el ID del video de YouTube
+  // El ID es la parte después de "v=" en la URL o el final de youtu.be/
+  const videos = [
+    {
+      id: 'VIDEO_ID_1', // Reemplazar con IDs reales
+      title: 'Song Title 1',
+      description: 'Beautiful melody that touches the soul...'
+    },
+    {
+      id: 'VIDEO_ID_2',
+      title: 'Song Title 2',
+      description: 'A journey through sound and emotion...'
+    },
+    {
+      id: 'VIDEO_ID_3',
+      title: 'Song Title 3',
+      description: 'Healing frequencies and harmonies...'
+    },
+  ]
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.76, 0, 0.24, 1]
+      }
+    }
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto">
+      {/* Title Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="text-center mb-16"
+      >
+        <h2 
+          className="text-4xl lg:text-5xl font-light text-stone-800 mb-6 tracking-wide"
+          style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}
+        >
+          My Music
+        </h2>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="mt-8 text-stone-600 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
+        >
+          Songs, melodies, and vocal expressions that carry healing vibrations.
+          Each piece is an offering of love and light through sound.
+        </motion.p>
+        <GradientLine className="mt-12" />
+      </motion.div>
+
+      {/* Videos Grid */}
+      <motion.div
+        ref={containerRef}
+        variants={containerVariants}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10"
+      >
+        {videos.map((video, index) => (
+          <motion.div
+            key={index}
+            variants={itemVariants}
+            className="group"
+          >
+            <BackdropBlurCard className="overflow-hidden h-full">
+              {/* YouTube Video Embed */}
+              <div className="relative aspect-video bg-stone-100 overflow-hidden">
+                <iframe
+                  src={`https://www.youtube.com/embed/${video.id}`}
+                  title={video.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full"
+                />
+              </div>
+
+              {/* Video Info */}
+              <div className="p-6">
+                <h3 
+                  className="text-xl font-semibold text-stone-800 mb-3 group-hover:text-amber-600 transition-colors duration-300"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                >
+                  {video.title}
+                </h3>
+                
+                <p className="text-stone-600 leading-relaxed text-sm">
+                  {video.description}
+                </p>
+              </div>
+            </BackdropBlurCard>
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {/* Link to Full YouTube Channel */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.6 }}
+        className="mt-16 text-center"
+      >
+        <motion.a
+          href="https://www.youtube.com/@lasun7929/videos"
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+          className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-full font-medium hover:shadow-xl transition-all duration-300"
+        >
+          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          <span>Visit My YouTube Channel</span>
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </motion.a>
+
+        <p className="text-stone-500 italic max-w-2xl mx-auto leading-relaxed mt-8">
+          Explore more videos, subscribe, and join the journey through sound and healing.
         </p>
       </motion.div>
     </div>

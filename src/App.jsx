@@ -43,7 +43,8 @@ const AppContent = () => {
       nameShort: 'Creation',
       href: '/personal-creation',
       subItems: [
-        { name: t('menu.books'), href: '/personal-creation#books' }
+        { name: t('menu.books'), href: '/personal-creation#books' },
+        { name: 'Music', href: '/personal-creation#music' }
       ]
     },
     { name: 'Courses', href: '/store#courses' },
