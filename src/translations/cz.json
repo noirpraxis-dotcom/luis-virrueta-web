@@ -262,6 +262,41 @@
       "note": "Ráda budu pracovat na vašem čtyřnohém, dvounohém či beznohém kamarádovi - stačí, jste-li jeho právoplatným majitelem."
     }
   },
+  "prices": {
+    "title": "CENÍK SEZENÍ",
+    "specialRates": "Nabízím zvýhodněné ceny pro klienty z Česka, Slovenska a Mexika. Napište mi a ráda vám poskytnu informace.",
+    "online": {
+      "title": "SEZENÍ ONLINE",
+      "subtitle": "v reálném čase přes videohovor",
+      "single": "Sezení",
+      "package3": "Balíček 3 sezení",
+      "package6": "Balíček 6 sezení",
+      "emotionBodyBelief": "s Emočním, Tělesným & Myšlenkovým kódem",
+      "ilyariChanneled": "Sezení s přenosem Ilyari",
+      "ilyariPackage3": "Balíček 3 sezení s přenosem Ilyari",
+      "ilyariPackage6": "Balíček 6 sezení s přenosem Ilyari",
+      "duration60": "60 min",
+      "duration60PerSession": "60 min každé sezení",
+      "duration2030": "20-30 min",
+      "duration2030PerSession": "20-30 min každé sezení",
+      "online": "online",
+      "save10": "ušetříte 10%",
+      "save15": "ušetříte 15%"
+    },
+    "email": {
+      "title": "SEZENÍ POR E-MAILU",
+      "subtitle": "stejně účinné jako prezenční, bez nutnosti domlouvat termín, cenově dostupnější",
+      "process": "Stanovíme si cíl sezení přes e-mail či WhatsApp → Budu na vás v domluvenou dobu pracovat → Pošlu vám podrobné poznámky ze sezení.",
+      "single": "Sezení po e-mailu s Emočním, Tělesným & Myšlenkovým kódem",
+      "package3": "Balíček 3 sezení po e-mailu s Emočním, Tělesným & Myšlenkovým kódem",
+      "package6": "Balíček 6 sezení po e-mailu s Emočním, Tělesným & Myšlenkovým kódem"
+    },
+    "pastLife": {
+      "title": "Regrese do minulých životů",
+      "duration": "2.5-3 hodiny (prezenčně v Olomouci či online)",
+      "description": "Zahrnuje přípravné vedení a řízenou meditaci."
+    }
+  },
   "times": [
     "9:00",
     "10:30",

@@ -262,6 +262,41 @@
       "note": "I can work with your four-legged, two-legged, or no-legged companion as long as you are their rightful owner."
     }
   },
+  "prices": {
+    "title": "SESSION PRICES",
+    "specialRates": "I offer special rates for clients in Czechia, Slovakia and Mexico. Please reach out to discuss your options.",
+    "online": {
+      "title": "ONLINE SESSIONS",
+      "subtitle": "Face-to-face via videocall, from anywhere",
+      "single": "Single Session",
+      "package3": "3-Session Package",
+      "package6": "6-Session Package",
+      "emotionBodyBelief": "Emotion Code, Body Code & Belief Code",
+      "ilyariChanneled": "Ilyari channeled session",
+      "ilyariPackage3": "3-session Ilyari package",
+      "ilyariPackage6": "6-session Ilyari package",
+      "duration60": "60 min",
+      "duration60PerSession": "60 min per session",
+      "duration2030": "20-30 min",
+      "duration2030PerSession": "20-30 min per session",
+      "online": "online",
+      "save10": "save 10%",
+      "save15": "save 15%"
+    },
+    "email": {
+      "title": "EMAIL SESSIONS",
+      "subtitle": "equally effective healing, no scheduling required, more budget-friendly",
+      "process": "We set the goal by email or WhatsApp → I work on you at the agreed time → I report back to you with detailed notes.",
+      "single": "Email session with Emotion Code, Body Code & Belief Code",
+      "package3": "3 email sessions package with Emotion Code, Body Code & Belief Code",
+      "package6": "6 email sessions package with Emotion Code, Body Code & Belief Code"
+    },
+    "pastLife": {
+      "title": "Past Life Regression",
+      "duration": "2.5-3 hours (online)",
+      "description": "Just as effective as a in-person session. Includes pre-session preparation and personalized guidance."
+    }
+  },
   "times": [
     "9:00 AM",
     "10:30 AM",

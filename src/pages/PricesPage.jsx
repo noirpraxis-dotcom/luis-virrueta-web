@@ -2,8 +2,10 @@ import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Video, Mail, Clock } from 'lucide-react'
 import { GradientLine, BackdropBlurCard } from '../elementos/ElementosReutilizables'
+import { useLanguage } from '../context/LanguageContext'
 
 const PricesPage = () => {
+  const { t } = useLanguage()
   const onlineRef = useRef(null)
   const emailRef = useRef(null)
   const regressionRef = useRef(null)
@@ -13,80 +15,80 @@ const PricesPage = () => {
 
   const onlineSessions = [
     {
-      title: 'Single Session',
-      subtitle: 'Emotion Code, Body Code & Belief Code',
+      title: t('prices.online.single'),
+      subtitle: t('prices.online.emotionBodyBelief'),
       price: '80',
-      duration: '60 min',
-      type: 'online'
+      duration: t('prices.online.duration60'),
+      type: t('prices.online.online')
     },
     {
-      title: '3-Session Package',
-      subtitle: 'Emotion Code, Body Code & Belief Code',
+      title: t('prices.online.package3'),
+      subtitle: t('prices.online.emotionBodyBelief'),
       price: '216',
       originalPrice: '240',
-      duration: '60 min per session',
-      type: 'online',
-      save: '10%',
+      duration: t('prices.online.duration60PerSession'),
+      type: t('prices.online.online'),
+      save: t('prices.online.save10'),
       popular: true
     },
     {
-      title: '6-Session Package',
-      subtitle: 'Emotion Code, Body Code & Belief Code',
+      title: t('prices.online.package6'),
+      subtitle: t('prices.online.emotionBodyBelief'),
       price: '408',
       originalPrice: '480',
-      duration: '60 min per session',
-      type: 'online',
-      save: '15%'
+      duration: t('prices.online.duration60PerSession'),
+      type: t('prices.online.online'),
+      save: t('prices.online.save15')
     },
     {
-      title: 'Single Ilyari Session',
-      subtitle: 'Channeled transmission',
+      title: t('prices.online.ilyariChanneled'),
+      subtitle: '',
       price: '44',
-      duration: '20-30 min',
-      type: 'online'
+      duration: t('prices.online.duration2030'),
+      type: t('prices.online.online')
     },
     {
-      title: '3-Session Ilyari Package',
-      subtitle: 'Channeled transmission',
+      title: t('prices.online.ilyariPackage3'),
+      subtitle: '',
       price: '120',
       originalPrice: '132',
-      duration: '20-30 min per session',
-      type: 'online',
-      save: '10%'
+      duration: t('prices.online.duration2030PerSession'),
+      type: t('prices.online.online'),
+      save: t('prices.online.save10')
     },
     {
-      title: '6-Session Ilyari Package',
-      subtitle: 'Channeled transmission',
+      title: t('prices.online.ilyariPackage6'),
+      subtitle: '',
       price: '224',
       originalPrice: '264',
-      duration: '20-30 min per session',
-      type: 'online',
-      save: '15%'
+      duration: t('prices.online.duration2030PerSession'),
+      type: t('prices.online.online'),
+      save: t('prices.online.save15')
     }
   ]
 
   const emailSessions = [
     {
-      title: 'Single Email Session',
-      subtitle: 'Emotion Code, Body Code & Belief Code',
+      title: t('prices.email.single'),
+      subtitle: '',
       price: '63',
       type: 'email'
     },
     {
-      title: '3 Email Sessions Package',
-      subtitle: 'Emotion Code, Body Code & Belief Code',
+      title: t('prices.email.package3'),
+      subtitle: '',
       price: '170',
       originalPrice: '189',
       type: 'email',
-      save: '10%'
+      save: t('prices.online.save10')
     },
     {
-      title: '6 Email Sessions Package',
-      subtitle: 'Emotion Code, Body Code & Belief Code',
+      title: t('prices.email.package6'),
+      subtitle: '',
       price: '320',
       originalPrice: '378',
       type: 'email',
-      save: '15%'
+      save: t('prices.online.save15')
     }
   ]
 
@@ -107,7 +109,7 @@ const PricesPage = () => {
               className="text-stone-800 text-6xl lg:text-8xl font-light tracking-[0.2em] mb-8"
               style={{ fontFamily: 'Gotham, sans-serif' }}
             >
-              PRICES
+              {t('prices.title')}
             </motion.h1>
             
             <motion.div
@@ -116,15 +118,6 @@ const PricesPage = () => {
               transition={{ duration: 1.5, delay: 0.3 }}
               className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-80 mb-8"
             />
-            
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.5 }}
-              className="text-stone-600 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed mb-4"
-            >
-              Invest in your healing journey with flexible options designed to support deep transformation.
-            </motion.p>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -133,7 +126,7 @@ const PricesPage = () => {
               className="text-amber-700 text-base lg:text-lg max-w-2xl mx-auto leading-relaxed italic"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
-              I offer special rates for clients in Czechia, Slovakia and Mexico. Please reach out to discuss your options.
+              {t('prices.specialRates')}
             </motion.p>
           </motion.div>
         </div>
@@ -158,10 +151,10 @@ const PricesPage = () => {
               className="text-4xl lg:text-6xl font-light text-stone-800 mb-4 tracking-wide"
               style={{ fontFamily: 'Cormoant Garamond, serif' }}
             >
-              Online <span className="italic text-amber-700">Sessions</span>
+              {t('prices.online.title')}
             </h2>
             <p className="text-stone-600 text-lg max-w-2xl mx-auto">
-              Face-to-face via videocall, from anywhere
+              {t('prices.online.subtitle')}
             </p>
           </motion.div>
 
@@ -177,7 +170,7 @@ const PricesPage = () => {
               >
                 {session.save && (
                   <div className="absolute -top-3 -right-3 bg-amber-600 text-white px-4 py-1.5 rounded-full text-sm font-medium z-10 shadow-lg">
-                    Save {session.save}
+                    {session.save}
                   </div>
                 )}
                 {session.popular && (
@@ -248,13 +241,13 @@ const PricesPage = () => {
               className="text-4xl lg:text-6xl font-light text-stone-800 mb-4 tracking-wide"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
-              Email <span className="italic text-amber-700">Sessions</span>
+              {t('prices.email.title')}
             </h2>
             <p className="text-stone-600 text-lg max-w-3xl mx-auto mb-4">
-              Equally effective healing, no scheduling required, more budget-friendly
+              {t('prices.email.subtitle')}
             </p>
             <p className="text-stone-500 text-base max-w-2xl mx-auto italic" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-              We set the goal by email or WhatsApp → I work on you at the agreed time → I report back to you with detailed notes.
+              {t('prices.email.process')}
             </p>
           </motion.div>
 
@@ -270,7 +263,7 @@ const PricesPage = () => {
               >
                 {session.save && (
                   <div className="absolute -top-3 -right-3 bg-amber-600 text-white px-4 py-1.5 rounded-full text-sm font-medium z-10 shadow-lg">
-                    Save {session.save}
+                    {session.save}
                   </div>
                 )}
                 <BackdropBlurCard className="h-full border-2 border-stone-200 hover:border-stone-400/50 transition-all duration-300">
@@ -281,7 +274,6 @@ const PricesPage = () => {
                     >
                       {session.title}
                     </h3>
-                    <p className="text-stone-600 text-sm mb-4">{session.subtitle}</p>
                     
                     <div className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent my-4" />
                     
@@ -332,7 +324,7 @@ const PricesPage = () => {
                 className="text-4xl lg:text-6xl font-light text-stone-800 mb-4 tracking-wide"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                Past Life <span className="italic text-amber-700">Regression</span>
+                {t('prices.pastLife.title')}
               </h2>
             </div>
 
@@ -347,13 +339,13 @@ const PricesPage = () => {
                 </div>
                 
                 <p className="text-center text-stone-600 text-lg mb-2" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-                  2.5-3 hours session (online)
+                  {t('prices.pastLife.duration')}
                 </p>
 
                 <div className="h-px bg-gradient-to-r from-transparent via-amber-300 to-transparent my-8" />
                 
                 <p className="text-center text-stone-700 text-base lg:text-lg leading-relaxed max-w-2xl mx-auto mb-8">
-                  Just as effective as an in-person session. Includes pre-session preparation and personalized guidance.
+                  {t('prices.pastLife.description')}
                 </p>
                 
                 <motion.button

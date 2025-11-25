@@ -262,6 +262,41 @@
       "note": "Puedo trabajar con tu compañero de cuatro patas, dos patas o sin patas, siempre que seas su legítimo dueño."
     }
   },
+  "prices": {
+    "title": "PRECIOS DE LAS SESIONES",
+    "specialRates": "Ofrezco tarifas especiales para clientes de Chequia, Eslovaquia y México. No dudes en contactarme para conocer las opciones disponibles.",
+    "online": {
+      "title": "SESIONES EN LÍNEA",
+      "subtitle": "por videollamada desde cualquier parte del mundo",
+      "single": "Sesión",
+      "package3": "Paquete de 3 sesiones",
+      "package6": "Paquete de 6 sesiones",
+      "emotionBodyBelief": "con el Emotion Code, Body Code & Belief Code",
+      "ilyariChanneled": "Sesión canalizada de Ilyari",
+      "ilyariPackage3": "Paquete de 3 sesiones de Ilyari",
+      "ilyariPackage6": "Paquete de 6 sesiones de Ilyari",
+      "duration60": "60 min",
+      "duration60PerSession": "60 min por sesión",
+      "duration2030": "20-30 min",
+      "duration2030PerSession": "20-30 min por sesión",
+      "online": "en línea",
+      "save10": "ahorra 10%",
+      "save15": "ahorra 15%"
+    },
+    "email": {
+      "title": "SESIONES POR CORREO ELECTRÓNICO",
+      "subtitle": "sanación igual de efectiva, sin necesidad de agendar, más accesible económicamente",
+      "process": "Establecemos el objetivo por correo o WhatsApp → Realizo la sesión en el momento acordado → Te envío un informe con notas detalladas.",
+      "single": "Sesión por correo electrónico con el Emotion Code, Body Code & Belief Code",
+      "package3": "Paquete de 3 sesiones por correo electrónico con el Emotion Code, Body Code & Belief Code",
+      "package6": "Paquete de 6 sesiones por correo electrónico con el Emotion Code, Body Code & Belief Code"
+    },
+    "pastLife": {
+      "title": "Regresión a Vidas Pasadas",
+      "duration": "2.5-3 horas (en línea)",
+      "description": "Igual de efectiva que una sesión presencial. Incluye preparación previa y orientación personalizada."
+    }
+  },
   "times": [
     "9:00 AM",
     "10:30 AM",
