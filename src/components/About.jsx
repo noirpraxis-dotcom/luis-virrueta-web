@@ -200,8 +200,8 @@ const About = () => {
               Hypnotherapy & <span className="italic text-amber-700">Energy Healing</span>
             </motion.h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
-              {[4, 5].map((num, index) => (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 max-w-6xl mx-auto">
+              {[4, 6, 5].map((num, index) => (
                 <motion.div
                   key={num}
                   initial={{ opacity: 0, y: 40 }}

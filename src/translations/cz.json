@@ -41,6 +41,7 @@
     "scrollDown": "Posunout dolů"
   },
   "countries": {
+    "intro": "Pracovala jsem s lidmi z",
     "title": "PRACOVALA JSEM S LIDMI Z",
     "question": "A odkud jste vy?"
   },
@@ -203,20 +204,24 @@
   },
   "testimonials": {
     "title": "Svědectví",
+    "subtitle": "Slyšte od těch, kteří zažili transformaci",
     "testimonial1": {
       "text": "Úplně jsem se ponořil do zkušenosti s minulými životy. Zuzana ve mně vzbouzela velkou důvěru, celou dobu jsem cítil její profesionální a láskyplný přístup. Byl to velmi realistický zážitek - byl jsem schopný do detailu vnímat různé fáze jednoho mého minulého života a navázat přímý kontakt se svým duchovním průvodcem. Na konci jsem byl tím zážitkem tak uchvácený, že jsem nechtěl nic jiného, než aby ve mně začal rezonovat. Dodnes přemýšlím o tom, co jsem zažil. Teď už chápu účel mého současného života a celou řadu jeho aspektů, a denně hovořím se svým duchovním průvodcem. Velké diky.",
-      "author": "Rodrigo J.",
-      "location": "Santiago de Chile"
+      "name": "Rodrigo J.",
+      "location": "Santiago de Chile",
+      "service": "Regrese do minulých životů"
     },
     "testimonial2": {
       "text": "Absolvovala jsem tři sezení metody Body Code. Zuzana pozorně a se smyslem pro detail pátrala po příčinách mé tělesné, emoční a energetické nerovnováhy. Překvapilo mě, jak jsem v reálném čase na vlastním těle pociťovala napravování jednotlivých příčin! Ty byly složité a existovaly na tolika úrovních, že se v nich šlo snadno ztratit, ale Zuzana má vhled, kladla nezbytné otázky a spatřovala vazby, díky nimž nakonec byla schopna uvolnit hluboké a mocné energetické kořeny mých problémů. U některých věcí byl výsledek okamžitý, u jiných se změny projevily postupně. Nejneuvěřitelnější pro mě bylo ohlédnout se zpět po dvou měsících a uvědomit si, co všechno se v mém životě díky našim sezením změnilo. Cítím, že se mi pročistila minulost a otevřely se přede mnou nečekané cesty. Jsem Zuzaně ohromně vděčná za její citlivost, seriózní přístup a vášeň pro její práci, díky níž je možné úplně všechno!",
-      "author": "Marie D.",
-      "location": "Vancouver, Kanada"
+      "name": "Marie D.",
+      "location": "Vancouver, Kanada",
+      "service": "Body Code sezení"
     },
     "testimonial3": {
       "text": "Jsem majitelkou skoro 9letého Jack Russellova teriéra Sida, který je i přes svůj věk velmi živý, hravý a aktivní. Když máte doma aktivního neposedu, rychle si všimnete, že s ním není něco v pořádku. Sid ztratil zájem o házení míčku, nechtěl chodit ven, a když byl doma, jen ležel bez zájmu o okolí. Jako jeho pánovi mi to doslova trhalo srdce, proto jsem nakontaktovala Zuzanu. Ta s ním pracovala něco přes hodinu a její práce mě velmi zaujala. Tento pocit se ještě umocnil, když jsem viděla kýžený výsledek na svém psovi. Účinky terapie se dostavily do pár dnů. Sidův stav se postupně v průběhu týdne vrátil do standardu, kdy se nemohl dočkat, až půjdeme ven, a nosil všechny míčky. Jeho energie byla zpátky. Ještě jsme od Zuzany dostali shrnutí v podobě Pdf souboru, takže víme, s čím měl Sid problém, a na co dalšího se můžeme zaměřit. O terapii jsem poprosila také pro sebe. A v případě, kdy Sid v budoucnu nebude ve své kůži, budu ráda, pokud mu Zuzana opět věnuje svůj čas a péči.",
-      "author": "Daniela a Sid",
-      "location": "Olomouc, Česká republika"
+      "name": "Daniela a Sid",
+      "location": "Olomouc, Česká republika",
+      "service": "Léčení zvířat"
     }
   },
   "personalCreation": {

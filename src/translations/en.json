@@ -41,6 +41,7 @@
     "scrollDown": "Scroll Down"
   },
   "countries": {
+    "intro": "I have worked with people from",
     "title": "I HAVE WORKED WITH PEOPLE FROM",
     "question": "And where are you from?"
   },
@@ -203,20 +204,24 @@
   },
   "testimonials": {
     "title": "Testimonials",
+    "subtitle": "Hear from those who have experienced transformation",
     "testimonial1": {
       "text": "I gave myself completely to the past life experience. Zuzana inspired me a lot of confidence, I felt at all times her professionalism and the love she gives. The experience is so real - I could see in great detail the stages of a previous life and feel the contact with my spiritual guide. At the end I was very ecstatic with the experience, I just wanted it to have an impact on me. To this day I still reflect on what I experienced. I am able to understand many aspects of my current life, my purpose, and I converse with my spirit guide on a daily basis. I only have words of gratitude.",
-      "author": "Rodrigo J.",
-      "location": "Santiago de Chile"
+      "name": "Rodrigo J.",
+      "location": "Santiago de Chile",
+      "service": "Past Life Regression"
     },
     "testimonial2": {
       "text": "With great attention, Zuzana investigated until she reached the very roots of my inner imbalance. It was surprising for me to feel the energy of the imbalances leaving my body! The ramifications were so complex that one could get lost, but Zuzana was asking all the right questions and seeing the underlying links with great insight. For certain issues, the result was immediate, while others took several weeks to manifest. It is incredible to witness all the changes that entered my life after the sessions. My past cleared and new paths were opened. I am grateful to Zuzana for her empathy, passion and professional approach that makes everything possible.",
-      "author": "Marie D.",
-      "location": "Vancouver, Canada"
+      "name": "Marie D.",
+      "location": "Vancouver, Canada",
+      "service": "Body Code Session"
     },
     "testimonial3": {
       "text": "I am the owner of Sid, a 9 year old Jack Russell terrier. He is very active and playful despite his age, but suddenly, he lost interest in fetching the ball and going for walks. He would just lie around, indifferent to his surroundings. It was breaking my heart to see him like this, so I contacted Zuzana. It was amazing to watch her work with Sid and it was even more incredible to see the results several days later. Sid's condition gradually returned to normal: his energy was back. If Sid needs help in the future, I would love to have Zuzana working on him again. I even requested a session for myself!",
-      "author": "Daniela and Sid",
-      "location": "Olomouc, Czech Republic"
+      "name": "Daniela and Sid",
+      "location": "Olomouc, Czech Republic",
+      "service": "Animal Healing"
     }
   },
   "personalCreation": {

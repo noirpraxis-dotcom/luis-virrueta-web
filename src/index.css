@@ -95,3 +95,17 @@ body {
     opacity: 0.7;
   }
 }
+
+/* Animación de resplandor lento para LIGHTWORKS - pasa por dentro de las letras */
+@keyframes shimmer-slow {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer-slow {
+  animation: shimmer-slow 4s ease-in-out infinite;
+}

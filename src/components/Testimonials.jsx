@@ -1,7 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
+import { useLanguage } from '../context/LanguageContext'
 
 const Testimonials = () => {
+  const { t } = useLanguage()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [direction, setDirection] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
@@ -10,27 +12,27 @@ const Testimonials = () => {
   const testimonials = [
     {
       id: 1,
-      name: 'Rodrigo J.',
-      location: 'Santiago de Chile',
-      text: 'I gave myself completely to the past life experience. Zuzana inspired me a lot of confidence, I felt at all times her professionalism and the love she gives. The experience is so real - I could see in great detail the stages of a previous life and feel the contact with my spiritual guide. At the end I was very ecstatic with the experience, I just wanted it to have an impact on me. To this day I still reflect on what I experienced. I am able to understand many aspects of my current life, my purpose, and I converse with my spirit guide on a daily basis. I only have words of gratitude.',
-      image: '/testimonial-1.jpg', // Placeholder
-      service: 'Past Life Regression'
+      name: t('testimonials.testimonial1.name'),
+      location: t('testimonials.testimonial1.location'),
+      text: t('testimonials.testimonial1.text'),
+      image: '/testimonial-1.jpg',
+      service: t('testimonials.testimonial1.service')
     },
     {
       id: 2,
-      name: 'Marie D.',
-      location: 'Vancouver, Canada',
-      text: 'With great attention, Zuzana investigated until she reached the very roots of my inner imbalance. It was surprising for me to feel the energy of the imbalances leaving my body! The ramifications were so complex that one could get lost, but Zuzana was asking all the right questions and seeing the underlying links with great insight. For certain issues, the result was immediate, while others took several weeks to manifest. It is incredible to witness all the changes that entered my life after the sessions. My past cleared and new paths were opened. I am grateful to Zuzana for her empathy, passion and professional approach that makes everything possible.',
-      image: '/testimonial-2.jpg', // Placeholder
-      service: 'Body Code Session'
+      name: t('testimonials.testimonial2.name'),
+      location: t('testimonials.testimonial2.location'),
+      text: t('testimonials.testimonial2.text'),
+      image: '/testimonial-2.jpg',
+      service: t('testimonials.testimonial2.service')
     },
     {
       id: 3,
-      name: 'Daniela and Sid',
-      location: 'Olomouc, Czech Republic',
-      text: 'I am the owner of Sid, a 9 year old Jack Russell terrier. He is very active and playful despite his age, but suddenly, he lost interest in fetching the ball and going for walks. He would just lie around, indifferent to his surroundings. It was breaking my heart to see him like this, so I contacted Zuzana. It was amazing to watch her work with Sid and it was even more incredible to see the results several days later. Sid\'s condition gradually returned to normal: his energy was back. If Sid needs help in the future, I would love to have Zuzana working on him again. I even requested a session for myself!',
-      image: '/testimonial-3.jpg', // Placeholder
-      service: 'Animal Healing'
+      name: t('testimonials.testimonial3.name'),
+      location: t('testimonials.testimonial3.location'),
+      text: t('testimonials.testimonial3.text'),
+      image: '/testimonial-3.jpg',
+      service: t('testimonials.testimonial3.service')
     }
   ]
 
@@ -125,7 +127,7 @@ const Testimonials = () => {
             className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 leading-tight"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
-            Testimonials
+            {t('testimonials.title')}
           </motion.h2>
           
           <motion.div
@@ -144,7 +146,7 @@ const Testimonials = () => {
             className="text-stone-600 text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-light"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
-            Hear from those who have experienced transformation
+            {t('testimonials.subtitle')}
           </motion.p>
         </motion.div>
 

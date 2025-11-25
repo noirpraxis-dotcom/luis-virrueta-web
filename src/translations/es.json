@@ -41,6 +41,7 @@
     "scrollDown": "Desplázate"
   },
   "countries": {
+    "intro": "He trabajado con personas de",
     "title": "HE TRABAJADO CON PERSONAS DE",
     "question": "¿Y tú, de dónde eres?"
   },
@@ -203,20 +204,24 @@
   },
   "testimonials": {
     "title": "Testimonios",
+    "subtitle": "Escucha a quienes han experimentado transformación",
     "testimonial1": {
       "text": "Me entregué por completo a la experiencia de vidas pasadas. Zuzana me inspiraba mucha confianza, sentí en todo momento su profesionalismo y el amor que entrega. La experiencia es tan real - pude ver con mucho detalle las etapas de una vida anterior y sentir el contacto con mi guía espiritual. Al final estaba muy extasiado con la experiencia, solo quería que repercutiera sobre mí. Hasta el día de hoy reflexiono en torno a lo vivido. Logro comprender muchos aspectos de mi vida actual, de mi propósito, y converso con mis guía espiritual a diario. Solo tengo palabras de agradecimiento.",
-      "author": "Rodrigo J.",
-      "location": "Santiago de Chile"
+      "name": "Rodrigo J.",
+      "location": "Santiago de Chile",
+      "service": "Regresión a Vidas Pasadas"
     },
     "testimonial2": {
       "text": "He tenido la suerte de recibir tres sesiones de Body Code con Zuzana. Con mucha atención y detalle, Zuzana va indagando hasta llegar a la raíz de las posibles causas que provocan desequilibrio corporal, emocional y/o energético. Lo interesante (y sorprendente) de las sesiones ha sido la resonancia que sentí en mi cuerpo a medida que iban surgiendo las causas y razones de mi desequilibrio. Las ramificaciones son complejas y están a tantos niveles, que uno se puede perder, pero Zuzana con mucha perspicacia y atención hace las preguntas necesarias y ve los vínculos subyacentes, que permiten después hacer un trabajo de liberación energético profundo y potente  para eliminar las causas del malestar. Para ciertas cosas, el resultado es inmediato. Lo más increíble para mí, ha sido ver después de dos meses, todo lo que ha cambiado en mi vida al trabajar la temática que consulté con ella. Siento que se limpiaron memorias y se abrieron caminos inesperados. Le soy increíblemente agradecida por su sensibilidad, su pasión, su seriedad con el trabajo y su conexión que lo permite todo!",
-      "author": "Marie D.",
-      "location": "Vancouver, Canadá"
+      "name": "Marie D.",
+      "location": "Vancouver, Canadá",
+      "service": "Sesión Body Code"
     },
     "testimonial3": {
       "text": "Soy la dueña de Sid, un Jack Russell terrier de casi 9 años, que es muy activo y juguetón a pesar de su edad. Cuando tienes un perro travieso en casa, enseguida te das cuenta de que algo le está pasando. Sid perdió el interés por traer la pelota, no quería salir de paseo y en casa se quedaba tumbado y desinteresado por su entorno. Me rompía el corazón verlo así, así que contacté a Zuzana. Ella trabajó con Sid durante una hora y era impresionante observar su trabajo. Esta sensación mía se reforzó aún más cuando a los pocos días llegó el efecto de la terapia. La condición de Sid volvió gradualmente a la normalidad: se emocionaba por salir de paseo y traía las pelotas lanzadas. Su energía había vuelto. También recibimos notas de la sesión en un Pdf, así que tenemos registro de lo que andaba mal con Sid y qué más podemos hacer por él. Yo también solicité mi propia sesión. Y si a Sid le aquejara algo en el futuro, me encantaría que Zuzana volviera a atenderlo.",
-      "author": "Daniela y Sid",
-      "location": "Olomouc, República Checa"
+      "name": "Daniela y Sid",
+      "location": "Olomouc, República Checa",
+      "service": "Sanación para Animales"
     }
   },
   "personalCreation": {

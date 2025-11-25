@@ -51,9 +51,17 @@ const Header = ({ menuItems }) => {
                   <span className="text-white">leaf</span>
                 </div>
                 
-                {/* Lightworks - más grande, expandido y alineado con Greenleaf */}
+                {/* Lightworks - expandido con animación de resplandor */}
                 <div 
-                  className="text-[0.65rem] uppercase text-white/60 font-light tracking-[1.45em] text-center -mt-2 ml-[0.3em]"
+                  className="text-[0.65rem] uppercase font-medium tracking-[1.45em] text-center -mt-2 ml-[0.3em] relative"
+                  style={{
+                    background: 'linear-gradient(90deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.85) 35%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.85) 65%, rgba(255,255,255,0.85) 100%)',
+                    backgroundSize: '200% 100%',
+                    WebkitBackgroundClip: 'text',
+                    backgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    animation: 'shimmer-slow 4s ease-in-out infinite'
+                  }}
                 >
                   lightworks
                 </div>
