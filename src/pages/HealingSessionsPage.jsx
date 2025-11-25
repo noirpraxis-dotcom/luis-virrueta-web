@@ -172,7 +172,7 @@ const EmotionBodyBeliefSection = ({ t }) => {
           className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          {t('healingSessions.emotionBodyBelief.title')}
+          {t('healingSessions.emotionBodyBelief.title')} <span className="italic text-amber-700">{t('healingSessions.emotionBodyBelief.titleItalic')}</span>
         </h2>
 
         <motion.p
@@ -386,7 +386,7 @@ const PastLifeSection = ({ t }) => {
           className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          {t('healingSessions.pastLife.title')}
+          {t('healingSessions.pastLife.title')} <span className="italic text-amber-700">{t('healingSessions.pastLife.titleItalic')}</span>
         </h2>
 
         <motion.p
@@ -613,7 +613,7 @@ const IlyariSection = ({ t }) => {
           className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          {t('healingSessions.ilyari.title')}
+          {t('healingSessions.ilyari.title')} <span className="italic text-amber-700">{t('healingSessions.ilyari.titleItalic')}</span>
         </h2>
 
         <motion.p
@@ -772,7 +772,7 @@ const AnimalsSection = ({ t }) => {
           className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          {t('healingSessions.animals.title')}
+          {t('healingSessions.animals.title')} <span className="italic text-amber-700">{t('healingSessions.animals.titleItalic')}</span>
         </h2>
 
         <motion.p
