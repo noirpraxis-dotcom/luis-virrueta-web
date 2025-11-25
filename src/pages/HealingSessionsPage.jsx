@@ -741,12 +741,12 @@ const SessionNavigator = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
-      bgColor: 'bg-[#f5f3f0]',
-      borderColor: 'border-stone-300',
-      hoverBorder: 'hover:border-[#a89984]',
-      accentColor: '#a89984',
-      buttonBg: 'bg-[#a89984]',
-      buttonHover: 'hover:bg-[#8d7e6f]'
+      bgColor: 'bg-amber-50',
+      borderColor: 'border-amber-200',
+      hoverBorder: 'hover:border-amber-500',
+      accentColor: '#d97706',
+      buttonBg: 'bg-amber-600',
+      buttonHover: 'hover:bg-amber-700'
     },
     {
       id: 'ilyari-somatic',
@@ -783,12 +783,12 @@ const SessionNavigator = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
-      bgColor: 'bg-[#f8f6f4]',
-      borderColor: 'border-stone-300',
-      hoverBorder: 'hover:border-[#c9b8a0]',
-      accentColor: '#c9b8a0',
-      buttonBg: 'bg-[#c9b8a0]',
-      buttonHover: 'hover:bg-[#b5a18a]'
+      bgColor: 'bg-rose-50',
+      borderColor: 'border-rose-200',
+      hoverBorder: 'hover:border-rose-400',
+      accentColor: '#fb7185',
+      buttonBg: 'bg-rose-400',
+      buttonHover: 'hover:bg-rose-500'
     }
   ]
 
