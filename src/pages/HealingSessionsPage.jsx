@@ -103,10 +103,7 @@ const EmotionBodyBeliefSection = ({ t }) => {
       title: t('healingSessions.emotionBodyBelief.emotionCode.title'),
       icon: (
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          {/* Elegant heart with energy waves */}
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} opacity="0.6" d="M2 12h4M18 12h4M12 2v4M12 18v4" />
-          <circle cx="12" cy="12" r="2.5" strokeWidth={1} />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
         </svg>
       ),
       color: 'from-[#8dc1ab] to-[#7ab09a]',
@@ -122,13 +119,9 @@ const EmotionBodyBeliefSection = ({ t }) => {
       title: t('healingSessions.emotionBodyBelief.bodyCode.title'),
       icon: (
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          {/* Elegant human silhouette with energy centers */}
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 3c1.5 0 2.5 1 2.5 2.5S13.5 8 12 8s-2.5-1-2.5-2.5S10.5 3 12 3z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 8v4M12 12c-2 0-3.5 1-4.5 2.5v5.5M12 12c2 0 3.5 1 4.5 2.5v5.5" />
-          <circle cx="12" cy="10" r="0.8" fill="currentColor" opacity="0.7" />
-          <circle cx="12" cy="13" r="0.8" fill="currentColor" opacity="0.7" />
-          <circle cx="12" cy="16" r="0.8" fill="currentColor" opacity="0.7" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} opacity="0.5" d="M8 10c-1-0.5-2-0.5-3 0M16 10c1-0.5 2-0.5 3 0" />
+          <circle cx="12" cy="8" r="5" strokeWidth={1.5} />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 21a8 8 0 1 0-16 0" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 13v8" opacity="0.5" />
         </svg>
       ),
       color: 'from-[#8dc1ab] to-[#7ab09a]',
@@ -143,12 +136,9 @@ const EmotionBodyBeliefSection = ({ t }) => {
       title: t('healingSessions.emotionBodyBelief.beliefCode.title'),
       icon: (
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          {/* Elegant brain/mind with neural connections */}
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M9.5 3C7 3 5 5 5 7.5c0 1.5.7 2.8 1.7 3.7-.5.8-.7 1.8-.7 2.8 0 3 2.5 5.5 5.5 5.5h1c3 0 5.5-2.5 5.5-5.5 0-1-.3-2-.7-2.8 1-.9 1.7-2.2 1.7-3.7C19 5 17 3 14.5 3c-1 0-2 .4-2.5 1-.5-.6-1.5-1-2.5-1z" />
-          <circle cx="9" cy="8" r="1.2" fill="currentColor" opacity="0.6" />
-          <circle cx="15" cy="8" r="1.2" fill="currentColor" opacity="0.6" />
-          <circle cx="12" cy="12" r="1.2" fill="currentColor" opacity="0.6" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} opacity="0.5" d="M9 8l3 4m3-4l-3 4" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 1 1-6 0" opacity="0.5" />
         </svg>
       ),
       color: 'from-[#8dc1ab] to-[#7ab09a]',
@@ -329,52 +319,33 @@ const EmotionBodyBeliefSection = ({ t }) => {
                 )}
 
                 {/* Metaphor */}
-                <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 lg:p-10 border border-stone-200/50 shadow-sm">
+                <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 lg:p-10 border border-stone-200/50 shadow-sm mb-8">
                   <div className="flex items-start gap-6">
-                    <svg className={`w-10 h-10 text-${code.iconColor || 'amber-500'} flex-shrink-0`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 3l1.5 4.5h4.5l-3.6 2.7 1.4 4.3-3.8-2.8-3.8 2.8 1.4-4.3-3.6-2.7h4.5z" />
-                      <circle cx="12" cy="12" r="2" strokeWidth="1" />
+                    <svg className="w-8 h-8 text-[#8dc1ab] flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                     </svg>
-                    <p className="text-stone-700 text-xl leading-loose italic" style={{ fontFamily: 'Cormorant Garamond, serif', lineHeight: '1.9', fontSize: '1.25rem' }}>
+                    <p className="text-stone-700 text-lg leading-relaxed" style={{ fontFamily: 'Gotham, sans-serif', lineHeight: '1.7' }}>
                       {code.metaphor}
                     </p>
                   </div>
                 </div>
+
+                {/* Book a Session Button */}
+                <motion.a
+                  href="/prices"
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="block w-full py-4 bg-gradient-to-r from-[#8dc1ab] to-[#7ab09a] text-white text-center rounded-xl font-medium tracking-wide shadow-lg hover:shadow-xl transition-all duration-300"
+                  style={{ fontFamily: 'Gotham, sans-serif' }}
+                >
+                  {t('healingSessions.common.bookSession')}
+                </motion.a>
               </div>
             </BackdropBlurCard>
           </motion.div>
         ))}
       </div>
 
-      {/* CTA Section */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-      >
-        <BackdropBlurCard className="bg-gradient-to-br from-emerald-50 to-amber-50 border-2 border-emerald-200">
-          <div className="p-12 text-center">
-            <h4
-              className="text-3xl lg:text-4xl font-light text-stone-800 mb-6"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
-              {t('healingSessions.common.readyToBeginTitle')}
-            </h4>
-            <p className="text-stone-600 text-lg mb-8">
-              {t('healingSessions.common.readyToBeginText')}
-            </p>
-            <motion.a
-              href="/store"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-block px-12 py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-full font-medium tracking-wide text-lg shadow-lg hover:shadow-xl transition-all duration-300"
-            >
-              {t('healingSessions.common.bookYourSession')}
-            </motion.a>
-          </div>
-        </BackdropBlurCard>
-      </motion.div>
     </div>
   )
 }
