@@ -1170,11 +1170,30 @@ const SessionNavigator = ({ t }) => {
                       boxShadow: `0 20px 50px -15px ${session.accentColor}60`
                     }}
                   >
-                    {/* Button glow effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    {/* Continuous shimmer animation */}
+                    <div 
+                      className="absolute inset-0 opacity-30"
+                      style={{
+                        background: `linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)`,
+                        animation: 'shimmer 3s infinite',
+                        backgroundSize: '200% 100%'
+                      }}
+                    />
                     
-                    <span className="relative">{session.action}</span>
-                    <svg className="w-5 h-5 xl:w-5 xl:h-5 group-hover:translate-x-2 transition-transform duration-500 relative" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    {/* Hover glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    
+                    {/* Pulsing glow behind button */}
+                    <div 
+                      className="absolute -inset-1 rounded-full blur-lg opacity-20"
+                      style={{
+                        background: session.accentColor,
+                        animation: 'pulse-glow 2s ease-in-out infinite'
+                      }}
+                    />
+                    
+                    <span className="relative z-10">{session.action}</span>
+                    <svg className="w-5 h-5 xl:w-5 xl:h-5 group-hover:translate-x-2 transition-transform duration-500 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </motion.button>
