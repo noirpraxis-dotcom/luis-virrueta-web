@@ -212,7 +212,7 @@ const PricesPage = () => {
                       className="w-full bg-[#8dc1ab] hover:bg-[#7ab09a] text-white py-3 rounded-full font-light text-base tracking-wide shadow-lg hover:shadow-xl transition-all duration-300"
                       style={{ fontFamily: 'Cormorant Garamond, serif' }}
                     >
-                      Book Now
+                      {t('healingSessions.common.bookNow')}
                     </motion.button>
                   </div>
                 </BackdropBlurCard>
@@ -295,7 +295,7 @@ const PricesPage = () => {
                       className="w-full bg-stone-700 hover:bg-stone-800 text-white py-3 rounded-full font-light text-base tracking-wide shadow-lg hover:shadow-xl transition-all duration-300"
                       style={{ fontFamily: 'Cormorant Garamond, serif' }}
                     >
-                      Book Now
+                      {t('healingSessions.common.bookNow')}
                     </motion.button>
                   </div>
                 </BackdropBlurCard>
@@ -354,7 +354,7 @@ const PricesPage = () => {
                   className="w-full max-w-md mx-auto block bg-amber-600 hover:bg-amber-700 text-white py-4 rounded-full font-light text-lg tracking-wide shadow-lg hover:shadow-xl transition-all duration-300"
                   style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 >
-                  Book Past Life Regression
+                  {t('healingSessions.common.bookNow')}
                 </motion.button>
               </div>
             </BackdropBlurCard>

@@ -250,7 +250,7 @@ const EmotionBodyBeliefSection = ({ t }) => {
           className="text-4xl lg:text-5xl font-light text-stone-800 mb-6 tracking-wide"
           style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}
         >
-          What Can The Codes Do For You?
+          {t('healingSessions.common.whatCanCodesDoTitle')}
         </motion.h3>
         <GradientLine className="mx-auto" />
       </div>
@@ -337,10 +337,10 @@ const EmotionBodyBeliefSection = ({ t }) => {
               className="text-3xl lg:text-4xl font-light text-stone-800 mb-6"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
-              Ready to Begin Your Healing Journey?
+              {t('healingSessions.common.readyToBeginTitle')}
             </h4>
             <p className="text-stone-600 text-lg mb-8">
-              Experience the transformative power of the Codes and unlock your body's natural ability to heal.
+              {t('healingSessions.common.readyToBeginText')}
             </p>
             <motion.a
               href="/store"
@@ -348,7 +348,7 @@ const EmotionBodyBeliefSection = ({ t }) => {
               whileTap={{ scale: 0.95 }}
               className="inline-block px-12 py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-full font-medium tracking-wide text-lg shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              Book Your Session
+              {t('healingSessions.common.bookYourSession')}
             </motion.a>
           </div>
         </BackdropBlurCard>
@@ -454,13 +454,13 @@ const PastLifeSection = ({ t }) => {
               className="text-2xl lg:text-3xl font-light text-stone-800 text-center mb-6 tracking-wide"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
-              Comfort of <span className="italic text-amber-700">Home</span>
+              {t('healingSessions.common.comfortOfHomeTitle')} <span className="italic text-amber-700">{t('healingSessions.common.comfortOfHomeTitleItalic')}</span>
             </h3>
 
             <div className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mb-6" />
 
             <p className="text-base lg:text-lg text-stone-700 leading-relaxed text-center">
-              If my office is far from where you live, an online session is a convenient alternative. It reduces the time and cost of travel and gives you the opportunity to enjoy the experience in the comfort and privacy of your home.
+              {t('healingSessions.common.comfortOfHomeText')}
             </p>
           </div>
         </BackdropBlurCard>
@@ -484,20 +484,20 @@ const PastLifeSection = ({ t }) => {
               className="text-2xl lg:text-3xl font-light text-stone-800 text-center mb-6 tracking-wide"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
-              Equally <span className="italic text-amber-700">Effective</span>
+              {t('healingSessions.common.equallyEffectiveTitle')} <span className="italic text-amber-700">{t('healingSessions.common.equallyEffectiveTitleItalic')}</span>
             </h3>
 
             <div className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mb-6" />
 
             <p className="text-base lg:text-lg text-stone-700 leading-relaxed text-center mb-6">
-              An online regression is equally effective as one conducted in person. All you need is:
+              {t('healingSessions.common.equallyEffectiveText')}
             </p>
 
             <ul className="space-y-3">
               {[
-                'A quiet, dimly lit room',
-                'Headphones with a good microphone',
-                'A stable internet connection'
+                t('healingSessions.common.requirement1'),
+                t('healingSessions.common.requirement2'),
+                t('healingSessions.common.requirement3')
               ].map((item, index) => (
                 <motion.li
                   key={index}
@@ -930,13 +930,13 @@ const SessionNavigator = ({ t }) => {
   const sessions = [
     {
       id: 'emotion-body-belief',
-      title: 'Emotion, Body & Belief Code',
+      title: t('healingSessions.navigator.emotionBodyBeliefTitle'),
       questions: [
-        'Feeling stuck with recurring emotional patterns?',
-        'Physical discomfort with no medical explanation?',
-        'Limiting beliefs holding you back?'
+        t('healingSessions.navigator.emotionBodyBeliefQ1'),
+        t('healingSessions.navigator.emotionBodyBeliefQ2'),
+        t('healingSessions.navigator.emotionBodyBeliefQ3')
       ],
-      action: 'Energy Healing',
+      action: t('healingSessions.navigator.emotionBodyBeliefAction'),
       icon: (
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -951,13 +951,13 @@ const SessionNavigator = ({ t }) => {
     },
     {
       id: 'past-life-regressions',
-      title: 'Past Life Regression',
+      title: t('healingSessions.navigator.pastLifeTitle'),
       questions: [
-        'Unexplainable fears or phobias?',
-        'Déjà vu or strong connections to certain places?',
-        'Curious about your soul\'s journey?'
+        t('healingSessions.navigator.pastLifeQ1'),
+        t('healingSessions.navigator.pastLifeQ2'),
+        t('healingSessions.navigator.pastLifeQ3')
       ],
-      action: 'Explore Past Lives',
+      action: t('healingSessions.navigator.pastLifeAction'),
       icon: (
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -972,13 +972,13 @@ const SessionNavigator = ({ t }) => {
     },
     {
       id: 'ilyari-somatic',
-      title: 'Ilyari Somatic Transmission',
+      title: t('healingSessions.navigator.ilyariTitle'),
       questions: [
-        'Seeking spiritual awakening?',
-        'Ready for DNA activation and light codes?',
-        'Want to connect with higher frequencies?'
+        t('healingSessions.navigator.ilyariQ1'),
+        t('healingSessions.navigator.ilyariQ2'),
+        t('healingSessions.navigator.ilyariQ3')
       ],
-      action: 'Receive Light Codes',
+      action: t('healingSessions.navigator.ilyariAction'),
       icon: (
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
@@ -993,13 +993,13 @@ const SessionNavigator = ({ t }) => {
     },
     {
       id: 'healing-animals',
-      title: 'Healing for Animals',
+      title: t('healingSessions.navigator.animalsTitle'),
       questions: [
-        'Is your pet showing behavioral changes?',
-        'Health issues affecting your companion?',
-        'Want to support their wellbeing energetically?'
+        t('healingSessions.navigator.animalsQ1'),
+        t('healingSessions.navigator.animalsQ2'),
+        t('healingSessions.navigator.animalsQ3')
       ],
-      action: 'Help Your Pet',
+      action: t('healingSessions.navigator.animalsAction'),
       icon: (
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -1046,8 +1046,8 @@ const SessionNavigator = ({ t }) => {
           className="text-5xl lg:text-6xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Which Session <br className="lg:hidden" />
-          <span className="italic text-amber-700">Calls to You?</span>
+          {t('healingSessions.navigator.title')} <br className="lg:hidden" />
+          <span className="italic text-amber-700">{t('healingSessions.navigator.titleItalic')}</span>
         </h2>
         
         <motion.p
@@ -1057,7 +1057,7 @@ const SessionNavigator = ({ t }) => {
           className="text-stone-600 text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-light"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Answer these questions to discover your ideal healing path
+          {t('healingSessions.navigator.subtitle')}
         </motion.p>
 
         <motion.div

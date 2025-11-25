@@ -3,8 +3,10 @@ import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { MessageCircle } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 const CallToActionSection = () => {
+  const { t } = useLanguage()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
@@ -55,9 +57,9 @@ const CallToActionSection = () => {
             className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 leading-tight"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
-            Find the Perfect
+            {t('healingSessions.cta.findPerfectSession')}
             <br />
-            <span className="italic">Session for You</span>
+            <span className="italic">{t('healingSessions.cta.findPerfectSessionItalic')}</span>
           </motion.h2>
           
           <motion.div
@@ -74,8 +76,7 @@ const CallToActionSection = () => {
             className="text-stone-600 text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-light"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
-            Whether you're seeking emotional healing, spiritual growth, 
-            or clarity in your life's path, I'm here to guide you.
+            {t('healingSessions.cta.description')}
           </motion.p>
         </motion.div>
 
@@ -104,10 +105,10 @@ const CallToActionSection = () => {
                     className="text-white text-2xl lg:text-3xl font-light mb-2 tracking-wide"
                     style={{ fontFamily: 'Cormorant Garamond, serif' }}
                   >
-                    Ready to Begin?
+                    {t('healingSessions.cta.readyToBegin')}
                   </h3>
                   <p className="text-white/90 text-base lg:text-lg font-light">
-                    Explore healing sessions and start your transformation
+                    {t('healingSessions.cta.exploreHealingSessions')}
                   </p>
                   
                   {/* Arrow indicator */}
@@ -131,7 +132,7 @@ const CallToActionSection = () => {
             className="flex items-center justify-center gap-4"
           >
             <div className="h-px bg-stone-300 flex-1" />
-            <span className="text-stone-400 text-sm tracking-widest uppercase">or</span>
+            <span className="text-stone-400 text-sm tracking-widest uppercase">{t('healingSessions.cta.or')}</span>
             <div className="h-px bg-stone-300 flex-1" />
           </motion.div>
 
@@ -163,10 +164,10 @@ const CallToActionSection = () => {
                       className="text-stone-800 text-2xl lg:text-3xl font-light mb-1 tracking-wide"
                       style={{ fontFamily: 'Cormorant Garamond, serif' }}
                     >
-                      Not Sure Where to Start?
+                      {t('healingSessions.cta.notSureWhereToStart')}
                     </h3>
                     <p className="text-stone-600 text-base lg:text-lg font-light">
-                      Let's talk on WhatsApp — I'm here to help
+                      {t('healingSessions.cta.letsTalkWhatsApp')}
                     </p>
                   </div>
                 </div>
@@ -187,7 +188,7 @@ const CallToActionSection = () => {
             className="text-stone-400 text-base lg:text-lg font-light italic"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
-            Your journey to healing begins with a single step
+            {t('healingSessions.cta.journeyBegins')}
           </p>
         </motion.div>
       </div>
