@@ -12,13 +12,13 @@ const ProductDetailPage = () => {
   const products = {
     '1': {
       id: 1,
-      name: 'Emotion Code Session',
-      category: 'Healing Session',
-      price: 120,
+      name: 'Online Session - Single',
+      category: 'Emotion, Body & Belief Code',
+      price: 80,
       duration: '60 min',
       image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&h=800&fit=crop',
-      shortDescription: 'Release trapped emotions that may be creating physical and emotional problems.',
-      fullDescription: 'The Emotion Code is a powerful and simple method developed by Dr. Bradley Nelson to identify and release trapped emotions. These trapped emotions are made of energy, and they can create pain, malfunction, and disease. They can also block you from love, happiness and success.',
+      shortDescription: 'Release trapped emotions, correct body imbalances, and transform limiting beliefs in a comprehensive online healing session.',
+      fullDescription: 'This comprehensive online session combines the powerful techniques of Emotion Code, Body Code, and Belief Code to address physical, emotional, and mental imbalances. Work with trapped emotions, energy systems, limiting beliefs, and more in a single transformative session.',
       benefits: [
         'Release emotional baggage from past events',
         'Reduce physical discomfort and pain',
@@ -58,93 +58,79 @@ const ProductDetailPage = () => {
     },
     '2': {
       id: 2,
-      name: 'Body Code Session',
-      category: 'Healing Session',
-      price: 130,
-      duration: '75 min',
+      name: 'Online Session - 3 Pack',
+      category: 'Emotion, Body & Belief Code',
+      price: 216,
+      duration: '60 min per session',
       image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=800&fit=crop',
-      shortDescription: 'Discover and correct imbalances in the body.',
-      fullDescription: 'The Body Code is a sophisticated and comprehensive energy healing technique designed to identify and correct imbalances in six key areas: Energies, Circuits & Systems, Toxins, Pathogens, Misalignments, and Nutrition & Lifestyle.',
+      shortDescription: 'Save 10% with this package of three comprehensive online healing sessions for deeper transformation.',
+      fullDescription: 'Commit to your healing journey with this value package of three comprehensive online sessions. Experience deeper transformation as we work together over multiple sessions to release layers of trapped emotions, correct imbalances, and transform limiting beliefs. Save 10% compared to single sessions.',
       benefits: [
-        'Balance energy systems throughout the body',
-        'Address root causes of physical issues',
-        'Holistic healing approach',
-        'Personalized treatment for your needs',
-        'Improve overall body function',
-        'Enhance vitality and wellness'
-      ],
-      whatToExpect: [
-        'Comprehensive assessment of body systems',
-        'Identification of specific imbalances',
-        'Targeted correction of issues found',
-        'Detailed explanation of findings',
-        'Personalized recommendations for ongoing wellness'
+        'Save 10% on sessions',
+        'Deeper healing journey',
+        'Consistent progress tracking',
+        'Flexible scheduling over time',
+        'Build on previous session insights',
+        'Greater lasting transformation'
       ],
       ideal: [
-        'Those with chronic physical issues',
-        'People seeking comprehensive healing',
-        'Anyone wanting to optimize health',
-        'Individuals with mysterious symptoms',
-        'Those committed to deep healing work'
+        'Those committed to healing journey',
+        'People seeking deeper transformation',
+        'Anyone wanting consistent support',
+        'Individuals ready for lasting change',
+        'Those who value progress over time'
       ],
       faq: [
         {
-          question: 'How is this different from Emotion Code?',
-          answer: 'While Emotion Code focuses specifically on trapped emotions, Body Code addresses six different types of imbalances including emotions, structural issues, toxins, pathogens, and more. It\'s a more comprehensive system.'
+          question: 'How do I schedule the 3 sessions?',
+          answer: 'You can schedule sessions flexibly over several weeks or months based on your needs and availability. We recommend spacing them 1-2 weeks apart for optimal integration.'
         },
         {
-          question: 'Can this replace medical treatment?',
-          answer: 'Body Code is a complementary healing modality and should not replace medical care. Always consult with your healthcare provider for medical concerns.'
+          question: 'What if I need to reschedule?',
+          answer: 'Sessions can be rescheduled with 24 hours notice. Your package remains valid for 6 months from purchase date.'
         }
       ]
     },
     '3': {
       id: 3,
-      name: 'Belief Code Session',
-      category: 'Healing Session',
-      price: 130,
-      duration: '75 min',
+      name: 'Email Session - Single',
+      category: 'Remote Healing',
+      price: 63,
+      duration: 'Asynchronous',
       image: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=600&h=800&fit=crop',
-      shortDescription: 'Transform limiting beliefs and negative thought patterns.',
-      fullDescription: 'The Belief Code helps identify and release limiting beliefs and negative thought patterns that operate at a subconscious level. These beliefs shape your reality and can hold you back from achieving your full potential.',
+      shortDescription: 'Receive healing work via email at your convenience. Perfect for those with busy schedules or time zone differences.',
+      fullDescription: 'Email sessions offer the same powerful healing work as online sessions, but conducted asynchronously. Share your concerns via email, and receive detailed written feedback about what was found and released. Perfect for those with busy schedules, different time zones, or who prefer written communication.',
       benefits: [
-        'Transform limiting beliefs',
-        'Clear mental blocks',
-        'Enhance personal growth',
-        'Achieve your goals faster',
-        'Improve self-confidence',
-        'Create lasting positive change'
-      ],
-      whatToExpect: [
-        'Exploration of limiting beliefs',
-        'Identification of belief systems',
-        'Release of negative programming',
-        'Installation of empowering beliefs',
-        'Integration support'
+        'Work at your own pace',
+        'No scheduling coordination needed',
+        'Detailed written report',
+        'Privacy and convenience',
+        'Perfect for any time zone',
+        'Thoughtful written guidance'
       ],
       ideal: [
-        'Those feeling stuck in life',
-        'People with self-sabotaging patterns',
-        'Anyone wanting to achieve big goals',
-        'Individuals seeking transformation',
-        'Those ready for deep mindset work'
+        'Busy professionals with irregular schedules',
+        'People in different time zones',
+        'Those who prefer written communication',
+        'Anyone seeking convenience',
+        'Introverts who process better alone'
       ],
       faq: [
         {
-          question: 'Will I know what beliefs are being released?',
-          answer: 'Yes, we\'ll discuss the beliefs we identify and you\'ll be fully aware of what we\'re working on throughout the session.'
+          question: 'How does an email session work?',
+          answer: 'You email me your concerns and what you\'d like to work on. I conduct the healing session remotely and send you a detailed written report of what was found and released, along with any guidance or recommendations.'
         },
         {
-          question: 'How long do results take?',
-          answer: 'Some people notice shifts immediately, while others experience gradual changes over days or weeks as new beliefs integrate.'
+          question: 'How long does it take?',
+          answer: 'You\'ll typically receive your detailed report within 2-3 business days. The healing work itself is conducted in real-time, but the asynchronous format allows flexibility for both of us.'
         }
       ]
     },
     '4': {
       id: 4,
       name: 'Past Life Regression',
-      category: 'Healing Session',
-      price: 150,
+      category: 'Deep Soul Work',
+      price: 120,
       duration: '90 min',
       image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=600&h=800&fit=crop',
       shortDescription: 'Explore past lives to understand current patterns.',
@@ -184,13 +170,13 @@ const ProductDetailPage = () => {
     },
     '5': {
       id: 5,
-      name: 'Ilyari Somatic Transmission',
-      category: 'Healing Session',
-      price: 140,
-      duration: '60 min',
+      name: 'Ilyari Channeled Session',
+      category: 'Light Code Transmission',
+      price: 44,
+      duration: '20-30 min',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=800&fit=crop',
-      shortDescription: 'Experience channeled light codes for cellular healing.',
-      fullDescription: 'Ilyari Somatic Transmission is a unique healing modality that channels high-frequency light codes directly through the body for deep cellular healing and consciousness expansion. This work operates beyond the mind, directly at the cellular and energetic level.',
+      shortDescription: 'Experience channeled light codes transmitted through the body for deep cellular healing and transformation.',
+      fullDescription: 'Ilyari Somatic Transmission is a unique healing modality that channels high-frequency light codes directly through the body for deep cellular healing and consciousness expansion. This concentrated session delivers powerful transformation in a shorter timeframe, perfect for those called to light code activations.',
       benefits: [
         'Deep cellular healing',
         'Consciousness expansion',
@@ -199,19 +185,13 @@ const ProductDetailPage = () => {
         'Spiritual awakening support',
         'Energetic alignment'
       ],
-      whatToExpect: [
-        'Comfortable position (lying or sitting)',
-        'Transmission of light codes',
-        'Possible physical sensations',
-        'Deep relaxation or altered states',
-        'Integration period after session'
-      ],
       ideal: [
         'Lightworkers and healers',
         'Those on awakening journey',
         'People seeking consciousness expansion',
         'Anyone called to this work',
-        'Those ready for quantum shifts'
+        'Those ready for quantum shifts',
+        'Individuals wanting shorter sessions'
       ],
       faq: [
         {
@@ -226,9 +206,9 @@ const ProductDetailPage = () => {
     },
     '6': {
       id: 6,
-      name: 'Animal Healing Session',
-      category: 'Healing Session',
-      price: 100,
+      name: 'Healing for Animals',
+      category: 'Pet Healing',
+      price: 56,
       duration: '45 min',
       image: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=600&h=800&fit=crop',
       shortDescription: 'Energy healing for your beloved animal companions.',
@@ -241,19 +221,13 @@ const ProductDetailPage = () => {
         'Enhance bonding',
         'Support end-of-life transition'
       ],
-      whatToExpect: [
-        'Discussion of your animal\'s concerns',
-        'Remote or in-person energy work',
-        'Identification of trapped emotions',
-        'Release and balancing',
-        'Follow-up recommendations'
-      ],
       ideal: [
         'Anxious or stressed animals',
         'Animals with behavior issues',
         'Pets with physical ailments',
         'Rescue animals with trauma',
-        'Senior animals needing support'
+        'Senior animals needing support',
+        'Any beloved animal companion'
       ],
       faq: [
         {
@@ -323,7 +297,7 @@ const ProductDetailPage = () => {
               className="space-y-6"
             >
               <div>
-                <span className="inline-block px-4 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-4">
+                <span className="inline-block px-4 py-1 bg-[#8dc1ab]/20 text-[#8dc1ab] rounded-full text-sm font-medium mb-4" style={{ fontFamily: 'Gotham, sans-serif' }}>
                   {product.category}
                 </span>
                 
@@ -335,7 +309,7 @@ const ProductDetailPage = () => {
                 </h1>
                 
                 <div className="flex items-baseline gap-4 mb-6">
-                  <span className="text-3xl font-light text-emerald-600">
+                  <span className="text-3xl font-light text-[#8dc1ab]" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                     ${product.price}
                   </span>
                   <span className="text-stone-500">• {product.duration}</span>
@@ -370,8 +344,9 @@ const ProductDetailPage = () => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.4 + index * 0.1 }}
                       className="flex items-start gap-2 text-stone-700"
+                      style={{ fontFamily: 'Gotham, sans-serif' }}
                     >
-                      <span className="text-emerald-500 mt-1">✓</span>
+                      <span className="text-[#8dc1ab] mt-1">✓</span>
                       <span>{benefit}</span>
                     </motion.li>
                   ))}
@@ -380,35 +355,6 @@ const ProductDetailPage = () => {
             </motion.div>
           </div>
 
-          {/* What to Expect Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="mb-20"
-          >
-            <BackdropBlurCard>
-              <div className="p-8 lg:p-12">
-                <h2 
-                  className="text-3xl font-light text-stone-800 mb-8"
-                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                >
-                  {t('productDetail.whatToExpect')}
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-                  {product.whatToExpect.map((step, index) => (
-                    <div key={index} className="text-center">
-                      <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-light">
-                        {index + 1}
-                      </div>
-                      <p className="text-stone-600 text-sm">{step}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </BackdropBlurCard>
-          </motion.div>
-
           {/* Ideal For Section */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -416,7 +362,7 @@ const ProductDetailPage = () => {
             transition={{ delay: 0.7 }}
             className="mb-20"
           >
-            <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-8 lg:p-12">
+            <div className="bg-[#8dc1ab]/10 border border-[#8dc1ab]/30 rounded-2xl p-8 lg:p-12">
               <h2 
                 className="text-3xl font-light text-stone-800 mb-6 text-center"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
@@ -425,8 +371,8 @@ const ProductDetailPage = () => {
               </h2>
               <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
                 {product.ideal.map((item, index) => (
-                  <li key={index} className="flex items-center gap-2 text-stone-700">
-                    <span className="text-emerald-500">•</span>
+                  <li key={index} className="flex items-center gap-2 text-stone-700" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                    <span className="text-[#8dc1ab]">•</span>
                     <span>{item}</span>
                   </li>
                 ))}

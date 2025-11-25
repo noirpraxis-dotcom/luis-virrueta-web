@@ -14,57 +14,57 @@ const Store = () => {
   const products = [
     {
       id: 1,
-      name: 'Emotion Code Session',
-      category: 'Healing Session',
-      price: '$120',
+      name: 'Online Session - Single',
+      category: 'Emotion, Body & Belief Code',
+      price: '$80',
       duration: '60 min',
       image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&h=800&fit=crop',
-      description: 'Release trapped emotions that may be creating physical and emotional problems. The Emotion Code is a powerful method for identifying and releasing trapped emotions.',
+      description: 'Release trapped emotions, correct body imbalances, and transform limiting beliefs in a comprehensive online healing session.',
       benefits: [
         'Release emotional baggage',
-        'Reduce physical discomfort',
-        'Improve relationships',
-        'Enhance overall well-being'
+        'Balance energy systems',
+        'Transform limiting beliefs',
+        'Holistic healing approach'
       ]
     },
     {
       id: 2,
-      name: 'Body Code Session',
-      category: 'Healing Session',
-      price: '$130',
-      duration: '75 min',
+      name: 'Online Session - 3 Pack',
+      category: 'Emotion, Body & Belief Code',
+      price: '$216',
+      duration: '60 min per session',
       image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=800&fit=crop',
-      description: 'Discover and correct imbalances in the body that may be causing physical and emotional issues. A comprehensive approach to healing.',
+      description: 'Save 10% with this package of three comprehensive online healing sessions for deeper transformation.',
       benefits: [
-        'Balance energy systems',
-        'Address root causes',
-        'Holistic healing approach',
-        'Personalized treatment'
+        'Save 10% on sessions',
+        'Deeper healing journey',
+        'Consistent progress',
+        'Flexible scheduling'
       ]
     },
     {
       id: 3,
-      name: 'Belief Code Session',
-      category: 'Healing Session',
-      price: '$130',
-      duration: '75 min',
+      name: 'Email Session - Single',
+      category: 'Remote Healing',
+      price: '$63',
+      duration: 'Asynchronous',
       image: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=600&h=800&fit=crop',
-      description: 'Identify and release limiting beliefs and negative thought patterns that hold you back from achieving your full potential.',
+      description: 'Receive healing work via email at your convenience. Perfect for those with busy schedules or time zone differences.',
       benefits: [
-        'Transform limiting beliefs',
-        'Clear mental blocks',
-        'Enhance personal growth',
-        'Achieve your goals'
+        'Work at your own pace',
+        'No scheduling needed',
+        'Detailed written report',
+        'Privacy and convenience'
       ]
     },
     {
       id: 4,
       name: 'Past Life Regression',
-      category: 'Healing Session',
-      price: '$150',
+      category: 'Deep Soul Work',
+      price: '$120',
       duration: '90 min',
       image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=600&h=800&fit=crop',
-      description: 'Explore past lives to understand current life patterns, relationships, and challenges. Gain profound insights and healing.',
+      description: 'Explore past lives to understand current patterns, relationships, and challenges. Gain profound insights and healing.',
       benefits: [
         'Understand life patterns',
         'Heal deep-rooted issues',
@@ -74,10 +74,10 @@ const Store = () => {
     },
     {
       id: 5,
-      name: 'Ilyari Somatic Transmission',
-      category: 'Healing Session',
-      price: '$140',
-      duration: '60 min',
+      name: 'Ilyari Channeled Session',
+      category: 'Light Code Transmission',
+      price: '$44',
+      duration: '20-30 min',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=800&fit=crop',
       description: 'Experience channeled light codes transmitted through the body for deep cellular healing and transformation.',
       benefits: [
@@ -90,8 +90,8 @@ const Store = () => {
     {
       id: 6,
       name: 'Healing for Animals',
-      category: 'Healing Session',
-      price: '$100',
+      category: 'Pet Healing',
+      price: '$56',
       duration: '45 min',
       image: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=600&h=800&fit=crop',
       description: 'Energy healing sessions specifically designed for your beloved animal companions to support their health and well-being.',

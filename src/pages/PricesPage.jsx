@@ -106,10 +106,11 @@ const PricesPage = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-              className="text-stone-800 text-6xl lg:text-8xl font-light tracking-[0.2em] mb-8"
+              className="text-stone-800 font-light tracking-[0.2em] mb-8"
               style={{ fontFamily: 'Gotham, sans-serif' }}
             >
-              {t('prices.title')}
+              <div className="text-3xl lg:text-4xl mb-2 opacity-60">SESSION</div>
+              <div className="text-6xl lg:text-8xl">PRICES</div>
             </motion.h1>
             
             <motion.div
@@ -123,8 +124,8 @@ const PricesPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.7 }}
-              className="text-amber-700 text-base lg:text-lg max-w-2xl mx-auto leading-relaxed italic"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              className="text-stone-900 text-base lg:text-lg max-w-2xl mx-auto leading-relaxed font-normal"
+              style={{ fontFamily: 'Gotham, sans-serif' }}
             >
               {t('prices.specialRates')}
             </motion.p>
