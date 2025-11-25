@@ -45,7 +45,8 @@ const AppContent = () => {
       name: t('menu.store'), 
       href: '/store',
       subItems: [
-        { name: t('menu.courses'), href: '/store#courses' }
+        { name: t('menu.courses'), href: '/store#courses' },
+        { name: t('menu.books'), href: '/personal-creation#books' }
       ]
     },
   ]

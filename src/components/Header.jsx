@@ -1,10 +1,29 @@
 import { motion } from 'framer-motion'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useRef } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import LanguageSelector from './LanguageSelector'
 
 const Header = ({ menuItems }) => {
   const [hoveredItem, setHoveredItem] = useState(null)
+  const location = useLocation()
+  const timeoutRef = useRef(null)
+
+  const handleMouseEnter = (index) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+    setHoveredItem(index)
+  }
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setHoveredItem(null)
+    }, 200) // 200ms delay antes de cerrar
+  }
+
+  const isActive = (href) => {
+    return location.pathname === href || location.pathname.startsWith(href + '/')
+  }
 
   return (
     <motion.header 
@@ -43,8 +62,8 @@ const Header = ({ menuItems }) => {
                 <li 
                   key={index} 
                   className="relative group"
-                  onMouseEnter={() => setHoveredItem(index)}
-                  onMouseLeave={() => setHoveredItem(null)}
+                  onMouseEnter={() => handleMouseEnter(index)}
+                  onMouseLeave={handleMouseLeave}
                 >
                   <Link to={item.href}>
                     <motion.div
@@ -67,10 +86,10 @@ const Header = ({ menuItems }) => {
                     </motion.div>
                   </Link>
                   
-                  {/* Hover underline effect - más elegante */}
+                  {/* Hover underline effect - más elegante, se queda activo si está en la página */}
                   <motion.div
                     initial={{ scaleX: 0 }}
-                    animate={{ scaleX: hoveredItem === index ? 1 : 0 }}
+                    animate={{ scaleX: (hoveredItem === index || isActive(item.href)) ? 1 : 0 }}
                     transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
                     className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white to-transparent origin-center"
                   />
@@ -88,8 +107,8 @@ const Header = ({ menuItems }) => {
                         duration: 0.35, 
                         ease: [0.4, 0, 0.2, 1]
                       }}
-                      onMouseEnter={() => setHoveredItem(index)}
-                      onMouseLeave={() => setHoveredItem(null)}
+                      onMouseEnter={() => handleMouseEnter(index)}
+                      onMouseLeave={handleMouseLeave}
                       className="absolute top-full left-0 mt-6 bg-black backdrop-blur-xl rounded-xl shadow-2xl py-4 min-w-[340px] border border-white/30"
                       style={{
                         boxShadow: '0 10px 40px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1)'
