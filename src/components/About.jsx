@@ -64,25 +64,12 @@ const About = () => {
             className="lg:col-span-2 relative group"
           >
             <div className="relative aspect-[3/4] overflow-hidden rounded-3xl shadow-2xl border border-amber-600/30">
-              {/* Placeholder para la foto - Estilo light elegante */}
-              <div className="absolute inset-0 bg-gradient-to-br from-stone-100 via-amber-50 to-stone-200 flex items-center justify-center">
-                <div className="text-center p-8">
-                  <svg className="w-24 h-24 mx-auto text-stone-400/40 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  <p className="text-stone-500/60 text-sm tracking-wider font-light" style={{ fontFamily: 'Gotham, sans-serif' }}>
-                    Your photo here
-                  </p>
-                </div>
-              </div>
-              
-              {/* Descomenta cuando subas la foto:
+              {/* Foto de Zuzana */}
               <img 
-                src="/zuzana-photo.jpg" 
+                src="/about ligera.jpg" 
                 alt="Zuzana Erdösová" 
                 className="w-full h-full object-cover"
               />
-              */}
 
               {/* Overlay decorativo en hover */}
               <motion.div
