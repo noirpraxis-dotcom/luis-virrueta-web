@@ -51,9 +51,9 @@ const Header = ({ menuItems }) => {
                   <span className="text-white">leaf</span>
                 </div>
                 
-                {/* Lightworks - debajo y alineado */}
+                {/* Lightworks - más grande, expandido y alineado con Greenleaf */}
                 <div 
-                  className="text-[0.58rem] uppercase text-white/60 font-light tracking-[0.3em] text-center -mt-2"
+                  className="text-[0.65rem] uppercase text-white/60 font-light tracking-[1.45em] text-center -mt-2 ml-[0.3em]"
                 >
                   lightworks
                 </div>
