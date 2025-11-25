@@ -1,5 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { useParams, useNavigate } from 'react-router-dom'
 import { CinematicTitle, GradientLine, BackdropBlurCard } from '../elementos/ElementosReutilizables'
 import { useLanguage } from '../context/LanguageContext'
@@ -8,14 +7,6 @@ const ProductDetailPage = () => {
   const { t } = useLanguage()
   const { productId } = useParams()
   const navigate = useNavigate()
-  const [selectedDate, setSelectedDate] = useState('')
-  const [selectedTime, setSelectedTime] = useState('')
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    notes: ''
-  })
 
   // Datos de productos - en producción vendría de una API
   const products = {
@@ -279,12 +270,11 @@ const ProductDetailPage = () => {
 
   const product = products[productId] || products['1']
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    // Aquí iría la integración con el sistema de pago/reserva
-    console.log('Booking:', { product, selectedDate, selectedTime, formData })
-    alert('Thank you for booking! We\'ll contact you shortly to confirm your session.')
-    navigate('/store')
+  const handleSubmit = () => {
+    // Aquí iría la integración con el sistema de pago (Stripe, PayPal, etc.)
+    console.log('Proceeding to payment for:', product)
+    alert('Redirecting to secure payment gateway...\n\nProduct: ' + product.name + '\nPrice: $' + product.price)
+    // navigate('/checkout') o redirigir a pasarela de pago externa
   }
 
   return (
@@ -473,147 +463,60 @@ const ProductDetailPage = () => {
             </div>
           </motion.div>
 
-          {/* Booking Form */}
+          {/* Payment CTA Section */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9 }}
           >
-            <BackdropBlurCard className="max-w-3xl mx-auto">
-              <div className="p-8 lg:p-12">
+            <div className="max-w-2xl mx-auto bg-white rounded-3xl shadow-2xl border border-stone-200/50 overflow-hidden">
+              <div className="p-10 lg:p-16 text-center">
                 <h2 
-                  className="text-3xl font-light text-stone-800 mb-8 text-center"
+                  className="text-4xl lg:text-5xl font-light text-stone-800 mb-6"
                   style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 >
-                  {t('productDetail.bookSession')}
+                  Ready to Begin Your <span className="italic text-amber-700">Journey</span>?
                 </h2>
+                
+                <p className="text-lg text-stone-600 mb-8 leading-relaxed" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                  Transform your life with this powerful healing session.
+                </p>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Name */}
-                    <div>
-                      <label className="block text-stone-700 mb-2 font-medium">
-                        {t('productDetail.fullName')} {t('productDetail.required')}
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
-                        className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:border-emerald-500 focus:outline-none transition-colors"
-                        placeholder="Your name"
-                      />
-                    </div>
-
-                    {/* Email */}
-                    <div>
-                      <label className="block text-stone-700 mb-2 font-medium">
-                        {t('productDetail.email')} {t('productDetail.required')}
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
-                        className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:border-emerald-500 focus:outline-none transition-colors"
-                        placeholder="your@email.com"
-                      />
-                    </div>
-
-                    {/* Phone */}
-                    <div>
-                      <label className="block text-stone-700 mb-2 font-medium">
-                        {t('productDetail.phone')} {t('productDetail.required')}
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                        className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:border-emerald-500 focus:outline-none transition-colors"
-                        placeholder="+1 (555) 000-0000"
-                      />
-                    </div>
-
-                    {/* Preferred Date */}
-                    <div>
-                      <label className="block text-stone-700 mb-2 font-medium">
-                        {t('productDetail.preferredDate')} {t('productDetail.required')}
-                      </label>
-                      <input
-                        type="date"
-                        required
-                        value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
-                        className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:border-emerald-500 focus:outline-none transition-colors"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Time */}
-                  <div>
-                    <label className="block text-stone-700 mb-2 font-medium">
-                      {t('productDetail.preferredTime')} {t('productDetail.required')}
-                    </label>
-                    <select
-                      required
-                      value={selectedTime}
-                      onChange={(e) => setSelectedTime(e.target.value)}
-                      className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:border-emerald-500 focus:outline-none transition-colors"
-                    >
-                      <option value="">{t('productDetail.selectTime')}</option>
-                      <option value="9:00 AM">9:00 AM</option>
-                      <option value="10:30 AM">10:30 AM</option>
-                      <option value="12:00 PM">12:00 PM</option>
-                      <option value="2:00 PM">2:00 PM</option>
-                      <option value="3:30 PM">3:30 PM</option>
-                      <option value="5:00 PM">5:00 PM</option>
-                    </select>
-                  </div>
-
-                  {/* Notes */}
-                  <div>
-                    <label className="block text-stone-700 mb-2 font-medium">
-                      {t('productDetail.additionalNotes')}
-                    </label>
-                    <textarea
-                      value={formData.notes}
-                      onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                      rows="4"
-                      className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:border-emerald-500 focus:outline-none transition-colors resize-none"
-                      placeholder={t('productDetail.notesPlaceholder')}
-                    />
-                  </div>
-
-                  {/* Total */}
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-6">
-                    <div className="flex justify-between items-center">
-                      <span className="text-lg text-stone-700">{t('productDetail.total')}:</span>
-                      <span className="text-3xl font-light text-emerald-600">
+                <div className="bg-gradient-to-br from-amber-50 to-stone-50 rounded-2xl p-8 mb-8">
+                  <div className="flex justify-between items-center">
+                    <div className="text-left">
+                      <p className="text-stone-600 text-sm mb-1" style={{ fontFamily: 'Gotham, sans-serif' }}>Session Investment</p>
+                      <p className="text-stone-800 text-5xl font-light" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                         ${product.price}
-                      </span>
+                      </p>
                     </div>
-                    <p className="text-sm text-stone-600 mt-2">
-                      {t('productDetail.paymentSecure')}
-                    </p>
+                    <div className="text-right">
+                      <p className="text-stone-600 text-sm mb-1" style={{ fontFamily: 'Gotham, sans-serif' }}>Duration</p>
+                      <p className="text-stone-800 text-2xl font-light" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                        {product.duration}
+                      </p>
+                    </div>
                   </div>
+                </div>
 
-                  {/* Submit Button */}
-                  <motion.button
-                    type="submit"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-4 rounded-lg font-medium tracking-wide transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/25"
-                  >
-                    {t('productDetail.completeBooking')}
-                  </motion.button>
+                <motion.button
+                  onClick={handleSubmit}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full py-6 bg-gradient-to-r from-[#8dc1ab] to-[#7ab09a] text-white rounded-2xl text-lg font-medium tracking-wider shadow-2xl hover:shadow-[0_25px_60px_-15px_rgba(141,193,171,0.4)] transition-all duration-500 flex items-center justify-center gap-3"
+                  style={{ fontFamily: 'Gotham, sans-serif', letterSpacing: '0.15em' }}
+                >
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                  </svg>
+                  PROCEED TO PAYMENT
+                </motion.button>
 
-                  <p className="text-xs text-stone-500 text-center">
-                    {t('productDetail.termsText')}
-                  </p>
-                </form>
+                <p className="text-xs text-stone-500 mt-6" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                  Secure payment processing • 100% satisfaction guaranteed
+                </p>
               </div>
-            </BackdropBlurCard>
+            </div>
           </motion.div>
         </div>
       </div>
