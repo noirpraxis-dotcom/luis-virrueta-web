@@ -36,24 +36,36 @@ const Header = ({ menuItems }) => {
         <div className="max-w-[90rem] mx-auto px-16 lg:px-20">
           <div className="flex justify-between items-center h-28">
             {/* Logo */}
-            <motion.div 
-              whileHover={{ 
-                scale: 1.03,
-                letterSpacing: '0.18em',
-              }}
-              transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
-              className="text-[2.75rem] font-light tracking-[0.15em] cursor-pointer relative"
-              style={{ fontFamily: 'Gotham, sans-serif' }}
-            >
-              <span className="bg-gradient-to-r from-[#8dc1ab] via-[#8dc1ab] to-[#7ab09a] bg-clip-text text-transparent animate-gradient">Green</span>
-              <span className="text-white">leaf</span>
-              {/* Underline decorativo */}
+            <Link to="/">
               <motion.div 
-                className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#8dc1ab] to-transparent opacity-0"
-                whileHover={{ opacity: 0.5 }}
-                transition={{ duration: 0.3 }}
-              />
-            </motion.div>
+                whileHover={{ 
+                  scale: 1.03,
+                }}
+                transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
+                className="cursor-pointer relative"
+                style={{ fontFamily: 'Gotham, sans-serif' }}
+              >
+                {/* Greenleaf - con menos espaciado */}
+                <div className="text-[2.75rem] font-light tracking-[0.05em]">
+                  <span className="bg-gradient-to-r from-[#8dc1ab] via-[#8dc1ab] to-[#7ab09a] bg-clip-text text-transparent animate-gradient">Green</span>
+                  <span className="text-white">leaf</span>
+                </div>
+                
+                {/* Lightworks - debajo y alineado */}
+                <div 
+                  className="text-[0.58rem] uppercase text-white/60 font-light tracking-[0.3em] text-center -mt-2"
+                >
+                  lightworks
+                </div>
+                
+                {/* Underline decorativo */}
+                <motion.div 
+                  className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#8dc1ab] to-transparent opacity-0"
+                  whileHover={{ opacity: 0.5 }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.div>
+            </Link>
 
             {/* Menu Items - más separados del logo */}
             <div className="flex items-center gap-8">
