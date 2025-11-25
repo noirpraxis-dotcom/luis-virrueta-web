@@ -700,7 +700,7 @@ const SessionPricesSection = () => {
   )
 }
 
-// Session Navigator - Quick Access Cards
+// Session Navigator - Interactive Intelligent Guide (Home-style elegance)
 const SessionNavigator = () => {
   const containerRef = useRef(null)
   const isInView = useInView(containerRef, { once: true, amount: 0.2 })
@@ -709,58 +709,50 @@ const SessionNavigator = () => {
     {
       id: 'emotion-body-belief',
       title: 'Emotion, Body & Belief Code',
-      shortTitle: 'Energy Healing',
-      description: 'Release trapped emotions, correct physical imbalances, and transform limiting beliefs at the subconscious level.',
-      icon: (
-        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-        </svg>
-      ),
-      gradient: 'from-rose-400 to-pink-500',
-      bgGradient: 'from-rose-50 to-pink-50',
-      accentColor: 'rose'
+      questions: [
+        'Feeling stuck with recurring emotional patterns?',
+        'Physical discomfort with no medical explanation?',
+        'Limiting beliefs holding you back?'
+      ],
+      action: 'Energy Healing',
+      icon: '💝',
+      color: 'rose'
     },
     {
       id: 'past-life-regressions',
       title: 'Past Life Regression',
-      shortTitle: 'Soul Journey',
-      description: 'Explore past life experiences to understand present challenges and release karmic patterns.',
-      icon: (
-        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
-      gradient: 'from-purple-400 to-indigo-500',
-      bgGradient: 'from-purple-50 to-indigo-50',
-      accentColor: 'purple'
+      questions: [
+        'Unexplainable fears or phobias?',
+        'Déjà vu or strong connections to certain places?',
+        'Curious about your soul\'s journey?'
+      ],
+      action: 'Explore Past Lives',
+      icon: '⏳',
+      color: 'purple'
     },
     {
       id: 'ilyari-somatic',
       title: 'Ilyari Somatic Transmission',
-      shortTitle: 'Light Codes',
-      description: 'Channel sacred light codes and somatic transmissions for deep cellular healing and awakening.',
-      icon: (
-        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-        </svg>
-      ),
-      gradient: 'from-amber-400 to-orange-500',
-      bgGradient: 'from-amber-50 to-orange-50',
-      accentColor: 'amber'
+      questions: [
+        'Seeking spiritual awakening?',
+        'Ready for DNA activation and light codes?',
+        'Want to connect with higher frequencies?'
+      ],
+      action: 'Receive Light Codes',
+      icon: '✨',
+      color: 'amber'
     },
     {
       id: 'healing-animals',
       title: 'Healing for Animals',
-      shortTitle: 'Pet Healing',
-      description: 'Energy healing specifically designed for your beloved animal companions to restore balance and vitality.',
-      icon: (
-        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
-      gradient: 'from-emerald-400 to-teal-500',
-      bgGradient: 'from-emerald-50 to-teal-50',
-      accentColor: 'emerald'
+      questions: [
+        'Is your pet showing behavioral changes?',
+        'Health issues affecting your companion?',
+        'Want to support their wellbeing energetically?'
+      ],
+      action: 'Help Your Pet',
+      icon: '🐾',
+      color: 'emerald'
     }
   ]
 
@@ -776,124 +768,169 @@ const SessionNavigator = () => {
     }
   }
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  }
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.76, 0, 0.24, 1]
-      }
-    }
-  }
-
   return (
     <div className="max-w-7xl mx-auto">
-      {/* Title Section */}
+      {/* Hero Title - Home style */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="text-center mb-12 lg:mb-16"
+        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+        className="text-center mb-16 lg:mb-20"
       >
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1.2, delay: 0.2 }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-600/30 to-transparent mx-auto w-32 mb-8"
+        />
+
         <h2 
-          className="text-3xl lg:text-4xl font-light text-stone-800 mb-4 tracking-wide"
-          style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}
+          className="text-5xl lg:text-6xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
         >
-          Find Your Perfect Session
+          Which Session <br className="lg:hidden" />
+          <span className="italic text-amber-700">Calls to You?</span>
         </h2>
-        <p className="text-stone-600 text-base lg:text-lg max-w-2xl mx-auto">
-          Choose the healing modality that resonates with your current journey
-        </p>
+        
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.4 }}
+          className="text-stone-600 text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-light"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
+        >
+          Answer these questions to discover your ideal healing path
+        </motion.p>
+
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1.5, delay: 0.6 }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-96 mt-10"
+        />
       </motion.div>
 
-      {/* Session Cards Grid */}
+      {/* Interactive Question Cards - Premium Design */}
       <motion.div
         ref={containerRef}
-        variants={containerVariants}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8"
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.8, delay: 0.3 }}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10"
       >
         {sessions.map((session, index) => (
           <motion.div
             key={session.id}
-            variants={cardVariants}
-            whileHover={{ y: -8, scale: 1.02 }}
-            transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
-            onClick={() => handleNavigate(session.id)}
-            className="group cursor-pointer"
+            initial={{ opacity: 0, y: 40 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ 
+              duration: 0.8, 
+              delay: 0.5 + index * 0.15,
+              ease: [0.76, 0, 0.24, 1]
+            }}
+            className="group"
           >
-            <div className={`relative h-full bg-gradient-to-br ${session.bgGradient} rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl border border-${session.accentColor}-200/50 hover:border-${session.accentColor}-300 transition-all duration-500`}>
-              {/* Decorative gradient overlay */}
-              <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${session.gradient} opacity-10 rounded-bl-full`} />
+            <div className="relative bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl border border-stone-200/50 hover:border-amber-600/30 transition-all duration-500 h-full">
+              {/* Decorative blur effect */}
+              <div className="absolute -top-20 -right-20 w-64 h-64 bg-gradient-to-br from-amber-400/10 to-orange-400/10 rounded-full blur-3xl" />
               
-              <div className="relative p-6 lg:p-8 h-full flex flex-col">
-                {/* Icon */}
+              <div className="relative p-8 lg:p-10">
+                {/* Icon - Large and elegant */}
                 <motion.div
                   whileHover={{ scale: 1.1, rotate: 5 }}
                   transition={{ duration: 0.3 }}
-                  className={`w-16 h-16 bg-gradient-to-br ${session.gradient} rounded-2xl flex items-center justify-center text-white mb-5 shadow-lg group-hover:shadow-xl transition-shadow duration-300`}
+                  className="text-6xl lg:text-7xl mb-6"
                 >
                   {session.icon}
                 </motion.div>
 
                 {/* Title */}
                 <h3 
-                  className="text-xl lg:text-2xl font-light text-stone-800 mb-3 leading-tight group-hover:text-amber-700 transition-colors duration-300"
+                  className="text-2xl lg:text-3xl font-light text-stone-800 mb-8 leading-tight tracking-wide"
                   style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 >
                   {session.title}
                 </h3>
 
-                {/* Description */}
-                <p className="text-stone-600 text-sm lg:text-base leading-relaxed mb-6 flex-grow">
-                  {session.description}
-                </p>
+                {/* Questions with checkmarks */}
+                <div className="space-y-4 mb-10">
+                  {session.questions.map((question, qIndex) => (
+                    <motion.div
+                      key={qIndex}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={isInView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ 
+                        duration: 0.6, 
+                        delay: 0.7 + index * 0.15 + qIndex * 0.1 
+                      }}
+                      className="flex items-start gap-3 group-hover:translate-x-1 transition-transform duration-300"
+                    >
+                      <div className={`mt-1 w-5 h-5 rounded-full bg-gradient-to-br from-${session.color}-400 to-${session.color}-500 flex items-center justify-center flex-shrink-0`}>
+                        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <p className="text-stone-700 text-base lg:text-lg font-light leading-relaxed" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                        {question}
+                      </p>
+                    </motion.div>
+                  ))}
+                </div>
 
-                {/* Arrow indicator */}
-                <div className="flex items-center gap-2 text-amber-600 font-medium text-sm group-hover:gap-3 transition-all duration-300">
-                  <span>Learn More</span>
-                  <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
+                {/* Divider */}
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mb-8"
+                />
+
+                {/* Then text and Action Button */}
+                <div className="text-center">
+                  <p className="text-stone-500 text-sm uppercase tracking-[0.2em] mb-6 font-light" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                    Then
+                  </p>
+                  
+                  <motion.button
+                    onClick={() => handleNavigate(session.id)}
+                    whileHover={{ scale: 1.03, y: -2 }}
+                    whileTap={{ scale: 0.97 }}
+                    className={`w-full bg-gradient-to-r from-${session.color}-400 to-${session.color}-500 text-white py-4 px-6 rounded-full font-light text-lg tracking-wide hover:shadow-xl hover:shadow-${session.color}-500/30 transition-all duration-500 flex items-center justify-center gap-3 group`}
+                    style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                  >
+                    <span>{session.action}</span>
+                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </motion.button>
                 </div>
               </div>
-
-              {/* Hover glow effect */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.4 }}
-                className={`absolute inset-0 bg-gradient-to-t ${session.gradient} opacity-0 group-hover:opacity-5 pointer-events-none transition-opacity duration-500`}
-              />
             </div>
           </motion.div>
         ))}
       </motion.div>
 
-      {/* Helper text */}
-      <motion.p
+      {/* Bottom decorative element */}
+      <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-        className="text-center text-stone-500 text-sm mt-10 italic"
-        style={{ fontFamily: 'Cormorant Garamond, serif' }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 1.2 }}
+        className="mt-16 text-center"
       >
-        Click on any session to explore detailed information below
-      </motion.p>
+        <motion.div
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, delay: 1.3 }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-600/30 to-transparent mx-auto w-48 mb-8"
+        />
+        
+        <p className="text-stone-500 text-lg font-light italic" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+          Each session is uniquely designed to meet you where you are
+        </p>
+      </motion.div>
     </div>
   )
 }
