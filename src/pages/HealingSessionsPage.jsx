@@ -224,7 +224,7 @@ const EmotionBodyBeliefSection = ({ t }) => {
               {t('healingSessions.emotionBodyBelief.intro3')}
             </p>
 
-            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-6 lg:p-8">
+            <div className="bg-gradient-to-r from-[#8dc1ab]/10 to-stone-50 border border-[#8dc1ab]/30 rounded-xl p-6 lg:p-8">
               <p className="text-stone-800 text-lg leading-relaxed italic" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                 "{t('healingSessions.emotionBodyBelief.intro4')}"
               </p>
@@ -237,9 +237,9 @@ const EmotionBodyBeliefSection = ({ t }) => {
             animate={{ opacity: isIntroInView ? 1 : 0, x: isIntroInView ? 0 : 30 }}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            <BackdropBlurCard className="aspect-[4/5] bg-gradient-to-br from-emerald-100 to-amber-100 flex items-center justify-center">
+            <BackdropBlurCard className="aspect-[4/5] bg-gradient-to-br from-[#8dc1ab]/20 to-amber-100/30 flex items-center justify-center">
               <div className="text-center p-12">
-                <svg className="w-24 h-24 text-emerald-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-24 h-24 text-[#8dc1ab] mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
                 <p className="text-stone-500 text-lg">Photo Space</p>
@@ -333,12 +333,18 @@ const EmotionBodyBeliefSection = ({ t }) => {
                 {/* Book a Session Button */}
                 <motion.a
                   href="/prices"
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="block w-full py-4 bg-gradient-to-r from-[#8dc1ab] to-[#7ab09a] text-white text-center rounded-xl font-medium tracking-wide shadow-lg hover:shadow-xl transition-all duration-300"
-                  style={{ fontFamily: 'Gotham, sans-serif' }}
+                  whileHover={{ scale: 1.03, y: -3 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="group block w-full py-5 bg-gradient-to-r from-[#8dc1ab] to-[#7ab09a] text-white text-center rounded-2xl font-medium tracking-wider shadow-xl hover:shadow-2xl transition-all duration-500 relative overflow-hidden"
+                  style={{ fontFamily: 'Gotham, sans-serif', letterSpacing: '0.1em' }}
                 >
-                  {t('healingSessions.common.bookSession')}
+                  <span className="relative z-10 flex items-center justify-center gap-3">
+                    {t('healingSessions.common.bookSession')}
+                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </span>
+                  <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </motion.a>
               </div>
             </BackdropBlurCard>
@@ -387,8 +393,8 @@ const PastLifeSection = ({ t }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={isTitleInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, delay: 0.4 }}
-          className="text-xl lg:text-2xl text-stone-600 max-w-4xl mx-auto leading-relaxed font-light"
-          style={{ fontFamily: 'Cormorant Garamond, serif' }}
+          className="text-lg lg:text-xl text-stone-700 max-w-4xl mx-auto leading-relaxed"
+          style={{ fontFamily: 'Gotham, sans-serif' }}
         >
           {t('healingSessions.pastLife.intro')}
         </motion.p>
@@ -420,94 +426,111 @@ const PastLifeSection = ({ t }) => {
         </div>
       </motion.div>
 
-      {/* Online Sessions Info - Two elegant cards */}
+      {/* Unified Online Sessions Section */}
       <motion.div
         ref={cardsRef}
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 50 }}
         animate={isCardsInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto"
+        transition={{ duration: 1 }}
+        className="max-w-5xl mx-auto"
       >
-        {/* Card 1: Benefits of Online Sessions */}
-        <BackdropBlurCard className="border-2 border-stone-200 hover:border-amber-600/30 transition-colors duration-500">
-          <div className="p-8 lg:p-10">
-            {/* Decorative icon */}
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={isCardsInView ? { scale: 1 } : {}}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="w-16 h-16 rounded-full bg-amber-600/10 border-2 border-amber-600/30 flex items-center justify-center mx-auto mb-6"
-            >
-              <svg className="w-8 h-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-              </svg>
-            </motion.div>
-
-            <h3 
-              className="text-2xl lg:text-3xl font-light text-stone-800 text-center mb-6 tracking-wide"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
-              {t('healingSessions.common.comfortOfHomeTitle')} <span className="italic text-amber-700">{t('healingSessions.common.comfortOfHomeTitleItalic')}</span>
-            </h3>
-
-            <div className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mb-6" />
-
-            <p className="text-base lg:text-lg text-stone-700 leading-relaxed text-center">
-              {t('healingSessions.common.comfortOfHomeText')}
-            </p>
-          </div>
-        </BackdropBlurCard>
-
-        {/* Card 2: What You Need */}
-        <BackdropBlurCard className="border-2 border-stone-200 hover:border-amber-600/30 transition-colors duration-500">
-          <div className="p-8 lg:p-10">
-            {/* Decorative icon */}
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={isCardsInView ? { scale: 1 } : {}}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="w-16 h-16 rounded-full bg-amber-600/10 border-2 border-amber-600/30 flex items-center justify-center mx-auto mb-6"
-            >
-              <svg className="w-8 h-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </motion.div>
-
-            <h3 
-              className="text-2xl lg:text-3xl font-light text-stone-800 text-center mb-6 tracking-wide"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
-              {t('healingSessions.common.equallyEffectiveTitle')} <span className="italic text-amber-700">{t('healingSessions.common.equallyEffectiveTitleItalic')}</span>
-            </h3>
-
-            <div className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mb-6" />
-
-            <p className="text-base lg:text-lg text-stone-700 leading-relaxed text-center mb-6">
-              {t('healingSessions.common.equallyEffectiveText')}
-            </p>
-
-            <ul className="space-y-3">
-              {[
-                t('healingSessions.common.requirement1'),
-                t('healingSessions.common.requirement2'),
-                t('healingSessions.common.requirement3')
-              ].map((item, index) => (
-                <motion.li
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={isCardsInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-                  className="flex items-start gap-3"
+        <BackdropBlurCard className="border-2 border-[#8dc1ab]/30 bg-gradient-to-br from-stone-50 via-[#8dc1ab]/5 to-stone-50">
+          <div className="p-10 lg:p-16">
+            {/* Two columns layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-10">
+              {/* Left: Comfort of Home */}
+              <div className="space-y-6">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={isCardsInView ? { scale: 1 } : {}}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="w-16 h-16 rounded-full bg-[#8dc1ab]/10 border-2 border-[#8dc1ab]/30 flex items-center justify-center"
                 >
-                  <svg className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  <svg className="w-8 h-8 text-[#8dc1ab]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                   </svg>
-                  <span className="text-stone-700 leading-relaxed">
-                    {item}
-                  </span>
-                </motion.li>
-              ))}
-            </ul>
+                </motion.div>
+
+                <h3 
+                  className="text-2xl lg:text-3xl font-light text-stone-800 tracking-wide"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                >
+                  {t('healingSessions.common.comfortOfHomeTitle')} <span className="italic text-[#8dc1ab]">{t('healingSessions.common.comfortOfHomeTitleItalic')}</span>
+                </h3>
+
+                <p className="text-base lg:text-lg text-stone-700 leading-relaxed">
+                  {t('healingSessions.common.comfortOfHomeText')}
+                </p>
+              </div>
+
+              {/* Right: Equally Effective */}
+              <div className="space-y-6">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={isCardsInView ? { scale: 1 } : {}}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                  className="w-16 h-16 rounded-full bg-[#8dc1ab]/10 border-2 border-[#8dc1ab]/30 flex items-center justify-center"
+                >
+                  <svg className="w-8 h-8 text-[#8dc1ab]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </motion.div>
+
+                <h3 
+                  className="text-2xl lg:text-3xl font-light text-stone-800 tracking-wide"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                >
+                  {t('healingSessions.common.equallyEffectiveTitle')} <span className="italic text-[#8dc1ab]">{t('healingSessions.common.equallyEffectiveTitleItalic')}</span>
+                </h3>
+
+                <p className="text-base lg:text-lg text-stone-700 leading-relaxed mb-6">
+                  {t('healingSessions.common.equallyEffectiveText')}
+                </p>
+
+                <ul className="space-y-3">
+                  {[
+                    t('healingSessions.common.requirement1'),
+                    t('healingSessions.common.requirement2'),
+                    t('healingSessions.common.requirement3')
+                  ].map((item, index) => (
+                    <motion.li
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={isCardsInView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+                      className="flex items-start gap-3"
+                    >
+                      <svg className="w-5 h-5 text-[#8dc1ab] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-stone-700 leading-relaxed text-sm lg:text-base">
+                        {item}
+                      </span>
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="h-px bg-gradient-to-r from-transparent via-[#8dc1ab]/30 to-transparent my-10" />
+
+            {/* Book a Session Button */}
+            <motion.a
+              href="/prices"
+              whileHover={{ scale: 1.03, y: -3 }}
+              whileTap={{ scale: 0.97 }}
+              className="group block w-full max-w-md mx-auto py-5 bg-gradient-to-r from-[#8dc1ab] to-[#7ab09a] text-white text-center rounded-2xl font-medium tracking-wider shadow-xl hover:shadow-2xl transition-all duration-500 relative overflow-hidden"
+              style={{ fontFamily: 'Gotham, sans-serif', letterSpacing: '0.1em' }}
+            >
+              <span className="relative z-10 flex items-center justify-center gap-3">
+                {t('healingSessions.common.bookSession')}
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </span>
+              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            </motion.a>
           </div>
         </BackdropBlurCard>
       </motion.div>
