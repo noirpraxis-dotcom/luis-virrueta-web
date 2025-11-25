@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import LanguageSelector from './LanguageSelector'
 
 const MobileMenu = ({ isOpen, onClose, menuItems }) => {
   const [expandedItem, setExpandedItem] = useState(null)
@@ -66,22 +67,21 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
             transition={{ type: "spring", duration: 0.5 }}
             className="absolute inset-0 flex items-center justify-center"
           >
-            <div className="relative w-full h-full bg-gradient-to-br from-black via-gray-900 to-black flex flex-col items-center justify-start pt-24 p-8">
+            <div className="relative w-full h-full bg-gradient-to-br from-black via-gray-900 to-black flex flex-col items-center justify-start pt-20 p-8">
               {/* Efectos decorativos */}
               <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-0 left-0 w-64 h-64 bg-elegant-white rounded-full blur-3xl" />
-                <div className="absolute bottom-0 right-0 w-64 h-64 bg-elegant-white rounded-full blur-3xl" />
+                <div className="absolute top-0 left-0 w-64 h-64 bg-[#8dc1ab] rounded-full blur-3xl" />
+                <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#8dc1ab] rounded-full blur-3xl" />
               </div>
 
-              {/* Logo/Título */}
+              {/* Language Selector - Top Right */}
               <motion.div
-                initial={{ y: -30, opacity: 0 }}
+                initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                className="text-elegant-white text-5xl font-bold mb-12 z-10"
-                style={{ fontFamily: 'Gotham, sans-serif' }}
+                className="absolute top-8 right-8 z-20"
               >
-                Greenleaf
+                <LanguageSelector />
               </motion.div>
 
               {/* Menu Items */}
@@ -90,85 +90,106 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                 initial="closed"
                 animate={isOpen ? "open" : "closed"}
                 exit="closed"
-                className="space-y-6 z-10 w-full max-w-md"
+                className="space-y-4 z-10 w-full max-w-md"
               >
-                {menuItems.map((item, index) => (
-                  <motion.li
-                    key={index}
-                    variants={itemVariants}
-                    className="relative"
-                  >
-                    <div>
-                      {item.subItems ? (
-                        <motion.button
-                          onClick={() => setExpandedItem(expandedItem === index ? null : index)}
-                          whileHover={{ x: 10, scale: 1.05 }}
-                          className="block text-elegant-gray hover:text-white text-3xl font-medium tracking-wide transition-colors duration-300 py-2 text-left w-full"
-                          style={{ fontFamily: 'Gotham, sans-serif' }}
-                        >
-                          {item.name}
-                          <motion.span
-                            animate={{ rotate: expandedItem === index ? 180 : 0 }}
-                            className="inline-block ml-2"
-                          >
-                            ▼
-                          </motion.span>
-                        </motion.button>
-                      ) : (
-                        <Link
-                          to={item.href}
-                          onClick={onClose}
-                        >
-                          <motion.div
-                            whileHover={{ x: 10, scale: 1.05 }}
-                            className="block text-elegant-gray hover:text-white text-3xl font-medium tracking-wide transition-colors duration-300 py-2"
+                {menuItems.map((item, index) => {
+                  const isStore = item.name.toLowerCase().includes('store') || 
+                                  item.name.toLowerCase().includes('tienda') || 
+                                  item.name.toLowerCase().includes('obchod')
+                  
+                  return (
+                    <motion.li
+                      key={index}
+                      variants={itemVariants}
+                      className="relative"
+                    >
+                      <div>
+                        {item.subItems ? (
+                          <motion.button
+                            onClick={() => setExpandedItem(expandedItem === index ? null : index)}
+                            whileHover={{ x: 5 }}
+                            className="block text-white/80 hover:text-white text-2xl font-light tracking-wider transition-colors duration-300 py-3 text-left w-full uppercase"
                             style={{ fontFamily: 'Gotham, sans-serif' }}
                           >
                             {item.name}
-                          </motion.div>
-                        </Link>
-                      )}
-
-                      {/* Submenú */}
-                      <AnimatePresence>
-                        {item.subItems && expandedItem === index && (
-                          <motion.ul
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="overflow-hidden ml-6 mt-2 space-y-2"
+                            <motion.span
+                              animate={{ rotate: expandedItem === index ? 180 : 0 }}
+                              className="inline-block ml-2 text-sm"
+                            >
+                              ▼
+                            </motion.span>
+                          </motion.button>
+                        ) : (
+                          <Link
+                            to={item.href}
+                            onClick={onClose}
                           >
-                            {item.subItems.map((subItem, subIndex) => (
-                              <motion.li
-                                key={subIndex}
-                                initial={{ x: -20, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                transition={{ delay: subIndex * 0.1 }}
+                            {isStore ? (
+                              <motion.div
+                                whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(141, 193, 171, 0.4)' }}
+                                whileTap={{ scale: 0.95 }}
+                                className="flex items-center justify-center gap-3 bg-[#8dc1ab] text-black px-8 py-4 rounded-full text-xl font-medium tracking-wider transition-all duration-300 uppercase border-2 border-[#8dc1ab] hover:bg-[#7ab09a] hover:border-[#7ab09a]"
+                                style={{ fontFamily: 'Gotham, sans-serif' }}
                               >
-                                <Link
-                                  to={subItem.href}
-                                  onClick={onClose}
-                                  className="block text-elegant-gray hover:text-white text-xl py-1 transition-colors duration-200"
-                                  style={{ fontFamily: 'Gotham, sans-serif' }}
-                                >
-                                  - {subItem.name}
-                                </Link>
-                              </motion.li>
-                            ))}
-                          </motion.ul>
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                </svg>
+                                {item.name}
+                              </motion.div>
+                            ) : (
+                              <motion.div
+                                whileHover={{ x: 5 }}
+                                className="block text-white/80 hover:text-white text-2xl font-light tracking-wider transition-colors duration-300 py-3 uppercase"
+                                style={{ fontFamily: 'Gotham, sans-serif' }}
+                              >
+                                {item.name}
+                              </motion.div>
+                            )}
+                          </Link>
                         )}
-                      </AnimatePresence>
-                    </div>
 
-                    {/* Línea decorativa */}
-                    <motion.div
-                      initial={{ scaleX: 0 }}
-                      whileHover={{ scaleX: 1 }}
-                      className="h-px bg-gradient-to-r from-transparent via-elegant-white to-transparent origin-left"
-                    />
-                  </motion.li>
-                ))}
+                        {/* Submenú */}
+                        <AnimatePresence>
+                          {item.subItems && expandedItem === index && (
+                            <motion.ul
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="overflow-hidden ml-6 mt-3 space-y-2"
+                            >
+                              {item.subItems.map((subItem, subIndex) => (
+                                <motion.li
+                                  key={subIndex}
+                                  initial={{ x: -20, opacity: 0 }}
+                                  animate={{ x: 0, opacity: 1 }}
+                                  transition={{ delay: subIndex * 0.1 }}
+                                >
+                                  <Link
+                                    to={subItem.href}
+                                    onClick={onClose}
+                                    className="block text-white/60 hover:text-white text-base py-2 transition-colors duration-200 font-light tracking-wide"
+                                    style={{ fontFamily: 'Gotham, sans-serif' }}
+                                  >
+                                    • {subItem.name}
+                                  </Link>
+                                </motion.li>
+                              ))}
+                            </motion.ul>
+                          )}
+                        </AnimatePresence>
+                      </div>
+
+                      {/* Línea decorativa sutil */}
+                      {!isStore && (
+                        <motion.div
+                          initial={{ scaleX: 0 }}
+                          className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mt-2"
+                        />
+                      )}
+                    </motion.li>
+                  )
+                })}
               </motion.ul>
 
 
