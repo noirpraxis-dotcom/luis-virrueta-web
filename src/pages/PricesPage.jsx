@@ -142,20 +142,30 @@ const PricesPage = () => {
             transition={{ duration: 1 }}
             className="text-center mb-16"
           >
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="w-16 h-16 rounded-full bg-[#8dc1ab]/20 border-2 border-[#8dc1ab]/30 flex items-center justify-center">
-                <Video className="w-8 h-8 text-[#8dc1ab]" />
-              </div>
-            </div>
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={isOnlineInView ? { scaleX: 1 } : {}}
+              transition={{ duration: 1.2, delay: 0.2 }}
+              className="h-px bg-gradient-to-r from-transparent via-[#8dc1ab]/40 to-transparent mx-auto w-32 mb-8"
+            />
+            
             <h2 
-              className="text-4xl lg:text-6xl font-light text-stone-800 mb-4 tracking-wide"
-              style={{ fontFamily: 'Cormoant Garamond, serif' }}
+              className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
+              style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
-              {t('prices.online.title')}
+              {t('prices.online.title')} <span className="italic text-amber-700">{t('prices.online.titleItalic')}</span>
             </h2>
-            <p className="text-stone-600 text-lg max-w-2xl mx-auto">
+            
+            <p className="text-stone-700 text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed" style={{ fontFamily: 'Gotham, sans-serif' }}>
               {t('prices.online.subtitle')}
             </p>
+            
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={isOnlineInView ? { scaleX: 1 } : {}}
+              transition={{ duration: 1.5, delay: 0.6 }}
+              className="h-px bg-gradient-to-r from-transparent via-[#8dc1ab]/50 to-transparent mx-auto w-96 mt-10"
+            />
           </motion.div>
 
           {/* Online Session Cards */}
@@ -174,11 +184,11 @@ const PricesPage = () => {
                   </div>
                 )}
                 {session.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#8dc1ab] text-white px-5 py-1.5 rounded-full text-sm font-medium z-10 shadow-lg">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#8dc1ab] text-white px-5 py-1.5 rounded-full text-sm font-medium z-10 shadow-lg" style={{ fontFamily: 'Gotham, sans-serif' }}>
                     Popular
                   </div>
                 )}
-                <BackdropBlurCard className={`h-full border-2 border-stone-200 hover:border-[#8dc1ab]/50 transition-all duration-300 ${session.popular ? 'ring-2 ring-[#8dc1ab]/20' : ''}`}>
+                <div className={`h-full bg-white rounded-3xl shadow-2xl hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.2)] border border-stone-200/50 hover:border-[#8dc1ab]/30 transition-all duration-700 ${session.popular ? 'ring-2 ring-[#8dc1ab]/20' : ''}`}>
                   <div className="p-6 lg:p-8">
                     <h3 
                       className="text-xl lg:text-2xl font-light text-stone-800 mb-2 tracking-wide"
@@ -186,9 +196,11 @@ const PricesPage = () => {
                     >
                       {session.title}
                     </h3>
-                    <p className="text-stone-600 text-sm mb-4">{session.subtitle}</p>
+                    {session.subtitle && (
+                      <p className="text-stone-600 text-sm mb-4" style={{ fontFamily: 'Gotham, sans-serif' }}>{session.subtitle}</p>
+                    )}
                     
-                    <div className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent my-4" />
+                    <div className="h-px bg-gradient-to-r from-transparent via-[#8dc1ab]/30 to-transparent my-4" />
                     
                     <div className="text-center mb-4">
                       {session.originalPrice && (
@@ -199,20 +211,24 @@ const PricesPage = () => {
                       <span className="text-4xl lg:text-5xl font-light text-stone-800" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                         ${session.price}
                       </span>
-                      <span className="text-stone-600 ml-2">USD</span>
+                      <span className="text-stone-600 ml-2 text-lg" style={{ fontFamily: 'Gotham, sans-serif' }}>USD</span>
                     </div>
                     
-                    <p className="text-center text-stone-500 text-sm italic mb-6" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-                      {session.duration}
-                    </p>
+                    <div className="flex items-center justify-center gap-2 mb-6">
+                      <Clock className="w-5 h-5 text-[#8dc1ab]" />
+                      <p className="text-stone-700 text-base font-medium" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                        {session.duration}
+                      </p>
+                    </div>
                     
                     <motion.button
                       whileHover={{ scale: 1.03, y: -2 }}
                       whileTap={{ scale: 0.97 }}
-                      className="w-full bg-[#8dc1ab] hover:bg-[#7ab09a] text-white py-3 rounded-full font-light text-base tracking-wide shadow-lg hover:shadow-xl transition-all duration-300"
-                      style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                      className="w-full py-4 bg-gradient-to-r from-[#8dc1ab] to-[#7ab09a] text-white rounded-2xl font-medium tracking-wider shadow-xl hover:shadow-2xl transition-all duration-500 relative overflow-hidden"
+                      style={{ fontFamily: 'Gotham, sans-serif', letterSpacing: '0.1em' }}
                     >
-                      {t('healingSessions.common.bookNow')}
+                      <span className="relative z-10">{t('healingSessions.common.bookNow')}</span>
+                      <div className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity duration-500" />
                     </motion.button>
                   </div>
                 </BackdropBlurCard>
@@ -232,23 +248,34 @@ const PricesPage = () => {
             transition={{ duration: 1 }}
             className="text-center mb-16"
           >
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="w-16 h-16 rounded-full bg-stone-700/10 border-2 border-stone-700/30 flex items-center justify-center">
-                <Mail className="w-8 h-8 text-stone-700" />
-              </div>
-            </div>
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={isEmailInView ? { scaleX: 1 } : {}}
+              transition={{ duration: 1.2, delay: 0.2 }}
+              className="h-px bg-gradient-to-r from-transparent via-stone-400/40 to-transparent mx-auto w-32 mb-8"
+            />
+            
             <h2 
-              className="text-4xl lg:text-6xl font-light text-stone-800 mb-4 tracking-wide"
+              className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
-              {t('prices.email.title')}
+              {t('prices.email.title')} <span className="italic text-amber-700">{t('prices.email.titleItalic')}</span>
             </h2>
-            <p className="text-stone-600 text-lg max-w-3xl mx-auto mb-4">
+            
+            <p className="text-stone-700 text-lg lg:text-xl max-w-3xl mx-auto mb-6 leading-relaxed" style={{ fontFamily: 'Gotham, sans-serif' }}>
               {t('prices.email.subtitle')}
             </p>
-            <p className="text-stone-500 text-base max-w-2xl mx-auto italic" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+            
+            <p className="text-stone-600 text-base lg:text-lg max-w-2xl mx-auto leading-relaxed" style={{ fontFamily: 'Gotham, sans-serif' }}>
               {t('prices.email.process')}
             </p>
+            
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={isEmailInView ? { scaleX: 1 } : {}}
+              transition={{ duration: 1.5, delay: 0.6 }}
+              className="h-px bg-gradient-to-r from-transparent via-stone-400/50 to-transparent mx-auto w-96 mt-10"
+            />
           </motion.div>
 
           {/* Email Session Cards */}
@@ -262,20 +289,20 @@ const PricesPage = () => {
                 className="relative"
               >
                 {session.save && (
-                  <div className="absolute -top-3 -right-3 bg-amber-600 text-white px-4 py-1.5 rounded-full text-sm font-medium z-10 shadow-lg">
+                  <div className="absolute -top-3 -right-3 bg-amber-600 text-white px-4 py-1.5 rounded-full text-sm font-medium z-10 shadow-lg" style={{ fontFamily: 'Gotham, sans-serif' }}>
                     {session.save}
                   </div>
                 )}
-                <BackdropBlurCard className="h-full border-2 border-stone-200 hover:border-stone-400/50 transition-all duration-300">
+                <div className="h-full bg-white rounded-3xl shadow-2xl hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.2)] border border-stone-200/50 hover:border-stone-400/30 transition-all duration-700">
                   <div className="p-6 lg:p-8">
                     <h3 
-                      className="text-xl lg:text-2xl font-light text-stone-800 mb-2 tracking-wide"
-                      style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                      className="text-lg lg:text-xl font-light text-stone-800 mb-3 tracking-wide leading-snug"
+                      style={{ fontFamily: 'Gotham, sans-serif' }}
                     >
                       {session.title}
                     </h3>
                     
-                    <div className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent my-4" />
+                    <div className="h-px bg-gradient-to-r from-transparent via-stone-300/50 to-transparent my-4" />
                     
                     <div className="text-center mb-6">
                       {session.originalPrice && (
@@ -286,16 +313,17 @@ const PricesPage = () => {
                       <span className="text-4xl lg:text-5xl font-light text-stone-800" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                         ${session.price}
                       </span>
-                      <span className="text-stone-600 ml-2">USD</span>
+                      <span className="text-stone-600 ml-2 text-lg" style={{ fontFamily: 'Gotham, sans-serif' }}>USD</span>
                     </div>
                     
                     <motion.button
                       whileHover={{ scale: 1.03, y: -2 }}
                       whileTap={{ scale: 0.97 }}
-                      className="w-full bg-stone-700 hover:bg-stone-800 text-white py-3 rounded-full font-light text-base tracking-wide shadow-lg hover:shadow-xl transition-all duration-300"
-                      style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                      className="w-full py-4 bg-gradient-to-r from-stone-700 to-stone-800 text-white rounded-2xl font-medium tracking-wider shadow-xl hover:shadow-2xl transition-all duration-500 relative overflow-hidden"
+                      style={{ fontFamily: 'Gotham, sans-serif', letterSpacing: '0.1em' }}
                     >
-                      {t('healingSessions.common.bookNow')}
+                      <span className="relative z-10">{t('healingSessions.common.bookNow')}</span>
+                      <div className="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition-opacity duration-500" />
                     </motion.button>
                   </div>
                 </BackdropBlurCard>
@@ -315,46 +343,59 @@ const PricesPage = () => {
           >
             {/* Section Title */}
             <div className="text-center mb-12">
-              <div className="flex items-center justify-center gap-4 mb-6">
-                <div className="w-16 h-16 rounded-full bg-amber-600/10 border-2 border-amber-600/30 flex items-center justify-center">
-                  <Clock className="w-8 h-8 text-amber-600" />
-                </div>
-              </div>
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={isRegressionInView ? { scaleX: 1 } : {}}
+                transition={{ duration: 1.2, delay: 0.2 }}
+                className="h-px bg-gradient-to-r from-transparent via-amber-600/40 to-transparent mx-auto w-32 mb-8"
+              />
+              
               <h2 
-                className="text-4xl lg:text-6xl font-light text-stone-800 mb-4 tracking-wide"
+                className="text-5xl lg:text-7xl font-light text-stone-800 mb-8 tracking-wide leading-tight"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                {t('prices.pastLife.title')}
+                {t('prices.pastLife.title')} <span className="italic text-amber-700">{t('prices.pastLife.titleItalic')}</span>
               </h2>
+              
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={isRegressionInView ? { scaleX: 1 } : {}}
+                transition={{ duration: 1.5, delay: 0.6 }}
+                className="h-px bg-gradient-to-r from-transparent via-amber-600/50 to-transparent mx-auto w-96 mt-10 mb-12"
+              />
             </div>
 
             {/* Regression Card */}
-            <BackdropBlurCard className="border-2 border-amber-200 hover:border-amber-400/50 transition-all duration-300">
+            <div className="bg-white rounded-3xl shadow-2xl hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.2)] border border-amber-200/50 hover:border-amber-400/30 transition-all duration-700">
               <div className="p-8 lg:p-12">
                 <div className="text-center mb-8">
                   <span className="text-6xl lg:text-7xl font-light text-stone-800" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                     $230
                   </span>
-                  <span className="text-stone-600 ml-2 text-xl">USD</span>
+                  <span className="text-stone-600 ml-2 text-xl" style={{ fontFamily: 'Gotham, sans-serif' }}>USD</span>
                 </div>
                 
-                <p className="text-center text-stone-600 text-lg mb-2" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-                  {t('prices.pastLife.duration')}
-                </p>
+                <div className="flex items-center justify-center gap-2 mb-6">
+                  <Clock className="w-6 h-6 text-amber-600" />
+                  <p className="text-stone-700 text-lg font-medium" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                    {t('prices.pastLife.duration')}
+                  </p>
+                </div>
 
-                <div className="h-px bg-gradient-to-r from-transparent via-amber-300 to-transparent my-8" />
+                <div className="h-px bg-gradient-to-r from-transparent via-amber-300/50 to-transparent my-8" />
                 
-                <p className="text-center text-stone-700 text-base lg:text-lg leading-relaxed max-w-2xl mx-auto mb-8">
+                <p className="text-center text-stone-700 text-base lg:text-lg leading-relaxed max-w-2xl mx-auto mb-8" style={{ fontFamily: 'Gotham, sans-serif' }}>
                   {t('prices.pastLife.description')}
                 </p>
                 
                 <motion.button
                   whileHover={{ scale: 1.03, y: -2 }}
                   whileTap={{ scale: 0.97 }}
-                  className="w-full max-w-md mx-auto block bg-amber-600 hover:bg-amber-700 text-white py-4 rounded-full font-light text-lg tracking-wide shadow-lg hover:shadow-xl transition-all duration-300"
-                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                  className="w-full max-w-md mx-auto block py-4 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-2xl font-medium tracking-wider shadow-xl hover:shadow-2xl transition-all duration-500 relative overflow-hidden"
+                  style={{ fontFamily: 'Gotham, sans-serif', letterSpacing: '0.1em' }}
                 >
-                  {t('healingSessions.common.bookNow')}
+                  <span className="relative z-10">{t('healingSessions.common.bookNow')}</span>
+                  <div className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity duration-500" />
                 </motion.button>
               </div>
             </BackdropBlurCard>

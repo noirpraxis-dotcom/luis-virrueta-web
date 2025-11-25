@@ -360,7 +360,8 @@
     "title": "SESSION PRICES",
     "specialRates": "I offer special rates for clients in Czechia, Slovakia and Mexico. Please reach out to discuss your options.",
     "online": {
-      "title": "ONLINE SESSIONS",
+      "title": "Online",
+      "titleItalic": "Sessions",
       "subtitle": "Face-to-face via videocall, from anywhere",
       "single": "Single Session",
       "package3": "3-Session Package",
@@ -378,7 +379,8 @@
       "save15": "save 15%"
     },
     "email": {
-      "title": "EMAIL SESSIONS",
+      "title": "Email",
+      "titleItalic": "Sessions",
       "subtitle": "equally effective healing, no scheduling required, more budget-friendly",
       "process": "We set the goal by email or WhatsApp → I work on you at the agreed time → I report back to you with detailed notes.",
       "single": "Email session with Emotion Code, Body Code & Belief Code",
@@ -386,7 +388,8 @@
       "package6": "6 email sessions package with Emotion Code, Body Code & Belief Code"
     },
     "pastLife": {
-      "title": "Past Life Regression",
+      "title": "Past Life",
+      "titleItalic": "Regression",
       "duration": "2.5-3 hours (online)",
       "description": "Just as effective as a in-person session. Includes pre-session preparation and personalized guidance."
     }

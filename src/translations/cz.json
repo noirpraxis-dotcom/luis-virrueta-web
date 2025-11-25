@@ -359,7 +359,8 @@
     "title": "CENÍK SEZENÍ",
     "specialRates": "Nabízím zvýhodněné ceny pro klienty z Česka, Slovenska a Mexika. Napište mi a ráda vám poskytnu informace.",
     "online": {
-      "title": "SEZENÍ ONLINE",
+      "title": "Sezení",
+      "titleItalic": "Online",
       "subtitle": "v reálném čase přes videohovor",
       "single": "Sezení",
       "package3": "Balíček 3 sezení",
@@ -377,7 +378,8 @@
       "save15": "ušetříte 15%"
     },
     "email": {
-      "title": "SEZENÍ POR E-MAILU",
+      "title": "Sezení po",
+      "titleItalic": "E-mailu",
       "subtitle": "stejně účinné jako prezenční, bez nutnosti domlouvat termín, cenově dostupnější",
       "process": "Stanovíme si cíl sezení přes e-mail či WhatsApp → Budu na vás v domluvenou dobu pracovat → Pošlu vám podrobné poznámky ze sezení.",
       "single": "Sezení po e-mailu s Emočním, Tělesným & Myšlenkovým kódem",
@@ -385,7 +387,8 @@
       "package6": "Balíček 6 sezení po e-mailu s Emočním, Tělesným & Myšlenkovým kódem"
     },
     "pastLife": {
-      "title": "Regrese do minulých životů",
+      "title": "Regrese do minulých",
+      "titleItalic": "životů",
       "duration": "2.5-3 hodiny (prezenčně v Olomouci či online)",
       "description": "Zahrnuje přípravné vedení a řízenou meditaci."
     }
