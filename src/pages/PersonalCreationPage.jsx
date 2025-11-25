@@ -197,57 +197,58 @@ const BooksSection = () => {
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+        <div className="space-y-8 lg:space-y-10">
           {books.map((book) => (
             <motion.div
               key={book.id}
               variants={itemVariants}
-              whileHover={{ y: -8 }}
-              transition={{ duration: 0.3 }}
+              whileHover={{ y: -5 }}
+              transition={{ duration: 0.4 }}
             >
-              <BackdropBlurCard className="h-full overflow-hidden">
-                {/* Book Cover */}
-                <div className="h-96 bg-gradient-to-br from-amber-100 via-orange-50 to-rose-100 relative overflow-hidden">
-                  {/* Placeholder for book cover */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center p-8">
-                      <svg className="w-20 h-20 text-amber-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                      </svg>
-                      <p className="text-amber-600 font-medium text-sm">Book Cover Placeholder</p>
-                      <p className="text-amber-500 text-xs mt-1">Add your book cover image</p>
+              <div className="bg-white rounded-3xl shadow-2xl hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.2)] border border-stone-200/50 hover:border-[#8dc1ab]/30 transition-all duration-700 overflow-hidden">
+                <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] lg:grid-cols-[350px_1fr] gap-0">
+                  {/* Book Cover */}
+                  <div className="h-64 md:h-full bg-gradient-to-br from-amber-100 via-orange-50 to-rose-100 relative overflow-hidden">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center p-8">
+                        <svg className="w-16 h-16 text-amber-400 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        <p className="text-amber-600 font-medium text-sm" style={{ fontFamily: 'Gotham, sans-serif' }}>Book Cover</p>
+                      </div>
                     </div>
+
+                    {book.featured && (
+                      <div className="absolute top-4 right-4 bg-[#8dc1ab] text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                        {t('books.featured')}
+                      </div>
+                    )}
                   </div>
 
-                  {book.featured && (
-                    <div className="absolute top-4 right-4 bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-medium">
-                      {t('books.featured')}
-                    </div>
-                  )}
-                </div>
+                  {/* Book Info */}
+                  <div className="p-8 lg:p-10 flex flex-col justify-center">
+                    <h3 className="text-3xl lg:text-4xl font-light text-stone-800 mb-3 tracking-wide" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                      {book.title}
+                    </h3>
+                    
+                    <p className="text-amber-700 text-lg font-light italic mb-5" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                      {book.subtitle}
+                    </p>
 
-                {/* Book Info */}
-                <div className="p-6">
-                  <h3 className="text-2xl font-semibold text-stone-800 mb-2" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-                    {book.title}
-                  </h3>
-                  
-                  <p className="text-amber-600 text-base font-medium italic mb-4">
-                    {book.subtitle}
-                  </p>
+                    <div className="h-px bg-gradient-to-r from-[#8dc1ab]/30 via-[#8dc1ab]/20 to-transparent w-24 mb-5" />
 
-                  <p className="text-stone-700 text-base leading-relaxed mb-6">
-                    {book.description}
-                  </p>
+                    <p className="text-stone-700 text-base lg:text-lg leading-relaxed mb-6" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                      {book.description}
+                    </p>
 
-                  {/* Book Details */}
-                  <div className="flex items-center gap-4 text-sm text-stone-500 mb-6 pb-6 border-b border-stone-200">
-                    <div className="flex items-center gap-1">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <span>{book.pages} pages</span>
-                    </div>
+                    {/* Book Details */}
+                    <div className="flex items-center gap-6 text-sm text-stone-600 mb-6">
+                      <div className="flex items-center gap-2">
+                        <svg className="w-5 h-5 text-[#8dc1ab]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <span style={{ fontFamily: 'Gotham, sans-serif' }}>{book.pages} pages</span>
+                      </div>
                     <div className="flex items-center gap-1">
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -256,20 +257,22 @@ const BooksSection = () => {
                     </div>
                   </div>
 
-                  {/* CTA Button */}
-                  <motion.button
-                    onClick={() => navigate(`/books/${book.id}`)}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full bg-gradient-to-r from-amber-400 to-orange-500 text-white py-3 rounded-full font-medium hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
-                  >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
-                    {t('books.readMoreSupport')}
-                  </motion.button>
+                    {/* CTA Button */}
+                    <motion.button
+                      onClick={() => navigate(`/books/${book.id}`)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full bg-gradient-to-r from-[#8dc1ab] to-[#7ab09a] text-white py-4 rounded-2xl font-medium hover:shadow-2xl transition-all duration-500 flex items-center justify-center gap-2 shadow-xl tracking-wider"
+                      style={{ fontFamily: 'Gotham, sans-serif', letterSpacing: '0.1em' }}
+                    >
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      </svg>
+                      {t('books.readMoreSupport')}
+                    </motion.button>
+                  </div>
                 </div>
-              </BackdropBlurCard>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -386,67 +389,56 @@ const MusicSection = () => {
         />
       </motion.div>
 
-      {/* Videos Grid - PREMIUM DESIGN */}
+      {/* Videos Grid - Horizontal Premium Design */}
       <motion.div
         ref={containerRef}
         variants={containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-12"
+        className="space-y-8 lg:space-y-10"
       >
         {videos.map((video, index) => (
           <motion.div
             key={index}
             variants={itemVariants}
-            whileHover={{ y: -8 }}
+            whileHover={{ y: -5 }}
             transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
             className="group"
           >
-            <div className="relative bg-white rounded-2xl overflow-hidden shadow-xl border border-stone-200/50 hover:shadow-2xl hover:border-amber-600/20 transition-all duration-500">
-              {/* Decorative corner accent */}
-              <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-amber-600/10 to-transparent rounded-bl-full z-10" />
-              
-              {/* YouTube Video Embed with premium frame */}
-              <div className="relative aspect-video bg-gradient-to-br from-stone-100 to-amber-50/20 overflow-hidden">
-                {/* Elegant border overlay */}
-                <div className="absolute inset-0 border-b border-amber-600/10 z-10" />
-                
-                <iframe
-                  src={`https://www.youtube.com/embed/${video.id}`}
-                  title={video.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="absolute inset-0 w-full h-full"
-                />
-              </div>
+            <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.2)] border border-stone-200/50 hover:border-[#8dc1ab]/30 transition-all duration-700">
+              <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-0">
+                {/* YouTube Video Embed */}
+                <div className="relative aspect-video lg:aspect-[4/3] bg-gradient-to-br from-stone-100 to-[#8dc1ab]/5 overflow-hidden">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${video.id}`}
+                    title={video.title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="absolute inset-0 w-full h-full"
+                  />
+                </div>
 
-              {/* Video Info - Premium Layout */}
-              <div className="relative p-8 lg:p-10">
-                {/* Decorative line above title */}
-                <motion.div
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="h-px bg-gradient-to-r from-amber-600/50 via-amber-600/20 to-transparent w-16 mb-6"
-                />
+                {/* Video Info - Horizontal Layout */}
+                <div className="relative p-8 lg:p-10 flex flex-col justify-center">
+                  <div className="h-px bg-gradient-to-r from-[#8dc1ab]/40 via-[#8dc1ab]/20 to-transparent w-20 mb-6" />
 
-                <h3 
-                  className="text-2xl lg:text-3xl font-light text-stone-800 mb-5 tracking-wide group-hover:text-amber-700 transition-colors duration-500 leading-tight"
-                  style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.02em' }}
-                >
-                  {video.title}
-                </h3>
-                
-                <p className="text-stone-700 leading-relaxed text-base lg:text-lg">
-                  {video.description}
-                </p>
+                  <h3 
+                    className="text-2xl lg:text-3xl font-light text-stone-800 mb-5 tracking-wide group-hover:text-[#8dc1ab] transition-colors duration-500 leading-tight"
+                    style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.02em' }}
+                  >
+                    {video.title}
+                  </h3>
+                  
+                  <p className="text-stone-700 leading-relaxed text-base lg:text-lg" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                    {video.description}
+                  </p>
 
-                {/* Decorative dots */}
-                <div className="flex gap-1.5 mt-6 opacity-40">
-                  {[...Array(3)].map((_, i) => (
-                    <div key={i} className="w-1 h-1 bg-amber-600 rounded-full" />
-                  ))}
+                  {/* Decorative dots */}
+                  <div className="flex gap-1.5 mt-6 opacity-40">
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="w-1 h-1 bg-[#8dc1ab] rounded-full" />
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -455,7 +447,7 @@ const MusicSection = () => {
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="absolute inset-0 bg-gradient-to-t from-amber-600/5 to-transparent pointer-events-none"
+                className="absolute inset-0 bg-gradient-to-t from-[#8dc1ab]/5 to-transparent pointer-events-none"
               />
             </div>
           </motion.div>
