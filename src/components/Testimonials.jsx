@@ -1,9 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 const Testimonials = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [direction, setDirection] = useState(0)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const autoPlayRef = useRef(null)
 
   const testimonials = [
     {
@@ -34,18 +36,19 @@ const Testimonials = () => {
 
   const slideVariants = {
     enter: (direction) => ({
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0
+      x: direction > 0 ? 300 : -300,
+      opacity: 0,
+      scale: 0.98
     }),
     center: {
-      zIndex: 1,
       x: 0,
-      opacity: 1
+      opacity: 1,
+      scale: 1
     },
     exit: (direction) => ({
-      zIndex: 0,
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0
+      x: direction < 0 ? 300 : -300,
+      opacity: 0,
+      scale: 0.98
     })
   }
 
@@ -54,7 +57,21 @@ const Testimonials = () => {
     return Math.abs(offset) * velocity
   }
 
+  const resetAutoPlay = () => {
+    if (autoPlayRef.current) {
+      clearInterval(autoPlayRef.current)
+    }
+    autoPlayRef.current = setInterval(() => {
+      if (!isTransitioning) {
+        paginate(1)
+      }
+    }, 6000)
+  }
+
   const paginate = (newDirection) => {
+    if (isTransitioning) return
+    
+    setIsTransitioning(true)
     setDirection(newDirection)
     setCurrentIndex((prevIndex) => {
       if (newDirection === 1) {
@@ -62,16 +79,20 @@ const Testimonials = () => {
       }
       return prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
     })
+    resetAutoPlay()
+    
+    setTimeout(() => setIsTransitioning(false), 400)
   }
 
   // Auto-advance carousel
   useEffect(() => {
-    const timer = setInterval(() => {
-      paginate(1)
-    }, 8000) // Change every 8 seconds
-
-    return () => clearInterval(timer)
-  }, [currentIndex])
+    resetAutoPlay()
+    return () => {
+      if (autoPlayRef.current) {
+        clearInterval(autoPlayRef.current)
+      }
+    }
+  }, [])
 
   return (
     <section className="relative py-20 lg:py-32 px-6 lg:px-20 bg-gradient-to-b from-stone-50 to-white overflow-hidden">
@@ -94,8 +115,8 @@ const Testimonials = () => {
         </motion.div>
 
         {/* Carousel Container */}
-        <div className="relative">
-          <AnimatePresence initial={false} custom={direction}>
+        <div className="relative min-h-[600px] lg:min-h-[500px] flex items-center">
+          <AnimatePresence initial={false} custom={direction} mode="wait">
             <motion.div
               key={currentIndex}
               custom={direction}
@@ -104,12 +125,13 @@ const Testimonials = () => {
               animate="center"
               exit="exit"
               transition={{
-                x: { type: "spring", stiffness: 300, damping: 30 },
-                opacity: { duration: 0.2 }
+                x: { type: "tween", duration: 0.4, ease: "easeInOut" },
+                opacity: { duration: 0.3 },
+                scale: { duration: 0.4, ease: "easeInOut" }
               }}
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={1}
+              dragElastic={0.2}
               onDragEnd={(e, { offset, velocity }) => {
                 const swipe = swipePower(offset.x, velocity.x)
 
@@ -119,9 +141,9 @@ const Testimonials = () => {
                   paginate(-1)
                 }
               }}
-              className="w-full"
+              className="absolute inset-0 w-full"
             >
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center h-full">
                 {/* Image */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -181,15 +203,17 @@ const Testimonials = () => {
               </div>
             </motion.div>
           </AnimatePresence>
+        </div>
 
-          {/* Navigation Arrows - Desktop */}
-          <div className="hidden lg:flex absolute top-1/2 -translate-y-1/2 left-0 right-0 justify-between pointer-events-none">
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => paginate(-1)}
-              className="pointer-events-auto -ml-6 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-emerald-50 transition-colors"
-            >
+        {/* Navigation Arrows - Desktop */}
+        <div className="hidden lg:flex absolute top-1/2 -translate-y-1/2 left-0 right-0 justify-between pointer-events-none mt-[-60px]">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => paginate(-1)}
+            disabled={isTransitioning}
+            className="pointer-events-auto -ml-6 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-emerald-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
               <svg className="w-6 h-6 text-stone-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
@@ -198,7 +222,8 @@ const Testimonials = () => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => paginate(1)}
-              className="pointer-events-auto -mr-6 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-emerald-50 transition-colors"
+              disabled={isTransitioning}
+              className="pointer-events-auto -mr-6 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-emerald-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg className="w-6 h-6 text-stone-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -206,23 +231,27 @@ const Testimonials = () => {
             </motion.button>
           </div>
 
-          {/* Dots Navigation */}
-          <div className="flex justify-center gap-3 mt-12">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
+        {/* Dots Navigation */}
+        <div className="flex justify-center gap-3 mt-12">
+          {testimonials.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                if (!isTransitioning) {
                   setDirection(index > currentIndex ? 1 : -1)
+                  setIsTransitioning(true)
                   setCurrentIndex(index)
-                }}
-                className={`transition-all duration-300 rounded-full ${
-                  index === currentIndex
-                    ? 'w-8 h-2 bg-emerald-500'
-                    : 'w-2 h-2 bg-stone-300 hover:bg-stone-400'
-                }`}
-              />
-            ))}
-          </div>
+                  resetAutoPlay()
+                  setTimeout(() => setIsTransitioning(false), 400)
+                }
+              }}
+              className={`transition-all duration-300 rounded-full ${
+                index === currentIndex
+                  ? 'w-8 h-2 bg-emerald-500'
+                  : 'w-2 h-2 bg-stone-300 hover:bg-stone-400'
+              }`}
+            />
+          ))}
         </div>
       </div>
     </section>
