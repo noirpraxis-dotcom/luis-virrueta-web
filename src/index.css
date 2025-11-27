@@ -13,21 +13,30 @@ html {
 }
 
 body {
-  font-family: 'Inter', 'Montserrat', sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   overflow-x: hidden;
+  background-color: #0a0a0f;
+  color: #f5f5f7;
 }
 
-/* Gotham font fallback */
-@font-face {
-  font-family: 'Gotham';
-  src: local('Inter'), local('system-ui');
-  font-weight: 100 900;
-}
-
+/* Ainimation Premium Typography */
 @layer utilities {
-  .text-elegant {
-    font-family: 'Cormorant Garamond', serif;
-    letter-spacing: 0.05em;
+  .text-display {
+    font-family: 'Outfit', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  
+  .text-mono {
+    font-family: 'Space Grotesk', monospace;
+    letter-spacing: 0.01em;
+  }
+  
+  .text-neural {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
 

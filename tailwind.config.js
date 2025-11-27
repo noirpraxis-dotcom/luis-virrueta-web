@@ -7,16 +7,38 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'elegant': ['Cormorant Garamond', 'serif'],
-        'modern': ['Montserrat', 'sans-serif'],
-        'gotham': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        'display': ['Outfit', 'system-ui', 'sans-serif'],
+        'mono': ['Space Grotesk', 'monospace'],
+        'body': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
-        'elegant-white': '#F5F5F5',
-        'elegant-gray': '#E8E8E8',
+        // Ainimation Palette - Psicología × Diseño × IA
+        'neural': {
+          50: '#f0f4ff',
+          100: '#e0e9ff',
+          200: '#c7d7ff',
+          300: '#a4baff',
+          400: '#8494ff',
+          500: '#6366f1', // Primary - Neurociencia/IA
+          600: '#4f46e5',
+          700: '#4338ca',
+          800: '#3730a3',
+          900: '#312e81',
+        },
+        'psych': {
+          50: '#fdf4ff',
+          100: '#fae8ff',
+          500: '#d946ef', // Psychology accent
+          600: '#c026d3',
+        },
+        'design': {
+          50: '#fff7ed',
+          500: '#f59e0b', // Design/Creativity
+          600: '#d97706',
+        },
       },
       spacing: {
-        '40': '10rem', // 160px para el header más elegante
+        '40': '10rem',
       },
     },
   },

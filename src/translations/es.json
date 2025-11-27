@@ -1,21 +1,21 @@
 {
   "menu": {
     "home": "Inicio",
-    "about": "Sobre Mí",
-    "healingSessions": "Sesiones",
-    "healingSessionsShort": "Sesiones",
-    "emotionCode": "Código de Emoción, Cuerpo y Creencias",
-    "pastLife": "Regresiones a Vidas Pasadas",
-    "ilyari": "Transmisiones Somáticas Ilyari",
-    "animals": "Sanación para Animales",
-    "sessionPrices": "Precios de Sesiones",
-    "personalCreation": "Creación",
-    "personalCreationShort": "Creación",
-    "books": "Libros",
-    "music": "Música",
-    "store": "Tienda",
-    "prices": "Precios",
-    "courses": "Cursos"
+    "about": "Filosofía",
+    "services": "Servicios",
+    "servicesShort": "Servicios",
+    "brandIdentity": "Identidad Visual",
+    "premiumApps": "Apps Premium",
+    "digitalContent": "Contenido Digital",
+    "aiAvatars": "Avatares IA",
+    "brandPsychology": "Psicología de Marca",
+    "portfolio": "Portafolio",
+    "portfolioShort": "Trabajo",
+    "process": "Proceso",
+    "contact": "Contacto",
+    "store": "Store",
+    "prices": "Inversión",
+    "lab": "Lab"
   },
   "cookies": {
     "title": "Valoramos tu privacidad",
@@ -36,8 +36,13 @@
     "savePreferences": "Guardar preferencias"
   },
   "hero": {
-    "subtitle": "Terapeuta certificada en Regresión a Vidas Pasadas, sanadora energética y canalizadora de Ilyari. Antigua investigadora universitaria con dos doctorados que explora los aspectos intuitivos y científicos de la sanación energética.",
-    "seeMore": "Ver más",
+    "manifesto1": "Más del 90% de las decisiones humanas se toman de forma inconsciente.",
+    "manifesto2": "Y, sin embargo, la mayoría de las marcas siguen intentando convencer a través de lo racional.",
+    "manifesto3": "En Ainimation diseñamos emociones.",
+    "manifesto4": "Aplicamos psicología, diseño y tecnología para crear identidades que se sienten antes de entenderse.",
+    "subtitle": "Psicología × Diseño × Inteligencia Artificial",
+    "tagline": "Donde la psicología, el diseño y la inteligencia artificial se combinan para construir marcas que piensan, sienten y perduran.",
+    "cta": "Ver Filosofía",
     "scrollDown": "Desplázate"
   },
   "countries": {
@@ -46,13 +51,23 @@
     "question": "¿Y tú, de dónde eres?"
   },
   "about": {
-    "title": "Sobre Mí",
-    "subtitle": "Sanadora Energética y Guía Espiritual",
-    "description": "Zuzana Erdösová es terapeuta certificada en Regresiones a Vidas Pasadas, sanadora energética formada en los métodos Emotion Code, Body Code y Belief Code, facilitadora de Star Magic Healing (Nivel 2) y canalizadora de Ilyari (transmisión somática de códigos de luz). Como ex profesora e investigadora universitaria con dos doctorados en Lingüística y Estudios Latinoamericanos, su vocación y pasión se centran en explorar tanto los aspectos intuitivos como los científicos de la sanación energética. Zuzana es también autora de numerosos artículos científicos, capítulos de libros y seis libros de autoría individual, entre ellos \"Pensar la otredad. La comunidad originaria mexicana desde cinco fuentes de conocimiento\" y \"Proverbios evolucionados: Sabiduría actualizada para la vida que realmente quieres vivir.\" Además, es traductora, cantante y letrista, y una gran entusiasta de los caballos. Disfruta hablar y trabajar en varios idiomas (inglés, español y su lengua materna, el checo) y vivir en entornos interculturales rodeados de una naturaleza hermosa.",
-    "certificationsTitle": "CERTIFICACIONES",
-    "certifications": "Practicante Certificada",
-    "experience": "Más de 10 Años de Experiencia",
-    "clients": "Más de 500 Clientes en Todo el Mundo"
+    "title": "Filosofía",
+    "subtitle": "Psicología × Diseño × IA",
+    "manifesto": {
+      "intro": "Hoy cualquiera puede generar imágenes con inteligencia artificial. Pero si fuera tan simple, todas las marcas serían memorables.",
+      "difference": "La diferencia está en entender cómo funciona la mente: cómo un color dirige la atención, cómo la forma influye en la emoción, cómo el orden visual guía el deseo.",
+      "approach": "En Ainimation no seguimos tendencias: formulamos hipótesis, analizamos reacciones, medimos resultados.",
+      "ai": "No nos quedamos con lo que la IA propone: la llevamos al límite, la corregimos, la reentrenamos hasta alcanzar la coherencia exacta entre significado, emoción y percepción.",
+      "system": "Construimos un sistema de significado que conecta tres niveles invisibles: la atención, el deseo y la memoria.",
+      "result": "Eso es lo que hace que una marca deje de ser un logotipo y se convierta en una experiencia psicológica completa.",
+      "calibration": "Cada elemento —tipografía, ritmo, espacio, tono— está calibrado para resonar con tu público desde el inconsciente.",
+      "permanence": "Y cuando esa estructura está alineada, tu marca no solo comunica: permanece."
+    },
+    "credentials": {
+      "psych": "Psicólogo y Psicoanalista",
+      "design": "Diseñador Multidisciplinario",
+      "tech": "Especialista en IA Generativa"
+    }
   },
   "books": {
     "title": "Mis Libros",
@@ -231,6 +246,73 @@
     "paragraph2": "Es el momento en que la parte observadora de mí vislumbra las huellas de la otra parte, la que creó sin necesidad de observar.",
     "quote": "Ahí reside la extraña tensión: la consciencia en flujo es ciega, porque ve a través de todo. Mientras que la consciencia a distancia observa, pero sólo la memoria de ese flujo.",
     "quoteAuthor": "AUREN"
+  },
+  "services": {
+    "hero": {
+      "title": "SERVICIOS",
+      "subtitle": "PREMIUM",
+      "description": "Desde identidades visuales completas hasta aplicaciones que resuelven problemas reales. Cada proyecto es una fusión estratégica de psicología, diseño e inteligencia artificial."
+    },
+    "brandIdentity": {
+      "title": "Identidad Visual",
+      "subtitle": "Sistemas de marca que conectan con el inconsciente",
+      "description": "No solo logotipos. Construimos lenguajes visuales completos: tipografía, color, forma, ritmo. Cada decisión está fundamentada en cómo la mente procesa, recuerda y desea.",
+      "includes": [
+        "Investigación psicológica del target",
+        "Sistema de marca completo (logo, tipografía, paleta)",
+        "Manual de identidad con fundamentos perceptuales",
+        "Aplicaciones digitales y físicas",
+        "Guías de implementación para equipos"
+      ]
+    },
+    "premiumApps": {
+      "title": "Apps Premium",
+      "subtitle": "Aplicaciones que resuelven problemas reales",
+      "description": "Diseñamos experiencias digitales donde cada interacción está calibrada. No se trata solo de interfaz: se trata de arquitectura de la atención, jerarquía del deseo, y memoria emocional.",
+      "includes": [
+        "UX estratégico con psicología cognitiva",
+        "UI premium con animaciones significativas",
+        "Prototipos interactivos de alta fidelidad",
+        "Sistema de diseño escalable",
+        "Desarrollo front-end con tecnología moderna"
+      ]
+    },
+    "digitalContent": {
+      "title": "Contenido Digital",
+      "subtitle": "Videos, audios y elementos visuales que permanecen",
+      "description": "Desde motion graphics hasta piezas audiovisuales complejas. Cada frame, cada transición, cada segundo está diseñado para capturar atención, generar emoción y anclar memoria.",
+      "includes": [
+        "Motion graphics y animaciones 2D/3D",
+        "Videos explicativos y comerciales",
+        "Identidad sonora y diseño de audio",
+        "Ilustraciones y elementos gráficos custom",
+        "Post-producción con IA generativa"
+      ]
+    },
+    "aiAvatars": {
+      "title": "Avatares IA",
+      "subtitle": "Representaciones digitales coherentes con tu marca",
+      "description": "Entrenamos modelos de IA para generar avatares, personajes y representaciones visuales que mantienen la coherencia perceptual de tu identidad. No es solo generar: es dirigir la IA hacia tu objetivo estratégico.",
+      "includes": [
+        "Fine-tuning de modelos (Stable Diffusion, Midjourney, etc.)",
+        "Generación de avatares consistentes",
+        "Bibliotecas de assets generativos",
+        "Workflows de producción con IA",
+        "Entrenamiento de modelos custom"
+      ]
+    },
+    "brandPsychology": {
+      "title": "Psicología de Marca",
+      "subtitle": "Consultoría estratégica para marcas que quieren conectar",
+      "description": "Analizamos tu marca desde la neurociencia y la psicología cognitiva. Identificamos qué funciona, qué no, y por qué. Te entregamos un mapa claro de cómo tu audiencia te percibe, te desea y te recuerda.",
+      "includes": [
+        "Auditoría perceptual de marca",
+        "Análisis de competencia desde psicología",
+        "Mapeo de arquetipos y territorios emocionales",
+        "Estrategia de posicionamiento inconsciente",
+        "Roadmap de optimización visual y verbal"
+      ]
+    }
   },
   "healingSessions": {
     "hero": {

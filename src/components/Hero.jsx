@@ -13,83 +13,108 @@ const Hero = () => {
       ref={ref}
       className="relative min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black flex items-center justify-center py-24 lg:py-32"
     >
-      {/* Efectos decorativos sutiles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Neural network effect background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
         <motion.div
           initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 0.02 } : {}}
+          animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 2 }}
-          className="absolute top-1/4 right-1/4 w-96 h-96 bg-amber-600 rounded-full blur-3xl"
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-neural-500 rounded-full blur-3xl"
+        />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ duration: 2, delay: 0.5 }}
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-psych-500 rounded-full blur-3xl"
         />
       </div>
 
-      <div className="relative max-w-5xl mx-auto px-6 lg:px-12 text-center">
-        {/* Logo elegante arriba del nombre con animación de rotación */}
+      <div className="relative max-w-6xl mx-auto px-6 lg:px-12 text-center">
+        {/* Manifesto Opening */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-          className="flex justify-center mb-12"
+          transition={{ duration: 0.8 }}
+          className="mb-16 space-y-6"
         >
-          <motion.img 
-            src="/logo.png" 
-            alt="Greenleaf Lightworks" 
-            className="h-28 lg:h-36 w-auto opacity-80 drop-shadow-xl"
-            animate={{ 
-              rotate: [0, -360, -360, -720]
-            }}
-            transition={{
-              duration: 3.5,
-              times: [0, 0.4, 0.6, 1],
-              repeat: Infinity,
-              repeatDelay: 2,
-              ease: [0.65, 0, 0.35, 1]
-            }}
-          />
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="text-white/60 text-lg lg:text-xl font-light leading-relaxed max-w-4xl mx-auto font-body"
+          >
+            {t('hero.manifesto1')}
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ duration: 1, delay: 0.4 }}
+            className="text-white/70 text-lg lg:text-xl font-light leading-relaxed max-w-4xl mx-auto font-body"
+          >
+            {t('hero.manifesto2')}
+          </motion.p>
         </motion.div>
 
-        {/* Título cinematográfico */}
+        {/* Main Title with Neural Gradient */}
         <motion.h1
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1.2, delay: 0.2, ease: [0.76, 0, 0.24, 1] }}
-          className="text-white text-6xl lg:text-8xl font-light tracking-[0.2em] mb-8"
-          style={{ fontFamily: 'Gotham, sans-serif' }}
+          transition={{ duration: 1.2, delay: 0.6, ease: [0.76, 0, 0.24, 1] }}
+          className="text-6xl lg:text-9xl font-bold mb-6 font-display"
         >
-          Zuzana Erdösová
+          <span className="text-neural bg-gradient-to-r from-neural-400 via-psych-500 to-design-500 bg-clip-text text-transparent">
+            Ainimation
+          </span>
         </motion.h1>
 
-        {/* Línea decorativa dorada */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={isInView ? { scaleX: 1 } : {}}
-          transition={{ duration: 1.5, delay: 0.3, ease: [0.76, 0, 0.24, 1] }}
-          className="h-px bg-gradient-to-r from-transparent via-amber-600/60 to-transparent mx-auto w-80 mb-12"
-        />
-
-        {/* Fragmento resumido elegante */}
+        {/* Subtitle */}
         <motion.p
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 0.6 }}
-          className="text-white/80 text-xl lg:text-2xl font-light leading-relaxed tracking-wide mb-16 max-w-4xl mx-auto"
-          style={{ fontFamily: 'Gotham, sans-serif' }}
+          transition={{ duration: 1, delay: 0.8 }}
+          className="text-white/50 text-xl lg:text-2xl font-light tracking-wide mb-4 font-mono"
         >
           {t('hero.subtitle')}
         </motion.p>
 
-        {/* Botón "Ver más" elegante */}
+        {/* Decorative line */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={isInView ? { scaleX: 1 } : {}}
+          transition={{ duration: 1.5, delay: 1, ease: [0.76, 0, 0.24, 1] }}
+          className="h-px bg-gradient-to-r from-transparent via-neural-500/60 to-transparent mx-auto w-80 mb-12"
+        />
+
+        {/* Core message */}
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 1.2 }}
+          className="text-white text-2xl lg:text-3xl font-medium leading-relaxed mb-8 max-w-4xl mx-auto font-display"
+        >
+          {t('hero.manifesto3')}
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 1.4 }}
+          className="text-white/80 text-lg lg:text-xl font-light leading-relaxed mb-16 max-w-4xl mx-auto font-body"
+        >
+          {t('hero.manifesto4')}
+        </motion.p>
+
+        {/* CTA Button */}
         <motion.a
           href="/about"
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 0.9 }}
+          transition={{ duration: 1, delay: 1.6 }}
           whileHover={{ scale: 1.05, y: -3 }}
           whileTap={{ scale: 0.95 }}
-          className="inline-flex items-center gap-3 px-10 py-5 bg-white/5 backdrop-blur-md border border-amber-600/30 rounded-full text-white/90 text-sm tracking-[0.25em] uppercase font-light hover:bg-white/10 hover:border-amber-600/50 transition-all duration-500 shadow-2xl group"
-          style={{ fontFamily: 'Gotham, sans-serif' }}
+          className="inline-flex items-center gap-3 px-10 py-5 bg-neural-500/10 backdrop-blur-md border border-neural-500/30 rounded-full text-white text-sm tracking-wider uppercase font-medium hover:bg-neural-500/20 hover:border-neural-500/50 transition-all duration-500 shadow-2xl group font-mono"
         >
-          <span>{t('hero.seeMore')}</span>
+          <span>{t('hero.cta')}</span>
           <motion.svg
             className="w-5 h-5"
             fill="none"
@@ -98,24 +123,24 @@ const Hero = () => {
             animate={{ y: [0, 5, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </motion.svg>
         </motion.a>
 
-        {/* Elementos decorativos adicionales */}
+        {/* Decorative dots */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 2, delay: 1.2 }}
+          transition={{ duration: 2, delay: 1.8 }}
           className="mt-20 flex justify-center gap-2"
         >
           {[...Array(3)].map((_, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, scale: 0 }}
-              animate={isInView ? { opacity: 0.3, scale: 1 } : {}}
-              transition={{ duration: 0.5, delay: 1.2 + i * 0.1 }}
-              className="w-1.5 h-1.5 bg-amber-600 rounded-full"
+              animate={isInView ? { opacity: 0.4, scale: 1 } : {}}
+              transition={{ duration: 0.5, delay: 1.8 + i * 0.1 }}
+              className="w-1.5 h-1.5 bg-neural-500 rounded-full"
             />
           ))}
         </motion.div>

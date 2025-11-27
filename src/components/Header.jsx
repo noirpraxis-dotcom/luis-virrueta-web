@@ -45,17 +45,18 @@ const Header = ({ menuItems }) => {
                 className="cursor-pointer relative"
                 style={{ fontFamily: 'Gotham, sans-serif' }}
               >
-                {/* Greenleaf - con menos espaciado */}
-                <div className="text-[2.75rem] font-light tracking-[0.05em]">
-                  <span className="bg-gradient-to-r from-[#8dc1ab] via-[#8dc1ab] to-[#7ab09a] bg-clip-text text-transparent animate-gradient">Green</span>
-                  <span className="text-white">leaf</span>
+                {/* Ainimation - Neural gradient */}
+                <div className="text-[2.75rem] font-bold tracking-tight font-display">
+                  <span className="bg-gradient-to-r from-neural-400 via-psych-500 to-design-500 bg-clip-text text-transparent animate-gradient">
+                    Ainimation
+                  </span>
                 </div>
                 
-                {/* Lightworks - expandido con animación de resplandor */}
+                {/* Tagline - Subtle shimmer */}
                 <div 
-                  className="text-[0.65rem] uppercase font-medium tracking-[1.45em] text-center -mt-2 ml-[0.3em] relative"
+                  className="text-[0.6rem] uppercase font-medium tracking-[0.3em] text-center -mt-1 font-mono"
                   style={{
-                    background: 'linear-gradient(90deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.85) 35%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.85) 65%, rgba(255,255,255,0.85) 100%)',
+                    background: 'linear-gradient(90deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.4) 100%)',
                     backgroundSize: '200% 100%',
                     WebkitBackgroundClip: 'text',
                     backgroundClip: 'text',
@@ -63,7 +64,7 @@ const Header = ({ menuItems }) => {
                     animation: 'shimmer-slow 4s ease-in-out infinite'
                   }}
                 >
-                  lightworks
+                  Psych × Design × AI
                 </div>
                 
                 {/* Underline decorativo */}
