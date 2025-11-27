@@ -26,18 +26,18 @@ const Footer = () => {
               whileHover={{ scale: 1.02 }}
               className="cursor-pointer relative"
             >
-              {/* Ainimation - Neural gradient */}
+              {/* Ainimation - Cinematic gradient */}
               <div className="text-[2.75rem] font-bold tracking-tight font-display">
-                <span className="bg-gradient-to-r from-neural-400 via-psych-500 to-design-500 bg-clip-text text-transparent animate-gradient">
+                <span className="bg-gradient-to-r from-purple-400 via-fuchsia-500 to-cyan-400 bg-clip-text text-transparent animate-gradient">
                   Ainimation
                 </span>
               </div>
               
-              {/* Tagline */}
+              {/* Tagline - Cinematic */}
               <div 
                 className="text-[0.6rem] uppercase font-medium tracking-[0.3em] text-center -mt-1 font-mono"
                 style={{
-                  background: 'linear-gradient(90deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.4) 100%)',
+                  background: 'linear-gradient(90deg, rgba(168,85,247,0.4) 0%, rgba(217,70,239,0.6) 50%, rgba(6,182,212,0.4) 100%)',
                   backgroundSize: '200% 100%',
                   WebkitBackgroundClip: 'text',
                   backgroundClip: 'text',
@@ -56,7 +56,7 @@ const Footer = () => {
               <span key={link.name} className="flex items-center gap-x-6">
                 <Link
                   to={link.href}
-                  className="text-white/60 hover:text-[#8dc1ab] transition-colors duration-300"
+                  className="text-white/60 hover:text-fuchsia-400 transition-colors duration-300"
                   style={{ fontFamily: 'Gotham, sans-serif' }}
                 >
                   {link.name}
@@ -70,7 +70,7 @@ const Footer = () => {
               <span className="text-white/20">|</span>
               <button
                 onClick={handleCookieSettings}
-                className="text-white/60 hover:text-[#8dc1ab] transition-colors duration-300"
+                className="text-white/60 hover:text-fuchsia-400 transition-colors duration-300"
                 style={{ fontFamily: 'Gotham, sans-serif' }}
               >
                 Cookie Settings

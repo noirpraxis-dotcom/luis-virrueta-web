@@ -1,0 +1,30 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dark background circle -->
+  <circle cx="256" cy="256" r="256" fill="#0a0a0f"/>
+  
+  <!-- Gradient Definitions -->
+  <defs>
+    <linearGradient id="faviconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:rgb(168,85,247);stop-opacity:1" />
+      <stop offset="50%" style="stop-color:rgb(217,70,239);stop-opacity:1" />
+      <stop offset="100%" style="stop-color:rgb(6,182,212);stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- "AI" Letters - Bold & Centered -->
+  <text 
+    x="256" 
+    y="320" 
+    font-family="'Playfair Display', serif" 
+    font-size="280" 
+    font-weight="900" 
+    text-anchor="middle" 
+    fill="url(#faviconGradient)"
+    letter-spacing="-10"
+  >
+    AI
+  </text>
+  
+  <!-- Subtle accent dot -->
+  <circle cx="256" cy="150" r="20" fill="url(#faviconGradient)" opacity="0.6"/>
+</svg>

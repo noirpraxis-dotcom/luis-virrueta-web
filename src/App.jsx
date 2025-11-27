@@ -5,59 +5,47 @@ import Header from './components/Header'
 import MobileMenu from './components/MobileMenu'
 import ToggleButton from './components/ToggleButton'
 import HomePage from './pages/HomePage'
-import AboutPage from './pages/AboutPage'
-import StorePage from './pages/StorePage'
-import BooksPage from './pages/BooksPage'
-import BookDetailPage from './pages/BookDetailPage'
-import ProductDetailPage from './pages/ProductDetailPage'
-import HealingSessionsPage from './pages/HealingSessionsPage'
-import PersonalCreationPage from './pages/PersonalCreationPage'
-import PricesPage from './pages/PricesPage'
-import CoursesPage from './pages/CoursesPage'
+import PhilosophyPage from './pages/PhilosophyPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import TermsConditionsPage from './pages/TermsConditionsPage'
 import CookiePolicyPage from './pages/CookiePolicyPage'
 import CookieBanner from './components/CookieBanner'
 import Footer from './components/Footer'
 import WhatsAppButton from './components/WhatsAppButton'
+import SmoothScroll from './components/SmoothScroll'
+import CustomCursor from './components/CustomCursor'
 
 const AppContent = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { t } = useLanguage()
 
   const menuItems = [
-    { name: t('menu.home'), href: '/' },
-    { name: t('menu.about'), href: '/about' },
+    { name: 'Inicio', href: '/' },
+    { name: 'Sobre Mí', href: '/about' },
     { 
-      name: t('menu.healingSessions'),
-      nameShort: t('menu.healingSessionsShort'),
-      href: '/healing-sessions',
+      name: 'Servicios',
+      nameShort: 'Servicios',
+      href: '/servicios',
       subItems: [
-        { name: t('menu.emotionCode'), href: '/healing-sessions#emotion-body-belief' },
-        { name: t('menu.pastLife'), href: '/healing-sessions#past-life-regressions' },
-        { name: t('menu.ilyari'), href: '/healing-sessions#ilyari-somatic' },
-        { name: t('menu.animals'), href: '/healing-sessions#healing-animals' }
+        { name: 'Identidad de Marca', href: '/servicios/identidad-marca' },
+        { name: 'Apps Premium', href: '/servicios/apps-premium' },
+        { name: 'Contenido Digital', href: '/servicios/contenido-digital' },
+        { name: 'Avatares IA', href: '/servicios/avatares-ia' },
+        { name: 'Consultoría Psicológica', href: '/servicios/consultoria-psicologica' }
       ]
     },
-    { name: t('menu.prices'), href: '/prices' },
-    { 
-      name: t('menu.personalCreation'),
-      nameShort: t('menu.personalCreationShort'),
-      href: '/personal-creation',
-      subItems: [
-        { name: t('menu.books'), href: '/personal-creation#books' },
-        { name: t('menu.music'), href: '/personal-creation#music' }
-      ]
-    },
-    { name: t('menu.courses'), href: '/courses' },
-    { name: t('menu.store'), href: '/store' }
+    { name: 'Portafolio', href: '/portafolio' },
+    { name: 'Inversión', href: '/inversion' },
+    { name: 'Contacto', href: '/contacto' }
   ]
 
   return (
     <Router>
-      <div className="relative min-h-screen">
-        {/* Desktop Header - visible en pantallas md y superiores */}
-        <Header menuItems={menuItems} />
+      <SmoothScroll>
+        <CustomCursor />
+        <div className="relative min-h-screen">
+          {/* Desktop Header - visible en pantallas md y superiores */}
+          <Header menuItems={menuItems} />
 
         {/* Toggle Button - visible en pantallas pequeñas y tablet */}
         <ToggleButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen(!isMenuOpen)} />
@@ -79,73 +67,46 @@ const AppContent = () => {
               </div>
             } />
             
-            {/* Página About: Independiente con fondo blanco elegante */}
+            {/* Página Philosophy: Manifiesto Ainimation - Psych × Design × AI */}
             <Route path="/about" element={
               <div className="lg:pt-28">
-                <AboutPage />
+                <PhilosophyPage />
               </div>
             } />
 
-            {/* Página Store: Tienda con productos */}
-            <Route path="/store" element={
+            {/* Página Servicios: Overview de todos los servicios */}
+            <Route path="/servicios" element={
               <div className="lg:pt-28">
-                <StorePage />
+                <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                  <h1 className="text-4xl font-display">Servicios - En construcción</h1>
+                </div>
               </div>
             } />
 
-            {/* Página Store: Detalle de producto individual */}
-            <Route path="/store/:productId" element={
+            {/* Página Portafolio: Casos de éxito */}
+            <Route path="/portafolio" element={
               <div className="lg:pt-28">
-                <ProductDetailPage />
+                <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                  <h1 className="text-4xl font-display">Portafolio - En construcción</h1>
+                </div>
               </div>
             } />
 
-            {/* Página Books: Biblioteca de libros */}
-            <Route path="/books" element={
+            {/* Página Inversión: Precios premium */}
+            <Route path="/inversion" element={
               <div className="lg:pt-28">
-                <BooksPage />
+                <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                  <h1 className="text-4xl font-display">Inversión - En construcción</h1>
+                </div>
               </div>
             } />
 
-            {/* Página Book Detail: Detalle de libro con donación */}
-            <Route path="/books/:bookId" element={
+            {/* Página Contacto */}
+            <Route path="/contacto" element={
               <div className="lg:pt-28">
-                <BookDetailPage />
-              </div>
-            } />
-
-            {/* Página Healing Sessions: Todas las subsecciones en una página */}
-            <Route path="/healing-sessions" element={
-              <div className="lg:pt-28">
-                <HealingSessionsPage />
-              </div>
-            } />
-
-            {/* Página Prices: Precios de sesiones */}
-            <Route path="/prices" element={
-              <div className="lg:pt-28">
-                <PricesPage />
-              </div>
-            } />
-
-            {/* Página Personal Creation: Todas las subsecciones en una página */}
-            <Route path="/personal-creation" element={
-              <div className="lg:pt-28">
-                <PersonalCreationPage />
-              </div>
-            } />
-
-            {/* Página Courses */}
-            <Route path="/courses" element={
-              <div className="lg:pt-28">
-                <CoursesPage />
-              </div>
-            } />
-
-            {/* Páginas Legales */}
-            <Route path="/privacy-policy" element={
-              <div className="lg:pt-28">
-                <CoursesPage />
+                <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                  <h1 className="text-4xl font-display">Contacto - En construcción</h1>
+                </div>
               </div>
             } />
 
@@ -180,7 +141,8 @@ const AppContent = () => {
 
         {/* WhatsApp Button - flotante en todas las páginas */}
         <WhatsAppButton />
-      </div>
+        </div>
+      </SmoothScroll>
     </Router>
   )
 }

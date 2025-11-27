@@ -1,29 +1,29 @@
 import Home from '../components/Home'
 import Hero from '../components/Hero'
-import CallToActionSection from '../components/CallToActionSection'
-import PersonalPhotoSection from '../components/PersonalPhotoSection'
-import CountriesSection from '../components/CountriesSection'
+import AboutLuisSection from '../components/AboutLuisSection'
+import AnimatedStats from '../components/AnimatedStats'
+import ServicesOverview from '../components/ServicesOverview'
 import Testimonials from '../components/Testimonials'
 
 const HomePage = () => {
   return (
     <>
-      {/* Video limpio */}
+      {/* Video limpio de fondo */}
       <Home />
       
-      {/* Nombre cinematográfico con botón Ver más */}
+      {/* Hero: Nombre cinematográfico Ainimation con manifiesto */}
       <Hero />
       
-      {/* Call to Action: Work With Me & WhatsApp Contact */}
-      <CallToActionSection />
+      {/* Sobre Mí: Luis Virrueta - Formación y credenciales */}
+      <AboutLuisSection />
       
-      {/* Personal Photo Section - Artistic */}
-      <PersonalPhotoSection />
+      {/* Estadísticas Animadas: Números que impresionan */}
+      <AnimatedStats />
       
-      {/* Sección de países cinematográfica */}
-      <CountriesSection />
+      {/* Servicios Overview: 5 servicios principales */}
+      <ServicesOverview />
       
-      {/* Testimonios con carrusel */}
+      {/* Testimonios con carrusel (reutilizado) */}
       <Testimonials />
     </>
   )
