@@ -1,5 +1,6 @@
 import { motion, useInView, useMotionValue, useSpring } from 'framer-motion'
 import { useEffect, useRef } from 'react'
+import { TrendingUp, Award } from 'lucide-react'
 
 /**
  * AnimatedStats Component
@@ -60,6 +61,14 @@ const AnimatedStats = () => {
           transition={{ duration: 1 }}
           className="text-center mb-16 sm:mb-20 lg:mb-24"
         >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="mb-6"
+          >
+            <TrendingUp className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-emerald-400 mb-4" strokeWidth={1.5} />
+          </motion.div>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-light text-white mb-6 tracking-[0.1em] font-display">
             RESULTADOS MEDIBLES
           </h2>

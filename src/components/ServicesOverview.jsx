@@ -7,7 +7,9 @@ import {
   Video, 
   Bot, 
   Brain,
-  ArrowRight 
+  ArrowRight,
+  Sparkles,
+  Layers
 } from 'lucide-react'
 
 const ServicesOverview = () => {
@@ -83,8 +85,10 @@ const ServicesOverview = () => {
             transition={{ duration: 1 }}
             className="mb-6 sm:mb-8"
           >
-            <span className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-purple-500/10 via-fuchsia-500/10 to-cyan-500/10 border border-purple-500/30 rounded-full text-purple-400 text-xs sm:text-sm tracking-widest uppercase font-mono mb-6 sm:mb-8">
+            <span className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-purple-500/10 via-fuchsia-500/10 to-cyan-500/10 border border-purple-500/30 rounded-full text-purple-400 text-xs sm:text-sm tracking-widest uppercase font-mono mb-6 sm:mb-8">
+              <Layers className="w-4 h-4" strokeWidth={2} />
               Servicios Premium
+              <Sparkles className="w-4 h-4" strokeWidth={2} />
             </span>
           </motion.div>
 

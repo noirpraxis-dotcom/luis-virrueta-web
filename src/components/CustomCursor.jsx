@@ -78,39 +78,112 @@ const CustomCursor = () => {
 
   return (
     <>
-      {/* Main Cursor */}
+      {/* Premium Brush Cursor */}
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 pointer-events-none z-[9999] mix-blend-difference"
+        className="fixed top-0 left-0 pointer-events-none z-[9999]"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
         }}
       >
-        <motion.div
-          className="w-full h-full rounded-full bg-white"
+        <motion.svg
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
           animate={{
-            scale: isHovering ? 1.5 : 1,
-            opacity: isHovering ? 0.5 : 1,
+            scale: isHovering ? 1.3 : 1,
+            rotate: isHovering ? 15 : 0,
           }}
-          transition={{ type: 'spring', stiffness: 500, damping: 28 }}
-        />
+          transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+          className="drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]"
+        >
+          {/* Brush handle */}
+          <path
+            d="M8 24L16 16L20 12L24 8"
+            stroke="url(#brushGradient)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {/* Brush bristles */}
+          <path
+            d="M24 8L28 4M20 12L24 8M16 16L20 12"
+            stroke="url(#brushGradient)"
+            strokeWidth="2"
+            strokeLinecap="round"
+            opacity="0.7"
+          />
+          {/* Brush tip */}
+          <circle
+            cx="8"
+            cy="24"
+            r="3"
+            fill="url(#brushGradient)"
+            opacity="0.8"
+          />
+          <circle
+            cx="8"
+            cy="24"
+            r="5"
+            fill="url(#brushGradient)"
+            opacity="0.3"
+          />
+          
+          {/* Gradient definition */}
+          <defs>
+            <linearGradient id="brushGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#a855f7" />
+              <stop offset="50%" stopColor="#d946ef" />
+              <stop offset="100%" stopColor="#06b6d4" />
+            </linearGradient>
+          </defs>
+        </motion.svg>
       </motion.div>
 
-      {/* Cursor Trail (Estela) */}
+      {/* Sparkle Trail Effect */}
       <motion.div
-        className="fixed top-0 left-0 w-1 h-1 pointer-events-none z-[9998] mix-blend-difference"
+        className="fixed top-0 left-0 pointer-events-none z-[9998]"
         style={{
           x: cursorX,
           y: cursorY,
         }}
       >
         <motion.div
-          className="w-full h-full rounded-full bg-white"
+          className="relative"
           animate={{
-            scale: isHovering ? 0 : 1,
+            scale: isHovering ? 0 : [0.8, 1.2, 0.8],
+            opacity: isHovering ? 0 : [0.4, 0.7, 0.4],
           }}
-          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-        />
+          transition={{ 
+            duration: 2, 
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          {/* Sparkle particles */}
+          {[0, 1, 2, 3].map((i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 rounded-full bg-gradient-to-r from-purple-400 via-fuchsia-500 to-cyan-400"
+              style={{
+                top: '50%',
+                left: '50%',
+              }}
+              animate={{
+                x: [0, Math.cos(i * Math.PI / 2) * 15],
+                y: [0, Math.sin(i * Math.PI / 2) * 15],
+                opacity: [0.8, 0],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                delay: i * 0.2,
+              }}
+            />
+          ))}
+        </motion.div>
       </motion.div>
 
       {/* Texto del cursor (si existe) */}

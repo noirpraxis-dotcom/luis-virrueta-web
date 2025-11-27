@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { useLanguage } from '../context/LanguageContext'
-import { GraduationCap, Brain, Sparkles, Award } from 'lucide-react'
+import { GraduationCap, Brain, Sparkles, Award, User2, Star } from 'lucide-react'
 
 const AboutLuisSection = () => {
   const { t } = useLanguage()
@@ -54,6 +54,14 @@ const AboutLuisSection = () => {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         {/* Section Title - Mobile First */}
         <div className="text-center mb-16 sm:mb-20 lg:mb-24">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.8 }}
+            className="mb-6 sm:mb-8"
+          >
+            <User2 className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-purple-400 mb-4" strokeWidth={1.5} />
+          </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -171,11 +179,15 @@ const AboutLuisSection = () => {
               className="h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent mx-auto w-24 sm:w-32 mb-6 sm:mb-8"
             />
             
-            <h3 
-              className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-4 sm:mb-6 tracking-[0.1em] sm:tracking-[0.15em] font-display"
-            >
-              FORMACIÓN
-            </h3>
+            <div className="flex items-center justify-center gap-4 mb-4 sm:mb-6">
+              <Star className="w-8 h-8 sm:w-10 sm:h-10 text-fuchsia-400" strokeWidth={1.5} />
+              <h3 
+                className="text-3xl sm:text-4xl lg:text-5xl font-light text-white tracking-[0.1em] sm:tracking-[0.15em] font-display"
+              >
+                FORMACIÓN
+              </h3>
+              <Star className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400" strokeWidth={1.5} />
+            </div>
 
             <motion.div
               initial={{ scaleX: 0 }}
