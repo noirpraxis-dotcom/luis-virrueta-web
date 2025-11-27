@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { useLanguage } from '../context/LanguageContext'
+import { Sparkles, Zap, Heart } from 'lucide-react'
 
 const Hero = () => {
   const { t } = useLanguage()
@@ -36,6 +37,62 @@ const Hero = () => {
       </div>
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 text-center">
+        {/* Floating Icon - Top */}
+        <motion.div
+          initial={{ opacity: 0, y: -20, rotate: -10 }}
+          animate={isInView ? { 
+            opacity: [0.4, 0.7, 0.4], 
+            y: [0, -10, 0],
+            rotate: [-10, 10, -10]
+          } : {}}
+          transition={{ 
+            duration: 4, 
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute top-8 left-1/4 hidden lg:block"
+        >
+          <Sparkles className="w-12 h-12 text-fuchsia-400" strokeWidth={1.5} />
+        </motion.div>
+
+        {/* Floating Icon - Right */}
+        <motion.div
+          initial={{ opacity: 0, x: 20, rotate: 10 }}
+          animate={isInView ? { 
+            opacity: [0.4, 0.7, 0.4], 
+            x: [0, 10, 0],
+            rotate: [10, -10, 10]
+          } : {}}
+          transition={{ 
+            duration: 5, 
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 0.5
+          }}
+          className="absolute top-1/3 right-1/4 hidden lg:block"
+        >
+          <Zap className="w-10 h-10 text-cyan-400" strokeWidth={1.5} />
+        </motion.div>
+
+        {/* Floating Icon - Left */}
+        <motion.div
+          initial={{ opacity: 0, x: -20, rotate: -15 }}
+          animate={isInView ? { 
+            opacity: [0.4, 0.7, 0.4], 
+            x: [0, -10, 0],
+            rotate: [-15, 15, -15]
+          } : {}}
+          transition={{ 
+            duration: 6, 
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1
+          }}
+          className="absolute top-1/2 left-1/4 hidden lg:block"
+        >
+          <Heart className="w-10 h-10 text-purple-400" strokeWidth={1.5} />
+        </motion.div>
+
         {/* Manifesto Opening - Mobile First */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}

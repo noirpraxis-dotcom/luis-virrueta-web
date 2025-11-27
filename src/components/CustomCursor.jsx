@@ -9,18 +9,38 @@ import { motion, useMotionValue, useSpring } from 'framer-motion'
 const CustomCursor = () => {
   const [isHovering, setIsHovering] = useState(false)
   const [cursorText, setCursorText] = useState('')
+  const [sparkles, setSparkles] = useState([])
   
   const cursorX = useMotionValue(-100)
   const cursorY = useMotionValue(-100)
   
-  const springConfig = { damping: 25, stiffness: 700 }
+  // Spring más rápido y responsivo
+  const springConfig = { damping: 20, stiffness: 400 }
   const cursorXSpring = useSpring(cursorX, springConfig)
   const cursorYSpring = useSpring(cursorY, springConfig)
 
   useEffect(() => {
     const moveCursor = (e) => {
+      // Centrar el cursor correctamente (pincel es 32x32, centrar en 16,16)
       cursorX.set(e.clientX - 16)
       cursorY.set(e.clientY - 16)
+    }
+
+    // Crear chispas mágicas al hacer click
+    const createSparkles = (e) => {
+      const newSparkles = Array.from({ length: 8 }, (_, i) => ({
+        id: Date.now() + i,
+        x: e.clientX,
+        y: e.clientY,
+        angle: (i * Math.PI * 2) / 8,
+      }))
+      
+      setSparkles(prev => [...prev, ...newSparkles])
+      
+      // Limpiar chispas después de la animación
+      setTimeout(() => {
+        setSparkles(prev => prev.filter(s => !newSparkles.find(ns => ns.id === s.id)))
+      }, 1000)
     }
 
     const handleMouseEnter = (e) => {
@@ -51,6 +71,7 @@ const CustomCursor = () => {
     }
 
     window.addEventListener('mousemove', moveCursor)
+    window.addEventListener('click', createSparkles)
     
     // Agregar listeners a todos los elementos interactivos
     const interactiveElements = document.querySelectorAll('a, button, [role="button"]')
@@ -61,6 +82,7 @@ const CustomCursor = () => {
 
     return () => {
       window.removeEventListener('mousemove', moveCursor)
+      window.removeEventListener('click', createSparkles)
       interactiveElements.forEach(el => {
         el.removeEventListener('mouseenter', handleMouseEnter)
         el.removeEventListener('mouseleave', handleMouseLeave)
@@ -202,6 +224,62 @@ const CustomCursor = () => {
           {cursorText}
         </motion.div>
       )}
+
+      {/* Chispas Mágicas al Click */}
+      {sparkles.map((sparkle) => (
+        <motion.div
+          key={sparkle.id}
+          className="fixed pointer-events-none z-[9997]"
+          initial={{
+            x: sparkle.x,
+            y: sparkle.y,
+            scale: 0,
+            opacity: 1,
+          }}
+          animate={{
+            x: sparkle.x + Math.cos(sparkle.angle) * 80,
+            y: sparkle.y + Math.sin(sparkle.angle) * 80,
+            scale: [0, 1, 0],
+            opacity: [1, 1, 0],
+          }}
+          transition={{
+            duration: 0.8,
+            ease: [0.34, 1.56, 0.64, 1],
+          }}
+        >
+          {/* Estrella mágica amarilla/dorada */}
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <motion.path
+              d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"
+              fill="url(#sparkleGradient)"
+              initial={{ rotate: 0 }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 0.8, ease: "linear" }}
+            />
+            <motion.path
+              d="M12 5L13.5 10.5L19 12L13.5 13.5L12 19L10.5 13.5L5 12L10.5 10.5L12 5Z"
+              fill="#FCD34D"
+              opacity="0.8"
+              initial={{ rotate: 0 }}
+              animate={{ rotate: -360 }}
+              transition={{ duration: 0.8, ease: "linear" }}
+            />
+            <defs>
+              <radialGradient id="sparkleGradient">
+                <stop offset="0%" stopColor="#FEF3C7" />
+                <stop offset="50%" stopColor="#FCD34D" />
+                <stop offset="100%" stopColor="#F59E0B" />
+              </radialGradient>
+            </defs>
+          </svg>
+        </motion.div>
+      ))}
     </>
   )
 }
