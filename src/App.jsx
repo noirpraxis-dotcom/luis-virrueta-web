@@ -6,6 +6,10 @@ import MobileMenu from './components/MobileMenu'
 import ToggleButton from './components/ToggleButton'
 import HomePage from './pages/HomePage'
 import PhilosophyPage from './pages/PhilosophyPage'
+import ServiciosPage from './pages/ServiciosPage'
+import PortafolioPage from './pages/PortafolioPage'
+import InversionPage from './pages/InversionPage'
+import ContactoPage from './pages/ContactoPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import TermsConditionsPage from './pages/TermsConditionsPage'
 import CookiePolicyPage from './pages/CookiePolicyPage'
@@ -77,36 +81,28 @@ const AppContent = () => {
             {/* Página Servicios: Overview de todos los servicios */}
             <Route path="/servicios" element={
               <div className="lg:pt-28">
-                <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                  <h1 className="text-4xl font-display">Servicios - En construcción</h1>
-                </div>
+                <ServiciosPage />
               </div>
             } />
 
             {/* Página Portafolio: Casos de éxito */}
             <Route path="/portafolio" element={
               <div className="lg:pt-28">
-                <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                  <h1 className="text-4xl font-display">Portafolio - En construcción</h1>
-                </div>
+                <PortafolioPage />
               </div>
             } />
 
             {/* Página Inversión: Precios premium */}
             <Route path="/inversion" element={
               <div className="lg:pt-28">
-                <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                  <h1 className="text-4xl font-display">Inversión - En construcción</h1>
-                </div>
+                <InversionPage />
               </div>
             } />
 
             {/* Página Contacto */}
             <Route path="/contacto" element={
               <div className="lg:pt-28">
-                <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                  <h1 className="text-4xl font-display">Contacto - En construcción</h1>
-                </div>
+                <ContactoPage />
               </div>
             } />
 

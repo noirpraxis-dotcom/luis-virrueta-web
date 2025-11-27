@@ -1,0 +1,381 @@
+import { motion, useInView } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { Send, Mail, MessageSquare, MapPin, Phone, Instagram, Linkedin, CheckCircle2, XCircle } from 'lucide-react'
+
+const ContactoPage = () => {
+  const heroRef = useRef(null)
+  const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    service: '',
+    message: '',
+  })
+
+  const [formStatus, setFormStatus] = useState(null) // 'success', 'error', null
+
+  const services = [
+    'Identidad de Marca',
+    'App Premium',
+    'Contenido Digital',
+    'Avatar IA',
+    'Consultoría Psicoanalítica',
+    'Paquete Custom',
+  ]
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    
+    // Simulación de envío (aquí integrarías con backend real o servicio como EmailJS)
+    console.log('Form submitted:', formData)
+    
+    // Simular éxito
+    setFormStatus('success')
+    
+    // Reset form después de 3 segundos
+    setTimeout(() => {
+      setFormData({ name: '', email: '', phone: '', service: '', message: '' })
+      setFormStatus(null)
+    }, 3000)
+  }
+
+  const contactMethods = [
+    {
+      icon: Mail,
+      title: 'Email',
+      value: 'hola@ainimation.studio',
+      link: 'mailto:hola@ainimation.studio',
+      color: 'from-purple-500 to-purple-600',
+    },
+    {
+      icon: Phone,
+      title: 'WhatsApp',
+      value: '+52 123 456 7890',
+      link: 'https://wa.me/521234567890',
+      color: 'from-emerald-500 to-emerald-600',
+    },
+    {
+      icon: MapPin,
+      title: 'Ubicación',
+      value: 'Ciudad de México, MX',
+      link: null,
+      color: 'from-fuchsia-500 to-fuchsia-600',
+    },
+  ]
+
+  const socialLinks = [
+    { icon: Instagram, url: 'https://instagram.com/ainimation', label: 'Instagram' },
+    { icon: Linkedin, url: 'https://linkedin.com/in/luisvirrueta', label: 'LinkedIn' },
+  ]
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black">
+      {/* Hero Section */}
+      <section ref={heroRef} className="relative py-32 lg:py-40 px-6 lg:px-20 overflow-hidden">
+        {/* Gradient orbs */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl" />
+        </div>
+
+        <div className="relative max-w-7xl mx-auto">
+          {/* Icon */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-8"
+          >
+            <MessageSquare className="w-16 h-16 mx-auto text-purple-400 mb-6" strokeWidth={1.5} />
+          </motion.div>
+
+          {/* Title */}
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="text-5xl lg:text-8xl font-bold text-center mb-8 font-display"
+          >
+            <span className="bg-gradient-to-r from-purple-400 via-fuchsia-500 to-cyan-400 bg-clip-text text-transparent">
+              Conversemos
+            </span>
+          </motion.h1>
+
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.4 }}
+            className="text-xl lg:text-2xl text-white/70 text-center max-w-3xl mx-auto font-light mb-12"
+          >
+            Cuéntame tu visión. Transformémosla en una marca que piensa, siente y perdura.
+          </motion.p>
+
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={isHeroInView ? { scaleX: 1 } : {}}
+            transition={{ duration: 1.5, delay: 0.6 }}
+            className="h-px bg-gradient-to-r from-transparent via-purple-500/40 to-transparent mx-auto w-80"
+          />
+        </div>
+      </section>
+
+      {/* Contact Methods */}
+      <section className="py-12 px-6 lg:px-20">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6">
+            {contactMethods.map((method, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+              >
+                {method.link ? (
+                  <a
+                    href={method.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block h-full"
+                  >
+                    <ContactMethodCard method={method} />
+                  </a>
+                ) : (
+                  <ContactMethodCard method={method} />
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content: Form + Info */}
+      <section className="py-20 px-6 lg:px-20">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16">
+            {/* Form */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-6"
+            >
+              <h2 className="text-3xl lg:text-5xl font-bold mb-8 font-display text-white">
+                Inicia tu proyecto
+              </h2>
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Name */}
+                <div>
+                  <label htmlFor="name" className="block text-white/70 mb-2 text-sm uppercase tracking-wider font-mono">
+                    Nombre completo *
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition-all"
+                    placeholder="Tu nombre"
+                  />
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label htmlFor="email" className="block text-white/70 mb-2 text-sm uppercase tracking-wider font-mono">
+                    Email *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition-all"
+                    placeholder="tu@email.com"
+                  />
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label htmlFor="phone" className="block text-white/70 mb-2 text-sm uppercase tracking-wider font-mono">
+                    WhatsApp
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition-all"
+                    placeholder="+52 123 456 7890"
+                  />
+                </div>
+
+                {/* Service */}
+                <div>
+                  <label htmlFor="service" className="block text-white/70 mb-2 text-sm uppercase tracking-wider font-mono">
+                    Servicio de interés *
+                  </label>
+                  <select
+                    id="service"
+                    name="service"
+                    value={formData.service}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500/50 transition-all appearance-none cursor-pointer"
+                  >
+                    <option value="" className="bg-zinc-900">Selecciona un servicio</option>
+                    {services.map((service, i) => (
+                      <option key={i} value={service} className="bg-zinc-900">{service}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Message */}
+                <div>
+                  <label htmlFor="message" className="block text-white/70 mb-2 text-sm uppercase tracking-wider font-mono">
+                    Cuéntame tu proyecto *
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    rows={6}
+                    className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition-all resize-none"
+                    placeholder="Describe tu visión, objetivos, timeline, presupuesto..."
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <motion.button
+                  type="submit"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full py-4 bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white font-semibold rounded-xl hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 flex items-center justify-center gap-3"
+                >
+                  <Send className="w-5 h-5" />
+                  Enviar Mensaje
+                </motion.button>
+
+                {/* Status Messages */}
+                {formStatus === 'success' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-3 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-400"
+                  >
+                    <CheckCircle2 className="w-5 h-5" />
+                    <span>¡Mensaje enviado! Te responderé en menos de 24 horas.</span>
+                  </motion.div>
+                )}
+
+                {formStatus === 'error' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400"
+                  >
+                    <XCircle className="w-5 h-5" />
+                    <span>Error al enviar. Por favor intenta por email o WhatsApp.</span>
+                  </motion.div>
+                )}
+              </form>
+            </motion.div>
+
+            {/* Info Sidebar */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-12"
+            >
+              {/* Response Time */}
+              <div className="bg-gradient-to-br from-purple-950/50 to-fuchsia-950/50 border border-purple-500/30 rounded-2xl p-8">
+                <h3 className="text-2xl font-bold text-white mb-4 font-display">Tiempo de respuesta</h3>
+                <p className="text-white/70 leading-relaxed mb-6">
+                  Respondo personalmente todos los mensajes en <span className="text-purple-400 font-semibold">menos de 24 horas</span> (días hábiles).
+                </p>
+                <p className="text-white/70 leading-relaxed">
+                  Para proyectos urgentes, contacta directo por <span className="text-emerald-400 font-semibold">WhatsApp</span>.
+                </p>
+              </div>
+
+              {/* What Happens Next */}
+              <div className="space-y-6">
+                <h3 className="text-2xl font-bold text-white font-display">¿Qué sigue?</h3>
+                <div className="space-y-4">
+                  {[
+                    { number: '01', text: 'Revisamos tu mensaje y respondemos en 24h' },
+                    { number: '02', text: 'Agendamos videollamada para conocer tu proyecto' },
+                    { number: '03', text: 'Creamos propuesta personalizada con cotización' },
+                    { number: '04', text: 'Si conectamos, ¡empezamos a crear magia!' },
+                  ].map((step, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: 20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.1 }}
+                      className="flex items-start gap-4"
+                    >
+                      <span className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-fuchsia-400 bg-clip-text text-transparent font-mono">
+                        {step.number}
+                      </span>
+                      <p className="text-white/70 leading-relaxed pt-1">{step.text}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Social Links */}
+              <div>
+                <h3 className="text-xl font-bold text-white mb-4 font-display">Sígueme</h3>
+                <div className="flex gap-4">
+                  {socialLinks.map((social, i) => (
+                    <motion.a
+                      key={i}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      className="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/10 rounded-full hover:border-purple-500/50 transition-all"
+                    >
+                      <social.icon className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+                    </motion.a>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+const ContactMethodCard = ({ method }) => {
+  return (
+    <div className="h-full bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-white/30 transition-all duration-300 group cursor-pointer">
+      <method.icon className="w-10 h-10 text-white/70 group-hover:text-white mb-4 transition-colors" strokeWidth={1.5} />
+      <h3 className="text-white/50 uppercase tracking-wider text-xs font-mono mb-2">{method.title}</h3>
+      <p className={`text-lg font-medium bg-gradient-to-r ${method.color} bg-clip-text text-transparent`}>
+        {method.value}
+      </p>
+    </div>
+  )
+}
+
+export default ContactoPage
