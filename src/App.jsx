@@ -7,6 +7,11 @@ import ToggleButton from './components/ToggleButton'
 import HomePage from './pages/HomePage'
 import PhilosophyPage from './pages/PhilosophyPage'
 import ServiciosPage from './pages/ServiciosPage'
+import IdentidadMarcaPage from './pages/IdentidadMarcaPage'
+import AppsPremiumPage from './pages/AppsPremiumPage'
+import ContenidoDigitalPage from './pages/ContenidoDigitalPage'
+import AvataresIAPage from './pages/AvataresIAPage'
+import ConsultoriaPsicologicaPage from './pages/ConsultoriaPsicologicaPage'
 import PortafolioPage from './pages/PortafolioPage'
 import InversionPage from './pages/InversionPage'
 import ContactoPage from './pages/ContactoPage'
@@ -17,7 +22,6 @@ import CookieBanner from './components/CookieBanner'
 import Footer from './components/Footer'
 import WhatsAppButton from './components/WhatsAppButton'
 import SmoothScroll from './components/SmoothScroll'
-import CustomCursor from './components/CustomCursor'
 
 const AppContent = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -46,7 +50,6 @@ const AppContent = () => {
   return (
     <Router>
       <SmoothScroll>
-        <CustomCursor />
         <div className="relative min-h-screen">
           {/* Desktop Header - visible en pantallas md y superiores */}
           <Header menuItems={menuItems} />
@@ -82,6 +85,37 @@ const AppContent = () => {
             <Route path="/servicios" element={
               <div className="lg:pt-28">
                 <ServiciosPage />
+              </div>
+            } />
+
+            {/* Páginas individuales de servicios */}
+            <Route path="/servicios/identidad-marca" element={
+              <div className="lg:pt-28">
+                <IdentidadMarcaPage />
+              </div>
+            } />
+
+            <Route path="/servicios/apps-premium" element={
+              <div className="lg:pt-28">
+                <AppsPremiumPage />
+              </div>
+            } />
+
+            <Route path="/servicios/contenido-digital" element={
+              <div className="lg:pt-28">
+                <ContenidoDigitalPage />
+              </div>
+            } />
+
+            <Route path="/servicios/avatares-ia" element={
+              <div className="lg:pt-28">
+                <AvataresIAPage />
+              </div>
+            } />
+
+            <Route path="/servicios/consultoria-psicologica" element={
+              <div className="lg:pt-28">
+                <ConsultoriaPsicologicaPage />
               </div>
             } />
 
