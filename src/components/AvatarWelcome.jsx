@@ -115,17 +115,14 @@ const AvatarWelcome = () => {
 
               {/* Video */}
               <div className="absolute inset-[3px] rounded-3xl overflow-hidden border-4 border-black shadow-2xl">
-                <div className="relative w-full h-full">
+                <div className="relative w-full h-full flex items-center justify-center">
                   <iframe
-                    className="absolute w-full h-full scale-110"
+                    className="w-full h-full"
                     src="https://www.youtube.com/embed/XonEErWLLTA?autoplay=0&loop=1&playlist=XonEErWLLTA&controls=1&modestbranding=1&rel=0"
                     title="Welcome to LUXMANIA"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
-                    style={{
-                      objectFit: 'cover'
-                    }}
                   />
                 </div>
               </div>

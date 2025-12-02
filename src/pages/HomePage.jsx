@@ -2,6 +2,7 @@ import Home from '../components/Home'
 import Hero from '../components/Hero'
 import LuisViruettaIntro from '../components/LuisViruettaIntro'
 import AvatarWelcome from '../components/AvatarWelcome'
+import BrandCTA from '../components/BrandCTA'
 import WhyLuxmania from '../components/WhyLuxmania'
 import LuxmaniaMethod from '../components/LuxmaniaMethod'
 import LuxmaniaServices from '../components/LuxmaniaServices'
@@ -16,6 +17,9 @@ const HomePage = () => {
       
       {/* Luis Virrueta Intro: Compact elegant section - BEFORE Hero stats */}
       <LuisViruettaIntro />
+      
+      {/* Brand CTA: Llamado a acción principal - Construye tu marca */}
+      <BrandCTA />
       
       {/* Avatar Welcome: Nuestros avatares te saludan */}
       <AvatarWelcome />
