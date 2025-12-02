@@ -23,96 +23,75 @@ const AvatarWelcome = () => {
         {/* Two column layout - desktop side by side, mobile stacked */}
         <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 lg:gap-16 items-center">
           
-          {/* Left: Content */}
+          {/* Left: Content - CINEMÁTICO Y MINIMALISTA */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-            className="order-2 lg:order-1"
+            className="order-2 lg:order-1 flex flex-col justify-center"
           >
-            {/* Eyebrow with icon - New hierarchy */}
+            {/* Eyebrow - minimal */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="flex items-center gap-3 mb-6"
+              className="flex items-center gap-3 mb-8"
             >
-              <Bot className="w-6 h-6 text-[#a855f7]" />
-              <p className="text-[#d946ef] text-sm font-mono uppercase tracking-widest">
-                Nuestros Avatares Te Dan la Bienvenida
+              <Bot className="w-5 h-5 text-[#a855f7]" strokeWidth={1.5} />
+              <p className="text-[#d946ef]/70 text-xs font-mono uppercase tracking-[0.3em]">
+                Bienvenida
               </p>
             </motion.div>
 
-            {/* Main heading */}
+            {/* Main heading - Tipografía elegante */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-4xl lg:text-6xl font-light text-white mb-6 tracking-tight font-display leading-tight"
+              className="text-4xl lg:text-6xl font-extralight text-white mb-12 tracking-tight font-display leading-tight"
             >
-              Welcome to{' '}
-              <span 
-                className="block lg:inline"
-                style={{
-                  background: 'linear-gradient(135deg, #a8a9ad 0%, #ffffff 20%, #d4d4d8 40%, #fafafa 60%, #e4e4e7 80%, #ffffff 100%)',
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.25))',
-                  letterSpacing: '0.08em'
-                }}
-              >
-                LUXMANIA
+              Conoce nuestros{' '}
+              <span className="block lg:inline bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#e879f9] bg-clip-text text-transparent font-light">
+                Avatares IA
               </span>
             </motion.h2>
 
-            {/* Gradient line */}
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={isInView ? { scaleX: 1 } : {}}
-              transition={{ duration: 1, delay: 0.4 }}
-              className="h-[2px] bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-transparent w-48 mb-8 origin-left"
-            />
-
-            {/* Description - More welcoming, SEO-friendly and extensive */}
+            {/* Description - Reducido y cinemático */}
             <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-white/60 text-lg lg:text-xl font-light leading-relaxed mb-12 max-w-xl"
+            >
+              Presiona play. Descubre cómo la{' '}
+              <span className="text-[#a855f7]">inteligencia artificial</span>{' '}
+              da vida a tu marca con autenticidad y personalidad.
+            </motion.p>
+
+            {/* CTA Button - minimalista */}
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="text-white/90 text-lg lg:text-xl leading-relaxed mb-6"
-            >
-              <span className="text-white font-semibold">Bienvenido.</span> Presiona play y conoce cómo fusionamos{' '}
-              <span className="text-[#a855f7] font-medium">psicología del comportamiento</span>,{' '}
-              <span className="text-[#d946ef] font-medium">diseño estratégico</span> y{' '}
-              <span className="text-[#a855f7] font-medium">tecnología de vanguardia</span>{' '}
-              para crear <span className="text-white font-semibold">avatares digitales que representan tu marca</span> con autenticidad.
-            </motion.p>
-            
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-white/70 text-base lg:text-lg leading-relaxed mb-10"
-            >
-              En LUXMANIA no solo creamos imágenes. Diseñamos <span className="text-white font-medium">identidades visuales inteligentes</span>,{' '}
-              <span className="text-[#d946ef] font-medium">experiencias de marca memorables</span> y{' '}
-              <span className="text-[#a855f7] font-medium">soluciones digitales premium</span> que conectan emocionalmente con tu audiencia.
-            </motion.p>
-
-            {/* CTA Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.7 }}
             >
               <Link to="/servicios/avatares-ia">
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, x: 5 }}
                   whileTap={{ scale: 0.98 }}
-                  className="group bg-gradient-to-r from-[#a855f7] to-[#d946ef] px-8 py-4 rounded-full text-white font-semibold flex items-center gap-3 shadow-2xl"
+                  className="group relative bg-transparent border border-[#d946ef]/30 hover:border-[#d946ef] px-8 py-3 rounded-full text-white font-light text-base tracking-wide transition-all duration-500 overflow-hidden"
                 >
-                  Creación de Avatares IA
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <span className="relative z-10 flex items-center gap-3">
+                    <span className="text-white/70 group-hover:text-white transition-colors">Explorar servicio</span>
+                    <ArrowRight className="w-4 h-4 text-[#d946ef] group-hover:translate-x-1 transition-transform" />
+                  </span>
+                  
+                  {/* Hover gradient fill */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-[#a855f7]/10 to-[#d946ef]/10"
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
                 </motion.button>
               </Link>
             </motion.div>

@@ -79,8 +79,8 @@ const LuxmaniaServices = () => {
     >
       {/* Background gradients */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#0066FF]/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#D4AF37]/5 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#a855f7]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#d946ef]/5 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
@@ -95,7 +95,7 @@ const LuxmaniaServices = () => {
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-[#0066FF] text-sm sm:text-base font-mono uppercase tracking-widest mb-4"
+            className="text-[#a855f7] text-sm sm:text-base font-mono uppercase tracking-widest mb-4"
           >
             Soluciones Integrales
           </motion.p>
@@ -106,7 +106,7 @@ const LuxmaniaServices = () => {
             className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 font-display"
           >
             Para marcas que quieren{' '}
-            <span className="bg-gradient-to-r from-[#0066FF] to-[#D4AF37] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#a855f7] to-[#d946ef] bg-clip-text text-transparent"
               trascender
             </span>
           </motion.h2>
@@ -137,18 +137,18 @@ const LuxmaniaServices = () => {
                 {/* Badge */}
                 {pkg.badge && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                    <span className="bg-[#0066FF] text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wide">
+                    <span className="bg-[#a855f7] text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wide">
                       {pkg.badge}
                     </span>
                   </div>
                 )}
 
                 {/* Card */}
-                <div className={`relative bg-[#1A1A1A] border ${pkg.highlight ? 'border-[#0066FF]/40' : 'border-white/10'} rounded-3xl p-8 h-full hover:border-white/30 transition-all duration-500`}>
+                <div className={`relative bg-[#1A1A1A] border ${pkg.highlight ? 'border-[#a855f7]/40' : 'border-white/10'} rounded-3xl p-8 h-full hover:border-white/30 transition-all duration-500`}>
                   {/* Icon */}
                   <div className="mb-6">
-                    <div className="inline-flex p-4 rounded-2xl bg-gradient-to-br from-[#0066FF]/10 to-[#D4AF37]/10">
-                      <Icon className="w-8 h-8 text-[#0066FF]" strokeWidth={1.5} />
+                    <div className="inline-flex p-4 rounded-2xl bg-gradient-to-br from-[#a855f7]/10 to-[#d946ef]/10">
+                      <Icon className="w-8 h-8 text-[#a855f7]" strokeWidth={1.5} />
                     </div>
                   </div>
 
@@ -160,14 +160,14 @@ const LuxmaniaServices = () => {
 
                   {/* Price */}
                   <div className="mb-8">
-                    <p className="text-[#D4AF37] text-3xl font-bold">{pkg.price}</p>
+                    <p className="text-[#d946ef] text-3xl font-bold">{pkg.price}</p>
                   </div>
 
                   {/* Features */}
                   <ul className="space-y-3 mb-8">
                     {pkg.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-[#0066FF] flex-shrink-0 mt-0.5" strokeWidth={2} />
+                        <Check className="w-5 h-5 text-[#a855f7] flex-shrink-0 mt-0.5" strokeWidth={2} />
                         <span className="text-white/70 text-sm">{feature}</span>
                       </li>
                     ))}
@@ -180,7 +180,7 @@ const LuxmaniaServices = () => {
                     whileTap={{ scale: 0.95 }}
                     className={`block text-center py-3 rounded-full font-medium uppercase text-sm tracking-wide transition-all duration-300 ${
                       pkg.highlight 
-                        ? 'bg-[#0066FF] text-white hover:bg-[#0052CC] shadow-lg shadow-[#0066FF]/20' 
+                        ? 'bg-[#a855f7] text-white hover:bg-[#7c3aed] shadow-lg shadow-[#a855f7]/20' 
                         : 'bg-white/5 text-white hover:bg-white/10 border border-white/20'
                     }`}
                   >
@@ -201,7 +201,7 @@ const LuxmaniaServices = () => {
         >
           <h3 className="text-white text-2xl lg:text-3xl font-bold mb-6 font-display">
             O construye tu solución{' '}
-            <span className="text-[#D4AF37]">a medida</span>
+            <span className="text-[#d946ef]">a medida</span>
           </h3>
           <p className="text-white/60 mb-12 max-w-2xl mx-auto">
             También ofrecemos servicios individuales para complementar tu marca existente
@@ -218,9 +218,9 @@ const LuxmaniaServices = () => {
                   animate={isInView ? { opacity: 1, scale: 1 } : {}}
                   transition={{ duration: 0.4, delay: 1.4 + index * 0.05 }}
                   whileHover={{ y: -5, scale: 1.05 }}
-                  className="bg-[#1A1A1A] border border-white/10 rounded-2xl p-6 hover:border-[#0066FF]/40 transition-all duration-300 cursor-pointer"
+                  className="bg-[#1A1A1A] border border-white/10 rounded-2xl p-6 hover:border-[#a855f7]/40 transition-all duration-300 cursor-pointer"
                 >
-                  <Icon className="w-8 h-8 text-[#0066FF] mx-auto mb-3" strokeWidth={1.5} />
+                  <Icon className="w-8 h-8 text-[#a855f7] mx-auto mb-3" strokeWidth={1.5} />
                   <p className="text-white/70 text-sm font-medium">{service.name}</p>
                 </motion.div>
               )
@@ -239,13 +239,13 @@ const LuxmaniaServices = () => {
             ¿No encuentras lo que buscas?
           </p>
           <p className="text-white text-xl mb-6">
-            <span className="text-[#0066FF] font-semibold">Creamos soluciones personalizadas</span> para tus necesidades específicas
+            <span className="text-[#a855f7] font-semibold">Creamos soluciones personalizadas</span> para tus necesidades específicas
           </p>
           <motion.a
             href="#contacto"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-3 px-10 py-5 bg-[#D4AF37] text-black rounded-full text-base font-bold tracking-wide uppercase hover:bg-[#C49D2F] transition-all duration-300 shadow-lg shadow-[#D4AF37]/20"
+            className="inline-flex items-center gap-3 px-10 py-5 bg-[#d946ef] text-white rounded-full text-base font-bold tracking-wide uppercase hover:bg-[#c026d3] transition-all duration-300 shadow-lg shadow-[#d946ef]/20"
           >
             <span>Hablemos de tu Proyecto</span>
           </motion.a>

@@ -11,21 +11,21 @@ const AboutCreator = () => {
       icon: Brain,
       title: "Psicólogo Clínico & Psicoanalista",
       description: "Licenciatura en Psicología con especialización en psicoanálisis. Entiendo los mecanismos inconscientes de decisión, memoria emocional y construcción de vínculos.",
-      color: "#0066FF",
+      color: "#a855f7",
       years: "2015-2020"
     },
     {
       icon: Palette,
       title: "Diseñador Multidisciplinario",
       description: "8+ años diseñando identidades visuales, motion graphics, experiencias digitales y branding estratégico para marcas premium y startups.",
-      color: "#D4AF37",
+      color: "#d946ef",
       years: "2016-Presente"
     },
     {
       icon: Code,
       title: "Desarrollador Full-stack & Especialista IA",
       description: "React, Node.js, Python. Fine-tuning de modelos LLM, automatización con IA, desarrollo de apps premium y experiencias interactivas.",
-      color: "#0066FF",
+      color: "#e879f9",
       years: "2020-Presente"
     }
   ]
@@ -84,8 +84,8 @@ const AboutCreator = () => {
     >
       {/* Background gradients */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 -right-20 w-96 h-96 bg-[#0066FF]/8 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -left-20 w-96 h-96 bg-[#D4AF37]/8 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 -right-20 w-96 h-96 bg-[#a855f7]/8 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 -left-20 w-96 h-96 bg-[#d946ef]/8 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
@@ -100,7 +100,7 @@ const AboutCreator = () => {
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-[#D4AF37] text-sm sm:text-base font-mono uppercase tracking-widest mb-4"
+            className="text-[#d946ef] text-sm sm:text-base font-mono uppercase tracking-widest mb-4"
           >
             El Creador
           </motion.p>
@@ -111,7 +111,7 @@ const AboutCreator = () => {
             className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 font-display"
           >
             El diseñador que entiende{' '}
-            <span className="bg-gradient-to-r from-[#0066FF] to-[#D4AF37] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#a855f7] to-[#d946ef] bg-clip-text text-transparent"
               tu mente
             </span>
           </motion.h2>
@@ -136,9 +136,9 @@ const AboutCreator = () => {
           >
             <div className="relative aspect-[3/4] overflow-hidden rounded-3xl shadow-2xl border border-white/10 group">
               {/* Placeholder for photo */}
-              <div className="w-full h-full bg-gradient-to-br from-[#0066FF]/20 via-[#1A1A1A] to-[#D4AF37]/20 flex items-center justify-center">
+              <div className="w-full h-full bg-gradient-to-br from-[#a855f7]/20 via-[#1A1A1A] to-[#d946ef]/20 flex items-center justify-center">
                 <div className="text-center px-6">
-                  <Sparkles className="w-16 h-16 mx-auto text-[#0066FF] mb-4" strokeWidth={1.5} />
+                  <Sparkles className="w-16 h-16 mx-auto text-[#a855f7] mb-4" strokeWidth={1.5} />
                   <p className="text-white/60 text-sm font-mono">Tu foto profesional</p>
                   <p className="text-white/30 text-xs font-mono mt-2">Actualizar imagen</p>
                 </div>
@@ -148,12 +148,12 @@ const AboutCreator = () => {
               <motion.div
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
-                className="absolute inset-0 bg-gradient-to-t from-[#0066FF]/30 via-transparent to-transparent"
+                className="absolute inset-0 bg-gradient-to-t from-[#a855f7]/30 via-transparent to-transparent"
               />
             </div>
 
             {/* Decorative frame */}
-            <div className="absolute -inset-4 border border-[#0066FF]/20 rounded-3xl -z-10" />
+            <div className="absolute -inset-4 border border-[#a855f7]/20 rounded-3xl -z-10" />
           </motion.div>
 
           {/* Text Content */}
@@ -172,7 +172,7 @@ const AboutCreator = () => {
                 initial={{ scaleX: 0 }}
                 animate={isInView ? { scaleX: 1 } : {}}
                 transition={{ duration: 1, delay: 1 }}
-                className="h-px bg-gradient-to-r from-[#0066FF] via-[#D4AF37]/50 to-transparent w-56"
+                className="h-px bg-gradient-to-r from-[#a855f7] via-[#d946ef]/50 to-transparent w-56"
               />
             </div>
 
@@ -186,7 +186,7 @@ const AboutCreator = () => {
               Detrás de cada compra, un deseo inconsciente.
             </p>
             <p className="text-white/70 text-base lg:text-lg leading-relaxed">
-              Entonces me pregunté: <span className="text-[#0066FF] italic">¿Y si aplicáramos esto al branding?</span>
+              Entonces me pregunté: <span className="text-[#a855f7] italic">¿Y si aplicáramos esto al branding?</span>
             </p>
 
             {/* Quote */}
@@ -194,9 +194,9 @@ const AboutCreator = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 1.2 }}
-              className="border-l-2 border-[#D4AF37]/40 pl-6 py-4 mt-8"
+              className="border-l-2 border-[#d946ef]/40 pl-6 py-4 mt-8"
             >
-              <p className="text-[#D4AF37] text-lg lg:text-xl italic font-light">
+              <p className="text-[#d946ef] text-lg lg:text-xl italic font-light">
                 "Hoy, LUXMANIA es la fusión de dos mundos: la precisión psicológica del análisis humano 
                 y la belleza estratégica del diseño."
               </p>
@@ -225,7 +225,7 @@ const AboutCreator = () => {
               initial={{ scaleX: 0 }}
               animate={isInView ? { scaleX: 1 } : {}}
               transition={{ duration: 1, delay: 1.6 }}
-              className="h-px bg-gradient-to-r from-transparent via-[#0066FF]/40 to-transparent mx-auto w-80"
+              className="h-px bg-gradient-to-r from-transparent via-[#a855f7]/40 to-transparent mx-auto w-80"
             />
           </div>
 
@@ -241,9 +241,9 @@ const AboutCreator = () => {
                   whileHover={{ y: -12, scale: 1.03 }}
                   className="relative group"
                 >
-                  <div className="bg-[#1A1A1A] border border-white/10 rounded-3xl p-10 h-full hover:border-white/20 transition-all duration-500 hover:shadow-2xl hover:shadow-[#0066FF]/10">
+                  <div className="bg-[#1A1A1A] border border-white/10 rounded-3xl p-10 h-full hover:border-white/20 transition-all duration-500 hover:shadow-2xl hover:shadow-[#a855f7]/10">
                     {/* Year badge */}
-                    <div className="text-[#D4AF37] text-xs font-mono uppercase tracking-widest mb-6">
+                    <div className="text-[#d946ef] text-xs font-mono uppercase tracking-widest mb-6">
                       {skill.years}
                     </div>
                     
@@ -285,7 +285,7 @@ const AboutCreator = () => {
           className="mb-24"
         >
           <div className="text-center mb-16">
-            <Lightbulb className="w-12 h-12 text-[#D4AF37] mx-auto mb-6" strokeWidth={1.5} />
+            <Lightbulb className="w-12 h-12 text-[#d946ef] mx-auto mb-6" strokeWidth={1.5} />
             <h4 className="text-3xl lg:text-5xl font-light text-white mb-6 font-display tracking-wide">
               Mi Metodología
             </h4>
@@ -304,9 +304,9 @@ const AboutCreator = () => {
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.6, delay: 2.4 + index * 0.1 }}
                   whileHover={{ y: -8 }}
-                  className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-[#0066FF]/50 transition-all duration-500"
+                  className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-[#a855f7]/50 transition-all duration-500"
                 >
-                  <Icon className="w-10 h-10 text-[#0066FF] mb-6" strokeWidth={1.5} />
+                  <Icon className="w-10 h-10 text-[#a855f7] mb-6" strokeWidth={1.5} />
                   <h5 className="text-white text-lg font-semibold mb-4">
                     {item.title}
                   </h5>
@@ -334,7 +334,7 @@ const AboutCreator = () => {
               initial={{ scaleX: 0 }}
               animate={isInView ? { scaleX: 1 } : {}}
               transition={{ duration: 1, delay: 3 }}
-              className="h-px bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent mx-auto w-80"
+              className="h-px bg-gradient-to-r from-transparent via-[#d946ef]/40 to-transparent mx-auto w-80"
             />
           </div>
 
@@ -349,7 +349,7 @@ const AboutCreator = () => {
                   transition={{ duration: 0.6, delay: 3.2 + index * 0.1 }}
                   className="text-center"
                 >
-                  <Icon className="w-12 h-12 text-[#0066FF] mx-auto mb-4" strokeWidth={1.5} />
+                  <Icon className="w-12 h-12 text-[#a855f7] mx-auto mb-4" strokeWidth={1.5} />
                   <div className="text-4xl lg:text-5xl font-bold text-white mb-2 font-display">
                     {item.number}
                   </div>
@@ -367,10 +367,10 @@ const AboutCreator = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 3.6 }}
-          className="text-center bg-gradient-to-br from-[#0066FF]/10 via-[#1A1A1A] to-[#D4AF37]/10 border border-white/10 rounded-3xl p-12 lg:p-16"
+          className="text-center bg-gradient-to-br from-[#a855f7]/10 via-[#1A1A1A] to-[#d946ef]/10 border border-white/10 rounded-3xl p-12 lg:p-16"
         >
           <h4 className="text-3xl lg:text-4xl font-light text-white mb-6 font-display">
-            ¿Listo para crear una marca que <span className="text-[#0066FF] font-semibold">realmente conecte</span>?
+            ¿Listo para crear una marca que <span className="text-[#a855f7] font-semibold">realmente conecte</span>?
           </h4>
           <p className="text-white/70 text-lg mb-8 max-w-2xl mx-auto">
             Agenda una sesión estratégica gratuita y descubre cómo la psicología puede transformar tu branding
@@ -379,7 +379,7 @@ const AboutCreator = () => {
             href="#contacto"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-block bg-gradient-to-r from-[#0066FF] to-[#D4AF37] px-12 py-5 rounded-full text-white font-semibold text-lg shadow-2xl"
+            className="inline-block bg-gradient-to-r from-[#a855f7] to-[#d946ef] px-12 py-5 rounded-full text-white font-semibold text-lg shadow-2xl"
           >
             Agenda tu sesión gratuita
           </motion.a>

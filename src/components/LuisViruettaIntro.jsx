@@ -59,164 +59,95 @@ const LuisViruettaIntro = () => {
             </div>
           </motion.div>
 
-          {/* Right: Content */}
+          {/* Right: Content - CINEMÁTICO Y MINIMALISTA */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-            className="order-1 lg:order-2"
+            className="order-1 lg:order-2 flex flex-col justify-center"
           >
-            {/* Eyebrow */}
+            {/* Eyebrow - minimal */}
             <motion.p
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-[#d946ef] text-sm font-mono uppercase tracking-widest mb-4"
+              className="text-[#d946ef]/70 text-xs font-mono uppercase tracking-[0.3em] mb-6"
             >
-              ¿Por Qué Creé LUXMANIA?
+              Fundador
             </motion.p>
 
-            {/* Name - More compact */}
+            {/* Name - Tipografía elegante y grande */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-4xl lg:text-6xl font-light text-white mb-5 tracking-tight font-display"
+              className="text-5xl lg:text-7xl font-extralight text-white mb-4 tracking-tight font-display leading-[0.95]"
             >
-              Luis Virrueta
+              Luis
+              <br />
+              <span className="bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#e879f9] bg-clip-text text-transparent font-light">
+                Virrueta
+              </span>
             </motion.h2>
 
-            {/* Gradient line */}
-            <motion.div
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, delay: 0.4 }}
-              className="h-[2px] bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-transparent w-48 mb-8 origin-left"
-            />
-
-            {/* Main hook - Why LUXMANIA was created - More compact */}
+            {/* Subtitle - elegante */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="text-white text-xl lg:text-2xl font-light leading-relaxed mb-7"
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-white/50 text-sm font-light tracking-[0.2em] uppercase mb-10 font-mono"
             >
-              Veía que la mayoría de las marcas <span className="text-white/60">solo se preocupan por verse bien</span>. 
-              Pero <span className="text-[#a855f7] font-medium">ignoraban cómo funciona el cerebro humano</span> y 
-              qué <span className="text-[#d946ef] font-medium">realmente activa las decisiones</span>.
+              Psych × Design × Tech
             </motion.p>
 
-            {/* Supporting copy - Three key credentials - More compact */}
+            {/* Quote cinemático - mensaje central */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="relative mb-12"
+            >
+              <div className="absolute -left-4 top-0 text-6xl text-[#a855f7]/20 font-serif leading-none">"</div>
+              <p className="text-white/90 text-2xl lg:text-3xl font-extralight leading-relaxed italic pl-8">
+                Diseño marcas que se{' '}
+                <span className="text-[#d946ef] not-italic font-light">sienten</span>{' '}
+                antes de{' '}
+                <span className="text-[#a855f7] not-italic font-light">entenderse</span>
+              </p>
+            </motion.div>
+
+            {/* CTA Button - minimalista y elegante */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="space-y-3 mb-8"
-            >
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full bg-[#a855f7] mt-1.5 flex-shrink-0" />
-                <p className="text-white/80 text-base lg:text-lg leading-relaxed">
-                  Entiendo <span className="text-white font-semibold">cómo funciona el inconsciente</span> y qué mecanismos activan decisiones de compra
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full bg-[#d946ef] mt-1.5 flex-shrink-0" />
-                <p className="text-white/80 text-base lg:text-lg leading-relaxed">
-                  Diseño identidades visuales que <span className="text-white font-semibold">hablan directamente a las emociones</span> de tu audiencia
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full bg-[#a855f7] mt-1.5 flex-shrink-0" />
-                <p className="text-white/80 text-base lg:text-lg leading-relaxed">
-                  Desarrollo experiencias digitales que <span className="text-white font-semibold">construyen vínculos inconscientes</span> con tu marca
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Experience badges/chips - Compact to fit in one line on mobile */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.65 }}
-              className="flex flex-wrap gap-2 mb-8"
-            >
-              <div className="bg-gradient-to-r from-[#a855f7]/20 to-[#a855f7]/10 backdrop-blur-sm border border-[#a855f7]/30 rounded-full px-3 py-2 flex items-center gap-2">
-                <Brain className="w-4 h-4 text-[#a855f7]" strokeWidth={2} />
-                <div>
-                  <p className="text-white text-xs font-semibold">Psicología</p>
-                  <p className="text-white/60 text-[10px]">2015 - Presente</p>
-                </div>
-              </div>
-              
-              <div className="bg-gradient-to-r from-[#d946ef]/20 to-[#d946ef]/10 backdrop-blur-sm border border-[#d946ef]/30 rounded-full px-3 py-2 flex items-center gap-2">
-                <Palette className="w-4 h-4 text-[#d946ef]" strokeWidth={2} />
-                <div>
-                  <p className="text-white text-xs font-semibold">Diseño</p>
-                  <p className="text-white/60 text-[10px]">8+ años</p>
-                </div>
-              </div>
-              
-              <div className="bg-gradient-to-r from-[#e879f9]/20 to-[#e879f9]/10 backdrop-blur-sm border border-[#e879f9]/30 rounded-full px-3 py-2 flex items-center gap-2">
-                <Code className="w-4 h-4 text-[#e879f9]" strokeWidth={2} />
-                <div>
-                  <p className="text-white text-xs font-semibold">Dev Tech</p>
-                  <p className="text-white/60 text-[10px]">2020 - Presente</p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Value proposition - More compact */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.7 }}
-              className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5 lg:p-7 mb-8"
-            >
-              <p className="text-white/70 text-base lg:text-lg leading-relaxed italic">
-                "No diseño para que tu marca <span className="text-white not-italic">se vea bien</span>. 
-                Diseño para que tu audiencia <span className="text-[#a855f7] font-semibold not-italic">sienta, recuerde y actúe</span>."
-              </p>
-            </motion.div>
-
-            {/* CTA Button - More compact */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.8 }}
             >
               <Link to="/sobre-mi">
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, x: 5 }}
                   whileTap={{ scale: 0.98 }}
-                  className="group relative bg-gradient-to-r from-[#a855f7] to-[#d946ef] px-8 py-4 rounded-full text-white font-semibold text-lg shadow-2xl overflow-hidden"
+                  className="group relative bg-transparent border border-[#d946ef]/30 hover:border-[#d946ef] px-8 py-3 rounded-full text-white font-light text-base tracking-wide transition-all duration-500 overflow-hidden"
                 >
                   <span className="relative z-10 flex items-center gap-3">
-                    Conoce mi historia completa
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    <span className="text-white/70 group-hover:text-white transition-colors">Conocer más</span>
+                    <ArrowRight className="w-4 h-4 text-[#d946ef] group-hover:translate-x-1 transition-transform" />
                   </span>
                   
-                  {/* Hover effect */}
+                  {/* Hover gradient fill */}
                   <motion.div
-                    className="absolute inset-0 bg-white/20"
-                    initial={{ x: '-100%' }}
-                    whileHover={{ x: '100%' }}
-                    transition={{ duration: 0.5 }}
+                    className="absolute inset-0 bg-gradient-to-r from-[#a855f7]/10 to-[#d946ef]/10"
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
                   />
                 </motion.button>
               </Link>
-
-              <p className="text-white/40 text-sm mt-4 font-mono">
-                → Descubre cómo la psicología transforma el branding
-              </p>
             </motion.div>
           </motion.div>
         </div>

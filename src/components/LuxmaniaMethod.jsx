@@ -14,7 +14,7 @@ const LuxmaniaMethod = () => {
       title: "PSICOANÁLISIS DE MARCA",
       description: "No empezamos dibujando. Empezamos escuchando.",
       details: "¿Quién es tu cliente ideal? ¿Qué arquetipo representa tu marca? ¿Qué emociones quieres activar?",
-      color: "#0066FF"
+      color: "#a855f7"
     },
     {
       number: "02",
@@ -22,7 +22,7 @@ const LuxmaniaMethod = () => {
       title: "ESTRATEGIA SIMBÓLICA",
       description: "Definimos colores, formas y narrativas basadas en psicología del comportamiento.",
       details: "Cada decisión tiene un porqué científico y emocional.",
-      color: "#D4AF37"
+      color: "#d946ef"
     },
     {
       number: "03",
@@ -30,7 +30,7 @@ const LuxmaniaMethod = () => {
       title: "DISEÑO CONSCIENTE",
       description: "Creamos tu identidad visual: desde el logo hasta la experiencia digital completa.",
       details: "Hermoso, sí. Pero sobre todo, estratégico.",
-      color: "#0066FF"
+      color: "#e879f9"
     },
     {
       number: "04",
@@ -38,7 +38,7 @@ const LuxmaniaMethod = () => {
       title: "ACTIVACIÓN E IMPACTO",
       description: "Lanzamos tu marca al mundo con un sistema completo.",
       details: "Web, contenido, fotografía, animaciones. Todo alineado a tu arquetipo de marca.",
-      color: "#D4AF37"
+      color: "#d946ef"
     }
   ]
 
@@ -50,8 +50,8 @@ const LuxmaniaMethod = () => {
     >
       {/* Decorative gradient orbs */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-[#0066FF]/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-[#D4AF37]/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-[#a855f7]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-[#d946ef]/10 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
@@ -66,7 +66,7 @@ const LuxmaniaMethod = () => {
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-[#0066FF] text-sm sm:text-base font-mono uppercase tracking-widest mb-4"
+            className="text-[#a855f7] text-sm sm:text-base font-mono uppercase tracking-widest mb-4"
           >
             El Método Luxmania
           </motion.p>
@@ -77,7 +77,7 @@ const LuxmaniaMethod = () => {
             className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 font-display"
           >
             Donde el diseño encuentra{' '}
-            <span className="bg-gradient-to-r from-[#0066FF] to-[#D4AF37] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#a855f7] to-[#d946ef] bg-clip-text text-transparent">
               la mente inconsciente
             </span>
           </motion.h2>
@@ -85,7 +85,7 @@ const LuxmaniaMethod = () => {
             initial={{ scaleX: 0 }}
             animate={isInView ? { scaleX: 1 } : {}}
             transition={{ duration: 1, delay: 0.5 }}
-            className="h-px bg-gradient-to-r from-transparent via-[#0066FF]/40 to-transparent mx-auto w-80"
+            className="h-px bg-gradient-to-r from-transparent via-[#a855f7]/40 to-transparent mx-auto w-80"
           />
         </motion.div>
 
@@ -102,7 +102,7 @@ const LuxmaniaMethod = () => {
                 whileHover={{ y: -8, scale: 1.02 }}
                 className="relative group"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#0066FF]/5 to-[#D4AF37]/5 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#a855f7]/5 to-[#d946ef]/5 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
                 <div className="relative bg-[#1A1A1A] border border-white/10 rounded-3xl p-8 lg:p-10 h-full hover:border-white/20 transition-all duration-500">
                   {/* Number Badge */}
                   <div className="flex items-start justify-between mb-6">
@@ -160,7 +160,7 @@ const LuxmaniaMethod = () => {
             href="#servicios"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-3 px-10 py-5 bg-[#0066FF] text-white rounded-full text-base font-medium tracking-wide uppercase hover:bg-[#0052CC] transition-all duration-300 shadow-lg shadow-[#0066FF]/20 hover:shadow-[#0066FF]/40"
+            className="inline-flex items-center gap-3 px-10 py-5 bg-[#a855f7] text-white rounded-full text-base font-medium tracking-wide uppercase hover:bg-[#7c3aed] transition-all duration-300 shadow-lg shadow-[#a855f7]/20 hover:shadow-[#a855f7]/40"
           >
             <span>Explorar Servicios</span>
             <Sparkles className="w-5 h-5" />
