@@ -60,20 +60,19 @@ const Header = ({ menuItems }) => {
                   >
                     LUX
                   </span>
-                  {/* MANIA - Animado: blanco completo → colores corriendo → blanco */}
+                  {/* MANIA - Animado con degradados morado/azul/fucsia */}
                   <motion.span
                     animate={{
-                      backgroundPosition: ['0% 50%', '200% 50%', '400% 50%']
+                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
                     }}
                     transition={{
-                      duration: 10,
+                      duration: 8,
                       repeat: Infinity,
-                      ease: [0.4, 0, 0.2, 1],
-                      times: [0, 0.5, 1]
+                      ease: "linear"
                     }}
                     style={{
-                      background: 'linear-gradient(90deg, #ffffff 0%, #ffffff 15%, #a855f7 20%, #6366f1 25%, #d946ef 30%, #e879f9 35%, #8b5cf6 40%, #ffffff 45%, #ffffff 60%, #a855f7 65%, #6366f1 70%, #d946ef 75%, #e879f9 80%, #8b5cf6 85%, #ffffff 90%, #ffffff 100%)',
-                      backgroundSize: '400% 100%',
+                      background: 'linear-gradient(90deg, #ffffff 0%, #a855f7 15%, #6366f1 30%, #d946ef 45%, #e879f9 60%, #8b5cf6 75%, #ffffff 90%, #ffffff 100%)',
+                      backgroundSize: '200% 100%',
                       WebkitBackgroundClip: 'text',
                       backgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',

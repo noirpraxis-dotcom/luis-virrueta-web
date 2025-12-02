@@ -3,6 +3,7 @@ import Hero from '../components/Hero'
 import LuisViruettaIntro from '../components/LuisViruettaIntro'
 import AvatarWelcome from '../components/AvatarWelcome'
 import BrandCTA from '../components/BrandCTA'
+import ShowcaseCreations from '../components/ShowcaseCreations'
 import WhyLuxmania from '../components/WhyLuxmania'
 import LuxmaniaMethod from '../components/LuxmaniaMethod'
 import LuxmaniaServices from '../components/LuxmaniaServices'
@@ -21,6 +22,12 @@ const HomePage = () => {
       {/* Brand CTA: Llamado a acción principal - Construye tu marca */}
       <BrandCTA />
       
+      {/* Showcase Creations: Muestra de trabajos con videos */}
+      <ShowcaseCreations />
+      
+      {/* Servicios y Paquetes: Essential, Professional, Luxury */}
+      <LuxmaniaServices />
+      
       {/* Avatar Welcome: Nuestros avatares te saludan */}
       <AvatarWelcome />
       
@@ -32,9 +39,6 @@ const HomePage = () => {
       
       {/* El Método LUXMANIA: Las 4 fases del proceso */}
       <LuxmaniaMethod />
-      
-      {/* Servicios y Paquetes: Essential, Professional, Luxury */}
-      <LuxmaniaServices />
       
       {/* Sobre Mí: Luis Virrueta - Psicólogo, Diseñador, Developer */}
       <AboutCreator />

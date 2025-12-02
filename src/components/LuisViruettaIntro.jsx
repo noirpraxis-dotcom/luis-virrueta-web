@@ -5,14 +5,16 @@ import { ArrowRight, Brain, Sparkles, Palette, Code } from 'lucide-react'
 const LuisViruettaIntro = () => {
   return (
     <section className="relative bg-black py-16 lg:py-24 overflow-hidden">
-      {/* Gradient background effects - Sutiles fucsia/morado/azul */}
+      {/* Gradient background effects - Intensos y luminosos fucsia/morado/azul */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Degradado principal - fucsia/morado hacia la foto */}
-        <div className="absolute top-[15%] right-[20%] w-[700px] h-[700px] bg-gradient-to-br from-[#d946ef]/18 via-[#a855f7]/14 to-[#7c3aed]/10 rounded-full blur-3xl" />
-        {/* Degradado secundario - azul/violeta sutil */}
-        <div className="absolute top-[35%] right-[28%] w-[550px] h-[550px] bg-gradient-to-bl from-[#6366f1]/12 via-[#8b5cf6]/8 to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-[15%] right-[20%] w-[700px] h-[700px] bg-gradient-to-br from-[#d946ef]/25 via-[#a855f7]/20 to-[#7c3aed]/15 rounded-full blur-3xl" />
+        {/* Degradado secundario - azul/violeta intenso */}
+        <div className="absolute top-[35%] right-[28%] w-[550px] h-[550px] bg-gradient-to-bl from-[#6366f1]/20 via-[#8b5cf6]/15 to-transparent rounded-full blur-3xl" />
         {/* Degradado inferior - fucsia difuminado hacia abajo */}
-        <div className="absolute bottom-[-180px] right-[22%] w-[850px] h-[850px] bg-gradient-to-t from-[#d946ef]/12 via-[#c026d3]/8 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-[-180px] right-[22%] w-[850px] h-[850px] bg-gradient-to-t from-[#d946ef]/20 via-[#c026d3]/15 to-transparent rounded-full blur-3xl" />
+        {/* Degradado izquierdo - complemento luminoso */}
+        <div className="absolute top-[50%] left-[10%] w-[400px] h-[400px] bg-gradient-to-br from-[#a855f7]/15 via-[#e879f9]/10 to-transparent rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">

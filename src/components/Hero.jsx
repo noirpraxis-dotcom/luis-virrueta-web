@@ -315,43 +315,22 @@ const Hero = () => {
           {t('hero.subtitle')}
         </motion.p>
 
-        {/* CTA Buttons - Doble acción */}
+        {/* CTA Button - Arquetipos */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, delay: 0.8 }}
-          className="flex flex-col sm:flex-row justify-center gap-3 items-center"
+          className="flex justify-center"
         >
-          {/* Primary CTA */}
-          <motion.a
-            href="#metodo"
-            whileHover={{ scale: 1.02, x: 5 }}
-            whileTap={{ scale: 0.98 }}
-            className="group relative bg-transparent border border-[#d946ef]/30 hover:border-[#d946ef] px-7 py-2.5 rounded-full text-white font-light text-sm tracking-wide transition-all duration-500 overflow-hidden"
-          >
-            <span className="relative z-10 flex items-center gap-2">
-              <span className="text-white/70 group-hover:text-white transition-colors">{t('hero.cta')}</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#d946ef] group-hover:translate-x-1 transition-transform" />
-            </span>
-            
-            {/* Hover gradient fill */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-[#a855f7]/10 to-[#d946ef]/10"
-              initial={{ opacity: 0 }}
-              whileHover={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            />
-          </motion.a>
-
           {/* Archetipos CTA */}
           <motion.button
             onClick={() => setIsArchetypesModalOpen(true)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="group px-7 py-2.5 bg-white/5 backdrop-blur-sm text-white/80 rounded-full font-light text-sm tracking-wide border border-white/10 hover:bg-white/10 hover:border-[#a855f7]/40 transition-all duration-300 flex items-center gap-2"
+            className="group px-8 py-3 bg-gradient-to-r from-[#a855f7] to-[#d946ef] text-white rounded-full font-medium text-sm tracking-wide hover:shadow-lg hover:shadow-[#a855f7]/50 transition-all duration-300 flex items-center gap-2"
           >
-            <Sparkles className="w-3.5 h-3.5 text-[#a855f7]" />
-            <span className="group-hover:text-white transition-colors">Descubre tu Arquetipo</span>
+            <Sparkles className="w-4 h-4" />
+            <span>Descubre tu Arquetipo</span>
           </motion.button>
         </motion.div>
 
