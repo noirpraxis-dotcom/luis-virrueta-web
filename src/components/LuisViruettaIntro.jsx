@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Brain, Sparkles } from 'lucide-react'
+import { ArrowRight, Brain, Sparkles, Palette, Code } from 'lucide-react'
 
 const LuisViruettaIntro = () => {
   return (
@@ -135,6 +135,39 @@ const LuisViruettaIntro = () => {
                 <p className="text-white/80 text-lg leading-relaxed">
                   Desarrollo experiencias digitales que <span className="text-white font-semibold">construyen vínculos inconscientes</span> con tu marca
                 </p>
+              </div>
+            </motion.div>
+
+            {/* Experience badges/chips */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.65 }}
+              className="flex flex-wrap gap-4 mb-10"
+            >
+              <div className="bg-gradient-to-r from-[#0066FF]/20 to-[#0066FF]/10 backdrop-blur-sm border border-[#0066FF]/30 rounded-full px-6 py-3 flex items-center gap-3">
+                <Brain className="w-5 h-5 text-[#0066FF]" strokeWidth={2} />
+                <div>
+                  <p className="text-white text-sm font-semibold">Psicología</p>
+                  <p className="text-white/60 text-xs">2015 - Presente</p>
+                </div>
+              </div>
+              
+              <div className="bg-gradient-to-r from-[#D4AF37]/20 to-[#D4AF37]/10 backdrop-blur-sm border border-[#D4AF37]/30 rounded-full px-6 py-3 flex items-center gap-3">
+                <Palette className="w-5 h-5 text-[#D4AF37]" strokeWidth={2} />
+                <div>
+                  <p className="text-white text-sm font-semibold">Diseño</p>
+                  <p className="text-white/60 text-xs">8+ años</p>
+                </div>
+              </div>
+              
+              <div className="bg-gradient-to-r from-[#0066FF]/20 to-[#0066FF]/10 backdrop-blur-sm border border-[#0066FF]/30 rounded-full px-6 py-3 flex items-center gap-3">
+                <Code className="w-5 h-5 text-[#0066FF]" strokeWidth={2} />
+                <div>
+                  <p className="text-white text-sm font-semibold">Desarrollo IA</p>
+                  <p className="text-white/60 text-xs">2020 - Presente</p>
+                </div>
               </div>
             </motion.div>
 
