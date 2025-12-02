@@ -5,16 +5,14 @@ import { ArrowRight, Brain, Sparkles, Palette, Code } from 'lucide-react'
 const LuisViruettaIntro = () => {
   return (
     <section className="relative bg-black py-16 lg:py-24 overflow-hidden">
-      {/* Transición sutil superior */}
-      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/0 via-black/30 to-black pointer-events-none" />
-      
-      {/* Transición sutil inferior */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/0 via-black/30 to-black pointer-events-none" />
-      
-      {/* Gradient background effects - Elegante azul + fucsia MÁS VISIBLES */}
+      {/* Gradient background effects - Premium cinemático con azules y morados */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-gradient-to-br from-[#7c3aed]/15 via-[#a855f7]/20 to-[#6366f1]/12 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-gradient-to-tl from-[#d946ef]/15 via-[#c026d3]/20 to-[#8b5cf6]/12 rounded-full blur-3xl" />
+        {/* Degradado superior - azul/morado hacia la foto */}
+        <div className="absolute top-[10%] right-[18%] w-[750px] h-[750px] bg-gradient-to-br from-[#6366f1]/25 via-[#7c3aed]/20 to-[#a855f7]/15 rounded-full blur-3xl" />
+        {/* Degradado medio - fucsia/morado */}
+        <div className="absolute top-[30%] right-[25%] w-[600px] h-[600px] bg-gradient-to-bl from-[#d946ef]/18 via-[#c026d3]/12 to-transparent rounded-full blur-3xl" />
+        {/* Degradado inferior - difuminado hacia abajo azul/violeta */}
+        <div className="absolute bottom-[-150px] right-[20%] w-[900px] h-[900px] bg-gradient-to-t from-[#8b5cf6]/15 via-[#6366f1]/10 to-transparent rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
@@ -120,8 +118,8 @@ const LuisViruettaIntro = () => {
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.3 }}
             className="order-1 lg:order-2 relative"
           >
-            {/* Main circular photo container */}
-            <div className="relative mx-auto w-full max-w-[380px] aspect-square">
+            {/* Main circular photo container - MÁS PEQUEÑA */}
+            <div className="relative mx-auto w-full max-w-[320px] aspect-square">
               {/* Static gradient ring - SIN ROTAR */}
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#a855f7] via-[#d946ef] to-[#e879f9] p-[3px]">
                 <div className="w-full h-full rounded-full bg-black" />
@@ -136,15 +134,15 @@ const LuisViruettaIntro = () => {
                 />
               </div>
 
-              {/* Floating badge con iconos individuales */}
+              {/* Floating badge con iconos individuales - PERFECTAMENTE CENTRADO */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#7c3aed] via-[#d946ef] to-[#8b5cf6] p-[2px] rounded-full shadow-2xl"
+                className="absolute bottom-[-20px] left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#7c3aed] via-[#d946ef] to-[#8b5cf6] p-[2px] rounded-full shadow-2xl"
               >
-                <div className="bg-black px-6 py-2.5 rounded-full flex items-center gap-2">
+                <div className="bg-black px-5 py-2 rounded-full flex items-center justify-center gap-2">
                   <Brain className="w-4 h-4 text-[#a855f7]" strokeWidth={2} />
                   <span className="text-white/90 text-xs font-medium tracking-wider whitespace-nowrap">
                     Psych

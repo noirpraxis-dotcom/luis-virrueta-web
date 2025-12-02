@@ -45,19 +45,43 @@ const Header = ({ menuItems }) => {
                 className="cursor-pointer relative"
                 style={{ fontFamily: 'Gotham, sans-serif' }}
               >
-                {/* LUXMANIA - Elegant silver chrome */}
-                <div 
-                  className="text-[2.2rem] font-bold tracking-wider font-display"
-                  style={{
-                    background: 'linear-gradient(135deg, #a8a9ad 0%, #ffffff 20%, #d4d4d8 40%, #fafafa 60%, #e4e4e7 80%, #ffffff 100%)',
-                    WebkitBackgroundClip: 'text',
-                    backgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.25))',
-                    letterSpacing: '0.1em'
-                  }}
-                >
-                  LUXMANIA
+                {/* LUXMANIA - Elegant silver chrome con animación en MANIA */}
+                <div className="text-[2.2rem] font-bold tracking-wider font-display flex">
+                  {/* LUX - Estático */}
+                  <span
+                    style={{
+                      background: 'linear-gradient(135deg, #a8a9ad 0%, #ffffff 20%, #d4d4d8 40%, #fafafa 60%, #e4e4e7 80%, #ffffff 100%)',
+                      WebkitBackgroundClip: 'text',
+                      backgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.25))',
+                      letterSpacing: '0.1em'
+                    }}
+                  >
+                    LUX
+                  </span>
+                  {/* MANIA - Animado con degradados morado/azul/fucsia */}
+                  <motion.span
+                    animate={{
+                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                    }}
+                    transition={{
+                      duration: 8,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    style={{
+                      background: 'linear-gradient(90deg, #ffffff 0%, #a855f7 15%, #6366f1 30%, #d946ef 45%, #e879f9 60%, #8b5cf6 75%, #ffffff 90%, #ffffff 100%)',
+                      backgroundSize: '200% 100%',
+                      WebkitBackgroundClip: 'text',
+                      backgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      filter: 'drop-shadow(0 0 25px rgba(168,85,247,0.3))',
+                      letterSpacing: '0.1em'
+                    }}
+                  >
+                    MANIA
+                  </motion.span>
                 </div>
                 
                 {/* Tagline - Elegant subtle */}

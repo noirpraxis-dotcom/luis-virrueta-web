@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight, MessageCircle } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const BrandCTA = () => {
@@ -13,16 +13,10 @@ const BrandCTA = () => {
       ref={ref}
       className="relative bg-black py-20 lg:py-28 overflow-hidden"
     >
-      {/* Transición sutil superior */}
-      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/0 via-black/30 to-black pointer-events-none" />
-      
-      {/* Transición sutil inferior */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/0 via-black/30 to-black pointer-events-none" />
-
-      {/* Gradient background effects */}
+      {/* Gradient background effects - Conectado con sección anterior */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#a855f7]/15 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#d946ef]/15 rounded-full blur-3xl" />
+        <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#a855f7]/12 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[#d946ef]/10 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-4xl mx-auto px-6 lg:px-12 text-center">
@@ -63,15 +57,15 @@ const BrandCTA = () => {
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
           {/* Primary CTA */}
-          <Link to="/contacto">
+          <a href="https://wa.me/5215586953032" target="_blank" rel="noopener noreferrer">
             <motion.button
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
               className="group relative bg-gradient-to-r from-[#a855f7] to-[#d946ef] px-10 py-4 rounded-full text-white font-medium text-lg tracking-wide overflow-hidden shadow-lg shadow-[#a855f7]/30 hover:shadow-[#a855f7]/50 transition-all duration-300"
             >
               <span className="relative z-10 flex items-center gap-3">
-                <Sparkles className="w-5 h-5" />
-                <span>Comenzar mi Marca</span>
+                <MessageCircle className="w-5 h-5" />
+                <span>Programar Videollamada</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
               
@@ -83,17 +77,17 @@ const BrandCTA = () => {
                 transition={{ duration: 0.3 }}
               />
             </motion.button>
-          </Link>
+          </a>
 
           {/* Secondary CTA */}
-          <Link to="/servicios">
+          <Link to="/portfolio">
             <motion.button
               whileHover={{ scale: 1.02, x: 5 }}
               whileTap={{ scale: 0.98 }}
               className="group relative bg-transparent border border-[#d946ef]/30 hover:border-[#d946ef] px-8 py-4 rounded-full text-white font-light text-base tracking-wide transition-all duration-500 overflow-hidden"
             >
               <span className="relative z-10 flex items-center gap-3">
-                <span className="text-white/70 group-hover:text-white transition-colors">Ver servicios</span>
+                <span className="text-white/70 group-hover:text-white transition-colors">Ver Portafolio</span>
                 <ArrowRight className="w-4 h-4 text-[#d946ef] group-hover:translate-x-1 transition-transform" />
               </span>
               
