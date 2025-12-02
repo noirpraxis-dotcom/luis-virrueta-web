@@ -111,7 +111,7 @@ const AboutCreator = () => {
             className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 font-display"
           >
             El diseñador que entiende{' '}
-            <span className="bg-gradient-to-r from-[#a855f7] to-[#d946ef] bg-clip-text text-transparent"
+            <span className="bg-gradient-to-r from-[#a855f7] to-[#d946ef] bg-clip-text text-transparent">
               tu mente
             </span>
           </motion.h2>
