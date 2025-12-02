@@ -50,22 +50,24 @@ const AvatarWelcome = () => {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="text-4xl lg:text-6xl font-extralight text-white mb-12 tracking-tight font-display leading-tight"
             >
-              Conoce nuestros{' '}
+              Nuestros Avatares te dan la{' '}
               <span className="block lg:inline bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#e879f9] bg-clip-text text-transparent font-light">
-                Avatares IA
+                Bienvenida
               </span>
             </motion.h2>
 
-            {/* Description - Reducido y cinemático */}
+            {/* Description - Enfocado en psicología/diseño/tech */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-white/60 text-lg lg:text-xl font-light leading-relaxed mb-12 max-w-xl"
             >
-              Presiona play. Descubre cómo la{' '}
-              <span className="text-[#a855f7]">inteligencia artificial</span>{' '}
-              da vida a tu marca con autenticidad y personalidad.
+              Presiona play. Descubre el aspecto cinemático que se logra cuando combinamos{' '}
+              <span className="text-[#a855f7]">psicología</span>,{' '}
+              <span className="text-[#d946ef]">diseño</span> y{' '}
+              <span className="text-[#e879f9]">tecnología</span>{' '}
+              de vanguardia.
             </motion.p>
 
             {/* CTA Button - minimalista */}

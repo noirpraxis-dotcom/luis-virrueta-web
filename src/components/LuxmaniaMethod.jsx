@@ -46,7 +46,7 @@ const LuxmaniaMethod = () => {
     <section 
       id="metodo"
       ref={ref}
-      className="relative bg-gradient-to-b from-[#0A0A0A] via-[#1A1A1A] to-[#0A0A0A] py-24 lg:py-32 overflow-hidden"
+      className="relative bg-gradient-to-b from-[#0A0A0A] via-[#1A1A1A] to-[#0A0A0A] py-16 lg:py-20 overflow-hidden"
     >
       {/* Decorative gradient orbs */}
       <div className="absolute inset-0 pointer-events-none">
@@ -55,90 +55,73 @@ const LuxmaniaMethod = () => {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-        {/* Section Header */}
+        {/* Section Header - Minimalista */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-20 lg:mb-28"
+          className="text-center mb-12 lg:mb-14"
         >
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-[#a855f7] text-sm sm:text-base font-mono uppercase tracking-widest mb-4"
-          >
+          <p className="text-[#a855f7] text-xs font-mono uppercase tracking-[0.4em] mb-3">
             El Método Luxmania
-          </motion.p>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 font-display"
-          >
+          </p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extralight text-white font-display">
             Donde el diseño encuentra{' '}
             <span className="bg-gradient-to-r from-[#a855f7] to-[#d946ef] bg-clip-text text-transparent">
               la mente inconsciente
             </span>
-          </motion.h2>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={isInView ? { scaleX: 1 } : {}}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="h-px bg-gradient-to-r from-transparent via-[#a855f7]/40 to-transparent mx-auto w-80"
-          />
+          </h2>
         </motion.div>
 
-        {/* Phases Grid */}
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+        {/* Phases Grid - Compact */}
+        <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
           {phases.map((phase, index) => {
             const Icon = phase.icon
             return (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.6 + index * 0.15 }}
-                whileHover={{ y: -8, scale: 1.02 }}
+                transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
+                whileHover={{ y: -3, scale: 1.01 }}
                 className="relative group"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#a855f7]/5 to-[#d946ef]/5 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
-                <div className="relative bg-[#1A1A1A] border border-white/10 rounded-3xl p-8 lg:p-10 h-full hover:border-white/20 transition-all duration-500">
-                  {/* Number Badge */}
-                  <div className="flex items-start justify-between mb-6">
+                <div className="relative bg-[#1A1A1A] border border-white/10 rounded-2xl p-6 lg:p-7 h-full hover:border-white/20 transition-all duration-300">
+                  {/* Number Badge - Compact */}
+                  <div className="flex items-start justify-between mb-4">
                     <span 
-                      className="text-6xl font-bold font-mono opacity-20"
+                      className="text-4xl font-bold font-mono opacity-20"
                       style={{ color: phase.color }}
                     >
                       {phase.number}
                     </span>
                     <div 
-                      className="p-4 rounded-2xl bg-gradient-to-br from-white/5 to-white/10"
+                      className="p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10"
                     >
                       <Icon 
-                        className="w-8 h-8" 
+                        className="w-6 h-6" 
                         style={{ color: phase.color }}
                         strokeWidth={1.5}
                       />
                     </div>
                   </div>
 
-                  {/* Content */}
-                  <h3 className="text-white text-xl lg:text-2xl font-bold mb-4 font-display">
+                  {/* Content - Compact */}
+                  <h3 className="text-white text-lg lg:text-xl font-semibold mb-3 font-display">
                     {phase.title}
                   </h3>
-                  <p className="text-white/80 text-base lg:text-lg leading-relaxed mb-4">
+                  <p className="text-white/80 text-sm lg:text-base leading-relaxed mb-3 font-light">
                     {phase.description}
                   </p>
-                  <p className="text-white/50 text-sm lg:text-base leading-relaxed">
+                  <p className="text-white/50 text-xs lg:text-sm leading-relaxed font-light">
                     {phase.details}
                   </p>
 
-                  {/* Decorative line */}
+                  {/* Decorative line - Subtle */}
                   <motion.div
                     initial={{ scaleX: 0 }}
                     whileHover={{ scaleX: 1 }}
-                    className="h-px bg-gradient-to-r from-transparent to-white/20 mt-6 origin-left"
+                    className="h-px bg-gradient-to-r from-transparent to-white/20 mt-4 origin-left"
                   />
                 </div>
               </motion.div>
@@ -146,24 +129,24 @@ const LuxmaniaMethod = () => {
           })}
         </div>
 
-        {/* Bottom CTA */}
+        {/* Bottom CTA - Minimalista */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 1.4 }}
-          className="text-center mt-20"
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="text-center mt-12"
         >
-          <p className="text-white/60 text-lg mb-8">
+          <p className="text-white/50 text-sm mb-6 font-light">
             Un proceso probado que transforma ideas en marcas inolvidables
           </p>
           <motion.a
             href="#servicios"
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-3 px-10 py-5 bg-[#a855f7] text-white rounded-full text-base font-medium tracking-wide uppercase hover:bg-[#7c3aed] transition-all duration-300 shadow-lg shadow-[#a855f7]/20 hover:shadow-[#a855f7]/40"
+            whileHover={{ scale: 1.02, x: 3 }}
+            whileTap={{ scale: 0.98 }}
+            className="inline-flex items-center gap-3 px-8 py-3 bg-transparent border border-[#a855f7]/30 hover:border-[#a855f7] text-white rounded-full text-sm font-light tracking-wide transition-all duration-300"
           >
             <span>Explorar Servicios</span>
-            <Sparkles className="w-5 h-5" />
+            <Sparkles className="w-4 h-4 text-[#a855f7]" />
           </motion.a>
         </motion.div>
       </div>

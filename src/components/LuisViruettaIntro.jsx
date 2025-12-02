@@ -5,10 +5,10 @@ import { ArrowRight, Brain, Sparkles, Palette, Code } from 'lucide-react'
 const LuisViruettaIntro = () => {
   return (
     <section className="relative bg-black py-16 lg:py-24 overflow-hidden">
-      {/* Gradient background effects */}
+      {/* Gradient background effects - Elegante azul + fucsia */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-[#a855f7]/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-[#d946ef]/10 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-gradient-to-br from-[#7c3aed]/8 via-[#a855f7]/10 to-[#6366f1]/6 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-gradient-to-tl from-[#d946ef]/8 via-[#c026d3]/10 to-[#8b5cf6]/6 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
@@ -41,18 +41,28 @@ const LuisViruettaIntro = () => {
                 />
               </div>
 
-              {/* Floating badge */}
+              {/* Floating badge con iconos individuales */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#a855f7] to-[#d946ef] p-[2px] rounded-full shadow-2xl"
+                className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#7c3aed] via-[#d946ef] to-[#8b5cf6] p-[2px] rounded-full shadow-2xl"
               >
-                <div className="bg-black px-8 py-3 rounded-full flex items-center gap-3">
-                  <Brain className="w-5 h-5 text-[#a855f7]" />
-                  <span className="text-white text-sm font-medium tracking-wide">
-                    Psych × Design × Tech
+                <div className="bg-black px-6 py-2.5 rounded-full flex items-center gap-2">
+                  <Brain className="w-4 h-4 text-[#a855f7]" strokeWidth={2} />
+                  <span className="text-white/90 text-xs font-medium tracking-wider whitespace-nowrap">
+                    Psych
+                  </span>
+                  <span className="text-white/30 text-xs">×</span>
+                  <Palette className="w-4 h-4 text-[#d946ef]" strokeWidth={2} />
+                  <span className="text-white/90 text-xs font-medium tracking-wider whitespace-nowrap">
+                    Design
+                  </span>
+                  <span className="text-white/30 text-xs">×</span>
+                  <Code className="w-4 h-4 text-[#8b5cf6]" strokeWidth={2} />
+                  <span className="text-white/90 text-xs font-medium tracking-wider whitespace-nowrap">
+                    Tech
                   </span>
                 </div>
               </motion.div>

@@ -28,7 +28,7 @@ const Hero = () => {
   return (
     <section 
       ref={ref}
-      className="relative min-h-screen bg-[#0A0A0A] flex items-center justify-center pt-20 pb-24 lg:pt-32 lg:pb-32 overflow-hidden"
+      className="relative bg-[#0A0A0A] flex items-center justify-center py-20 lg:py-24 overflow-hidden"
     >
       {/* Animated gradient orbs with continuous motion */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -198,101 +198,34 @@ const Hero = () => {
           </div>
         </motion.div>
 
-        {/* Manifesto Opening with cinematic reveal */}
+        {/* Manifesto - Minimalista */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1.2, ease: [0.6, 0.05, 0.01, 0.9] }}
-          className="mb-12 sm:mb-16 lg:mb-20 space-y-8 sm:space-y-10"
+          transition={{ duration: 1, ease: [0.6, 0.05, 0.01, 0.9] }}
+          className="mb-10 lg:mb-12"
         >
-          {/* Decorative top line */}
-          <motion.div
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={isInView ? { scaleX: 1, opacity: 0.3 } : {}}
-            transition={{ duration: 1.5, delay: 0.3 }}
-            className="h-px bg-gradient-to-r from-transparent via-white to-transparent mx-auto w-32 mb-8"
-          />
-
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.4 }}
-            className="text-white text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-light leading-tight max-w-5xl mx-auto relative"
+            transition={{ duration: 1, delay: 0.2 }}
+            className="text-white text-2xl sm:text-3xl lg:text-4xl font-extralight leading-tight max-w-4xl mx-auto"
           >
-            <motion.span
-              animate={{ 
-                textShadow: [
-                  "0 0 20px rgba(255,255,255,0.1)",
-                  "0 0 40px rgba(255,255,255,0.2)",
-                  "0 0 20px rgba(255,255,255,0.1)"
-                ]
-              }}
-              transition={{ duration: 3, repeat: Infinity }}
-            >
-              {t('hero.manifesto1')}
-            </motion.span>
+            {t('hero.manifesto1')}
           </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.6 }}
-            className="text-white/60 text-lg sm:text-xl lg:text-2xl font-light leading-relaxed max-w-4xl mx-auto"
-          >
-            {t('hero.manifesto2')}
-          </motion.p>
-
-          {/* Decorative bottom dots */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ duration: 1, delay: 0.8 }}
-            className="flex justify-center gap-2 pt-4"
-          >
-            {[0, 1, 2].map((i) => (
-              <motion.div
-                key={i}
-                animate={{ 
-                  scale: [1, 1.5, 1],
-                  opacity: [0.3, 0.8, 0.3]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  delay: i * 0.2
-                }}
-                className="w-1.5 h-1.5 rounded-full bg-white/40"
-              />
-            ))}
-          </motion.div>
         </motion.div>
 
-        {/* Brand Name - LUXMANIA with epic reveal */}
+        {/* Brand Name - LUXMANIA minimalista */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8, y: 50 }}
-          animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ 
-            duration: 1.5, 
-            delay: 1, 
+            duration: 1, 
+            delay: 0.4, 
             ease: [0.6, 0.05, 0.01, 0.9]
           }}
-          className="mb-8 sm:mb-10 relative"
+          className="mb-6 lg:mb-8 relative"
         >
-          {/* Animated glow behind text */}
-          <motion.div
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.1, 0.3, 0.1]
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="absolute inset-0 blur-3xl bg-gradient-to-r from-[#a855f7]/20 via-white/30 to-[#d946ef]/20"
-            style={{ transform: 'translateY(20px)' }}
-          />
-
           <motion.h1 
             className="relative text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold font-display leading-tight tracking-wide"
             animate={{
@@ -319,189 +252,47 @@ const Hero = () => {
           >
             LUXMANIA
           </motion.h1>
-
-          {/* Decorative lines */}
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={isInView ? { scaleX: 1 } : {}}
-            transition={{ duration: 1.5, delay: 1.3 }}
-            className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-64 h-px"
-          >
-            <motion.div
-              animate={{
-                background: [
-                  'linear-gradient(90deg, transparent, rgba(168,85,247,0.5), transparent)',
-                  'linear-gradient(90deg, transparent, rgba(217,70,239,0.5), transparent)',
-                  'linear-gradient(90deg, transparent, rgba(168,85,247,0.5), transparent)'
-                ]
-              }}
-              transition={{ duration: 4, repeat: Infinity }}
-              className="w-full h-full"
-            />
-          </motion.div>
         </motion.div>
 
-        {/* Subtitle */}
+        {/* Subtitle minimalista */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 0.8 }}
-          className="text-white/40 text-xs sm:text-sm lg:text-base font-light tracking-[0.3em] mb-12 font-mono uppercase"
+          transition={{ duration: 1, delay: 0.6 }}
+          className="text-white/30 text-xs font-light tracking-[0.4em] mb-8 font-mono uppercase"
         >
           {t('hero.subtitle')}
         </motion.p>
 
-        {/* Decorative line */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={isInView ? { scaleX: 1 } : {}}
-          transition={{ duration: 1.5, delay: 1, ease: [0.76, 0, 0.24, 1] }}
-          className="h-px bg-gradient-to-r from-transparent via-[#a855f7]/40 to-transparent mx-auto w-48 sm:w-64 lg:w-96 mb-12 sm:mb-16"
-        />
-
-        {/* Core message */}
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 1.2 }}
-          className="text-white/90 text-lg sm:text-xl lg:text-2xl font-light leading-relaxed mb-16 sm:mb-20 max-w-5xl mx-auto"
-        >
-          {t('hero.manifesto3')}
-        </motion.p>
-
-        {/* CTA Buttons with enhanced animations */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1.2, delay: 1.6 }}
-          className="flex flex-col sm:flex-row gap-5 sm:gap-6 justify-center items-center"
-        >
-          <motion.a
-            href="#metodo"
-            whileHover={{ 
-              scale: 1.08, 
-              y: -4,
-              boxShadow: "0 20px 60px rgba(168,85,247,0.4)"
-            }}
-            whileTap={{ scale: 0.95 }}
-            className="group relative inline-flex items-center gap-3 px-10 sm:px-12 py-5 sm:py-6 bg-[#a855f7] text-white rounded-full text-sm sm:text-base font-semibold tracking-wide uppercase overflow-hidden shadow-lg shadow-[#a855f7]/30"
-          >
-            {/* Animated gradient overlay */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-[#a855f7] via-[#7c3aed] to-[#a855f7]"
-              animate={{
-                x: ['-100%', '100%']
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-            />
-            <span className="relative z-10">{t('hero.cta')}</span>
-            <motion.div
-              animate={{ rotate: [0, 360] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            >
-              <Sparkles className="relative z-10 w-5 h-5" />
-            </motion.div>
-
-            {/* Glow effect */}
-            <motion.div
-              className="absolute inset-0 bg-white/20 rounded-full blur-lg opacity-0 group-hover:opacity-100"
-              transition={{ duration: 0.3 }}
-            />
-          </motion.a>
-          
-          <motion.a
-            href="#portfolio"
-            whileHover={{ 
-              scale: 1.08, 
-              y: -4,
-              borderColor: 'rgba(217,70,239,0.8)'
-            }}
-            whileTap={{ scale: 0.95 }}
-            className="group relative inline-flex items-center gap-3 px-10 sm:px-12 py-5 sm:py-6 bg-transparent border-2 border-white/20 text-white rounded-full text-sm sm:text-base font-semibold tracking-wide uppercase overflow-hidden transition-colors duration-300"
-          >
-            {/* Hover fill effect */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-[#d946ef]/0 to-[#d946ef]/10"
-              initial={{ x: '-100%' }}
-              whileHover={{ x: 0 }}
-              transition={{ duration: 0.3 }}
-            />
-            <span className="relative z-10 group-hover:text-[#d946ef] transition-colors">
-              {t('hero.cta2')}
-            </span>
-
-            {/* Animated border glow */}
-            <motion.div
-              className="absolute inset-0 rounded-full"
-              animate={{
-                boxShadow: [
-                  '0 0 0 0 rgba(217,70,239,0)',
-                  '0 0 0 4px rgba(217,70,239,0.2)',
-                  '0 0 0 0 rgba(217,70,239,0)'
-                ]
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-          </motion.a>
-        </motion.div>
-
-        {/* Scroll indicator with cinematic animation */}
+        {/* CTA Button - Minimalista */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1.5, delay: 2 }}
-          className="mt-20 sm:mt-24 lg:mt-28"
+          transition={{ duration: 1, delay: 0.8 }}
+          className="flex justify-center"
         >
-          <motion.div
-            animate={{ 
-              y: [0, 15, 0],
-              opacity: [0.3, 0.8, 0.3]
-            }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-            className="inline-flex flex-col items-center gap-3 cursor-pointer group"
+          <motion.a
+            href="#metodo"
+            whileHover={{ scale: 1.02, x: 5 }}
+            whileTap={{ scale: 0.98 }}
+            className="group relative bg-transparent border border-[#d946ef]/30 hover:border-[#d946ef] px-8 py-3 rounded-full text-white font-light text-base tracking-wide transition-all duration-500 overflow-hidden"
           >
-            {/* Animated circle */}
+            <span className="relative z-10 flex items-center gap-3">
+              <span className="text-white/70 group-hover:text-white transition-colors">{t('hero.cta')}</span>
+              <ArrowRight className="w-4 h-4 text-[#d946ef] group-hover:translate-x-1 transition-transform" />
+            </span>
+            
+            {/* Hover gradient fill */}
             <motion.div
-              className="relative w-8 h-12 border-2 border-white/20 rounded-full"
-              whileHover={{ borderColor: 'rgba(255,255,255,0.5)' }}
-            >
-              <motion.div
-                animate={{
-                  y: [0, 16, 0],
-                  opacity: [0, 1, 0]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="absolute top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-white/60 rounded-full"
-              />
-            </motion.div>
-
-            {/* Chevron */}
-            <motion.div
-              animate={{ y: [0, 5, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-            >
-              <ChevronDown className="w-5 h-5 text-white/40 group-hover:text-white/70 transition-colors" />
-            </motion.div>
-
-            {/* Ripple effect */}
-            <motion.div
-              className="absolute bottom-0 w-20 h-20 border border-white/10 rounded-full"
-              animate={{
-                scale: [1, 1.5, 1],
-                opacity: [0.5, 0, 0.5]
-              }}
-              transition={{ duration: 3, repeat: Infinity }}
+              className="absolute inset-0 bg-gradient-to-r from-[#a855f7]/10 to-[#d946ef]/10"
+              initial={{ opacity: 0 }}
+              whileHover={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
             />
-          </motion.div>
+          </motion.a>
         </motion.div>
+
+
       </motion.div>
     </section>
   )
