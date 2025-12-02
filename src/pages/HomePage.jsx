@@ -1,8 +1,11 @@
 import Home from '../components/Home'
 import Hero from '../components/Hero'
-import AboutLuisSection from '../components/AboutLuisSection'
-import AnimatedStats from '../components/AnimatedStats'
-import ServicesOverview from '../components/ServicesOverview'
+import LuisViruettaIntro from '../components/LuisViruettaIntro'
+import AvatarWelcome from '../components/AvatarWelcome'
+import WhyLuxmania from '../components/WhyLuxmania'
+import LuxmaniaMethod from '../components/LuxmaniaMethod'
+import LuxmaniaServices from '../components/LuxmaniaServices'
+import AboutCreator from '../components/AboutCreator'
 import Testimonials from '../components/Testimonials'
 
 const HomePage = () => {
@@ -11,19 +14,28 @@ const HomePage = () => {
       {/* Video limpio de fondo */}
       <Home />
       
-      {/* Hero: Nombre cinematográfico Ainimation con manifiesto */}
+      {/* Hero: LUXMANIA - Branding con fundamento psicológico */}
       <Hero />
       
-      {/* Sobre Mí: Luis Virrueta - Formación y credenciales */}
-      <AboutLuisSection />
+      {/* Luis Virrueta Intro: Compact elegant section */}
+      <LuisViruettaIntro />
       
-      {/* Estadísticas Animadas: Números que impresionan */}
-      <AnimatedStats />
+      {/* Video de Avatares: Welcome to LUXMANIA */}
+      <AvatarWelcome />
       
-      {/* Servicios Overview: 5 servicios principales */}
-      <ServicesOverview />
+      {/* Por Qué LUXMANIA: El diferenciador psicológico */}
+      <WhyLuxmania />
       
-      {/* Testimonios con carrusel (reutilizado) */}
+      {/* El Método LUXMANIA: Las 4 fases del proceso */}
+      <LuxmaniaMethod />
+      
+      {/* Servicios y Paquetes: Essential, Professional, Luxury */}
+      <LuxmaniaServices />
+      
+      {/* Sobre Mí: Luis Virrueta - Psicólogo, Diseñador, Developer */}
+      <AboutCreator />
+      
+      {/* Testimonios */}
       <Testimonials />
     </>
   )

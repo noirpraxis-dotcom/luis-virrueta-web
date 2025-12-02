@@ -29,21 +29,10 @@ const AppContent = () => {
 
   const menuItems = [
     { name: 'Inicio', href: '/' },
-    { name: 'Sobre Mí', href: '/about' },
-    { 
-      name: 'Servicios',
-      nameShort: 'Servicios',
-      href: '/servicios',
-      subItems: [
-        { name: 'Identidad de Marca', href: '/servicios/identidad-marca' },
-        { name: 'Apps Premium', href: '/servicios/apps-premium' },
-        { name: 'Contenido Digital', href: '/servicios/contenido-digital' },
-        { name: 'Avatares IA', href: '/servicios/avatares-ia' },
-        { name: 'Consultoría Psicológica', href: '/servicios/consultoria-psicologica' }
-      ]
-    },
-    { name: 'Portafolio', href: '/portafolio' },
-    { name: 'Inversión', href: '/inversion' },
+    { name: 'Método', href: '/#metodo' },
+    { name: 'Servicios', href: '/#servicios' },
+    { name: 'Portfolio', href: '/portafolio' },
+    { name: 'Sobre Mí', href: '/#sobre-mi' },
     { name: 'Contacto', href: '/contacto' }
   ]
 
@@ -69,9 +58,7 @@ const AppContent = () => {
           <Routes>
             {/* Página Home: Video + Hero con "Ver más" */}
             <Route path="/" element={
-              <div className="lg:pt-28">
-                <HomePage />
-              </div>
+              <HomePage />
             } />
             
             {/* Página Philosophy: Manifiesto Ainimation - Psych × Design × AI */}

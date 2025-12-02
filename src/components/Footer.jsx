@@ -20,33 +20,46 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 py-8 lg:px-12">
         {/* Main Footer Content */}
         <div className="flex flex-col items-center justify-center space-y-6">
-          {/* Logo/Brand - Ainimation */}
+          {/* Logo/Brand - LUXMANIA */}
           <Link to="/">
             <motion.div
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.03 }}
+              transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
               className="cursor-pointer relative"
+              style={{ fontFamily: 'Gotham, sans-serif' }}
             >
-              {/* Ainimation - Cinematic gradient */}
-              <div className="text-[2.75rem] font-bold tracking-tight font-display">
-                <span className="bg-gradient-to-r from-purple-400 via-fuchsia-500 to-cyan-400 bg-clip-text text-transparent animate-gradient">
-                  Ainimation
-                </span>
-              </div>
-              
-              {/* Tagline - Cinematic */}
+              {/* LUXMANIA - Elegant silver chrome */}
               <div 
-                className="text-[0.6rem] uppercase font-medium tracking-[0.3em] text-center -mt-1 font-mono"
+                className="text-[2.2rem] font-bold tracking-wider font-display"
                 style={{
-                  background: 'linear-gradient(90deg, rgba(168,85,247,0.4) 0%, rgba(217,70,239,0.6) 50%, rgba(6,182,212,0.4) 100%)',
-                  backgroundSize: '200% 100%',
+                  background: 'linear-gradient(135deg, #a8a9ad 0%, #ffffff 20%, #d4d4d8 40%, #fafafa 60%, #e4e4e7 80%, #ffffff 100%)',
                   WebkitBackgroundClip: 'text',
                   backgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
-                  animation: 'shimmer-slow 4s ease-in-out infinite'
+                  filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.25))',
+                  letterSpacing: '0.1em'
                 }}
               >
-                Psych × Design × AI
+                LUXMANIA
               </div>
+              
+              {/* Tagline - Elegant subtle */}
+              <div 
+                className="text-[0.5rem] uppercase font-medium tracking-[0.4em] text-center -mt-0.5 font-mono"
+                style={{
+                  color: 'rgba(255,255,255,0.3)',
+                  letterSpacing: '0.4em'
+                }}
+              >
+                Psych × Design × Tech
+              </div>
+              
+              {/* Underline decorativo */}
+              <motion.div 
+                className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#0066FF] to-transparent opacity-0"
+                whileHover={{ opacity: 0.5 }}
+                transition={{ duration: 0.3 }}
+              />
             </motion.div>
           </Link>
 
@@ -80,7 +93,7 @@ const Footer = () => {
 
           {/* Copyright */}
           <div className="text-white/40 text-xs tracking-wide font-mono">
-            © {currentYear} Ainimation. Psicología × Diseño × IA. All rights reserved.
+            © {currentYear} LUXMANIA. Psych × Design × Tech. All rights reserved.
           </div>
         </div>
       </div>

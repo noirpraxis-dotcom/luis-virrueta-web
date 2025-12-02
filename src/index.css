@@ -17,14 +17,20 @@ body {
   overflow-x: hidden;
   background-color: #0a0a0f;
   color: #f5f5f7;
-  cursor: none; /* Custom cursor premium en desktop */
+  cursor: auto;
 }
 
-/* Cursor default en mobile/tablet */
-@media (max-width: 1024px) {
-  body {
-    cursor: auto;
-  }
+* {
+  cursor: auto !important;
+}
+
+/* Asegurar cursor blanco visible en toda la página */
+body, button, a, input, textarea, select {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" stroke="black" stroke-width="1" d="M5 3l14 9-5 0-3 6z"/></svg>') 12 12, auto !important;
+}
+
+button:hover, a:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="rgba(168,85,247,1)" stroke="white" stroke-width="1" d="M5 3l14 9-5 0-3 6z"/></svg>') 12 12, pointer !important;
 }
 
 /* Ainimation Cinematic Typography */
@@ -129,4 +135,31 @@ body {
 
 .animate-shimmer-slow {
   animation: shimmer-slow 4s ease-in-out infinite;
+}
+
+/* LUXMANIA - Efecto metálico plateado elegante */
+@keyframes chrome-shine {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.text-chrome-silver {
+  background: linear-gradient(135deg, 
+    #a8a9ad 0%, 
+    #ffffff 20%, 
+    #d4d4d8 40%, 
+    #fafafa 60%, 
+    #e4e4e7 80%, 
+    #ffffff 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 30px rgba(255,255,255,0.3)) drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+  animation: chrome-shine 8s ease-in-out infinite;
 }

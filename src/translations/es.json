@@ -36,13 +36,15 @@
     "savePreferences": "Guardar preferencias"
   },
   "hero": {
-    "manifesto1": "Más del 90% de las decisiones humanas se toman de forma inconsciente.",
-    "manifesto2": "Y, sin embargo, la mayoría de las marcas siguen intentando convencer a través de lo racional.",
-    "manifesto3": "En Ainimation diseñamos emociones.",
-    "manifesto4": "Aplicamos psicología, diseño y tecnología para crear identidades que se sienten antes de entenderse.",
-    "subtitle": "Psicología × Diseño × Inteligencia Artificial",
+    "manifesto1": "Más del 90% de las decisiones de compra ocurren en el inconsciente.",
+    "manifesto2": "¿Tu marca está hablando el lenguaje correcto?",
+    "brandName": "LUXMANIA",
+    "manifesto3": "No creamos logos bonitos. Diseñamos identidades que activan emociones profundas y construyen conexiones que tu competencia no puede copiar.",
+    "manifesto4": "",
+    "subtitle": "Psicología × Diseño × Tecnología",
     "tagline": "Donde la psicología, el diseño y la inteligencia artificial se combinan para construir marcas que piensan, sienten y perduran.",
-    "cta": "Ver Filosofía",
+    "cta": "Descubre tu Arquetipo",
+    "cta2": "Ver Casos de Éxito",
     "scrollDown": "Desplázate"
   },
   "countries": {

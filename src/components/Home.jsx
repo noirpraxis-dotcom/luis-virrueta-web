@@ -4,7 +4,7 @@ import { useRef } from 'react'
 import VideoBackground from './VideoBackground'
 const Home = () => {
   return (
-    <section id="home" className="relative h-screen">
+    <section id="home" className="relative h-screen w-full overflow-hidden">
       {/* Video/Image Background limpio - sin overlay */}
       <VideoBackground />
       
