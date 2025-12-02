@@ -40,6 +40,74 @@
     "seeMore": "See More",
     "scrollDown": "Scroll Down"
   },
+  "archetypes": {
+    "title": "Brand Archetypes",
+    "subtitle": "Discover the personality that defines your brand",
+    "ruler": {
+      "name": "The Ruler",
+      "desire": "Control and order",
+      "description": "Brand that represents power, stability and leadership. Ideal for companies seeking to project authority and excellence. Examples: Mercedes-Benz, Rolex, Microsoft."
+    },
+    "explorer": {
+      "name": "The Explorer",
+      "desire": "Freedom and discovery",
+      "description": "Adventurous brand that inspires individuality and authenticity. Perfect for businesses that value innovation and experience. Examples: Jeep, Patagonia, Red Bull."
+    },
+    "sage": {
+      "name": "The Sage",
+      "desire": "Knowledge and truth",
+      "description": "Brand that educates and shares wisdom. For companies seeking to be a trusted source of information. Examples: Google, BBC, Harvard."
+    },
+    "hero": {
+      "name": "The Hero",
+      "desire": "Achievement and mastery",
+      "description": "Brand that inspires overcoming challenges. Ideal for products that help improve performance. Examples: Nike, Gatorade, FedEx."
+    },
+    "outlaw": {
+      "name": "The Outlaw",
+      "desire": "Revolution and change",
+      "description": "Disruptive brand that challenges the status quo. For businesses that break rules and create new categories. Examples: Harley-Davidson, Virgin, Diesel."
+    },
+    "magician": {
+      "name": "The Magician",
+      "desire": "Transformation",
+      "description": "Brand that makes dreams come true. Perfect for products that offer unique experiences. Examples: Disney, Apple, MasterCard."
+    },
+    "everyman": {
+      "name": "The Everyman",
+      "desire": "Belonging",
+      "description": "Accessible and reliable brand. Ideal for companies that prioritize human connection. Examples: IKEA, Levi's, Target."
+    },
+    "lover": {
+      "name": "The Lover",
+      "desire": "Intimacy and passion",
+      "description": "Sensory and emotional brand. For businesses that create pleasurable experiences. Examples: Victoria's Secret, Godiva, Alfa Romeo."
+    },
+    "jester": {
+      "name": "The Jester",
+      "desire": "Fun and joy",
+      "description": "Fun brand that brightens the day. Perfect for products that don't take themselves too seriously. Examples: M&M's, Old Spice, Ben & Jerry's."
+    },
+    "caregiver": {
+      "name": "The Caregiver",
+      "desire": "Service and protection",
+      "description": "Compassionate and generous brand. Ideal for companies focused on well-being. Examples: Johnson & Johnson, Volvo, UNICEF."
+    },
+    "creator": {
+      "name": "The Creator",
+      "desire": "Innovation and expression",
+      "description": "Imaginative brand that fosters creativity. For businesses that value originality. Examples: Adobe, Lego, Crayola."
+    },
+    "innocent": {
+      "name": "The Innocent",
+      "desire": "Happiness and simplicity",
+      "description": "Optimistic and pure brand. Ideal for products that offer nostalgia and positivity. Examples: Coca-Cola, Dove, McDonald's."
+    },
+    "cta": {
+      "title": "Did you identify your archetype?",
+      "subtitle": "Let's work together to build a brand that resonates with your audience"
+    }
+  },
   "countries": {
     "intro": "I have worked with people from",
     "title": "I HAVE WORKED WITH PEOPLE FROM",

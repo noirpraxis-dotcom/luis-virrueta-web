@@ -13,6 +13,9 @@ const BrandCTA = () => {
       ref={ref}
       className="relative bg-black py-20 lg:py-28 overflow-hidden"
     >
+      {/* Transición gradiente inferior para siguiente sección */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-black/50 to-black pointer-events-none z-10" />
+      
       {/* Gradient background effects - Conectado con sección anterior */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#a855f7]/12 rounded-full blur-3xl" />

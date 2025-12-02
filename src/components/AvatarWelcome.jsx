@@ -11,8 +11,11 @@ const AvatarWelcome = () => {
   return (
     <section 
       ref={ref}
-      className="relative bg-black pt-8 pb-16 lg:pt-12 lg:pb-24 overflow-hidden"
+      className="relative bg-black py-12 lg:py-16 overflow-hidden"
     >
+      {/* Transición gradiente superior desde sección anterior */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-t from-transparent via-black/50 to-black pointer-events-none z-10" />
+      
       {/* Gradient background effects */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/4 w-[600px] h-[600px] bg-[#a855f7]/10 rounded-full blur-3xl" />

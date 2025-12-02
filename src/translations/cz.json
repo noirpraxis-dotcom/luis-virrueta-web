@@ -40,6 +40,74 @@
     "seeMore": "Zobrazit více",
     "scrollDown": "Posunout dolů"
   },
+  "archetypes": {
+    "title": "Archetypy značky",
+    "subtitle": "Objevte osobnost, která definuje vaši značku",
+    "ruler": {
+      "name": "Vládce",
+      "desire": "Kontrola a řád",
+      "description": "Značka představující moc, stabilitu a vedení. Ideální pro firmy, které chtějí projektovat autoritu a dokonalost. Příklady: Mercedes-Benz, Rolex, Microsoft."
+    },
+    "explorer": {
+      "name": "Průzkumník",
+      "desire": "Svoboda a objevování",
+      "description": "Dobrodružná značka inspirující individualitu a autenticitu. Perfektní pro firmy, které oceňují inovace a zkušenosti. Příklady: Jeep, Patagonia, Red Bull."
+    },
+    "sage": {
+      "name": "Mudrc",
+      "desire": "Poznání a pravda",
+      "description": "Značka, která vzdělává a sdílí moudrost. Pro firmy, které chtějí být důvěryhodným zdrojem informací. Příklady: Google, BBC, Harvard."
+    },
+    "hero": {
+      "name": "Hrdina",
+      "desire": "Dosažení a překonání",
+      "description": "Značka inspirující k překonávání výzev. Ideální pro produkty, které pomáhají zlepšovat výkon. Příklady: Nike, Gatorade, FedEx."
+    },
+    "outlaw": {
+      "name": "Rebel",
+      "desire": "Revoluce a změna",
+      "description": "Disruptivní značka zpochybňující status quo. Pro firmy, které porušují pravidla a vytvářejí nové kategorie. Příklady: Harley-Davidson, Virgin, Diesel."
+    },
+    "magician": {
+      "name": "Kouzelník",
+      "desire": "Transformace",
+      "description": "Značka, která splňuje sny. Perfektní pro produkty nabízející jedinečné zážitky. Příklady: Disney, Apple, MasterCard."
+    },
+    "everyman": {
+      "name": "Obyčejný člověk",
+      "desire": "Sounáležitost",
+      "description": "Přístupná a spolehlivá značka. Ideální pro firmy, které upřednostňují lidské spojení. Příklady: IKEA, Levi's, Target."
+    },
+    "lover": {
+      "name": "Milenec",
+      "desire": "Intimita a vášeň",
+      "description": "Smyslová a emocionální značka. Pro firmy vytvářející příjemné zážitky. Příklady: Victoria's Secret, Godiva, Alfa Romeo."
+    },
+    "jester": {
+      "name": "Šašek",
+      "desire": "Zábava a radost",
+      "description": "Zábavná značka rozjasňující den. Perfektní pro produkty, které se neberou příliš vážně. Příklady: M&M's, Old Spice, Ben & Jerry's."
+    },
+    "caregiver": {
+      "name": "Pečovatel",
+      "desire": "Služba a ochrana",
+      "description": "Soucitná a velkorysá značka. Ideální pro firmy zaměřené na blaho. Příklady: Johnson & Johnson, Volvo, UNICEF."
+    },
+    "creator": {
+      "name": "Tvůrce",
+      "desire": "Inovace a vyjádření",
+      "description": "Imaginativní značka podporující kreativitu. Pro firmy, které oceňují originalitu. Příklady: Adobe, Lego, Crayola."
+    },
+    "innocent": {
+      "name": "Nevinný",
+      "desire": "Štěstí a jednoduchost",
+      "description": "Optimistická a čistá značka. Ideální pro produkty nabízející nostalgii a pozitivitu. Příklady: Coca-Cola, Dove, McDonald's."
+    },
+    "cta": {
+      "title": "Identifikovali jste svůj archetyp?",
+      "subtitle": "Pojďme společně vytvořit značku, která rezonuje s vaším publikem"
+    }
+  },
   "countries": {
     "intro": "Pracovala jsem s lidmi z",
     "title": "PRACOVALA JSEM S LIDMI Z",

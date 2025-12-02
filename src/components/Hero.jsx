@@ -1,13 +1,15 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useLanguage } from '../context/LanguageContext'
 import { Brain, Sparkles, Zap, ChevronDown, ArrowRight } from 'lucide-react'
+import ArchetypesModal from './ArchetypesModal'
 
 const Hero = () => {
   const { t } = useLanguage()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-150px" })
+  const [isArchetypesModalOpen, setIsArchetypesModalOpen] = useState(false)
   
   // Parallax effect
   const { scrollY } = useScroll()
@@ -198,72 +200,73 @@ const Hero = () => {
           </div>
         </motion.div>
 
-        {/* Stats Grid - Datos organizados elegantemente */}
+        {/* Stats Grid - Minimalista y elegante */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, ease: [0.6, 0.05, 0.01, 0.9] }}
-          className="mb-16 lg:mb-20"
+          className="mb-20 lg:mb-24"
         >
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          {/* Manifesto principal */}
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="text-white text-3xl sm:text-4xl lg:text-5xl font-extralight leading-tight max-w-4xl mx-auto mb-16 text-center"
+          >
+            {t('hero.manifesto1')}
+          </motion.h2>
+
+          {/* Stats compactos */}
+          <div className="flex flex-wrap justify-center gap-12 lg:gap-16 mb-12">
             {/* Stat 1 */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 1, delay: 0.2 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={isInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.8, delay: 0.3 }}
               className="text-center"
             >
-              <div className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-[#a855f7] to-[#d946ef] bg-clip-text text-transparent mb-3">
+              <div className="text-6xl lg:text-7xl font-bold bg-gradient-to-r from-[#a855f7] to-[#d946ef] bg-clip-text text-transparent mb-2">
                 95%
               </div>
-              <p className="text-white/60 text-sm lg:text-base font-light leading-relaxed">
-                de las decisiones de compra ocurren en el <span className="text-white">inconsciente</span>
+              <p className="text-white/50 text-xs lg:text-sm font-light uppercase tracking-wider">
+                Decisiones<br />Inconscientes
               </p>
             </motion.div>
 
             {/* Stat 2 */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 1, delay: 0.3 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={isInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.8, delay: 0.4 }}
               className="text-center"
             >
-              <div className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-[#d946ef] to-[#e879f9] bg-clip-text text-transparent mb-3">
+              <div className="text-6xl lg:text-7xl font-bold bg-gradient-to-r from-[#d946ef] to-[#e879f9] bg-clip-text text-transparent mb-2">
                 7s
               </div>
-              <p className="text-white/60 text-sm lg:text-base font-light leading-relaxed">
-                es todo lo que tienes para causar una <span className="text-white">primera impresión</span>
+              <p className="text-white/50 text-xs lg:text-sm font-light uppercase tracking-wider">
+                Primera<br />Impresión
               </p>
             </motion.div>
 
             {/* Stat 3 */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 1, delay: 0.4 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={isInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.8, delay: 0.5 }}
               className="text-center"
             >
-              <div className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-[#e879f9] to-[#a855f7] bg-clip-text text-transparent mb-3">
+              <div className="text-6xl lg:text-7xl font-bold bg-gradient-to-r from-[#e879f9] to-[#a855f7] bg-clip-text text-transparent mb-2">
                 80%
               </div>
-              <p className="text-white/60 text-sm lg:text-base font-light leading-relaxed">
-                del impacto de tu marca viene de su <span className="text-white">identidad visual</span>
+              <p className="text-white/50 text-xs lg:text-sm font-light uppercase tracking-wider">
+                Identidad<br />Visual
               </p>
             </motion.div>
           </div>
-
-          {/* Manifesto text below stats */}
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="text-white text-2xl sm:text-3xl lg:text-4xl font-extralight leading-tight max-w-4xl mx-auto mt-12 text-center"
-          >
-            {t('hero.manifesto1')}
-          </motion.h2>
         </motion.div>
 
-        {/* Brand Name - LUXMANIA minimalista */}
+        {/* Brand Name - LUXMANIA reducido para elegancia */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -272,10 +275,10 @@ const Hero = () => {
             delay: 0.4, 
             ease: [0.6, 0.05, 0.01, 0.9]
           }}
-          className="mb-6 lg:mb-8 relative"
+          className="mb-5 lg:mb-6 relative"
         >
           <motion.h1 
-            className="relative text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold font-display leading-tight tracking-wide"
+            className="relative text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold font-display leading-tight tracking-wide"
             animate={{
               filter: [
                 'drop-shadow(0 0 30px rgba(255,255,255,0.3)) drop-shadow(0 4px 8px rgba(0,0,0,0.5))',
@@ -307,27 +310,28 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, delay: 0.6 }}
-          className="text-white/30 text-xs font-light tracking-[0.4em] mb-8 font-mono uppercase"
+          className="text-white/30 text-xs font-light tracking-[0.4em] mb-10 font-mono uppercase"
         >
           {t('hero.subtitle')}
         </motion.p>
 
-        {/* CTA Button - Minimalista */}
+        {/* CTA Buttons - Doble acción */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, delay: 0.8 }}
-          className="flex justify-center"
+          className="flex flex-col sm:flex-row justify-center gap-3 items-center"
         >
+          {/* Primary CTA */}
           <motion.a
             href="#metodo"
             whileHover={{ scale: 1.02, x: 5 }}
             whileTap={{ scale: 0.98 }}
-            className="group relative bg-transparent border border-[#d946ef]/30 hover:border-[#d946ef] px-8 py-3 rounded-full text-white font-light text-base tracking-wide transition-all duration-500 overflow-hidden"
+            className="group relative bg-transparent border border-[#d946ef]/30 hover:border-[#d946ef] px-7 py-2.5 rounded-full text-white font-light text-sm tracking-wide transition-all duration-500 overflow-hidden"
           >
-            <span className="relative z-10 flex items-center gap-3">
+            <span className="relative z-10 flex items-center gap-2">
               <span className="text-white/70 group-hover:text-white transition-colors">{t('hero.cta')}</span>
-              <ArrowRight className="w-4 h-4 text-[#d946ef] group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-3.5 h-3.5 text-[#d946ef] group-hover:translate-x-1 transition-transform" />
             </span>
             
             {/* Hover gradient fill */}
@@ -338,10 +342,27 @@ const Hero = () => {
               transition={{ duration: 0.3 }}
             />
           </motion.a>
+
+          {/* Archetipos CTA */}
+          <motion.button
+            onClick={() => setIsArchetypesModalOpen(true)}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="group px-7 py-2.5 bg-white/5 backdrop-blur-sm text-white/80 rounded-full font-light text-sm tracking-wide border border-white/10 hover:bg-white/10 hover:border-[#a855f7]/40 transition-all duration-300 flex items-center gap-2"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-[#a855f7]" />
+            <span className="group-hover:text-white transition-colors">Descubre tu Arquetipo</span>
+          </motion.button>
         </motion.div>
 
 
       </motion.div>
+
+      {/* Archetipos Modal */}
+      <ArchetypesModal 
+        isOpen={isArchetypesModalOpen} 
+        onClose={() => setIsArchetypesModalOpen(false)} 
+      />
     </section>
   )
 }
