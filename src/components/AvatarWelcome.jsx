@@ -99,37 +99,36 @@ const AvatarWelcome = () => {
             </motion.div>
           </motion.div>
 
-          {/* Right: Circular video */}
+          {/* Right: Rectangular vertical video */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.3 }}
             className="order-1 lg:order-2 relative"
           >
-            {/* Circular video container */}
-            <div className="relative mx-auto w-full max-w-[450px] aspect-square">
+            {/* Rectangular vertical video container */}
+            <div className="relative mx-auto w-full max-w-[380px] aspect-[9/16]">
               {/* Rotating gradient ring */}
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0 rounded-full bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#a855f7] p-[3px]"
+                className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#a855f7] p-[3px]"
               >
-                <div className="w-full h-full rounded-full bg-black" />
+                <div className="w-full h-full rounded-3xl bg-black" />
               </motion.div>
 
               {/* Video */}
-              <div className="absolute inset-[3px] rounded-full overflow-hidden border-4 border-black shadow-2xl">
+              <div className="absolute inset-[3px] rounded-3xl overflow-hidden border-4 border-black shadow-2xl">
                 <div className="relative w-full h-full">
                   <iframe
-                    className="absolute w-full h-full scale-150"
+                    className="absolute w-full h-full scale-110"
                     src="https://www.youtube.com/embed/XonEErWLLTA?autoplay=0&loop=1&playlist=XonEErWLLTA&controls=1&modestbranding=1&rel=0"
                     title="Welcome to LUXMANIA"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                     style={{
-                      objectFit: 'cover',
-                      top: '8%'
+                      objectFit: 'cover'
                     }}
                   />
                 </div>
