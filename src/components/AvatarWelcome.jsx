@@ -74,44 +74,18 @@ const AvatarWelcome = () => {
               className="h-[2px] bg-gradient-to-r from-[#0066FF] via-[#D4AF37] to-transparent w-48 mb-8 origin-left"
             />
 
-            {/* Description */}
+            {/* Description - More welcoming and magical */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="text-white/80 text-lg lg:text-xl leading-relaxed mb-8"
+              className="text-white/80 text-xl lg:text-2xl leading-relaxed mb-10 font-light italic"
             >
-              Nuestros avatares digitales te dan la bienvenida. 
-              <span className="text-white font-medium"> Representa tu marca 24/7</span>, 
-              humaniza tu comunicación y conecta emocionalmente con tu audiencia.
+              "Bienvenido. Presiona play y descubre <span className="text-white font-medium not-italic">la magia</span> de combinar 
+              <span className="text-[#0066FF] font-medium not-italic"> psicología</span>, 
+              <span className="text-[#D4AF37] font-medium not-italic">diseño</span> y 
+              <span className="text-[#0066FF] font-medium not-italic">tecnología</span>."
             </motion.p>
-
-            {/* Benefits list */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="space-y-3 mb-10"
-            >
-              <div className="flex items-start gap-3">
-                <Sparkles className="w-5 h-5 text-[#D4AF37] mt-1 flex-shrink-0" />
-                <p className="text-white/70 text-base">
-                  Portavoz digital de tu marca con tu personalidad
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <Sparkles className="w-5 h-5 text-[#0066FF] mt-1 flex-shrink-0" />
-                <p className="text-white/70 text-base">
-                  Contenido escalable para redes sociales y campañas
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <Sparkles className="w-5 h-5 text-[#D4AF37] mt-1 flex-shrink-0" />
-                <p className="text-white/70 text-base">
-                  Conexión emocional real con tu audiencia
-                </p>
-              </div>
-            </motion.div>
 
             {/* CTA Button */}
             <motion.div
@@ -155,7 +129,7 @@ const AvatarWelcome = () => {
                 <div className="relative w-full h-full">
                   <iframe
                     className="absolute inset-0 w-full h-full scale-150"
-                    src="https://www.youtube.com/embed/XonEErWLLTA?autoplay=1&mute=1&loop=1&playlist=XonEErWLLTA&controls=0&modestbranding=1"
+                    src="https://www.youtube.com/embed/XonEErWLLTA?autoplay=0&loop=1&playlist=XonEErWLLTA&controls=1&modestbranding=1&rel=0"
                     title="Welcome to LUXMANIA"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
