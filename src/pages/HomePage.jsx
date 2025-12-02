@@ -17,11 +17,11 @@ const HomePage = () => {
       {/* Luis Virrueta Intro: Compact elegant section - BEFORE Hero stats */}
       <LuisViruettaIntro />
       
+      {/* Avatar Welcome: Nuestros avatares te saludan */}
+      <AvatarWelcome />
+      
       {/* Hero: LUXMANIA - Branding con fundamento psicológico */}
       <Hero />
-      
-      {/* Video de Avatares: Welcome to LUXMANIA */}
-      <AvatarWelcome />
       
       {/* Por Qué LUXMANIA: El diferenciador psicológico */}
       <WhyLuxmania />
