@@ -15,8 +15,8 @@ const AvatarWelcome = () => {
     >
       {/* Gradient background effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/4 w-[600px] h-[600px] bg-[#0066FF]/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#D4AF37]/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/4 w-[600px] h-[600px] bg-[#a855f7]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#d946ef]/10 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
@@ -37,8 +37,8 @@ const AvatarWelcome = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="flex items-center gap-3 mb-6"
             >
-              <Bot className="w-6 h-6 text-[#0066FF]" />
-              <p className="text-[#D4AF37] text-sm font-mono uppercase tracking-widest">
+              <Bot className="w-6 h-6 text-[#a855f7]" />
+              <p className="text-[#d946ef] text-sm font-mono uppercase tracking-widest">
                 Nuestros Avatares Te Dan la Bienvenida
               </p>
             </motion.div>
@@ -71,7 +71,7 @@ const AvatarWelcome = () => {
               initial={{ scaleX: 0 }}
               animate={isInView ? { scaleX: 1 } : {}}
               transition={{ duration: 1, delay: 0.4 }}
-              className="h-[2px] bg-gradient-to-r from-[#0066FF] via-[#D4AF37] to-transparent w-48 mb-8 origin-left"
+              className="h-[2px] bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-transparent w-48 mb-8 origin-left"
             />
 
             {/* Description - More welcoming, SEO-friendly and extensive */}
@@ -82,9 +82,9 @@ const AvatarWelcome = () => {
               className="text-white/90 text-lg lg:text-xl leading-relaxed mb-6"
             >
               <span className="text-white font-semibold">Bienvenido.</span> Presiona play y conoce cómo fusionamos{' '}
-              <span className="text-[#0066FF] font-medium">psicología del comportamiento</span>,{' '}
-              <span className="text-[#D4AF37] font-medium">diseño estratégico</span> y{' '}
-              <span className="text-[#0066FF] font-medium">tecnología de vanguardia</span>{' '}
+              <span className="text-[#a855f7] font-medium">psicología del comportamiento</span>,{' '}
+              <span className="text-[#d946ef] font-medium">diseño estratégico</span> y{' '}
+              <span className="text-[#a855f7] font-medium">tecnología de vanguardia</span>{' '}
               para crear <span className="text-white font-semibold">avatares digitales que representan tu marca</span> con autenticidad.
             </motion.p>
             
@@ -95,8 +95,8 @@ const AvatarWelcome = () => {
               className="text-white/70 text-base lg:text-lg leading-relaxed mb-10"
             >
               En LUXMANIA no solo creamos imágenes. Diseñamos <span className="text-white font-medium">identidades visuales inteligentes</span>,{' '}
-              <span className="text-[#D4AF37] font-medium">experiencias de marca memorables</span> y{' '}
-              <span className="text-[#0066FF] font-medium">soluciones digitales premium</span> que conectan emocionalmente con tu audiencia.
+              <span className="text-[#d946ef] font-medium">experiencias de marca memorables</span> y{' '}
+              <span className="text-[#a855f7] font-medium">soluciones digitales premium</span> que conectan emocionalmente con tu audiencia.
             </motion.p>
 
             {/* CTA Button */}
@@ -109,7 +109,7 @@ const AvatarWelcome = () => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="group bg-gradient-to-r from-[#0066FF] to-[#D4AF37] px-8 py-4 rounded-full text-white font-semibold flex items-center gap-3 shadow-2xl"
+                  className="group bg-gradient-to-r from-[#a855f7] to-[#d946ef] px-8 py-4 rounded-full text-white font-semibold flex items-center gap-3 shadow-2xl"
                 >
                   Creación de Avatares IA
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -131,7 +131,7 @@ const AvatarWelcome = () => {
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0 rounded-full bg-gradient-to-r from-[#0066FF] via-[#D4AF37] to-[#0066FF] p-[3px]"
+                className="absolute inset-0 rounded-full bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#a855f7] p-[3px]"
               >
                 <div className="w-full h-full rounded-full bg-black" />
               </motion.div>
@@ -165,7 +165,7 @@ const AvatarWelcome = () => {
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
-                className="absolute -top-4 -right-4 w-20 h-20 bg-[#D4AF37]/20 rounded-full blur-2xl"
+                className="absolute -top-4 -right-4 w-20 h-20 bg-[#d946ef]/20 rounded-full blur-2xl"
               />
               <motion.div
                 animate={{ 
@@ -178,7 +178,7 @@ const AvatarWelcome = () => {
                   ease: "easeInOut",
                   delay: 1
                 }}
-                className="absolute -bottom-4 -left-4 w-24 h-24 bg-[#0066FF]/20 rounded-full blur-2xl"
+                className="absolute -bottom-4 -left-4 w-24 h-24 bg-[#e879f9]/20 rounded-full blur-2xl"
               />
             </div>
           </motion.div>

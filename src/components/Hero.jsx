@@ -44,7 +44,7 @@ const Hero = () => {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute top-1/4 -left-20 lg:left-1/4 w-72 lg:w-[600px] h-72 lg:h-[600px] bg-[#0066FF] rounded-full blur-3xl"
+          className="absolute top-1/4 -left-20 lg:left-1/4 w-72 lg:w-[600px] h-72 lg:h-[600px] bg-[#a855f7] rounded-full blur-3xl"
         />
         <motion.div
           animate={{ 
@@ -59,7 +59,7 @@ const Hero = () => {
             ease: "easeInOut",
             delay: 1
           }}
-          className="absolute bottom-1/4 -right-20 lg:right-1/4 w-64 lg:w-[500px] h-64 lg:h-[500px] bg-[#D4AF37] rounded-full blur-3xl"
+          className="absolute bottom-1/4 -right-20 lg:right-1/4 w-64 lg:w-[500px] h-64 lg:h-[500px] bg-[#d946ef] rounded-full blur-3xl"
         />
         <motion.div
           animate={{ 
@@ -72,7 +72,7 @@ const Hero = () => {
             repeat: Infinity,
             ease: "linear"
           }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 lg:w-96 h-48 lg:h-96 bg-gradient-to-r from-[#0066FF] to-[#D4AF37] rounded-full blur-3xl"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 lg:w-96 h-48 lg:h-96 bg-gradient-to-r from-[#a855f7] to-[#d946ef] rounded-full blur-3xl"
         />
       </div>
 
@@ -138,9 +138,9 @@ const Hero = () => {
             <motion.div
               animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0, 0.3] }}
               transition={{ duration: 2, repeat: Infinity }}
-              className="absolute inset-0 bg-[#0066FF] rounded-full blur-xl"
+              className="absolute inset-0 bg-[#a855f7] rounded-full blur-xl"
             />
-            <Brain className="relative w-12 h-12 text-[#0066FF] drop-shadow-[0_0_15px_rgba(0,102,255,0.5)]" strokeWidth={1.5} />
+            <Brain className="relative w-12 h-12 text-[#a855f7] drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]" strokeWidth={1.5} />
           </div>
         </motion.div>
 
@@ -165,9 +165,9 @@ const Hero = () => {
             <motion.div
               animate={{ scale: [1, 1.8, 1], opacity: [0.3, 0, 0.3] }}
               transition={{ duration: 2.5, repeat: Infinity }}
-              className="absolute inset-0 bg-[#D4AF37] rounded-full blur-xl"
+              className="absolute inset-0 bg-[#d946ef] rounded-full blur-xl"
             />
-            <Sparkles className="relative w-10 h-10 text-[#D4AF37] drop-shadow-[0_0_15px_rgba(212,175,55,0.6)]" strokeWidth={1.5} />
+            <Sparkles className="relative w-10 h-10 text-[#d946ef] drop-shadow-[0_0_15px_rgba(217,70,239,0.6)]" strokeWidth={1.5} />
           </div>
         </motion.div>
 
@@ -192,9 +192,9 @@ const Hero = () => {
             <motion.div
               animate={{ scale: [1, 1.6, 1], opacity: [0.3, 0, 0.3] }}
               transition={{ duration: 2.2, repeat: Infinity }}
-              className="absolute inset-0 bg-[#0066FF] rounded-full blur-xl"
+              className="absolute inset-0 bg-[#e879f9] rounded-full blur-xl"
             />
-            <Zap className="relative w-10 h-10 text-[#0066FF] drop-shadow-[0_0_15px_rgba(0,102,255,0.5)]" strokeWidth={1.5} />
+            <Zap className="relative w-10 h-10 text-[#e879f9] drop-shadow-[0_0_15px_rgba(232,121,249,0.5)]" strokeWidth={1.5} />
           </div>
         </motion.div>
 
@@ -289,7 +289,7 @@ const Hero = () => {
               repeat: Infinity,
               ease: "easeInOut"
             }}
-            className="absolute inset-0 blur-3xl bg-gradient-to-r from-[#0066FF]/20 via-white/30 to-[#D4AF37]/20"
+            className="absolute inset-0 blur-3xl bg-gradient-to-r from-[#a855f7]/20 via-white/30 to-[#d946ef]/20"
             style={{ transform: 'translateY(20px)' }}
           />
 
@@ -330,9 +330,9 @@ const Hero = () => {
             <motion.div
               animate={{
                 background: [
-                  'linear-gradient(90deg, transparent, rgba(0,102,255,0.5), transparent)',
-                  'linear-gradient(90deg, transparent, rgba(212,175,55,0.5), transparent)',
-                  'linear-gradient(90deg, transparent, rgba(0,102,255,0.5), transparent)'
+                  'linear-gradient(90deg, transparent, rgba(168,85,247,0.5), transparent)',
+                  'linear-gradient(90deg, transparent, rgba(217,70,239,0.5), transparent)',
+                  'linear-gradient(90deg, transparent, rgba(168,85,247,0.5), transparent)'
                 ]
               }}
               transition={{ duration: 4, repeat: Infinity }}
@@ -356,7 +356,7 @@ const Hero = () => {
           initial={{ scaleX: 0 }}
           animate={isInView ? { scaleX: 1 } : {}}
           transition={{ duration: 1.5, delay: 1, ease: [0.76, 0, 0.24, 1] }}
-          className="h-px bg-gradient-to-r from-transparent via-[#0066FF]/40 to-transparent mx-auto w-48 sm:w-64 lg:w-96 mb-12 sm:mb-16"
+          className="h-px bg-gradient-to-r from-transparent via-[#a855f7]/40 to-transparent mx-auto w-48 sm:w-64 lg:w-96 mb-12 sm:mb-16"
         />
 
         {/* Core message */}
@@ -381,14 +381,14 @@ const Hero = () => {
             whileHover={{ 
               scale: 1.08, 
               y: -4,
-              boxShadow: "0 20px 60px rgba(0,102,255,0.4)"
+              boxShadow: "0 20px 60px rgba(168,85,247,0.4)"
             }}
             whileTap={{ scale: 0.95 }}
-            className="group relative inline-flex items-center gap-3 px-10 sm:px-12 py-5 sm:py-6 bg-[#0066FF] text-white rounded-full text-sm sm:text-base font-semibold tracking-wide uppercase overflow-hidden shadow-lg shadow-[#0066FF]/30"
+            className="group relative inline-flex items-center gap-3 px-10 sm:px-12 py-5 sm:py-6 bg-[#a855f7] text-white rounded-full text-sm sm:text-base font-semibold tracking-wide uppercase overflow-hidden shadow-lg shadow-[#a855f7]/30"
           >
             {/* Animated gradient overlay */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-[#0066FF] via-[#0052CC] to-[#0066FF]"
+              className="absolute inset-0 bg-gradient-to-r from-[#a855f7] via-[#7c3aed] to-[#a855f7]"
               animate={{
                 x: ['-100%', '100%']
               }}
@@ -418,19 +418,19 @@ const Hero = () => {
             whileHover={{ 
               scale: 1.08, 
               y: -4,
-              borderColor: 'rgba(212,175,55,0.8)'
+              borderColor: 'rgba(217,70,239,0.8)'
             }}
             whileTap={{ scale: 0.95 }}
             className="group relative inline-flex items-center gap-3 px-10 sm:px-12 py-5 sm:py-6 bg-transparent border-2 border-white/20 text-white rounded-full text-sm sm:text-base font-semibold tracking-wide uppercase overflow-hidden transition-colors duration-300"
           >
             {/* Hover fill effect */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/0 to-[#D4AF37]/10"
+              className="absolute inset-0 bg-gradient-to-r from-[#d946ef]/0 to-[#d946ef]/10"
               initial={{ x: '-100%' }}
               whileHover={{ x: 0 }}
               transition={{ duration: 0.3 }}
             />
-            <span className="relative z-10 group-hover:text-[#D4AF37] transition-colors">
+            <span className="relative z-10 group-hover:text-[#d946ef] transition-colors">
               {t('hero.cta2')}
             </span>
 
@@ -439,9 +439,9 @@ const Hero = () => {
               className="absolute inset-0 rounded-full"
               animate={{
                 boxShadow: [
-                  '0 0 0 0 rgba(212,175,55,0)',
-                  '0 0 0 4px rgba(212,175,55,0.2)',
-                  '0 0 0 0 rgba(212,175,55,0)'
+                  '0 0 0 0 rgba(217,70,239,0)',
+                  '0 0 0 4px rgba(217,70,239,0.2)',
+                  '0 0 0 0 rgba(217,70,239,0)'
                 ]
               }}
               transition={{ duration: 2, repeat: Infinity }}

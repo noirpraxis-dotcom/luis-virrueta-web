@@ -56,7 +56,7 @@ const Footer = () => {
               
               {/* Underline decorativo */}
               <motion.div 
-                className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#0066FF] to-transparent opacity-0"
+                className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#d946ef] to-transparent opacity-0"
                 whileHover={{ opacity: 0.5 }}
                 transition={{ duration: 0.3 }}
               />

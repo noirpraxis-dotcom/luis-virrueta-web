@@ -9,7 +9,7 @@ const VideoBackground = () => {
   useEffect(() => {
     // Intentar cargar el video
     const video = document.createElement('video')
-    video.src = 'https://cdn.pixabay.com/video/2022/01/20/105014-666539940_large.mp4'
+    video.src = '/luxmania rosa.mp4'
     video.preload = 'metadata'
     
     // Timeout de 3 segundos - si no carga, usar imagen
@@ -59,7 +59,7 @@ const VideoBackground = () => {
             objectFit: 'cover',
           }}
         >
-          <source src="https://cdn.pixabay.com/video/2022/01/20/105014-666539940_large.mp4" type="video/mp4" />
+          <source src="/luxmania rosa.mp4" type="video/mp4" />
         </motion.video>
       ) : (
         // Image Background - Pantalla completa en todos los dispositivos, centro siempre visible
