@@ -198,18 +198,66 @@ const Hero = () => {
           </div>
         </motion.div>
 
-        {/* Manifesto - Minimalista */}
+        {/* Stats Grid - Datos organizados elegantemente */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, ease: [0.6, 0.05, 0.01, 0.9] }}
-          className="mb-10 lg:mb-12"
+          className="mb-16 lg:mb-20"
         >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Stat 1 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 1, delay: 0.2 }}
+              className="text-center"
+            >
+              <div className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-[#a855f7] to-[#d946ef] bg-clip-text text-transparent mb-3">
+                95%
+              </div>
+              <p className="text-white/60 text-sm lg:text-base font-light leading-relaxed">
+                de las decisiones de compra ocurren en el <span className="text-white">inconsciente</span>
+              </p>
+            </motion.div>
+
+            {/* Stat 2 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 1, delay: 0.3 }}
+              className="text-center"
+            >
+              <div className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-[#d946ef] to-[#e879f9] bg-clip-text text-transparent mb-3">
+                7s
+              </div>
+              <p className="text-white/60 text-sm lg:text-base font-light leading-relaxed">
+                es todo lo que tienes para causar una <span className="text-white">primera impresión</span>
+              </p>
+            </motion.div>
+
+            {/* Stat 3 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 1, delay: 0.4 }}
+              className="text-center"
+            >
+              <div className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-[#e879f9] to-[#a855f7] bg-clip-text text-transparent mb-3">
+                80%
+              </div>
+              <p className="text-white/60 text-sm lg:text-base font-light leading-relaxed">
+                del impacto de tu marca viene de su <span className="text-white">identidad visual</span>
+              </p>
+            </motion.div>
+          </div>
+
+          {/* Manifesto text below stats */}
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="text-white text-2xl sm:text-3xl lg:text-4xl font-extralight leading-tight max-w-4xl mx-auto"
+            transition={{ duration: 1, delay: 0.5 }}
+            className="text-white text-2xl sm:text-3xl lg:text-4xl font-extralight leading-tight max-w-4xl mx-auto mt-12 text-center"
           >
             {t('hero.manifesto1')}
           </motion.h2>

@@ -5,22 +5,74 @@ import { ArrowRight, Brain, Sparkles, Palette, Code } from 'lucide-react'
 const LuisViruettaIntro = () => {
   return (
     <section className="relative bg-black py-16 lg:py-24 overflow-hidden">
-      {/* Gradient background effects - Elegante azul + fucsia */}
+      {/* Gradient background effects - Elegante azul + fucsia MÁS VISIBLES */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-gradient-to-br from-[#7c3aed]/8 via-[#a855f7]/10 to-[#6366f1]/6 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-gradient-to-tl from-[#d946ef]/8 via-[#c026d3]/10 to-[#8b5cf6]/6 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-gradient-to-br from-[#7c3aed]/15 via-[#a855f7]/20 to-[#6366f1]/12 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-gradient-to-tl from-[#d946ef]/15 via-[#c026d3]/20 to-[#8b5cf6]/12 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
-        <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-16 items-center">
           
-          {/* Left: Content - CINEMÁTICO Y MINIMALISTA */}
+          {/* Left: Photo - Static border */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+            className="order-1 lg:order-1 relative"
+          >
+            {/* Main circular photo container */}
+            <div className="relative mx-auto w-full max-w-[380px] aspect-square">
+              {/* Static gradient ring - SIN ROTAR */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#a855f7] via-[#d946ef] to-[#e879f9] p-[3px]">
+                <div className="w-full h-full rounded-full bg-black" />
+              </div>
+
+              {/* Photo */}
+              <div className="absolute inset-[3px] rounded-full overflow-hidden border-4 border-black shadow-2xl">
+                <img 
+                  src="/Luis.png" 
+                  alt="Luis Virrueta"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Floating badge con iconos individuales */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#7c3aed] via-[#d946ef] to-[#8b5cf6] p-[2px] rounded-full shadow-2xl"
+              >
+                <div className="bg-black px-6 py-2.5 rounded-full flex items-center gap-2">
+                  <Brain className="w-4 h-4 text-[#a855f7]" strokeWidth={2} />
+                  <span className="text-white/90 text-xs font-medium tracking-wider whitespace-nowrap">
+                    Psych
+                  </span>
+                  <span className="text-white/30 text-xs">×</span>
+                  <Palette className="w-4 h-4 text-[#d946ef]" strokeWidth={2} />
+                  <span className="text-white/90 text-xs font-medium tracking-wider whitespace-nowrap">
+                    Design
+                  </span>
+                  <span className="text-white/30 text-xs">×</span>
+                  <Code className="w-4 h-4 text-[#8b5cf6]" strokeWidth={2} />
+                  <span className="text-white/90 text-xs font-medium tracking-wider whitespace-nowrap">
+                    Tech
+                  </span>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+
+          {/* Right: Content - CINEMÁTICO Y MINIMALISTA */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-            className="order-2 lg:order-1 flex flex-col justify-center"
+            className="order-2 lg:order-2 flex flex-col justify-center"
           >
             {/* Eyebrow - minimal con icono */}
             <motion.div
@@ -36,19 +88,30 @@ const LuisViruettaIntro = () => {
               </p>
             </motion.div>
 
-            {/* Main heading - Tipografía elegante igual que bienvenida */}
+            {/* Main heading - Tipografía elegante con nombre */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-4xl lg:text-6xl font-extralight text-white mb-12 tracking-tight font-display leading-tight"
+              className="text-4xl lg:text-6xl font-extralight text-white mb-8 tracking-tight font-display leading-tight"
             >
-              Psicólogo que{' '}
-              <span className="block lg:inline bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#e879f9] bg-clip-text text-transparent font-light">
-                Diseña Marcas
+              Luis{' '}
+              <span className="bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#e879f9] bg-clip-text text-transparent font-light">
+                Virrueta
               </span>
             </motion.h2>
+
+            {/* Subtitle descriptivo */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.35 }}
+              className="text-white/80 text-xl lg:text-2xl font-light mb-12"
+            >
+              Psicólogo que diseña marcas
+            </motion.p>
 
             {/* Description - Enfocado en psicología/diseño/tech */}
             <motion.p
@@ -93,62 +156,6 @@ const LuisViruettaIntro = () => {
                 </motion.button>
               </Link>
             </motion.div>
-          </motion.div>
-
-          {/* Right: Photo - More compact */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.3 }}
-            className="order-1 lg:order-2 relative"
-          >
-            {/* Main circular photo container */}
-            <div className="relative mx-auto w-full max-w-[380px] aspect-square">
-              {/* Rotating gradient ring */}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0 rounded-full bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#a855f7] p-[3px]"
-              >
-                <div className="w-full h-full rounded-full bg-black" />
-              </motion.div>
-
-              {/* Photo */}
-              <div className="absolute inset-[3px] rounded-full overflow-hidden border-4 border-black shadow-2xl">
-                <img 
-                  src="/Luis.png" 
-                  alt="Luis Virrueta"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Floating badge con iconos individuales */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#7c3aed] via-[#d946ef] to-[#8b5cf6] p-[2px] rounded-full shadow-2xl"
-              >
-                <div className="bg-black px-6 py-2.5 rounded-full flex items-center gap-2">
-                  <Brain className="w-4 h-4 text-[#a855f7]" strokeWidth={2} />
-                  <span className="text-white/90 text-xs font-medium tracking-wider whitespace-nowrap">
-                    Psych
-                  </span>
-                  <span className="text-white/30 text-xs">×</span>
-                  <Palette className="w-4 h-4 text-[#d946ef]" strokeWidth={2} />
-                  <span className="text-white/90 text-xs font-medium tracking-wider whitespace-nowrap">
-                    Design
-                  </span>
-                  <span className="text-white/30 text-xs">×</span>
-                  <Code className="w-4 h-4 text-[#8b5cf6]" strokeWidth={2} />
-                  <span className="text-white/90 text-xs font-medium tracking-wider whitespace-nowrap">
-                    Tech
-                  </span>
-                </div>
-              </motion.div>
-            </div>
           </motion.div>
         </div>
       </div>

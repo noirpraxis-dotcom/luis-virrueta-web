@@ -108,14 +108,10 @@ const AvatarWelcome = () => {
           >
             {/* Rectangular vertical video container */}
             <div className="relative mx-auto w-full max-w-[380px] aspect-[9/16]">
-              {/* Rotating gradient ring */}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#a855f7] p-[3px]"
-              >
+              {/* Static gradient ring - sin rotación */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#a855f7] via-[#d946ef] to-[#e879f9] p-[3px]">
                 <div className="w-full h-full rounded-3xl bg-black" />
-              </motion.div>
+              </div>
 
               {/* Video */}
               <div className="absolute inset-[3px] rounded-3xl overflow-hidden border-4 border-black shadow-2xl">
