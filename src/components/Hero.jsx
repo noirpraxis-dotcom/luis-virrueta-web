@@ -2,7 +2,7 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { useLanguage } from '../context/LanguageContext'
-import { Brain, Sparkles, Zap, ChevronDown } from 'lucide-react'
+import { Brain, Sparkles, Zap, ChevronDown, ArrowRight } from 'lucide-react'
 
 const Hero = () => {
   const { t } = useLanguage()
