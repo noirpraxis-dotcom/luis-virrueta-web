@@ -30,7 +30,7 @@ const AvatarWelcome = () => {
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
             className="order-2 lg:order-1"
           >
-            {/* Eyebrow with icon */}
+            {/* Eyebrow with icon - New hierarchy */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -39,7 +39,7 @@ const AvatarWelcome = () => {
             >
               <Bot className="w-6 h-6 text-[#0066FF]" />
               <p className="text-[#D4AF37] text-sm font-mono uppercase tracking-widest">
-                Nuestros Avatares IA
+                Nuestros Avatares Te Dan la Bienvenida
               </p>
             </motion.div>
 
@@ -74,17 +74,29 @@ const AvatarWelcome = () => {
               className="h-[2px] bg-gradient-to-r from-[#0066FF] via-[#D4AF37] to-transparent w-48 mb-8 origin-left"
             />
 
-            {/* Description - More welcoming and magical */}
+            {/* Description - More welcoming, SEO-friendly and extensive */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="text-white/80 text-xl lg:text-2xl leading-relaxed mb-10 font-light italic"
+              className="text-white/90 text-lg lg:text-xl leading-relaxed mb-6"
             >
-              "Bienvenido. Presiona play y descubre <span className="text-white font-medium not-italic">la magia</span> de combinar 
-              <span className="text-[#0066FF] font-medium not-italic"> psicología</span>, 
-              <span className="text-[#D4AF37] font-medium not-italic">diseño</span> y 
-              <span className="text-[#0066FF] font-medium not-italic">tecnología</span>."
+              <span className="text-white font-semibold">Bienvenido.</span> Presiona play y conoce cómo fusionamos{' '}
+              <span className="text-[#0066FF] font-medium">psicología del comportamiento</span>,{' '}
+              <span className="text-[#D4AF37] font-medium">diseño estratégico</span> y{' '}
+              <span className="text-[#0066FF] font-medium">tecnología de vanguardia</span>{' '}
+              para crear <span className="text-white font-semibold">avatares digitales que representan tu marca</span> con autenticidad.
+            </motion.p>
+            
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="text-white/70 text-base lg:text-lg leading-relaxed mb-10"
+            >
+              En LUXMANIA no solo creamos imágenes. Diseñamos <span className="text-white font-medium">identidades visuales inteligentes</span>,{' '}
+              <span className="text-[#D4AF37] font-medium">experiencias de marca memorables</span> y{' '}
+              <span className="text-[#0066FF] font-medium">soluciones digitales premium</span> que conectan emocionalmente con tu audiencia.
             </motion.p>
 
             {/* CTA Button */}
@@ -128,14 +140,15 @@ const AvatarWelcome = () => {
               <div className="absolute inset-[3px] rounded-full overflow-hidden border-4 border-black shadow-2xl">
                 <div className="relative w-full h-full">
                   <iframe
-                    className="absolute inset-0 w-full h-full scale-150"
+                    className="absolute w-full h-full scale-150"
                     src="https://www.youtube.com/embed/XonEErWLLTA?autoplay=0&loop=1&playlist=XonEErWLLTA&controls=1&modestbranding=1&rel=0"
                     title="Welcome to LUXMANIA"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                     style={{
-                      objectFit: 'cover'
+                      objectFit: 'cover',
+                      top: '8%'
                     }}
                   />
                 </div>
