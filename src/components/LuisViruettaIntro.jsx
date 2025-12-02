@@ -4,7 +4,7 @@ import { ArrowRight, Brain, Sparkles, Palette, Code } from 'lucide-react'
 
 const LuisViruettaIntro = () => {
   return (
-    <section className="relative bg-black py-20 lg:py-32 overflow-hidden">
+    <section className="relative bg-black py-16 lg:py-24 overflow-hidden">
       {/* Gradient background effects */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-[#0066FF]/10 rounded-full blur-3xl" />
@@ -19,7 +19,7 @@ const LuisViruettaIntro = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-            className="relative order-2 lg:order-1"
+            className="relative order-1 lg:order-1"
           >
             {/* Main circular photo container */}
             <div className="relative mx-auto w-full max-w-[380px] aspect-square">
@@ -139,35 +139,35 @@ const LuisViruettaIntro = () => {
               </div>
             </motion.div>
 
-            {/* Experience badges/chips - More compact */}
+            {/* Experience badges/chips - Compact to fit in one line on mobile */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.65 }}
-              className="flex flex-wrap gap-3 mb-8"
+              className="flex flex-wrap gap-2 mb-8"
             >
-              <div className="bg-gradient-to-r from-[#0066FF]/20 to-[#0066FF]/10 backdrop-blur-sm border border-[#0066FF]/30 rounded-full px-6 py-3 flex items-center gap-3">
-                <Brain className="w-5 h-5 text-[#0066FF]" strokeWidth={2} />
+              <div className="bg-gradient-to-r from-[#0066FF]/20 to-[#0066FF]/10 backdrop-blur-sm border border-[#0066FF]/30 rounded-full px-3 py-2 flex items-center gap-2">
+                <Brain className="w-4 h-4 text-[#0066FF]" strokeWidth={2} />
                 <div>
-                  <p className="text-white text-sm font-semibold">Psicología</p>
-                  <p className="text-white/60 text-xs">2015 - Presente</p>
+                  <p className="text-white text-xs font-semibold">Psicología</p>
+                  <p className="text-white/60 text-[10px]">2015 - Presente</p>
                 </div>
               </div>
               
-              <div className="bg-gradient-to-r from-[#D4AF37]/20 to-[#D4AF37]/10 backdrop-blur-sm border border-[#D4AF37]/30 rounded-full px-6 py-3 flex items-center gap-3">
-                <Palette className="w-5 h-5 text-[#D4AF37]" strokeWidth={2} />
+              <div className="bg-gradient-to-r from-[#D4AF37]/20 to-[#D4AF37]/10 backdrop-blur-sm border border-[#D4AF37]/30 rounded-full px-3 py-2 flex items-center gap-2">
+                <Palette className="w-4 h-4 text-[#D4AF37]" strokeWidth={2} />
                 <div>
-                  <p className="text-white text-sm font-semibold">Diseño</p>
-                  <p className="text-white/60 text-xs">8+ años</p>
+                  <p className="text-white text-xs font-semibold">Diseño</p>
+                  <p className="text-white/60 text-[10px]">8+ años</p>
                 </div>
               </div>
               
-              <div className="bg-gradient-to-r from-[#0066FF]/20 to-[#0066FF]/10 backdrop-blur-sm border border-[#0066FF]/30 rounded-full px-6 py-3 flex items-center gap-3">
-                <Code className="w-5 h-5 text-[#0066FF]" strokeWidth={2} />
+              <div className="bg-gradient-to-r from-[#0066FF]/20 to-[#0066FF]/10 backdrop-blur-sm border border-[#0066FF]/30 rounded-full px-3 py-2 flex items-center gap-2">
+                <Code className="w-4 h-4 text-[#0066FF]" strokeWidth={2} />
                 <div>
-                  <p className="text-white text-sm font-semibold">Desarrollo Tech</p>
-                  <p className="text-white/60 text-xs">2020 - Presente</p>
+                  <p className="text-white text-xs font-semibold">Dev Tech</p>
+                  <p className="text-white/60 text-[10px]">2020 - Presente</p>
                 </div>
               </div>
             </motion.div>
