@@ -2,6 +2,7 @@ import { motion, useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { Briefcase, ExternalLink, Eye, Heart, Zap, Star, Award, Sparkles, Palette, Type, Droplets, Image as ImageIcon, FileText } from 'lucide-react'
 import LogoCarousel3D from '../components/LogoCarousel3D'
+import BrandingShowcase from '../components/BrandingShowcase'
 
 const PortafolioPage = () => {
   const heroRef = useRef(null)
@@ -86,7 +87,7 @@ const PortafolioPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black">
       {/* Hero Section */}
-      <section ref={heroRef} className="relative py-32 lg:py-40 px-6 lg:px-20 overflow-hidden">
+      <section ref={heroRef} className="relative py-20 lg:py-32 px-6 lg:px-20 overflow-hidden">
         {/* Gradient orbs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl" />
@@ -94,33 +95,31 @@ const PortafolioPage = () => {
         </div>
 
         <div className="relative max-w-7xl mx-auto">
-          {/* Icon - Premium y elegante */}
+          {/* Icon - Premium y elegante sin contenedor */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.8 }}
-            className="text-center mb-8"
+            className="text-center mb-6"
           >
             <motion.div
-              className="inline-flex p-4 rounded-2xl bg-gradient-to-br from-[#0ea5e9]/10 to-[#a855f7]/10 border border-[#0ea5e9]/20"
               whileHover={{ scale: 1.1, rotate: 5 }}
               transition={{ duration: 0.3 }}
+              className="inline-block"
             >
-              <Award className="w-12 h-12 text-[#0ea5e9]" strokeWidth={1.5} />
+              <Sparkles className="w-12 h-12 text-white/80" strokeWidth={1.2} />
             </motion.div>
           </motion.div>
 
-          {/* Title - Con más letter-spacing */}
+          {/* Title - Blanco elegante */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-5xl lg:text-8xl font-bold text-center mb-8 font-display tracking-[0.15em]"
+            className="text-5xl lg:text-8xl font-bold text-center mb-8 font-display tracking-[0.15em] text-white"
             style={{ letterSpacing: '0.15em' }}
           >
-            <span className="bg-gradient-to-r from-[#0ea5e9] via-[#a855f7] to-[#d946ef] bg-clip-text text-transparent">
-              PORTAFOLIO
-            </span>
+            PORTAFOLIO
           </motion.h1>
 
           {/* Subtitle */}
@@ -144,6 +143,9 @@ const PortafolioPage = () => {
 
       {/* 3D Logo Carousel */}
       <LogoCarousel3D />
+
+      {/* Branding Showcase con Video */}
+      <BrandingShowcase />
 
       {/* Filter Buttons */}
       <section className="py-12 px-6 lg:px-20">
