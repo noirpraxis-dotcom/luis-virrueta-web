@@ -19,11 +19,11 @@ async function compressLogos() {
 
     // Leer todos los archivos
     const files = await readdir(inputDir)
-    const imageFiles = files.filter(file => 
-      /\.(png|jpg|jpeg)$/i.test(file)
-    )
+    const imageFiles = files
+      .filter(file => /\.(png|jpg|jpeg)$/i.test(file))
+      .sort() // Ordenar alfabéticamente
 
-    console.log(`📦 Comprimiendo ${imageFiles.length} imágenes...\n`)
+    console.log(`📦 Comprimiendo ${imageFiles.length} imágenes (ordenadas alfabéticamente)...\n`)
 
     let totalOriginal = 0
     let totalCompressed = 0
