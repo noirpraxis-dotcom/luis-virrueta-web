@@ -146,8 +146,8 @@ const IndividualServices = () => {
                 }}
                 className="group relative aspect-square"
               >
-                {/* Card container */}
-                <div className="relative h-full bg-gradient-to-br from-[#1A1A1A] to-[#0d0d0d] border border-white/10 rounded-2xl lg:rounded-3xl p-6 lg:p-8 hover:border-white/30 transition-all duration-500 flex flex-col items-center justify-center text-center">
+                {/* Card container - Más compacto y elegante */}
+                <div className="relative h-full bg-gradient-to-br from-[#1A1A1A] to-[#0d0d0d] border border-white/10 rounded-2xl lg:rounded-3xl p-4 lg:p-6 hover:border-white/30 transition-all duration-500 flex flex-col items-center justify-center text-center">
                   
                   {/* Animated glow on hover */}
                   <motion.div
@@ -157,17 +157,17 @@ const IndividualServices = () => {
                     }}
                   />
 
-                  {/* Icon with gradient background - Más grande */}
+                  {/* Icon with gradient background - Proporción optimizada */}
                   <motion.div
-                    className={`relative mb-4 p-5 lg:p-6 rounded-2xl bg-gradient-to-br ${service.color} opacity-90 group-hover:opacity-100 transition-opacity`}
+                    className={`relative mb-3 lg:mb-4 p-3 lg:p-4 rounded-xl lg:rounded-2xl bg-gradient-to-br ${service.color} opacity-90 group-hover:opacity-100 transition-opacity flex-shrink-0`}
                     whileHover={{ rotate: [0, -10, 10, -10, 0] }}
                     transition={{ duration: 0.5 }}
                   >
-                    <Icon className="w-8 h-8 lg:w-10 lg:h-10 text-white" strokeWidth={1.5} />
+                    <Icon className="w-6 h-6 lg:w-8 lg:h-8 text-white" strokeWidth={1.5} />
                     
                     {/* Shimmer effect */}
                     <motion.div
-                      className="absolute inset-0 rounded-2xl"
+                      className="absolute inset-0 rounded-xl lg:rounded-2xl"
                       style={{
                         background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
                         backgroundSize: '200% 100%'
@@ -184,12 +184,12 @@ const IndividualServices = () => {
                     />
                   </motion.div>
 
-                  {/* Text content */}
-                  <div className="relative z-10">
-                    <h3 className="text-white text-base lg:text-lg font-bold mb-1 group-hover:text-[#d946ef] transition-colors">
+                  {/* Text content - Compacto y responsive */}
+                  <div className="relative z-10 flex-1 flex flex-col justify-center min-h-0">
+                    <h3 className="text-white text-sm lg:text-base font-bold mb-0.5 lg:mb-1 group-hover:text-[#d946ef] transition-colors leading-tight">
                       {service.name}
                     </h3>
-                    <p className="text-white/50 text-xs lg:text-sm font-light group-hover:text-white/70 transition-colors">
+                    <p className="text-white/50 text-[10px] lg:text-xs font-light group-hover:text-white/70 transition-colors leading-tight line-clamp-2">
                       {service.description}
                     </p>
                   </div>
