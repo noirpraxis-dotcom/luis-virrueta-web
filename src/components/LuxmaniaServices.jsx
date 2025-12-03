@@ -192,49 +192,6 @@ const LuxmaniaServices = () => {
           })}
         </div>
 
-        {/* Individual Services */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 1.2 }}
-          className="text-center"
-        >
-          <h3 className="text-white text-2xl lg:text-3xl font-bold mb-6 font-display">
-            O construye tu solución{' '}
-            <span className="text-[#d946ef]">a medida</span>
-          </h3>
-          <p className="text-white/60 mb-12 max-w-2xl mx-auto">
-            También ofrecemos servicios individuales para complementar tu marca existente
-          </p>
-
-          {/* Services Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {individualServices.map((service, index) => {
-              const Icon = service.icon
-              return (
-                <motion.a
-                  key={index}
-                  href="#contacto"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ duration: 0.4, delay: 1.4 + index * 0.05 }}
-                  whileHover={{ y: -5, scale: 1.05, borderColor: 'rgba(168,85,247,0.6)' }}
-                  className="group relative bg-[#1A1A1A] border border-white/10 rounded-2xl p-6 hover:bg-gradient-to-br hover:from-[#a855f7]/5 hover:to-[#d946ef]/5 transition-all duration-300 cursor-pointer block"
-                >
-                  <Icon className="w-8 h-8 text-[#a855f7] group-hover:text-[#d946ef] mx-auto mb-3 transition-colors" strokeWidth={1.5} />
-                  <p className="text-white/70 group-hover:text-white text-sm font-light transition-colors">{service.name}</p>
-                  
-                  {/* Subtle glow on hover */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-br from-[#a855f7]/0 to-[#d946ef]/0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                    initial={false}
-                  />
-                </motion.a>
-              )
-            })}
-          </div>
-        </motion.div>
-
         {/* Bottom CTA */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}

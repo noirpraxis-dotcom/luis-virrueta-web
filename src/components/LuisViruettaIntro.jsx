@@ -403,6 +403,9 @@ const LuisViruettaIntro = () => {
           </Link>
         </motion.div>
       </div>
+
+      {/* Gradient fade to black at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent via-black/30 to-black pointer-events-none" />
     </section>
   )
 }

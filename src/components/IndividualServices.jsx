@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Camera, Palette, Smartphone, Mic, Brain, FileText, Sparkles, Video, Code, Megaphone } from 'lucide-react'
+import { Camera, Palette, Smartphone, Mic, Brain, FileText, Sparkles, Video, Code, Megaphone, Calendar } from 'lucide-react'
 
 const IndividualServices = () => {
   const services = [
@@ -215,8 +215,11 @@ const IndividualServices = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="text-center mt-12 lg:mt-16"
         >
-          <p className="text-white/60 text-base lg:text-lg mb-6">
-            ¿No estás seguro qué necesitas?
+          <p className="text-white/60 text-base lg:text-lg mb-4">
+            ¿No encuentras lo que buscas?
+          </p>
+          <p className="text-white text-lg lg:text-xl mb-6">
+            <span className="text-[#a855f7] font-semibold">Creamos soluciones personalizadas</span> para tus necesidades específicas
           </p>
           
           <motion.a
@@ -239,6 +242,7 @@ const IndividualServices = () => {
                 ease: "linear"
               }}
             />
+            <Calendar className="w-5 h-5 relative z-10" />
             <span className="relative z-10">Agenda tu Consulta Gratuita</span>
           </motion.a>
         </motion.div>

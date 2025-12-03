@@ -129,16 +129,30 @@ const Header = ({ menuItems }) => {
                 >
                   <Link to={item.href}>
                     <motion.div
-                      className="text-white/70 hover:text-white transition-all duration-500 text-[0.75rem] font-light tracking-[0.25em] uppercase cursor-pointer whitespace-nowrap"
-                      style={{ 
-                        fontFamily: 'Space Grotesk, sans-serif',
-                        fontWeight: 300,
-                        letterSpacing: '0.25em'
-                      }}
-                      whileHover={{ y: -2, letterSpacing: '0.3em' }}
+                      className="relative cursor-pointer whitespace-nowrap"
+                      whileHover={{ y: -2 }}
                       transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
                     >
-                      {item.name}
+                      <motion.span
+                        className="text-[0.8rem] uppercase"
+                        style={{ 
+                          fontFamily: 'Space Grotesk, sans-serif',
+                          fontWeight: 400,
+                          letterSpacing: '0.2em',
+                          background: 'linear-gradient(135deg, #ffffff 0%, #e4e4e7 30%, #ffffff 60%, #d4d4d8 100%)',
+                          WebkitBackgroundClip: 'text',
+                          backgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          filter: 'drop-shadow(0 0 12px rgba(255,255,255,0.15))',
+                        }}
+                        whileHover={{
+                          filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.4))',
+                          letterSpacing: '0.25em'
+                        }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        {item.name}
+                      </motion.span>
                     </motion.div>
                   </Link>
                   
