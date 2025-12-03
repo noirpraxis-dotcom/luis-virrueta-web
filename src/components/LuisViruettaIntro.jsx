@@ -76,46 +76,97 @@ const LuisViruettaIntro = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.35 }}
-              className="text-white/70 text-lg lg:text-xl font-light mb-10 max-w-lg"
+              className="text-white/70 text-lg lg:text-xl font-light mb-8 max-w-lg"
             >
               Psicólogo y diseñador. Fundé{' '}
               <span className="text-[#d946ef] font-normal">Luxmania</span>{' '}
               para crear marcas que trascienden el inconsciente.
             </motion.p>
 
-            <div className="h-px bg-gradient-to-r from-[#a855f7]/20 via-[#d946ef]/20 to-transparent w-2/3 mb-10" />
-
-            {/* Badges elegantes - igual que BrandCTA */}
-            <motion.div
+            {/* 'Con lo mejor de:' */}
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-white/50 text-sm font-light mb-5"
+            >
+              Con lo mejor de:
+            </motion.p>
+
+            {/* Badges con animaciones */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.45 }}
               className="flex flex-wrap gap-3 mb-12"
             >
-              <div className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#a855f7]/50 transition-all duration-300">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#a855f7]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <motion.div
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#a855f7]/50 transition-all duration-300 cursor-pointer"
+              >
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-[#a855f7]/20 to-transparent"
+                  initial={{ x: '-100%' }}
+                  whileHover={{ x: '100%' }}
+                  transition={{ duration: 0.6 }}
+                />
                 <div className="relative flex items-center gap-2">
-                  <Brain className="w-4 h-4 text-[#a855f7]" />
-                  <span className="text-white/70 text-sm font-light">Psicología</span>
+                  <motion.div
+                    animate={{ rotate: [0, 5, -5, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <Brain className="w-4 h-4 text-[#a855f7]" />
+                  </motion.div>
+                  <span className="text-white/70 group-hover:text-white text-sm font-light transition-colors">Psicología</span>
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#d946ef]/50 transition-all duration-300">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#d946ef]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <motion.div
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#d946ef]/50 transition-all duration-300 cursor-pointer"
+              >
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-[#d946ef]/20 to-transparent"
+                  initial={{ x: '-100%' }}
+                  whileHover={{ x: '100%' }}
+                  transition={{ duration: 0.6 }}
+                />
                 <div className="relative flex items-center gap-2">
-                  <Palette className="w-4 h-4 text-[#d946ef]" />
-                  <span className="text-white/70 text-sm font-light">Diseño</span>
+                  <motion.div
+                    animate={{ rotate: [0, -5, 5, 0] }}
+                    transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <Palette className="w-4 h-4 text-[#d946ef]" />
+                  </motion.div>
+                  <span className="text-white/70 group-hover:text-white text-sm font-light transition-colors">Diseño</span>
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#e879f9]/50 transition-all duration-300">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#e879f9]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <motion.div
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#e879f9]/50 transition-all duration-300 cursor-pointer"
+              >
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-[#e879f9]/20 to-transparent"
+                  initial={{ x: '-100%' }}
+                  whileHover={{ x: '100%' }}
+                  transition={{ duration: 0.6 }}
+                />
                 <div className="relative flex items-center gap-2">
-                  <Code className="w-4 h-4 text-[#e879f9]" />
-                  <span className="text-white/70 text-sm font-light">Tecnología</span>
+                  <motion.div
+                    animate={{ rotate: [0, 5, -5, 0] }}
+                    transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <Code className="w-4 h-4 text-[#e879f9]" />
+                  </motion.div>
+                  <span className="text-white/70 group-hover:text-white text-sm font-light transition-colors">Tecnología</span>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
 
           </motion.div>
