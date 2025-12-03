@@ -27,62 +27,74 @@ const BrandCTA = () => {
         {/* Grid: Texto + Video */}
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center mb-16">
           
-          {/* Left: Texto minimalista */}
+          {/* Left: Texto potente y claro */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
             className="space-y-10"
           >
-            {/* Heading principal - más directo */}
+            {/* Heading principal - Copy claro y enganchador */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-extralight text-white tracking-tight font-display leading-tight"
+              className="text-4xl sm:text-5xl lg:text-6xl font-extralight text-white tracking-tight font-display leading-[1.1]"
             >
-              Diseñamos{' '}
-              <span className="bg-gradient-to-r from-[#a855f7] to-[#d946ef] bg-clip-text text-transparent font-light">
-                tu identidad visual
+              Diseñamos desde cero{' '}
+              <span className="bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#e879f9] bg-clip-text text-transparent font-light">
+                tu marca
               </span>
             </motion.h2>
 
-            {/* Subtitle simple */}
+            {/* Subtitle con mejor tecnología */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-white/50 text-base lg:text-lg font-light leading-relaxed max-w-md"
+              className="text-white/70 text-lg lg:text-xl font-light leading-relaxed max-w-lg"
             >
-              Una marca que trasciende el inconsciente. No sólo se ve, se siente.
+              Combinando lo mejor de la{' '}
+              <span className="text-[#a855f7] font-normal">psicología</span>,{' '}
+              <span className="text-[#d946ef] font-normal">diseño</span> y{' '}
+              <span className="text-[#e879f9] font-normal">tecnología</span>
             </motion.p>
 
-            <div className="h-px bg-gradient-to-r from-white/10 to-transparent w-1/2 my-8" />
+            <div className="h-px bg-gradient-to-r from-[#a855f7]/20 via-[#d946ef]/20 to-transparent w-2/3" />
 
-            {/* Iconos minimalistas con info clave */}
+            {/* Badges elegantes con iconos */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="space-y-4"
+              className="flex flex-wrap gap-3"
             >
-              <div className="flex items-start gap-3">
-                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#a855f7]" />
-                <p className="text-white/60 text-sm lg:text-base font-light">
-                  Psicología aplicada al diseño
-                </p>
+              <div className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#a855f7]/50 transition-all duration-300">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#a855f7]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative flex items-center gap-2">
+                  <Brain className="w-4 h-4 text-[#a855f7]" />
+                  <span className="text-white/70 text-sm font-light">Psicología</span>
+                </div>
               </div>
-              <div className="flex items-start gap-3">
-                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#d946ef]" />
-                <p className="text-white/60 text-sm lg:text-base font-light">
-                  Identidades que conectan emocionalmente
-                </p>
+
+              <div className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#d946ef]/50 transition-all duration-300">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#d946ef]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative flex items-center gap-2">
+                  <svg className="w-4 h-4 text-[#d946ef]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                  </svg>
+                  <span className="text-white/70 text-sm font-light">Diseño</span>
+                </div>
               </div>
-              <div className="flex items-start gap-3">
-                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#e879f9]" />
-                <p className="text-white/60 text-sm lg:text-base font-light">
-                  Marcas que tu competencia no puede replicar
-                </p>
+
+              <div className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#e879f9]/50 transition-all duration-300">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#e879f9]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative flex items-center gap-2">
+                  <svg className="w-4 h-4 text-[#e879f9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-white/70 text-sm font-light">Tecnología</span>
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -132,15 +144,30 @@ const BrandCTA = () => {
               </div>
             </div>
 
-            {/* Caption minimalista debajo del video */}
-            <motion.p
+            {/* Caption elegante con ícono y flecha animada */}
+            <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="text-white/40 text-sm font-light text-center lg:text-right max-w-[500px] mx-auto lg:mx-0 lg:ml-auto px-2"
+              className="flex items-center justify-center lg:justify-end gap-3 max-w-[500px] mx-auto lg:mx-0 lg:ml-auto px-2"
             >
-              Un poco de nuestro trabajo
-            </motion.p>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-white/10">
+                <svg className="w-4 h-4 text-[#a855f7]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+                <span className="text-white/50 text-sm font-light">Un poco de nuestro trabajo</span>
+                <motion.svg 
+                  className="w-4 h-4 text-[#d946ef]"
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                  animate={{ y: [-2, 2, -2] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                </motion.svg>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
 
