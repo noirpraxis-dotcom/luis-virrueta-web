@@ -3,6 +3,7 @@ import Hero from '../components/Hero'
 import LuisViruettaIntro from '../components/LuisViruettaIntro'
 import AvatarWelcome from '../components/AvatarWelcome'
 import BrandCTA from '../components/BrandCTA'
+import IndividualServices from '../components/IndividualServices'
 import ShowcaseCreations from '../components/ShowcaseCreations'
 import WhyLuxmania from '../components/WhyLuxmania'
 import LuxmaniaMethod from '../components/LuxmaniaMethod'
@@ -21,6 +22,9 @@ const HomePage = () => {
       
       {/* Brand CTA: Llamado a acción principal - Construye tu marca */}
       <BrandCTA />
+      
+      {/* Individual Services: Servicios a medida en cuadros elegantes */}
+      <IndividualServices />
       
       {/* Showcase Creations: Muestra de trabajos con videos */}
       <ShowcaseCreations />
