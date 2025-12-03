@@ -128,8 +128,8 @@ const IndividualServices = () => {
           </motion.p>
         </motion.div>
 
-        {/* Services Grid - Cuadrados */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+        {/* Services Grid - Cuadrados: 3 columnas en móvil, 6 en desktop (2 filas) */}
+        <div className="grid grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6">
           {services.map((service, index) => {
             const Icon = service.icon
             return (
@@ -157,13 +157,13 @@ const IndividualServices = () => {
                     }}
                   />
 
-                  {/* Icon with gradient background */}
+                  {/* Icon with gradient background - Más grande */}
                   <motion.div
-                    className={`relative mb-4 p-4 lg:p-5 rounded-2xl bg-gradient-to-br ${service.color} opacity-90 group-hover:opacity-100 transition-opacity`}
+                    className={`relative mb-4 p-5 lg:p-6 rounded-2xl bg-gradient-to-br ${service.color} opacity-90 group-hover:opacity-100 transition-opacity`}
                     whileHover={{ rotate: [0, -10, 10, -10, 0] }}
                     transition={{ duration: 0.5 }}
                   >
-                    <Icon className="w-6 h-6 lg:w-8 lg:h-8 text-white" strokeWidth={1.5} />
+                    <Icon className="w-8 h-8 lg:w-10 lg:h-10 text-white" strokeWidth={1.5} />
                     
                     {/* Shimmer effect */}
                     <motion.div
