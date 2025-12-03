@@ -95,9 +95,9 @@ const BrandCTA = () => {
             className="space-y-4"
           >
             <div className="relative w-full max-w-[500px] mx-auto lg:mx-0 lg:ml-auto">
-              {/* Video container con borde sutil */}
-              <div className="relative rounded-2xl bg-gradient-to-br from-[#a855f7]/30 via-[#d946ef]/20 to-transparent p-[2px]">
-                <div className="relative w-full rounded-xl overflow-hidden bg-black shadow-2xl" style={{ paddingBottom: '75%' }}>
+              {/* Video container con borde gradiente visible */}
+              <div className="relative rounded-2xl bg-gradient-to-br from-[#a855f7] via-[#d946ef] to-[#e879f9] p-[3px]">
+                <div className="relative w-full aspect-[5/4] rounded-xl overflow-hidden bg-black shadow-2xl">
                   {/* Loading animation - Brain pulse */}
                   {!videoLoaded && (
                     <motion.div
@@ -126,8 +126,7 @@ const BrandCTA = () => {
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                     onLoad={() => setVideoLoaded(true)}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    style={{ border: 'none' }}
+                    className="w-full h-full"
                   />
                 </div>
               </div>
