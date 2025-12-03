@@ -1,6 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { Briefcase, ExternalLink, Eye, Heart, Zap, Star, Award, Sparkles, Palette, Type, Droplets, Image as ImageIcon, FileText } from 'lucide-react'
+import LogoCarousel3D from '../components/LogoCarousel3D'
 
 const PortafolioPage = () => {
   const heroRef = useRef(null)
@@ -140,6 +141,9 @@ const PortafolioPage = () => {
           />
         </div>
       </section>
+
+      {/* 3D Logo Carousel */}
+      <LogoCarousel3D />
 
       {/* Filter Buttons */}
       <section className="py-12 px-6 lg:px-20">
