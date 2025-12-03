@@ -97,7 +97,7 @@ const BrandCTA = () => {
             <div className="relative w-full max-w-[500px] mx-auto lg:mx-0 lg:ml-auto">
               {/* Video container con borde gradiente visible */}
               <div className="relative rounded-2xl bg-gradient-to-br from-[#a855f7] via-[#d946ef] to-[#e879f9] p-[3px]">
-                <div className="relative w-full aspect-[5/4] rounded-xl overflow-hidden bg-black shadow-2xl">
+                <div className="relative w-full aspect-[16/11] rounded-xl overflow-hidden bg-black shadow-2xl">
                   {/* Loading animation - Brain pulse */}
                   {!videoLoaded && (
                     <motion.div
