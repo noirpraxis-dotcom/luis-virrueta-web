@@ -12,7 +12,7 @@ const BrandCTA = () => {
   return (
     <section 
       ref={ref}
-      className="relative bg-black py-20 lg:py-28 overflow-hidden"
+      className="relative bg-black py-16 lg:py-20 overflow-hidden"
     >
       {/* Transición gradiente inferior para siguiente sección */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-black/50 to-black pointer-events-none z-10" />
@@ -107,8 +107,26 @@ const BrandCTA = () => {
             className="space-y-4"
           >
             <div className="relative w-full max-w-[500px] mx-auto lg:mx-0 lg:ml-auto">
-              {/* Video container con sombra sutil inferior derecha */}
-              <div className="relative rounded-3xl overflow-hidden shadow-[8px_12px_35px_-8px_rgba(168,85,247,0.25),12px_16px_25px_-6px_rgba(217,70,239,0.15)] hover:shadow-[10px_15px_45px_-8px_rgba(168,85,247,0.3),15px_20px_30px_-6px_rgba(217,70,239,0.2)] transition-shadow duration-500">
+              {/* Sombras animadas para efecto levitación */}
+              <motion.div
+                className="absolute -inset-4 rounded-3xl blur-2xl opacity-40"
+                animate={{
+                  background: [
+                    'radial-gradient(circle at 50% 50%, rgba(168,85,247,0.4), rgba(217,70,239,0.3), transparent)',
+                    'radial-gradient(circle at 50% 50%, rgba(217,70,239,0.4), rgba(232,121,249,0.3), transparent)',
+                    'radial-gradient(circle at 50% 50%, rgba(232,121,249,0.4), rgba(168,85,247,0.3), transparent)',
+                    'radial-gradient(circle at 50% 50%, rgba(168,85,247,0.4), rgba(217,70,239,0.3), transparent)'
+                  ]
+                }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+              
+              {/* Video container */}
+              <div className="relative rounded-3xl overflow-hidden shadow-[0_15px_50px_-12px_rgba(168,85,247,0.35),0_8px_25px_-8px_rgba(217,70,239,0.25)] hover:shadow-[0_20px_60px_-12px_rgba(168,85,247,0.45),0_12px_35px_-8px_rgba(217,70,239,0.35)] transition-shadow duration-500">
                 <div className="relative w-full aspect-[16/11] overflow-hidden bg-black">
                   {/* Loading animation - Brain pulse */}
                   {!videoLoaded && (

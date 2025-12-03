@@ -42,7 +42,7 @@ const LuisViruettaIntro = () => {
               </p>
             </motion.div>
 
-            {/* Main heading - Nombre */}
+            {/* Main heading - Nombre con efecto MANIA en Virrueta */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -51,9 +51,23 @@ const LuisViruettaIntro = () => {
               className="text-4xl lg:text-6xl font-extralight text-white mb-6 tracking-tight font-display leading-[1.1]"
             >
               Luis{' '}
-              <span className="bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#e879f9] bg-clip-text text-transparent font-light">
+              <motion.span
+                className="bg-gradient-to-r from-[#ffffff] via-[#a855f7] to-[#d946ef] bg-clip-text text-transparent font-light"
+                style={{
+                  backgroundSize: '200% 100%',
+                  backgroundPosition: '0% 50%'
+                }}
+                animate={{
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+              >
                 Virrueta
-              </span>
+              </motion.span>
             </motion.h2>
 
             {/* Subtitle breve */}
@@ -64,9 +78,9 @@ const LuisViruettaIntro = () => {
               transition={{ duration: 0.8, delay: 0.35 }}
               className="text-white/70 text-lg lg:text-xl font-light mb-10 max-w-lg"
             >
-              Psicólogo y diseñador. Fundador de{' '}
-              <span className="text-[#d946ef] font-normal">Luxmania</span>. 
-              Creo marcas que conectan emocionalmente.
+              Psicólogo y diseñador. Fundé{' '}
+              <span className="text-[#d946ef] font-normal">Luxmania</span>{' '}
+              para crear marcas que trascienden el inconsciente.
             </motion.p>
 
             <div className="h-px bg-gradient-to-r from-[#a855f7]/20 via-[#d946ef]/20 to-transparent w-2/3 mb-10" />
@@ -104,34 +118,6 @@ const LuisViruettaIntro = () => {
               </div>
             </motion.div>
 
-            {/* CTA Button - minimalista y elegante */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-            >
-              <Link to="/sobre-mi">
-                <motion.button
-                  whileHover={{ scale: 1.02, x: 5 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="group relative bg-transparent border border-[#d946ef]/30 hover:border-[#d946ef] px-8 py-3 rounded-full text-white font-light text-base tracking-wide transition-all duration-500 overflow-hidden"
-                >
-                  <span className="relative z-10 flex items-center gap-3">
-                    <span className="text-white/70 group-hover:text-white transition-colors">Conocer más</span>
-                    <ArrowRight className="w-4 h-4 text-[#d946ef] group-hover:translate-x-1 transition-transform" />
-                  </span>
-                  
-                  {/* Hover gradient fill */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-[#a855f7]/10 to-[#d946ef]/10"
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                </motion.button>
-              </Link>
-            </motion.div>
           </motion.div>
 
           {/* Right: Video horizontal - Static border */}
@@ -208,6 +194,36 @@ const LuisViruettaIntro = () => {
             </div>
           </motion.div>
         </div>
+
+        {/* CTA Button centrado abajo */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="flex justify-center mt-12"
+        >
+          <Link to="/sobre-mi">
+            <motion.button
+              whileHover={{ scale: 1.02, x: 5 }}
+              whileTap={{ scale: 0.98 }}
+              className="group relative bg-transparent border border-[#d946ef]/30 hover:border-[#d946ef] px-8 py-3 rounded-full text-white font-light text-base tracking-wide transition-all duration-500 overflow-hidden"
+            >
+              <span className="relative z-10 flex items-center gap-3">
+                <span className="text-white/70 group-hover:text-white transition-colors">Conocer más</span>
+                <ArrowRight className="w-4 h-4 text-[#d946ef] group-hover:translate-x-1 transition-transform" />
+              </span>
+              
+              {/* Hover gradient fill */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-[#a855f7]/10 to-[#d946ef]/10"
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              />
+            </motion.button>
+          </Link>
+        </motion.div>
       </div>
     </section>
   )
