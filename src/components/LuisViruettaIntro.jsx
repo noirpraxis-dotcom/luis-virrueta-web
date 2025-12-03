@@ -78,20 +78,9 @@ const LuisViruettaIntro = () => {
               transition={{ duration: 0.8, delay: 0.35 }}
               className="text-white/70 text-lg lg:text-xl font-light mb-8 max-w-lg"
             >
-              Psicólogo y diseñador. Fundé{' '}
+              Psicólogo y Diseñador. Fundé{' '}
               <span className="text-[#d946ef] font-normal">Luxmania</span>{' '}
-              para crear marcas que trascienden el inconsciente.
-            </motion.p>
-
-            {/* 'Con lo mejor de:' */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-white/50 text-sm font-light mb-5"
-            >
-              Con lo mejor de:
+              para crear marcas que fusionen lo mejor de:
             </motion.p>
 
             {/* Badges con animaciones continuas elegantes */}
@@ -245,6 +234,22 @@ const LuisViruettaIntro = () => {
                   <span className="text-white/70 group-hover:text-white text-sm font-light transition-colors">Tecnología</span>
                 </div>
               </motion.div>
+            </motion.div>
+
+            {/* Quote sobre el inconsciente */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="space-y-3 mb-10"
+            >
+              <p className="text-white/60 text-sm lg:text-base font-light leading-relaxed max-w-lg">
+                El <span className="text-[#a855f7] font-normal">95% de las decisiones</span> ocurren en el inconsciente.
+              </p>
+              <p className="text-white/80 text-base lg:text-lg font-light leading-relaxed max-w-lg">
+                Las personas no eligen con la mente, <span className="text-[#d946ef] font-normal">eligen desde la emoción</span>.
+              </p>
             </motion.div>
 
           </motion.div>
