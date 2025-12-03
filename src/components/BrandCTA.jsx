@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef } from 'react'
-import { ArrowRight, MessageCircle } from 'lucide-react'
+import { useRef, useState } from 'react'
+import { ArrowRight, MessageCircle, Brain } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const BrandCTA = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const [videoLoaded, setVideoLoaded] = useState(false)
 
   return (
     <section 
@@ -22,35 +23,112 @@ const BrandCTA = () => {
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[#d946ef]/10 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative max-w-4xl mx-auto px-6 lg:px-12 text-center">
-        {/* Main heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-          className="mb-8"
-        >
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-extralight text-white mb-6 tracking-tight font-display leading-tight"
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
+        {/* Grid: Texto + Video */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-12">
+          
+          {/* Left: Texto y pregunta */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+            className="space-y-6"
           >
-            ¿Listo para{' '}
-            <span className="bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#e879f9] bg-clip-text text-transparent font-light">
-              construir tu marca?
-            </span>
-          </motion.h2>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-4xl sm:text-5xl lg:text-6xl font-extralight text-white tracking-tight font-display leading-tight"
+            >
+              ¿Listo para{' '}
+              <span className="bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#e879f9] bg-clip-text text-transparent font-light">
+                construir tu marca?
+              </span>
+            </motion.h2>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-white/60 text-lg lg:text-xl font-light leading-relaxed max-w-2xl mx-auto"
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="text-white/60 text-base lg:text-lg font-light leading-relaxed"
+            >
+              Transformemos tu visión en una identidad de marca que conecta, cautiva y convierte
+            </motion.p>
+
+            <div className="h-px bg-gradient-to-r from-[#a855f7]/30 via-[#d946ef]/30 to-transparent w-3/4 my-8" />
+
+            {/* Copy fuerte sobre diseño inconsciente */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="space-y-4"
+            >
+              <h3 className="text-2xl lg:text-3xl font-bold text-white leading-tight">
+                Diseñamos tu marca para{' '}
+                <span className="bg-gradient-to-r from-[#a855f7] to-[#d946ef] bg-clip-text text-transparent">
+                  trascender el inconsciente
+                </span>
+              </h3>
+              
+              <p className="text-white/70 text-base lg:text-lg leading-relaxed font-light">
+                No sólo <span className="text-white font-medium">se verá bien</span>, se{' '}
+                <span className="text-[#a855f7] font-medium">sentirá correcta</span>.
+              </p>
+
+              <p className="text-white/60 text-sm lg:text-base leading-relaxed font-light">
+                Como psicólogo y diseñador, entiendo que <span className="text-[#d946ef]">95% de las decisiones ocurren en el inconsciente</span>. 
+                Creamos identidades que <span className="text-white">activan emociones profundas</span> y construyen 
+                conexiones que tu competencia no puede replicar.
+              </p>
+            </motion.div>
+          </motion.div>
+
+          {/* Right: Video horizontal (menos estirado) */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}
           >
-            Transformemos tu visión en una identidad de marca que conecta, cautiva y convierte
-          </motion.p>
-        </motion.div>
+            <div className="relative w-full max-w-[550px] mx-auto">
+              {/* Video container con borde gradiente */}
+              <div className="relative rounded-2xl bg-gradient-to-br from-[#a855f7] via-[#d946ef] to-[#e879f9] p-[3px]">
+                <div className="w-full rounded-xl overflow-hidden bg-black shadow-2xl relative" style={{ aspectRatio: '16/10' }}>
+                  {/* Loading animation - Brain pulse */}
+                  {!videoLoaded && (
+                    <motion.div
+                      className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-black via-[#0A0A0A] to-black z-10"
+                    >
+                      <motion.div
+                        animate={{
+                          scale: [1, 1.2, 1],
+                          opacity: [0.5, 1, 0.5]
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      >
+                        <Brain className="w-16 h-16 text-[#a855f7]" />
+                      </motion.div>
+                    </motion.div>
+                  )}
+
+                  {/* YouTube Video Embed */}
+                  <iframe
+                    src="https://www.youtube.com/embed/-Swi2UlM4JI?autoplay=1&mute=1&loop=1&playlist=-Swi2UlM4JI&controls=0&modestbranding=1&rel=0&showinfo=0"
+                    title="Diseño de Marca Psicológico"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    onLoad={() => setVideoLoaded(true)}
+                    className="w-full h-full"
+                  />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
 
         {/* CTA Button - Visual y destacado */}
         <motion.div

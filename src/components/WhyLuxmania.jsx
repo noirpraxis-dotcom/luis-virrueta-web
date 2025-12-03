@@ -62,48 +62,34 @@ const WhyLuxmania = () => {
             transition={{ duration: 0.8, delay: 0.5 }}
             className="grid grid-cols-3 gap-4"
           >
-            <motion.div
-              whileHover={{ y: -5, scale: 1.02 }}
-              className="bg-[#1A1A1A] border border-white/10 rounded-xl p-5 flex flex-col items-center justify-center aspect-square"
-            >
-              <Brain className="w-10 h-10 text-[#a855f7] mb-2" strokeWidth={1.5} />
-              <p className="text-white/60 text-xs text-center">Psicología</p>
-            </motion.div>
-            <motion.div
-              whileHover={{ y: -5, scale: 1.02 }}
-              className="bg-[#1A1A1A] border border-white/10 rounded-xl p-5 flex flex-col items-center justify-center aspect-square"
-            >
-              <Palette className="w-10 h-10 text-[#d946ef] mb-2" strokeWidth={1.5} />
-              <p className="text-white/60 text-xs text-center">Diseño</p>
-            </motion.div>
-            <motion.div
-              whileHover={{ y: -5, scale: 1.02 }}
-              className="bg-[#1A1A1A] border border-white/10 rounded-xl p-5 flex flex-col items-center justify-center aspect-square"
-            >
-              <Lightbulb className="w-10 h-10 text-[#e879f9] mb-2" strokeWidth={1.5} />
-              <p className="text-white/60 text-xs text-center">Tecnología</p>
-            </motion.div>
+            {/* Brain Icon */}
+            <div className="flex flex-col items-center text-center space-y-3 p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] transition-colors duration-300">
+              <div className="relative">
+                <div className="absolute inset-0 bg-[#a855f7]/20 blur-xl rounded-full" />
+                <Brain className="relative w-10 h-10 text-[#a855f7]" />
+              </div>
+              <span className="text-white/60 text-xs font-light">Psicología</span>
+            </div>
+
+            {/* Palette Icon */}
+            <div className="flex flex-col items-center text-center space-y-3 p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] transition-colors duration-300">
+              <div className="relative">
+                <div className="absolute inset-0 bg-[#d946ef]/20 blur-xl rounded-full" />
+                <Palette className="relative w-10 h-10 text-[#d946ef]" />
+              </div>
+              <span className="text-white/60 text-xs font-light">Diseño</span>
+            </div>
+
+            {/* Lightbulb Icon */}
+            <div className="flex flex-col items-center text-center space-y-3 p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] transition-colors duration-300">
+              <div className="relative">
+                <div className="absolute inset-0 bg-[#e879f9]/20 blur-xl rounded-full" />
+                <Lightbulb className="relative w-10 h-10 text-[#e879f9]" />
+              </div>
+              <span className="text-white/60 text-xs font-light">Estrategia</span>
+            </div>
           </motion.div>
         </div>
-
-        {/* Bottom: About Creator - Compact */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.7 }}
-          className="bg-gradient-to-br from-[#1A1A1A] to-[#0A0A0A] border border-white/10 rounded-2xl p-6 lg:p-8"
-        >
-          <p className="text-white/80 text-base lg:text-lg leading-relaxed mb-4 font-light">
-            Como <span className="text-[#a855f7]">psicólogo, psicoanalista y diseñador</span>, 
-            descifro el código emocional de tu audiencia y lo transformo en una identidad visual que 
-            <span className="text-[#d946ef]"> se siente antes de entenderse</span>.
-          </p>
-          <div className="flex items-center gap-3">
-            <div className="h-px bg-gradient-to-r from-[#a855f7] to-transparent flex-1" />
-            <span className="text-white/30 text-xs font-mono uppercase tracking-[0.3em]">Luxmania</span>
-            <div className="h-px bg-gradient-to-l from-[#d946ef] to-transparent flex-1" />
-          </div>
-        </motion.div>
       </div>
     </section>
   )
