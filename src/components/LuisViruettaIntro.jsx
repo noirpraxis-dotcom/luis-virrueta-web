@@ -51,25 +51,9 @@ const LuisViruettaIntro = () => {
               className="text-4xl lg:text-6xl font-extralight text-white mb-6 tracking-tight font-display leading-[1.1]"
             >
               Luis{' '}
-              <motion.span
-                className="bg-gradient-to-r from-[#d946ef] via-[#a855f7] to-[#6366f1] bg-clip-text text-transparent italic"
-                style={{
-                  backgroundSize: '200% 100%',
-                  backgroundPosition: '0% 50%',
-                  fontFamily: 'Georgia, serif',
-                  fontWeight: 300
-                }}
-                animate={{
-                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
+              <span className="text-white italic" style={{ fontFamily: 'Georgia, serif', fontWeight: 200 }}>
                 Virrueta
-              </motion.span>
+              </span>
             </motion.h2>
 
             {/* Subtitle breve */}
@@ -244,33 +228,19 @@ const LuisViruettaIntro = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="space-y-3 mb-10"
+              className="space-y-1 mb-10"
             >
               <p className="text-white/70 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
                 El{' '}
-                <motion.span 
-                  className="text-[#d946ef] font-normal"
-                  animate={{
-                    textShadow: [
-                      '0 0 15px rgba(217,70,239,0.3)',
-                      '0 0 20px rgba(168,85,247,0.4)',
-                      '0 0 15px rgba(217,70,239,0.3)'
-                    ]
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                >
+                <span className="text-white font-normal">
                   95% de las decisiones
-                </motion.span>{' '}
+                </span>{' '}
                 ocurren en el inconsciente.
               </p>
 
               <p className="text-white/70 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
                 Las personas no eligen con la mente,{' '}
-                <span className="text-[#a855f7] font-normal">
+                <span className="text-white font-normal">
                   eligen desde la emoción
                 </span>.
               </p>
