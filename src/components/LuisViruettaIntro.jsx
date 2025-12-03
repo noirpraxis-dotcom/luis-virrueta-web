@@ -116,11 +116,7 @@ const LuisViruettaIntro = () => {
                 transition={{ 
                   boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" }
                 }}
-                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] cursor-pointer"
-                style={{
-                  border: '1px solid',
-                  borderImage: 'linear-gradient(90deg, rgba(168,85,247,0.3), rgba(168,85,247,0.1), rgba(168,85,247,0.3)) 1'
-                }}
+                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 cursor-pointer"
               >
                 {/* Shimmer effect */}
                 <motion.div
@@ -168,11 +164,7 @@ const LuisViruettaIntro = () => {
                 transition={{ 
                   boxShadow: { duration: 3.2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }
                 }}
-                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] cursor-pointer"
-                style={{
-                  border: '1px solid',
-                  borderImage: 'linear-gradient(90deg, rgba(217,70,239,0.3), rgba(217,70,239,0.1), rgba(217,70,239,0.3)) 1'
-                }}
+                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 cursor-pointer"
               >
                 {/* Shimmer effect */}
                 <motion.div
@@ -220,11 +212,7 @@ const LuisViruettaIntro = () => {
                 transition={{ 
                   boxShadow: { duration: 3.4, repeat: Infinity, ease: "easeInOut", delay: 1 }
                 }}
-                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] cursor-pointer"
-                style={{
-                  border: '1px solid',
-                  borderImage: 'linear-gradient(90deg, rgba(232,121,249,0.3), rgba(232,121,249,0.1), rgba(232,121,249,0.3)) 1'
-                }}
+                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 cursor-pointer"
               >
                 {/* Shimmer effect */}
                 <motion.div
