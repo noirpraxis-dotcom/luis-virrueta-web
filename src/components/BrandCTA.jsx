@@ -25,92 +25,96 @@ const BrandCTA = () => {
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
         {/* Grid: Texto + Video */}
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-12">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           
-          {/* Left: Texto y pregunta */}
+          {/* Left: Texto minimalista */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-            className="space-y-6"
+            className="space-y-8"
           >
+            {/* Heading principal - más directo */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-4xl sm:text-5xl lg:text-6xl font-extralight text-white tracking-tight font-display leading-tight"
             >
-              ¿Listo para{' '}
-              <span className="bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#e879f9] bg-clip-text text-transparent font-light">
-                construir tu marca?
+              Diseñamos{' '}
+              <span className="bg-gradient-to-r from-[#a855f7] to-[#d946ef] bg-clip-text text-transparent font-light">
+                tu identidad visual
               </span>
             </motion.h2>
 
+            {/* Subtitle simple */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-white/60 text-base lg:text-lg font-light leading-relaxed"
+              className="text-white/50 text-base lg:text-lg font-light leading-relaxed max-w-md"
             >
-              Transformemos tu visión en una identidad de marca que conecta, cautiva y convierte
+              Una marca que trasciende el inconsciente. No sólo se ve, se siente.
             </motion.p>
 
-            <div className="h-px bg-gradient-to-r from-[#a855f7]/30 via-[#d946ef]/30 to-transparent w-3/4 my-8" />
+            <div className="h-px bg-gradient-to-r from-white/10 to-transparent w-1/2 my-8" />
 
-            {/* Copy fuerte sobre diseño inconsciente */}
+            {/* Iconos minimalistas con info clave */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.4 }}
               className="space-y-4"
             >
-              <h3 className="text-2xl lg:text-3xl font-bold text-white leading-tight">
-                Diseñamos tu marca para{' '}
-                <span className="bg-gradient-to-r from-[#a855f7] to-[#d946ef] bg-clip-text text-transparent">
-                  trascender el inconsciente
-                </span>
-              </h3>
-              
-              <p className="text-white/70 text-base lg:text-lg leading-relaxed font-light">
-                No sólo <span className="text-white font-medium">se verá bien</span>, se{' '}
-                <span className="text-[#a855f7] font-medium">sentirá correcta</span>.
-              </p>
-
-              <p className="text-white/60 text-sm lg:text-base leading-relaxed font-light">
-                Como psicólogo y diseñador, entiendo que <span className="text-[#d946ef]">95% de las decisiones ocurren en el inconsciente</span>. 
-                Creamos identidades que <span className="text-white">activan emociones profundas</span> y construyen 
-                conexiones que tu competencia no puede replicar.
-              </p>
+              <div className="flex items-start gap-3">
+                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#a855f7]" />
+                <p className="text-white/60 text-sm lg:text-base font-light">
+                  Psicología aplicada al diseño
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#d946ef]" />
+                <p className="text-white/60 text-sm lg:text-base font-light">
+                  Identidades que conectan emocionalmente
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#e879f9]" />
+                <p className="text-white/60 text-sm lg:text-base font-light">
+                  Marcas que tu competencia no puede replicar
+                </p>
+              </div>
             </motion.div>
           </motion.div>
 
-          {/* Right: Video horizontal (menos estirado) */}
+          {/* Right: Video más cuadrado + caption */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}
+            className="space-y-4"
           >
-            <div className="relative w-full max-w-[550px] mx-auto">
-              {/* Video container con borde gradiente */}
-              <div className="relative rounded-2xl bg-gradient-to-br from-[#a855f7] via-[#d946ef] to-[#e879f9] p-[3px]">
-                <div className="w-full rounded-xl overflow-hidden bg-black shadow-2xl relative" style={{ aspectRatio: '16/10' }}>
+            <div className="relative w-full max-w-[480px] mx-auto lg:mx-0 lg:ml-auto">
+              {/* Video container con borde sutil */}
+              <div className="relative rounded-2xl bg-gradient-to-br from-[#a855f7]/30 via-[#d946ef]/20 to-transparent p-[2px]">
+                <div className="w-full rounded-xl overflow-hidden bg-black shadow-2xl relative" style={{ aspectRatio: '4/3' }}>
                   {/* Loading animation - Brain pulse */}
                   {!videoLoaded && (
                     <motion.div
-                      className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-black via-[#0A0A0A] to-black z-10"
+                      className="absolute inset-0 flex items-center justify-center bg-black z-10"
                     >
                       <motion.div
                         animate={{
-                          scale: [1, 1.2, 1],
-                          opacity: [0.5, 1, 0.5]
+                          scale: [1, 1.15, 1],
+                          opacity: [0.4, 0.8, 0.4]
                         }}
                         transition={{
-                          duration: 2,
+                          duration: 2.5,
                           repeat: Infinity,
                           ease: "easeInOut"
                         }}
                       >
-                        <Brain className="w-16 h-16 text-[#a855f7]" />
+                        <Brain className="w-12 h-12 text-[#a855f7]/60" />
                       </motion.div>
                     </motion.div>
                   )}
@@ -118,7 +122,7 @@ const BrandCTA = () => {
                   {/* YouTube Video Embed */}
                   <iframe
                     src="https://www.youtube.com/embed/-Swi2UlM4JI?autoplay=1&mute=1&loop=1&playlist=-Swi2UlM4JI&controls=0&modestbranding=1&rel=0&showinfo=0"
-                    title="Diseño de Marca Psicológico"
+                    title="Nuestro Trabajo"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                     onLoad={() => setVideoLoaded(true)}
@@ -127,6 +131,16 @@ const BrandCTA = () => {
                 </div>
               </div>
             </div>
+
+            {/* Caption minimalista debajo del video */}
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="text-white/40 text-sm font-light text-center lg:text-right max-w-[480px] mx-auto lg:mx-0 lg:ml-auto"
+            >
+              Un poco de nuestro trabajo
+            </motion.p>
           </motion.div>
         </div>
 
