@@ -28,7 +28,7 @@ const LuisViruettaIntro = () => {
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
             className="order-2 lg:order-1 flex flex-col justify-center"
           >
-            {/* Eyebrow - minimal con icono */}
+            {/* Eyebrow - enfocado en el cliente */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -36,51 +36,64 @@ const LuisViruettaIntro = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="flex items-center gap-3 mb-8"
             >
-              <Brain className="w-5 h-5 text-[#a855f7]" strokeWidth={1.5} />
+              <Sparkles className="w-5 h-5 text-[#a855f7]" strokeWidth={1.5} />
               <p className="text-[#d946ef]/70 text-xs font-mono uppercase tracking-[0.3em]">
-                Sobre el Creador
+                Tu Marca Merece Más
               </p>
             </motion.div>
 
-            {/* Main heading - Tipografía elegante con nombre */}
+            {/* Main heading - Enfocado en beneficio del cliente */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-4xl lg:text-6xl font-extralight text-white mb-8 tracking-tight font-display leading-tight"
+              className="text-4xl lg:text-6xl font-extralight text-white mb-8 tracking-tight font-display leading-[1.1]"
             >
-              Luis{' '}
+              Marcas que{' '}
               <span className="bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#e879f9] bg-clip-text text-transparent font-light">
-                Virrueta
+                trascienden
               </span>
             </motion.h2>
 
-            {/* Subtitle descriptivo */}
+            {/* Subtitle - Valor para el cliente */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.35 }}
-              className="text-white/80 text-xl lg:text-2xl font-light mb-12"
+              className="text-white/80 text-xl lg:text-2xl font-light mb-10"
             >
-              Psicólogo que diseña marcas
+              No diseño logos. Construyo identidades que tus clientes recuerdan y aman.
             </motion.p>
 
-            {/* Description - Enfocado en psicología/diseño/tech */}
-            <motion.p
+            {/* Description - Beneficios claros */}
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-white/60 text-lg lg:text-xl font-light leading-relaxed mb-12 max-w-xl"
+              className="space-y-5 mb-12 max-w-xl"
             >
-              Combinando{' '}
-              <span className="text-[#a855f7]">psicología del comportamiento</span>,{' '}
-              <span className="text-[#d946ef]">diseño estratégico</span> y{' '}
-              <span className="text-[#e879f9]">tecnología</span>,{' '}
-              creo identidades de marca que conectan emocionalmente antes de ser comprendidas racionalmente.
-            </motion.p>
+              <div className="flex items-start gap-4">
+                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#a855f7] flex-shrink-0" />
+                <p className="text-white/70 text-base lg:text-lg font-light leading-relaxed">
+                  <span className="text-white font-normal">Psicología aplicada:</span> Tu marca conecta con las emociones que impulsan decisiones de compra
+                </p>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#d946ef] flex-shrink-0" />
+                <p className="text-white/70 text-base lg:text-lg font-light leading-relaxed">
+                  <span className="text-white font-normal">Diseño estratégico:</span> Cada elemento visual tiene un propósito que vende
+                </p>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#e879f9] flex-shrink-0" />
+                <p className="text-white/70 text-base lg:text-lg font-light leading-relaxed">
+                  <span className="text-white font-normal">Tecnología de punta:</span> Tu presencia digital funciona perfecta en cualquier dispositivo
+                </p>
+              </div>
+            </motion.div>
 
             {/* CTA Button - minimalista y elegante */}
             <motion.div

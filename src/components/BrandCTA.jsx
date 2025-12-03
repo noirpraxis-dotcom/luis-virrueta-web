@@ -107,9 +107,9 @@ const BrandCTA = () => {
             className="space-y-4"
           >
             <div className="relative w-full max-w-[500px] mx-auto lg:mx-0 lg:ml-auto">
-              {/* Video container con borde gradiente visible */}
-              <div className="relative rounded-2xl bg-gradient-to-br from-[#a855f7] via-[#d946ef] to-[#e879f9] p-[3px]">
-                <div className="relative w-full aspect-[16/11] rounded-xl overflow-hidden bg-black shadow-2xl">
+              {/* Video container con efecto levitación */}
+              <div className="relative rounded-3xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(168,85,247,0.4),0_10px_30px_-10px_rgba(217,70,239,0.3),0_0_40px_rgba(168,85,247,0.2)] hover:shadow-[0_25px_70px_-15px_rgba(168,85,247,0.5),0_15px_40px_-10px_rgba(217,70,239,0.4),0_0_50px_rgba(168,85,247,0.3)] transition-shadow duration-500">
+                <div className="relative w-full aspect-[16/11] overflow-hidden bg-black">
                   {/* Loading animation - Brain pulse */}
                   {!videoLoaded && (
                     <motion.div
@@ -185,6 +185,20 @@ const BrandCTA = () => {
               whileTap={{ scale: 0.95 }}
               className="group relative bg-gradient-to-r from-[#a855f7] to-[#d946ef] px-10 py-4 rounded-full text-white font-medium text-lg tracking-wide overflow-hidden shadow-lg shadow-[#a855f7]/30 hover:shadow-[#a855f7]/50 transition-all duration-300"
             >
+              {/* Efecto de brillo interno animado */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                animate={{
+                  x: ['-200%', '200%']
+                }}
+                transition={{
+                  duration: 2.5,
+                  repeat: Infinity,
+                  repeatDelay: 1,
+                  ease: "easeInOut"
+                }}
+              />
+              
               <span className="relative z-10 flex items-center gap-3">
                 <MessageCircle className="w-5 h-5" />
                 <span>Programar Videollamada</span>
