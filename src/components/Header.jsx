@@ -84,16 +84,29 @@ const Header = ({ menuItems }) => {
                   </motion.span>
                 </div>
                 
-                {/* Tagline - Elegant subtle */}
-                <div 
-                  className="text-[0.5rem] uppercase font-medium tracking-[0.4em] text-center -mt-0.5 font-mono"
+                {/* Tagline - Efecto platino/chrome animado */}
+                <motion.div 
+                  className="text-[0.5rem] uppercase font-bold tracking-[0.4em] text-center -mt-0.5 font-mono"
+                  animate={{
+                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
                   style={{
-                    color: 'rgba(255,255,255,0.3)',
-                    letterSpacing: '0.4em'
+                    background: 'linear-gradient(90deg, #71717a 0%, #fafafa 20%, #ffffff 40%, #fafafa 60%, #71717a 80%, #52525b 100%)',
+                    backgroundSize: '200% 100%',
+                    WebkitBackgroundClip: 'text',
+                    backgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    letterSpacing: '0.4em',
+                    filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.4))'
                   }}
                 >
                   Psych × Design × Tech
-                </div>
+                </motion.div>
                 
                 {/* Underline decorativo */}
                 <motion.div 
