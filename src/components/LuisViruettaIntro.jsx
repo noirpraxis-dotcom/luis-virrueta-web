@@ -94,7 +94,7 @@ const LuisViruettaIntro = () => {
               Con lo mejor de:
             </motion.p>
 
-            {/* Badges con animaciones */}
+            {/* Badges con animaciones continuas elegantes */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -102,21 +102,51 @@ const LuisViruettaIntro = () => {
               transition={{ duration: 0.8, delay: 0.45 }}
               className="flex flex-wrap gap-3 mb-12"
             >
+              {/* Badge Psicología */}
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#a855f7]/50 transition-all duration-300 cursor-pointer"
+                animate={{ 
+                  boxShadow: [
+                    '0 0 0 0 rgba(168,85,247,0)',
+                    '0 0 20px 0 rgba(168,85,247,0.3)',
+                    '0 0 0 0 rgba(168,85,247,0)'
+                  ]
+                }}
+                transition={{ 
+                  boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                }}
+                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] cursor-pointer"
+                style={{
+                  border: '1px solid',
+                  borderImage: 'linear-gradient(90deg, rgba(168,85,247,0.3), rgba(168,85,247,0.1), rgba(168,85,247,0.3)) 1'
+                }}
               >
+                {/* Shimmer effect */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-[#a855f7]/20 to-transparent"
-                  initial={{ x: '-100%' }}
-                  whileHover={{ x: '100%' }}
-                  transition={{ duration: 0.6 }}
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-[#a855f7]/30 to-transparent"
+                  animate={{ x: ['-200%', '200%'] }}
+                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
                 />
+                
+                {/* Glow continuo */}
+                <motion.div
+                  className="absolute inset-0 bg-[#a855f7]/10 blur-xl"
+                  animate={{ opacity: [0.3, 0.6, 0.3] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                />
+                
                 <div className="relative flex items-center gap-2">
                   <motion.div
-                    animate={{ rotate: [0, 5, -5, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    animate={{ 
+                      rotate: [0, 5, -5, 0],
+                      scale: [1, 1.1, 1]
+                    }}
+                    transition={{ 
+                      duration: 2, 
+                      repeat: Infinity, 
+                      ease: "easeInOut" 
+                    }}
                   >
                     <Brain className="w-4 h-4 text-[#a855f7]" />
                   </motion.div>
@@ -124,21 +154,51 @@ const LuisViruettaIntro = () => {
                 </div>
               </motion.div>
 
+              {/* Badge Diseño */}
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#d946ef]/50 transition-all duration-300 cursor-pointer"
+                animate={{ 
+                  boxShadow: [
+                    '0 0 0 0 rgba(217,70,239,0)',
+                    '0 0 20px 0 rgba(217,70,239,0.3)',
+                    '0 0 0 0 rgba(217,70,239,0)'
+                  ]
+                }}
+                transition={{ 
+                  boxShadow: { duration: 3.2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }
+                }}
+                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] cursor-pointer"
+                style={{
+                  border: '1px solid',
+                  borderImage: 'linear-gradient(90deg, rgba(217,70,239,0.3), rgba(217,70,239,0.1), rgba(217,70,239,0.3)) 1'
+                }}
               >
+                {/* Shimmer effect */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-[#d946ef]/20 to-transparent"
-                  initial={{ x: '-100%' }}
-                  whileHover={{ x: '100%' }}
-                  transition={{ duration: 0.6 }}
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-[#d946ef]/30 to-transparent"
+                  animate={{ x: ['-200%', '200%'] }}
+                  transition={{ duration: 3.2, repeat: Infinity, repeatDelay: 2, ease: "easeInOut", delay: 0.8 }}
                 />
+                
+                {/* Glow continuo */}
+                <motion.div
+                  className="absolute inset-0 bg-[#d946ef]/10 blur-xl"
+                  animate={{ opacity: [0.3, 0.6, 0.3] }}
+                  transition={{ duration: 2.7, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                />
+                
                 <div className="relative flex items-center gap-2">
                   <motion.div
-                    animate={{ rotate: [0, -5, 5, 0] }}
-                    transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                    animate={{ 
+                      rotate: [0, -5, 5, 0],
+                      scale: [1, 1.1, 1]
+                    }}
+                    transition={{ 
+                      duration: 2.2, 
+                      repeat: Infinity, 
+                      ease: "easeInOut" 
+                    }}
                   >
                     <Palette className="w-4 h-4 text-[#d946ef]" />
                   </motion.div>
@@ -146,21 +206,51 @@ const LuisViruettaIntro = () => {
                 </div>
               </motion.div>
 
+              {/* Badge Tecnología */}
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#e879f9]/50 transition-all duration-300 cursor-pointer"
+                animate={{ 
+                  boxShadow: [
+                    '0 0 0 0 rgba(232,121,249,0)',
+                    '0 0 20px 0 rgba(232,121,249,0.3)',
+                    '0 0 0 0 rgba(232,121,249,0)'
+                  ]
+                }}
+                transition={{ 
+                  boxShadow: { duration: 3.4, repeat: Infinity, ease: "easeInOut", delay: 1 }
+                }}
+                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] cursor-pointer"
+                style={{
+                  border: '1px solid',
+                  borderImage: 'linear-gradient(90deg, rgba(232,121,249,0.3), rgba(232,121,249,0.1), rgba(232,121,249,0.3)) 1'
+                }}
               >
+                {/* Shimmer effect */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-[#e879f9]/20 to-transparent"
-                  initial={{ x: '-100%' }}
-                  whileHover={{ x: '100%' }}
-                  transition={{ duration: 0.6 }}
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-[#e879f9]/30 to-transparent"
+                  animate={{ x: ['-200%', '200%'] }}
+                  transition={{ duration: 3.4, repeat: Infinity, repeatDelay: 2, ease: "easeInOut", delay: 1.6 }}
                 />
+                
+                {/* Glow continuo */}
+                <motion.div
+                  className="absolute inset-0 bg-[#e879f9]/10 blur-xl"
+                  animate={{ opacity: [0.3, 0.6, 0.3] }}
+                  transition={{ duration: 2.9, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+                />
+                
                 <div className="relative flex items-center gap-2">
                   <motion.div
-                    animate={{ rotate: [0, 5, -5, 0] }}
-                    transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                    animate={{ 
+                      rotate: [0, 5, -5, 0],
+                      scale: [1, 1.1, 1]
+                    }}
+                    transition={{ 
+                      duration: 2.4, 
+                      repeat: Infinity, 
+                      ease: "easeInOut" 
+                    }}
                   >
                     <Code className="w-4 h-4 text-[#e879f9]" />
                   </motion.div>
