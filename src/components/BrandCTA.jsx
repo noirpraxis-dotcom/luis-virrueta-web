@@ -107,8 +107,8 @@ const BrandCTA = () => {
             className="space-y-4"
           >
             <div className="relative w-full max-w-[500px] mx-auto lg:mx-0 lg:ml-auto">
-              {/* Video container con efecto levitación */}
-              <div className="relative rounded-3xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(168,85,247,0.4),0_10px_30px_-10px_rgba(217,70,239,0.3),0_0_40px_rgba(168,85,247,0.2)] hover:shadow-[0_25px_70px_-15px_rgba(168,85,247,0.5),0_15px_40px_-10px_rgba(217,70,239,0.4),0_0_50px_rgba(168,85,247,0.3)] transition-shadow duration-500">
+              {/* Video container con sombra sutil inferior derecha */}
+              <div className="relative rounded-3xl overflow-hidden shadow-[8px_12px_35px_-8px_rgba(168,85,247,0.25),12px_16px_25px_-6px_rgba(217,70,239,0.15)] hover:shadow-[10px_15px_45px_-8px_rgba(168,85,247,0.3),15px_20px_30px_-6px_rgba(217,70,239,0.2)] transition-shadow duration-500">
                 <div className="relative w-full aspect-[16/11] overflow-hidden bg-black">
                   {/* Loading animation - Brain pulse */}
                   {!videoLoaded && (
@@ -138,7 +138,7 @@ const BrandCTA = () => {
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                     onLoad={() => setVideoLoaded(true)}
-                    className="w-full h-full"
+                    className="w-full h-full object-cover scale-[1.01]"
                   />
                 </div>
               </div>

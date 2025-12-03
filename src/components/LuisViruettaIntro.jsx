@@ -28,7 +28,7 @@ const LuisViruettaIntro = () => {
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
             className="order-2 lg:order-1 flex flex-col justify-center"
           >
-            {/* Eyebrow - enfocado en el cliente */}
+            {/* Eyebrow - quién soy */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -36,62 +36,71 @@ const LuisViruettaIntro = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="flex items-center gap-3 mb-8"
             >
-              <Sparkles className="w-5 h-5 text-[#a855f7]" strokeWidth={1.5} />
+              <Brain className="w-5 h-5 text-[#a855f7]" strokeWidth={1.5} />
               <p className="text-[#d946ef]/70 text-xs font-mono uppercase tracking-[0.3em]">
-                Tu Marca Merece Más
+                Sobre Mí
               </p>
             </motion.div>
 
-            {/* Main heading - Enfocado en beneficio del cliente */}
+            {/* Main heading - Nombre */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-4xl lg:text-6xl font-extralight text-white mb-8 tracking-tight font-display leading-[1.1]"
+              className="text-4xl lg:text-6xl font-extralight text-white mb-6 tracking-tight font-display leading-[1.1]"
             >
-              Marcas que{' '}
+              Luis{' '}
               <span className="bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#e879f9] bg-clip-text text-transparent font-light">
-                trascienden
+                Virrueta
               </span>
             </motion.h2>
 
-            {/* Subtitle - Valor para el cliente */}
+            {/* Subtitle breve */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.35 }}
-              className="text-white/80 text-xl lg:text-2xl font-light mb-10"
+              className="text-white/70 text-lg lg:text-xl font-light mb-10 max-w-lg"
             >
-              No diseño logos. Construyo identidades que tus clientes recuerdan y aman.
+              Psicólogo y diseñador. Fundador de{' '}
+              <span className="text-[#d946ef] font-normal">Luxmania</span>. 
+              Creo marcas que conectan emocionalmente.
             </motion.p>
 
-            {/* Description - Beneficios claros */}
+            <div className="h-px bg-gradient-to-r from-[#a855f7]/20 via-[#d946ef]/20 to-transparent w-2/3 mb-10" />
+
+            {/* Badges elegantes - igual que BrandCTA */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="space-y-5 mb-12 max-w-xl"
+              className="flex flex-wrap gap-3 mb-12"
             >
-              <div className="flex items-start gap-4">
-                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#a855f7] flex-shrink-0" />
-                <p className="text-white/70 text-base lg:text-lg font-light leading-relaxed">
-                  <span className="text-white font-normal">Psicología aplicada:</span> Tu marca conecta con las emociones que impulsan decisiones de compra
-                </p>
+              <div className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#a855f7]/50 transition-all duration-300">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#a855f7]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative flex items-center gap-2">
+                  <Brain className="w-4 h-4 text-[#a855f7]" />
+                  <span className="text-white/70 text-sm font-light">Psicología</span>
+                </div>
               </div>
-              <div className="flex items-start gap-4">
-                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#d946ef] flex-shrink-0" />
-                <p className="text-white/70 text-base lg:text-lg font-light leading-relaxed">
-                  <span className="text-white font-normal">Diseño estratégico:</span> Cada elemento visual tiene un propósito que vende
-                </p>
+
+              <div className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#d946ef]/50 transition-all duration-300">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#d946ef]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative flex items-center gap-2">
+                  <Palette className="w-4 h-4 text-[#d946ef]" />
+                  <span className="text-white/70 text-sm font-light">Diseño</span>
+                </div>
               </div>
-              <div className="flex items-start gap-4">
-                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#e879f9] flex-shrink-0" />
-                <p className="text-white/70 text-base lg:text-lg font-light leading-relaxed">
-                  <span className="text-white font-normal">Tecnología de punta:</span> Tu presencia digital funciona perfecta en cualquier dispositivo
-                </p>
+
+              <div className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#e879f9]/50 transition-all duration-300">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#e879f9]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative flex items-center gap-2">
+                  <Code className="w-4 h-4 text-[#e879f9]" />
+                  <span className="text-white/70 text-sm font-light">Tecnología</span>
+                </div>
               </div>
             </motion.div>
 
