@@ -25,14 +25,14 @@ const BrandCTA = () => {
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
         {/* Grid: Texto + Video */}
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center mb-16">
           
           {/* Left: Texto minimalista */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-            className="space-y-8"
+            className="space-y-10"
           >
             {/* Heading principal - más directo */}
             <motion.h2
@@ -94,10 +94,10 @@ const BrandCTA = () => {
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}
             className="space-y-4"
           >
-            <div className="relative w-full max-w-[480px] mx-auto lg:mx-0 lg:ml-auto">
+            <div className="relative w-full max-w-[500px] mx-auto lg:mx-0 lg:ml-auto">
               {/* Video container con borde sutil */}
               <div className="relative rounded-2xl bg-gradient-to-br from-[#a855f7]/30 via-[#d946ef]/20 to-transparent p-[2px]">
-                <div className="w-full rounded-xl overflow-hidden bg-black shadow-2xl relative" style={{ aspectRatio: '4/3' }}>
+                <div className="relative w-full rounded-xl overflow-hidden bg-black shadow-2xl" style={{ paddingBottom: '75%' }}>
                   {/* Loading animation - Brain pulse */}
                   {!videoLoaded && (
                     <motion.div
@@ -126,7 +126,8 @@ const BrandCTA = () => {
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                     onLoad={() => setVideoLoaded(true)}
-                    className="w-full h-full"
+                    className="absolute inset-0 w-full h-full object-cover"
+                    style={{ border: 'none' }}
                   />
                 </div>
               </div>
@@ -137,7 +138,7 @@ const BrandCTA = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="text-white/40 text-sm font-light text-center lg:text-right max-w-[480px] mx-auto lg:mx-0 lg:ml-auto"
+              className="text-white/40 text-sm font-light text-center lg:text-right max-w-[500px] mx-auto lg:mx-0 lg:ml-auto px-2"
             >
               Un poco de nuestro trabajo
             </motion.p>
