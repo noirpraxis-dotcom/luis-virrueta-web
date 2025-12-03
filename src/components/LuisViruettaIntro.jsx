@@ -65,7 +65,23 @@ const LuisViruettaIntro = () => {
               className="text-white/70 text-lg lg:text-xl font-light mb-8 max-w-lg"
             >
               Psicólogo y Diseñador. Fundé{' '}
-              <span className="text-[#d946ef] font-normal">Luxmania</span>{' '}
+              <motion.span
+                className="bg-gradient-to-r from-[#a855f7] via-[#0ea5e9] to-[#d946ef] bg-clip-text text-transparent font-normal"
+                style={{
+                  backgroundSize: '200% 100%',
+                  backgroundPosition: '0% 50%'
+                }}
+                animate={{
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                Luxmania
+              </motion.span>{' '}
               para crear marcas que fusionen lo mejor de:
             </motion.p>
 
@@ -222,28 +238,62 @@ const LuisViruettaIntro = () => {
               </motion.div>
             </motion.div>
 
-            {/* Quote sobre el inconsciente - Mismo peso que el subtitle */}
+            {/* Quote sobre el inconsciente - Con ícono y líneas elegantes */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="space-y-1 mb-10"
+              className="relative mb-10"
             >
-              <p className="text-white/70 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
-                El{' '}
-                <span className="text-white font-normal">
-                  95% de las decisiones
-                </span>{' '}
-                ocurren en el inconsciente.
-              </p>
+              {/* Líneas decorativas superior e inferior */}
+              <div className="absolute -left-4 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-[#a855f7]/40 to-transparent" />
+              
+              {/* Contenedor con padding */}
+              <div className="relative pl-8 space-y-1">
+                {/* Ícono elegante */}
+                <motion.div
+                  className="absolute left-0 top-2"
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                    opacity: [0.6, 1, 0.6]
+                  }}
+                  transition={{ 
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <svg className="w-5 h-5 text-[#d946ef]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                </motion.div>
 
-              <p className="text-white/70 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
-                Las personas no eligen con la mente,{' '}
-                <span className="text-white font-normal">
-                  eligen desde la emoción
-                </span>.
-              </p>
+                <p className="text-white/70 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
+                  El{' '}
+                  <span className="text-white font-normal">
+                    95% de las decisiones
+                  </span>{' '}
+                  ocurren en el inconsciente.
+                </p>
+
+                <p className="text-white/70 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
+                  Las personas no eligen con la mente,{' '}
+                  <span className="text-white font-normal">
+                    eligen desde la emoción
+                  </span>.
+                </p>
+              </div>
+
+              {/* Línea horizontal decorativa inferior */}
+              <motion.div 
+                className="mt-4 h-[1px] bg-gradient-to-r from-[#a855f7]/30 via-[#d946ef]/50 to-transparent max-w-md"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: 0.8 }}
+                style={{ transformOrigin: 'left' }}
+              />
             </motion.div>
 
           </motion.div>
