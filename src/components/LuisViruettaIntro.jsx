@@ -112,7 +112,7 @@ const LuisViruettaIntro = () => {
             </motion.div>
           </motion.div>
 
-          {/* Right: Photo - Static border */}
+          {/* Right: Video horizontal - Static border */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -120,20 +120,42 @@ const LuisViruettaIntro = () => {
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.3 }}
             className="order-1 lg:order-2 relative"
           >
-            {/* Main circular photo container - MÁS PEQUEÑA */}
-            <div className="relative mx-auto w-full max-w-[320px] aspect-square">
-              {/* Static gradient ring - SIN ROTAR */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#a855f7] via-[#d946ef] to-[#e879f9] p-[3px]">
-                <div className="w-full h-full rounded-full bg-black" />
-              </div>
+            {/* Video container horizontal */}
+            <div className="relative mx-auto w-full max-w-[500px]">
+              {/* Static gradient border */}
+              <div className="relative rounded-2xl bg-gradient-to-br from-[#a855f7] via-[#d946ef] to-[#e879f9] p-[3px]">
+                <div className="w-full rounded-xl overflow-hidden bg-black shadow-2xl">
+                  {/* Loading animation - Brain pulse */}
+                  <motion.div
+                    initial={{ opacity: 1 }}
+                    animate={{ opacity: 0 }}
+                    transition={{ delay: 1.5, duration: 0.5 }}
+                    className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-black via-[#0A0A0A] to-black z-10"
+                  >
+                    <motion.div
+                      animate={{
+                        scale: [1, 1.2, 1],
+                        opacity: [0.5, 1, 0.5]
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      <Brain className="w-16 h-16 text-[#a855f7]" />
+                    </motion.div>
+                  </motion.div>
 
-              {/* Photo */}
-              <div className="absolute inset-[3px] rounded-full overflow-hidden border-4 border-black shadow-2xl">
-                <img 
-                  src="/Luis.png" 
-                  alt="Luis Virrueta"
-                  className="w-full h-full object-cover"
-                />
+                  {/* YouTube Video Embed */}
+                  <iframe
+                    src="https://www.youtube.com/embed/PR7GISY0yPM?autoplay=1&mute=1&loop=1&playlist=PR7GISY0yPM&controls=0&modestbranding=1&rel=0&showinfo=0"
+                    title="Luis Virrueta Presentación"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full aspect-video"
+                  />
+                </div>
               </div>
 
               {/* Floating badge con iconos individuales - PERFECTAMENTE CENTRADO */}
