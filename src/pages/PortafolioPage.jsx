@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
-import { Briefcase, ExternalLink, Eye, Heart, Zap, Star, Award } from 'lucide-react'
+import { Briefcase, ExternalLink, Eye, Heart, Zap, Star, Award, Sparkles, Palette, Type, Droplets, Image as ImageIcon, FileText } from 'lucide-react'
 
 const PortafolioPage = () => {
   const heroRef = useRef(null)
@@ -93,25 +93,38 @@ const PortafolioPage = () => {
         </div>
 
         <div className="relative max-w-7xl mx-auto">
-          {/* Icon */}
+          {/* Icon - Más elegante */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.8 }}
             className="text-center mb-8"
           >
-            <Briefcase className="w-16 h-16 mx-auto text-cyan-400 mb-6" strokeWidth={1.5} />
+            <motion.div
+              animate={{
+                rotate: [0, 10, -10, 0],
+                scale: [1, 1.1, 1]
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <Sparkles className="w-16 h-16 mx-auto text-[#0ea5e9] mb-6" strokeWidth={1.5} />
+            </motion.div>
           </motion.div>
 
-          {/* Title */}
+          {/* Title - Con más letter-spacing */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-5xl lg:text-8xl font-bold text-center mb-8 font-display"
+            className="text-5xl lg:text-8xl font-bold text-center mb-8 font-display tracking-[0.15em]"
+            style={{ letterSpacing: '0.15em' }}
           >
-            <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-fuchsia-400 bg-clip-text text-transparent">
-              Portafolio
+            <span className="bg-gradient-to-r from-[#0ea5e9] via-[#a855f7] to-[#d946ef] bg-clip-text text-transparent">
+              PORTAFOLIO
             </span>
           </motion.h1>
 
@@ -131,6 +144,167 @@ const PortafolioPage = () => {
             transition={{ duration: 1.5, delay: 0.6 }}
             className="h-px bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent mx-auto w-80"
           />
+        </div>
+      </section>
+
+      {/* Diseño de Identidad Visual Section */}
+      <section className="relative bg-black py-16 lg:py-20 overflow-hidden">
+        {/* Background gradients */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-[#a855f7]/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-[#d946ef]/5 rounded-full blur-3xl" />
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            
+            {/* Left: Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1 }}
+              className="order-2 lg:order-1"
+            >
+              {/* Eyebrow */}
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="text-[#a855f7] text-sm font-mono uppercase tracking-widest mb-4"
+              >
+                Branding Premium
+              </motion.p>
+
+              {/* Heading */}
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="text-4xl lg:text-5xl font-bold mb-6"
+              >
+                Diseñamos tu{' '}
+                <span className="bg-gradient-to-r from-[#a855f7] to-[#d946ef] bg-clip-text text-transparent">
+                  Identidad Visual Completa
+                </span>
+              </motion.h2>
+
+              {/* Subtitle */}
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="text-white/60 text-lg mb-10"
+              >
+                Desde el concepto hasta la implementación. Cada elemento diseñado estratégicamente para conectar con tu audiencia.
+              </motion.p>
+
+              {/* Lo que incluye - Grid minimalista */}
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                {[
+                  { icon: Palette, label: "Logotipos" },
+                  { icon: Type, label: "Tipografías" },
+                  { icon: Droplets, label: "Paleta de Color" },
+                  { icon: ImageIcon, label: "Mockups" },
+                  { icon: FileText, label: "Manual de Marca" },
+                  { icon: Sparkles, label: "Aplicaciones" }
+                ].map((item, index) => {
+                  const Icon = item.icon
+                  return (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.02] border border-white/10 hover:border-[#a855f7]/30 transition-all duration-300"
+                    >
+                      <Icon className="w-5 h-5 text-[#a855f7]" strokeWidth={1.5} />
+                      <span className="text-white/70 text-sm font-light">{item.label}</span>
+                    </motion.div>
+                  )
+                })}
+              </div>
+
+              {/* Espacio para métricas o CTA */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 1.2 }}
+                className="flex gap-4 text-sm text-white/50"
+              >
+                <div className="flex items-center gap-2">
+                  <Award className="w-4 h-4 text-[#d946ef]" />
+                  <span>100+ Marcas creadas</span>
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* Right: Visual placeholder - Aquí irán las imágenes */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, delay: 0.2 }}
+              className="order-1 lg:order-2"
+            >
+              <div className="relative w-full max-w-[500px] mx-auto lg:mx-0 lg:ml-auto">
+                {/* Sombras animadas premium */}
+                <motion.div
+                  className="absolute -inset-12 rounded-3xl blur-[80px]"
+                  animate={{
+                    background: [
+                      'radial-gradient(ellipse at 50% 80%, rgba(168,85,247,0.5), rgba(217,70,239,0.35), rgba(124,58,237,0.2), transparent)',
+                      'radial-gradient(ellipse at 50% 75%, rgba(217,70,239,0.6), rgba(232,121,249,0.4), rgba(168,85,247,0.25), transparent)',
+                      'radial-gradient(ellipse at 50% 85%, rgba(232,121,249,0.55), rgba(192,38,211,0.4), rgba(217,70,239,0.22), transparent)',
+                      'radial-gradient(ellipse at 50% 80%, rgba(168,85,247,0.5), rgba(217,70,239,0.35), rgba(124,58,237,0.2), transparent)'
+                    ],
+                    opacity: [0.4, 0.6, 0.5, 0.4]
+                  }}
+                  transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+
+                {/* Placeholder para imágenes de identidad visual */}
+                <div className="relative rounded-3xl overflow-hidden border border-[#a855f7]/30 bg-gradient-to-br from-[#1A1A1A] to-[#0d0d0d]">
+                  <div className="aspect-[16/11] flex items-center justify-center p-8">
+                    {/* Grid de placeholders para fotos */}
+                    <div className="grid grid-cols-2 gap-4 w-full">
+                      {[1, 2, 3, 4].map((num) => (
+                        <motion.div
+                          key={num}
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.5, delay: 0.3 + num * 0.1 }}
+                          whileHover={{ scale: 1.05 }}
+                          className="aspect-square rounded-xl bg-gradient-to-br from-[#a855f7]/20 to-[#d946ef]/20 border border-white/10 flex items-center justify-center"
+                        >
+                          <ImageIcon className="w-8 h-8 text-white/30" />
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Badge */}
+                  <div className="absolute bottom-4 right-4">
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-xl border border-white/20">
+                      <Eye className="w-4 h-4 text-[#a855f7]" />
+                      <span className="text-white text-xs font-medium whitespace-nowrap">Galería de Proyectos</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
