@@ -42,7 +42,7 @@ const LuisViruettaIntro = () => {
               </p>
             </motion.div>
 
-            {/* Main heading - Nombre con gradiente interno animado */}
+            {/* Main heading - Nombre con Virrueta elegante en itálica */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -52,16 +52,18 @@ const LuisViruettaIntro = () => {
             >
               Luis{' '}
               <motion.span
-                className="bg-gradient-to-r from-[#ffffff] via-[#a855f7] to-[#0ea5e9] bg-clip-text text-transparent font-light"
+                className="bg-gradient-to-r from-[#d946ef] via-[#a855f7] to-[#6366f1] bg-clip-text text-transparent italic"
                 style={{
-                  backgroundSize: '300% 100%',
-                  backgroundPosition: '0% 50%'
+                  backgroundSize: '200% 100%',
+                  backgroundPosition: '0% 50%',
+                  fontFamily: 'Georgia, serif',
+                  fontWeight: 300
                 }}
                 animate={{
-                  backgroundPosition: ['0% 50%', '50% 50%', '100% 50%', '0% 50%']
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
                 }}
                 transition={{
-                  duration: 10,
+                  duration: 8,
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
@@ -236,56 +238,39 @@ const LuisViruettaIntro = () => {
               </motion.div>
             </motion.div>
 
-            {/* Quote sobre el inconsciente - Creativo y elegante */}
+            {/* Quote sobre el inconsciente - Mismo peso que el subtitle */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="space-y-4 mb-10"
+              className="space-y-3 mb-10"
             >
-              {/* Stat destacado 95% */}
-              <div className="relative inline-block">
-                <motion.div
-                  className="absolute -inset-2 bg-gradient-to-r from-[#a855f7]/20 via-[#6366f1]/20 to-[#d946ef]/20 blur-xl rounded-lg"
+              <p className="text-white/70 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
+                El{' '}
+                <motion.span 
+                  className="text-[#d946ef] font-normal"
                   animate={{
-                    opacity: [0.3, 0.6, 0.3],
-                    scale: [1, 1.05, 1]
+                    textShadow: [
+                      '0 0 15px rgba(217,70,239,0.3)',
+                      '0 0 20px rgba(168,85,247,0.4)',
+                      '0 0 15px rgba(217,70,239,0.3)'
+                    ]
                   }}
                   transition={{
                     duration: 3,
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
-                />
-                <p className="relative text-white/70 text-sm lg:text-base font-light leading-relaxed max-w-lg">
-                  El{' '}
-                  <motion.span 
-                    className="text-white text-2xl lg:text-3xl font-normal"
-                    animate={{
-                      textShadow: [
-                        '0 0 20px rgba(168,85,247,0.3)',
-                        '0 0 30px rgba(99,102,241,0.4)',
-                        '0 0 20px rgba(217,70,239,0.3)',
-                        '0 0 20px rgba(168,85,247,0.3)'
-                      ]
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                  >
-                    95% de las decisiones
-                  </motion.span>{' '}
-                  ocurren en el inconsciente.
-                </p>
-              </div>
+                >
+                  95% de las decisiones
+                </motion.span>{' '}
+                ocurren en el inconsciente.
+              </p>
 
-              {/* Frase de emoción */}
-              <p className="text-white/60 text-base lg:text-lg font-light leading-relaxed max-w-lg">
+              <p className="text-white/70 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
                 Las personas no eligen con la mente,{' '}
-                <span className="text-white text-xl lg:text-2xl font-normal bg-gradient-to-r from-[#d946ef] via-[#a855f7] to-[#6366f1] bg-clip-text text-transparent">
+                <span className="text-[#a855f7] font-normal">
                   eligen desde la emoción
                 </span>.
               </p>
