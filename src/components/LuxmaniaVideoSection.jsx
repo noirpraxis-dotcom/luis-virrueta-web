@@ -42,33 +42,7 @@ const LuxmaniaVideoSection = () => {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="text-7xl lg:text-8xl font-bold font-display tracking-tight relative"
               >
-                {/* LUX con efecto de faro/spotlight */}
-                <span className="relative inline-block">
-                  <span className="text-white relative z-10">LUX</span>
-                  {/* Efecto de luz tipo faro que barre */}
-                  <motion.span
-                    animate={{
-                      left: ['-100%', '200%']
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      repeatDelay: 1,
-                      ease: "easeInOut"
-                    }}
-                    className="absolute inset-0 overflow-hidden"
-                  >
-                    <span 
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-60"
-                      style={{
-                        maskImage: 'linear-gradient(90deg, transparent, white, transparent)',
-                        WebkitMaskImage: 'linear-gradient(90deg, transparent, white, transparent)',
-                      }}
-                    />
-                  </motion.span>
-                  {/* Glow estático */}
-                  <span className="absolute inset-0 text-white blur-xl opacity-50 -z-10">LUX</span>
-                </span>
+                <span className="text-white">LUX</span>
                 <span className="relative inline-block">
                   {/* Capa 1 - Onda azul */}
                   <motion.span
@@ -210,27 +184,83 @@ const LuxmaniaVideoSection = () => {
             transition={{ duration: 1, delay: 0.3 }}
             className="relative group"
           >
-            {/* Marco premium con gradiente */}
-            <div className="relative aspect-[3/4] max-w-md mx-auto p-1 rounded-3xl bg-gradient-to-br from-blue-500 via-cyan-400 to-indigo-600">
-              {/* Video Container interno */}
-              <div className="relative w-full h-full rounded-[calc(1.5rem-4px)] overflow-hidden bg-zinc-950">
-                {/* Video - usando iframe de YouTube */}
+            {/* Container con fade out elegante */}
+            <div className="relative aspect-[3/4] max-w-md mx-auto">
+              {/* Video Container */}
+              <div className="relative w-full h-full rounded-3xl overflow-hidden bg-black">
+                {/* Video - usando iframe de YouTube en HD */}
                 <iframe
                   ref={videoRef}
                   className="absolute inset-0 w-full h-full"
-                  src="https://www.youtube.com/embed/OUsF8K7G810?autoplay=0&controls=1&rel=0&modestbranding=1"
+                  src={`https://www.youtube.com/embed/OUsF8K7G810?autoplay=${isPlaying ? 1 : 0}&controls=1&rel=0&modestbranding=1&enablejsapi=1&hd=1`}
                   title="Luxmania Video"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
 
+                {/* Animación de carga mientras el video inicia */}
+                {isPlaying && (
+                  <motion.div
+                    initial={{ opacity: 1 }}
+                    animate={{ opacity: 0 }}
+                    transition={{ duration: 0.5, delay: 2 }}
+                    className="absolute inset-0 bg-black flex flex-col items-center justify-center gap-6 z-[15] pointer-events-none"
+                  >
+                    {/* Cerebro animado */}
+                    <div className="relative">
+                      {/* Círculos pulsantes tipo cerebro */}
+                      <motion.div
+                        animate={{
+                          scale: [1, 1.2, 1],
+                          opacity: [0.3, 0.6, 0.3]
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                        className="absolute inset-0 w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 blur-xl"
+                      />
+                      <motion.div
+                        animate={{
+                          rotate: 360
+                        }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: "linear"
+                        }}
+                        className="relative w-16 h-16"
+                      >
+                        <Sparkles className="w-16 h-16 text-cyan-400" />
+                      </motion.div>
+                    </div>
+                    
+                    {/* Texto Cargando */}
+                    <motion.p
+                      animate={{ opacity: [0.5, 1, 0.5] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                      className="text-white/80 text-lg font-light tracking-wider"
+                    >
+                      Cargando...
+                    </motion.p>
+                  </motion.div>
+                )}
+
+              {/* Fade out elegante hacia negro en los bordes */}
+              <div className="absolute inset-0 pointer-events-none z-[5]" style={{
+                background: 'radial-gradient(ellipse 85% 85% at center, transparent 50%, rgba(0,0,0,0.4) 75%, rgba(0,0,0,0.8) 100%)'
+              }} />
+
               {/* Overlay inicial con instrucciones - se puede cerrar al hacer click */}
               {!isPlaying && (
                 <motion.div
                   initial={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
                   onClick={() => setIsPlaying(true)}
-                  className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 backdrop-blur-sm flex flex-col items-center justify-center p-8 z-10 cursor-pointer"
+                  className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70 backdrop-blur-sm flex flex-col items-center justify-center p-8 z-10 cursor-pointer"
                 >
                   {/* Play Button */}
                   <motion.div
@@ -276,20 +306,22 @@ const LuxmaniaVideoSection = () => {
               )}
               </div>
 
-              {/* Glow effect azul premium */}
-              <div className="absolute -inset-2 bg-gradient-to-r from-blue-500/30 via-cyan-400/30 to-indigo-500/30 rounded-3xl blur-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+              {/* Glow effect azul sutil */}
+              <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 via-cyan-400/20 to-indigo-500/20 rounded-3xl blur-3xl opacity-40 group-hover:opacity-70 transition-opacity duration-500 -z-10" />
             </div>
 
-            {/* Badge flotante */}
+            {/* Texto elegante debajo del video */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 1 }}
-              className="absolute -bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full"
+              className="mt-8 flex items-center justify-center gap-3"
             >
-              <p className="text-white/90 text-sm font-medium whitespace-nowrap">
-                Psicología + Diseño Premium
+              <div className="w-1 h-1 rounded-full bg-cyan-400 animate-pulse" />
+              <p className="text-white/60 text-sm font-light tracking-wide uppercase">
+                Psicología × Diseño × Tecnología
               </p>
+              <div className="w-1 h-1 rounded-full bg-blue-400 animate-pulse" style={{ animationDelay: '0.5s' }} />
             </motion.div>
           </motion.div>
 
