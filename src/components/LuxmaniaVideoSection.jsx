@@ -42,7 +42,33 @@ const LuxmaniaVideoSection = () => {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="text-7xl lg:text-8xl font-bold font-display tracking-tight relative"
               >
-                <span className="text-white">LUX</span>
+                {/* LUX con efecto de faro/spotlight */}
+                <span className="relative inline-block">
+                  <span className="text-white relative z-10">LUX</span>
+                  {/* Efecto de luz tipo faro que barre */}
+                  <motion.span
+                    animate={{
+                      left: ['-100%', '200%']
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      repeatDelay: 1,
+                      ease: "easeInOut"
+                    }}
+                    className="absolute inset-0 overflow-hidden"
+                  >
+                    <span 
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-60"
+                      style={{
+                        maskImage: 'linear-gradient(90deg, transparent, white, transparent)',
+                        WebkitMaskImage: 'linear-gradient(90deg, transparent, white, transparent)',
+                      }}
+                    />
+                  </motion.span>
+                  {/* Glow estático */}
+                  <span className="absolute inset-0 text-white blur-xl opacity-50 -z-10">LUX</span>
+                </span>
                 <span className="relative inline-block">
                   {/* Capa 1 - Onda azul */}
                   <motion.span
