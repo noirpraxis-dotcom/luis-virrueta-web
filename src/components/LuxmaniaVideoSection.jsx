@@ -112,8 +112,8 @@ const LuxmaniaVideoSection = () => {
                     MANIA
                   </motion.span>
                   
-                  {/* Capa base - Blanco */}
-                  <span className="text-white/30 relative">MANIA</span>
+                  {/* Capa base - Morado */}
+                  <span className="text-purple-500/40 relative">MANIA</span>
                 </span>
               </motion.h2>
 
