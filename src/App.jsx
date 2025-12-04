@@ -30,9 +30,8 @@ const AppContent = () => {
 
   const menuItems = [
     { name: 'Inicio', href: '/' },
-    { name: 'Método', href: '/#metodo' },
+    { name: 'Portafolio', href: '/portafolio' },
     { name: 'Servicios', href: '/servicios' },
-    { name: 'Portfolio', href: '/portafolio' },
     { name: 'Sobre Mí', href: '/sobre-mi' },
     { name: 'Contacto', href: '/contacto' }
   ]

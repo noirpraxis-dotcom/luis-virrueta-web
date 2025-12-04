@@ -66,7 +66,7 @@ const LogoCarousel3D = () => {
   }, [])
 
   return (
-    <div className="relative py-20 lg:py-24 px-6 lg:px-20 overflow-hidden">
+    <section className="relative py-8 lg:py-12 px-6 lg:px-20 overflow-hidden">
       {/* Background gradient orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl animate-pulse" />
@@ -181,7 +181,7 @@ const LogoCarousel3D = () => {
           </div>
         </motion.div>
       </div>
-    </div>
+    </section>
   )
 }
 
