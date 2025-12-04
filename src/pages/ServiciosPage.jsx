@@ -30,7 +30,7 @@ const ServiciosPage = () => {
       icon: Palette,
       title: 'Identidad de Marca',
       subtitle: 'Brand Identity',
-      tagline: 'Sistemas visuales que permanecen en la memoria',
+      tagline: 'Diseños que conectan y permanecen',
       description: 'Creamos identidades de marca completas que no solo se ven increíbles, sino que están fundamentadas en psicología y neurociencia. Cada elemento visual está diseñado para conectar con el inconsciente de tu audiencia.',
       gradient: 'from-purple-500 to-purple-600',
       features: [
@@ -183,26 +183,19 @@ const ServiciosPage = () => {
         </div>
 
         <div className="relative max-w-7xl mx-auto">
-          {/* Icon */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-8"
-          >
-            <Sparkles className="w-16 h-16 mx-auto text-fuchsia-400 mb-6" strokeWidth={1.5} />
-          </motion.div>
-
-          {/* Title */}
+          {/* Title - Más elegante y profesional */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="text-5xl lg:text-8xl font-bold text-center mb-8 font-display"
+            transition={{ duration: 1 }}
+            className="text-6xl lg:text-9xl font-bold text-center mb-8 font-display text-white"
+            style={{ 
+              letterSpacing: '0.08em',
+              fontWeight: 300,
+              textTransform: 'uppercase'
+            }}
           >
-            <span className="bg-gradient-to-r from-purple-400 via-fuchsia-500 to-cyan-400 bg-clip-text text-transparent">
-              Servicios Premium
-            </span>
+            Servicios
           </motion.h1>
 
           {/* Subtitle */}

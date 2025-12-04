@@ -74,48 +74,7 @@ const LogoCarousel3D = () => {
       </div>
 
       <div className="relative max-w-7xl mx-auto">
-        {/* Title - Más premium y elegante */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          {/* Ícono decorativo */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-6"
-          >
-            <div className="inline-block">
-              <Sparkles className="w-10 h-10 text-white/60 mx-auto" strokeWidth={1.2} />
-            </div>
-          </motion.div>
-          
-          {/* Título principal en blanco */}
-          <h2 className="text-4xl lg:text-6xl font-bold mb-4 font-display text-white tracking-wide">
-            Nuestros Logotipos
-          </h2>
-          
-          {/* Subtítulo */}
-          <p className="text-lg lg:text-xl text-white/50 max-w-2xl mx-auto font-light">
-            Identidades visuales premium diseñadas con psicología aplicada
-          </p>
-          
-          {/* Línea decorativa */}
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent mx-auto w-64 mt-6"
-          />
-        </motion.div>
-
-        {/* Carousel Container */}
+        {/* Carousel Container - Sin encabezado */}
         <div className="relative">
           {/* Swiper Carousel */}
           <Swiper
