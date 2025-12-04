@@ -95,31 +95,19 @@ const PortafolioPage = () => {
         </div>
 
         <div className="relative max-w-7xl mx-auto">
-          {/* Icon - Premium y elegante sin contenedor */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-6"
-          >
-            <motion.div
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ duration: 0.3 }}
-              className="inline-block"
-            >
-              <Sparkles className="w-12 h-12 text-white/80" strokeWidth={1.2} />
-            </motion.div>
-          </motion.div>
-
-          {/* Title - Blanco elegante */}
+          {/* Title - Más elegante y profesional */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="text-5xl lg:text-8xl font-bold text-center mb-8 font-display tracking-[0.15em] text-white"
-            style={{ letterSpacing: '0.15em' }}
+            transition={{ duration: 1 }}
+            className="text-6xl lg:text-9xl font-bold text-center mb-8 font-display text-white"
+            style={{ 
+              letterSpacing: '0.08em',
+              fontWeight: 300,
+              textTransform: 'uppercase'
+            }}
           >
-            PORTAFOLIO
+            Portafolio
           </motion.h1>
 
           {/* Subtitle */}

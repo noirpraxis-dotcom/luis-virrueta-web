@@ -189,20 +189,37 @@ const LogoCarousel3D = () => {
           </div>
         </div>
 
-        {/* Stats */}
+        {/* Texto premium debajo del carousel */}
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.5 }}
-          className="text-center mt-8"
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="mt-16 text-center"
         >
-          <p className="text-white/60 text-base lg:text-lg mb-1">
-            {logos.length} identidades de marca únicas
-          </p>
-          <p className="text-white/40 text-xs lg:text-sm font-mono">
-            Optimizadas para carga rápida • ~30 KB por logo
-          </p>
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <div className="w-1 h-1 rounded-full bg-purple-400 animate-pulse" />
+            <p className="text-white/50 text-sm font-light tracking-wider uppercase">
+              Muestra Selecta de Identidades Visuales
+            </p>
+            <div className="w-1 h-1 rounded-full bg-cyan-400 animate-pulse" style={{ animationDelay: '0.5s' }} />
+          </div>
+          <div className="flex items-center justify-center gap-4 text-white/30 text-xs">
+            <div className="flex items-center gap-1.5">
+              <Sparkles className="w-3 h-3" />
+              <span>Premium</span>
+            </div>
+            <span>•</span>
+            <div className="flex items-center gap-1.5">
+              <span>🧠</span>
+              <span>Psicología Aplicada</span>
+            </div>
+            <span>•</span>
+            <div className="flex items-center gap-1.5">
+              <span>✨</span>
+              <span>Diseño Estratégico</span>
+            </div>
+          </div>
         </motion.div>
       </div>
     </div>
