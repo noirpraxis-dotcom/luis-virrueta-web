@@ -77,7 +77,7 @@ const ContactoPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black">
       {/* Hero Section */}
-      <section ref={heroRef} className="relative py-32 lg:py-40 px-6 lg:px-20 overflow-hidden">
+      <section ref={heroRef} className="relative py-20 lg:py-32 px-6 lg:px-20 overflow-hidden">
         {/* Gradient orbs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl" />
@@ -95,27 +95,68 @@ const ContactoPage = () => {
             <MessageSquare className="w-16 h-16 mx-auto text-purple-400 mb-6" strokeWidth={1.5} />
           </motion.div>
 
-          {/* Title */}
+          {/* Title con efecto 3D igual que Portafolio */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-5xl lg:text-8xl font-bold text-center mb-8 font-display"
+            className="text-6xl lg:text-9xl font-bold text-center mb-8 font-display relative"
+            style={{ 
+              letterSpacing: '0.08em',
+              fontWeight: 300,
+              textTransform: 'uppercase'
+            }}
           >
-            <span className="bg-gradient-to-r from-purple-400 via-fuchsia-500 to-cyan-400 bg-clip-text text-transparent">
-              Conversemos
+            <span className="relative inline-block">
+              {/* C con degradado */}
+              <span className="relative">
+                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm">C</span>
+                <span className="relative text-white">C</span>
+              </span>
+              {/* ontact */}
+              <span className="text-white">ontact</span>
+              {/* o con degradado */}
+              <span className="relative">
+                <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm">o</span>
+                <span className="relative text-white">o</span>
+              </span>
             </span>
           </motion.h1>
 
-          {/* Subtitle */}
+          {/* Subtitle elegante */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.4 }}
-            className="text-xl lg:text-2xl text-white/70 text-center max-w-3xl mx-auto font-light mb-12"
+            className="text-lg lg:text-xl text-white/60 text-center max-w-4xl mx-auto font-extralight italic mb-12"
+            style={{ letterSpacing: '0.08em' }}
           >
             Cuéntame tu visión. Transformémosla en una marca que piensa, siente y perdura.
           </motion.p>
+
+          {/* Línea dorada animada */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={isHeroInView ? { scaleX: 1 } : {}}
+            transition={{ duration: 1.5, delay: 0.6 }}
+            className="relative h-px mx-auto w-80 overflow-hidden mb-20"
+          >
+            <motion.div
+              animate={{
+                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: 'linear'
+              }}
+              className="absolute inset-0"
+              style={{
+                background: 'linear-gradient(90deg, transparent 0%, rgba(217, 161, 75, 0.6) 50%, transparent 100%)',
+                backgroundSize: '200% 100%'
+              }}
+            />
+          </motion.div>
 
           <motion.div
             initial={{ scaleX: 0 }}

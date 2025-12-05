@@ -175,7 +175,7 @@ const ServiciosPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black">
       {/* Hero Section */}
-      <section ref={heroRef} className="relative py-32 lg:py-40 px-6 lg:px-20 overflow-hidden">
+      <section ref={heroRef} className="relative py-20 lg:py-32 px-6 lg:px-20 overflow-hidden">
         {/* Gradient orbs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl" />
@@ -183,37 +183,68 @@ const ServiciosPage = () => {
         </div>
 
         <div className="relative max-w-7xl mx-auto">
-          {/* Title - Más elegante y profesional */}
+          {/* Title con efecto 3D igual que Portafolio */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1 }}
-            className="text-6xl lg:text-9xl font-bold text-center mb-8 font-display text-white"
+            className="text-6xl lg:text-9xl font-bold text-center mb-8 font-display relative"
             style={{ 
               letterSpacing: '0.08em',
               fontWeight: 300,
               textTransform: 'uppercase'
             }}
           >
-            Servicios
+            <span className="relative inline-block">
+              {/* S con degradado */}
+              <span className="relative">
+                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm">S</span>
+                <span className="relative text-white">S</span>
+              </span>
+              {/* ervicio */}
+              <span className="text-white">ervicio</span>
+              {/* s con degradado */}
+              <span className="relative">
+                <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm">s</span>
+                <span className="relative text-white">s</span>
+              </span>
+            </span>
           </motion.h1>
 
-          {/* Subtitle */}
+          {/* Subtitle elegante */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.4 }}
-            className="text-xl lg:text-2xl text-white/70 text-center max-w-3xl mx-auto font-light mb-12"
+            className="text-lg lg:text-xl text-white/60 text-center max-w-4xl mx-auto font-extralight italic mb-12"
+            style={{ letterSpacing: '0.08em' }}
           >
-            Cinco formas de transformar tu marca en una experiencia inolvidable que conecta con el inconsciente
+            Cinco formas de transformar tu marca en una experiencia inolvidable
           </motion.p>
 
+          {/* Línea dorada animada */}
           <motion.div
             initial={{ scaleX: 0 }}
             animate={isHeroInView ? { scaleX: 1 } : {}}
             transition={{ duration: 1.5, delay: 0.6 }}
-            className="h-px bg-gradient-to-r from-transparent via-purple-500/40 to-transparent mx-auto w-80"
-          />
+            className="relative h-px mx-auto w-80 overflow-hidden"
+          >
+            <motion.div
+              animate={{
+                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: 'linear'
+              }}
+              className="absolute inset-0"
+              style={{
+                background: 'linear-gradient(90deg, transparent 0%, rgba(217, 161, 75, 0.6) 50%, transparent 100%)',
+                backgroundSize: '200% 100%'
+              }}
+            />
+          </motion.div>
         </div>
       </section>
 
@@ -252,33 +283,33 @@ const ServiceDetail = ({ service, index }) => {
               <service.icon className="w-full h-full text-white" strokeWidth={1.5} />
             </motion.div>
             
-            <h2 className="text-4xl lg:text-5xl font-bold text-white mb-3 font-display">
+            <h2 className="text-3xl lg:text-5xl font-bold text-white mb-3 font-display" style={{ letterSpacing: '0.02em', fontWeight: 400 }}>
               {service.title}
             </h2>
-            <p className="text-white/50 uppercase tracking-widest text-sm font-mono mb-4">
+            <p className="text-white/40 uppercase tracking-[0.25em] text-xs font-light mb-5">
               {service.subtitle}
             </p>
-            <p className={`text-2xl font-medium bg-gradient-to-r ${service.gradient} bg-clip-text text-transparent mb-6 font-display`}>
+            <p className={`text-xl lg:text-2xl font-light bg-gradient-to-r ${service.gradient} bg-clip-text text-transparent mb-6 italic`} style={{ letterSpacing: '0.01em' }}>
               {service.tagline}
             </p>
           </div>
 
           {/* Description */}
-          <p className="text-lg text-white/80 leading-relaxed">
+          <p className="text-base lg:text-lg text-white/70 leading-relaxed font-light" style={{ letterSpacing: '0.01em', lineHeight: '1.8' }}>
             {service.description}
           </p>
 
           {/* Investment + Duration */}
-          <div className="flex gap-6 pt-4">
+          <div className="flex gap-8 pt-6">
             <div>
-              <p className="text-white/50 text-sm uppercase tracking-wider font-mono mb-2">Inversión</p>
-              <p className={`text-2xl font-bold bg-gradient-to-r ${service.gradient} bg-clip-text text-transparent`}>
+              <p className="text-white/40 text-xs uppercase tracking-[0.2em] font-light mb-2">Inversión</p>
+              <p className={`text-2xl lg:text-3xl font-light bg-gradient-to-r ${service.gradient} bg-clip-text text-transparent`}>
                 {service.investment}
               </p>
             </div>
             <div>
-              <p className="text-white/50 text-sm uppercase tracking-wider font-mono mb-2">Duración</p>
-              <p className="text-xl font-medium text-white">{service.duration}</p>
+              <p className="text-white/40 text-xs uppercase tracking-[0.2em] font-light mb-2">Duración</p>
+              <p className="text-xl lg:text-2xl font-light text-white">{service.duration}</p>
             </div>
           </div>
         </div>
@@ -287,11 +318,11 @@ const ServiceDetail = ({ service, index }) => {
         <div className="space-y-8">
           {/* Features */}
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
-            <h3 className="text-xl font-medium text-white mb-6 flex items-center gap-2">
-              <Check className="w-5 h-5 text-emerald-400" strokeWidth={2} />
+            <h3 className="text-lg font-light text-white mb-6 flex items-center gap-2" style={{ letterSpacing: '0.05em' }}>
+              <Check className="w-5 h-5 text-emerald-400" strokeWidth={1.5} />
               ¿Qué incluye?
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-4">
               {service.features.map((feature, i) => (
                 <motion.li
                   key={i}
@@ -301,7 +332,7 @@ const ServiceDetail = ({ service, index }) => {
                   className="flex items-start gap-3 text-white/70"
                 >
                   <div className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${service.gradient} mt-2 flex-shrink-0`} />
-                  <span className="text-sm">{feature}</span>
+                  <span className="text-sm font-light leading-relaxed" style={{ letterSpacing: '0.01em' }}>{feature}</span>
                 </motion.li>
               ))}
             </ul>
@@ -309,8 +340,8 @@ const ServiceDetail = ({ service, index }) => {
 
           {/* Process */}
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
-            <h3 className="text-xl font-medium text-white mb-6 flex items-center gap-2">
-              <Zap className="w-5 h-5 text-cyan-400" strokeWidth={2} />
+            <h3 className="text-lg font-light text-white mb-6 flex items-center gap-2" style={{ letterSpacing: '0.05em' }}>
+              <Zap className="w-5 h-5 text-cyan-400" strokeWidth={1.5} />
               Proceso
             </h3>
             <ol className="space-y-4">
@@ -322,10 +353,10 @@ const ServiceDetail = ({ service, index }) => {
                   transition={{ duration: 0.5, delay: i * 0.07 }}
                   className="flex items-start gap-4"
                 >
-                  <span className={`text-lg font-bold bg-gradient-to-r ${service.gradient} bg-clip-text text-transparent flex-shrink-0`}>
+                  <span className={`text-base font-light bg-gradient-to-r ${service.gradient} bg-clip-text text-transparent flex-shrink-0`}>
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <span className="text-white/70 text-sm pt-1">{step}</span>
+                  <span className="text-white/70 text-sm font-light pt-0.5 leading-relaxed" style={{ letterSpacing: '0.01em' }}>{step}</span>
                 </motion.li>
               ))}
             </ol>
