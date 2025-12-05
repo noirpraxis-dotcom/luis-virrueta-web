@@ -187,3 +187,11 @@ button:hover, a:hover {
       0 0 50px rgba(255, 255, 255, 0.2);
   }
 }
+
+/* Borde luminoso dorado para carrusel horizontal de muestras */
+.swiper-slide-active .card-border-horizontal {
+  box-shadow: 
+    0 0 0 2px rgba(217, 161, 75, 0.6),
+    0 0 35px rgba(217, 161, 75, 0.3),
+    0 0 70px rgba(217, 161, 75, 0.15);
+}

@@ -2,6 +2,7 @@ import { motion, useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { Briefcase, ExternalLink, Eye, Heart, Zap, Star, Award, Sparkles, Palette, Type, Droplets, Image as ImageIcon, FileText } from 'lucide-react'
 import LogoCarousel3D from '../components/LogoCarousel3D'
+import WorkSamplesCarousel from '../components/WorkSamplesCarousel'
 import BrandingShowcase from '../components/BrandingShowcase'
 
 const PortafolioPage = () => {
@@ -131,6 +132,9 @@ const PortafolioPage = () => {
 
       {/* 3D Logo Carousel */}
       <LogoCarousel3D />
+
+      {/* Work Samples Carousel - Horizontal */}
+      <WorkSamplesCarousel />
 
       {/* Branding Showcase con Video */}
       <BrandingShowcase />
