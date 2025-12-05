@@ -73,7 +73,7 @@ const WorkSamplesCarousel = () => {
               textTransform: 'uppercase'
             }}
           >
-            Identidades <span className="italic font-light">Visuales</span>
+            Identidades <span className="italic font-extralight">Visuales</span>
           </motion.h2>
         </motion.div>
 

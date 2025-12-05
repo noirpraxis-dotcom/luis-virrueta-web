@@ -34,7 +34,7 @@ const WebsitesCarousel = () => {
               textTransform: 'uppercase'
             }}
           >
-            Sitios <span className="italic font-light">Web</span>
+            Sitios <span className="italic font-extralight">Web</span>
           </motion.h2>
         </motion.div>
 

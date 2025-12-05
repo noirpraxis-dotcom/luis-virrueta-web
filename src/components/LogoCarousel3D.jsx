@@ -95,7 +95,7 @@ const LogoCarousel3D = () => {
               textTransform: 'uppercase'
             }}
           >
-            Logotipos <span className="italic font-light">Animados</span>
+            Logotipos <span className="italic font-extralight">Conceptuales</span>
           </motion.h2>
         </motion.div>
 

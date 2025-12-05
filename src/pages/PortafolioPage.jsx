@@ -5,6 +5,7 @@ import LogoCarousel3D from '../components/LogoCarousel3D'
 import WorkSamplesCarousel from '../components/WorkSamplesCarousel'
 import WebsitesCarousel from '../components/WebsitesCarousel'
 import AvatarsSection from '../components/AvatarsSection'
+import AnimatedLogosSection from '../components/AnimatedLogosSection'
 import BrandingShowcase from '../components/BrandingShowcase'
 
 const PortafolioPage = () => {
@@ -131,7 +132,8 @@ const PortafolioPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.4 }}
-            className="text-xl lg:text-2xl text-white/70 text-center max-w-4xl mx-auto font-light mb-12"
+            className="text-lg lg:text-xl text-white/60 text-center max-w-4xl mx-auto font-extralight italic mb-12"
+            style={{ letterSpacing: '0.08em' }}
           >
             Proyectos Reales = Psicología + Diseño + Tecnología
           </motion.p>
@@ -140,8 +142,24 @@ const PortafolioPage = () => {
             initial={{ scaleX: 0 }}
             animate={isHeroInView ? { scaleX: 1 } : {}}
             transition={{ duration: 1.5, delay: 0.6 }}
-            className="h-px bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent mx-auto w-80"
-          />
+            className="relative h-px mx-auto w-80 overflow-hidden"
+          >
+            <motion.div
+              animate={{
+                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: 'linear'
+              }}
+              className="absolute inset-0"
+              style={{
+                background: 'linear-gradient(90deg, transparent 0%, rgba(217, 161, 75, 0.6) 50%, transparent 100%)',
+                backgroundSize: '200% 100%'
+              }}
+            />
+          </motion.div>
         </div>
       </section>
 
@@ -156,6 +174,9 @@ const PortafolioPage = () => {
 
       {/* Avatares */}
       <AvatarsSection />
+
+      {/* Logotipos Animados */}
+      <AnimatedLogosSection />
 
       {/* Secciones eliminadas - Filter Buttons y Projects Grid */}
       {false && (

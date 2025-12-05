@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Play, Volume2 } from 'lucide-react'
 
-const AvatarsSection = () => {
+const AnimatedLogosSection = () => {
   const ref = useRef(null)
   const videoRef = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
@@ -39,7 +39,7 @@ const AvatarsSection = () => {
               textTransform: 'uppercase'
             }}
           >
-            Avatares <span className="italic font-extralight">Digitales</span>
+            Logotipos <span className="italic font-extralight">Animados</span>
           </motion.h2>
         </motion.div>
 
@@ -51,12 +51,12 @@ const AvatarsSection = () => {
           className="relative max-w-[500px] mx-auto"
         >
           <div className="relative aspect-[9/16] rounded-3xl overflow-hidden bg-black">
-            {/* Video - sin autoplay */}
+            {/* Video - sin autoplay - URL a cambiar por el usuario */}
             <iframe
               ref={videoRef}
               className="absolute inset-0 w-full h-full"
               src={`https://www.youtube.com/embed/XonEErWLLTA?autoplay=${isPlaying ? 1 : 0}&controls=1&rel=0&modestbranding=1&enablejsapi=1&hd=1&loop=1&playlist=XonEErWLLTA`}
-              title="Avatares Digitales"
+              title="Logotipos Animados"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -109,7 +109,7 @@ const AvatarsSection = () => {
                   transition={{ duration: 0.8, delay: 0.7 }}
                   className="mt-8 text-white/80 text-sm font-light tracking-wider text-center px-6"
                 >
-                  Dale play para escuchar a nuestros avatares
+                  Dale play para ver logotipos que cobran vida
                 </motion.p>
               </motion.div>
             )}
@@ -124,7 +124,7 @@ const AvatarsSection = () => {
           className="mt-12 text-center"
         >
           <p className="text-white/40 text-sm font-light tracking-wider uppercase">
-            Identidades digitales con personalidad
+            Logotipos que cobran vida con movimiento
           </p>
         </motion.div>
       </div>
@@ -132,4 +132,4 @@ const AvatarsSection = () => {
   )
 }
 
-export default AvatarsSection
+export default AnimatedLogosSection
