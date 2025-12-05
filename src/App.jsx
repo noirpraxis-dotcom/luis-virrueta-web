@@ -12,7 +12,7 @@ import AppsPremiumPage from './pages/AppsPremiumPage'
 import ContenidoDigitalPage from './pages/ContenidoDigitalPage'
 import AvataresIAPage from './pages/AvataresIAPage'
 import ConsultoriaPsicologicaPage from './pages/ConsultoriaPsicologicaPage'
-import AboutCreatorPage from './pages/AboutCreatorPage'
+import AboutPage from './pages/AboutPage'
 import PortafolioPage from './pages/PortafolioPage'
 import InversionPage from './pages/InversionPage'
 import ContactoPage from './pages/ContactoPage'
@@ -109,7 +109,7 @@ const AppContent = () => {
             {/* Página Sobre Mí: Historia completa de Luis Virrueta */}
             <Route path="/sobre-mi" element={
               <div className="lg:pt-28">
-                <AboutCreatorPage />
+                <AboutPage />
               </div>
             } />
 
