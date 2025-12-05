@@ -29,7 +29,7 @@ const AboutPage = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black">
+    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28">
       {/* Hero Section */}
       <section ref={heroRef} className="relative py-20 lg:py-32 px-6 lg:px-20 overflow-hidden">
         {/* Gradient orbs */}

@@ -63,94 +63,66 @@ const AppContent = () => {
             
             {/* Página Philosophy: Manifiesto Ainimation - Psych × Design × AI */}
             <Route path="/about" element={
-              <div className="lg:pt-28">
-                <PhilosophyPage />
-              </div>
+              <PhilosophyPage />
             } />
 
             {/* Página Servicios: Overview de todos los servicios */}
             <Route path="/servicios" element={
-              <div className="lg:pt-28">
-                <ServiciosPage />
-              </div>
+              <ServiciosPage />
             } />
 
             {/* Páginas individuales de servicios */}
             <Route path="/servicios/identidad-marca" element={
-              <div className="lg:pt-28">
-                <IdentidadMarcaPage />
-              </div>
+              <IdentidadMarcaPage />
             } />
 
             <Route path="/servicios/apps-premium" element={
-              <div className="lg:pt-28">
-                <AppsPremiumPage />
-              </div>
+              <AppsPremiumPage />
             } />
 
             <Route path="/servicios/contenido-digital" element={
-              <div className="lg:pt-28">
-                <ContenidoDigitalPage />
-              </div>
+              <ContenidoDigitalPage />
             } />
 
             <Route path="/servicios/avatares-ia" element={
-              <div className="lg:pt-28">
-                <AvataresIAPage />
-              </div>
+              <AvataresIAPage />
             } />
 
             <Route path="/servicios/consultoria-psicologica" element={
-              <div className="lg:pt-28">
-                <ConsultoriaPsicologicaPage />
-              </div>
+              <ConsultoriaPsicologicaPage />
             } />
 
             {/* Página Sobre Mí: Historia completa de Luis Virrueta */}
             <Route path="/sobre-mi" element={
-              <div className="lg:pt-28">
-                <AboutPage />
-              </div>
+              <AboutPage />
             } />
 
             {/* Página Portafolio: Casos de éxito */}
             <Route path="/portafolio" element={
-              <div className="lg:pt-28">
-                <PortafolioPage />
-              </div>
+              <PortafolioPage />
             } />
 
             {/* Página Inversión: Precios premium */}
             <Route path="/inversion" element={
-              <div className="lg:pt-28">
-                <InversionPage />
-              </div>
+              <InversionPage />
             } />
 
             {/* Página Contacto */}
             <Route path="/contacto" element={
-              <div className="lg:pt-28">
-                <ContactoPage />
-              </div>
+              <ContactoPage />
             } />
 
             {/* Páginas Legales */}
             <Route path="/privacy-policy" element={
-              <div className="lg:pt-28">
-                <PrivacyPolicyPage />
-              </div>
+              <PrivacyPolicyPage />
             } />
 
             <Route path="/terms-conditions" element={
-              <div className="lg:pt-28">
-                <TermsConditionsPage />
-              </div>
+              <TermsConditionsPage />
             } />
 
             <Route path="/cookie-policy" element={
-              <div className="lg:pt-28">
-                <CookiePolicyPage />
-              </div>
+              <CookiePolicyPage />
             } />
             
             {/* Aquí irán más rutas/páginas */}
