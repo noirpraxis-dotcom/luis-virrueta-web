@@ -116,9 +116,9 @@ const PortafolioPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.4 }}
-            className="text-xl lg:text-2xl text-white/70 text-center max-w-3xl mx-auto font-light mb-12"
+            className="text-xl lg:text-2xl text-white/70 text-center max-w-4xl mx-auto font-light mb-12"
           >
-            Proyectos reales donde la psicología, el diseño y la tecnología transforman marcas
+            Proyectos Reales + Psicología + Diseño + Tecnología
           </motion.p>
 
           <motion.div
