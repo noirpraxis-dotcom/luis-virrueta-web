@@ -34,7 +34,7 @@ const WebsitesCarousel = () => {
               textTransform: 'uppercase'
             }}
           >
-            Sitios Web Que Se Sienten
+            Sitios Web
           </motion.h2>
         </motion.div>
 
@@ -107,14 +107,15 @@ const WebsitesCarousel = () => {
                 </motion.div>
               )}
 
-              {/* YouTube Video Embed - autoplay automático */}
+              {/* YouTube Video Embed - autoplay automático con zoom para eliminar espacios laterales */}
               <iframe
                 src="https://www.youtube.com/embed/-Swi2UlM4JI?autoplay=1&mute=1&loop=1&playlist=-Swi2UlM4JI&controls=0&modestbranding=1&rel=0&showinfo=0"
-                title="Sitios Web Que Se Sienten"
+                title="Sitios Web"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 onLoad={() => setVideoLoaded(true)}
-                className="w-full h-full object-cover scale-[1.01]"
+                className="w-full h-full object-cover scale-[1.25]"
+                style={{ transform: 'scale(1.25)' }}
               />
 
               {/* Badge premium dentro del video */}
@@ -160,7 +161,7 @@ const WebsitesCarousel = () => {
           className="mt-12 text-center"
         >
           <p className="text-white/40 text-sm font-light tracking-wider uppercase">
-            Experiencias digitales que conectan emocionalmente
+            Que se sienten y trascienden la razón
           </p>
         </motion.div>
       </div>
