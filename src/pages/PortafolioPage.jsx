@@ -130,11 +130,11 @@ const PortafolioPage = () => {
         </div>
       </section>
 
-      {/* 3D Logo Carousel */}
-      <LogoCarousel3D />
-
       {/* Work Samples Carousel - Horizontal */}
       <WorkSamplesCarousel />
+
+      {/* 3D Logo Carousel */}
+      <LogoCarousel3D />
 
       {/* Branding Showcase con Video */}
       <BrandingShowcase />

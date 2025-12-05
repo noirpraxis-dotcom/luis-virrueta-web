@@ -66,7 +66,7 @@ const LogoCarousel3D = () => {
   }, [])
 
   return (
-    <section className="relative pt-0 pb-6 lg:pt-0 lg:pb-8 px-6 lg:px-20 overflow-hidden">
+    <section className="relative pt-12 pb-6 lg:pt-16 lg:pb-8 px-6 lg:px-20 overflow-hidden">
       {/* Background gradient orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl animate-pulse" />
@@ -74,7 +74,52 @@ const LogoCarousel3D = () => {
       </div>
 
       <div className="relative max-w-7xl mx-auto">
-        {/* Carousel Container - Sin encabezado */}
+        {/* Header elegante */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-10"
+        >
+          {/* Título principal */}
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-4xl lg:text-6xl font-bold mb-4 font-display text-white"
+            style={{ 
+              letterSpacing: '0.05em',
+              fontWeight: 300,
+              textTransform: 'uppercase'
+            }}
+          >
+            Nuestros Logotipos
+          </motion.h2>
+          
+          {/* Subtítulo */}
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-base lg:text-lg text-white/50 max-w-2xl mx-auto font-light"
+          >
+            Muestra Selecta de Identidades Visuales
+          </motion.p>
+          
+          {/* Línea decorativa */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent mx-auto w-64 mt-6"
+          />
+        </motion.div>
+
+        {/* Carousel Container */}
         <div className="relative">
           {/* Swiper Carousel */}
           <Swiper

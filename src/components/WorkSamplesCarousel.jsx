@@ -44,7 +44,7 @@ const WorkSamplesCarousel = () => {
   }, [])
 
   return (
-    <section className="relative py-16 lg:py-20 px-6 lg:px-20 overflow-hidden">
+    <section className="relative pt-4 pb-16 lg:pt-6 lg:pb-20 px-6 lg:px-20 overflow-hidden">
       {/* Background gradient orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl animate-pulse" />
@@ -58,7 +58,7 @@ const WorkSamplesCarousel = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-10"
         >
           {/* Título principal */}
           <motion.h2
