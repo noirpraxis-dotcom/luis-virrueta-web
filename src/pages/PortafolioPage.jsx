@@ -4,6 +4,7 @@ import { Briefcase, ExternalLink, Eye, Heart, Zap, Star, Award, Sparkles, Palett
 import LogoCarousel3D from '../components/LogoCarousel3D'
 import WorkSamplesCarousel from '../components/WorkSamplesCarousel'
 import WebsitesCarousel from '../components/WebsitesCarousel'
+import AvatarsSection from '../components/AvatarsSection'
 import BrandingShowcase from '../components/BrandingShowcase'
 
 const PortafolioPage = () => {
@@ -139,6 +140,9 @@ const PortafolioPage = () => {
 
       {/* Websites Carousel */}
       <WebsitesCarousel />
+
+      {/* Avatars Section */}
+      <AvatarsSection />
 
       {/* Branding Showcase con Video */}
       <BrandingShowcase />
