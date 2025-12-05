@@ -103,14 +103,27 @@ const PortafolioPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1 }}
-            className="text-6xl lg:text-9xl font-bold text-center mb-8 font-display text-white"
+            className="text-6xl lg:text-9xl font-bold text-center mb-8 font-display relative"
             style={{ 
               letterSpacing: '0.08em',
               fontWeight: 300,
               textTransform: 'uppercase'
             }}
           >
-            Portafolio
+            <span className="relative inline-block">
+              {/* P con degradado */}
+              <span className="relative">
+                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm">P</span>
+                <span className="relative text-white">P</span>
+              </span>
+              {/* ortafoli - texto normal */}
+              <span className="text-white">ortafoli</span>
+              {/* O con degradado */}
+              <span className="relative">
+                <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm">o</span>
+                <span className="relative text-white">o</span>
+              </span>
+            </span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -132,46 +145,45 @@ const PortafolioPage = () => {
         </div>
       </section>
 
-      {/* Work Samples Carousel - Horizontal */}
+      {/* Identidades Visuales */}
       <WorkSamplesCarousel />
 
-      {/* 3D Logo Carousel */}
-      <LogoCarousel3D />
-
-      {/* Websites Carousel */}
+      {/* Sitios Web */}
       <WebsitesCarousel />
 
-      {/* Avatars Section */}
+      {/* Logotipos 3D */}
+      <LogoCarousel3D />
+
+      {/* Avatares */}
       <AvatarsSection />
 
-      {/* Branding Showcase con Video */}
-      <BrandingShowcase />
+      {/* Secciones eliminadas - Filter Buttons y Projects Grid */}
+      {false && (
+        <>
+          <section className="py-12 px-6 lg:px-20">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex flex-wrap justify-center gap-4">
+                {categories.map((cat) => (
+                  <motion.button
+                    key={cat.id}
+                    onClick={() => setActiveFilter(cat.id)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                      activeFilter === cat.id
+                        ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg shadow-cyan-500/30'
+                        : 'bg-white/5 text-white/70 border border-white/10 hover:border-white/30'
+                    }`}
+                  >
+                    {cat.label}
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+          </section>
 
-      {/* Filter Buttons */}
-      <section className="py-12 px-6 lg:px-20">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-wrap justify-center gap-4">
-            {categories.map((cat) => (
-              <motion.button
-                key={cat.id}
-                onClick={() => setActiveFilter(cat.id)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
-                  activeFilter === cat.id
-                    ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg shadow-cyan-500/30'
-                    : 'bg-white/5 text-white/70 border border-white/10 hover:border-white/30'
-                }`}
-              >
-                {cat.label}
-              </motion.button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Projects Grid */}
-      <section className="py-12 px-6 lg:px-20 pb-32">
+          {/* Projects Grid */}
+          <section className="py-12 px-6 lg:px-20 pb-32">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProjects.map((project, index) => (
@@ -214,6 +226,8 @@ const PortafolioPage = () => {
           </div>
         </div>
       </section>
+      </>
+      )}
     </div>
   )
 }
