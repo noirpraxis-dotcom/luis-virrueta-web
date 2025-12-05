@@ -39,15 +39,10 @@ const AvatarsSection = () => {
               Avatares
             </motion.h2>
 
-            {/* Video vertical con borde morado */}
+            {/* Video vertical sin borde */}
             <div className="relative mx-auto w-full max-w-[380px] aspect-[9/16]">
-              {/* Borde gradiente morado */}
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#a855f7] via-[#d946ef] to-[#e879f9] p-[3px]">
-                <div className="w-full h-full rounded-3xl bg-black" />
-              </div>
-
               {/* Video */}
-              <div className="absolute inset-[3px] rounded-3xl overflow-hidden border-4 border-black shadow-2xl">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl">
                 <div className="relative w-full h-full flex items-center justify-center">
                   <iframe
                     className="w-full h-full"
@@ -59,33 +54,6 @@ const AvatarsSection = () => {
                   />
                 </div>
               </div>
-
-              {/* Floating particles */}
-              <motion.div
-                animate={{ 
-                  y: [0, -20, 0],
-                  opacity: [0.3, 0.6, 0.3]
-                }}
-                transition={{ 
-                  duration: 3, 
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="absolute -top-4 -right-4 w-20 h-20 bg-[#d946ef]/20 rounded-full blur-2xl"
-              />
-              <motion.div
-                animate={{ 
-                  y: [0, -15, 0],
-                  opacity: [0.3, 0.6, 0.3]
-                }}
-                transition={{ 
-                  duration: 4, 
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 1
-                }}
-                className="absolute -bottom-4 -left-4 w-24 h-24 bg-[#e879f9]/20 rounded-full blur-2xl"
-              />
             </div>
 
             {/* Texto elegante debajo */}
@@ -121,15 +89,10 @@ const AvatarsSection = () => {
               Logotipos Animados
             </motion.h2>
 
-            {/* Video vertical con borde morado */}
+            {/* Video vertical sin borde */}
             <div className="relative mx-auto w-full max-w-[380px] aspect-[9/16]">
-              {/* Borde gradiente morado */}
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#a855f7] via-[#d946ef] to-[#e879f9] p-[3px]">
-                <div className="w-full h-full rounded-3xl bg-black" />
-              </div>
-
               {/* Video - placeholder por ahora */}
-              <div className="absolute inset-[3px] rounded-3xl overflow-hidden border-4 border-black shadow-2xl">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl">
                 <div className="relative w-full h-full flex items-center justify-center bg-zinc-950">
                   {/* Placeholder - reemplazar con el video que proporciones */}
                   <div className="text-white/30 text-center p-6">
@@ -137,34 +100,6 @@ const AvatarsSection = () => {
                   </div>
                 </div>
               </div>
-
-              {/* Floating particles */}
-              <motion.div
-                animate={{ 
-                  y: [0, -20, 0],
-                  opacity: [0.3, 0.6, 0.3]
-                }}
-                transition={{ 
-                  duration: 3, 
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.5
-                }}
-                className="absolute -top-4 -right-4 w-20 h-20 bg-[#d946ef]/20 rounded-full blur-2xl"
-              />
-              <motion.div
-                animate={{ 
-                  y: [0, -15, 0],
-                  opacity: [0.3, 0.6, 0.3]
-                }}
-                transition={{ 
-                  duration: 4, 
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 1.5
-                }}
-                className="absolute -bottom-4 -left-4 w-24 h-24 bg-[#e879f9]/20 rounded-full blur-2xl"
-              />
             </div>
 
             {/* Texto elegante debajo */}

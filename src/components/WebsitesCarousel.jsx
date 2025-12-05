@@ -1,19 +1,11 @@
 import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Play, Sparkles } from 'lucide-react'
+import { Brain } from 'lucide-react'
 
 const WebsitesCarousel = () => {
   const ref = useRef(null)
-  const videoRef = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [showLoading, setShowLoading] = useState(false)
-
-  const handlePlay = () => {
-    setShowLoading(true)
-    setTimeout(() => setShowLoading(false), 2000)
-    setIsPlaying(true)
-  }
+  const [videoLoaded, setVideoLoaded] = useState(false)
 
   return (
     <section ref={ref} className="relative pt-12 pb-16 lg:pt-16 lg:pb-20 px-6 lg:px-20 overflow-hidden">
@@ -48,74 +40,115 @@ const WebsitesCarousel = () => {
 
         {/* Video Container - Horizontal grande */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={isInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 1, delay: 0.3 }}
+          initial={{ opacity: 0, x: 30 }}
+          animate={isInView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.3 }}
           className="relative max-w-5xl mx-auto"
         >
-          <div className="relative aspect-[16/9] rounded-3xl overflow-hidden bg-black">
-            {/* Video - usando iframe de YouTube */}
-            <iframe
-              ref={videoRef}
-              className="absolute inset-0 w-full h-full"
-              src={`https://www.youtube.com/embed/-Swi2UlM4JI?autoplay=${isPlaying ? 1 : 0}&controls=1&rel=0&modestbranding=1&enablejsapi=1&hd=1`}
-              title="Sitios Web Video"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-            
-            {/* Overlay oscuro */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/70 pointer-events-none" />
-            
-            {/* Fade out radial en los bordes */}
-            <div 
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: 'radial-gradient(ellipse 85% 85% at 50% 50%, transparent 50%, rgba(0,0,0,0.8) 100%)'
-              }}
-            />
+          {/* Sombras animadas premium */}
+          <motion.div
+            className="absolute -inset-12 rounded-3xl blur-[80px]"
+            animate={{
+              background: [
+                'radial-gradient(ellipse at 50% 80%, rgba(59,130,246,0.5), rgba(99,102,241,0.35), rgba(79,70,229,0.2), transparent)',
+                'radial-gradient(ellipse at 50% 75%, rgba(99,102,241,0.6), rgba(139,92,246,0.4), rgba(59,130,246,0.25), transparent)',
+                'radial-gradient(ellipse at 50% 85%, rgba(139,92,246,0.55), rgba(59,130,246,0.4), rgba(99,102,241,0.22), transparent)',
+                'radial-gradient(ellipse at 50% 80%, rgba(59,130,246,0.5), rgba(99,102,241,0.35), rgba(79,70,229,0.2), transparent)'
+              ],
+              opacity: [0.4, 0.6, 0.5, 0.4]
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
 
-            {/* Botón de Play custom - solo visible si no está reproduciendo */}
-            {!isPlaying && (
-              <motion.button
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handlePlay}
-                className="absolute inset-0 z-10 flex items-center justify-center"
-              >
-                <div className="w-20 h-20 lg:w-24 lg:h-24 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center group hover:bg-white/20 transition-all duration-300">
-                  <Play className="w-8 h-8 lg:w-10 lg:h-10 text-white fill-white ml-1" />
-                </div>
-              </motion.button>
-            )}
-
-            {/* Loading animation */}
-            {showLoading && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm"
-              >
+          {/* Segunda capa de sombra inferior */}
+          <motion.div
+            className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-[120%] h-40 rounded-full blur-[60px]"
+            animate={{
+              background: [
+                'radial-gradient(ellipse at 50% 50%, rgba(59,130,246,0.4), rgba(99,102,241,0.25), transparent)',
+                'radial-gradient(ellipse at 50% 50%, rgba(99,102,241,0.5), rgba(79,70,229,0.3), transparent)',
+                'radial-gradient(ellipse at 50% 50%, rgba(139,92,246,0.45), rgba(59,130,246,0.28), transparent)',
+                'radial-gradient(ellipse at 50% 50%, rgba(59,130,246,0.4), rgba(99,102,241,0.25), transparent)'
+              ],
+              opacity: [0.5, 0.7, 0.6, 0.5]
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          
+          {/* Video container */}
+          <div className="relative rounded-3xl overflow-hidden shadow-[0_20px_60px_-20px_rgba(59,130,246,0.4),0_15px_45px_-15px_rgba(99,102,241,0.3)] hover:shadow-[0_25px_70px_-20px_rgba(59,130,246,0.5),0_20px_55px_-15px_rgba(99,102,241,0.4)] transition-shadow duration-500">
+            <div className="relative w-full aspect-[16/9] overflow-hidden bg-black">
+              {/* Loading animation */}
+              {!videoLoaded && (
                 <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 flex items-center justify-center bg-black z-10"
                 >
-                  <Sparkles className="w-12 h-12 text-blue-400" />
+                  <motion.div
+                    animate={{
+                      scale: [1, 1.15, 1],
+                      opacity: [0.4, 0.8, 0.4]
+                    }}
+                    transition={{
+                      duration: 2.5,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <Brain className="w-12 h-12 text-blue-400/60" />
+                  </motion.div>
                 </motion.div>
-                <motion.p
-                  animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                  className="mt-4 text-white text-sm font-light"
+              )}
+
+              {/* YouTube Video Embed - autoplay automático */}
+              <iframe
+                src="https://www.youtube.com/embed/-Swi2UlM4JI?autoplay=1&mute=1&loop=1&playlist=-Swi2UlM4JI&controls=0&modestbranding=1&rel=0&showinfo=0"
+                title="Sitios Web Que Se Sienten"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                onLoad={() => setVideoLoaded(true)}
+                className="w-full h-full object-cover scale-[1.01]"
+              />
+
+              {/* Badge premium dentro del video */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
+                className="absolute bottom-4 right-4 z-20"
+              >
+                <motion.div 
+                  className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-black/60 backdrop-blur-xl border border-white/20 shadow-2xl whitespace-nowrap"
+                  whileHover={{ scale: 1.05, backgroundColor: 'rgba(0,0,0,0.7)' }}
+                  transition={{ duration: 0.3 }}
                 >
-                  Cargando...
-                </motion.p>
+                  <svg className="w-4 h-4 text-blue-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-white text-xs font-medium">Experiencias digitales</span>
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.2, 1],
+                      opacity: [0.5, 1, 0.5]
+                    }}
+                    transition={{ 
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                  </motion.div>
+                </motion.div>
               </motion.div>
-            )}
+            </div>
           </div>
         </motion.div>
 
