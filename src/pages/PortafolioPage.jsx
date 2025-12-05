@@ -3,6 +3,7 @@ import { useRef, useState } from 'react'
 import { Briefcase, ExternalLink, Eye, Heart, Zap, Star, Award, Sparkles, Palette, Type, Droplets, Image as ImageIcon, FileText } from 'lucide-react'
 import LogoCarousel3D from '../components/LogoCarousel3D'
 import WorkSamplesCarousel from '../components/WorkSamplesCarousel'
+import WebsitesCarousel from '../components/WebsitesCarousel'
 import BrandingShowcase from '../components/BrandingShowcase'
 
 const PortafolioPage = () => {
@@ -118,7 +119,7 @@ const PortafolioPage = () => {
             transition={{ duration: 1, delay: 0.4 }}
             className="text-xl lg:text-2xl text-white/70 text-center max-w-4xl mx-auto font-light mb-12"
           >
-            Proyectos Reales + Psicología + Diseño + Tecnología
+            Proyectos Reales = Psicología + Diseño + Tecnología
           </motion.p>
 
           <motion.div
@@ -135,6 +136,9 @@ const PortafolioPage = () => {
 
       {/* 3D Logo Carousel */}
       <LogoCarousel3D />
+
+      {/* Websites Carousel */}
+      <WebsitesCarousel />
 
       {/* Branding Showcase con Video */}
       <BrandingShowcase />

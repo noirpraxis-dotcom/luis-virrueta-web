@@ -2,53 +2,54 @@ import { useRef, useState, useEffect } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { EffectCoverflow, Navigation, Autoplay } from 'swiper/modules'
 import { motion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 // Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/effect-coverflow'
 import 'swiper/css/navigation'
 
-const WorkSamplesCarousel = () => {
+const WebsitesCarousel = () => {
   const swiperRef = useRef(null)
-  const [samples, setSamples] = useState([])
+  const [websites, setWebsites] = useState([])
 
-  // Cargar imágenes comprimidas en orden alfabético según los archivos originales
+  // Cargar imágenes de sitios web
   useEffect(() => {
-    const loadSamples = () => {
-      // Nombres de archivo originales en orden alfabético
-      const fileNames = [
-        '1.jpg', '10.jpg', '11.jpg', '12.jpg', '13.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg', '9.jpg',
-        'descarga (31).jpg', 'descarga (33).jpg', 'descarga (34).jpg', 'descarga (37).jpg', 'descarga (40).jpg', 'descarga (41).jpg',
-        'descarga (46).jpg', 'descarga (50).jpg', 'descarga (51).jpg', 'descarga (53).jpg', 'descarga (55).jpg', 'descarga (56).jpg',
-        'descarga (57).jpg', 'descarga (59).jpg', 'descarga (61).jpg', 'descarga (63).jpg', 'descarga (67).jpg', 'descarga (70).jpg',
-        'descarga (72).jpg', 'descarga (74).jpg', 'descarga (76).jpg', 'descarga (80).jpg', 'descarga (82).jpg', 'descarga (85).jpg',
-        'descarga (87).jpg', 'descarga (94).jpg', 'descarga (99).jpg',
-        'descarga - 2025-12-05T120429.873.jpg', 'descarga - 2025-12-05T120612.036.jpg', 'descarga - 2025-12-05T120818.595.jpg',
-        'descarga - 2025-12-05T120934.074.jpg', 'descarga - 2025-12-05T120955.862.jpg', 'descarga - 2025-12-05T121220.480.jpg',
-        'descarga - 2025-12-05T121240.035.jpg', 'descarga - 2025-12-05T121416.864.jpg', 'descarga - 2025-12-05T121453.123.jpg',
-        'descarga - 2025-12-05T121509.594.jpg', 'descarga - 2025-12-05T121523.401.jpg', 'descarga - 2025-12-05T122136.197.jpg',
-        'descarga - 2025-12-05T122231.950.jpg'
-      ]
-      
-      // Mapear a las imágenes comprimidas numeradas (muestra-1.webp corresponde a 1.jpg, etc.)
-      const sampleFiles = fileNames.map((fileName, index) => ({
-        id: index + 1,
-        image: `/muestras-compressed/muestra-${index + 1}.webp`,
-        name: fileName
-      }))
-      
-      setSamples(sampleFiles)
+    const loadWebsites = async () => {
+      try {
+        const websiteFiles = []
+        // Intentar cargar hasta 50 imágenes
+        for (let i = 1; i <= 50; i++) {
+          try {
+            const img = new Image()
+            img.src = `/sitios-compressed/sitio-${i}.webp`
+            await new Promise((resolve, reject) => {
+              img.onload = resolve
+              img.onerror = reject
+              setTimeout(reject, 1000)
+            })
+            websiteFiles.push({
+              id: i,
+              image: `/sitios-compressed/sitio-${i}.webp`
+            })
+          } catch {
+            break
+          }
+        }
+        setWebsites(websiteFiles)
+      } catch (error) {
+        console.error('Error cargando sitios web:', error)
+      }
     }
-    loadSamples()
+    loadWebsites()
   }, [])
 
   return (
-    <section className="relative pt-4 pb-16 lg:pt-6 lg:pb-20 px-6 lg:px-20 overflow-hidden">
+    <section className="relative pt-12 pb-16 lg:pt-16 lg:pb-20 px-6 lg:px-20 overflow-hidden">
       {/* Background gradient orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }} />
+        <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }} />
       </div>
 
       <div className="relative max-w-7xl mx-auto">
@@ -73,7 +74,7 @@ const WorkSamplesCarousel = () => {
               textTransform: 'uppercase'
             }}
           >
-            Identidades Visuales
+            Sitios Web Que Se Sienten
           </motion.h2>
         </motion.div>
 
@@ -102,8 +103,8 @@ const WorkSamplesCarousel = () => {
             className="py-12"
             slideActiveClass="swiper-slide-active"
           >
-            {samples.map((sample) => (
-              <SwiperSlide key={sample.id} className="!w-[90vw] lg:!w-[900px]">
+            {websites.map((website) => (
+              <SwiperSlide key={website.id} className="!w-[90vw] lg:!w-[900px]">
                 <motion.div
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.3 }}
@@ -113,8 +114,8 @@ const WorkSamplesCarousel = () => {
                   <div className="card-border-horizontal relative aspect-[16/9] rounded-2xl overflow-hidden bg-zinc-950 shadow-2xl">
                     {/* Imagen como fondo completo */}
                     <img 
-                      src={sample.image} 
-                      alt={`Muestra ${sample.id}`}
+                      src={website.image} 
+                      alt={`Sitio Web ${website.id}`}
                       className="absolute inset-0 w-full h-full object-cover"
                       loading="lazy"
                     />
@@ -160,7 +161,7 @@ const WorkSamplesCarousel = () => {
           className="mt-12 text-center"
         >
           <p className="text-white/40 text-sm font-light tracking-wider uppercase">
-            Una muestra de nuestro trabajo
+            Experiencias digitales que conectan emocionalmente
           </p>
         </motion.div>
       </div>
@@ -168,4 +169,4 @@ const WorkSamplesCarousel = () => {
   )
 }
 
-export default WorkSamplesCarousel
+export default WebsitesCarousel

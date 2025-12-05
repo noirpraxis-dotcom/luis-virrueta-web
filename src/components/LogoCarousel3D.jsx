@@ -95,7 +95,7 @@ const LogoCarousel3D = () => {
               textTransform: 'uppercase'
             }}
           >
-            Nuestros Logotipos
+            Logotipos
           </motion.h2>
         </motion.div>
 
@@ -173,6 +173,18 @@ const LogoCarousel3D = () => {
           </div>
         </div>
 
+        {/* Texto elegante debajo del carousel */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="mt-12 text-center"
+        >
+          <p className="text-white/40 text-sm font-light tracking-wider uppercase">
+            Muestras selectas de logotipos que transmiten
+          </p>
+        </motion.div>
       </div>
     </section>
   )
