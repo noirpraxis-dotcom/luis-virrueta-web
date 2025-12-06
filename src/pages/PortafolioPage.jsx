@@ -100,7 +100,7 @@ const PortafolioPage = () => {
             muted
             playsInline
             preload="auto"
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-20"
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-50"
             style={{
               minWidth: '100vw',
               minHeight: '100%',
@@ -112,7 +112,7 @@ const PortafolioPage = () => {
             Tu navegador no soporta video HTML5.
           </video>
           {/* Overlay para que el texto sea legible */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
         </div>
 
         {/* Gradient orbs (ahora encima del video) */}
