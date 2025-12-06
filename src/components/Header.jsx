@@ -45,43 +45,85 @@ const Header = ({ menuItems }) => {
                 className="cursor-pointer relative"
                 style={{ fontFamily: 'Gotham, sans-serif' }}
               >
-                {/* LUXMANIA - Elegant silver chrome con animación en MANIA */}
+                {/* LUXMANIA - Con efecto de ondas animadas */}
                 <div className="text-[2.2rem] font-bold tracking-wider font-display flex">
-                  {/* LUX - Estático */}
-                  <span
-                    style={{
-                      background: 'linear-gradient(135deg, #a8a9ad 0%, #ffffff 20%, #d4d4d8 40%, #fafafa 60%, #e4e4e7 80%, #ffffff 100%)',
-                      WebkitBackgroundClip: 'text',
-                      backgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.25))',
-                      letterSpacing: '0.1em'
-                    }}
-                  >
+                  {/* LUX - Blanco estático */}
+                  <span className="text-white" style={{ letterSpacing: '0.1em' }}>
                     LUX
                   </span>
-                  {/* MANIA - Animado con degradados morado/azul/fucsia */}
-                  <motion.span
-                    animate={{
-                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
-                    }}
-                    transition={{
-                      duration: 8,
-                      repeat: Infinity,
-                      ease: "linear"
-                    }}
-                    style={{
-                      background: 'linear-gradient(90deg, #ffffff 0%, #a855f7 15%, #6366f1 30%, #d946ef 45%, #e879f9 60%, #8b5cf6 75%, #ffffff 90%, #ffffff 100%)',
-                      backgroundSize: '200% 100%',
-                      WebkitBackgroundClip: 'text',
-                      backgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      filter: 'drop-shadow(0 0 25px rgba(168,85,247,0.3))',
-                      letterSpacing: '0.1em'
-                    }}
-                  >
-                    MANIA
-                  </motion.span>
+                  {/* MANIA - Animado con ondas de colores superpuestas */}
+                  <span className="relative inline-block" style={{ letterSpacing: '0.1em' }}>
+                    {/* Capa 1 - Onda azul */}
+                    <motion.span
+                      animate={{
+                        backgroundPosition: ['0% 0%', '100% 100%']
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                      style={{
+                        background: 'linear-gradient(135deg, transparent 0%, transparent 40%, #3b82f6 50%, transparent 60%, transparent 100%)',
+                        backgroundSize: '200% 200%',
+                        WebkitBackgroundClip: 'text',
+                        backgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                      }}
+                      className="absolute inset-0"
+                    >
+                      MANIA
+                    </motion.span>
+                    
+                    {/* Capa 2 - Onda fucsia */}
+                    <motion.span
+                      animate={{
+                        backgroundPosition: ['0% 0%', '100% 100%']
+                      }}
+                      transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "linear",
+                        delay: 0.5
+                      }}
+                      style={{
+                        background: 'linear-gradient(135deg, transparent 0%, transparent 40%, #d946ef 50%, transparent 60%, transparent 100%)',
+                        backgroundSize: '200% 200%',
+                        WebkitBackgroundClip: 'text',
+                        backgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                      }}
+                      className="absolute inset-0"
+                    >
+                      MANIA
+                    </motion.span>
+                    
+                    {/* Capa 3 - Onda morada */}
+                    <motion.span
+                      animate={{
+                        backgroundPosition: ['0% 0%', '100% 100%']
+                      }}
+                      transition={{
+                        duration: 5,
+                        repeat: Infinity,
+                        ease: "linear",
+                        delay: 1
+                      }}
+                      style={{
+                        background: 'linear-gradient(135deg, transparent 0%, transparent 40%, #8b5cf6 50%, transparent 60%, transparent 100%)',
+                        backgroundSize: '200% 200%',
+                        WebkitBackgroundClip: 'text',
+                        backgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                      }}
+                      className="absolute inset-0"
+                    >
+                      MANIA
+                    </motion.span>
+                    
+                    {/* Texto base en blanco */}
+                    <span className="relative text-white">MANIA</span>
+                  </span>
                 </div>
                 
                 {/* Tagline - Efecto platino/chrome animado */}
@@ -110,7 +152,7 @@ const Header = ({ menuItems }) => {
                 
                 {/* Underline decorativo */}
                 <motion.div 
-                  className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#0066FF] to-transparent opacity-0"
+                  className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0"
                   whileHover={{ opacity: 0.5 }}
                   transition={{ duration: 0.3 }}
                 />
