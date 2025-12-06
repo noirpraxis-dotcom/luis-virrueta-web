@@ -92,7 +92,30 @@ const PortafolioPage = () => {
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28">
       {/* Hero Section */}
       <section ref={heroRef} className="relative py-20 lg:py-32 px-6 lg:px-20 overflow-hidden">
-        {/* Gradient orbs */}
+        {/* Video de fondo - Expandido horizontalmente, cubriendo incluso el header */}
+        <div className="absolute inset-0 -top-28 overflow-hidden pointer-events-none">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-20"
+            style={{
+              minWidth: '100vw',
+              minHeight: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center'
+            }}
+          >
+            <source src="/hero portafolio.mp4" type="video/mp4" />
+            Tu navegador no soporta video HTML5.
+          </video>
+          {/* Overlay para que el texto sea legible */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/90" />
+        </div>
+
+        {/* Gradient orbs (ahora encima del video) */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl" />
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl" />
