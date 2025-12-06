@@ -1,5 +1,5 @@
 import { motion, useInView } from 'framer-motion'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Briefcase, ExternalLink, Eye, Heart, Zap, Star, Award, Sparkles, Palette, Type, Droplets, Image as ImageIcon, FileText, Brain, Code, Lightbulb } from 'lucide-react'
 import LogoCarousel3D from '../components/LogoCarousel3D'
 import WorkSamplesCarousel from '../components/WorkSamplesCarousel'
@@ -331,6 +331,9 @@ const PortafolioPage = () => {
           </div>
         </div>
       </section>
+
+      {/* Lighthouse Section - Video con efecto de loop reverso */}
+      <LighthouseSection />
       </>
       )}
     </div>
@@ -412,6 +415,117 @@ const ProjectCard = ({ project, index }) => {
         />
       </div>
     </motion.div>
+  )
+}
+
+// Componente Lighthouse Section con video que se reproduce en reversa
+const LighthouseSection = () => {
+  const videoRef = useRef(null)
+  const [isReversing, setIsReversing] = useState(false)
+  const sectionRef = useRef(null)
+  const isInView = useInView(sectionRef, { once: true, amount: 0.3 })
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    const handleTimeUpdate = () => {
+      // Cuando llegue al final, hacer reversa
+      if (!isReversing && video.currentTime >= video.duration - 0.1) {
+        setIsReversing(true)
+        video.pause()
+        
+        // Esperar un momento en la imagen final
+        setTimeout(() => {
+          // Reproducir en reversa
+          const playReverse = setInterval(() => {
+            if (video.currentTime <= 0.1) {
+              clearInterval(playReverse)
+              setIsReversing(false)
+              video.currentTime = 0
+              video.play()
+            } else {
+              video.currentTime -= 0.033 // ~30fps en reversa
+            }
+          }, 33)
+        }, 800) // Pausa de 800ms en la imagen final
+      }
+    }
+
+    video.addEventListener('timeupdate', handleTimeUpdate)
+    return () => video.removeEventListener('timeupdate', handleTimeUpdate)
+  }, [isReversing])
+
+  return (
+    <section ref={sectionRef} className="relative py-20 px-6 lg:px-20 overflow-hidden">
+      {/* Background blur effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-600/10 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative max-w-7xl mx-auto">
+        {/* Title */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-12"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="inline-block px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5 mb-8"
+          >
+            <span className="text-sm lg:text-base text-white/80 font-light tracking-wider uppercase">
+              Iluminamos Tu Marca
+            </span>
+          </motion.div>
+
+          <h2 className="text-4xl lg:text-6xl font-bold text-white mb-6"
+            style={{ 
+              letterSpacing: '0.05em',
+              fontWeight: 300
+            }}
+          >
+            Deja que Nosotros Alumbremos Tu Logo
+          </h2>
+
+          <p className="text-base lg:text-lg text-white/60 font-extralight italic max-w-2xl mx-auto"
+            style={{ letterSpacing: '0.08em' }}
+          >
+            Como un faro en la oscuridad, guiamos tu marca hacia el éxito
+          </p>
+        </motion.div>
+
+        {/* Video Container */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 0.4 }}
+          className="relative rounded-2xl overflow-hidden shadow-2xl"
+          style={{ aspectRatio: '21/9' }}
+        >
+          {/* Video */}
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            className="w-full h-full object-cover"
+          >
+            <source src="/faro video.mp4" type="video/mp4" />
+          </video>
+
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
+
+          {/* Border glow effect */}
+          <div className="absolute inset-0 rounded-2xl border border-white/10" />
+        </motion.div>
+      </div>
+    </section>
   )
 }
 
