@@ -3,13 +3,309 @@ import { useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles } from 'lucide-react'
 
+// Función para obtener el artículo basado en el slug
+const getArticleBySlug = (slug) => {
+  const articles = {
+    'neurociencia-del-diseno': {
+      title: 'Neurociencia del Diseño: Por Qué Algunos Logos Son Inolvidables',
+      author: 'Luis Virrueta',
+      date: '6 Dic 2025',
+      readTime: '12 min',
+      category: 'Psicología',
+      tags: ['Neuroscience', 'Logo Design', 'Brand Recognition', 'Psychology'],
+      gradient: 'from-pink-500 to-rose-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'En el mundo del branding, algunos logos trascienden su función básica de identificación para convertirse en símbolos culturales inolvidables. ¿Qué hace que reconozcamos instantáneamente el swoosh de Nike, la manzana de Apple o los arcos dorados de McDonald\'s? La respuesta está en la neurociencia del diseño.'
+        },
+        {
+          type: 'heading',
+          title: 'El Cerebro y el Reconocimiento Visual',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'Nuestro cerebro procesa imágenes 60,000 veces más rápido que el texto. El córtex visual, que representa aproximadamente el 30% de nuestra corteza cerebral, está optimizado para detectar patrones, formas y colores de manera instantánea. Los logos exitosos aprovechan esta capacidad innata.'
+        },
+        {
+          type: 'highlight',
+          content: '"Un logo efectivo debe ser procesado por el cerebro en menos de 400 milisegundos para crear un impacto memorable."',
+          author: 'Estudios de Neuroimagen Visual'
+        },
+        {
+          type: 'heading',
+          title: 'Los Tres Pilares Neurológicos del Logo Perfecto',
+          icon: Sparkles
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'Simplicidad Cognitiva',
+          content: 'El cerebro humano prefiere formas simples porque requieren menos energía para procesar. Los logos más memorables utilizan entre 1-3 elementos visuales clave. Esta economía cognitiva permite que el cerebro almacene y recupere la información visual de manera más eficiente.',
+          gradient: 'from-purple-500 to-fuchsia-500'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'Activación Emocional',
+          content: 'La amígdala, nuestro centro emocional, se activa cuando vemos logos que asociamos con experiencias positivas. Los colores, formas curvas vs angulares, y la simetría desencadenan respuestas emocionales específicas que quedan grabadas en nuestra memoria a largo plazo.',
+          gradient: 'from-cyan-500 to-blue-500'
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'Conexión Semántica',
+          content: 'Los logos más poderosos crean puentes entre la imagen visual y el concepto de marca en el hipocampo. Esta región cerebral, responsable de la memoria asociativa, vincula el símbolo con significados, valores y experiencias, creando una red neural robusta.',
+          gradient: 'from-emerald-500 to-teal-500'
+        },
+        {
+          type: 'heading',
+          title: 'El Rol del Color en la Memoria Visual',
+          icon: Zap
+        },
+        {
+          type: 'text',
+          content: 'Los colores activan diferentes áreas del cerebro y generan respuestas fisiológicas medibles. El rojo aumenta la frecuencia cardíaca y crea urgencia, el azul reduce el estrés y transmite confianza, mientras que el amarillo estimula la dopamina y genera optimismo.'
+        },
+        {
+          type: 'colorGrid',
+          colors: [
+            { name: 'Rojo', hex: '#EF4444', emotion: 'Pasión, Urgencia, Energía', brands: 'Coca-Cola, Netflix, YouTube' },
+            { name: 'Azul', hex: '#3B82F6', emotion: 'Confianza, Calma, Profesionalismo', brands: 'Facebook, IBM, Samsung' },
+            { name: 'Amarillo', hex: '#FBBF24', emotion: 'Optimismo, Creatividad, Atención', brands: 'McDonald\'s, IKEA, Snapchat' },
+            { name: 'Verde', hex: '#10B981', emotion: 'Crecimiento, Salud, Naturaleza', brands: 'Starbucks, Spotify, WhatsApp' },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Aplicando la Neurociencia a Tu Marca',
+          icon: Eye
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Prueba de los 3 Segundos',
+              description: 'Tu logo debe ser reconocible en 3 segundos o menos. Si requiere más tiempo, simplifica.'
+            },
+            {
+              title: 'Coherencia Visual',
+              description: 'Usa el logo consistentemente en todos los puntos de contacto para fortalecer las conexiones neuronales.'
+            },
+            {
+              title: 'Testeo Emocional',
+              description: 'Realiza pruebas A/B midiendo respuestas emocionales (microexpresiones, dilatación pupilar) a diferentes versiones.'
+            },
+            {
+              title: 'Memoria a Largo Plazo',
+              description: 'Repite la exposición del logo en contextos positivos para crear asociaciones duraderas en el hipocampo.'
+            },
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'La neurociencia del diseño nos revela que crear un logo memorable no es arte o magia, sino ciencia aplicada. Al comprender cómo el cerebro procesa, almacena y recupera información visual, podemos diseñar símbolos que no solo se ven bien, sino que se graban profundamente en la mente de nuestra audiencia.'
+        },
+      ]
+    },
+    'ia-generativa-diseno-emocion': {
+      title: 'La IA Generativa en el Diseño: Del Prompt a la Emoción',
+      author: 'Luis Virrueta',
+      date: '5 Dic 2025',
+      readTime: '14 min',
+      category: 'Tecnología × Diseño',
+      tags: ['AI', 'Generative Design', 'Emotional Design', 'Psychology'],
+      gradient: 'from-purple-500 to-fuchsia-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'La inteligencia artificial generativa está revolucionando el diseño gráfico, pero la verdadera magia ocurre cuando entendemos la psicología detrás de cada pixel generado. No se trata solo de crear imágenes hermosas, sino de diseñar experiencias que resuenen emocionalmente con tu audiencia.'
+        },
+        {
+          type: 'heading',
+          title: 'La Convergencia de Tres Mundos',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'Estamos presenciando un momento histórico donde la tecnología de IA, los principios del diseño y la comprensión psicológica del usuario se fusionan para crear algo completamente nuevo: diseño generativo con inteligencia emocional.'
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'Psicología del Prompt Engineering',
+          content: 'Escribir prompts efectivos requiere entender cómo la IA interpreta el lenguaje emocional. Palabras como "acogedor", "dinámico" o "sofisticado" activan diferentes redes neuronales en los modelos, generando resultados que evocan emociones específicas en quien los observa.',
+          gradient: 'from-purple-500 to-fuchsia-500'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'Diseño Adaptativo Emocional',
+          content: 'Las IAs generativas pueden analizar respuestas emocionales en tiempo real y adaptar el diseño. Esto crea un loop de retroalimentación donde el diseño evoluciona basándose en métricas psicológicas como engagement, tiempo de atención y respuesta emocional.',
+          gradient: 'from-cyan-500 to-blue-500'
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'La Ética del Diseño Automatizado',
+          content: 'Con gran poder viene gran responsabilidad. Debemos considerar las implicaciones éticas de diseños que pueden manipular emociones. La transparencia sobre el uso de IA y el respeto por la autonomía emocional del usuario son fundamentales.',
+          gradient: 'from-emerald-500 to-teal-500'
+        },
+        {
+          type: 'heading',
+          title: 'Workflow Psych × Design × AI',
+          icon: Brain
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Definir la Emoción Objetivo',
+              description: 'Antes de escribir un prompt, identifica qué emoción específica quieres evocar: confianza, excitación, nostalgia, aspiración.'
+            },
+            {
+              title: 'Prompt Psicológicamente Informado',
+              description: 'Usa lenguaje que combine elementos visuales con estados emocionales: "logo minimalista que transmite seguridad y profesionalismo".'
+            },
+            {
+              title: 'Iteración con Testing A/B Emocional',
+              description: 'Usa herramientas de eye-tracking y análisis de microexpresiones para validar si el diseño genera la emoción deseada.'
+            },
+            {
+              title: 'Refinamiento Human-in-the-Loop',
+              description: 'La IA propone, el diseñador humano refina con sensibilidad cultural y emocional que las máquinas aún no poseen.'
+            },
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'La IA generativa no reemplaza al diseñador, lo potencia. Al combinar tecnología de punta, principios de diseño atemporales y comprensión psicológica profunda, creamos experiencias visuales que no solo se ven increíbles, sino que conectan genuinamente con las personas.'
+        },
+      ]
+    },
+    'interfaces-empaticas-machine-learning': {
+      title: 'Interfaces que Leen tu Mente: UX Empático con Machine Learning',
+      author: 'Luis Virrueta',
+      date: '4 Dic 2025',
+      readTime: '13 min',
+      category: 'UX × Tecnología',
+      tags: ['Machine Learning', 'UX Design', 'User Psychology', 'Technology'],
+      gradient: 'from-cyan-500 to-blue-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'Imagina una interfaz que se adapta a tu estado emocional, anticipa tus necesidades y ajusta su complejidad según tu nivel de estrés. Bienvenido al futuro del UX empático, donde Machine Learning y psicología del usuario crean experiencias verdaderamente personalizadas.'
+        },
+        {
+          type: 'heading',
+          title: 'La Nueva Era del Diseño Adaptativo',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'El diseño de interfaces tradicional asume que todos los usuarios son iguales. Pero la realidad es que cada persona interactúa con la tecnología de manera única, influenciada por su estado emocional, contexto y experiencia previa. El ML nos permite diseñar para esta complejidad.'
+        },
+        {
+          type: 'highlight',
+          content: '"Las interfaces empáticas no solo responden a clics, responden a emociones, patrones de comportamiento y contexto en tiempo real."',
+          author: 'MIT Media Lab'
+        },
+        {
+          type: 'heading',
+          title: 'Los Cuatro Pilares del UX Empático',
+          icon: Sparkles
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'Detección de Estado Emocional',
+          content: 'Algoritmos de ML analizan velocidad de interacción, presión en la pantalla, tiempo de duda antes de hacer clic. Estos datos revelan frustración, confianza o confusión, permitiendo que la interfaz se adapte en tiempo real.',
+          gradient: 'from-purple-500 to-fuchsia-500'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'Predicción de Necesidades',
+          content: 'Modelos predictivos aprenden patrones individuales de uso. Si el usuario siempre revisa su cuenta después de hacer una compra, la interfaz puede ofrecer esa información proactivamente, reduciendo carga cognitiva.',
+          gradient: 'from-cyan-500 to-blue-500'
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'Adaptación de Complejidad',
+          content: 'El ML puede detectar cuando un usuario está abrumado y simplificar la interfaz automáticamente, u ofrecer más opciones avanzadas a usuarios experimentados. La complejidad se ajusta al nivel de confort del usuario.',
+          gradient: 'from-emerald-500 to-teal-500'
+        },
+        {
+          type: 'subsection',
+          number: '04',
+          title: 'Feedback Contextual Inteligente',
+          content: 'Los mensajes de error, confirmaciones y notificaciones se adaptan al tono y nivel de detalle que cada usuario prefiere, basándose en interacciones previas y estado emocional actual.',
+          gradient: 'from-amber-500 to-orange-500'
+        },
+        {
+          type: 'heading',
+          title: 'Implementación Ética',
+          icon: Eye
+        },
+        {
+          type: 'text',
+          content: 'Con gran poder predictivo viene la responsabilidad de respetar la privacidad y autonomía del usuario. La transparencia sobre qué datos se recopilan y cómo se usan es fundamental. El usuario siempre debe tener control sobre el nivel de personalización.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Consent Informed',
+              description: 'Explica claramente qué datos emocionales y de comportamiento recopilas y por qué. El usuario debe poder opt-out en cualquier momento.'
+            },
+            {
+              title: 'Transparencia Algorítmica',
+              description: 'Ofrece insights sobre por qué la interfaz tomó ciertas decisiones adaptativas. "Simplificamos la vista porque detectamos que estabas explorando rápidamente".'
+            },
+            {
+              title: 'Control de Usuario',
+              description: 'Proporciona controles granulares para ajustar el nivel de adaptación. Algunos usuarios prefieren consistencia sobre personalización.'
+            },
+            {
+              title: 'Testing Psicológico',
+              description: 'Valida que las adaptaciones realmente mejoren la experiencia y no causen ansiedad o sensación de pérdida de control.'
+            },
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'Las interfaces empáticas representan el futuro del diseño UX. Al fusionar Machine Learning con comprensión psicológica profunda, creamos experiencias digitales que no solo son funcionales, sino genuinamente humanas. La tecnología se vuelve invisible, y lo que queda es una conexión natural entre persona y herramienta.'
+        },
+      ]
+    }
+  }
+
+  return articles[slug] || articles['neurociencia-del-diseno']
+}
+
 const BlogArticlePage = () => {
   const { slug } = useParams()
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
 
-  // Contenido del artículo de Neurociencia del Diseño
-  const article = {
+  const article = getArticleBySlug(slug)
+
+  if (!article) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-white mb-4">Artículo no encontrado</h1>
+          <Link to="/blog" className="text-cyan-400 hover:text-cyan-300">
+            Volver al Blog
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  const article_old = {
     title: 'Neurociencia del Diseño: Por Qué Algunos Logos Son Inolvidables',
     author: 'Luis Virrueta',
     date: '6 Dic 2025',
@@ -120,8 +416,8 @@ const BlogArticlePage = () => {
       <section ref={heroRef} className="relative py-20 lg:py-32 px-6 lg:px-20 overflow-hidden">
         {/* Background effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-pink-600/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-rose-600/10 rounded-full blur-3xl" />
+          <div className={`absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br ${article.gradient}/10 rounded-full blur-3xl`} />
+          <div className={`absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br ${article.gradient}/10 rounded-full blur-3xl`} />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto">
