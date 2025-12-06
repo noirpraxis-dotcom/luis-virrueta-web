@@ -35,7 +35,7 @@ const AnimatedLogosSection = () => {
             className="text-3xl lg:text-5xl font-bold mb-4 font-display text-white"
             style={{
               letterSpacing: '0.15em',
-              fontWeight: 300,
+              fontWeight: 200,
               textTransform: 'uppercase'
             }}
           >
