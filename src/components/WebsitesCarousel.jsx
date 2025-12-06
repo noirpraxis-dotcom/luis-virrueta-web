@@ -23,12 +23,12 @@ const WebsitesCarousel = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          {/* Subtítulo superior */}
+          {/* Subtítulo superior con borde */}
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-xs uppercase tracking-[0.3em] text-white/40 font-light mb-6"
+            className="inline-block text-xs uppercase tracking-[0.3em] text-white/70 font-light mb-6 px-4 py-2 border border-white/30 rounded-full"
           >
             Dev • UI/UX • Responsive
           </motion.p>
@@ -47,15 +47,15 @@ const WebsitesCarousel = () => {
             Sitios <span className="italic font-extralight">Web</span>
           </motion.h2>
 
-          {/* Subtítulo inferior */}
+          {/* Subtítulo inferior - pregunta provocativa */}
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-base lg:text-lg text-white/50 font-light italic max-w-2xl mx-auto"
-            style={{ letterSpacing: '0.02em' }}
+            className="text-base lg:text-lg text-white/60 font-extralight italic max-w-2xl mx-auto"
+            style={{ letterSpacing: '0.08em' }}
           >
-            Experiencias digitales que conectan y convierten
+            ¿Tu sitio web refleja la experiencia que prometes?
           </motion.p>
         </motion.div>
 

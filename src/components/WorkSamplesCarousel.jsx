@@ -92,8 +92,8 @@ const WorkSamplesCarousel = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-base lg:text-lg text-white/50 font-light italic max-w-2xl mx-auto"
-            style={{ letterSpacing: '0.02em' }}
+            className="text-base lg:text-lg text-white/60 font-extralight italic max-w-2xl mx-auto"
+            style={{ letterSpacing: '0.08em' }}
           >
             ¿Hasta dónde podemos llevar tu marca?
           </motion.p>
