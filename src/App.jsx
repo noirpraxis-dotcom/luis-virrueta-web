@@ -14,6 +14,7 @@ import AvataresIAPage from './pages/AvataresIAPage'
 import ConsultoriaPsicologicaPage from './pages/ConsultoriaPsicologicaPage'
 import AboutPage from './pages/AboutPage'
 import PortafolioPage from './pages/PortafolioPage'
+import BlogPage from './pages/BlogPage'
 import InversionPage from './pages/InversionPage'
 import ContactoPage from './pages/ContactoPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
@@ -32,6 +33,7 @@ const AppContent = () => {
     { name: 'Inicio', href: '/' },
     { name: 'Portafolio', href: '/portafolio' },
     { name: 'Servicios', href: '/servicios' },
+    { name: 'Blog', href: '/blog' },
     { name: 'Sobre Mí', href: '/sobre-mi' },
     { name: 'Contacto', href: '/contacto' }
   ]
@@ -100,6 +102,11 @@ const AppContent = () => {
             {/* Página Portafolio: Casos de éxito */}
             <Route path="/portafolio" element={
               <PortafolioPage />
+            } />
+
+            {/* Página Blog: Artículos sobre diseño */}
+            <Route path="/blog" element={
+              <BlogPage />
             } />
 
             {/* Página Inversión: Precios premium */}
