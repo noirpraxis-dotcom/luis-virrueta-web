@@ -177,14 +177,31 @@ const ServiciosPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28">
       {/* Hero Section */}
-      <section ref={heroRef} className="relative py-20 lg:py-32 px-6 lg:px-20 overflow-hidden">
-        {/* Gradient orbs */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-fuchsia-600/10 rounded-full blur-3xl" />
+      <section ref={heroRef} className="relative py-20 lg:py-40 px-6 lg:px-20 overflow-hidden">
+        {/* Video de fondo */}
+        <div className="absolute inset-0 -top-28 -bottom-16 overflow-hidden pointer-events-none z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-50"
+            style={{
+              minWidth: '100vw',
+              minHeight: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center'
+            }}
+          >
+            <source src="/hero servicios.mp4" type="video/mp4" />
+            Tu navegador no soporta video HTML5.
+          </video>
+          {/* Overlay oscuro uniforme */}
+          <div className="absolute inset-0 bg-black/30" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto">
+        <div className="relative z-20 max-w-7xl mx-auto">
           {/* Title con efecto 3D igual que Portafolio */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -213,41 +230,99 @@ const ServiciosPage = () => {
             </span>
           </motion.h1>
 
-          {/* Subtitle elegante */}
-          <motion.p
+          {/* Subtitle con iconos elegantes */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.4 }}
-            className="text-lg lg:text-xl text-white/60 text-center max-w-4xl mx-auto font-extralight italic mb-12"
-            style={{ letterSpacing: '0.08em' }}
+            className="flex flex-col items-center gap-6 mb-12"
           >
-            Cinco formas de transformar tu marca en una experiencia inolvidable
-          </motion.p>
+            {/* Etiqueta superior con borde */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="relative px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5"
+            >
+              <div className="flex items-center gap-3">
+                <Briefcase className="w-4 h-4 text-white/60" strokeWidth={1.5} />
+                <span className="text-sm lg:text-base text-white/80 font-light tracking-wider uppercase">
+                  Servicios Premium
+                </span>
+              </div>
+            </motion.div>
 
-          {/* Línea dorada animada */}
+            {/* Fórmula con iconos */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="flex items-center gap-3 lg:gap-4 flex-wrap justify-center"
+            >
+              {/* Psicología */}
+              <div className="flex items-center gap-2">
+                <Brain className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+                <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
+                  Psicología
+                </span>
+              </div>
+
+              <span className="text-white/40 text-xs">+</span>
+
+              {/* Diseño */}
+              <div className="flex items-center gap-2">
+                <Palette className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+                <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
+                  Diseño
+                </span>
+              </div>
+
+              <span className="text-white/40 text-xs">+</span>
+
+              {/* Tecnología */}
+              <div className="flex items-center gap-2">
+                <Code className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+                <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
+                  Tecnología
+                </span>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Línea con efecto desde el centro expandiéndose */}
           <motion.div
-            initial={{ scaleX: 0 }}
-            animate={isHeroInView ? { scaleX: 1 } : {}}
-            transition={{ duration: 1.5, delay: 0.6 }}
-            className="relative h-px mx-auto w-80 overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={isHeroInView ? { opacity: 1 } : {}}
+            transition={{ duration: 1, delay: 0.8 }}
+            className="relative h-px mx-auto w-96 overflow-hidden"
           >
             <motion.div
+              initial={{ scaleX: 0 }}
+              animate={isHeroInView ? { scaleX: 1 } : {}}
+              transition={{ duration: 1.2, delay: 0.9, ease: [0.76, 0, 0.24, 1] }}
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent"
+              style={{ transformOrigin: 'center' }}
+            />
+            {/* Punto luminoso que se mueve */}
+            <motion.div
               animate={{
-                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                x: ['-100%', '100%'],
+                opacity: [0, 1, 1, 0]
               }}
               transition={{
-                duration: 3,
+                duration: 2.5,
                 repeat: Infinity,
-                ease: 'linear'
+                ease: 'easeInOut',
+                delay: 1.5
               }}
-              className="absolute inset-0"
-              style={{
-                background: 'linear-gradient(90deg, transparent 0%, rgba(217, 161, 75, 0.6) 50%, transparent 100%)',
-                backgroundSize: '200% 100%'
-              }}
+              className="absolute inset-0 w-24 h-full bg-gradient-to-r from-transparent via-white to-transparent blur-sm"
+              style={{ left: '50%' }}
             />
           </motion.div>
         </div>
+
+        {/* Degradado suave en la parte inferior para transición elegante */}
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-black pointer-events-none z-30" />
       </section>
 
       {/* Services Grid */}
