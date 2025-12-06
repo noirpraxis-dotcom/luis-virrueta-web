@@ -217,14 +217,14 @@ const ServiciosPage = () => {
             <span className="relative inline-block">
               {/* S con degradado */}
               <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm">S</span>
+                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>S</span>
                 <span className="relative text-white">S</span>
               </span>
               {/* ervicio */}
               <span className="text-white">ervicio</span>
               {/* s con degradado */}
               <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm">s</span>
+                <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>s</span>
                 <span className="relative text-white">s</span>
               </span>
             </span>

@@ -137,14 +137,14 @@ const PortafolioPage = () => {
             <span className="relative inline-block">
               {/* P con degradado */}
               <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm">P</span>
+                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>P</span>
                 <span className="relative text-white">P</span>
               </span>
-              {/* ortafoli - texto normal */}
+              {/* ortafoli */}
               <span className="text-white">ortafoli</span>
-              {/* O con degradado */}
+              {/* o con degradado */}
               <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm">o</span>
+                <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>o</span>
                 <span className="relative text-white">o</span>
               </span>
             </span>

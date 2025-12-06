@@ -64,14 +64,14 @@ const AboutPage = () => {
             <span className="relative inline-block">
               {/* S con degradado */}
               <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm">S</span>
+                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>S</span>
                 <span className="relative text-white">S</span>
               </span>
               {/* obre M */}
               <span className="text-white">obre M</span>
               {/* í con degradado */}
               <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm">í</span>
+                <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>í</span>
                 <span className="relative text-white">í</span>
               </span>
             </span>

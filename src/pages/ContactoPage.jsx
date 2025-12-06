@@ -110,14 +110,14 @@ const ContactoPage = () => {
             <span className="relative inline-block">
               {/* C con degradado */}
               <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm">C</span>
+                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>C</span>
                 <span className="relative text-white">C</span>
               </span>
               {/* ontact */}
               <span className="text-white">ontact</span>
               {/* o con degradado */}
               <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm">o</span>
+                <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>o</span>
                 <span className="relative text-white">o</span>
               </span>
             </span>
