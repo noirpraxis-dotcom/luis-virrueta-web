@@ -1,5 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Palette, Brain, Zap } from 'lucide-react'
 
 const categories = [
@@ -18,34 +19,47 @@ const BlogPage = () => {
   const blogPosts = [
     {
       id: 1,
+      title: 'Neurociencia del Diseño: Por Qué Algunos Logos Son Inolvidables',
+      excerpt: 'La ciencia detrás de los logos icónicos y cómo aplicar estos principios neurológicos a tu marca.',
+      category: 'psychology',
+      author: 'Luis Virrueta',
+      date: '6 Dic 2025',
+      readTime: '12 min',
+      gradient: 'from-pink-500/20 to-rose-500/20',
+      borderGradient: 'from-pink-500 to-rose-500',
+      tags: ['Neuroscience', 'Logo Design', 'Brand Recognition'],
+      slug: 'neurociencia-del-diseno'
+    },
+    {
+      id: 2,
       title: 'La Psicología del Color en el Branding de Lujo',
       excerpt: 'Descubre cómo las marcas premium utilizan la teoría del color para crear conexiones emocionales profundas con su audiencia.',
       category: 'psychology',
-      author: 'Zuzana Luxmania',
-      date: '6 Dic 2025',
+      author: 'Luis Virrueta',
+      date: '4 Dic 2025',
       readTime: '8 min',
       gradient: 'from-purple-500/20 to-fuchsia-500/20',
       borderGradient: 'from-purple-500 to-fuchsia-500',
       tags: ['Color Theory', 'Luxury Branding', 'Psychology']
     },
     {
-      id: 2,
+      id: 3,
       title: 'Tendencias de Diseño 2025: Minimalismo Maximalista',
       excerpt: 'El nuevo paradigma que combina la simplicidad estructural con detalles ricos y experiencias sensoriales complejas.',
       category: 'trends',
-      author: 'Zuzana Luxmania',
-      date: '4 Dic 2025',
+      author: 'Luis Virrueta',
+      date: '2 Dic 2025',
       readTime: '6 min',
       gradient: 'from-cyan-500/20 to-blue-500/20',
       borderGradient: 'from-cyan-500 to-blue-500',
       tags: ['Trends 2025', 'Minimalism', 'Visual Design']
     },
     {
-      id: 3,
+      id: 4,
       title: 'Creando Identidades de Marca Memorables',
       excerpt: 'Un sistema paso a paso para desarrollar marcas que resuenan emocionalmente y permanecen en la mente del consumidor.',
       category: 'branding',
-      author: 'Zuzana Luxmania',
+      author: 'Luis Virrueta',
       date: '1 Dic 2025',
       readTime: '10 min',
       gradient: 'from-emerald-500/20 to-teal-500/20',
@@ -53,11 +67,11 @@ const BlogPage = () => {
       tags: ['Brand Identity', 'Strategy', 'Visual Systems']
     },
     {
-      id: 4,
+      id: 5,
       title: 'Tipografía Premium: El Arte de la Elegancia Silenciosa',
       excerpt: 'Cómo las fuentes correctas comunican sofisticación, autoridad y exclusividad sin decir una palabra.',
       category: 'design',
-      author: 'Zuzana Luxmania',
+      author: 'Luis Virrueta',
       date: '28 Nov 2025',
       readTime: '7 min',
       gradient: 'from-violet-500/20 to-purple-500/20',
@@ -65,24 +79,12 @@ const BlogPage = () => {
       tags: ['Typography', 'Premium Design', 'Visual Hierarchy']
     },
     {
-      id: 5,
-      title: 'Neurociencia del Diseño: Por Qué Algunos Logos Son Inolvidables',
-      excerpt: 'La ciencia detrás de los logos icónicos y cómo aplicar estos principios neurológicos a tu marca.',
-      category: 'psychology',
-      author: 'Zuzana Luxmania',
-      date: '25 Nov 2025',
-      readTime: '9 min',
-      gradient: 'from-pink-500/20 to-rose-500/20',
-      borderGradient: 'from-pink-500 to-rose-500',
-      tags: ['Neuroscience', 'Logo Design', 'Brand Recognition']
-    },
-    {
       id: 6,
       title: 'Motion Design: Animaciones que Cuentan Historias',
       excerpt: 'El poder del movimiento para crear narrativas de marca que capturan la atención y generan engagement.',
       category: 'design',
-      author: 'Zuzana Luxmania',
-      date: '22 Nov 2025',
+      author: 'Luis Virrueta',
+      date: '25 Nov 2025',
       readTime: '8 min',
       gradient: 'from-amber-500/20 to-orange-500/20',
       borderGradient: 'from-amber-500 to-orange-500',
@@ -274,14 +276,15 @@ const BlogCard = ({ post, index }) => {
   const isInView = useInView(ref, { once: true, amount: 0.2 })
 
   return (
-    <motion.article
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="group relative"
-    >
-      <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-white/30 transition-all duration-500 h-full flex flex-col">
+    <Link to={post.slug ? `/blog/${post.slug}` : '#'}>
+      <motion.article
+        ref={ref}
+        initial={{ opacity: 0, y: 50 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, delay: index * 0.1 }}
+        className="group relative"
+      >
+        <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-white/30 transition-all duration-500 h-full flex flex-col">
         {/* Image Placeholder with gradient */}
         <div className={`aspect-[16/9] bg-gradient-to-br ${post.gradient} relative overflow-hidden`}>
           <div className="absolute inset-0 flex items-center justify-center">
@@ -372,6 +375,7 @@ const BlogCard = ({ post, index }) => {
         />
       </div>
     </motion.article>
+    </Link>
   )
 }
 

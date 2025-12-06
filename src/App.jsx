@@ -15,6 +15,7 @@ import ConsultoriaPsicologicaPage from './pages/ConsultoriaPsicologicaPage'
 import AboutPage from './pages/AboutPage'
 import PortafolioPage from './pages/PortafolioPage'
 import BlogPage from './pages/BlogPage'
+import BlogArticlePage from './pages/BlogArticlePage'
 import InversionPage from './pages/InversionPage'
 import ContactoPage from './pages/ContactoPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
@@ -107,6 +108,11 @@ const AppContent = () => {
             {/* Página Blog: Artículos sobre diseño */}
             <Route path="/blog" element={
               <BlogPage />
+            } />
+
+            {/* Página individual de artículo del blog */}
+            <Route path="/blog/:slug" element={
+              <BlogArticlePage />
             } />
 
             {/* Página Inversión: Precios premium */}
