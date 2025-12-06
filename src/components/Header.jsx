@@ -47,9 +47,14 @@ const Header = ({ menuItems }) => {
               >
                 {/* LUXMANIA - Con efecto de ondas animadas */}
                 <div className="text-[2.2rem] font-bold tracking-wider font-display flex">
-                  {/* LUX - Blanco estático */}
+                  {/* LUX - Con efecto 3D en la X */}
                   <span className="text-white" style={{ letterSpacing: '0.1em' }}>
-                    LUX
+                    <span className="relative inline-block">LU</span>
+                    <span className="relative inline-block">
+                      <span className="absolute inset-0 bg-gradient-to-br from-blue-400 via-cyan-300 to-white bg-clip-text text-transparent blur-md" style={{ transform: 'translateY(-2px) translateX(1px)' }}>X</span>
+                      <span className="absolute inset-0 bg-gradient-to-tl from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(1px) translateX(-0.5px)' }}>X</span>
+                      <span className="relative text-white">X</span>
+                    </span>
                   </span>
                   {/* MANIA - Animado con ondas de colores superpuestas */}
                   <span className="relative inline-block" style={{ letterSpacing: '0.1em' }}>

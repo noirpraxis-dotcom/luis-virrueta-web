@@ -262,6 +262,9 @@ const PortafolioPage = () => {
         </div>
       </section>
 
+      {/* Lighthouse Section - Video con efecto de loop reverso */}
+      <LighthouseSection />
+
       {/* Secciones eliminadas - Filter Buttons y Projects Grid */}
       {false && (
         <>
