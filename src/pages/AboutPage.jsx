@@ -183,6 +183,9 @@ const AboutPage = () => {
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-black pointer-events-none z-30" />
       </section>
 
+      {/* Photo + Bio Section */}
+      <section className="py-20 px-6 lg:px-20">
+        <div className="max-w-7xl mx-auto">
           {/* Grid: Photo + Bio */}
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center max-w-6xl mx-auto">
             {/* Photo */}
