@@ -26,21 +26,42 @@ const AnimatedLogosSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-6"
+          className="text-center mb-12"
         >
+          {/* Subtítulo superior */}
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-xs uppercase tracking-[0.3em] text-white/40 font-light mb-6"
+          >
+            Motion Graphics • After Effects
+          </motion.p>
+
+          {/* Título principal */}
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-3xl lg:text-5xl font-bold mb-4 font-display text-white"
+            className="text-4xl lg:text-6xl font-bold mb-6 font-display text-white"
             style={{
-              letterSpacing: '0.15em',
-              fontWeight: 200,
-              textTransform: 'uppercase'
+              letterSpacing: '0.05em',
+              fontWeight: 300
             }}
           >
             Logos <span className="italic font-extralight">Animados</span>
           </motion.h2>
+
+          {/* Subtítulo inferior */}
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-base lg:text-lg text-white/50 font-light italic max-w-2xl mx-auto"
+            style={{ letterSpacing: '0.02em' }}
+          >
+            Marcas que cobran vida con movimiento
+          </motion.p>
         </motion.div>
 
         {/* Video Container - Vertical (9:16) */}
