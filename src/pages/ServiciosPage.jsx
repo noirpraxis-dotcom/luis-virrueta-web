@@ -15,7 +15,9 @@ import {
   Image as ImageIcon,
   FileText,
   Eye,
-  Award
+  Award,
+  Code,
+  Briefcase
 } from 'lucide-react'
 
 const ServiciosPage = () => {
