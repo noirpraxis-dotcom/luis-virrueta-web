@@ -172,11 +172,13 @@ const PortafolioPage = () => {
       {/* Logotipos 3D */}
       <LogoCarousel3D />
 
-      {/* Avatares */}
-      <AvatarsSection />
-
-      {/* Logotipos Animados */}
-      <AnimatedLogosSection />
+      {/* Logos Animados + Avatares - En la misma línea */}
+      <section className="relative pt-12 pb-16 lg:pt-16 lg:pb-20 px-6 lg:px-20">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+          <AnimatedLogosSection />
+          <AvatarsSection />
+        </div>
+      </section>
 
       {/* Secciones eliminadas - Filter Buttons y Projects Grid */}
       {false && (

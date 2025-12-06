@@ -13,7 +13,7 @@ const AvatarsSection = () => {
   }
 
   return (
-    <section ref={ref} className="relative pt-12 pb-16 lg:pt-16 lg:pb-20 px-6 lg:px-20 overflow-hidden">
+    <div ref={ref} className="relative overflow-hidden">
       {/* Background gradient orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl animate-pulse" />
@@ -39,7 +39,7 @@ const AvatarsSection = () => {
               textTransform: 'uppercase'
             }}
           >
-            Avatares <span className="italic font-extralight">Digitales</span>
+            <span className="italic font-extralight">Avatares</span>
           </motion.h2>
         </motion.div>
 
@@ -50,7 +50,7 @@ const AvatarsSection = () => {
           transition={{ duration: 1, delay: 0.3 }}
           className="relative max-w-[500px] mx-auto"
         >
-          <div className="relative aspect-[9/16] rounded-3xl overflow-hidden bg-black">
+          <div className="relative aspect-[3/4] rounded-3xl overflow-hidden bg-black">
             {/* Video - sin autoplay */}
             <iframe
               ref={videoRef}
@@ -128,7 +128,7 @@ const AvatarsSection = () => {
           </p>
         </motion.div>
       </div>
-    </section>
+    </div>
   )
 }
 

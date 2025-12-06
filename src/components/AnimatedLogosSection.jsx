@@ -13,7 +13,7 @@ const AnimatedLogosSection = () => {
   }
 
   return (
-    <section ref={ref} className="relative pt-12 pb-16 lg:pt-16 lg:pb-20 px-6 lg:px-20 overflow-hidden">
+    <div ref={ref} className="relative overflow-hidden">
       {/* Background gradient orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl animate-pulse" />
@@ -39,7 +39,7 @@ const AnimatedLogosSection = () => {
               textTransform: 'uppercase'
             }}
           >
-            Logotipos <span className="italic font-extralight">Animados</span>
+            Logos <span className="italic font-extralight">Animados</span>
           </motion.h2>
         </motion.div>
 
@@ -50,12 +50,12 @@ const AnimatedLogosSection = () => {
           transition={{ duration: 1, delay: 0.3 }}
           className="relative max-w-[500px] mx-auto"
         >
-          <div className="relative aspect-[9/16] rounded-3xl overflow-hidden bg-black">
+          <div className="relative aspect-[3/4] rounded-3xl overflow-hidden bg-black">
             {/* Video - sin autoplay - URL a cambiar por el usuario */}
             <iframe
               ref={videoRef}
               className="absolute inset-0 w-full h-full"
-              src={`https://www.youtube.com/embed/XonEErWLLTA?autoplay=${isPlaying ? 1 : 0}&controls=1&rel=0&modestbranding=1&enablejsapi=1&hd=1&loop=1&playlist=XonEErWLLTA`}
+              src={`https://www.youtube.com/embed/iKQELmTVvUo?autoplay=${isPlaying ? 1 : 0}&controls=1&rel=0&modestbranding=1&enablejsapi=1&hd=1&loop=1&playlist=iKQELmTVvUo`}
               title="Logotipos Animados"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -128,7 +128,7 @@ const AnimatedLogosSection = () => {
           </p>
         </motion.div>
       </div>
-    </section>
+    </div>
   )
 }
 
