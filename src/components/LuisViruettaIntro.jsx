@@ -315,7 +315,7 @@ const LuisViruettaIntro = () => {
               />
             </motion.div>
 
-            {/* CTA Button - Pro cinematográfico con reflejo continuo */}
+            {/* CTA Button - Flotante con glow premium */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -325,9 +325,12 @@ const LuisViruettaIntro = () => {
             >
               <Link to="/sobre-mi">
                 <motion.button
-                  whileHover={{ scale: 1.02, x: 5 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className="group relative overflow-hidden border border-white/30 hover:border-white/60 px-8 py-4 rounded-full transition-all duration-500"
+                  className="group relative overflow-hidden px-8 py-4 rounded-full backdrop-blur-sm bg-white/5"
+                  style={{
+                    boxShadow: '0 0 30px rgba(168, 85, 247, 0.4), 0 0 60px rgba(59, 130, 246, 0.3)'
+                  }}
                 >
                   {/* Degradado animado morado/azul de fondo */}
                   <motion.div
@@ -335,7 +338,7 @@ const LuisViruettaIntro = () => {
                       backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
                     }}
                     transition={{
-                      duration: 4,
+                      duration: 5,
                       repeat: Infinity,
                       ease: "linear"
                     }}
@@ -343,47 +346,39 @@ const LuisViruettaIntro = () => {
                     style={{
                       background: 'linear-gradient(135deg, #a855f7 0%, #3b82f6 25%, #8b5cf6 50%, #6366f1 75%, #a855f7 100%)',
                       backgroundSize: '200% 200%',
-                      opacity: 0.1
+                      opacity: 0.2
                     }}
                   />
 
-                  {/* Reflejo continuo cinematográfico */}
+                  {/* Glow exterior animado */}
                   <motion.div
                     animate={{
-                      x: ['-200%', '200%']
+                      opacity: [0.4, 0.8, 0.4],
+                      scale: [1, 1.1, 1]
                     }}
                     transition={{
                       duration: 3,
                       repeat: Infinity,
-                      ease: "linear",
-                      repeatDelay: 1
+                      ease: "easeInOut"
                     }}
-                    className="absolute inset-0 w-1/3"
+                    className="absolute -inset-1 rounded-full blur-xl"
                     style={{
-                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)',
-                      transform: 'skewX(-20deg)'
+                      background: 'linear-gradient(135deg, #a855f7, #3b82f6, #8b5cf6)',
+                      opacity: 0.5
                     }}
                   />
 
-                  {/* Contenido del botón */}
                   <span className="relative flex items-center gap-3">
-                    <span className="text-white/80 group-hover:text-white font-light text-base tracking-wide transition-colors">
+                    <span className="text-white/90 group-hover:text-white font-light text-base tracking-wide transition-colors">
                       Conocer más
                     </span>
                     <motion.div
-                      whileHover={{ x: 3 }}
-                      transition={{ duration: 0.3 }}
+                      animate={{ x: [0, 3, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                     >
-                      <ArrowRight className="w-5 h-5 text-white/70 group-hover:text-white transition-colors" strokeWidth={1.5} />
+                      <ArrowRight className="w-5 h-5 text-white/80 group-hover:text-white transition-colors" strokeWidth={1.5} />
                     </motion.div>
                   </span>
-
-                  {/* Glow sutil en hover */}
-                  <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" 
-                    style={{
-                      boxShadow: '0 0 20px rgba(168, 85, 247, 0.3), 0 0 40px rgba(59, 130, 246, 0.2)'
-                    }}
-                  />
                 </motion.button>
               </Link>
             </motion.div>
