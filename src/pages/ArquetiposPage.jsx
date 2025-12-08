@@ -155,38 +155,38 @@ const ArquetiposPage = () => {
               </div>
             </motion.div>
 
-            {/* Fórmula con iconos */}
+            {/* Fórmula con iconos - Ad hoc arquetipos */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.6 }}
               className="flex items-center gap-3 lg:gap-4 flex-wrap justify-center"
             >
-              {/* Psicología */}
+              {/* Inconsciente */}
               <div className="flex items-center gap-2">
                 <Brain className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Psicología
+                  Inconsciente
                 </span>
               </div>
 
               <span className="text-white/40 text-xs">+</span>
 
-              {/* Diseño */}
+              {/* Símbolos */}
               <div className="flex items-center gap-2">
-                <Palette className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+                <Sparkles className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Diseño
+                  Símbolos
                 </span>
               </div>
 
               <span className="text-white/40 text-xs">+</span>
 
-              {/* Tecnología */}
+              {/* Identidad */}
               <div className="flex items-center gap-2">
-                <Code className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+                <Heart className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Tecnología
+                  Identidad
                 </span>
               </div>
             </motion.div>
@@ -229,7 +229,7 @@ const ArquetiposPage = () => {
             </p>
           </motion.div>
 
-          {/* Grid de Arquetipos */}
+          {/* Grid de Arquetipos - PREMIUM */}
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
             {arquetipos.map((arquetipo, index) => {
               const Icon = arquetipo.icon
@@ -239,8 +239,8 @@ const ArquetiposPage = () => {
                   initial={{ opacity: 0, y: 30 }}
                   animate={isContentInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  className="group relative overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 hover:border-white/20 transition-all duration-300"
+                  whileHover={{ y: -8 }}
+                  className="group relative overflow-hidden rounded-2xl bg-black/40 backdrop-blur-sm border border-white/10 p-8 hover:border-white/20 transition-all duration-500"
                 >
                   {/* Gradiente de fondo animado */}
                   <motion.div
@@ -248,40 +248,46 @@ const ArquetiposPage = () => {
                       backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
                     }}
                     transition={{
-                      duration: 6,
+                      duration: 8,
                       repeat: Infinity,
                       ease: "linear",
-                      delay: index * 0.2
+                      delay: index * 0.3
                     }}
-                    className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity"
+                    className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-500"
                     style={{
                       background: `linear-gradient(135deg, ${arquetipo.color.split(' ')[1]}, ${arquetipo.color.split(' ')[3]})`,
                       backgroundSize: '200% 200%'
                     }}
                   />
 
-                  <div className="relative z-10">
-                    {/* Ícono */}
-                    <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${arquetipo.color} p-3 mb-4 group-hover:scale-110 transition-transform`}>
+                  <div className="relative z-10 flex flex-col items-center text-center">
+                    {/* Ícono - Centrado y más grande */}
+                    <motion.div 
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      className={`flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br ${arquetipo.color} p-4 mb-6 shadow-2xl`}
+                    >
                       <Icon className="w-full h-full text-white" strokeWidth={1.5} />
-                    </div>
+                    </motion.div>
 
-                    {/* Nombre */}
-                    <h3 className="text-white text-xl font-light mb-3 tracking-wide">
+                    {/* Nombre - Fuente display */}
+                    <h3 className="text-white text-xl lg:text-2xl font-light mb-4 tracking-wide font-display">
                       {arquetipo.name}
                     </h3>
 
                     {/* Descripción */}
-                    <p className="text-white/60 text-sm font-light leading-relaxed mb-4">
+                    <p className="text-white/60 text-sm font-light leading-relaxed mb-6">
                       {arquetipo.description}
                     </p>
 
+                    {/* Línea separadora */}
+                    <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent w-full mb-6" />
+
                     {/* Ejemplos */}
-                    <div className="pt-4 border-t border-white/10">
-                      <p className="text-white/40 text-xs font-light uppercase tracking-wider mb-2">
+                    <div>
+                      <p className="text-white/40 text-xs font-light uppercase tracking-[0.2em] mb-3">
                         Ejemplos
                       </p>
-                      <p className="text-white/50 text-xs font-light">
+                      <p className="text-white/70 text-xs font-light leading-relaxed">
                         {arquetipo.ejemplos}
                       </p>
                     </div>
@@ -291,7 +297,7 @@ const ArquetiposPage = () => {
             })}
           </div>
 
-          {/* CTA Section - Estilo premium */}
+          {/* CTA Section - Premium elegante */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={isContentInView ? { opacity: 1, y: 0 } : {}}
@@ -299,13 +305,13 @@ const ArquetiposPage = () => {
             className="text-center"
           >
             <div className="max-w-3xl mx-auto mb-12">
-              <h3 className="text-3xl lg:text-5xl font-light text-white mb-6 tracking-wide">
+              <h3 className="text-4xl lg:text-6xl font-light text-white mb-6 tracking-[0.05em] font-display leading-tight">
                 ¿Cuál es el arquetipo de{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-fuchsia-500">
+                <span className="text-white" style={{ textShadow: '0 0 40px rgba(255, 255, 255, 0.4)' }}>
                   tu marca
                 </span>?
               </h3>
-              <p className="text-white/60 text-lg font-light leading-relaxed">
+              <p className="text-white/50 text-lg lg:text-xl font-extralight leading-relaxed">
                 Descubre cómo definir la personalidad profunda de tu marca y crear una identidad que resuene emocionalmente con tu audiencia ideal.
               </p>
             </div>
@@ -370,7 +376,7 @@ const ArquetiposPage = () => {
         </div>
       </section>
 
-      {/* Sección final - Por qué importa */}
+      {/* Sección final - Premium sin ícono */}
       <section className="relative py-20 lg:py-32 px-6 lg:px-12 bg-gradient-to-b from-black via-zinc-950/50 to-black">
         <div className="max-w-5xl mx-auto text-center">
           <motion.div
@@ -379,20 +385,28 @@ const ArquetiposPage = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <Sparkles className="w-12 h-12 mx-auto text-purple-400 mb-6" strokeWidth={1.5} />
-            <h2 className="text-4xl lg:text-5xl font-light text-white mb-8 tracking-wide">
+            {/* Línea superior decorativa */}
+            <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent w-64 mx-auto mb-12" />
+            
+            <h2 className="text-4xl lg:text-6xl font-light text-white mb-10 tracking-[0.05em] font-display leading-tight">
               La diferencia entre una{' '}
-              <span className="text-white/40">marca olvidable</span>
+              <span className="text-white/30">marca olvidable</span>
               <br />
               y una{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-fuchsia-500">
+              <motion.span
+                className="text-white"
+                style={{
+                  textShadow: '0 0 40px rgba(255, 255, 255, 0.4)'
+                }}
+              >
                 marca memorable
-              </span>
+              </motion.span>
             </h2>
-            <p className="text-white/60 text-xl font-light leading-relaxed max-w-3xl mx-auto">
+            
+            <p className="text-white/50 text-xl lg:text-2xl font-extralight leading-relaxed max-w-3xl mx-auto">
               Los arquetipos no son una moda, son la base psicológica de todas las marcas icónicas. 
               Cuando tu marca encarna un arquetipo auténtico, no vendes productos—{' '}
-              <span className="text-white">vendes identidad, pertenencia y significado</span>.
+              <span className="text-white/80">vendes identidad, pertenencia y significado</span>.
             </p>
           </motion.div>
         </div>
