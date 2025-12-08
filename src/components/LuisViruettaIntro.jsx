@@ -22,31 +22,67 @@ const LuisViruettaIntro = () => {
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
             className="order-2 lg:order-1 flex flex-col justify-center"
           >
-            {/* Eyebrow - quién soy */}
+            {/* Eyebrow - quién soy con borde redondeado */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="flex items-center gap-3 mb-8"
+              className="inline-flex items-center gap-3 mb-8 px-4 py-2 border border-white/20 rounded-full bg-white/5 backdrop-blur-sm w-fit"
             >
-              <Brain className="w-5 h-5 text-white/40" strokeWidth={1.5} />
-              <p className="text-white/50 text-xs font-mono uppercase tracking-[0.3em]">
+              <Brain className="w-4 h-4 text-white/60" strokeWidth={1.5} />
+              <p className="text-white/70 text-xs font-light uppercase tracking-[0.25em]">
                 Sobre Mí
               </p>
             </motion.div>
 
-            {/* Main heading - Nombre con Virrueta elegante en itálica */}
+            {/* Main heading - LUIS VIRRUETA en mayúsculas con L y A brillosas */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-5xl lg:text-7xl font-light text-white mb-6 tracking-tight font-display leading-[1.05]"
+              className="text-5xl lg:text-7xl font-light text-white mb-6 font-display leading-[1.05]"
+              style={{ letterSpacing: '0.15em' }}
             >
-              Luis{' '}
-              <span className="text-white/90 italic" style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 300 }}>
-                Virrueta
+              <span className="inline-block relative">
+                {/* L brillosa */}
+                <motion.span
+                  animate={{
+                    scale: [1, 1.3, 1],
+                    opacity: [0.6, 0.9, 0.6]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className="absolute inset-0 bg-gradient-to-br from-white via-white to-white bg-clip-text text-transparent blur-lg"
+                >
+                  L
+                </motion.span>
+                <span className="relative text-white">L</span>
+              </span>
+              UIS{' '}
+              VIRUET
+              <span className="inline-block relative">
+                {/* A brillosa */}
+                <motion.span
+                  animate={{
+                    scale: [1, 1.3, 1],
+                    opacity: [0.6, 0.9, 0.6]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 0.5
+                  }}
+                  className="absolute inset-0 bg-gradient-to-tl from-white via-white to-white bg-clip-text text-transparent blur-lg"
+                >
+                  A
+                </motion.span>
+                <span className="relative text-white">A</span>
               </span>
             </motion.h2>
 

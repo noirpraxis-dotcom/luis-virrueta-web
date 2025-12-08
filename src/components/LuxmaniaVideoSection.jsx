@@ -30,14 +30,32 @@ const LuxmaniaVideoSection = () => {
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
             className="order-2 lg:order-1 flex flex-col justify-center"
           >
-            {/* Título principal - LUXMANIA con última A brillosa */}
+            {/* Título principal - LUXMANIA con L y última A brillosas */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-6xl lg:text-8xl font-light text-white mb-6 tracking-[0.08em] font-display leading-[1.05]"
             >
-              LUXMANI
+              <span className="inline-block relative">
+                {/* L brillosa */}
+                <motion.span
+                  animate={{
+                    scale: [1, 1.3, 1],
+                    opacity: [0.6, 0.9, 0.6]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className="absolute inset-0 bg-gradient-to-br from-white via-white to-white bg-clip-text text-transparent blur-lg"
+                >
+                  L
+                </motion.span>
+                <span className="relative text-white">L</span>
+              </span>
+              UXMANI
               <span className="inline-block relative">
                 {/* Última A brillosa */}
                 <motion.span
@@ -48,7 +66,8 @@ const LuxmaniaVideoSection = () => {
                   transition={{
                     duration: 3,
                     repeat: Infinity,
-                    ease: "easeInOut"
+                    ease: "easeInOut",
+                    delay: 0.5
                   }}
                   className="absolute inset-0 bg-gradient-to-tl from-white via-white to-white bg-clip-text text-transparent blur-lg"
                 >
