@@ -14,14 +14,35 @@ const LuisViruettaIntro = () => {
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
         <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 lg:gap-16 items-center">
           
-          {/* Left: Content - CINEMÁTICO Y MINIMALISTA */}
+          {/* Left: Content - CINEMÁTICO Y MINIMALISTA con video background premium */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-            className="order-2 lg:order-1 flex flex-col justify-center"
+            className="order-2 lg:order-1 flex flex-col justify-center relative"
           >
+            {/* Video background solo en esta área - premium */}
+            <div className="absolute inset-0 overflow-hidden rounded-xl">
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover opacity-30"
+                style={{
+                  filter: 'blur(1px) brightness(0.7)',
+                }}
+              >
+                <source src="/LUIS VIRRUETA SECCION.mp4" type="video/mp4" />
+              </video>
+              
+              {/* Overlay gradient para que el texto se vea bien */}
+              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/70 to-black/60" />
+            </div>
+
+            {/* Contenido encima del video */}
+            <div className="relative z-10 p-8 lg:p-12">
             {/* Eyebrow - quién soy con borde redondeado */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -232,6 +253,9 @@ const LuisViruettaIntro = () => {
                 style={{ transformOrigin: 'left' }}
               />
             </motion.div>
+
+            </div>
+            {/* Fin del contenedor con video background */}
 
           </motion.div>
 
