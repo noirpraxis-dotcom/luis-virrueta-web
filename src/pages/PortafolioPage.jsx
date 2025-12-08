@@ -251,23 +251,31 @@ const PortafolioPage = () => {
       {/* Sitios Web */}
       <WebsitesCarousel />
 
-      {/* Logotipos 3D */}
-      <LogoCarousel3D />
-
-      {/* Video Farolito - Animación pequeña */}
-      <section className="relative py-8 px-6 lg:px-20">
-        <div className="max-w-4xl mx-auto">
+      {/* Video Farolito - Animación pequeña con degradado en bordes */}
+      <section className="relative py-12 px-6 lg:px-20">
+        <div className="max-w-2xl mx-auto relative">
+          {/* Degradado en bordes superior e inferior */}
+          <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-black via-black/60 to-transparent pointer-events-none z-10" />
+          <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none z-10" />
+          
+          {/* Degradado en bordes laterales */}
+          <div className="absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-black via-black/60 to-transparent pointer-events-none z-10" />
+          <div className="absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-black via-black/60 to-transparent pointer-events-none z-10" />
+          
           <video
             autoPlay
             loop
             muted
             playsInline
-            className="w-full h-auto rounded-xl"
+            className="w-full h-auto rounded-lg"
           >
             <source src="/FAROLITO ANIMACION.mp4" type="video/mp4" />
           </video>
         </div>
       </section>
+
+      {/* Logotipos 3D */}
+      <LogoCarousel3D />
 
       {/* Logos Animados + Avatares - En la misma línea */}
       <section className="relative pt-12 pb-16 lg:pt-16 lg:pb-20 px-6 lg:px-20">

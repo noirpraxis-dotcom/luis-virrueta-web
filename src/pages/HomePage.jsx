@@ -21,6 +21,9 @@ const HomePage = () => {
       {/* Luis Virrueta Intro: Compact elegant section - BEFORE Hero stats */}
       <LuisViruettaIntro />
       
+      {/* Por Qué LUXMANIA: El diferenciador psicológico - MOVIDO AQUÍ */}
+      <WhyLuxmania />
+      
       {/* Brand CTA: Llamado a acción principal - Construye tu marca */}
       <BrandCTA />
       
@@ -41,9 +44,6 @@ const HomePage = () => {
       
       {/* Hero: LUXMANIA - Branding con fundamento psicológico */}
       <Hero />
-      
-      {/* Por Qué LUXMANIA: El diferenciador psicológico */}
-      <WhyLuxmania />
       
       {/* El Método LUXMANIA: Las 4 fases del proceso */}
       <LuxmaniaMethod />

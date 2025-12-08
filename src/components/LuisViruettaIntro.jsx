@@ -50,17 +50,28 @@ const LuisViruettaIntro = () => {
               </span>
             </motion.h2>
 
-            {/* Subtitle breve */}
+            {/* Eyebrow subtitle - Profesión */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.35 }}
-              className="text-white/60 text-lg lg:text-2xl font-light mb-8 max-w-lg leading-relaxed"
+              className="text-white/50 text-sm lg:text-base font-light uppercase tracking-[0.3em] mb-6"
             >
-              Psicólogo y Diseñador. Fundé{' '}
+              Psicólogo × Diseñador
+            </motion.p>
+
+            {/* Subtitle principal - Más elegante */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-white/70 text-xl lg:text-2xl font-extralight tracking-wide mb-4 max-w-xl leading-relaxed"
+            >
+              Fundé{' '}
               <motion.span
-                className="text-white font-normal"
+                className="text-white font-light"
                 style={{
                   textShadow: '0 0 30px rgba(255, 255, 255, 0.3)'
                 }}
@@ -78,52 +89,67 @@ const LuisViruettaIntro = () => {
                 }}
               >
                 Luxmania
-              </motion.span>{' '}
-              para crear marcas que fusionen lo mejor de:
+              </motion.span>
             </motion.p>
 
-            {/* Badges con animaciones continuas elegantes */}
-            <motion.div
+            {/* Descripción complementaria */}
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.45 }}
-              className="flex flex-wrap gap-3 mb-12"
+              className="text-white/50 text-base lg:text-lg font-light leading-relaxed mb-10 max-w-xl"
+            >
+              Para crear marcas que{' '}
+              <span className="text-white/70">conectan emocionalmente</span>{' '}
+              fusionando:
+            </motion.p>
+
+            {/* Badges con formato inline más elegante */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="flex items-center gap-2 mb-10"
             >
               {/* Badge Psicología */}
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/20 cursor-pointer"
+                className="group relative overflow-hidden px-4 py-2.5 rounded-full bg-white/[0.03] border border-white/20 cursor-pointer"
               >
-                
                 <div className="relative flex items-center gap-2">
                   <Brain className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                  <span className="text-white/70 group-hover:text-white text-sm font-light transition-colors">Psicología</span>
+                  <span className="text-white/70 group-hover:text-white text-sm font-light transition-colors tracking-wide">Psicología</span>
                 </div>
               </motion.div>
+
+              <span className="text-white/30 text-xs mx-1">+</span>
 
               {/* Badge Diseño */}
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/20 cursor-pointer"
+                className="group relative overflow-hidden px-4 py-2.5 rounded-full bg-white/[0.03] border border-white/20 cursor-pointer"
               >
                 <div className="relative flex items-center gap-2">
                   <Palette className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                  <span className="text-white/70 group-hover:text-white text-sm font-light transition-colors">Diseño</span>
+                  <span className="text-white/70 group-hover:text-white text-sm font-light transition-colors tracking-wide">Diseño</span>
                 </div>
               </motion.div>
+
+              <span className="text-white/30 text-xs mx-1">+</span>
 
               {/* Badge Tecnología */}
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/20 cursor-pointer"
+                className="group relative overflow-hidden px-4 py-2.5 rounded-full bg-white/[0.03] border border-white/20 cursor-pointer"
               >
                 <div className="relative flex items-center gap-2">
                   <Code className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                  <span className="text-white/70 group-hover:text-white text-sm font-light transition-colors">Tecnología</span>
+                  <span className="text-white/70 group-hover:text-white text-sm font-light transition-colors tracking-wide">Tecnología</span>
                 </div>
               </motion.div>
             </motion.div>

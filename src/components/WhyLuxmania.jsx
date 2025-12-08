@@ -12,10 +12,10 @@ const WhyLuxmania = () => {
       ref={ref}
       className="relative bg-[#0A0A0A] py-16 lg:py-20 overflow-hidden"
     >
-      {/* Subtle gradient background */}
+      {/* Subtle gradient background - Minimalista blanco */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#a855f7]/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#d946ef]/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
@@ -55,7 +55,7 @@ const WhyLuxmania = () => {
             </p>
           </motion.div>
 
-          {/* Right: Visual Icons - Compact */}
+          {/* Right: Visual Icons - Minimalista blanco */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
@@ -65,28 +65,25 @@ const WhyLuxmania = () => {
             {/* Brain Icon */}
             <div className="flex flex-col items-center text-center space-y-3 p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] transition-colors duration-300">
               <div className="relative">
-                <div className="absolute inset-0 bg-[#a855f7]/20 blur-xl rounded-full" />
-                <Brain className="relative w-10 h-10 text-[#a855f7]" />
+                <Brain className="relative w-10 h-10 text-white/60" strokeWidth={1.5} />
               </div>
-              <span className="text-white/60 text-xs font-light">Psicología</span>
+              <span className="text-white/50 text-xs font-light">Psicología</span>
             </div>
 
             {/* Palette Icon */}
             <div className="flex flex-col items-center text-center space-y-3 p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] transition-colors duration-300">
               <div className="relative">
-                <div className="absolute inset-0 bg-[#d946ef]/20 blur-xl rounded-full" />
-                <Palette className="relative w-10 h-10 text-[#d946ef]" />
+                <Palette className="relative w-10 h-10 text-white/60" strokeWidth={1.5} />
               </div>
-              <span className="text-white/60 text-xs font-light">Diseño</span>
+              <span className="text-white/50 text-xs font-light">Diseño</span>
             </div>
 
             {/* Lightbulb Icon */}
             <div className="flex flex-col items-center text-center space-y-3 p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] transition-colors duration-300">
               <div className="relative">
-                <div className="absolute inset-0 bg-[#e879f9]/20 blur-xl rounded-full" />
-                <Lightbulb className="relative w-10 h-10 text-[#e879f9]" />
+                <Lightbulb className="relative w-10 h-10 text-white/60" strokeWidth={1.5} />
               </div>
-              <span className="text-white/60 text-xs font-light">Estrategia</span>
+              <span className="text-white/50 text-xs font-light">Estrategia</span>
             </div>
           </motion.div>
         </div>

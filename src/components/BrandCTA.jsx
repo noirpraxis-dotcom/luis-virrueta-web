@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
-import { ArrowRight, MessageCircle, Brain } from 'lucide-react'
+import { ArrowRight, MessageCircle, Brain, Code } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const BrandCTA = () => {
@@ -34,10 +34,10 @@ const BrandCTA = () => {
       {/* Transición gradiente inferior para siguiente sección */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-black/50 to-black pointer-events-none z-10" />
       
-      {/* Gradient background effects - Conectado con sección anterior */}
+      {/* Gradient background effects - Minimalista blanco */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#a855f7]/12 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[#d946ef]/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
@@ -51,69 +51,120 @@ const BrandCTA = () => {
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
             className="space-y-10"
           >
-            {/* Heading principal - Copy claro y enganchador */}
+            {/* Subtitle pequeño - Similar al Hero */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.15 }}
+              className="text-white/70 text-2xl lg:text-4xl font-extralight tracking-[0.15em] mb-6 uppercase leading-tight"
+            >
+              Diseñamos desde cero
+            </motion.p>
+
+            {/* Heading principal - Estilo Hero minimalista */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-5xl sm:text-6xl lg:text-7xl font-light text-white tracking-tight font-display leading-[1.05]"
+              className="text-6xl sm:text-7xl lg:text-9xl font-light text-white tracking-[0.08em] font-display leading-[0.95] mb-10 uppercase"
             >
-              Diseñamos desde cero{' '}
-              <span className="text-white italic" style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 300, textShadow: '0 0 40px rgba(255, 255, 255, 0.2)' }}>
-                tu marca
+              <span className="inline-block relative">
+                <motion.span
+                  animate={{
+                    scale: [1, 1.4, 1],
+                    opacity: [0.6, 0.9, 0.6]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className="absolute inset-0 bg-gradient-to-br from-white via-white to-white bg-clip-text text-transparent blur-lg"
+                >
+                  T
+                </motion.span>
+                <span className="relative text-white">T</span>
               </span>
+              u{' '}
+              <span className="inline-block relative">
+                M
+              </span>
+              <span className="inline-block relative">
+                <motion.span
+                  animate={{
+                    scale: [1, 1.4, 1],
+                    opacity: [0.6, 0.9, 0.6]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 0.3
+                  }}
+                  className="absolute inset-0 bg-gradient-to-tl from-white via-white to-white bg-clip-text text-transparent blur-lg"
+                >
+                  a
+                </motion.span>
+                <span className="relative text-white">a</span>
+              </span>
+              rca
             </motion.h2>
 
-            {/* Subtitle con mejor tecnología */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
+            {/* Fórmula con iconos - Estilo Hero */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-white/60 text-xl lg:text-2xl font-light leading-relaxed max-w-lg"
+              className="flex items-center gap-3 lg:gap-4 flex-wrap mb-8"
             >
-              Combinando lo mejor de la{' '}
-              <span className="text-white font-normal">psicología</span>,{' '}
-              <span className="text-white font-normal">diseño</span> y{' '}
-              <span className="text-white font-normal">tecnología</span>
-            </motion.p>
-
-            <div className="h-px bg-gradient-to-r from-white/20 via-white/10 to-transparent w-2/3" />
-
-            {/* Badges elegantes con iconos */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex flex-wrap gap-3"
-            >
-              <div className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#a855f7]/50 transition-all duration-300">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#a855f7]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="relative flex items-center gap-2">
-                  <Brain className="w-4 h-4 text-[#a855f7]" />
-                  <span className="text-white/70 text-sm font-light">Psicología</span>
-                </div>
+              {/* Psicología */}
+              <div className="flex items-center gap-2">
+                <Brain className="w-5 h-5 text-white/60" strokeWidth={1.5} />
+                <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
+                  Psicología
+                </span>
               </div>
 
-              <div className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#d946ef]/50 transition-all duration-300">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#d946ef]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="relative flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[#d946ef]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                  </svg>
-                  <span className="text-white/70 text-sm font-light">Diseño</span>
-                </div>
+              <span className="text-white/40 text-xs">+</span>
+
+              {/* Diseño */}
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                </svg>
+                <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
+                  Diseño
+                </span>
               </div>
 
-              <div className="group relative overflow-hidden px-5 py-3 rounded-full bg-white/[0.03] border border-white/10 hover:border-[#e879f9]/50 transition-all duration-300">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#e879f9]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="relative flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[#e879f9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  <span className="text-white/70 text-sm font-light">Tecnología</span>
-                </div>
+              <span className="text-white/40 text-xs">+</span>
+
+              {/* Tecnología */}
+              <div className="flex items-center gap-2">
+                <Code className="w-5 h-5 text-white/60" strokeWidth={1.5} />
+                <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
+                  Tecnología
+                </span>
               </div>
             </motion.div>
+
+            {/* Línea decorativa animada */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={isInView ? { opacity: 1 } : {}}
+              transition={{ duration: 1, delay: 0.4 }}
+              className="relative h-px mx-auto w-80 overflow-hidden mb-8"
+            >
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={isInView ? { scaleX: 1 } : {}}
+                transition={{ duration: 1.2, delay: 0.5, ease: [0.76, 0, 0.24, 1] }}
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                style={{ transformOrigin: 'center' }}
+              />
+            </motion.div>
+
+
           </motion.div>
 
           {/* Right: Video más cuadrado + caption */}
@@ -124,46 +175,8 @@ const BrandCTA = () => {
             className="space-y-4"
           >
             <div className="relative w-full max-w-[500px] mx-auto lg:mx-0 lg:ml-auto">
-              {/* Sombras animadas premium - más extensas y con cambio de intensidad */}
-              <motion.div
-                className="absolute -inset-12 rounded-3xl blur-[80px]"
-                animate={{
-                  background: [
-                    'radial-gradient(ellipse at 50% 80%, rgba(168,85,247,0.5), rgba(217,70,239,0.35), rgba(124,58,237,0.2), transparent)',
-                    'radial-gradient(ellipse at 50% 75%, rgba(217,70,239,0.6), rgba(232,121,249,0.4), rgba(168,85,247,0.25), transparent)',
-                    'radial-gradient(ellipse at 50% 85%, rgba(232,121,249,0.55), rgba(192,38,211,0.4), rgba(217,70,239,0.22), transparent)',
-                    'radial-gradient(ellipse at 50% 80%, rgba(168,85,247,0.5), rgba(217,70,239,0.35), rgba(124,58,237,0.2), transparent)'
-                  ],
-                  opacity: [0.4, 0.6, 0.5, 0.4]
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-
-              {/* Segunda capa de sombra inferior más intensa */}
-              <motion.div
-                className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-[120%] h-40 rounded-full blur-[60px]"
-                animate={{
-                  background: [
-                    'radial-gradient(ellipse at 50% 50%, rgba(168,85,247,0.4), rgba(217,70,239,0.25), transparent)',
-                    'radial-gradient(ellipse at 50% 50%, rgba(217,70,239,0.5), rgba(192,38,211,0.3), transparent)',
-                    'radial-gradient(ellipse at 50% 50%, rgba(232,121,249,0.45), rgba(168,85,247,0.28), transparent)',
-                    'radial-gradient(ellipse at 50% 50%, rgba(168,85,247,0.4), rgba(217,70,239,0.25), transparent)'
-                  ],
-                  opacity: [0.5, 0.7, 0.6, 0.5]
-                }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-              
-              {/* Video container con sombras sutiles */}
-              <div className="relative rounded-3xl overflow-hidden shadow-[0_20px_60px_-20px_rgba(168,85,247,0.4),0_15px_45px_-15px_rgba(217,70,239,0.3)] hover:shadow-[0_25px_70px_-20px_rgba(168,85,247,0.5),0_20px_55px_-15px_rgba(217,70,239,0.4)] transition-shadow duration-500">
+              {/* Video container simple - sin sombras de colores */}
+              <div className="relative rounded-xl overflow-hidden shadow-2xl">
                 <div className="relative w-full aspect-[16/11] overflow-hidden bg-black">
                   {/* Loading animation - Brain pulse */}
                   {!videoLoaded && (
@@ -181,7 +194,7 @@ const BrandCTA = () => {
                           ease: "easeInOut"
                         }}
                       >
-                        <Brain className="w-12 h-12 text-[#a855f7]/60" />
+                        <Brain className="w-12 h-12 text-white/40" />
                       </motion.div>
                     </motion.div>
                   )}
@@ -200,130 +213,62 @@ const BrandCTA = () => {
                     <source src="/faro video.mp4" type="video/mp4" />
                   </video>
 
-                  {/* Badge premium dentro del video - inferior derecho */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.8 }}
-                    className="absolute bottom-4 right-4 z-20"
-                  >
-                    <motion.div 
-                      className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-black/60 backdrop-blur-xl border border-white/20 shadow-2xl whitespace-nowrap"
-                      whileHover={{ scale: 1.05, backgroundColor: 'rgba(0,0,0,0.7)' }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <svg className="w-4 h-4 text-[#a855f7] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                      <span className="text-white text-xs font-medium">Una muestra de nuestro trabajo</span>
-                      <motion.div
-                        animate={{ 
-                          scale: [1, 1.2, 1],
-                          opacity: [0.5, 1, 0.5]
-                        }}
-                        transition={{ 
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }}
-                      >
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#d946ef]" />
-                      </motion.div>
-                    </motion.div>
-                  </motion.div>
+
                 </div>
               </div>
             </div>
           </motion.div>
         </div>
 
-        {/* CTA Button - Visual y destacado */}
+        {/* CTA Button - Estilo minimalista */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          {/* Primary CTA */}
+          {/* Primary CTA - Blanco */}
           <a href="https://wa.me/5215586953032" target="_blank" rel="noopener noreferrer">
             <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="group relative bg-gradient-to-r from-[#a855f7] to-[#d946ef] px-10 py-4 rounded-full text-white font-medium text-lg tracking-wide overflow-hidden shadow-lg shadow-[#a855f7]/30 hover:shadow-[#a855f7]/50 transition-all duration-300"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="group relative px-10 py-5 bg-white text-black font-light rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_20px_80px_rgba(255,255,255,0.3)]"
             >
-              {/* Efecto de brillo interno animado */}
+              {/* Efecto shine continuo */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
                 animate={{
-                  x: ['-200%', '200%']
+                  x: ['-100%', '200%']
                 }}
                 transition={{
-                  duration: 2.5,
+                  duration: 3,
                   repeat: Infinity,
-                  repeatDelay: 1,
-                  ease: "easeInOut"
+                  ease: "easeInOut",
+                  repeatDelay: 1
                 }}
+                className="absolute inset-0 w-1/3 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12"
               />
-              
-              <span className="relative z-10 flex items-center gap-3">
+              <span className="relative z-10 flex items-center gap-3 text-base tracking-wide">
                 <MessageCircle className="w-5 h-5" />
                 <span>Programar Videollamada</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
-              
-              {/* Hover gradient overlay */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-[#7c3aed] to-[#c026d3]"
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              />
             </motion.button>
           </a>
 
-          {/* Secondary CTA */}
+          {/* Secondary CTA - Border blanco */}
           <Link to="/portfolio">
             <motion.button
               whileHover={{ scale: 1.02, x: 5 }}
               whileTap={{ scale: 0.98 }}
-              className="group relative bg-transparent border border-[#d946ef]/30 hover:border-[#d946ef] px-8 py-4 rounded-full text-white font-light text-base tracking-wide transition-all duration-500 overflow-hidden"
+              className="group relative px-10 py-5 text-white font-light rounded-full border border-white/30 hover:border-white/60 transition-all duration-500 hover:scale-[1.02] overflow-hidden"
             >
-              <span className="relative z-10 flex items-center gap-3">
-                <span className="text-white/70 group-hover:text-white transition-colors">Ver Portafolio</span>
-                <ArrowRight className="w-4 h-4 text-[#d946ef] group-hover:translate-x-1 transition-transform" />
+              <div className="absolute inset-0 bg-white/5 backdrop-blur-sm transition-opacity duration-300 group-hover:bg-white/10" />
+              <span className="relative z-10 flex items-center gap-3 text-base tracking-wide">
+                <span>Ver Portafolio</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
-              
-              {/* Hover gradient fill */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-[#a855f7]/10 to-[#d946ef]/10"
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              />
             </motion.button>
           </Link>
-        </motion.div>
-
-        {/* Trust indicators */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="mt-12 flex flex-wrap justify-center gap-8 text-white/40 text-sm font-light"
-        >
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#a855f7]" />
-            <span>Consulta gratuita</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#d946ef]" />
-            <span>Resultados garantizados</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#e879f9]" />
-            <span>Soporte continuo</span>
-          </div>
         </motion.div>
       </div>
     </section>
