@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { Brain, Sparkles, Users, Heart, Crown, Zap, Shield, Compass, ArrowRight, Palette, Code } from 'lucide-react'
+import { Brain, Sparkles, Users, Heart, Crown, Zap, Shield, Compass, ArrowRight, Palette, Code, Smile, Flame, Lightbulb, Handshake } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const ArquetiposPage = () => {
@@ -10,63 +10,115 @@ const ArquetiposPage = () => {
   const contentRef = useRef(null)
   const isContentInView = useInView(contentRef, { once: true, amount: 0.2 })
 
-  // 12 Arquetipos completos
+  // 12 Arquetipos completos con estructura premium
   const arquetipos = [
     {
       icon: Crown,
       name: 'El Gobernante',
-      description: 'Control, liderazgo, autoridad. Marcas que representan el poder y la excelencia.',
+      pregunta: '¿Buscas transmitir poder, control y liderazgo excepcional?',
+      representa: 'Autoridad, excelencia y dominio. Marcas que lideran su industria.',
       ejemplos: 'Mercedes-Benz, Rolex, Microsoft',
+      insight: 'Crea orden del caos y establece estándares',
       color: 'from-yellow-500 to-amber-600'
     },
     {
       icon: Heart,
       name: 'El Amante',
-      description: 'Pasión, intimidad, belleza. Marcas que evocan deseo y conexión emocional.',
+      pregunta: '¿Buscas transmitir pasión, belleza y conexión emocional profunda?',
+      representa: 'Intimidad, placer y compromiso. Marcas que evocan deseo.',
       ejemplos: 'Victoria\'s Secret, Chanel, Godiva',
+      insight: 'Inspira amor y devoción apasionada',
       color: 'from-pink-500 to-rose-600'
     },
     {
       icon: Zap,
       name: 'El Héroe',
-      description: 'Valentía, desafío, transformación. Marcas que inspiran a superar obstáculos.',
+      pregunta: '¿Buscas transmitir valentía, fuerza y superación de obstáculos?',
+      representa: 'Coraje, determinación y victoria. Marcas que inspiran acción.',
       ejemplos: 'Nike, Red Bull, FedEx',
+      insight: 'Transforma desafíos en triunfos épicos',
       color: 'from-red-500 to-orange-600'
     },
     {
       icon: Brain,
       name: 'El Sabio',
-      description: 'Conocimiento, análisis, verdad. Marcas que representan inteligencia y expertise.',
+      pregunta: '¿Buscas transmitir conocimiento, verdad y expertise profundo?',
+      representa: 'Inteligencia, análisis y sabiduría. Marcas que educan.',
       ejemplos: 'Google, BBC, Harvard',
+      insight: 'Ilumina el camino hacia el entendimiento',
       color: 'from-blue-500 to-indigo-600'
     },
     {
       icon: Users,
       name: 'El Inocente',
-      description: 'Pureza, simplicidad, optimismo. Marcas que transmiten confianza y honestidad.',
+      pregunta: '¿Buscas transmitir pureza, optimismo y confianza absoluta?',
+      representa: 'Simplicidad, honestidad y bondad. Marcas que reconfortan.',
       ejemplos: 'Dove, Coca-Cola, McDonald\'s',
+      insight: 'Encuentra la felicidad en lo simple y puro',
       color: 'from-cyan-500 to-blue-600'
     },
     {
       icon: Compass,
       name: 'El Explorador',
-      description: 'Libertad, aventura, descubrimiento. Marcas que invitan a explorar lo desconocido.',
+      pregunta: '¿Buscas transmitir libertad, aventura y espíritu pionero?',
+      representa: 'Autonomía, descubrimiento y autenticidad. Marcas aventureras.',
       ejemplos: 'Jeep, The North Face, Patagonia',
+      insight: 'Abraza lo desconocido con valentía',
       color: 'from-green-500 to-emerald-600'
     },
     {
       icon: Shield,
       name: 'El Cuidador',
-      description: 'Protección, compasión, generosidad. Marcas que cuidan y protegen.',
+      pregunta: '¿Buscas transmitir protección, compasión y servicio desinteresado?',
+      representa: 'Generosidad, empatía y cuidado. Marcas que protegen.',
       ejemplos: 'Johnson & Johnson, Volvo, UNICEF',
+      insight: 'Cuida y nutre a los que te rodean',
       color: 'from-teal-500 to-cyan-600'
     },
     {
       icon: Sparkles,
       name: 'El Mago',
-      description: 'Transformación, visión, carisma. Marcas que hacen realidad los sueños.',
+      pregunta: '¿Buscas transmitir transformación, visión y experiencias mágicas?',
+      representa: 'Innovación, carisma y poder transformador. Marcas visionarias.',
       ejemplos: 'Disney, Apple, Tesla',
+      insight: 'Convierte sueños imposibles en realidad',
       color: 'from-purple-500 to-fuchsia-600'
+    },
+    {
+      icon: Smile,
+      name: 'El Bufón',
+      pregunta: '¿Buscas transmitir diversión, alegría y espíritu desenfadado?',
+      representa: 'Humor, espontaneidad y disfrute. Marcas que hacen reír.',
+      ejemplos: 'Ben & Jerry\'s, Old Spice, M&M\'s',
+      insight: 'Vive el momento y celebra la vida',
+      color: 'from-orange-500 to-yellow-600'
+    },
+    {
+      icon: Flame,
+      name: 'El Rebelde',
+      pregunta: '¿Buscas transmitir ruptura, revolución y cambio radical?',
+      representa: 'Disrupción, libertad y autenticidad. Marcas transgresoras.',
+      ejemplos: 'Harley-Davidson, Diesel, Virgin',
+      insight: 'Desafía las reglas y libera tu verdad',
+      color: 'from-red-600 to-purple-600'
+    },
+    {
+      icon: Lightbulb,
+      name: 'El Creador',
+      pregunta: '¿Buscas transmitir innovación, creatividad y expresión artística?',
+      representa: 'Imaginación, visión y ejecución perfecta. Marcas que crean.',
+      ejemplos: 'Lego, Adobe, Crayola',
+      insight: 'Da vida a la imaginación sin límites',
+      color: 'from-violet-500 to-pink-600'
+    },
+    {
+      icon: Handshake,
+      name: 'El Hombre Común',
+      pregunta: '¿Buscas transmitir cercanía, pertenencia y valores compartidos?',
+      representa: 'Comunidad, igualdad y conexión. Marcas para todos.',
+      ejemplos: 'IKEA, Levi\'s, Budweiser',
+      insight: 'Todos somos iguales en lo esencial',
+      color: 'from-slate-500 to-zinc-600'
     }
   ]
 
@@ -229,8 +281,8 @@ const ArquetiposPage = () => {
             </p>
           </motion.div>
 
-          {/* Grid de Arquetipos - PREMIUM */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+          {/* Grid de Arquetipos - 12 COMPLETOS CON GRADIENTES 3D */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
             {arquetipos.map((arquetipo, index) => {
               const Icon = arquetipo.icon
               return (
@@ -238,57 +290,111 @@ const ArquetiposPage = () => {
                   key={index}
                   initial={{ opacity: 0, y: 30 }}
                   animate={isContentInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={{ y: -8 }}
-                  className="group relative overflow-hidden rounded-2xl bg-black/40 backdrop-blur-sm border border-white/10 p-8 hover:border-white/20 transition-all duration-500"
+                  transition={{ duration: 0.6, delay: index * 0.08 }}
+                  whileHover={{ y: -10 }}
+                  className="group relative overflow-hidden rounded-3xl bg-black/50 backdrop-blur-sm border border-white/10 p-10 hover:border-white/30 transition-all duration-700"
                 >
-                  {/* Gradiente de fondo animado */}
+                  {/* Gradiente 3D animado con luz interior - SIEMPRE VISIBLE */}
                   <motion.div
                     animate={{
-                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                      backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'],
+                      scale: [1, 1.05, 1]
                     }}
                     transition={{
-                      duration: 8,
+                      duration: 6,
                       repeat: Infinity,
-                      ease: "linear",
-                      delay: index * 0.3
+                      ease: "easeInOut",
+                      delay: index * 0.2
                     }}
-                    className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-500"
+                    className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-700"
                     style={{
-                      background: `linear-gradient(135deg, ${arquetipo.color.split(' ')[1]}, ${arquetipo.color.split(' ')[3]})`,
-                      backgroundSize: '200% 200%'
+                      background: `linear-gradient(135deg, ${arquetipo.color.split(' ')[1]}, ${arquetipo.color.split(' ')[3]}, ${arquetipo.color.split(' ')[1]})`,
+                      backgroundSize: '400% 400%',
+                      filter: 'blur(60px)'
+                    }}
+                  />
+
+                  {/* Segundo layer de luz - efecto 3D */}
+                  <motion.div
+                    animate={{
+                      opacity: [0.3, 0.6, 0.3],
+                      scale: [1, 1.1, 1]
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: index * 0.15
+                    }}
+                    className="absolute inset-0"
+                    style={{
+                      background: `radial-gradient(circle at 50% 50%, ${arquetipo.color.split(' ')[1].replace('from-', '')}40, transparent 70%)`,
+                      filter: 'blur(40px)'
                     }}
                   />
 
                   <div className="relative z-10 flex flex-col items-center text-center">
-                    {/* Ícono - Centrado y más grande */}
+                    {/* Ícono con glow animado */}
                     <motion.div 
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      className={`flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br ${arquetipo.color} p-4 mb-6 shadow-2xl`}
+                      whileHover={{ scale: 1.15, rotate: 8 }}
+                      animate={{
+                        boxShadow: [
+                          `0 0 20px ${arquetipo.color.split(' ')[1].replace('from-', '')}40`,
+                          `0 0 40px ${arquetipo.color.split(' ')[1].replace('from-', '')}60`,
+                          `0 0 20px ${arquetipo.color.split(' ')[1].replace('from-', '')}40`
+                        ]
+                      }}
+                      transition={{
+                        boxShadow: {
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }
+                      }}
+                      className={`flex items-center justify-center w-24 h-24 rounded-2xl bg-gradient-to-br ${arquetipo.color} p-5 mb-8 shadow-2xl`}
                     >
                       <Icon className="w-full h-full text-white" strokeWidth={1.5} />
                     </motion.div>
 
-                    {/* Nombre - Fuente display */}
-                    <h3 className="text-white text-xl lg:text-2xl font-light mb-4 tracking-wide font-display">
+                    {/* Nombre */}
+                    <h3 className="text-white text-2xl lg:text-3xl font-light mb-6 tracking-wide font-display">
                       {arquetipo.name}
                     </h3>
 
-                    {/* Descripción */}
-                    <p className="text-white/60 text-sm font-light leading-relaxed mb-6">
-                      {arquetipo.description}
-                    </p>
+                    {/* Pregunta - NUEVA SECCIÓN */}
+                    <div className="mb-6">
+                      <p className="text-white/70 text-sm font-light leading-relaxed italic">
+                        {arquetipo.pregunta}
+                      </p>
+                    </div>
 
                     {/* Línea separadora */}
                     <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent w-full mb-6" />
 
+                    {/* Qué representa */}
+                    <div className="mb-6">
+                      <p className="text-white/40 text-xs font-light uppercase tracking-[0.2em] mb-2">
+                        Qué Representa
+                      </p>
+                      <p className="text-white/60 text-sm font-light leading-relaxed">
+                        {arquetipo.representa}
+                      </p>
+                    </div>
+
                     {/* Ejemplos */}
-                    <div>
-                      <p className="text-white/40 text-xs font-light uppercase tracking-[0.2em] mb-3">
+                    <div className="mb-6">
+                      <p className="text-white/40 text-xs font-light uppercase tracking-[0.2em] mb-2">
                         Ejemplos
                       </p>
                       <p className="text-white/70 text-xs font-light leading-relaxed">
                         {arquetipo.ejemplos}
+                      </p>
+                    </div>
+
+                    {/* Insight Final */}
+                    <div className="pt-4 border-t border-white/10">
+                      <p className="text-white/50 text-xs font-light italic">
+                        {arquetipo.insight}
                       </p>
                     </div>
                   </div>
