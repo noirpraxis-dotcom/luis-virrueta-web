@@ -138,24 +138,24 @@ const LuxmaniaVideoSection = () => {
               Psicología × Diseño × IA
             </motion.p>
 
-            {/* Mensaje central con palabra animada - ALINEADO */}
+            {/* Mensaje central con palabra animada - ALINEADO PERFECTO */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.4 }}
               className="mb-4 max-w-xl"
             >
-              <div className="text-xl lg:text-2xl font-extralight tracking-wide leading-relaxed inline-flex items-center gap-2">
+              <div className="text-xl lg:text-2xl font-extralight tracking-wide leading-relaxed flex items-center gap-2">
                 <span className="text-white/70">Diseñamos</span>
-                <div className="relative inline-block" style={{ width: '180px' }}>
+                <div className="relative inline-block min-w-[180px]">
                   <AnimatePresence mode="wait">
                     <motion.span
                       key={currentWordIndex}
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: -20, opacity: 0 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="absolute left-0 top-0 text-white font-light whitespace-nowrap"
+                      className="inline-block text-white font-light"
                       style={{
                         textShadow: '0 0 30px rgba(255, 255, 255, 0.3)'
                       }}
@@ -331,9 +331,6 @@ const LuxmaniaVideoSection = () => {
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   className="group relative overflow-hidden px-8 py-4 rounded-full backdrop-blur-sm bg-white/5"
-                  style={{
-                    boxShadow: '0 0 30px rgba(168, 85, 247, 0.4), 0 0 60px rgba(59, 130, 246, 0.3)'
-                  }}
                 >
                   {/* Degradado animado morado/azul de fondo */}
                   <motion.div
@@ -353,21 +350,21 @@ const LuxmaniaVideoSection = () => {
                     }}
                   />
 
-                  {/* Glow exterior animado */}
+                  {/* Glow exterior más sutil y extendido */}
                   <motion.div
                     animate={{
-                      opacity: [0.4, 0.8, 0.4],
-                      scale: [1, 1.1, 1]
+                      opacity: [0.2, 0.4, 0.2],
+                      scale: [1, 1.15, 1]
                     }}
                     transition={{
-                      duration: 3,
+                      duration: 4,
                       repeat: Infinity,
                       ease: "easeInOut"
                     }}
-                    className="absolute -inset-1 rounded-full blur-xl"
+                    className="absolute -inset-4 rounded-full blur-3xl"
                     style={{
                       background: 'linear-gradient(135deg, #a855f7, #3b82f6, #8b5cf6)',
-                      opacity: 0.5
+                      opacity: 0.3
                     }}
                   />
 
@@ -375,11 +372,13 @@ const LuxmaniaVideoSection = () => {
                     <span className="text-white/90 group-hover:text-white font-light text-base tracking-wide transition-colors">
                       Descubre nuestro método
                     </span>
+                    {/* Flecha dentro de círculo */}
                     <motion.div
                       animate={{ x: [0, 3, 0] }}
                       transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                      className="w-8 h-8 rounded-full border border-white/30 flex items-center justify-center group-hover:border-white/50 transition-colors"
                     >
-                      <ArrowRight className="w-5 h-5 text-white/80 group-hover:text-white transition-colors" strokeWidth={1.5} />
+                      <ArrowRight className="w-4 h-4 text-white/80 group-hover:text-white transition-colors" strokeWidth={1.5} />
                     </motion.div>
                   </span>
                 </motion.button>
