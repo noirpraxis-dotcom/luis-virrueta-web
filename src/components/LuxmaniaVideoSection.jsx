@@ -27,45 +27,51 @@ const LuxmaniaVideoSection = () => {
 
   return (
     <section ref={ref} className="relative bg-black py-16 lg:py-24 overflow-hidden">
-      {/* Orbs sutiles - Solo blanco minimal */}
-      <div className="absolute inset-0 pointer-events-none">
+      {/* Video de fondo - De lado a lado COMPLETO */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full object-cover opacity-40"
+          style={{
+            minWidth: '100%',
+            minHeight: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
+            filter: 'brightness(0.9)',
+          }}
+        >
+          <source src="/LUXMANIA HOME.mp4" type="video/mp4" />
+        </video>
+        
+        {/* Degradados arriba y abajo para blend perfecto */}
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
+        
+        {/* Overlay sutil para mantener legibilidad */}
+        <div className="absolute inset-0 bg-black/30" />
+      </div>
+
+      {/* Orbs sutiles encima del video */}
+      <div className="absolute inset-0 pointer-events-none z-10">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="relative z-20 max-w-7xl mx-auto px-6 lg:px-12">
         <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 lg:gap-16 items-center">
           
-          {/* Left: Texto elegante con video background - PREMIUM */}
+          {/* Left: Texto elegante */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-            className="order-2 lg:order-1 flex flex-col justify-center relative"
+            className="order-2 lg:order-1 flex flex-col justify-center"
           >
-            {/* Video background premium - LUXMANIA HOME lado a lado */}
-            <div className="absolute -inset-x-8 lg:-inset-x-12 inset-y-0 overflow-hidden">
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover opacity-40"
-                style={{
-                  filter: 'brightness(0.9)',
-                }}
-              >
-                <source src="/LUXMANIA HOME.mp4" type="video/mp4" />
-              </video>
-              
-              {/* Degradados premium para legibilidad - Con derecha */}
-              <div className="absolute inset-0 bg-black/30" />
-              <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
-              <div className="absolute top-0 bottom-0 right-0 w-32 bg-gradient-to-l from-black to-transparent" />
-            </div>
-
-            {/* Contenido encima del video */}
+            {/* Contenido */}
             <div className="relative z-10 p-8 lg:p-12">
             {/* Eyebrow - ¿Qué hacemos? */}
             <motion.div
