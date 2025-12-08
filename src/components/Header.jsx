@@ -32,7 +32,54 @@ const Header = ({ menuItems }) => {
       transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
       className="fixed top-0 left-0 right-0 z-50 hidden lg:block"
     >
-      <nav className="bg-black/70 backdrop-blur-md border-b border-white/5">
+      {/* Orbs lumínicos elegantes morado/rosa alrededor del header - MÁS VISIBLES */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          animate={{ 
+            scale: [1, 1.3, 1],
+            opacity: [0.15, 0.25, 0.15],
+            x: [0, 40, 0],
+            y: [0, -20, 0]
+          }}
+          transition={{ 
+            duration: 8, 
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-[#a855f7] rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{ 
+            scale: [1, 1.4, 1],
+            opacity: [0.12, 0.2, 0.12],
+            x: [0, -30, 0],
+            y: [0, 15, 0]
+          }}
+          transition={{ 
+            duration: 10, 
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1
+          }}
+          className="absolute top-1/2 right-0 -translate-y-1/2 w-80 h-80 bg-[#d946ef] rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.1, 0.18, 0.1],
+            x: [0, 20, 0]
+          }}
+          transition={{ 
+            duration: 12, 
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2
+          }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-r from-[#a855f7] to-[#d946ef] rounded-full blur-3xl"
+        />
+      </div>
+
+      <nav className="relative bg-black/70 backdrop-blur-md border-b border-white/5">
         <div className="max-w-7xl mx-auto px-8 lg:px-12">
           <div className="flex justify-between items-center h-24">
             {/* Logo */}
@@ -194,18 +241,15 @@ const Header = ({ menuItems }) => {
                       <motion.span
                         className="text-[0.8rem] uppercase"
                         style={{ 
-                          fontFamily: 'Space Grotesk, sans-serif',
-                          fontWeight: 400,
-                          letterSpacing: '0.2em',
-                          background: 'linear-gradient(135deg, #ffffff 0%, #e4e4e7 30%, #ffffff 60%, #d4d4d8 100%)',
-                          WebkitBackgroundClip: 'text',
-                          backgroundClip: 'text',
-                          WebkitTextFillColor: 'transparent',
-                          filter: 'drop-shadow(0 0 12px rgba(255,255,255,0.15))',
+                          fontFamily: 'Space Grotesk, monospace',
+                          fontWeight: 500,
+                          letterSpacing: '0.15em',
+                          color: '#ffffff',
+                          textShadow: '0 0 20px rgba(255,255,255,0.3), 0 0 8px rgba(168,85,247,0.2)',
                         }}
                         whileHover={{
-                          filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.4))',
-                          letterSpacing: '0.25em'
+                          textShadow: '0 0 30px rgba(255,255,255,0.6), 0 0 15px rgba(168,85,247,0.4)',
+                          letterSpacing: '0.2em'
                         }}
                         transition={{ duration: 0.3 }}
                       >
@@ -214,13 +258,54 @@ const Header = ({ menuItems }) => {
                     </motion.div>
                   </Link>
                   
-                  {/* Hover underline effect */}
-                  <motion.div
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: (hoveredItem === index || isActive(item.href)) ? 1 : 0 }}
-                    transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
-                    className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white to-transparent origin-center"
-                  />
+                  {/* Animated indicator: destello continuo solo cuando está activo */}
+                  {isActive(item.href) && (
+                    <motion.div className="absolute -bottom-1 left-1/2 -translate-x-1/2 flex items-center justify-center w-full">
+                      {/* Punto central que pulsa continuamente */}
+                      <motion.div
+                        animate={{ 
+                          scale: [0.8, 1.2, 0.8],
+                          opacity: [0.6, 1, 0.6]
+                        }}
+                        transition={{ 
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                        className="absolute w-1.5 h-1.5 bg-white rounded-full"
+                        style={{
+                          boxShadow: '0 0 8px rgba(255,255,255,0.8), 0 0 16px rgba(168,85,247,0.5)'
+                        }}
+                      />
+                      
+                      {/* Línea que se contrae y expande desde el centro */}
+                      <motion.div
+                        animate={{ 
+                          scaleX: [0.3, 1, 0.3],
+                          opacity: [0.4, 1, 0.4]
+                        }}
+                        transition={{ 
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                        className="h-px w-full bg-gradient-to-r from-transparent via-white to-transparent origin-center"
+                        style={{
+                          boxShadow: '0 0 8px rgba(255,255,255,0.6), 0 0 16px rgba(217,70,239,0.4)'
+                        }}
+                      />
+                    </motion.div>
+                  )}
+                  
+                  {/* Hover underline - solo cuando no está activo */}
+                  {hoveredItem === index && !isActive(item.href) && (
+                    <motion.div
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
+                      className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent origin-center"
+                    />
+                  )}
                 </li>
               ))}
               </ul>
