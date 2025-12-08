@@ -13,13 +13,40 @@ const WhyLuxmania = () => {
       ref={ref}
       className="relative bg-black py-24 lg:py-32 overflow-hidden"
     >
-      {/* Orbs sutiles */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+      {/* Video de fondo - Estilo Hero */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full object-cover opacity-40"
+          style={{
+            minWidth: '100%',
+            minHeight: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center'
+          }}
+        >
+          <source src="/ARQUETIPOS CEREBRO.mp4" type="video/mp4" />
+        </video>
+        
+        {/* Degradados arriba y abajo para blend perfecto */}
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
+        
+        {/* Overlay sutil para mantener legibilidad */}
+        <div className="absolute inset-0 bg-black/30" />
       </div>
 
-      <div className="relative max-w-6xl mx-auto px-6 lg:px-12">
+      {/* Orbs sutiles encima del video */}
+      <div className="absolute inset-0 pointer-events-none z-10">
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-fuchsia-600/10 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative z-20 max-w-6xl mx-auto px-6 lg:px-12">
         
         {/* Eyebrow */}
         <motion.div
