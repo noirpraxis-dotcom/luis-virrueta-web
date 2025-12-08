@@ -254,6 +254,21 @@ const PortafolioPage = () => {
       {/* Logotipos 3D */}
       <LogoCarousel3D />
 
+      {/* Video Farolito - Animación pequeña */}
+      <section className="relative py-8 px-6 lg:px-20">
+        <div className="max-w-4xl mx-auto">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-auto rounded-xl"
+          >
+            <source src="/FAROLITO ANIMACION.mp4" type="video/mp4" />
+          </video>
+        </div>
+      </section>
+
       {/* Logos Animados + Avatares - En la misma línea */}
       <section className="relative pt-12 pb-16 lg:pt-16 lg:pb-20 px-6 lg:px-20">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">

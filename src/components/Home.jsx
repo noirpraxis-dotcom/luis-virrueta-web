@@ -73,7 +73,7 @@ const Home = () => {
               textTransform: 'uppercase'
             }}>
               <span className="relative inline-block">
-                {/* T con degradado - capa blur inclinada + efecto lumínico expansivo */}
+                {/* T con efecto lumínico expansivo - SIN letras inclinadas atrás */}
                 <span className="relative inline-block">
                   {/* Glow animado que expande y contrae - T */}
                   <motion.span
@@ -86,17 +86,15 @@ const Home = () => {
                       repeat: Infinity,
                       ease: "easeInOut"
                     }}
-                    className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-lg"
-                    style={{ transform: 'translateY(-2px) rotate(-8deg)', transformOrigin: 'center' }}
+                    className="absolute inset-0 bg-gradient-to-br from-white via-white to-white bg-clip-text text-transparent blur-lg"
                   >
                     T
                   </motion.span>
-                  <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px) rotate(-8deg)', transformOrigin: 'center' }}>T</span>
                   <span className="relative text-white">T</span>
                 </span>
                 {/* u Marc */}
                 <span className="text-white">u Marc</span>
-                {/* a con degradado - capa blur inclinada + efecto lumínico expansivo */}
+                {/* a con efecto lumínico expansivo - SIN letras inclinadas atrás */}
                 <span className="relative inline-block">
                   {/* Glow animado que expande y contrae - A */}
                   <motion.span
@@ -110,12 +108,10 @@ const Home = () => {
                       ease: "easeInOut",
                       delay: 0.3
                     }}
-                    className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-lg"
-                    style={{ transform: 'translateY(-2px) rotate(8deg)', transformOrigin: 'center' }}
+                    className="absolute inset-0 bg-gradient-to-tl from-white via-white to-white bg-clip-text text-transparent blur-lg"
                   >
                     a
                   </motion.span>
-                  <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px) rotate(8deg)', transformOrigin: 'center' }}>a</span>
                   <span className="relative text-white">a</span>
                 </span>
               </span>
