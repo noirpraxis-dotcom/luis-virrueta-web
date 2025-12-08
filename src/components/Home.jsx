@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight, Sparkles, Brain, Palette, Code } from 'lucide-react'
 
 const Home = () => {
   const heroRef = useRef(null)
@@ -24,8 +24,8 @@ const Home = () => {
         <source src="/HERO HOME.mp4" type="video/mp4" />
       </video>
 
-      {/* Overlay oscuro cinematográfico */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black" />
+      {/* Overlay oscuro cinematográfico - Más transparente */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
 
       {/* Orbs sutiles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -41,66 +41,135 @@ const Home = () => {
           transition={{ duration: 0.8 }}
           className="space-y-8"
         >
-          {/* Badge superior */}
+          {/* Badge superior - Estilo Portafolio */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full"
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="inline-flex items-center gap-3 px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5 mb-4"
           >
-            <Sparkles className="w-4 h-4 text-purple-400" />
-            <span className="text-sm text-white/90 font-light">Psicología × Diseño × Tecnología</span>
+            <Sparkles className="w-4 h-4 text-white/60" strokeWidth={1.5} />
+            <span className="text-sm text-white/80 font-light tracking-wider uppercase">
+              Identidad Visual con Fundamento
+            </span>
           </motion.div>
 
-          {/* Título principal con efecto 3D */}
-          <h1 className="text-5xl lg:text-8xl font-bold font-display leading-tight">
-            <span className="block text-white drop-shadow-2xl" style={{ 
-              textShadow: '0 0 80px rgba(168, 85, 247, 0.5), 0 0 40px rgba(217, 70, 239, 0.3)'
-            }}>
+          {/* Título principal con efecto 3D - Estilo Portafolio */}
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="font-display leading-tight mb-8"
+          >
+            {/* Construimos - más pequeño */}
+            <span className="block text-white/70 text-2xl lg:text-4xl mb-3" style={{ fontWeight: 200, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
               Construimos
             </span>
-            <span className="block bg-gradient-to-r from-purple-400 via-fuchsia-500 to-purple-600 bg-clip-text text-transparent">
-              Tu Marca
+            
+            {/* Tu Marca - grande con efecto 3D */}
+            <span className="block text-6xl lg:text-9xl" style={{ 
+              letterSpacing: '0.08em',
+              fontWeight: 300,
+              textTransform: 'uppercase'
+            }}>
+              <span className="relative inline-block">
+                {/* T con degradado */}
+                <span className="relative">
+                  <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>T</span>
+                  <span className="relative text-white">T</span>
+                </span>
+                {/* u Marc */}
+                <span className="text-white">u Marc</span>
+                {/* a con degradado */}
+                <span className="relative">
+                  <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>a</span>
+                  <span className="relative text-white">a</span>
+                </span>
+              </span>
             </span>
-          </h1>
+          </motion.h1>
 
-          {/* Subtítulo elegante */}
-          <p className="text-xl lg:text-2xl text-white/80 max-w-3xl mx-auto font-light leading-relaxed">
-            Identidad de marca con fundamento psicológico.
-            <br className="hidden lg:block" />
-            Diseño que conecta, tecnología que convierte.
-          </p>
+          {/* Fórmula con iconos - Estilo Portafolio */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="flex items-center gap-3 lg:gap-4 flex-wrap justify-center mb-8"
+          >
+            {/* Psicología */}
+            <div className="flex items-center gap-2">
+              <Brain className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+              <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
+                Psicología
+              </span>
+            </div>
 
-          {/* Línea decorativa */}
-          <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent w-80 mx-auto" />
+            <span className="text-white/40 text-xs">+</span>
 
-          {/* Botones CTA */}
+            {/* Diseño */}
+            <div className="flex items-center gap-2">
+              <Palette className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+              <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
+                Diseño
+              </span>
+            </div>
+
+            <span className="text-white/40 text-xs">+</span>
+
+            {/* Tecnología */}
+            <div className="flex items-center gap-2">
+              <Code className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+              <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
+                Tecnología
+              </span>
+            </div>
+          </motion.div>
+
+          {/* Línea decorativa animada */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={isHeroInView ? { opacity: 1 } : {}}
+            transition={{ duration: 1, delay: 0.4 }}
+            className="relative h-px mx-auto w-80 overflow-hidden mb-8"
+          >
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={isHeroInView ? { scaleX: 1 } : {}}
+              transition={{ duration: 1.2, delay: 0.5, ease: [0.76, 0, 0.24, 1] }}
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+              style={{ transformOrigin: 'center' }}
+            />
+          </motion.div>
+
+          {/* Botones CTA - Mejorados */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
           >
-            {/* Botón principal */}
+            {/* Botón principal - Más elegante */}
             <Link
               to="/servicios"
-              className="group relative px-8 py-4 bg-white text-black font-semibold rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50"
+              className="group relative px-10 py-5 bg-white text-black font-light rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_20px_80px_rgba(255,255,255,0.3)]"
             >
-              <span className="relative z-10 flex items-center gap-2">
-                Ver Servicios
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <span className="relative z-10 flex items-center gap-3 text-base tracking-wide">
+                <span>Explorar Servicios</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" strokeWidth={1.5} />
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-fuchsia-500 opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
 
-            {/* Botón secundario */}
+            {/* Botón secundario - Más sutil */}
             <Link
               to="/contacto"
-              className="group px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-full border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all hover:scale-105"
+              className="group relative px-10 py-5 text-white font-light rounded-full border border-white/30 hover:border-white/60 transition-all duration-500 hover:scale-[1.02] overflow-hidden"
             >
-              <span className="flex items-center gap-2">
-                Agendar Consulta
-                <Sparkles className="w-5 h-5" />
+              <div className="absolute inset-0 bg-white/5 backdrop-blur-sm transition-opacity duration-300 group-hover:bg-white/10" />
+              <span className="relative z-10 flex items-center gap-3 text-base tracking-wide">
+                <span>Agendar Consulta</span>
+                <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
               </span>
             </Link>
           </motion.div>
