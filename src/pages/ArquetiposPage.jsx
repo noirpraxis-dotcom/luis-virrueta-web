@@ -292,7 +292,7 @@ const ArquetiposPage = () => {
                   animate={isContentInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.6, delay: index * 0.08 }}
                   whileHover={{ y: -10 }}
-                  className="group relative overflow-hidden rounded-3xl bg-black/50 backdrop-blur-sm border border-white/10 p-10 hover:border-white/30 transition-all duration-700"
+                  className="group relative overflow-hidden rounded-3xl bg-black/80 backdrop-blur-md border border-white/20 p-10 hover:border-white/40 transition-all duration-700"
                 >
                   {/* Gradiente 3D animado con luz interior - SIEMPRE VISIBLE */}
                   <motion.div
@@ -306,7 +306,7 @@ const ArquetiposPage = () => {
                       ease: "easeInOut",
                       delay: index * 0.2
                     }}
-                    className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-700"
+                    className="absolute inset-0 opacity-15 group-hover:opacity-25 transition-opacity duration-700"
                     style={{
                       background: `linear-gradient(135deg, ${arquetipo.color.split(' ')[1]}, ${arquetipo.color.split(' ')[3]}, ${arquetipo.color.split(' ')[1]})`,
                       backgroundSize: '400% 400%',
@@ -317,7 +317,7 @@ const ArquetiposPage = () => {
                   {/* Segundo layer de luz - efecto 3D */}
                   <motion.div
                     animate={{
-                      opacity: [0.3, 0.6, 0.3],
+                      opacity: [0.2, 0.4, 0.2],
                       scale: [1, 1.1, 1]
                     }}
                     transition={{
@@ -328,7 +328,7 @@ const ArquetiposPage = () => {
                     }}
                     className="absolute inset-0"
                     style={{
-                      background: `radial-gradient(circle at 50% 50%, ${arquetipo.color.split(' ')[1].replace('from-', '')}40, transparent 70%)`,
+                      background: `radial-gradient(circle at 50% 50%, ${arquetipo.color.split(' ')[1].replace('from-', '')}30, transparent 70%)`,
                       filter: 'blur(40px)'
                     }}
                   />
@@ -339,9 +339,9 @@ const ArquetiposPage = () => {
                       whileHover={{ scale: 1.15, rotate: 8 }}
                       animate={{
                         boxShadow: [
-                          `0 0 20px ${arquetipo.color.split(' ')[1].replace('from-', '')}40`,
-                          `0 0 40px ${arquetipo.color.split(' ')[1].replace('from-', '')}60`,
-                          `0 0 20px ${arquetipo.color.split(' ')[1].replace('from-', '')}40`
+                          `0 0 20px ${arquetipo.color.split(' ')[1].replace('from-', '')}50`,
+                          `0 0 40px ${arquetipo.color.split(' ')[1].replace('from-', '')}70`,
+                          `0 0 20px ${arquetipo.color.split(' ')[1].replace('from-', '')}50`
                         ]
                       }}
                       transition={{
@@ -351,49 +351,49 @@ const ArquetiposPage = () => {
                           ease: "easeInOut"
                         }
                       }}
-                      className={`flex items-center justify-center w-24 h-24 rounded-2xl bg-gradient-to-br ${arquetipo.color} p-5 mb-8 shadow-2xl`}
+                      className={`flex items-center justify-center w-24 h-24 rounded-2xl bg-gradient-to-br ${arquetipo.color} p-5 mb-6 shadow-2xl`}
                     >
                       <Icon className="w-full h-full text-white" strokeWidth={1.5} />
                     </motion.div>
 
-                    {/* Nombre */}
-                    <h3 className="text-white text-2xl lg:text-3xl font-light mb-6 tracking-wide font-display">
+                    {/* Nombre - JERARQUÍA PRINCIPAL */}
+                    <h3 className="text-white text-3xl lg:text-4xl font-light mb-4 tracking-wide font-display">
                       {arquetipo.name}
                     </h3>
 
-                    {/* Pregunta - NUEVA SECCIÓN */}
-                    <div className="mb-6">
-                      <p className="text-white/70 text-sm font-light leading-relaxed italic">
+                    {/* Pregunta destacada - LO PRIMERO QUE BUSCAN */}
+                    <div className="mb-6 px-2">
+                      <p className="text-white/90 text-base lg:text-lg font-light leading-relaxed italic">
                         {arquetipo.pregunta}
                       </p>
                     </div>
 
-                    {/* Línea separadora */}
-                    <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent w-full mb-6" />
+                    {/* Línea separadora más visible */}
+                    <div className="h-px bg-gradient-to-r from-transparent via-white/30 to-transparent w-full mb-6" />
 
-                    {/* Qué representa */}
+                    {/* Qué representa - MUY LEGIBLE */}
                     <div className="mb-6">
-                      <p className="text-white/40 text-xs font-light uppercase tracking-[0.2em] mb-2">
-                        Qué Representa
+                      <p className="text-white/50 text-xs font-light uppercase tracking-[0.25em] mb-3">
+                        Representa
                       </p>
-                      <p className="text-white/60 text-sm font-light leading-relaxed">
+                      <p className="text-white/80 text-base font-light leading-relaxed">
                         {arquetipo.representa}
                       </p>
                     </div>
 
-                    {/* Ejemplos */}
+                    {/* Ejemplos con mejor contraste */}
                     <div className="mb-6">
-                      <p className="text-white/40 text-xs font-light uppercase tracking-[0.2em] mb-2">
-                        Ejemplos
+                      <p className="text-white/50 text-xs font-light uppercase tracking-[0.25em] mb-3">
+                        Marcas Icónicas
                       </p>
-                      <p className="text-white/70 text-xs font-light leading-relaxed">
+                      <p className="text-white/90 text-sm font-light leading-relaxed">
                         {arquetipo.ejemplos}
                       </p>
                     </div>
 
-                    {/* Insight Final */}
-                    <div className="pt-4 border-t border-white/10">
-                      <p className="text-white/50 text-xs font-light italic">
+                    {/* Insight Final - Destacado */}
+                    <div className="pt-6 border-t border-white/20 mt-2">
+                      <p className="text-white/70 text-sm font-light italic leading-relaxed">
                         {arquetipo.insight}
                       </p>
                     </div>
@@ -417,17 +417,20 @@ const ArquetiposPage = () => {
                   tu marca
                 </span>?
               </h3>
-              <p className="text-white/50 text-lg lg:text-xl font-extralight leading-relaxed">
+              <p className="text-white/50 text-lg lg:text-xl font-extralight leading-relaxed mb-6">
                 Descubre cómo definir la personalidad profunda de tu marca y crear una identidad que resuene emocionalmente con tu audiencia ideal.
+              </p>
+              <p className="text-white/70 text-base lg:text-lg font-light leading-relaxed">
+                Agenda una sesión personalizada donde, como psicólogo especializado en branding, te ayudaré a identificar el arquetipo que mejor representa la esencia de tu marca.
               </p>
             </div>
 
-            {/* Botón CTA */}
-            <Link to="/identidad-de-marca">
+            {/* Botón CTA - Videollamada */}
+            <Link to="/contacto">
               <motion.button
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="group relative overflow-hidden px-10 py-5 rounded-full backdrop-blur-sm"
+                className="group relative overflow-hidden px-12 py-6 rounded-full backdrop-blur-sm"
               >
                 <motion.div
                   animate={{
@@ -464,8 +467,8 @@ const ArquetiposPage = () => {
                 />
 
                 <span className="relative flex items-center gap-3">
-                  <span className="text-white font-light text-lg tracking-wide">
-                    Definir mi Arquetipo
+                  <span className="text-white font-light text-lg lg:text-xl tracking-wide">
+                    Agendar Sesión de Arquetipos
                   </span>
                   <motion.div
                     animate={{ x: [0, 3, 0] }}

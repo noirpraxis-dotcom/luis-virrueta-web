@@ -43,27 +43,25 @@ const LuxmaniaVideoSection = () => {
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
             className="order-2 lg:order-1 flex flex-col justify-center relative"
           >
-            {/* Video background premium - IGUAL A LUIS VIRRUETA */}
-            <div className="absolute inset-0 overflow-hidden rounded-xl">
+            {/* Video background premium - LUXMANIA HOME lado a lado */}
+            <div className="absolute -inset-x-8 lg:-inset-x-12 inset-y-0 overflow-hidden">
               <video
                 autoPlay
                 loop
                 muted
                 playsInline
-                className="absolute inset-0 w-full h-full object-cover opacity-70"
+                className="absolute inset-0 w-full h-full object-cover opacity-40"
                 style={{
                   filter: 'brightness(0.9)',
                 }}
               >
-                <source src="/LUXMANIA SECCION.mp4" type="video/mp4" />
+                <source src="/LUXMANIA HOME.mp4" type="video/mp4" />
               </video>
               
-              {/* Degradados negros en los bordes para transición sutil */}
-              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-transparent to-black/90" />
-              <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
+              {/* Degradados premium para legibilidad */}
+              <div className="absolute inset-0 bg-black/30" />
               <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-black/40" />
             </div>
 
             {/* Contenido encima del video */}
