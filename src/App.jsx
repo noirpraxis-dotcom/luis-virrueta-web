@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { HelmetProvider } from 'react-helmet-async'
 import { LanguageProvider, useLanguage } from './context/LanguageContext'
 import Header from './components/Header'
 import MobileMenu from './components/MobileMenu'
@@ -158,9 +159,11 @@ const AppContent = () => {
 
 function App() {
   return (
-    <LanguageProvider>
-      <AppContent />
-    </LanguageProvider>
+    <HelmetProvider>
+      <LanguageProvider>
+        <AppContent />
+      </LanguageProvider>
+    </HelmetProvider>
   )
 }
 

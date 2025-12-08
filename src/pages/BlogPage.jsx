@@ -23,12 +23,15 @@ const BlogPage = () => {
       excerpt: 'La ciencia detrás de los logos icónicos y cómo aplicar estos principios neurológicos a tu marca.',
       category: 'psychology',
       author: 'Luis Virrueta',
-      date: '6 Dic 2025',
+      date: '15 Nov 2024',
       readTime: '12 min',
       gradient: 'from-pink-500/20 to-rose-500/20',
       borderGradient: 'from-pink-500 to-rose-500',
       tags: ['Neuroscience', 'Logo Design', 'Brand Recognition'],
-      slug: 'neurociencia-del-diseno'
+      slug: 'neurociencia-del-diseno',
+      image: '/IMAGENES BLOG/1.jpg',
+      rating: 4.9,
+      commentsCount: 27
     },
     {
       id: 2,
@@ -36,12 +39,16 @@ const BlogPage = () => {
       excerpt: 'Cómo fusionar inteligencia artificial, diseño visual y psicología para crear experiencias que conectan emocionalmente con tu audiencia.',
       category: 'trends',
       author: 'Luis Virrueta',
-      date: '5 Dic 2025',
+      date: '22 Nov 2024',
       readTime: '14 min',
       gradient: 'from-purple-500/20 to-fuchsia-500/20',
       borderGradient: 'from-purple-500 to-fuchsia-500',
       tags: ['AI', 'Generative Design', 'Emotional Design', 'Psychology'],
-      slug: 'ia-generativa-diseno-emocion'
+      slug: 'ia-generativa-diseno-emocion',
+      image: '/IMAGENES BLOG/2.jpg',
+      heroImage: '/IMAGENES BLOG/2.jpg',
+      rating: 5.0,
+      commentsCount: 34
     },
     {
       id: 3,
@@ -49,12 +56,15 @@ const BlogPage = () => {
       excerpt: 'Descubre cómo el ML y la psicología del usuario se unen para crear interfaces que anticipan necesidades y adaptan experiencias en tiempo real.',
       category: 'design',
       author: 'Luis Virrueta',
-      date: '4 Dic 2025',
+      date: '28 Nov 2024',
       readTime: '13 min',
       gradient: 'from-cyan-500/20 to-blue-500/20',
       borderGradient: 'from-cyan-500 to-blue-500',
       tags: ['Machine Learning', 'UX Design', 'User Psychology', 'Technology'],
-      slug: 'interfaces-empaticas-machine-learning'
+      slug: 'interfaces-empaticas-machine-learning',
+      image: '/IMAGENES BLOG/3.jpg',
+      rating: 4.8,
+      commentsCount: 19
     },
     {
       id: 4,
@@ -62,11 +72,15 @@ const BlogPage = () => {
       excerpt: 'Descubre cómo las marcas premium utilizan la teoría del color para crear conexiones emocionales profundas con su audiencia.',
       category: 'psychology',
       author: 'Luis Virrueta',
-      date: '3 Dic 2025',
-      readTime: '8 min',
+      date: '3 Dic 2024',
+      readTime: '10 min',
       gradient: 'from-emerald-500/20 to-teal-500/20',
       borderGradient: 'from-emerald-500 to-teal-500',
-      tags: ['Color Theory', 'Luxury Branding', 'Psychology']
+      tags: ['Color Theory', 'Luxury Branding', 'Psychology'],
+      slug: 'psicologia-color-branding-lujo',
+      image: '/IMAGENES BLOG/4.jpg',
+      rating: 4.7,
+      commentsCount: 15
     },
     {
       id: 5,
@@ -74,11 +88,15 @@ const BlogPage = () => {
       excerpt: 'El nuevo paradigma que combina la simplicidad estructural con detalles ricos y experiencias sensoriales complejas.',
       category: 'trends',
       author: 'Luis Virrueta',
-      date: '2 Dic 2025',
-      readTime: '6 min',
+      date: '5 Dic 2024',
+      readTime: '9 min',
       gradient: 'from-violet-500/20 to-purple-500/20',
       borderGradient: 'from-violet-500 to-purple-500',
-      tags: ['Trends 2025', 'Minimalism', 'Visual Design']
+      tags: ['Trends 2025', 'Minimalism', 'Visual Design'],
+      slug: 'tendencias-diseno-2025',
+      image: '/IMAGENES BLOG/5.jpg',
+      rating: 4.9,
+      commentsCount: 22
     },
     {
       id: 6,
@@ -86,11 +104,15 @@ const BlogPage = () => {
       excerpt: 'Un sistema paso a paso para desarrollar marcas que resuenan emocionalmente y permanecen en la mente del consumidor.',
       category: 'branding',
       author: 'Luis Virrueta',
-      date: '1 Dic 2025',
-      readTime: '10 min',
+      date: '7 Dic 2024',
+      readTime: '11 min',
       gradient: 'from-amber-500/20 to-orange-500/20',
       borderGradient: 'from-amber-500 to-orange-500',
-      tags: ['Brand Identity', 'Strategy', 'Visual Systems']
+      tags: ['Brand Identity', 'Strategy', 'Visual Systems'],
+      slug: 'identidades-marca-memorables',
+      image: '/IMAGENES BLOG/6.jpg',
+      rating: 5.0,
+      commentsCount: 31
     },
   ]
 
@@ -287,13 +309,29 @@ const BlogCard = ({ post, index }) => {
         className="group relative"
       >
         <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-white/30 transition-all duration-500 h-full flex flex-col">
-        {/* Image Placeholder with gradient */}
+        {/* Image with gradient overlay */}
         <div className={`aspect-[16/9] bg-gradient-to-br ${post.gradient} relative overflow-hidden`}>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <BookOpen className="w-16 h-16 text-white/20" strokeWidth={1} />
-          </div>
-          {/* Overlay on hover */}
-          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+          {/* Imagen real del blog con Lazy Loading */}
+          {post.image && (
+            <img 
+              src={post.image} 
+              alt={post.title}
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
+          {/* Fallback si no hay imagen */}
+          {!post.image && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <BookOpen className="w-16 h-16 text-white/20" strokeWidth={1} />
+            </div>
+          )}
+          
+          {/* Overlay oscuro cinematic permanente */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
+          
+          {/* Overlay hover interactivo */}
+          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               whileHover={{ scale: 1, opacity: 1 }}
@@ -306,10 +344,29 @@ const BlogCard = ({ post, index }) => {
           </div>
 
           {/* Category badge */}
-          <div className="absolute top-4 left-4 px-3 py-1.5 bg-black/60 backdrop-blur-md rounded-full border border-white/20">
+          <div className="absolute top-4 left-4 px-3 py-1.5 bg-black/60 backdrop-blur-md rounded-full border border-white/20 z-20">
             <span className="text-xs text-white/90 uppercase tracking-wider font-medium">
               {categories.find(c => c.id === post.category)?.label}
             </span>
+          </div>
+
+          {/* Rating y Comments Count - Esquina superior derecha */}
+          <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
+            {/* Rating con estrellas */}
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-black/70 backdrop-blur-md rounded-full border border-yellow-500/30">
+              <svg className="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <span className="text-xs font-bold text-white">{post.rating}</span>
+            </div>
+            
+            {/* Comments count */}
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-black/70 backdrop-blur-md rounded-full border border-white/20">
+              <svg className="w-3.5 h-3.5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+              <span className="text-xs font-medium text-white/90">{post.commentsCount}</span>
+            </div>
           </div>
         </div>
 
