@@ -47,13 +47,20 @@ const Header = ({ menuItems }) => {
               >
                 {/* LUXMANIA - Con efecto de ondas animadas */}
                 <div className="text-[2.2rem] font-bold tracking-wider font-display flex">
-                  {/* LUX - Con efecto 3D en la X */}
+                  {/* LUX - Con efecto 3D MEJORADO en la X */}
                   <span className="text-white" style={{ letterSpacing: '0.1em' }}>
                     <span className="relative inline-block">LU</span>
                     <span className="relative inline-block">
-                      <span className="absolute inset-0 bg-gradient-to-br from-blue-400 via-cyan-300 to-white bg-clip-text text-transparent blur-md" style={{ transform: 'translateY(-2px) translateX(1px)' }}>X</span>
-                      <span className="absolute inset-0 bg-gradient-to-tl from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(1px) translateX(-0.5px)' }}>X</span>
-                      <span className="relative text-white">X</span>
+                      {/* Capa 1 - Glow azul/cyan más grande */}
+                      <span className="absolute inset-0 bg-gradient-to-br from-cyan-400 via-blue-400 to-white bg-clip-text text-transparent blur-lg" style={{ transform: 'translateY(-3px) translateX(2px)', opacity: 0.8 }}>X</span>
+                      {/* Capa 2 - Glow intermedio cyan */}
+                      <span className="absolute inset-0 bg-gradient-to-br from-blue-300 via-cyan-300 to-white bg-clip-text text-transparent blur-md" style={{ transform: 'translateY(-2px) translateX(1.5px)', opacity: 0.9 }}>X</span>
+                      {/* Capa 3 - Glow morado/púrpura */}
+                      <span className="absolute inset-0 bg-gradient-to-tl from-purple-400 via-fuchsia-400 to-white bg-clip-text text-transparent blur-md" style={{ transform: 'translateY(2px) translateX(-1.5px)', opacity: 0.8 }}>X</span>
+                      {/* Capa 4 - Glow rosa */}
+                      <span className="absolute inset-0 bg-gradient-to-tl from-pink-400 via-purple-300 to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(1px) translateX(-0.5px)', opacity: 0.9 }}>X</span>
+                      {/* X principal blanca */}
+                      <span className="relative text-white" style={{ textShadow: '0 0 20px rgba(255, 255, 255, 0.5)' }}>X</span>
                     </span>
                   </span>
                   {/* MANIA - Animado con ondas de colores superpuestas */}

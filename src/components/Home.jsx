@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Sparkles, Brain, Palette, Code } from 'lucide-react'
+import { ArrowRight, Brain, Palette, Code, Gem } from 'lucide-react'
 
 const Home = () => {
   const heroRef = useRef(null)
@@ -48,7 +48,7 @@ const Home = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="inline-flex items-center gap-3 px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5 mb-4"
           >
-            <Sparkles className="w-4 h-4 text-white/60" strokeWidth={1.5} />
+            <Gem className="w-4 h-4 text-white/60" strokeWidth={1.5} />
             <span className="text-sm text-white/80 font-light tracking-wider uppercase">
               Identidad Visual con Fundamento
             </span>
@@ -153,9 +153,24 @@ const Home = () => {
               to="/servicios"
               className="group relative px-10 py-5 bg-white text-black font-light rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_20px_80px_rgba(255,255,255,0.3)]"
             >
+              {/* Efecto shine continuo */}
+              <motion.div
+                animate={{
+                  x: ['-100%', '200%']
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  repeatDelay: 1
+                }}
+                className="absolute inset-0 w-1/3 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12"
+              />
               <span className="relative z-10 flex items-center gap-3 text-base tracking-wide">
                 <span>Explorar Servicios</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" strokeWidth={1.5} />
+                <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
               </span>
             </Link>
 
@@ -176,13 +191,20 @@ const Home = () => {
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator con texto */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
       >
+        <motion.p
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="text-white/50 text-xs font-light tracking-widest uppercase"
+        >
+          Desliza para conocer más
+        </motion.p>
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
