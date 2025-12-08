@@ -51,16 +51,20 @@ const Header = ({ menuItems }) => {
                   <span className="text-white" style={{ letterSpacing: '0.1em' }}>
                     <span className="relative inline-block">LU</span>
                     <span className="relative inline-block">
+                      {/* Capa 0 - Glow ultra extendido */}
+                      <span className="absolute inset-0 bg-gradient-to-br from-cyan-300 via-blue-300 to-white bg-clip-text text-transparent blur-2xl" style={{ transform: 'translateY(-5px) translateX(3px)', opacity: 0.6, fontSize: '1.15em' }}>X</span>
                       {/* Capa 1 - Glow azul/cyan más grande */}
-                      <span className="absolute inset-0 bg-gradient-to-br from-cyan-400 via-blue-400 to-white bg-clip-text text-transparent blur-lg" style={{ transform: 'translateY(-3px) translateX(2px)', opacity: 0.8 }}>X</span>
+                      <span className="absolute inset-0 bg-gradient-to-br from-cyan-400 via-blue-400 to-white bg-clip-text text-transparent blur-xl" style={{ transform: 'translateY(-4px) translateX(2.5px)', opacity: 0.8 }}>X</span>
                       {/* Capa 2 - Glow intermedio cyan */}
-                      <span className="absolute inset-0 bg-gradient-to-br from-blue-300 via-cyan-300 to-white bg-clip-text text-transparent blur-md" style={{ transform: 'translateY(-2px) translateX(1.5px)', opacity: 0.9 }}>X</span>
-                      {/* Capa 3 - Glow morado/púrpura */}
-                      <span className="absolute inset-0 bg-gradient-to-tl from-purple-400 via-fuchsia-400 to-white bg-clip-text text-transparent blur-md" style={{ transform: 'translateY(2px) translateX(-1.5px)', opacity: 0.8 }}>X</span>
-                      {/* Capa 4 - Glow rosa */}
-                      <span className="absolute inset-0 bg-gradient-to-tl from-pink-400 via-purple-300 to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(1px) translateX(-0.5px)', opacity: 0.9 }}>X</span>
+                      <span className="absolute inset-0 bg-gradient-to-br from-blue-300 via-cyan-300 to-white bg-clip-text text-transparent blur-lg" style={{ transform: 'translateY(-2px) translateX(1.5px)', opacity: 0.9 }}>X</span>
+                      {/* Capa 3 - Glow morado/púrpura extendido */}
+                      <span className="absolute inset-0 bg-gradient-to-tl from-purple-400 via-fuchsia-400 to-white bg-clip-text text-transparent blur-xl" style={{ transform: 'translateY(3px) translateX(-2.5px)', opacity: 0.8 }}>X</span>
+                      {/* Capa 4 - Glow rosa intermedio */}
+                      <span className="absolute inset-0 bg-gradient-to-tl from-pink-400 via-purple-300 to-white bg-clip-text text-transparent blur-lg" style={{ transform: 'translateY(2px) translateX(-1.5px)', opacity: 0.9 }}>X</span>
+                      {/* Capa 5 - Glow púrpura ultra extendido */}
+                      <span className="absolute inset-0 bg-gradient-to-tl from-purple-300 via-fuchsia-300 to-white bg-clip-text text-transparent blur-2xl" style={{ transform: 'translateY(4px) translateX(-3px)', opacity: 0.6, fontSize: '1.15em' }}>X</span>
                       {/* X principal blanca */}
-                      <span className="relative text-white" style={{ textShadow: '0 0 20px rgba(255, 255, 255, 0.5)' }}>X</span>
+                      <span className="relative text-white" style={{ textShadow: '0 0 30px rgba(255, 255, 255, 0.7)' }}>X</span>
                     </span>
                   </span>
                   {/* MANIA - Animado con ondas de colores superpuestas */}

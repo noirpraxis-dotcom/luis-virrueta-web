@@ -1,11 +1,38 @@
 import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Brain, Palette, Code, Gem } from 'lucide-react'
 
 const Home = () => {
   const heroRef = useRef(null)
+  const videoRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
+
+  // Loop reversible para el video
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    let direction = 1 // 1 = forward, -1 = reverse
+
+    const handleTimeUpdate = () => {
+      if (direction === 1 && video.currentTime >= video.duration - 0.1) {
+        // Llegó al final, ir en reversa
+        direction = -1
+      } else if (direction === -1 && video.currentTime <= 0.1) {
+        // Llegó al inicio, ir hacia adelante
+        direction = 1
+      }
+
+      // Simular reversa cambiando la velocidad del tiempo
+      if (direction === -1) {
+        video.currentTime = Math.max(0, video.currentTime - 0.033) // ~30fps en reversa
+      }
+    }
+
+    video.addEventListener('timeupdate', handleTimeUpdate)
+    return () => video.removeEventListener('timeupdate', handleTimeUpdate)
+  }, [])
 
   return (
     <section 
@@ -13,10 +40,10 @@ const Home = () => {
       id="home" 
       className="relative h-screen w-full overflow-hidden flex items-center justify-center"
     >
-      {/* Video Background */}
+      {/* Video Background con loop reversible */}
       <video
+        ref={videoRef}
         autoPlay
-        loop
         muted
         playsInline
         className="absolute inset-0 w-full h-full object-cover"
@@ -73,15 +100,15 @@ const Home = () => {
               textTransform: 'uppercase'
             }}>
               <span className="relative inline-block">
-                {/* T con degradado */}
-                <span className="relative">
+                {/* T con degradado inclinada a la izquierda */}
+                <span className="relative inline-block" style={{ transform: 'rotate(-8deg)', transformOrigin: 'center bottom', display: 'inline-block' }}>
                   <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>T</span>
                   <span className="relative text-white">T</span>
                 </span>
                 {/* u Marc */}
                 <span className="text-white">u Marc</span>
-                {/* a con degradado */}
-                <span className="relative">
+                {/* a con degradado inclinada a la derecha */}
+                <span className="relative inline-block" style={{ transform: 'rotate(8deg)', transformOrigin: 'center bottom', display: 'inline-block' }}>
                   <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>a</span>
                   <span className="relative text-white">a</span>
                 </span>
