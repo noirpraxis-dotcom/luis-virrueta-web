@@ -1,333 +1,172 @@
 import { motion, useInView } from 'framer-motion'
-import { useRef, useState } from 'react'
-import { Play, Volume2, Sparkles } from 'lucide-react'
+import { useRef } from 'react'
+import { Brain, Palette, Code } from 'lucide-react'
 
 const LuxmaniaVideoSection = () => {
   const ref = useRef(null)
-  const videoRef = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
-  const [isPlaying, setIsPlaying] = useState(false)
-
-  const handlePlay = () => {
-    if (videoRef.current) {
-      videoRef.current.play()
-      setIsPlaying(true)
-    }
-  }
 
   return (
-    <div ref={ref} className="relative py-32 lg:py-40 px-6 lg:px-20 overflow-hidden bg-gradient-to-b from-black via-blue-950/20 to-black">
-      {/* Background gradient orbs - Azules luminosos */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute top-1/2 right-1/3 w-[500px] h-[500px] bg-cyan-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] bg-indigo-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+    <section ref={ref} className="relative bg-black py-16 lg:py-24 overflow-hidden">
+      {/* Orbs sutiles - Solo blanco minimal */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           
-          {/* Left: Copy minimalista y directo */}
+          {/* Left: Texto elegante y minimalista */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 1 }}
-            className="text-center lg:text-left space-y-8"
+            transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+            className="order-2 lg:order-1 flex flex-col justify-center"
           >
-            {/* Título: LUXMANIA grande arriba */}
-            <div className="space-y-3">
-              <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-7xl lg:text-8xl font-bold font-display tracking-tight relative"
+            {/* Título principal - LUXMANIA */}
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-6xl lg:text-8xl font-light text-white mb-6 tracking-tight font-display leading-[1.05]"
+            >
+              <motion.span
+                animate={{
+                  textShadow: [
+                    '0 0 20px rgba(255, 255, 255, 0.1)',
+                    '0 0 30px rgba(255, 255, 255, 0.3)',
+                    '0 0 20px rgba(255, 255, 255, 0.1)'
+                  ]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="text-white"
               >
-                <span className="text-white">LUX</span>
-                <span className="relative inline-block">
-                  {/* Capa 1 - Onda azul */}
-                  <motion.span
-                    animate={{
-                      backgroundPosition: ['0% 0%', '100% 100%']
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "linear"
-                    }}
-                    style={{
-                      background: 'linear-gradient(135deg, transparent 0%, transparent 40%, #3b82f6 50%, transparent 60%, transparent 100%)',
-                      backgroundSize: '200% 200%',
-                      WebkitBackgroundClip: 'text',
-                      backgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                    }}
-                    className="absolute inset-0"
-                  >
-                    MANIA
-                  </motion.span>
-                  
-                  {/* Capa 2 - Onda fucsia */}
-                  <motion.span
-                    animate={{
-                      backgroundPosition: ['0% 0%', '100% 100%']
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "linear",
-                      delay: 0.5
-                    }}
-                    style={{
-                      background: 'linear-gradient(135deg, transparent 0%, transparent 40%, #d946ef 50%, transparent 60%, transparent 100%)',
-                      backgroundSize: '200% 200%',
-                      WebkitBackgroundClip: 'text',
-                      backgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                    }}
-                    className="absolute inset-0"
-                  >
-                    MANIA
-                  </motion.span>
-                  
-                  {/* Capa 3 - Onda morada */}
-                  <motion.span
-                    animate={{
-                      backgroundPosition: ['0% 0%', '100% 100%']
-                    }}
-                    transition={{
-                      duration: 5,
-                      repeat: Infinity,
-                      ease: "linear",
-                      delay: 1
-                    }}
-                    style={{
-                      background: 'linear-gradient(135deg, transparent 0%, transparent 40%, #a855f7 50%, transparent 60%, transparent 100%)',
-                      backgroundSize: '200% 200%',
-                      WebkitBackgroundClip: 'text',
-                      backgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                    }}
-                    className="absolute inset-0"
-                  >
-                    MANIA
-                  </motion.span>
-                  
-                  {/* Capa base - Morado */}
-                  <span className="text-purple-500/40 relative">MANIA</span>
-                </span>
-              </motion.h2>
+                LUXMANIA
+              </motion.span>
+            </motion.h2>
 
-              {/* Pregunta más pequeña */}
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="text-2xl lg:text-3xl text-white/60 font-light"
-              >
-                ¿Cómo construimos marcas?
-              </motion.p>
-            </div>
+            {/* Pregunta pequeña */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="text-white/50 text-sm lg:text-base font-light uppercase tracking-[0.3em] mb-8"
+            >
+              ¿Cómo construimos marcas?
+            </motion.p>
 
-            {/* Mensaje central minimalista */}
+            {/* Mensaje central */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-lg lg:text-xl text-white/70 font-light leading-relaxed max-w-xl mx-auto lg:mx-0"
+              className="text-white/70 text-xl lg:text-2xl font-extralight tracking-wide mb-4 max-w-xl leading-relaxed"
             >
-              Diseñamos emociones. Creamos identidades visuales que se sienten antes de entenderse.
+              Diseñamos emociones.
             </motion.p>
 
-            {/* Puntos clave con iconos elegantes */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.45 }}
+              className="text-white/50 text-base lg:text-lg font-light leading-relaxed mb-10 max-w-xl"
+            >
+              Creamos identidades visuales que{' '}
+              <span className="text-white/70">se sienten antes de entenderse</span>.
+            </motion.p>
+
+            {/* Puntos clave minimalistas */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
-              transition={{ duration: 1, delay: 0.6 }}
-              className="space-y-4 max-w-md mx-auto lg:mx-0"
+              transition={{ duration: 1, delay: 0.5 }}
+              className="space-y-4 mb-10"
             >
               <div className="flex items-start gap-3">
-                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0" />
-                <p className="text-white/60 text-base font-light">Un color dirige la atención</p>
+                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-white/40 flex-shrink-0" />
+                <p className="text-white/50 text-base font-light">Un color dirige la atención</p>
               </div>
               <div className="flex items-start gap-3">
-                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />
-                <p className="text-white/60 text-base font-light">Una forma despierta emociones</p>
+                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-white/40 flex-shrink-0" />
+                <p className="text-white/50 text-base font-light">Una forma despierta emociones</p>
               </div>
               <div className="flex items-start gap-3">
-                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0" />
-                <p className="text-white/60 text-base font-light">El orden visual guía el deseo</p>
+                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-white/40 flex-shrink-0" />
+                <p className="text-white/50 text-base font-light">El orden visual guía el deseo</p>
               </div>
             </motion.div>
 
-            {/* Badges elegantes */}
+            {/* Fórmula con iconos */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : {}}
-              transition={{ duration: 1, delay: 0.8 }}
-              className="flex flex-wrap gap-3 justify-center lg:justify-start"
+              initial={{ opacity: 0, y: 10 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="flex items-center gap-2"
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-400/20 backdrop-blur-sm">
-                <Sparkles className="w-4 h-4 text-blue-400" />
-                <span className="text-sm text-blue-300/90 font-medium">Psicología + Diseño</span>
+              <div className="flex items-center gap-2">
+                <Brain className="w-4 h-4 text-white/60" strokeWidth={1.5} />
+                <span className="text-sm text-white/60 font-light tracking-wide">Psicología</span>
               </div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-400/20 backdrop-blur-sm">
-                <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                <span className="text-sm text-cyan-300/90 font-medium">Identidades con Alma</span>
+
+              <span className="text-white/30 text-xs mx-1">×</span>
+
+              <div className="flex items-center gap-2">
+                <Palette className="w-4 h-4 text-white/60" strokeWidth={1.5} />
+                <span className="text-sm text-white/60 font-light tracking-wide">Diseño</span>
+              </div>
+
+              <span className="text-white/30 text-xs mx-1">×</span>
+
+              <div className="flex items-center gap-2">
+                <Code className="w-4 h-4 text-white/60" strokeWidth={1.5} />
+                <span className="text-sm text-white/60 font-light tracking-wide">Tecnología</span>
               </div>
             </motion.div>
           </motion.div>
 
-          {/* Right: Video 3:4 con marco premium */}
+          {/* Right: Video vertical elegante */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="relative group"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.3 }}
+            className="order-1 lg:order-2 relative"
           >
-            {/* Container con fade out elegante */}
-            <div className="relative aspect-[3/4] max-w-md mx-auto">
-              {/* Video Container */}
-              <div className="relative w-full h-full rounded-3xl overflow-hidden bg-black">
-                {/* Video - usando iframe de YouTube en HD */}
+            <div className="relative mx-auto w-full max-w-[400px]">
+              <div className="w-full aspect-[3/4] rounded-xl overflow-hidden bg-black shadow-2xl">
+                {/* YouTube Video Embed vertical */}
                 <iframe
-                  ref={videoRef}
-                  className="absolute inset-0 w-full h-full"
-                  src={`https://www.youtube.com/embed/OUsF8K7G810?autoplay=${isPlaying ? 1 : 0}&controls=1&rel=0&modestbranding=1&enablejsapi=1&hd=1`}
-                  title="Luxmania Video"
-                  frameBorder="0"
+                  src="https://www.youtube.com/embed/OUsF8K7G810?autoplay=1&mute=1&loop=1&playlist=OUsF8K7G810&controls=0&modestbranding=1&rel=0&showinfo=0"
+                  title="Luxmania - Cómo construimos marcas"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
+                  className="w-full h-full object-cover"
                 />
-
-                {/* Animación de carga mientras el video inicia */}
-                {isPlaying && (
-                  <motion.div
-                    initial={{ opacity: 1 }}
-                    animate={{ opacity: 0 }}
-                    transition={{ duration: 0.5, delay: 2 }}
-                    className="absolute inset-0 bg-black flex flex-col items-center justify-center gap-6 z-[15] pointer-events-none"
-                  >
-                    {/* Cerebro animado */}
-                    <div className="relative">
-                      {/* Círculos pulsantes tipo cerebro */}
-                      <motion.div
-                        animate={{
-                          scale: [1, 1.2, 1],
-                          opacity: [0.3, 0.6, 0.3]
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }}
-                        className="absolute inset-0 w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 blur-xl"
-                      />
-                      <motion.div
-                        animate={{
-                          rotate: 360
-                        }}
-                        transition={{
-                          duration: 3,
-                          repeat: Infinity,
-                          ease: "linear"
-                        }}
-                        className="relative w-16 h-16"
-                      >
-                        <Sparkles className="w-16 h-16 text-cyan-400" />
-                      </motion.div>
-                    </div>
-                    
-                    {/* Texto Cargando */}
-                    <motion.p
-                      animate={{ opacity: [0.5, 1, 0.5] }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                      className="text-white/80 text-lg font-light tracking-wider"
-                    >
-                      Cargando...
-                    </motion.p>
-                  </motion.div>
-                )}
-
-              {/* Fade out elegante hacia negro en los bordes */}
-              <div className="absolute inset-0 pointer-events-none z-[5]" style={{
-                background: 'radial-gradient(ellipse 85% 85% at center, transparent 50%, rgba(0,0,0,0.4) 75%, rgba(0,0,0,0.8) 100%)'
-              }} />
-
-              {/* Overlay inicial con instrucciones - se puede cerrar al hacer click */}
-              {!isPlaying && (
-                <motion.div
-                  initial={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  onClick={() => setIsPlaying(true)}
-                  className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70 backdrop-blur-sm flex flex-col items-center justify-center p-8 z-10 cursor-pointer"
-                >
-                  {/* Play Button */}
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="mb-8 w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/50"
-                  >
-                    <Play className="w-10 h-10 text-white ml-1" strokeWidth={2} fill="white" />
-                  </motion.div>
-
-                  {/* Mensaje elegante */}
-                  <div className="text-center space-y-4">
-                    <div className="flex items-center justify-center gap-3">
-                      <Volume2 className="w-6 h-6 text-cyan-400 animate-pulse" />
-                      <p className="text-white text-lg font-medium">
-                        Sube el volumen
-                      </p>
-                    </div>
-                    <p className="text-white/70 text-sm font-light max-w-xs">
-                      Dale play para descubrir qué es Luxmania
-                    </p>
-                  </div>
-
-                  {/* Indicador decorativo */}
-                  <motion.div
-                    animate={{
-                      opacity: [0.3, 0.6, 0.3],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                    className="absolute bottom-8 left-1/2 -translate-x-1/2"
-                  >
-                    <div className="flex gap-2">
-                      <div className="w-2 h-2 rounded-full bg-cyan-400/60" />
-                      <div className="w-2 h-2 rounded-full bg-blue-400/60" />
-                      <div className="w-2 h-2 rounded-full bg-indigo-400/60" />
-                    </div>
-                  </motion.div>
-                </motion.div>
-              )}
               </div>
 
-              {/* Glow effect azul sutil */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 via-cyan-400/20 to-indigo-500/20 rounded-3xl blur-3xl opacity-40 group-hover:opacity-70 transition-opacity duration-500 -z-10" />
+              {/* Badge debajo del video */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.7 }}
+                className="mt-6 flex items-center justify-center gap-3"
+              >
+                <div className="w-1 h-1 rounded-full bg-white/40" />
+                <p className="text-white/50 text-xs font-light tracking-widest uppercase">
+                  Identidades con Alma
+                </p>
+                <div className="w-1 h-1 rounded-full bg-white/40" />
+              </motion.div>
             </div>
-
-            {/* Texto elegante debajo del video */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 1 }}
-              className="mt-8 flex items-center justify-center gap-3"
-            >
-              <div className="w-1 h-1 rounded-full bg-cyan-400 animate-pulse" />
-              <p className="text-white/60 text-sm font-light tracking-wide uppercase">
-                Psicología × Diseño × Tecnología
-              </p>
-              <div className="w-1 h-1 rounded-full bg-blue-400 animate-pulse" style={{ animationDelay: '0.5s' }} />
-            </motion.div>
           </motion.div>
 
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 

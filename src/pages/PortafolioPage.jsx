@@ -251,26 +251,33 @@ const PortafolioPage = () => {
       {/* Sitios Web */}
       <WebsitesCarousel />
 
-      {/* Video Farolito - Animación pequeña con degradado en bordes */}
+      {/* Video Farolito - Animación pequeña con degradado hacia afuera */}
       <section className="relative py-12 px-6 lg:px-20">
-        <div className="max-w-2xl mx-auto relative">
-          {/* Degradado en bordes superior e inferior */}
-          <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-black via-black/60 to-transparent pointer-events-none z-10" />
-          <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none z-10" />
+        <div className="max-w-xl mx-auto relative">
+          {/* Video */}
+          <div className="relative rounded-lg overflow-hidden">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-auto"
+            >
+              <source src="/FAROLITO ANIMACION.mp4" type="video/mp4" />
+            </video>
+          </div>
           
-          {/* Degradado en bordes laterales */}
-          <div className="absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-black via-black/60 to-transparent pointer-events-none z-10" />
-          <div className="absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-black via-black/60 to-transparent pointer-events-none z-10" />
+          {/* Degradado hacia AFUERA - superior */}
+          <div className="absolute -top-20 left-0 right-0 h-32 bg-gradient-to-t from-transparent via-black/40 to-black pointer-events-none" />
           
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-auto rounded-lg"
-          >
-            <source src="/FAROLITO ANIMACION.mp4" type="video/mp4" />
-          </video>
+          {/* Degradado hacia AFUERA - inferior */}
+          <div className="absolute -bottom-20 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-black/40 to-black pointer-events-none" />
+          
+          {/* Degradado hacia AFUERA - izquierda */}
+          <div className="absolute top-0 bottom-0 -left-20 w-32 bg-gradient-to-l from-transparent via-black/40 to-black pointer-events-none" />
+          
+          {/* Degradado hacia AFUERA - derecha */}
+          <div className="absolute top-0 bottom-0 -right-20 w-32 bg-gradient-to-r from-transparent via-black/40 to-black pointer-events-none" />
         </div>
       </section>
 

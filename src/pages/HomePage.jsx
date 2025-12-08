@@ -21,14 +21,14 @@ const HomePage = () => {
       {/* Luis Virrueta Intro: Compact elegant section - BEFORE Hero stats */}
       <LuisViruettaIntro />
       
-      {/* Por Qué LUXMANIA: El diferenciador psicológico - MOVIDO AQUÍ */}
-      <WhyLuxmania />
+      {/* Luxmania Video Section: ¿Qué es Luxmania? Con video - MOVIDO AQUÍ */}
+      <LuxmaniaVideoSection />
       
       {/* Brand CTA: Llamado a acción principal - Construye tu marca */}
       <BrandCTA />
       
-      {/* Luxmania Video Section: ¿Qué es Luxmania? Con video vertical */}
-      <LuxmaniaVideoSection />
+      {/* Por Qué LUXMANIA: El diferenciador psicológico */}
+      <WhyLuxmania />
       
       {/* Individual Services: Servicios a medida en cuadros elegantes */}
       <IndividualServices />

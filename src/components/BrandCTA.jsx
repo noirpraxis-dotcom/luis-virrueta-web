@@ -199,19 +199,16 @@ const BrandCTA = () => {
                     </motion.div>
                   )}
 
-                  {/* Video Local con Loop Ultra Suavizado - Sin trabas */}
-                  <video
-                    ref={videoRef}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    preload="auto"
-                    onLoadedData={() => setVideoLoaded(true)}
-                    className="w-full h-full object-cover scale-[1.01]"
-                  >
-                    <source src="/faro video.mp4" type="video/mp4" />
-                  </video>
+                  {/* YouTube Video Embed - Sitios Web */}
+                  <iframe
+                    src="https://www.youtube.com/embed/-Swi2UlM4JI?autoplay=1&mute=1&loop=1&playlist=-Swi2UlM4JI&controls=0&modestbranding=1&rel=0&showinfo=0"
+                    title="Sitios Web - Luxmania"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    onLoad={() => setVideoLoaded(true)}
+                    className="w-full h-full object-cover scale-[1.25]"
+                    style={{ transform: 'scale(1.25)' }}
+                  />
 
 
                 </div>
