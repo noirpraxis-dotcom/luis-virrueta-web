@@ -39,9 +39,11 @@ const LuisViruettaIntro = () => {
               
               {/* Degradados negros MÁS AMPLIOS en los bordes para transición muy sutil */}
               <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-transparent to-black/90" />
-              <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black/60" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
               {/* Fade extra en la parte superior */}
               <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black to-transparent" />
+              {/* Fade extra en la parte inferior */}
+              <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
               
               {/* Overlay gradient para que el texto se vea bien */}
               <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-black/40" />
@@ -313,6 +315,79 @@ const LuisViruettaIntro = () => {
               />
             </motion.div>
 
+            {/* CTA Button - Pro cinematográfico con reflejo continuo */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="mt-8"
+            >
+              <Link to="/sobre-mi">
+                <motion.button
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="group relative overflow-hidden border border-white/30 hover:border-white/60 px-8 py-4 rounded-full transition-all duration-500"
+                >
+                  {/* Degradado animado morado/azul de fondo */}
+                  <motion.div
+                    animate={{
+                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    className="absolute inset-0"
+                    style={{
+                      background: 'linear-gradient(135deg, #a855f7 0%, #3b82f6 25%, #8b5cf6 50%, #6366f1 75%, #a855f7 100%)',
+                      backgroundSize: '200% 200%',
+                      opacity: 0.1
+                    }}
+                  />
+
+                  {/* Reflejo continuo cinematográfico */}
+                  <motion.div
+                    animate={{
+                      x: ['-200%', '200%']
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "linear",
+                      repeatDelay: 1
+                    }}
+                    className="absolute inset-0 w-1/3"
+                    style={{
+                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)',
+                      transform: 'skewX(-20deg)'
+                    }}
+                  />
+
+                  {/* Contenido del botón */}
+                  <span className="relative flex items-center gap-3">
+                    <span className="text-white/80 group-hover:text-white font-light text-base tracking-wide transition-colors">
+                      Conocer más
+                    </span>
+                    <motion.div
+                      whileHover={{ x: 3 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <ArrowRight className="w-5 h-5 text-white/70 group-hover:text-white transition-colors" strokeWidth={1.5} />
+                    </motion.div>
+                  </span>
+
+                  {/* Glow sutil en hover */}
+                  <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" 
+                    style={{
+                      boxShadow: '0 0 20px rgba(168, 85, 247, 0.3), 0 0 40px rgba(59, 130, 246, 0.2)'
+                    }}
+                  />
+                </motion.button>
+              </Link>
+            </motion.div>
+
             </div>
             {/* Fin del contenedor con video background */}
 
@@ -367,28 +442,6 @@ const LuisViruettaIntro = () => {
             </div>
           </motion.div>
         </div>
-
-        {/* CTA Button centrado abajo */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex justify-center mt-12"
-        >
-          <Link to="/sobre-mi">
-            <motion.button
-              whileHover={{ scale: 1.02, x: 5 }}
-              whileTap={{ scale: 0.98 }}
-              className="group relative bg-transparent border border-white/30 hover:border-white/60 px-8 py-3 rounded-full text-white font-light text-base tracking-wide transition-all duration-500"
-            >
-              <span className="flex items-center gap-3">
-                <span className="text-white/70 group-hover:text-white transition-colors">Conocer más</span>
-                <ArrowRight className="w-4 h-4 text-white/60 group-hover:text-white group-hover:translate-x-1 transition-all" strokeWidth={1.5} />
-              </span>
-            </motion.button>
-          </Link>
-        </motion.div>
       </div>
 
       {/* Gradient fade to black at bottom */}
