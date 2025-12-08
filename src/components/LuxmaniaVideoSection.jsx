@@ -1,12 +1,25 @@
-import { motion, useInView } from 'framer-motion'
-import { useRef, useState } from 'react'
-import { Brain, Palette, Code, Play, Volume2, Gem } from 'lucide-react'
+import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { useRef, useState, useEffect } from 'react'
+import { Brain, Palette, Code, Play, Volume2, Gem, ArrowRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const LuxmaniaVideoSection = () => {
   const ref = useRef(null)
   const videoRef = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
   const [isPlaying, setIsPlaying] = useState(false)
+  
+  // Array de palabras que van rotando
+  const words = ['emociones', 'experiencias', 'sensaciones', 'reacciones', 'deseos', 'conexiones']
+  const [currentWordIndex, setCurrentWordIndex] = useState(0)
+
+  // Cambiar palabra cada 2.5 segundos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentWordIndex((prev) => (prev + 1) % words.length)
+    }, 2500)
+    return () => clearInterval(interval)
+  }, [])
 
   const handlePlay = () => {
     setIsPlaying(true)
@@ -21,21 +34,59 @@ const LuxmaniaVideoSection = () => {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 lg:gap-16 items-center">
           
-          {/* Left: Texto elegante y minimalista */}
+          {/* Left: Texto elegante con video background - PREMIUM */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-            className="order-2 lg:order-1 flex flex-col justify-center"
+            className="order-2 lg:order-1 flex flex-col justify-center relative"
           >
+            {/* Video background premium - IGUAL A LUIS VIRRUETA */}
+            <div className="absolute inset-0 overflow-hidden rounded-xl">
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover opacity-70"
+                style={{
+                  filter: 'brightness(0.9)',
+                }}
+              >
+                <source src="/LUXMANIA SECCION.mp4" type="video/mp4" />
+              </video>
+              
+              {/* Degradados negros en los bordes para transición sutil */}
+              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-transparent to-black/90" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
+              <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-black/40" />
+            </div>
+
+            {/* Contenido encima del video */}
+            <div className="relative z-10 p-8 lg:p-12">
+            {/* Eyebrow - ¿Qué hacemos? */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="inline-flex items-center gap-3 mb-8 px-4 py-2 border border-white/20 rounded-full bg-white/5 backdrop-blur-sm w-fit"
+            >
+              <Gem className="w-4 h-4 text-white/60" strokeWidth={1.5} />
+              <p className="text-white/70 text-xs font-light uppercase tracking-[0.25em]">
+                ¿Qué es Luxmania?
+              </p>
+            </motion.div>
+
             {/* Título principal - LUXMANIA con L y última A brillosas */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-6xl lg:text-8xl font-light text-white mb-6 tracking-[0.08em] font-display leading-[1.05]"
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="text-5xl lg:text-7xl font-light text-white mb-6 tracking-[0.15em] font-display leading-[1.05]"
             >
               <span className="inline-block relative">
                 {/* L brillosa */}
@@ -77,26 +128,44 @@ const LuxmaniaVideoSection = () => {
               </span>
             </motion.h2>
 
-            {/* Pregunta pequeña */}
+            {/* Subtítulo con animación de palabras rotando */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-white/50 text-sm lg:text-base font-light uppercase tracking-[0.3em] mb-8"
+              transition={{ duration: 0.8, delay: 0.35 }}
+              className="text-white/50 text-sm lg:text-base font-light uppercase tracking-[0.3em] mb-6"
             >
-              ¿Cómo construimos marcas?
+              Psicología × Diseño × IA
             </motion.p>
 
-            {/* Mensaje central */}
-            <motion.p
+            {/* Mensaje central con palabra animada - MEJORADO */}
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-white/70 text-xl lg:text-2xl font-extralight tracking-wide mb-4 max-w-xl leading-relaxed"
+              className="text-xl lg:text-2xl font-extralight tracking-wide mb-4 max-w-xl leading-relaxed flex items-baseline gap-2"
             >
-              Diseñamos emociones.
-            </motion.p>
+              <span className="text-white/70">Diseñamos</span>
+              <div className="relative min-w-[180px] lg:min-w-[220px]">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={currentWordIndex}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -20, opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute left-0 top-0 text-white font-light"
+                    style={{
+                      textShadow: '0 0 30px rgba(255, 255, 255, 0.3)'
+                    }}
+                  >
+                    {words[currentWordIndex]}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
+            </motion.div>
 
+            {/* Descripción complementaria */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -107,63 +176,229 @@ const LuxmaniaVideoSection = () => {
               <span className="text-white/70">se sienten antes de entenderse</span>.
             </motion.p>
 
-            {/* Puntos clave minimalistas - versión original */}
+            {/* Badges con degradado animado - IGUAL A LUIS VIRRUETA */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : {}}
-              transition={{ duration: 1, delay: 0.5 }}
-              className="space-y-4 mb-10"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="flex items-center gap-2 mb-10"
             >
-              <div className="flex items-start gap-3">
-                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-white/40 flex-shrink-0" />
-                <p className="text-white/50 text-base font-light">Un color dirige la atención</p>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-white/40 flex-shrink-0" />
-                <p className="text-white/50 text-base font-light">Una forma despierta emociones</p>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-white/40 flex-shrink-0" />
-                <p className="text-white/50 text-base font-light">El orden visual guía el deseo</p>
-              </div>
+              {/* Badge Psicología */}
+              <motion.div
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="group relative overflow-hidden px-4 py-2.5 rounded-full cursor-pointer"
+              >
+                <motion.div
+                  animate={{
+                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                  className="absolute inset-0"
+                  style={{
+                    background: 'linear-gradient(135deg, #a855f7 0%, #3b82f6 25%, #8b5cf6 50%, #6366f1 75%, #a855f7 100%)',
+                    backgroundSize: '200% 200%',
+                    opacity: 0.15
+                  }}
+                />
+                <div className="relative flex items-center gap-2">
+                  <Brain className="w-4 h-4 text-white/70" strokeWidth={1.5} />
+                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Psicología</span>
+                </div>
+              </motion.div>
+
+              <span className="text-white/30 text-xs mx-1">+</span>
+
+              {/* Badge Diseño */}
+              <motion.div
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="group relative overflow-hidden px-4 py-2.5 rounded-full cursor-pointer"
+              >
+                <motion.div
+                  animate={{
+                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                  }}
+                  transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "linear",
+                    delay: 0.5
+                  }}
+                  className="absolute inset-0"
+                  style={{
+                    background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 25%, #3b82f6 50%, #8b5cf6 75%, #6366f1 100%)',
+                    backgroundSize: '200% 200%',
+                    opacity: 0.15
+                  }}
+                />
+                <div className="relative flex items-center gap-2">
+                  <Palette className="w-4 h-4 text-white/70" strokeWidth={1.5} />
+                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Diseño</span>
+                </div>
+              </motion.div>
+
+              <span className="text-white/30 text-xs mx-1">+</span>
+
+              {/* Badge Tecnología */}
+              <motion.div
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="group relative overflow-hidden px-4 py-2.5 rounded-full cursor-pointer"
+              >
+                <motion.div
+                  animate={{
+                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                  }}
+                  transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: "linear",
+                    delay: 1
+                  }}
+                  className="absolute inset-0"
+                  style={{
+                    background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 25%, #a855f7 50%, #3b82f6 75%, #8b5cf6 100%)',
+                    backgroundSize: '200% 200%',
+                    opacity: 0.15
+                  }}
+                />
+                <div className="relative flex items-center gap-2">
+                  <Code className="w-4 h-4 text-white/70" strokeWidth={1.5} />
+                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Tecnología</span>
+                </div>
+              </motion.div>
             </motion.div>
 
-            {/* Fórmula con iconos */}
+            {/* Quote sobre percepción - Minimal */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.55 }}
+              className="relative mb-10"
+            >
+              <div className="absolute -left-4 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-white/20 to-transparent" />
+              
+              <div className="relative pl-8 space-y-1">
+                <Palette className="absolute left-0 top-2 w-5 h-5 text-white/40" strokeWidth={1.5} />
+
+                <p className="text-white/60 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
+                  Sabemos{' '}
+                  <span className="text-white font-normal">
+                    qué capta la atención
+                  </span>.
+                </p>
+
+                <p className="text-white/60 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
+                  Sabemos{' '}
+                  <span className="text-white font-normal">
+                    qué despierta emociones
+                  </span>.
+                </p>
+
+                <p className="text-white/60 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
+                  Sabemos{' '}
+                  <span className="text-white font-normal">
+                    qué impulsa las decisiones
+                  </span>.
+                </p>
+              </div>
+
+              <motion.div 
+                className="mt-4 h-[1px] bg-gradient-to-r from-white/20 to-transparent max-w-md"
+                initial={{ scaleX: 0 }}
+                animate={isInView ? { scaleX: 1 } : {}}
+                transition={{ duration: 1, delay: 0.8 }}
+                style={{ transformOrigin: 'left' }}
+              />
+            </motion.div>
+
+            {/* CTA Button - Pro cinematográfico con reflejo continuo */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="flex items-center gap-2"
+              className="mt-8"
             >
-              <div className="flex items-center gap-2">
-                <Brain className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                <span className="text-sm text-white/60 font-light tracking-wide">Psicología</span>
-              </div>
+              <Link to="/about">
+                <motion.button
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="group relative overflow-hidden border border-white/30 hover:border-white/60 px-8 py-4 rounded-full transition-all duration-500"
+                >
+                  {/* Degradado animado de fondo */}
+                  <motion.div
+                    animate={{
+                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    className="absolute inset-0"
+                    style={{
+                      background: 'linear-gradient(135deg, #a855f7 0%, #3b82f6 25%, #8b5cf6 50%, #6366f1 75%, #a855f7 100%)',
+                      backgroundSize: '200% 200%',
+                      opacity: 0.1
+                    }}
+                  />
 
-              <span className="text-white/30 text-xs mx-1">×</span>
+                  {/* Reflejo continuo cinematográfico */}
+                  <motion.div
+                    animate={{
+                      x: ['-200%', '200%']
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "linear",
+                      repeatDelay: 1
+                    }}
+                    className="absolute inset-0 w-1/3"
+                    style={{
+                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)',
+                      transform: 'skewX(-20deg)'
+                    }}
+                  />
 
-              <div className="flex items-center gap-2">
-                <Palette className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                <span className="text-sm text-white/60 font-light tracking-wide">Diseño</span>
-              </div>
+                  <span className="relative flex items-center gap-3">
+                    <span className="text-white/80 group-hover:text-white font-light text-base tracking-wide transition-colors">
+                      Descubre nuestro método
+                    </span>
+                    <motion.div
+                      whileHover={{ x: 3 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <ArrowRight className="w-5 h-5 text-white/70 group-hover:text-white transition-colors" strokeWidth={1.5} />
+                    </motion.div>
+                  </span>
 
-              <span className="text-white/30 text-xs mx-1">×</span>
-
-              <div className="flex items-center gap-2">
-                <Code className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                <span className="text-sm text-white/60 font-light tracking-wide">Tecnología</span>
-              </div>
+                  <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" 
+                    style={{
+                      boxShadow: '0 0 20px rgba(168, 85, 247, 0.3), 0 0 40px rgba(59, 130, 246, 0.2)'
+                    }}
+                  />
+                </motion.button>
+              </Link>
             </motion.div>
+
+            </div>
+            {/* Fin del contenedor con video background */}
           </motion.div>
 
-          {/* Right: Video vertical con play button funcional - ALINEADO CON TÍTULO */}
+          {/* Right: Video vertical con play button funcional */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.3 }}
-            className="order-1 lg:order-2 relative flex items-start justify-center lg:pt-16"
+            className="order-1 lg:order-2 relative"
           >
-            <div className="relative mx-auto w-full max-w-[400px]">
+            <div className="relative mx-auto w-full max-w-[500px]">
               <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-black shadow-2xl">
                 {/* YouTube iframe - se actualiza el src cuando se hace play */}
                 <iframe
@@ -227,17 +462,27 @@ const LuxmaniaVideoSection = () => {
                 )}
               </div>
 
-              {/* Badge debajo del video - centrado y más elegante */}
+              {/* Floating badge minimal */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.7 }}
-                className="mt-6 flex justify-center"
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="absolute bottom-[-20px] left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm border border-white/20 px-5 py-2 rounded-full shadow-2xl"
               >
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm border border-white/20 rounded-full">
-                  <Gem className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                  <span className="text-xs text-white/70 font-light tracking-wide uppercase">
-                    Diseño Premium
+                <div className="flex items-center justify-center gap-2">
+                  <Brain className="w-4 h-4 text-white/60" strokeWidth={1.5} />
+                  <span className="text-white/80 text-xs font-light tracking-wider whitespace-nowrap">
+                    Psych
+                  </span>
+                  <span className="text-white/30 text-xs">×</span>
+                  <Palette className="w-4 h-4 text-white/60" strokeWidth={1.5} />
+                  <span className="text-white/80 text-xs font-light tracking-wider whitespace-nowrap">
+                    Design
+                  </span>
+                  <span className="text-white/30 text-xs">×</span>
+                  <Code className="w-4 h-4 text-white/60" strokeWidth={1.5} />
+                  <span className="text-white/80 text-xs font-light tracking-wider whitespace-nowrap">
+                    AI
                   </span>
                 </div>
               </motion.div>
@@ -246,6 +491,9 @@ const LuxmaniaVideoSection = () => {
 
         </div>
       </div>
+
+      {/* Gradient fade to black at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent via-black/30 to-black pointer-events-none" />
     </section>
   )
 }
