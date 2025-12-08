@@ -9,6 +9,7 @@ import HomePage from './pages/HomePage'
 import PhilosophyPage from './pages/PhilosophyPage'
 import ServiciosPage from './pages/ServiciosPage'
 import IdentidadMarcaPage from './pages/IdentidadMarcaPage'
+import ArquetiposPage from './pages/ArquetiposPage'
 import AppsPremiumPage from './pages/AppsPremiumPage'
 import ContenidoDigitalPage from './pages/ContenidoDigitalPage'
 import AvataresIAPage from './pages/AvataresIAPage'
@@ -78,6 +79,11 @@ const AppContent = () => {
             {/* Páginas individuales de servicios */}
             <Route path="/servicios/identidad-marca" element={
               <IdentidadMarcaPage />
+            } />
+
+            {/* Página Arquetipos */}
+            <Route path="/identidad-de-marca" element={
+              <ArquetiposPage />
             } />
 
             <Route path="/servicios/apps-premium" element={

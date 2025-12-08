@@ -77,14 +77,14 @@ const BrandCTA = () => {
           </motion.p>
         </div>
 
-        {/* Video Grande y Centrado - Con bordes redondeados elegantes */}
+        {/* Video Grande y Centrado - EXPANDIDO para cubrir todo el ancho */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.4 }}
-          className="relative mb-8"
+          className="relative mb-8 -mx-6 lg:-mx-12"
         >
-          <div className="relative mx-auto w-full max-w-5xl">
+          <div className="relative w-full">
             {/* Glow sutil alrededor del video */}
             <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-purple-500/20 rounded-3xl blur-xl opacity-50" />
             
