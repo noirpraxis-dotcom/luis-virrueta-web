@@ -330,9 +330,9 @@ const LuxmaniaVideoSection = () => {
                 <motion.button
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className="group relative overflow-hidden px-8 py-4 rounded-full backdrop-blur-sm bg-white/5"
+                  className="group relative overflow-hidden px-8 py-4 rounded-full backdrop-blur-sm"
                 >
-                  {/* Degradado animado morado/azul de fondo */}
+                  {/* Degradado animado morado/azul de fondo - MÁS LUMINOSO */}
                   <motion.div
                     animate={{
                       backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
@@ -346,14 +346,14 @@ const LuxmaniaVideoSection = () => {
                     style={{
                       background: 'linear-gradient(135deg, #a855f7 0%, #3b82f6 25%, #8b5cf6 50%, #6366f1 75%, #a855f7 100%)',
                       backgroundSize: '200% 200%',
-                      opacity: 0.2
+                      opacity: 0.4
                     }}
                   />
 
-                  {/* Glow exterior más sutil y extendido */}
+                  {/* Glow exterior más visible */}
                   <motion.div
                     animate={{
-                      opacity: [0.2, 0.4, 0.2],
+                      opacity: [0.3, 0.6, 0.3],
                       scale: [1, 1.15, 1]
                     }}
                     transition={{
@@ -364,12 +364,12 @@ const LuxmaniaVideoSection = () => {
                     className="absolute -inset-4 rounded-full blur-3xl"
                     style={{
                       background: 'linear-gradient(135deg, #a855f7, #3b82f6, #8b5cf6)',
-                      opacity: 0.3
+                      opacity: 0.4
                     }}
                   />
 
                   <span className="relative flex items-center gap-3">
-                    <span className="text-white/90 group-hover:text-white font-light text-base tracking-wide transition-colors">
+                    <span className="text-white font-light text-base tracking-wide">
                       Descubre nuestro método
                     </span>
                     {/* Flecha dentro de círculo */}
@@ -378,7 +378,7 @@ const LuxmaniaVideoSection = () => {
                       transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                       className="w-8 h-8 rounded-full border border-white/30 flex items-center justify-center group-hover:border-white/50 transition-colors"
                     >
-                      <ArrowRight className="w-4 h-4 text-white/80 group-hover:text-white transition-colors" strokeWidth={1.5} />
+                      <ArrowRight className="w-4 h-4 text-white transition-colors" strokeWidth={1.5} />
                     </motion.div>
                   </span>
                 </motion.button>
