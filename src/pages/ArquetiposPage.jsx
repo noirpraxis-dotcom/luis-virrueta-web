@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { Brain, Sparkles, Users, Heart, Crown, Zap, Shield, Compass, ArrowRight } from 'lucide-react'
+import { Brain, Sparkles, Users, Heart, Crown, Zap, Shield, Compass, ArrowRight, Palette, Code } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const ArquetiposPage = () => {
@@ -10,7 +10,7 @@ const ArquetiposPage = () => {
   const contentRef = useRef(null)
   const isContentInView = useInView(contentRef, { once: true, amount: 0.2 })
 
-  // Arquetipos principales
+  // 12 Arquetipos completos
   const arquetipos = [
     {
       icon: Crown,
@@ -71,73 +71,141 @@ const ArquetiposPage = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28">
       
-      {/* Hero Section - Elegante como Portafolio */}
-      <section ref={heroRef} className="relative py-24 lg:py-40 px-6 lg:px-20 overflow-hidden">
-        {/* Orbs de fondo */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Hero Section - EXACTO como Portafolio */}
+      <section ref={heroRef} className="relative py-20 lg:py-40 px-6 lg:px-20 overflow-hidden">
+        {/* Video de fondo - Expandido horizontalmente, cubriendo incluso el header */}
+        <div className="absolute inset-0 -top-28 -bottom-16 overflow-hidden pointer-events-none z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-50"
+            style={{
+              minWidth: '100vw',
+              minHeight: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center'
+            }}
+          >
+            <source src="/HEADER ARQUETIPOS.mp4" type="video/mp4" />
+            Tu navegador no soporta video HTML5.
+          </video>
+          {/* Overlay para que el texto sea legible */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+        </div>
+
+        {/* Gradient orbs (ahora encima del video) */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl" />
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-fuchsia-600/10 rounded-full blur-3xl" />
         </div>
 
-        <div className="relative max-w-6xl mx-auto">
-          {/* Eyebrow */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8 }}
-            className="flex justify-center mb-8"
-          >
-            <div className="inline-flex items-center gap-3 px-4 py-2 border border-white/20 rounded-full bg-white/5 backdrop-blur-sm">
-              <Sparkles className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-              <p className="text-white/70 text-xs font-light uppercase tracking-[0.25em]">
-                Psicología de Marca
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Título */}
-          <motion.div
+        <div className="relative z-20 max-w-7xl mx-auto">
+          {/* Title - Más elegante y profesional */}
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="text-center mb-12"
+            transition={{ duration: 1 }}
+            className="text-6xl lg:text-9xl font-bold text-center mb-8 font-display relative"
+            style={{ 
+              letterSpacing: '0.08em',
+              fontWeight: 300,
+              textTransform: 'uppercase'
+            }}
           >
-            <h1 className="text-6xl lg:text-8xl font-light text-white mb-6 tracking-[0.15em] font-display leading-[1.05]">
-              ARQUETIPOS
-            </h1>
-            <p className="text-white/50 text-base lg:text-lg font-light uppercase tracking-[0.3em] mb-8">
-              La Identidad Profunda de tu Marca
-            </p>
-            
-            <div className="h-px bg-gradient-to-r from-transparent via-purple-500/40 to-transparent w-80 mx-auto" />
-          </motion.div>
+            <span className="relative inline-block">
+              {/* A con degradado */}
+              <span className="relative">
+                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>A</span>
+                <span className="relative text-white">A</span>
+              </span>
+              {/* rquetipo */}
+              <span className="text-white">rquetipo</span>
+              {/* s con degradado */}
+              <span className="relative">
+                <span className="absolute inset-0 bg-gradient-to-tl from-fuchsia-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>s</span>
+                <span className="relative text-white">s</span>
+              </span>
+            </span>
+          </motion.h1>
 
-          {/* Descripción Hero */}
+          {/* Subtitle con iconos elegantes */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-center max-w-3xl mx-auto"
+            transition={{ duration: 1, delay: 0.4 }}
+            className="flex flex-col items-center gap-6 mb-12"
           >
-            <p className="text-white/70 text-xl lg:text-2xl font-extralight leading-relaxed mb-6">
-              Los arquetipos son{' '}
-              <motion.span
-                className="text-white font-light"
-                style={{
-                  textShadow: '0 0 30px rgba(255, 255, 255, 0.3)'
-                }}
-              >
-                patrones universales
-              </motion.span>
-              {' '}que residen en el inconsciente colectivo.
-            </p>
-            <p className="text-white/50 text-base lg:text-lg font-light leading-relaxed">
-              Cada marca exitosa encarna un arquetipo que resuena profundamente con su audiencia. 
-              No vendes productos, vendes{' '}
-              <span className="text-white/80">identidad, pertenencia y significado</span>.
-            </p>
+            {/* Identidad Profunda - Encerrado en cuadro */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="relative px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5"
+            >
+              <div className="flex items-center gap-3">
+                <Brain className="w-4 h-4 text-white/60" strokeWidth={1.5} />
+                <span className="text-sm lg:text-base text-white/80 font-light tracking-wider uppercase">
+                  Identidad Profunda
+                </span>
+              </div>
+            </motion.div>
+
+            {/* Fórmula con iconos */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="flex items-center gap-3 lg:gap-4 flex-wrap justify-center"
+            >
+              {/* Psicología */}
+              <div className="flex items-center gap-2">
+                <Brain className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+                <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
+                  Psicología
+                </span>
+              </div>
+
+              <span className="text-white/40 text-xs">+</span>
+
+              {/* Diseño */}
+              <div className="flex items-center gap-2">
+                <Palette className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+                <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
+                  Diseño
+                </span>
+              </div>
+
+              <span className="text-white/40 text-xs">+</span>
+
+              {/* Tecnología */}
+              <div className="flex items-center gap-2">
+                <Code className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+                <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
+                  Tecnología
+                </span>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Línea con efecto desde el centro expandiéndose */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={isHeroInView ? { opacity: 1 } : {}}
+            transition={{ duration: 1, delay: 0.8 }}
+            className="relative h-px mx-auto w-96 overflow-hidden"
+          >
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={isHeroInView ? { scaleX: 1 } : {}}
+              transition={{ duration: 1.2, delay: 0.9, ease: [0.76, 0, 0.24, 1] }}
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent"
+              style={{ transformOrigin: 'center' }}
+            />
           </motion.div>
         </div>
       </section>
