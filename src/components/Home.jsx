@@ -18,14 +18,17 @@ const Home = () => {
         autoPlay
         loop
         muted
-        playsInline
+        playsInLine
         className="absolute inset-0 w-full h-full object-cover"
       >
         <source src="/HERO HOME.mp4" type="video/mp4" />
       </video>
 
+      {/* Degradado sutil en la parte inferior para transición suave */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70" />
+
       {/* Overlay oscuro cinematográfico - Más transparente */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
 
       {/* Orbs sutiles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

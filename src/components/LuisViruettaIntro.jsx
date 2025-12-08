@@ -22,23 +22,29 @@ const LuisViruettaIntro = () => {
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
             className="order-2 lg:order-1 flex flex-col justify-center relative"
           >
-            {/* Video background solo en esta área - premium */}
+            {/* Video background solo en esta área - premium y MÁS VISIBLE */}
             <div className="absolute inset-0 overflow-hidden rounded-xl">
               <video
                 autoPlay
                 loop
                 muted
                 playsInline
-                className="absolute inset-0 w-full h-full object-cover opacity-30"
+                className="absolute inset-0 w-full h-full object-cover opacity-70"
                 style={{
-                  filter: 'blur(1px) brightness(0.7)',
+                  filter: 'brightness(0.9)',
                 }}
               >
                 <source src="/LUIS VIRRUETA SECCION.mp4" type="video/mp4" />
               </video>
               
+              {/* Degradados negros MÁS AMPLIOS en los bordes para transición muy sutil */}
+              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-transparent to-black/90" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black/60" />
+              {/* Fade extra en la parte superior */}
+              <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black to-transparent" />
+              
               {/* Overlay gradient para que el texto se vea bien */}
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/70 to-black/60" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-black/40" />
             </div>
 
             {/* Contenido encima del video */}
@@ -170,43 +176,96 @@ const LuisViruettaIntro = () => {
               transition={{ duration: 0.8, delay: 0.5 }}
               className="flex items-center gap-2 mb-10"
             >
-              {/* Badge Psicología */}
+              {/* Badge Psicología con degradado animado morado/azul */}
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden px-4 py-2.5 rounded-full bg-white/[0.03] border border-white/20 cursor-pointer"
+                className="group relative overflow-hidden px-4 py-2.5 rounded-full cursor-pointer"
               >
+                {/* Degradado animado morado/azul de fondo */}
+                <motion.div
+                  animate={{
+                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                  className="absolute inset-0"
+                  style={{
+                    background: 'linear-gradient(135deg, #a855f7 0%, #3b82f6 25%, #8b5cf6 50%, #6366f1 75%, #a855f7 100%)',
+                    backgroundSize: '200% 200%',
+                    opacity: 0.15
+                  }}
+                />
                 <div className="relative flex items-center gap-2">
-                  <Brain className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                  <span className="text-white/70 group-hover:text-white text-sm font-light transition-colors tracking-wide">Psicología</span>
+                  <Brain className="w-4 h-4 text-white/70" strokeWidth={1.5} />
+                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Psicología</span>
                 </div>
               </motion.div>
 
               <span className="text-white/30 text-xs mx-1">+</span>
 
-              {/* Badge Diseño */}
+              {/* Badge Diseño con degradado animado morado/azul */}
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden px-4 py-2.5 rounded-full bg-white/[0.03] border border-white/20 cursor-pointer"
+                className="group relative overflow-hidden px-4 py-2.5 rounded-full cursor-pointer"
               >
+                {/* Degradado animado morado/azul de fondo */}
+                <motion.div
+                  animate={{
+                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                  }}
+                  transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "linear",
+                    delay: 0.5
+                  }}
+                  className="absolute inset-0"
+                  style={{
+                    background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 25%, #3b82f6 50%, #8b5cf6 75%, #6366f1 100%)',
+                    backgroundSize: '200% 200%',
+                    opacity: 0.15
+                  }}
+                />
                 <div className="relative flex items-center gap-2">
-                  <Palette className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                  <span className="text-white/70 group-hover:text-white text-sm font-light transition-colors tracking-wide">Diseño</span>
+                  <Palette className="w-4 h-4 text-white/70" strokeWidth={1.5} />
+                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Diseño</span>
                 </div>
               </motion.div>
 
               <span className="text-white/30 text-xs mx-1">+</span>
 
-              {/* Badge Tecnología */}
+              {/* Badge Tecnología con degradado animado morado/azul */}
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden px-4 py-2.5 rounded-full bg-white/[0.03] border border-white/20 cursor-pointer"
+                className="group relative overflow-hidden px-4 py-2.5 rounded-full cursor-pointer"
               >
+                {/* Degradado animado morado/azul de fondo */}
+                <motion.div
+                  animate={{
+                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                  }}
+                  transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: "linear",
+                    delay: 1
+                  }}
+                  className="absolute inset-0"
+                  style={{
+                    background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 25%, #a855f7 50%, #3b82f6 75%, #8b5cf6 100%)',
+                    backgroundSize: '200% 200%',
+                    opacity: 0.15
+                  }}
+                />
                 <div className="relative flex items-center gap-2">
-                  <Code className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                  <span className="text-white/70 group-hover:text-white text-sm font-light transition-colors tracking-wide">Tecnología</span>
+                  <Code className="w-4 h-4 text-white/70" strokeWidth={1.5} />
+                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Tecnología</span>
                 </div>
               </motion.div>
             </motion.div>
