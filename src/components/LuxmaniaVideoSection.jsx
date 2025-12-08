@@ -58,10 +58,11 @@ const LuxmaniaVideoSection = () => {
                 <source src="/LUXMANIA HOME.mp4" type="video/mp4" />
               </video>
               
-              {/* Degradados premium para legibilidad */}
+              {/* Degradados premium para legibilidad - Con derecha */}
               <div className="absolute inset-0 bg-black/30" />
               <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
+              <div className="absolute top-0 bottom-0 right-0 w-32 bg-gradient-to-l from-black to-transparent" />
             </div>
 
             {/* Contenido encima del video */}
