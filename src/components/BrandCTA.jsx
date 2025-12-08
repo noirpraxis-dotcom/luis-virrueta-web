@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { ArrowRight, MessageCircle, Brain } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
@@ -8,6 +8,23 @@ const BrandCTA = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
   const [videoLoaded, setVideoLoaded] = useState(false)
+  const videoRef = useRef(null)
+  
+  // Smooth loop - reinicia antes del final para evitar traba visual
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    
+    const handleTimeUpdate = () => {
+      // Reinicia 0.2 segundos antes del final para loop suave
+      if (video.duration - video.currentTime < 0.2) {
+        video.currentTime = 0
+      }
+    }
+    
+    video.addEventListener('timeupdate', handleTimeUpdate)
+    return () => video.removeEventListener('timeupdate', handleTimeUpdate)
+  }, [])
 
   return (
     <section 
@@ -169,15 +186,19 @@ const BrandCTA = () => {
                     </motion.div>
                   )}
 
-                  {/* YouTube Video Embed */}
-                  <iframe
-                    src="https://www.youtube.com/embed/-Swi2UlM4JI?autoplay=1&mute=1&loop=1&playlist=-Swi2UlM4JI&controls=0&modestbranding=1&rel=0&showinfo=0"
-                    title="Nuestro Trabajo"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    onLoad={() => setVideoLoaded(true)}
+                  {/* Video Local con Loop Ultra Suavizado - Sin trabas */}
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="auto"
+                    onLoadedData={() => setVideoLoaded(true)}
                     className="w-full h-full object-cover scale-[1.01]"
-                  />
+                  >
+                    <source src="/faro video.mp4" type="video/mp4" />
+                  </video>
 
                   {/* Badge premium dentro del video - inferior derecho */}
                   <motion.div
