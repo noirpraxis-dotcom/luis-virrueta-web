@@ -142,7 +142,7 @@ const LuxmaniaVideoSection = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.3 }}
-            className="order-1 lg:order-2 relative flex items-start justify-center lg:pt-0"
+            className="order-1 lg:order-2 relative flex items-start justify-center lg:pt-16"
           >
             <div className="relative mx-auto w-full max-w-[400px]">
               <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-black shadow-2xl">
