@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { ArrowRight, Sparkles, Code, Palette } from 'lucide-react'
+import { ArrowRight, Sparkles, Code, Palette, Brain } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const BrandCTA = () => {
@@ -77,7 +77,7 @@ const BrandCTA = () => {
           </motion.p>
         </div>
 
-        {/* Video Grande y Centrado */}
+        {/* Video Grande y Centrado - Con bordes redondeados elegantes */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
@@ -85,7 +85,10 @@ const BrandCTA = () => {
           className="relative mb-8"
         >
           <div className="relative mx-auto w-full max-w-5xl">
-            <div className="w-full rounded-2xl overflow-hidden bg-black shadow-2xl">
+            {/* Glow sutil alrededor del video */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-purple-500/20 rounded-3xl blur-xl opacity-50" />
+            
+            <div className="relative w-full rounded-3xl overflow-hidden bg-black shadow-2xl border border-white/10">
               <iframe
                 src="https://www.youtube.com/embed/-Swi2UlM4JI?autoplay=1&mute=1&loop=1&playlist=-Swi2UlM4JI&controls=0&modestbranding=1&rel=0&showinfo=0"
                 title="Muestra de Sitios Web"
@@ -112,17 +115,18 @@ const BrandCTA = () => {
           </div>
         </motion.div>
 
-        {/* Chips abajo con la info - Más elegantes */}
+        {/* Chips abajo con la info - Estilo Luxmania */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-wrap justify-center gap-4 mb-12"
+          className="flex flex-wrap justify-center items-center gap-3 mb-12"
         >
           {/* Chip 1 */}
           <motion.div
             whileHover={{ scale: 1.05, y: -2 }}
-            className="group relative overflow-hidden px-6 py-3 rounded-full bg-white/5 backdrop-blur-sm border border-white/10"
+            whileTap={{ scale: 0.95 }}
+            className="group relative overflow-hidden px-5 py-2.5 rounded-full cursor-pointer"
           >
             <motion.div
               animate={{
@@ -141,17 +145,18 @@ const BrandCTA = () => {
               }}
             />
             <div className="relative flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-              <span className="text-white/90 text-sm font-light tracking-wide">
-                Cada clic está pensado
-              </span>
+              <Brain className="w-4 h-4 text-white/70" strokeWidth={1.5} />
+              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Cada clic está pensado</span>
             </div>
           </motion.div>
+
+          <span className="text-white/30 text-xs">+</span>
 
           {/* Chip 2 */}
           <motion.div
             whileHover={{ scale: 1.05, y: -2 }}
-            className="group relative overflow-hidden px-6 py-3 rounded-full bg-white/5 backdrop-blur-sm border border-white/10"
+            whileTap={{ scale: 0.95 }}
+            className="group relative overflow-hidden px-5 py-2.5 rounded-full cursor-pointer"
           >
             <motion.div
               animate={{
@@ -171,17 +176,18 @@ const BrandCTA = () => {
               }}
             />
             <div className="relative flex items-center gap-2">
-              <Code className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-              <span className="text-white/90 text-sm font-light tracking-wide">
-                Cada scroll es intencional
-              </span>
+              <Palette className="w-4 h-4 text-white/70" strokeWidth={1.5} />
+              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Cada scroll es intencional</span>
             </div>
           </motion.div>
+
+          <span className="text-white/30 text-xs">+</span>
 
           {/* Chip 3 */}
           <motion.div
             whileHover={{ scale: 1.05, y: -2 }}
-            className="group relative overflow-hidden px-6 py-3 rounded-full bg-white/5 backdrop-blur-sm border border-white/10"
+            whileTap={{ scale: 0.95 }}
+            className="group relative overflow-hidden px-5 py-2.5 rounded-full cursor-pointer"
           >
             <motion.div
               animate={{
@@ -201,10 +207,8 @@ const BrandCTA = () => {
               }}
             />
             <div className="relative flex items-center gap-2">
-              <Palette className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-              <span className="text-white/90 text-sm font-light tracking-wide">
-                El diseño guía hacia la acción
-              </span>
+              <Code className="w-4 h-4 text-white/70" strokeWidth={1.5} />
+              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">El diseño guía hacia la acción</span>
             </div>
           </motion.div>
         </motion.div>
