@@ -56,10 +56,10 @@ const BrandCTA = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-extralight text-white tracking-tight font-display leading-[1.1]"
+              className="text-5xl sm:text-6xl lg:text-7xl font-light text-white tracking-tight font-display leading-[1.05]"
             >
               Diseñamos desde cero{' '}
-              <span className="bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#e879f9] bg-clip-text text-transparent font-light">
+              <span className="text-white italic" style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 300, textShadow: '0 0 40px rgba(255, 255, 255, 0.2)' }}>
                 tu marca
               </span>
             </motion.h2>
@@ -69,15 +69,15 @@ const BrandCTA = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-white/70 text-lg lg:text-xl font-light leading-relaxed max-w-lg"
+              className="text-white/60 text-xl lg:text-2xl font-light leading-relaxed max-w-lg"
             >
               Combinando lo mejor de la{' '}
-              <span className="text-[#a855f7] font-normal">psicología</span>,{' '}
-              <span className="text-[#d946ef] font-normal">diseño</span> y{' '}
-              <span className="text-[#e879f9] font-normal">tecnología</span>
+              <span className="text-white font-normal">psicología</span>,{' '}
+              <span className="text-white font-normal">diseño</span> y{' '}
+              <span className="text-white font-normal">tecnología</span>
             </motion.p>
 
-            <div className="h-px bg-gradient-to-r from-[#a855f7]/20 via-[#d946ef]/20 to-transparent w-2/3" />
+            <div className="h-px bg-gradient-to-r from-white/20 via-white/10 to-transparent w-2/3" />
 
             {/* Badges elegantes con iconos */}
             <motion.div

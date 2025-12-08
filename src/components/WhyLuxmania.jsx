@@ -26,9 +26,9 @@ const WhyLuxmania = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-12 lg:mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extralight text-white mb-3 font-display">
+          <h2 className="text-4xl sm:text-5xl lg:text-7xl font-light text-white mb-3 font-display tracking-tight leading-[1.1]">
             El problema con el branding{' '}
-            <span className="text-white/40">tradicional</span>
+            <span className="text-white/30 italic" style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 300 }}>tradicional</span>
           </h2>
         </motion.div>
 
@@ -41,17 +41,17 @@ const WhyLuxmania = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="space-y-5"
           >
-            <p className="text-white/70 text-base lg:text-lg leading-relaxed font-light">
+            <p className="text-white/60 text-lg lg:text-2xl leading-relaxed font-light">
               La mayoría de las agencias <span className="text-white">diseñan para impresionar</span>.
             </p>
-            <p className="text-white/70 text-base lg:text-lg leading-relaxed font-light">
-              Nosotros <span className="text-[#a855f7]">diseñamos para conectar</span>.
+            <p className="text-white/60 text-lg lg:text-2xl leading-relaxed font-light">
+              Nosotros <span className="text-white" style={{ textShadow: '0 0 30px rgba(255, 255, 255, 0.3)' }}>diseñamos para conectar</span>.
             </p>
-            <div className="h-px bg-gradient-to-r from-[#a855f7]/20 to-transparent w-3/4 my-6" />
-            <p className="text-white/60 text-sm lg:text-base leading-relaxed font-light">
+            <div className="h-px bg-gradient-to-r from-white/20 to-transparent w-3/4 my-6" />
+            <p className="text-white/50 text-base lg:text-xl leading-relaxed font-light">
               Tu cliente no compra productos, compra <span className="text-white">identidad</span>. 
               No busca servicios, busca <span className="text-white">pertenencia</span>. 
-              No elige marcas, elige <span className="text-[#d946ef]">arquetipos que resuenan con su propia psique</span>.
+              No elige marcas, elige <span className="text-white">arquetipos que resuenan con su propia psique</span>.
             </p>
           </motion.div>
 

@@ -99,7 +99,7 @@ const IndividualServices = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-[#a855f7] text-sm font-mono uppercase tracking-widest mb-4"
+            className="text-white/50 text-sm font-mono uppercase tracking-widest mb-4"
           >
             A tu medida
           </motion.p>
@@ -109,10 +109,10 @@ const IndividualServices = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-4xl lg:text-5xl font-bold mb-6"
+            className="text-5xl lg:text-7xl font-light mb-6 font-display tracking-tight"
           >
             <span className="text-white">Nuestros </span>
-            <span className="bg-gradient-to-r from-[#a855f7] via-[#d946ef] to-[#a855f7] bg-clip-text text-transparent">
+            <span className="text-white italic" style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 300 }}>
               Servicios
             </span>
           </motion.h2>
@@ -122,7 +122,7 @@ const IndividualServices = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-white/60 text-lg lg:text-xl max-w-2xl mx-auto"
+            className="text-white/50 text-xl lg:text-2xl max-w-2xl mx-auto font-light"
           >
             Arma tu paquete ideal. Todas las opciones para hacer crecer tu marca.
           </motion.p>

@@ -36,8 +36,8 @@ const LuisViruettaIntro = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="flex items-center gap-3 mb-8"
             >
-              <Brain className="w-5 h-5 text-[#a855f7]" strokeWidth={1.5} />
-              <p className="text-[#d946ef]/70 text-xs font-mono uppercase tracking-[0.3em]">
+              <Brain className="w-5 h-5 text-white/40" strokeWidth={1.5} />
+              <p className="text-white/50 text-xs font-mono uppercase tracking-[0.3em]">
                 Sobre Mí
               </p>
             </motion.div>
@@ -48,10 +48,10 @@ const LuisViruettaIntro = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-4xl lg:text-6xl font-extralight text-white mb-6 tracking-tight font-display leading-[1.1]"
+              className="text-5xl lg:text-7xl font-light text-white mb-6 tracking-tight font-display leading-[1.05]"
             >
               Luis{' '}
-              <span className="text-white italic" style={{ fontFamily: 'Georgia, serif', fontWeight: 200 }}>
+              <span className="text-white/90 italic" style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 300 }}>
                 Virrueta
               </span>
             </motion.h2>
@@ -62,20 +62,23 @@ const LuisViruettaIntro = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.35 }}
-              className="text-white/70 text-lg lg:text-xl font-light mb-8 max-w-lg"
+              className="text-white/60 text-lg lg:text-2xl font-light mb-8 max-w-lg leading-relaxed"
             >
               Psicólogo y Diseñador. Fundé{' '}
               <motion.span
-                className="bg-gradient-to-r from-[#a855f7] via-[#0ea5e9] to-[#d946ef] bg-clip-text text-transparent font-normal"
+                className="text-white font-normal"
                 style={{
-                  backgroundSize: '200% 100%',
-                  backgroundPosition: '0% 50%'
+                  textShadow: '0 0 30px rgba(255, 255, 255, 0.3)'
                 }}
                 animate={{
-                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                  textShadow: [
+                    '0 0 30px rgba(255, 255, 255, 0.3)',
+                    '0 0 40px rgba(255, 255, 255, 0.5)',
+                    '0 0 30px rgba(255, 255, 255, 0.3)'
+                  ]
                 }}
                 transition={{
-                  duration: 6,
+                  duration: 3,
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
