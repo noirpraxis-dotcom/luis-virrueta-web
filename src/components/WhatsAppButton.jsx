@@ -27,7 +27,7 @@ export default function WhatsAppButton() {
   }, [isHomePage]);
 
   const handleClick = () => {
-    const phoneNumber = '420776711636'; // Czech phone number
+    const phoneNumber = '420776711575'; // Czech phone number
     const message = encodeURIComponent('Hola! Me gustaría obtener más información sobre tus servicios.');
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };

@@ -386,9 +386,11 @@ const ServiceDetail = ({ service, index }) => {
               <span className="text-base lg:text-lg font-light text-white/90 tracking-wide">{service.duration}</span>
             </div>
 
-            {/* CTA Premium - Estilo LuisViruettaIntro */}
+            {/* CTA Premium - WhatsApp con mensaje personalizado */}
             <motion.a
-              href="/contacto"
+              href={`https://wa.me/420776711575?text=${encodeURIComponent(`Hola! Solicito cotización para ${service.title}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
               initial={{ opacity: 0, y: 10 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.3 }}

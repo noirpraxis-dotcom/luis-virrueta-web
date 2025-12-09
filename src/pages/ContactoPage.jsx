@@ -49,21 +49,21 @@ const ContactoPage = () => {
     {
       icon: Mail,
       title: 'Email',
-      value: 'hola@ainimation.studio',
-      link: 'mailto:hola@ainimation.studio',
+      value: 'luxmaniadigital@gmail.com',
+      link: 'mailto:luxmaniadigital@gmail.com',
       color: 'from-purple-500 to-purple-600',
     },
     {
       icon: Phone,
       title: 'WhatsApp',
-      value: '+52 123 456 7890',
-      link: 'https://wa.me/521234567890',
+      value: '+420 776 711 575',
+      link: 'https://wa.me/420776711575',
       color: 'from-emerald-500 to-emerald-600',
     },
     {
       icon: MapPin,
       title: 'Ubicación',
-      value: 'Ciudad de México, MX',
+      value: 'Toluca → Checoslovaquia',
       link: null,
       color: 'from-fuchsia-500 to-fuchsia-600',
     },
@@ -297,7 +297,7 @@ const ContactoPage = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-0 py-4 bg-transparent border-b border-white/10 text-white font-extralight text-lg tracking-wide placeholder-white/20 focus:outline-none focus:border-white/30 transition-all"
-                    placeholder="+52 123 456 7890"
+                    placeholder="+420 776 711 575"
                   />
                 </div>
 

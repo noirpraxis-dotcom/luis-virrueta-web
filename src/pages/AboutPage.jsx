@@ -1,5 +1,5 @@
 import { motion, useInView } from 'framer-motion'
-import { Brain, Code, Palette, Heart, Sparkles, Zap } from 'lucide-react'
+import { Brain, Code, Palette, Heart, Sparkles, Zap, Instagram, Linkedin } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useRef } from 'react'
 
@@ -295,6 +295,35 @@ const AboutPage = () => {
                   </motion.div>
                 ))}
               </div>
+
+              {/* Social Links - Minimalista */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 1.5 }}
+                className="flex items-center gap-6 pt-8"
+              >
+                <span className="text-white/30 text-[10px] uppercase tracking-[0.3em] font-light">Conecta</span>
+                <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
+                <div className="flex gap-4">
+                  {/* Instagram */}
+                  <a
+                    href="https://www.instagram.com/_horadorada_?igsh=MXRoZDJpaHdqbWRwYg=="
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-fuchsia-400/60 hover:bg-fuchsia-400/10 transition-all duration-300 group"
+                  >
+                    <Instagram className="w-4 h-4 text-white/50 group-hover:text-fuchsia-400 transition-colors" strokeWidth={1.5} />
+                  </a>
+                  {/* LinkedIn */}
+                  <a
+                    href="#"
+                    className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-cyan-400/60 hover:bg-cyan-400/10 transition-all duration-300 group"
+                  >
+                    <Linkedin className="w-4 h-4 text-white/50 group-hover:text-cyan-400 transition-colors" strokeWidth={1.5} />
+                  </a>
+                </div>
+              </motion.div>
             </motion.div>
           </div>
         </div>
