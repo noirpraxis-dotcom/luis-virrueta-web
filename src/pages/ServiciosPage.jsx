@@ -325,22 +325,59 @@ const ServiciosPage = () => {
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-black pointer-events-none z-30" />
       </section>
 
-      {/* Quick Navigation - Hexagon Grid */}
-      <section className="py-16 px-6 lg:px-20 border-t border-white/10">
+      {/* Quick Navigation - Hexagon Grid PREMIUM */}
+      <section className="py-20 lg:py-32 px-6 lg:px-20 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
+          {/* Header mejorado */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-16"
+            className="text-center mb-12"
           >
-            <h2 className="text-3xl lg:text-5xl font-light text-white mb-4 tracking-wide">
-              Explora Nuestros <span className="italic font-normal">Servicios</span>
+            {/* Badge superior */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-4 py-2 border border-white/20 rounded-full bg-white/5 backdrop-blur-sm mb-8"
+            >
+              <Sparkles className="w-3 h-3 text-white/60" strokeWidth={1.5} />
+              <span className="text-xs text-white/70 font-light uppercase tracking-[0.2em]">
+                Soluciones Premium
+              </span>
+            </motion.div>
+
+            <h2 className="text-3xl lg:text-5xl font-light text-white mb-6 tracking-wide">
+              ¿Qué Necesitas <span className="italic font-normal">Crear?</span>
             </h2>
-            <p className="text-white/50 text-sm lg:text-base font-extralight tracking-wide">
-              Selecciona un servicio para conocer más detalles
+            <p className="text-white/60 text-sm lg:text-base font-extralight leading-relaxed tracking-wide max-w-2xl mx-auto mb-8">
+              Selecciona el servicio que buscas y te llevaremos directo a los detalles. Cada proyecto está diseñado para conectar, convertir y trascender.
             </p>
+
+            {/* CTA al Portafolio */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="flex items-center justify-center gap-3 text-white/50 text-sm font-extralight"
+            >
+              <Eye className="w-4 h-4" strokeWidth={1.5} />
+              <span>¿Quieres ver nuestro trabajo primero?</span>
+              <a
+                href="/portafolio"
+                className="group relative inline-flex items-center gap-2 text-white hover:text-white transition-colors"
+              >
+                <span className="relative">
+                  Visita el Portafolio
+                  <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full" />
+                </span>
+                <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.5} />
+              </a>
+            </motion.div>
           </motion.div>
 
           {/* Hexagon Grid */}
@@ -365,7 +402,7 @@ const ServiciosPage = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.05 }}
-                whileHover={{ scale: 1.05, y: -5 }}
+                whileHover={{ scale: 1.08, y: -8 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => {
                   const element = document.getElementById(item.target);
@@ -373,44 +410,80 @@ const ServiciosPage = () => {
                     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
                   }
                 }}
-                className="group relative flex flex-col items-center"
+                className="group relative flex flex-col items-center cursor-pointer"
               >
-                {/* Hexagon Container */}
-                <div className="relative w-24 h-24 lg:w-28 lg:h-28 flex items-center justify-center">
-                  {/* Hexagon Background with gradient */}
+                {/* Hexagon Container - SOLO BORDES */}
+                <div className="relative w-28 h-28 lg:w-32 lg:h-32 flex items-center justify-center">
+                  {/* Hexagon OUTLINE ONLY con gradiente */}
                   <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full">
                     <defs>
-                      <linearGradient id={`gradient-${item.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" className={`text-${item.color.split(' ')[0].replace('from-', '')}`} stopColor="currentColor" />
-                        <stop offset="100%" className={`text-${item.color.split(' ')[2]}`} stopColor="currentColor" />
+                      {/* Gradiente para el borde */}
+                      <linearGradient id={`gradient-stroke-${item.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="rgba(255,255,255,0.15)" />
+                        <stop offset="50%" stopColor="rgba(255,255,255,0.3)" />
+                        <stop offset="100%" stopColor="rgba(255,255,255,0.15)" />
+                      </linearGradient>
+                      {/* Gradiente para hover */}
+                      <linearGradient id={`gradient-hover-${item.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="rgba(255,255,255,0.4)" />
+                        <stop offset="50%" stopColor="rgba(255,255,255,0.6)" />
+                        <stop offset="100%" stopColor="rgba(255,255,255,0.4)" />
                       </linearGradient>
                     </defs>
+                    
+                    {/* Hexágono de fondo transparente con borde elegante */}
                     <polygon
                       points="50 1 95 25 95 75 50 99 5 75 5 25"
-                      className={`fill-gradient-to-br ${item.color} transition-all duration-300`}
-                      style={{ fill: `url(#gradient-${item.id})`, opacity: 0.9 }}
+                      className="fill-none transition-all duration-500"
+                      stroke={`url(#gradient-stroke-${item.id})`}
+                      strokeWidth="1"
+                      style={{
+                        filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.1))'
+                      }}
                     />
-                    {/* Hexagon border */}
+                    
+                    {/* Hexágono hover (aparece en hover) */}
                     <polygon
                       points="50 1 95 25 95 75 50 99 5 75 5 25"
-                      className="fill-none stroke-white/20 group-hover:stroke-white/60 transition-all duration-300"
-                      strokeWidth="0.5"
+                      className="fill-none opacity-0 group-hover:opacity-100 transition-all duration-500"
+                      stroke={`url(#gradient-hover-${item.id})`}
+                      strokeWidth="1.5"
+                      style={{
+                        filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.3))'
+                      }}
                     />
                   </svg>
                   
-                  {/* Icon */}
-                  <item.icon className="relative z-10 w-8 h-8 lg:w-10 lg:h-10 text-white transition-transform duration-300 group-hover:scale-110" strokeWidth={1.5} />
+                  {/* Icon con color del gradiente */}
+                  <item.icon 
+                    className="relative z-10 w-9 h-9 lg:w-11 lg:h-11 text-white/70 group-hover:text-white transition-all duration-500 group-hover:scale-110 group-hover:rotate-3" 
+                    strokeWidth={1.2} 
+                  />
                   
-                  {/* Glow effect on hover */}
-                  <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${item.color} opacity-0 blur-xl group-hover:opacity-30 transition-opacity duration-300`} />
+                  {/* Glow effect sutil en hover - más grande */}
+                  <div className={`absolute -inset-4 rounded-full bg-gradient-to-br ${item.color} opacity-0 blur-2xl group-hover:opacity-20 transition-all duration-500`} />
+                  
+                  {/* Punto luminoso giratorio en hover */}
+                  <motion.div
+                    className="absolute w-2 h-2 bg-white rounded-full opacity-0 group-hover:opacity-100"
+                    style={{ top: '10%', left: '50%' }}
+                    animate={{
+                      rotate: 360,
+                      scale: [1, 1.5, 1],
+                    }}
+                    transition={{
+                      rotate: { duration: 3, repeat: Infinity, ease: "linear" },
+                      scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
+                    }}
+                  />
                 </div>
 
                 {/* Text */}
-                <div className="mt-4 text-center">
-                  <h3 className="text-white text-sm lg:text-base font-light tracking-wide mb-1">
+                <div className="mt-5 text-center">
+                  <h3 className="text-white/90 group-hover:text-white text-sm lg:text-base font-light tracking-[0.1em] mb-1.5 transition-colors duration-300">
                     {item.title}
                   </h3>
-                  <p className="text-white/40 text-[10px] lg:text-xs font-extralight tracking-wider">
+                  <p className="text-white/30 group-hover:text-white/50 text-[10px] lg:text-xs font-extralight tracking-[0.15em] transition-colors duration-300">
                     {item.subtitle}
                   </p>
                 </div>
