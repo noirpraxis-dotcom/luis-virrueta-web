@@ -301,13 +301,13 @@ const IndividualServices = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex items-center justify-center gap-3 text-white/50 text-sm font-extralight mt-6"
           >
-            <span>¿Quieres explorar todos los servicios a detalle?</span>
+            <span>{t('home.servicesSection.exploreQuestion')}</span>
             <Link
               to="/servicios"
               className="group inline-flex items-center gap-2 text-white hover:text-white/90 transition-colors"
             >
               <span className="relative font-light">
-                Ver Servicios Completos
+                {t('home.servicesSection.viewAllServices')}
                 <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full" />
               </span>
               <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.5} />

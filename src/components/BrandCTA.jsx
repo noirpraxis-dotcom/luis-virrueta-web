@@ -30,42 +30,53 @@ const BrandCTA = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-6xl lg:text-8xl font-light text-white mb-6 tracking-[0.15em] font-display leading-[1.05]"
           >
-            <span className="inline-block relative">
-              <motion.span
-                animate={{
-                  scale: [1, 1.3, 1],
-                  opacity: [0.6, 0.9, 0.6]
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="absolute inset-0 bg-gradient-to-br from-white via-white to-white bg-clip-text text-transparent blur-lg"
-              >
-                M
-              </motion.span>
-              <span className="relative text-white">M</span>
-            </span>
-            UESTR
-            <span className="inline-block relative">
-              <motion.span
-                animate={{
-                  scale: [1, 1.3, 1],
-                  opacity: [0.6, 0.9, 0.6]
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.5
-                }}
-                className="absolute inset-0 bg-gradient-to-tl from-white via-white to-white bg-clip-text text-transparent blur-lg"
-              >
-                A
-              </motion.span>
-              <span className="relative text-white">A</span>
-            </span>
+            {(() => {
+              const title = t('home.showcaseSection.title')
+              const firstLetter = title.charAt(0)
+              const lastLetter = title.charAt(title.length - 1)
+              const middle = title.slice(1, -1)
+              
+              return (
+                <>
+                  <span className="inline-block relative">
+                    <motion.span
+                      animate={{
+                        scale: [1, 1.3, 1],
+                        opacity: [0.6, 0.9, 0.6]
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                      className="absolute inset-0 bg-gradient-to-br from-white via-white to-white bg-clip-text text-transparent blur-lg"
+                    >
+                      {firstLetter}
+                    </motion.span>
+                    <span className="relative text-white">{firstLetter}</span>
+                  </span>
+                  {middle}
+                  <span className="inline-block relative">
+                    <motion.span
+                      animate={{
+                        scale: [1, 1.3, 1],
+                        opacity: [0.6, 0.9, 0.6]
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 0.5
+                      }}
+                      className="absolute inset-0 bg-gradient-to-tl from-white via-white to-white bg-clip-text text-transparent blur-lg"
+                    >
+                      {lastLetter}
+                    </motion.span>
+                    <span className="relative text-white">{lastLetter}</span>
+                  </span>
+                </>
+              )
+            })()}
           </motion.h2>
 
           {/* Subtítulo - Un poco sobre nuestro trabajo */}
@@ -284,7 +295,7 @@ const BrandCTA = () => {
 
               <span className="relative flex items-center gap-3">
                 <span className="text-white font-light text-base tracking-wide">
-                  Ver portafolio completo
+                  {t('home.showcaseSection.viewPortfolio')}
                 </span>
                 <motion.div
                   animate={{ x: [0, 3, 0] }}

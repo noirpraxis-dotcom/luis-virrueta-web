@@ -1,13 +1,15 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { useLanguage } from '../context/LanguageContext'
 
 const Footer = () => {
+  const { t } = useLanguage()
   const currentYear = new Date().getFullYear()
 
   const footerLinks = [
-    { name: 'Política de Privacidad', href: '/politica-privacidad' },
-    { name: 'Términos y Condiciones', href: '/terminos-condiciones' },
-    { name: 'Política de Cookies', href: '/politica-cookies' }
+    { name: t('footer.privacyPolicy'), href: '/politica-privacidad' },
+    { name: t('footer.termsConditions'), href: '/terminos-condiciones' },
+    { name: t('footer.cookiePolicy'), href: '/politica-cookies' }
   ]
 
   const handleCookieSettings = () => {
@@ -51,7 +53,7 @@ const Footer = () => {
                   letterSpacing: '0.4em'
                 }}
               >
-                Psych × Design × Tech
+                {t('footer.tagline')}
               </div>
               
               {/* Underline decorativo */}
@@ -86,14 +88,14 @@ const Footer = () => {
                 className="text-white/60 hover:text-fuchsia-400 transition-colors duration-300"
                 style={{ fontFamily: 'Gotham, sans-serif' }}
               >
-                Configuración de Cookies
+                {t('footer.cookieSettings')}
               </button>
             </span>
           </div>
 
           {/* Copyright */}
           <div className="text-white/40 text-xs tracking-wide font-mono">
-            © {currentYear} LUXMANIA. Psych × Design × Tech. All rights reserved.
+            © {currentYear} LUXMANIA. {t('footer.tagline')}. {t('footer.rights')}.
           </div>
         </div>
       </div>

@@ -83,14 +83,18 @@
       "quote2": "Sabemos",
       "quote2Bold": "qué despierta emociones",
       "quote3": "Sabemos",
-      "quote3Bold": "qué impulsa las decisiones"
+      "quote3Bold": "qué impulsa las decisiones",
+      "videoOverlay": "Descubre qué podemos hacer",
+      "videoOverlayBrand": "por tu marca",
+      "turnUpVolume": "Sube el volumen"
     },
     "showcaseSection": {
       "title": "MUESTRA",
       "subtitle": "Un poco sobre nuestro trabajo",
       "everyClick": "Cada clic está pensado",
       "everyScroll": "Cada scroll es intencional",
-      "designGuides": "El diseño guía hacia la acción"
+      "designGuides": "El diseño guía hacia la acción",
+      "viewPortfolio": "Ver portafolio completo"
     },
     "whySection": {
       "badge": "La Diferencia",
@@ -118,6 +122,8 @@
       "answer": "Creamos soluciones personalizadas",
       "answerEnd": "para tus necesidades específicas",
       "cta": "Platiquemos de tu proyecto",
+      "exploreQuestion": "¿Quieres explorar todos los servicios a detalle?",
+      "viewAllServices": "Ver Servicios Completos",
       "services": {
         "logoDesign": {
           "name": "Logo Design",
@@ -779,5 +785,13 @@
     "3:30 PM",
     "5:00 PM"
   ],
-  "lang": "es"
+  "lang": "es",
+  "footer": {
+    "privacyPolicy": "Política de Privacidad",
+    "termsConditions": "Términos y Condiciones",
+    "cookiePolicy": "Política de Cookies",
+    "cookieSettings": "Configuración de Cookies",
+    "tagline": "Psych × Design × Tech",
+    "rights": "All rights reserved"
+  }
 }

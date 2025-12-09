@@ -352,10 +352,10 @@ const LuxmaniaVideoSection = () => {
                       className="text-center mb-8 px-6"
                     >
                       <p className="text-white text-lg lg:text-xl font-light mb-2 leading-relaxed">
-                        Descubre qué podemos hacer
+                        {t('home.luxmaniaSection.videoOverlay')}
                       </p>
                       <p className="text-white/70 text-base font-light">
-                        por tu marca
+                        {t('home.luxmaniaSection.videoOverlayBrand')}
                       </p>
                     </motion.div>
 
@@ -380,7 +380,7 @@ const LuxmaniaVideoSection = () => {
                       <div className="flex items-center gap-2 px-4 py-2.5 bg-black/70 backdrop-blur-md border border-white/30 rounded-full">
                         <Volume2 className="w-4 h-4 text-white animate-pulse" strokeWidth={1.5} />
                         <span className="text-xs text-white font-light tracking-wide">
-                          Sube el volumen
+                          {t('home.luxmaniaSection.turnUpVolume')}
                         </span>
                       </div>
                     </motion.div>

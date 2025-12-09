@@ -106,7 +106,7 @@ const AnimatedLogosSection = () => {
                     className="flex items-center gap-2 text-purple-300"
                   >
                     <Volume2 className="w-5 h-5" />
-                    <span className="text-sm font-light tracking-wider uppercase">Sube el volumen</span>
+                    <span className="text-sm font-light tracking-wider uppercase">{t('home.luxmaniaSection.turnUpVolume')}</span>
                   </motion.div>
                 </motion.div>
 
