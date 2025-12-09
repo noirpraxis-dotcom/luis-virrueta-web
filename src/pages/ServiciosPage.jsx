@@ -594,17 +594,17 @@ const ServiciosPage = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 lg:gap-8 mb-12">
             {[
               { id: 'consultoria', icon: Brain, title: 'Consultoría', subtitle: 'Empieza aquí', color: 'from-purple-500 to-violet-600', target: 'consultoria-psicoanalitica' },
-              { id: 'identidad-visual', icon: Sparkles, title: 'Identidad Visual', subtitle: 'Sistema completo', color: 'from-fuchsia-500 to-pink-600', target: 'identidad-visual' },
-              { id: 'logo-design', icon: Palette, title: 'Logo Design', subtitle: 'Identidad memorable', color: 'from-purple-400 to-purple-600', target: 'logo-design' },
-              { id: 'paginas-web', icon: Code, title: 'Páginas Web', subtitle: 'Sitios que convierten', color: 'from-indigo-500 to-blue-600', target: 'paginas-web' },
-              { id: 'apps-moviles', icon: Smartphone, title: 'Apps Móviles', subtitle: 'Experiencias fluidas', color: 'from-cyan-500 to-blue-600', target: 'apps-moviles' },
-              { id: 'video-branding', icon: Video, title: 'Video Branding', subtitle: 'Contenido visual', color: 'from-violet-500 to-purple-600', target: 'video-branding' },
-              { id: 'animacion', icon: Layers, title: 'Animación', subtitle: 'Logos en movimiento', color: 'from-indigo-400 to-violet-600', target: 'animacion' },
-              { id: 'fotografia', icon: Camera, title: 'Fotografía', subtitle: 'Sesiones profesionales', color: 'from-pink-500 to-rose-600', target: 'fotografia' },
-              { id: 'audio-branding', icon: Mic, title: 'Audio Branding', subtitle: 'Identidad sonora', color: 'from-orange-500 to-amber-600', target: 'audio-branding' },
-              { id: 'avatares-ia', icon: Bot, title: 'Avatares IA', subtitle: 'Representación digital', color: 'from-emerald-500 to-teal-600', target: 'avatares-ia' },
-              { id: 'marketing', icon: Megaphone, title: 'Marketing', subtitle: 'Campañas efectivas', color: 'from-cyan-400 to-teal-600', target: 'marketing' },
-              { id: 'material-impreso', icon: FileText, title: 'Material Impreso', subtitle: 'Tangibles de lujo', color: 'from-fuchsia-400 to-purple-600', target: 'material-impreso' },
+              { id: 'identidad-visual', icon: Sparkles, title: 'Identidad Visual', subtitle: 'Sistema completo', color: 'from-fuchsia-500 to-pink-500', target: 'identidad-visual' },
+              { id: 'logo-design', icon: Palette, title: 'Logo Design', subtitle: 'Identidad memorable', color: 'from-cyan-400 to-blue-500', target: 'logo-design' },
+              { id: 'paginas-web', icon: Code, title: 'Páginas Web', subtitle: 'Sitios que convierten', color: 'from-emerald-400 to-green-500', target: 'paginas-web' },
+              { id: 'apps-moviles', icon: Smartphone, title: 'Apps Móviles', subtitle: 'Experiencias fluidas', color: 'from-amber-400 to-orange-500', target: 'apps-moviles' },
+              { id: 'video-branding', icon: Video, title: 'Video Branding', subtitle: 'Contenido visual', color: 'from-rose-400 to-red-500', target: 'video-branding' },
+              { id: 'animacion', icon: Layers, title: 'Animación', subtitle: 'Logos en movimiento', color: 'from-indigo-400 to-purple-500', target: 'animacion' },
+              { id: 'fotografia', icon: Camera, title: 'Fotografía', subtitle: 'Sesiones profesionales', color: 'from-pink-400 to-fuchsia-500', target: 'fotografia' },
+              { id: 'audio-branding', icon: Mic, title: 'Audio Branding', subtitle: 'Identidad sonora', color: 'from-yellow-400 to-amber-500', target: 'audio-branding' },
+              { id: 'avatares-ia', icon: Bot, title: 'Avatares IA', subtitle: 'Representación digital', color: 'from-teal-400 to-cyan-500', target: 'avatares-ia' },
+              { id: 'marketing', icon: Megaphone, title: 'Marketing', subtitle: 'Campañas efectivas', color: 'from-lime-400 to-green-500', target: 'marketing' },
+              { id: 'material-impreso', icon: FileText, title: 'Material Impreso', subtitle: 'Tangibles de lujo', color: 'from-violet-400 to-purple-500', target: 'material-impreso' },
             ].map((item, i) => (
               <motion.button
                 key={item.id}
