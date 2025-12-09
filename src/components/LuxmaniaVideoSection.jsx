@@ -2,15 +2,17 @@ import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
 import { Brain, Palette, Code, Play, Volume2, Gem, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useLanguage } from '../context/LanguageContext'
 
 const LuxmaniaVideoSection = () => {
+  const { t } = useLanguage()
   const ref = useRef(null)
   const videoRef = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
   const [isPlaying, setIsPlaying] = useState(false)
   
-  // Array de palabras que van rotando
-  const words = ['emociones', 'experiencias', 'sensaciones', 'reacciones', 'deseos', 'conexiones']
+  // Array de palabras que van rotando - traducidas
+  const words = t('home.luxmaniaSection.words')
   const [currentWordIndex, setCurrentWordIndex] = useState(0)
 
   // Cambiar palabra cada 2.5 segundos
@@ -127,7 +129,7 @@ const LuxmaniaVideoSection = () => {
               transition={{ duration: 0.8, delay: 0.35 }}
               className="text-white/50 text-sm lg:text-base font-light uppercase tracking-[0.3em] mb-6"
             >
-              Psicología × Diseño × IA
+              {t('home.luxmaniaSection.subtitle')}
             </motion.p>
 
             {/* Mensaje central con palabra animada - ALINEADO PERFECTO */}
@@ -138,7 +140,7 @@ const LuxmaniaVideoSection = () => {
               className="mb-4 max-w-xl"
             >
               <div className="text-xl lg:text-2xl font-extralight tracking-wide leading-relaxed flex items-center gap-2">
-                <span className="text-white/70">Diseñamos</span>
+                <span className="text-white/70">{t('home.luxmaniaSection.weDesign')}</span>
                 <div className="relative inline-block min-w-[180px]">
                   <AnimatePresence mode="wait">
                     <motion.span
@@ -166,8 +168,8 @@ const LuxmaniaVideoSection = () => {
               transition={{ duration: 0.8, delay: 0.45 }}
               className="text-white/50 text-base lg:text-lg font-light leading-relaxed mb-10 max-w-xl"
             >
-              Creamos identidades visuales que{' '}
-              <span className="text-white/70">se sienten antes de entenderse</span>.
+              {t('home.luxmaniaSection.description')}{' '}
+              <span className="text-white/70">{t('home.luxmaniaSection.feelBefore')}</span>.
             </motion.p>
 
             {/* Badges con degradado animado - IGUAL A LUIS VIRRUETA */}
@@ -201,7 +203,7 @@ const LuxmaniaVideoSection = () => {
                 />
                 <div className="relative flex items-center gap-2">
                   <Brain className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Psicología</span>
+                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.luxmaniaSection.psychology')}</span>
                 </div>
               </motion.div>
 
@@ -232,7 +234,7 @@ const LuxmaniaVideoSection = () => {
                 />
                 <div className="relative flex items-center gap-2">
                   <Palette className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Diseño</span>
+                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.luxmaniaSection.design')}</span>
                 </div>
               </motion.div>
 
@@ -263,7 +265,7 @@ const LuxmaniaVideoSection = () => {
                 />
                 <div className="relative flex items-center gap-2">
                   <Code className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Tecnología</span>
+                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.luxmaniaSection.technology')}</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -281,23 +283,23 @@ const LuxmaniaVideoSection = () => {
                 <Palette className="absolute left-0 top-2 w-5 h-5 text-white/40" strokeWidth={1.5} />
 
                 <p className="text-white/60 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
-                  Sabemos{' '}
+                  {t('home.luxmaniaSection.quote1')}{' '}
                   <span className="text-white font-normal">
-                    qué capta la atención
+                    {t('home.luxmaniaSection.quote1Bold')}
                   </span>.
                 </p>
 
                 <p className="text-white/60 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
-                  Sabemos{' '}
+                  {t('home.luxmaniaSection.quote2')}{' '}
                   <span className="text-white font-normal">
-                    qué despierta emociones
+                    {t('home.luxmaniaSection.quote2Bold')}
                   </span>.
                 </p>
 
                 <p className="text-white/60 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
-                  Sabemos{' '}
+                  {t('home.luxmaniaSection.quote3')}{' '}
                   <span className="text-white font-normal">
-                    qué impulsa las decisiones
+                    {t('home.luxmaniaSection.quote3Bold')}
                   </span>.
                 </p>
               </div>

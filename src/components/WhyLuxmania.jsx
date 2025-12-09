@@ -3,8 +3,10 @@ import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Brain, Palette, Code, ArrowRight, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useLanguage } from '../context/LanguageContext'
 
 const WhyLuxmania = () => {
+  const { t } = useLanguage()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
@@ -58,7 +60,7 @@ const WhyLuxmania = () => {
           <div className="inline-flex items-center gap-3 px-4 py-2 border border-white/20 rounded-full bg-white/5 backdrop-blur-sm">
             <Sparkles className="w-4 h-4 text-white/60" strokeWidth={1.5} />
             <p className="text-white/70 text-xs font-light uppercase tracking-[0.25em]">
-              La Diferencia
+              {t('home.whySection.badge')}
             </p>
           </div>
         </motion.div>
@@ -71,10 +73,10 @@ const WhyLuxmania = () => {
           className="text-center mb-6"
         >
           <h2 className="text-5xl lg:text-7xl font-light text-white mb-4 tracking-[0.1em] font-display leading-[1.05]">
-            EL PROBLEMA
+            {t('home.whySection.title')}
           </h2>
           <p className="text-white/50 text-base lg:text-lg font-light uppercase tracking-[0.3em]">
-            Branding Tradicional
+            {t('home.whySection.subtitle')}
           </p>
         </motion.div>
 
@@ -86,30 +88,28 @@ const WhyLuxmania = () => {
           className="max-w-3xl mx-auto text-center mb-16"
         >
           <p className="text-white/70 text-xl lg:text-2xl font-extralight leading-relaxed mb-6">
-            La mayoría de las agencias{' '}
-            <span className="text-white font-light">diseñan para impresionar</span>.
+            {t('home.whySection.problemText')}{' '}
+            <span className="text-white font-light">{t('home.whySection.problemBold')}</span>.
           </p>
           <p className="text-white/70 text-xl lg:text-2xl font-extralight leading-relaxed mb-8">
-            Nosotros{' '}
+            {t('home.whySection.solutionText')}{' '}
             <motion.span
               className="text-white font-light"
               style={{
                 textShadow: '0 0 30px rgba(255, 255, 255, 0.3)'
               }}
             >
-              diseñamos para conectar
+              {t('home.whySection.solutionBold')}
             </motion.span>.
           </p>
 
           <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent w-full max-w-md mx-auto my-10" />
 
           <p className="text-white/50 text-base lg:text-lg font-light leading-relaxed">
-            Tu cliente no compra productos, compra{' '}
-            <span className="text-white/80">identidad</span>.<br />
-            No busca servicios, busca{' '}
-            <span className="text-white/80">pertenencia</span>.<br />
-            No elige marcas, elige{' '}
-            <span className="text-white">arquetipos que resuenan con su propia psique</span>.
+            {t('home.whySection.approachText')}{' '}
+            <span className="text-white/80">{t('home.whySection.identity')}</span>,{' '}
+            <span className="text-white/80">{t('home.whySection.belonging')}</span>,{' '}
+            {t('home.whySection.archetypes')}.
           </p>
         </motion.div>
 
@@ -143,7 +143,7 @@ const WhyLuxmania = () => {
             />
             <div className="relative flex items-center gap-2">
               <Brain className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Psicología</span>
+              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.whySection.psychology')}</span>
             </div>
           </motion.div>
 
@@ -173,7 +173,7 @@ const WhyLuxmania = () => {
             />
             <div className="relative flex items-center gap-2">
               <Palette className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Diseño</span>
+              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.whySection.design')}</span>
             </div>
           </motion.div>
 
@@ -203,7 +203,7 @@ const WhyLuxmania = () => {
             />
             <div className="relative flex items-center gap-2">
               <Code className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Tecnología</span>
+              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.whySection.technology')}</span>
             </div>
           </motion.div>
         </motion.div>
@@ -257,7 +257,7 @@ const WhyLuxmania = () => {
 
               <span className="relative flex items-center gap-3">
                 <span className="text-white font-light text-base tracking-wide">
-                  Conocer arquetipos
+                  {t('home.whySection.cta')}
                 </span>
                 <motion.div
                   animate={{ x: [0, 3, 0] }}

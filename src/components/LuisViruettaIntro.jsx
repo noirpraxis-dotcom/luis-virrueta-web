@@ -291,7 +291,7 @@ const LuisViruettaIntro = () => {
                 <Brain className="absolute left-0 top-2 w-5 h-5 text-white/40" strokeWidth={1.5} />
 
                 <p className="text-white/60 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
-                  {t('home.luisSection.quote95')}{t('home.luisSection.quote95') && ' '}
+                  {t('home.luisSection.quote95Start')}{t('home.luisSection.quote95Start') && ' '}
                   <span className="text-white font-normal">
                     {t('home.luisSection.quote95Bold')}
                   </span>{' '}

@@ -11,6 +11,7 @@
     "brandPsychology": "Psicología de Marca",
     "portfolio": "Portafolio",
     "portfolioShort": "Trabajo",
+    "blog": "Blog",
     "process": "Proceso",
     "contact": "Contacto",
     "store": "Store",
@@ -59,13 +60,114 @@
       "psychology": "Psicología",
       "design": "Diseño",
       "technology": "Tecnología",
-      "quote95": "El",
+      "quote95Start": "El",
       "quote95Bold": "95% de las decisiones",
       "quote95End": "ocurren en el inconsciente.",
       "quoteSecond": "Las personas no eligen con la mente,",
       "quoteSecondBold": "eligen desde la emoción.",
       "cta": "Conoce Mi Enfoque",
       "aboutBadge": "El Creador"
+    },
+    "luxmaniaSection": {
+      "title": "LUXMANIA",
+      "subtitle": "Psicología × Diseño × IA",
+      "weDesign": "Diseñamos",
+      "words": ["emociones", "experiencias", "sensaciones", "reacciones", "deseos", "conexiones"],
+      "description": "Creamos identidades visuales que",
+      "feelBefore": "se sienten antes de entenderse",
+      "psychology": "Psicología",
+      "design": "Diseño",
+      "technology": "Tecnología",
+      "quote1": "Sabemos",
+      "quote1Bold": "qué capta la atención",
+      "quote2": "Sabemos",
+      "quote2Bold": "qué despierta emociones",
+      "quote3": "Sabemos",
+      "quote3Bold": "qué impulsa las decisiones"
+    },
+    "showcaseSection": {
+      "title": "MUESTRA",
+      "subtitle": "Un poco sobre nuestro trabajo",
+      "everyClick": "Cada clic está pensado",
+      "everyScroll": "Cada scroll es intencional",
+      "designGuides": "El diseño guía hacia la acción"
+    },
+    "whySection": {
+      "badge": "La Diferencia",
+      "title": "EL PROBLEMA",
+      "subtitle": "Branding Tradicional",
+      "problemText": "La mayoría de las agencias",
+      "problemBold": "diseñan para impresionar",
+      "solutionText": "Nosotros",
+      "solutionBold": "diseñamos para conectar",
+      "approachText": "Nuestro enfoque fusiona neurociencia, arquetipos y diseño para crear marcas que activan",
+      "identity": "identidad",
+      "belonging": "pertenencia",
+      "archetypes": "arquetipos que resuenan con su propia psique",
+      "psychology": "Psicología",
+      "design": "Diseño",
+      "technology": "Tecnología",
+      "cta": "Descubre Cómo Funciona"
+    },
+    "servicesSection": {
+      "badge": "A tu medida",
+      "title": "Nuestros",
+      "titleItalic": "Servicios",
+      "subtitle": "Arma tu paquete ideal. Todas las opciones para hacer crecer tu marca.",
+      "question": "¿No estás seguro de qué necesitas?",
+      "answer": "Creamos soluciones personalizadas",
+      "answerEnd": "para tus necesidades específicas",
+      "cta": "Platiquemos de tu proyecto",
+      "services": {
+        "logoDesign": {
+          "name": "Logo Design",
+          "description": "Identidad memorable"
+        },
+        "brandIdentity": {
+          "name": "Identidad Visual",
+          "description": "Sistema completo"
+        },
+        "websites": {
+          "name": "Páginas Web",
+          "description": "Sitios que convierten"
+        },
+        "mobileApps": {
+          "name": "Apps Móviles",
+          "description": "Experiencias fluidas"
+        },
+        "photography": {
+          "name": "Fotografía",
+          "description": "Sesiones profesionales"
+        },
+        "videoBranding": {
+          "name": "Video Branding",
+          "description": "Contenido visual"
+        },
+        "audioBranding": {
+          "name": "Audio Branding",
+          "description": "Identidad sonora"
+        },
+        "aiAvatars": {
+          "name": "Avatares IA",
+          "description": "Representación digital"
+        },
+        "consulting": {
+          "name": "Consultoría",
+          "description": "Estrategia psicológica"
+        },
+        "marketing": {
+          "name": "Marketing",
+          "description": "Campañas efectivas"
+        },
+        "printMaterial": {
+          "name": "Material Impreso",
+          "description": "Tangibles de lujo"
+        },
+        "animation": {
+          "name": "Animación",
+          "description": "Logos en movimiento"
+        }
+      }
     }
   },
   "hero": {

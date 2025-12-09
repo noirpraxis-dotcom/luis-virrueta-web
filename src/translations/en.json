@@ -49,13 +49,114 @@
       "psychology": "Psychology",
       "design": "Design",
       "technology": "Technology",
-      "quote95": "",
+      "quote95Start": "",
       "quote95Bold": "95% of decisions",
       "quote95End": "happen unconsciously.",
       "quoteSecond": "People don't choose with their mind,",
       "quoteSecondBold": "they choose from emotion.",
       "cta": "Explore My Approach",
       "aboutBadge": "The Creator"
+    },
+    "luxmaniaSection": {
+      "title": "LUXMANIA",
+      "subtitle": "Psychology × Design × AI",
+      "weDesign": "We Design",
+      "words": ["emotions", "experiences", "sensations", "reactions", "desires", "connections"],
+      "description": "We create visual identities that",
+      "feelBefore": "are felt before understood",
+      "psychology": "Psychology",
+      "design": "Design",
+      "technology": "Technology",
+      "quote1": "We know",
+      "quote1Bold": "what captures attention",
+      "quote2": "We know",
+      "quote2Bold": "what awakens emotions",
+      "quote3": "We know",
+      "quote3Bold": "what drives decisions"
+    },
+    "showcaseSection": {
+      "title": "SHOWCASE",
+      "subtitle": "A glimpse of our work",
+      "everyClick": "Every click is intentional",
+      "everyScroll": "Every scroll is deliberate",
+      "designGuides": "Design guides to action"
+    },
+    "whySection": {
+      "badge": "The Difference",
+      "title": "THE PROBLEM",
+      "subtitle": "Traditional Branding",
+      "problemText": "Most agencies",
+      "problemBold": "design to impress",
+      "solutionText": "We",
+      "solutionBold": "design to connect",
+      "approachText": "Our approach merges neuroscience, archetypes and design to create brands that activate",
+      "identity": "identity",
+      "belonging": "belonging",
+      "archetypes": "archetypes that resonate with their own psyche",
+      "psychology": "Psychology",
+      "design": "Design",
+      "technology": "Technology",
+      "cta": "Discover How It Works"
+    },
+    "servicesSection": {
+      "badge": "Tailored for you",
+      "title": "Our",
+      "titleItalic": "Services",
+      "subtitle": "Build your ideal package. All the options to grow your brand.",
+      "question": "Not sure what you need?",
+      "answer": "We create custom solutions",
+      "answerEnd": "for your specific needs",
+      "cta": "Let's Talk About Your Project",
+      "services": {
+        "logoDesign": {
+          "name": "Logo Design",
+          "description": "Memorable identity"
+        },
+        "brandIdentity": {
+          "name": "Brand Identity",
+          "description": "Complete system"
+        },
+        "websites": {
+          "name": "Websites",
+          "description": "Sites that convert"
+        },
+        "mobileApps": {
+          "name": "Mobile Apps",
+          "description": "Fluid experiences"
+        },
+        "photography": {
+          "name": "Photography",
+          "description": "Professional sessions"
+        },
+        "videoBranding": {
+          "name": "Video Branding",
+          "description": "Visual content"
+        },
+        "audioBranding": {
+          "name": "Audio Branding",
+          "description": "Sonic identity"
+        },
+        "aiAvatars": {
+          "name": "AI Avatars",
+          "description": "Digital representation"
+        },
+        "consulting": {
+          "name": "Consulting",
+          "description": "Psychological strategy"
+        },
+        "marketing": {
+          "name": "Marketing",
+          "description": "Effective campaigns"
+        },
+        "printMaterial": {
+          "name": "Print Material",
+          "description": "Luxury tangibles"
+        },
+        "animation": {
+          "name": "Animation",
+          "description": "Logos in motion"
+        }
+      }
     }
   },
   "hero": {

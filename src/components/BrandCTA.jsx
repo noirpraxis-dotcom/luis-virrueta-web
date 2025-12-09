@@ -3,8 +3,10 @@ import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { ArrowRight, Sparkles, Code, Palette, Brain } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useLanguage } from '../context/LanguageContext'
 
 const BrandCTA = () => {
+  const { t } = useLanguage()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
 
@@ -73,7 +75,7 @@ const BrandCTA = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-white/50 text-sm lg:text-base font-light uppercase tracking-[0.25em]"
           >
-            Un poco sobre nuestro trabajo
+            {t('home.showcaseSection.subtitle')}
           </motion.p>
         </div>
 
@@ -146,7 +148,7 @@ const BrandCTA = () => {
             />
             <div className="relative flex items-center gap-2">
               <Brain className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Cada clic está pensado</span>
+              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.showcaseSection.everyClick')}</span>
             </div>
           </motion.div>
 
@@ -177,7 +179,7 @@ const BrandCTA = () => {
             />
             <div className="relative flex items-center gap-2">
               <Palette className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Cada scroll es intencional</span>
+              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.showcaseSection.everyScroll')}</span>
             </div>
           </motion.div>
 
@@ -208,7 +210,7 @@ const BrandCTA = () => {
             />
             <div className="relative flex items-center gap-2">
               <Code className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">El diseño guía hacia la acción</span>
+              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.showcaseSection.designGuides')}</span>
             </div>
           </motion.div>
         </motion.div>

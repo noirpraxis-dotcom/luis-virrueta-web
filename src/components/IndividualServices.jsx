@@ -1,78 +1,81 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Camera, Palette, Smartphone, Mic, Brain, FileText, Sparkles, Video, Code, Megaphone, Calendar, ArrowRight } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 const IndividualServices = () => {
+  const { t } = useLanguage()
+  
   const services = [
     { 
-      name: "Logo Design", 
-      description: "Identidad memorable",
+      name: t('home.servicesSection.services.logoDesign.name'),
+      description: t('home.servicesSection.services.logoDesign.description'),
       icon: Palette,
       color: "from-[#a855f7] to-[#7c3aed]"
     },
     { 
-      name: "Identidad Visual", 
-      description: "Sistema completo",
+      name: t('home.servicesSection.services.brandIdentity.name'),
+      description: t('home.servicesSection.services.brandIdentity.description'),
       icon: Sparkles,
       color: "from-[#d946ef] to-[#c026d3]"
     },
     { 
-      name: "Páginas Web", 
-      description: "Sitios que convierten",
+      name: t('home.servicesSection.services.websites.name'),
+      description: t('home.servicesSection.services.websites.description'),
       icon: Code,
       color: "from-[#6366f1] to-[#4f46e5]"
     },
     { 
-      name: "Apps Móviles", 
-      description: "Experiencias fluidas",
+      name: t('home.servicesSection.services.mobileApps.name'),
+      description: t('home.servicesSection.services.mobileApps.description'),
       icon: Smartphone,
       color: "from-[#0ea5e9] to-[#0284c7]"
     },
     { 
-      name: "Fotografía", 
-      description: "Sesiones profesionales",
+      name: t('home.servicesSection.services.photography.name'),
+      description: t('home.servicesSection.services.photography.description'),
       icon: Camera,
       color: "from-[#ec4899] to-[#db2777]"
     },
     { 
-      name: "Video Branding", 
-      description: "Contenido visual",
+      name: t('home.servicesSection.services.videoBranding.name'),
+      description: t('home.servicesSection.services.videoBranding.description'),
       icon: Video,
       color: "from-[#8b5cf6] to-[#7c3aed]"
     },
     { 
-      name: "Audio Branding", 
-      description: "Identidad sonora",
+      name: t('home.servicesSection.services.audioBranding.name'),
+      description: t('home.servicesSection.services.audioBranding.description'),
       icon: Mic,
       color: "from-[#f97316] to-[#ea580c]"
     },
     { 
-      name: "Avatares IA", 
-      description: "Representación digital",
+      name: t('home.servicesSection.services.aiAvatars.name'),
+      description: t('home.servicesSection.services.aiAvatars.description'),
       icon: Brain,
       color: "from-[#10b981] to-[#059669]"
     },
     { 
-      name: "Consultoría", 
-      description: "Estrategia psicológica",
+      name: t('home.servicesSection.services.consulting.name'),
+      description: t('home.servicesSection.services.consulting.description'),
       icon: Brain,
       color: "from-[#a855f7] to-[#d946ef]"
     },
     { 
-      name: "Marketing", 
-      description: "Campañas efectivas",
+      name: t('home.servicesSection.services.marketing.name'),
+      description: t('home.servicesSection.services.marketing.description'),
       icon: Megaphone,
       color: "from-[#06b6d4] to-[#0891b2]"
     },
     { 
-      name: "Material Impreso", 
-      description: "Tangibles de lujo",
+      name: t('home.servicesSection.services.printMaterial.name'),
+      description: t('home.servicesSection.services.printMaterial.description'),
       icon: FileText,
       color: "from-[#d946ef] to-[#a855f7]"
     },
     { 
-      name: "Animación", 
-      description: "Logos en movimiento",
+      name: t('home.servicesSection.services.animation.name'),
+      description: t('home.servicesSection.services.animation.description'),
       icon: Sparkles,
       color: "from-[#6366f1] to-[#8b5cf6]"
     }
@@ -102,7 +105,7 @@ const IndividualServices = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-white/50 text-sm font-mono uppercase tracking-widest mb-4"
           >
-            A tu medida
+            {t('home.servicesSection.badge')}
           </motion.p>
           
           <motion.h2
@@ -112,9 +115,9 @@ const IndividualServices = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-5xl lg:text-7xl font-light mb-6 font-display tracking-tight"
           >
-            <span className="text-white">Nuestros </span>
+            <span className="text-white">{t('home.servicesSection.title')} </span>
             <span className="text-white italic" style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 300 }}>
-              Servicios
+              {t('home.servicesSection.titleItalic')}
             </span>
           </motion.h2>
 
@@ -125,7 +128,7 @@ const IndividualServices = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-white/50 text-xl lg:text-2xl max-w-2xl mx-auto font-light"
           >
-            Arma tu paquete ideal. Todas las opciones para hacer crecer tu marca.
+            {t('home.servicesSection.subtitle')}
           </motion.p>
         </motion.div>
 
@@ -217,10 +220,10 @@ const IndividualServices = () => {
           className="text-center mt-12 lg:mt-16"
         >
           <p className="text-white/60 text-base lg:text-lg mb-4">
-            ¿No encuentras lo que buscas?
+            {t('home.servicesSection.question')}
           </p>
           <p className="text-white text-lg lg:text-xl mb-6">
-            <span className="text-[#a855f7] font-semibold">Creamos soluciones personalizadas</span> para tus necesidades específicas
+            <span className="text-[#a855f7] font-semibold">{t('home.servicesSection.answer')}</span> {t('home.servicesSection.answerEnd')}
           </p>
           
           <motion.a
@@ -287,7 +290,7 @@ const IndividualServices = () => {
             <svg className="w-5 h-5 relative z-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
-            <span className="relative z-10 text-white font-light text-lg tracking-wide">Hablemos de tu Proyecto</span>
+            <span className="relative z-10 text-white font-light text-lg tracking-wide">{t('home.servicesSection.cta')}</span>
           </motion.a>
 
           {/* Link a servicios completos */}
