@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
-import { Camera, Palette, Smartphone, Mic, Brain, FileText, Sparkles, Video, Code, Megaphone, Calendar } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Camera, Palette, Smartphone, Mic, Brain, FileText, Sparkles, Video, Code, Megaphone, Calendar, ArrowRight } from 'lucide-react'
 
 const IndividualServices = () => {
   const services = [
