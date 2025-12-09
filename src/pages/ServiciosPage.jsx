@@ -32,125 +32,14 @@ const ServiciosPage = () => {
   const isIdentityInView = useInView(identityRef, { once: true, amount: 0.3 })
 
   const services = [
-    {
-      id: 'identidad-marca',
-      icon: Palette,
-      title: 'Identidad de Marca',
-      subtitle: 'Brand Identity',
-      tagline: 'Diseños que conectan y permanecen',
-      description: 'Creamos identidades de marca completas que no solo se ven increíbles, sino que están fundamentadas en psicología y neurociencia. Cada elemento visual está diseñado para conectar con el inconsciente de tu audiencia.',
-      gradient: 'from-purple-500 to-purple-600',
-      features: [
-        'Logo + Sistema de Identidad Completo',
-        'Manual de Marca Profesional (PDF)',
-        'Paleta de Color Psicológica',
-        'Tipografía + Jerarquías',
-        'Papelería Corporativa',
-        'Plantillas de Redes Sociales',
-        'Aplicaciones Digitales',
-        'Archivos Editables (AI, SVG, PNG)'
-      ],
-      process: [
-        'Briefing + Investigación de Mercado',
-        'Análisis Psicoanalítico de Audiencia',
-        'Conceptualización + Bocetos',
-        'Desarrollo de Identidad Visual',
-        'Manual de Marca + Guidelines',
-        'Entrega + Capacitación'
-      ],
-      duration: '4-6 semanas'
-    },
-    {
-      id: 'apps-premium',
-      icon: Smartphone,
-      title: 'Apps Premium',
-      subtitle: 'Full-Stack Development',
-      tagline: 'Desarrollo completo: diseño + código',
-      description: 'Desarrollo full-stack de aplicaciones web y móviles. React, Node.js, bases de datos, hosting. UI/UX con psicología aplicada que convierte usuarios en clientes leales.',
-      gradient: 'from-fuchsia-500 to-fuchsia-600',
-      features: [
-        'UI/UX Design + Prototipos Interactivos',
-        'Desarrollo Frontend (React/Next.js)',
-        'Backend + API (Node.js/Express)',
-        'Base de Datos (PostgreSQL/MongoDB)',
-        'Autenticación + Seguridad',
-        'Responsive + PWA',
-        'Deploy + Hosting',
-        'Mantenimiento + Soporte'
-      ],
-      process: [
-        'Discovery + Definición de Features',
-        'Arquitectura de Información',
-        'Diseño UI/UX + Design System',
-        'Desarrollo Frontend',
-        'Desarrollo Backend + Database',
-        'Testing + Deploy'
-      ],
-      duration: '8-12 semanas'
-    },
-    {
-      id: 'contenido-digital',
-      icon: Video,
-      title: 'Contenido Digital',
-      subtitle: 'Motion & Audio',
-      tagline: 'Video, motion graphics y animaciones 3D',
-      description: 'Creación de contenido visual que hipnotiza. Video profesional, motion graphics, animaciones 3D, edición de audio. Contenido que viraliza y posiciona tu marca.',
-      gradient: 'from-cyan-500 to-cyan-600',
-      features: [
-        'Video Profesional (Shooting + Edición)',
-        'Motion Graphics Cinematográficos',
-        'Animaciones 3D (Blender/Cinema 4D)',
-        'Edición de Audio + Sound Design',
-        'Reels + TikToks Optimizados',
-        'Video Ads para Redes Sociales',
-        'Intro/Outro para YouTube',
-        'Templates Editables (After Effects)'
-      ],
-      process: [
-        'Briefing Creativo + Referencias',
-        'Storyboard + Concepto Visual',
-        'Shooting (si aplica)',
-        'Edición + Motion Graphics',
-        'Sound Design + Música',
-        'Revisiones + Entrega Final'
-      ],
-      duration: '2-4 semanas'
-    },
-    {
-      id: 'avatares-ia',
-      icon: Bot,
-      title: 'Avatares IA',
-      subtitle: 'Generative AI',
-      tagline: 'Tu portavoz digital generado con IA',
-      description: 'Creamos avatares digitales generados con IA, entrenados específicamente para tu marca. Aparecen en videos, redes sociales y contenido automatizado.',
-      gradient: 'from-emerald-500 to-emerald-600',
-      features: [
-        'Fine-tuning de Modelo IA',
-        'Avatar Personalizado (Estilo/Personalidad)',
-        'Voice Cloning Profesional',
-        'Lip-sync Automático',
-        'Workflow de Generación',
-        'Scripts + Prompts Optimizados',
-        'Videos Automatizados',
-        'Capacitación + Documentación'
-      ],
-      process: [
-        'Definición de Personalidad del Avatar',
-        'Entrenamiento del Modelo IA',
-        'Voice Clone + Testing',
-        'Workflow de Producción',
-        'Pruebas + Ajustes',
-        'Entrega + Capacitación'
-      ],
-      duration: '6-8 semanas'
-    },
+    // 1. CONSULTORÍA - Punto de partida estratégico
     {
       id: 'consultoria-psicoanalitica',
       icon: Brain,
       title: 'Consultoría Psicoanalítica',
       subtitle: 'Brand Psychology',
-      tagline: 'Desciframos el inconsciente de tu audiencia',
-      description: 'Auditoría psicoanalítica profunda de tu marca: qué emociones genera, arquetipos, deseos inconscientes de tu audiencia. Optimización emocional para vender más.',
+      tagline: 'El punto de partida: descifra tu audiencia',
+      description: 'Auditoría psicoanalítica profunda de tu marca. Desciframos qué emociones generas, arquetipos, deseos inconscientes de tu audiencia. La base estratégica antes de cualquier diseño.',
       gradient: 'from-violet-500 to-violet-600',
       features: [
         'Análisis del Inconsciente de tu Audiencia',
@@ -171,6 +60,325 @@ const ServiciosPage = () => {
         'Reporte + Presentación'
       ],
       duration: '3-4 semanas'
+    },
+    // 2. IDENTIDAD VISUAL - Sistema completo
+    {
+      id: 'identidad-visual',
+      icon: Sparkles,
+      title: 'Identidad Visual',
+      subtitle: 'Brand Identity System',
+      tagline: 'Sistema completo que conecta y permanece',
+      description: 'Identidad de marca completa basada en psicología y neurociencia. Logo, colores, tipografía, manual de marca. Cada elemento diseñado para conectar con el inconsciente de tu audiencia.',
+      gradient: 'from-fuchsia-500 to-pink-600',
+      features: [
+        'Logo + Sistema de Identidad Completo',
+        'Manual de Marca Profesional (PDF)',
+        'Paleta de Color Psicológica',
+        'Tipografía + Jerarquías',
+        'Papelería Corporativa',
+        'Plantillas de Redes Sociales',
+        'Aplicaciones Digitales',
+        'Archivos Editables (AI, SVG, PNG)'
+      ],
+      process: [
+        'Briefing + Investigación de Mercado',
+        'Análisis Psicoanalítico de Audiencia',
+        'Conceptualización + Bocetos',
+        'Desarrollo de Identidad Visual',
+        'Manual de Marca + Guidelines',
+        'Entrega + Capacitación'
+      ],
+      duration: '4-6 semanas'
+    },
+    // 3. LOGO DESIGN - Elemento base
+    {
+      id: 'logo-design',
+      icon: Palette,
+      title: 'Logo Design',
+      subtitle: 'Visual Identity',
+      tagline: 'Identidad memorable que perdura',
+      description: 'Diseño de logotipo profesional con fundamento psicológico. Minimalista, memorable, versátil. Incluye variaciones, paleta de color y archivos editables.',
+      gradient: 'from-purple-400 to-purple-600',
+      features: [
+        'Logotipo Principal + Variaciones',
+        'Versiones: Color, B/N, Negativo',
+        'Paleta de Color Estratégica',
+        'Guía de Uso Básica',
+        'Archivos Vectoriales (AI, EPS, SVG)',
+        'Formatos Web (PNG, WebP)',
+        'Favicon + App Icon',
+        '3 Conceptos + Revisiones Ilimitadas'
+      ],
+      process: [
+        'Briefing + Moodboard',
+        'Investigación de Competencia',
+        'Conceptualización (3 propuestas)',
+        'Refinamiento del Concepto Elegido',
+        'Vectorización + Versiones',
+        'Entrega Final + Guidelines'
+      ],
+      duration: '2-3 semanas'
+    },
+    // 4. PÁGINAS WEB - Presencia digital
+    {
+      id: 'paginas-web',
+      icon: Code,
+      title: 'Páginas Web',
+      subtitle: 'Web Development',
+      tagline: 'Sitios que convierten visitantes en clientes',
+      description: 'Desarrollo de páginas web profesionales con React. Diseño responsivo, optimización SEO, hosting incluido. UI/UX con psicología aplicada que convierte.',
+      gradient: 'from-indigo-500 to-blue-600',
+      features: [
+        'Diseño UI/UX Personalizado',
+        'Desarrollo con React/Next.js',
+        'Responsive (Mobile, Tablet, Desktop)',
+        'Optimización SEO',
+        'Animaciones Fluidas (Framer Motion)',
+        'Formularios + Integraciones',
+        'Deploy + Hosting (1 año)',
+        'Mantenimiento + Soporte'
+      ],
+      process: [
+        'Definición de Estructura + Contenido',
+        'Wireframes + Diseño UI',
+        'Desarrollo Frontend',
+        'Optimización + SEO',
+        'Testing Cross-Browser',
+        'Deploy + Capacitación'
+      ],
+      duration: '4-6 semanas'
+    },
+    // 5. APPS MÓVILES - Experiencias digitales
+    {
+      id: 'apps-moviles',
+      icon: Smartphone,
+      title: 'Apps Móviles',
+      subtitle: 'Full-Stack Development',
+      tagline: 'Experiencias fluidas que enamoran',
+      description: 'Desarrollo full-stack de aplicaciones móviles y web. React Native, Node.js, bases de datos, hosting. UI/UX con psicología aplicada que convierte usuarios en clientes leales.',
+      gradient: 'from-cyan-500 to-blue-600',
+      features: [
+        'UI/UX Design + Prototipos Interactivos',
+        'Desarrollo Frontend (React/React Native)',
+        'Backend + API (Node.js/Express)',
+        'Base de Datos (PostgreSQL/MongoDB)',
+        'Autenticación + Seguridad',
+        'Responsive + PWA',
+        'Deploy + Hosting',
+        'Mantenimiento + Soporte'
+      ],
+      process: [
+        'Discovery + Definición de Features',
+        'Arquitectura de Información',
+        'Diseño UI/UX + Design System',
+        'Desarrollo Frontend',
+        'Desarrollo Backend + Database',
+        'Testing + Deploy'
+      ],
+      duration: '8-12 semanas'
+    },
+    // 6. VIDEO BRANDING - Contenido visual
+    {
+      id: 'video-branding',
+      icon: Video,
+      title: 'Video Branding',
+      subtitle: 'Motion Content',
+      tagline: 'Contenido visual que hipnotiza',
+      description: 'Producción de video profesional para tu marca. Shooting, edición cinematográfica, motion graphics, reels para redes. Contenido que viraliza y posiciona.',
+      gradient: 'from-violet-500 to-purple-600',
+      features: [
+        'Video Profesional (Shooting + Edición)',
+        'Reels + TikToks Optimizados',
+        'Video Ads para Redes Sociales',
+        'Intro/Outro para YouTube',
+        'Motion Graphics',
+        'Color Grading Cinematográfico',
+        'Subtítulos + Captions',
+        'Formatos Optimizados (IG, TT, YT)'
+      ],
+      process: [
+        'Briefing Creativo + Referencias',
+        'Storyboard + Guion',
+        'Shooting (si aplica)',
+        'Edición + Motion Graphics',
+        'Color Grading + Audio',
+        'Revisiones + Entrega Final'
+      ],
+      duration: '2-4 semanas'
+    },
+    // 7. ANIMACIÓN - Logos en movimiento
+    {
+      id: 'animacion',
+      icon: Layers,
+      title: 'Animación de Logo',
+      subtitle: 'Motion Graphics',
+      tagline: 'Logos que cobran vida',
+      description: 'Animación profesional de tu logotipo. Perfect para intros de video, redes sociales, presentaciones. Motion graphics fluidos con efecto WOW.',
+      gradient: 'from-indigo-400 to-violet-600',
+      features: [
+        'Animación de Logo (5-10 segundos)',
+        'Motion Graphics Cinematográficos',
+        'Versión Horizontal + Vertical',
+        'Con/Sin Audio',
+        'Formatos: MP4, MOV, GIF',
+        'Transparencia (Alpha Channel)',
+        'Optimizado para Redes Sociales',
+        'Archivos After Effects (Editable)'
+      ],
+      process: [
+        'Análisis del Logo',
+        'Concepto de Animación',
+        'Storyboard + Timing',
+        'Animación + Motion Graphics',
+        'Sound Design',
+        'Exportación Múltiple'
+      ],
+      duration: '1-2 semanas'
+    },
+    // 8. FOTOGRAFÍA - Sesiones profesionales
+    {
+      id: 'fotografia',
+      icon: Camera,
+      title: 'Fotografía',
+      subtitle: 'Professional Shooting',
+      tagline: 'Sesiones que capturan la esencia',
+      description: 'Fotografía profesional para tu marca. Producto, retrato corporativo, lifestyle. Edición profesional con estilo cinematográfico que eleva tu presencia visual.',
+      gradient: 'from-pink-500 to-rose-600',
+      features: [
+        'Sesión Fotográfica Profesional',
+        'Edición Profesional (Color Grading)',
+        'Retoque + Composición',
+        '50-100 Fotos Editadas',
+        'Archivos RAW + JPEG',
+        'Optimización para Web/Redes',
+        'Derechos de Uso Comercial',
+        'Banco de Imágenes Personalizado'
+      ],
+      process: [
+        'Briefing + Concepto Visual',
+        'Preparación de Locación/Producto',
+        'Sesión Fotográfica',
+        'Selección de Mejores Tomas',
+        'Edición + Retoque',
+        'Entrega + Optimización'
+      ],
+      duration: '1-2 semanas'
+    },
+    // 9. AUDIO BRANDING - Identidad sonora
+    {
+      id: 'audio-branding',
+      icon: Mic,
+      title: 'Audio Branding',
+      subtitle: 'Sonic Identity',
+      tagline: 'Identidad sonora que se graba en la mente',
+      description: 'Creación de identidad sonora para tu marca. Audio logo, jingles, música corporativa. Sonidos que activan reconocimiento y recuerdo emocional.',
+      gradient: 'from-orange-500 to-amber-600',
+      features: [
+        'Audio Logo (3-5 segundos)',
+        'Jingle Corporativo (15-30 seg)',
+        'Música de Fondo para Videos',
+        'Sound Design para Producto',
+        'Variaciones Instrumentales',
+        'Formatos: WAV, MP3, AAC',
+        'Derechos de Uso Comercial',
+        'Guidelines de Uso Sonoro'
+      ],
+      process: [
+        'Análisis de Identidad de Marca',
+        'Referencias Sonoras',
+        'Composición + Arreglos',
+        'Grabación + Mezcla',
+        'Mastering Profesional',
+        'Entrega + Documentación'
+      ],
+      duration: '2-3 semanas'
+    },
+    // 10. AVATARES IA - Representación digital
+    {
+      id: 'avatares-ia',
+      icon: Bot,
+      title: 'Avatares IA',
+      subtitle: 'Generative AI',
+      tagline: 'Tu portavoz digital generado con IA',
+      description: 'Creamos avatares digitales generados con IA, entrenados específicamente para tu marca. Aparecen en videos, redes sociales y contenido automatizado.',
+      gradient: 'from-emerald-500 to-teal-600',
+      features: [
+        'Fine-tuning de Modelo IA',
+        'Avatar Personalizado (Estilo/Personalidad)',
+        'Voice Cloning Profesional',
+        'Lip-sync Automático',
+        'Workflow de Generación',
+        'Scripts + Prompts Optimizados',
+        'Videos Automatizados',
+        'Capacitación + Documentación'
+      ],
+      process: [
+        'Definición de Personalidad del Avatar',
+        'Entrenamiento del Modelo IA',
+        'Voice Clone + Testing',
+        'Workflow de Producción',
+        'Pruebas + Ajustes',
+        'Entrega + Capacitación'
+      ],
+      duration: '6-8 semanas'
+    },
+    // 11. MARKETING - Campañas efectivas
+    {
+      id: 'marketing',
+      icon: Megaphone,
+      title: 'Marketing Digital',
+      subtitle: 'Growth Strategy',
+      tagline: 'Campañas que generan resultados reales',
+      description: 'Estrategia y ejecución de campañas de marketing digital. Ads, contenido orgánico, automatización. Enfocado en conversión y ROI medible.',
+      gradient: 'from-cyan-400 to-teal-600',
+      features: [
+        'Estrategia de Marketing 360°',
+        'Gestión de Redes Sociales',
+        'Campañas de Ads (Meta, Google)',
+        'Email Marketing + Automatización',
+        'Copywriting Persuasivo',
+        'Análisis + Optimización',
+        'Reportes Mensuales',
+        'Consultoría Continua'
+      ],
+      process: [
+        'Auditoría de Marca + Competencia',
+        'Definición de Objetivos + KPIs',
+        'Estrategia de Contenido',
+        'Implementación de Campañas',
+        'Monitoreo + A/B Testing',
+        'Optimización Continua'
+      ],
+      duration: 'Mensual (retainer)'
+    },
+    // 12. MATERIAL IMPRESO - Tangibles de lujo
+    {
+      id: 'material-impreso',
+      icon: FileText,
+      title: 'Material Impreso',
+      subtitle: 'Print Design',
+      tagline: 'Tangibles de lujo que impresionan',
+      description: 'Diseño de material impreso premium. Tarjetas de presentación, brochures, packaging, señalética. Impresión en materiales de alta calidad con acabados especiales.',
+      gradient: 'from-fuchsia-400 to-purple-600',
+      features: [
+        'Tarjetas de Presentación Premium',
+        'Brochures + Catálogos',
+        'Packaging Personalizado',
+        'Papelería Corporativa',
+        'Señalética + Letreros',
+        'Diseño + Mockups 3D',
+        'Gestión de Impresión',
+        'Archivos Print-Ready (CMYK)'
+      ],
+      process: [
+        'Briefing + Especificaciones',
+        'Diseño + Mockups',
+        'Selección de Materiales',
+        'Aprobación + Ajustes',
+        'Preparación de Archivos',
+        'Gestión de Impresión + Entrega'
+      ],
+      duration: '2-4 semanas'
     }
   ]
 
@@ -357,7 +565,7 @@ const ServiciosPage = () => {
               Selecciona el servicio que buscas y te llevaremos directo a los detalles. Cada proyecto está diseñado para conectar, convertir y trascender.
             </p>
 
-            {/* CTA al Portafolio */}
+            {/* CTA WhatsApp - Ayuda personalizada */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -365,14 +573,16 @@ const ServiciosPage = () => {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="flex items-center justify-center gap-3 text-white/50 text-sm font-extralight"
             >
-              <Eye className="w-4 h-4" strokeWidth={1.5} />
-              <span>¿Quieres ver nuestro trabajo primero?</span>
+              <Brain className="w-4 h-4" strokeWidth={1.5} />
+              <span>¿No sabes por dónde empezar?</span>
               <a
-                href="/portafolio"
+                href="https://wa.me/420776711575?text=Hola! Necesito ayuda para elegir el servicio ideal para mi proyecto"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="group relative inline-flex items-center gap-2 text-white hover:text-white transition-colors"
               >
                 <span className="relative">
-                  Visita el Portafolio
+                  Te Ayudo a Decidir
                   <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full" />
                 </span>
                 <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.5} />
@@ -380,21 +590,21 @@ const ServiciosPage = () => {
             </motion.div>
           </motion.div>
 
-          {/* Hexagon Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 lg:gap-8">
+          {/* Hexagon Grid - ORDEN POR RELEVANCIA */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 lg:gap-8 mb-12">
             {[
-              { id: 'logo-design', icon: Palette, title: 'Logo Design', subtitle: 'Identidad memorable', color: 'from-purple-500 to-purple-600', target: 'identidad-marca' },
-              { id: 'identidad-visual', icon: Sparkles, title: 'Identidad Visual', subtitle: 'Sistema completo', color: 'from-fuchsia-500 to-pink-600', target: 'identidad-marca' },
-              { id: 'paginas-web', icon: Code, title: 'Páginas Web', subtitle: 'Sitios que convierten', color: 'from-indigo-500 to-blue-600', target: 'apps-premium' },
-              { id: 'apps-moviles', icon: Smartphone, title: 'Apps Móviles', subtitle: 'Experiencias fluidas', color: 'from-cyan-500 to-blue-600', target: 'apps-premium' },
-              { id: 'fotografia', icon: Camera, title: 'Fotografía', subtitle: 'Sesiones profesionales', color: 'from-pink-500 to-rose-600', target: 'contenido-digital' },
-              { id: 'video-branding', icon: Video, title: 'Video Branding', subtitle: 'Contenido visual', color: 'from-violet-500 to-purple-600', target: 'contenido-digital' },
-              { id: 'audio-branding', icon: Mic, title: 'Audio Branding', subtitle: 'Identidad sonora', color: 'from-orange-500 to-amber-600', target: 'contenido-digital' },
+              { id: 'consultoria', icon: Brain, title: 'Consultoría', subtitle: 'Empieza aquí', color: 'from-purple-500 to-violet-600', target: 'consultoria-psicoanalitica' },
+              { id: 'identidad-visual', icon: Sparkles, title: 'Identidad Visual', subtitle: 'Sistema completo', color: 'from-fuchsia-500 to-pink-600', target: 'identidad-visual' },
+              { id: 'logo-design', icon: Palette, title: 'Logo Design', subtitle: 'Identidad memorable', color: 'from-purple-400 to-purple-600', target: 'logo-design' },
+              { id: 'paginas-web', icon: Code, title: 'Páginas Web', subtitle: 'Sitios que convierten', color: 'from-indigo-500 to-blue-600', target: 'paginas-web' },
+              { id: 'apps-moviles', icon: Smartphone, title: 'Apps Móviles', subtitle: 'Experiencias fluidas', color: 'from-cyan-500 to-blue-600', target: 'apps-moviles' },
+              { id: 'video-branding', icon: Video, title: 'Video Branding', subtitle: 'Contenido visual', color: 'from-violet-500 to-purple-600', target: 'video-branding' },
+              { id: 'animacion', icon: Layers, title: 'Animación', subtitle: 'Logos en movimiento', color: 'from-indigo-400 to-violet-600', target: 'animacion' },
+              { id: 'fotografia', icon: Camera, title: 'Fotografía', subtitle: 'Sesiones profesionales', color: 'from-pink-500 to-rose-600', target: 'fotografia' },
+              { id: 'audio-branding', icon: Mic, title: 'Audio Branding', subtitle: 'Identidad sonora', color: 'from-orange-500 to-amber-600', target: 'audio-branding' },
               { id: 'avatares-ia', icon: Bot, title: 'Avatares IA', subtitle: 'Representación digital', color: 'from-emerald-500 to-teal-600', target: 'avatares-ia' },
-              { id: 'consultoria', icon: Brain, title: 'Consultoría', subtitle: 'Estrategia psicológica', color: 'from-purple-500 to-violet-600', target: 'consultoria-psicoanalitica' },
-              { id: 'marketing', icon: Megaphone, title: 'Marketing', subtitle: 'Campañas efectivas', color: 'from-cyan-500 to-teal-600', target: 'contenido-digital' },
-              { id: 'material-impreso', icon: FileText, title: 'Material Impreso', subtitle: 'Tangibles de lujo', color: 'from-fuchsia-500 to-purple-600', target: 'identidad-marca' },
-              { id: 'animacion', icon: Layers, title: 'Animación', subtitle: 'Logos en movimiento', color: 'from-indigo-500 to-violet-600', target: 'contenido-digital' },
+              { id: 'marketing', icon: Megaphone, title: 'Marketing', subtitle: 'Campañas efectivas', color: 'from-cyan-400 to-teal-600', target: 'marketing' },
+              { id: 'material-impreso', icon: FileText, title: 'Material Impreso', subtitle: 'Tangibles de lujo', color: 'from-fuchsia-400 to-purple-600', target: 'material-impreso' },
             ].map((item, i) => (
               <motion.button
                 key={item.id}
@@ -490,6 +700,30 @@ const ServiciosPage = () => {
               </motion.button>
             ))}
           </div>
+
+          {/* CTA Portafolio - Abajo de los hexágonos */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center pt-8 border-t border-white/10"
+          >
+            <div className="flex items-center justify-center gap-3 text-white/40 text-sm font-extralight">
+              <Eye className="w-4 h-4" strokeWidth={1.5} />
+              <span>¿Quieres ver ejemplos de nuestro trabajo?</span>
+              <a
+                href="/portafolio"
+                className="group relative inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors"
+              >
+                <span className="relative">
+                  Explora el Portafolio
+                  <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full" />
+                </span>
+                <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.5} />
+              </a>
+            </div>
+          </motion.div>
         </div>
       </section>
 
