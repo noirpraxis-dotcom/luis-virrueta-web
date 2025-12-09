@@ -133,15 +133,15 @@ const AppContent = () => {
             } />
 
             {/* Páginas Legales */}
-            <Route path="/privacy-policy" element={
+            <Route path="/politica-privacidad" element={
               <PrivacyPolicyPage />
             } />
 
-            <Route path="/terms-conditions" element={
+            <Route path="/terminos-condiciones" element={
               <TermsConditionsPage />
             } />
 
-            <Route path="/cookie-policy" element={
+            <Route path="/politica-cookies" element={
               <CookiePolicyPage />
             } />
             
