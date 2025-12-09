@@ -1,35 +1,43 @@
 import { motion } from 'framer-motion'
 import { useRef } from 'react'
 import { useInView } from 'framer-motion'
+import { FileText, Shield, DollarSign, Palette, BookOpen, Scale } from 'lucide-react'
 
 const TermsConditionsPage = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
-  const lastUpdated = "November 25, 2025"
+  const lastUpdated = "9 de Diciembre, 2024"
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white">
       {/* Hero Section */}
-      <section className="relative py-32 lg:py-40 px-6 lg:px-20 bg-white">
-        <div className="max-w-4xl mx-auto">
+      <section className="relative py-32 lg:py-40 px-6 lg:px-20 overflow-hidden">
+        {/* Gradient Orbs */}
+        <div className="absolute top-20 left-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-fuchsia-500/10 rounded-full blur-3xl" />
+        
+        <div className="max-w-4xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center mb-12"
           >
-            <h1 
-              className="text-stone-800 text-5xl lg:text-7xl font-light tracking-[0.2em] mb-6"
-              style={{ fontFamily: 'Gotham, sans-serif' }}
-            >
-              TERMS & CONDITIONS
+            <div className="flex justify-center mb-6">
+              <div className="p-4 bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 rounded-2xl backdrop-blur-sm">
+                <FileText className="w-12 h-12 text-purple-600" />
+              </div>
+            </div>
+            
+            <h1 className="text-gray-900 text-5xl lg:text-7xl font-light tracking-tight mb-6">
+              Términos y <span className="bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent font-normal">Condiciones</span>
             </h1>
             
-            <div className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mx-auto w-64 mb-6" />
+            <div className="h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent mx-auto w-64 mb-6" />
             
-            <p className="text-stone-500 text-sm tracking-wide">
-              Last Updated: {lastUpdated}
+            <p className="text-gray-500 text-sm tracking-wide">
+              Última actualización: {lastUpdated}
             </p>
           </motion.div>
         </div>
@@ -44,51 +52,53 @@ const TermsConditionsPage = () => {
           className="max-w-4xl mx-auto space-y-12"
         >
           {/* Introduction */}
-          <div>
-            <p className="text-stone-600 leading-relaxed mb-4">
-              Welcome to Greenleaf Lightworks. By accessing or using our website and services, you agree to be bound 
-              by these Terms and Conditions. Please read them carefully.
+          <div className="bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-3xl p-8 border border-purple-100">
+            <p className="text-gray-700 leading-relaxed text-lg">
+              Bienvenido a <span className="font-semibold bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent">LUXMANIA</span>. 
+              Al acceder o usar nuestro sitio web y servicios, aceptas estar vinculado por estos Términos y Condiciones. 
+              Por favor, léelos cuidadosamente.
             </p>
           </div>
 
           {/* Acceptance of Terms */}
-          <Section title="1. Acceptance of Terms">
+          <Section title="1. Aceptación de Términos" icon={Shield}>
             <p>
-              By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement. 
-              If you do not agree to these terms, please do not use our website or services.
+              Al acceder y usar este sitio web, aceptas y te comprometes a cumplir con los términos y disposiciones de este acuerdo. 
+              Si no estás de acuerdo con estos términos, por favor no uses nuestro sitio web o servicios.
             </p>
           </Section>
 
           {/* Services Description */}
-          <Section title="2. Services">
-            <p>Greenleaf Lightworks provides:</p>
-            <ul className="list-disc pl-6 space-y-2 mt-3">
-              <li>Energy healing sessions (Emotion Code, Body Code, Belief Code)</li>
-              <li>Past life regression sessions</li>
-              <li>Ilyari somatic healing</li>
-              <li>Healing services for animals</li>
-              <li>Digital products and books</li>
-              <li>Online courses and educational content (coming soon)</li>
-              <li>Physical and digital products through our store</li>
+          <Section title="2. Servicios" icon={Palette}>
+            <p className="mb-3">LUXMANIA proporciona:</p>
+            <ul className="list-disc pl-6 space-y-2 text-gray-600">
+              <li>Branding psicológico y estrategia de marca</li>
+              <li>Arquetipos de marca y storytelling</li>
+              <li>Avatares IA personalizados</li>
+              <li>Diseño UX/UI</li>
+              <li>Consultoría de identidad de marca</li>
+              <li>Sesiones de sanación (Emotion Code, Body Code, Belief Code)</li>
+              <li>Contenido educativo del blog</li>
+              <li>Productos digitales y tienda online (próximamente)</li>
             </ul>
           </Section>
 
           {/* User Accounts */}
-          <Section title="3. User Accounts">
-            <Subsection title="3.1 Account Registration">
-              <p>To access certain features, you may need to create an account. You agree to:</p>
-              <ul className="list-disc pl-6 space-y-2 mt-3">
-                <li>Provide accurate and complete information</li>
-                <li>Keep your password secure and confidential</li>
-                <li>Notify us immediately of any unauthorized access</li>
-                <li>Be responsible for all activities under your account</li>
+          <Section title="3. Cuentas de Usuario" icon={Shield}>
+            <Subsection title="3.1 Registro">
+              <p>Para acceder a ciertas funciones, puedes necesitar crear una cuenta. Te comprometes a:</p>
+              <ul className="list-disc pl-6 space-y-2 mt-3 text-gray-600">
+                <li>Proporcionar información precisa y completa</li>
+                <li>Mantener tu contraseña segura y confidencial</li>
+                <li>Notificarnos inmediatamente de cualquier acceso no autorizado</li>
+                <li>Ser responsable de todas las actividades bajo tu cuenta</li>
               </ul>
             </Subsection>
 
-            <Subsection title="3.2 Account Termination">
+            <Subsection title="3.2 Terminación de Cuenta">
               <p>
-                We reserve the right to suspend or terminate your account if you violate these terms or engage in 
-                fraudulent, abusive, or illegal activity.
+                Nos reservamos el derecho de suspender o terminar tu cuenta si violas estos términos o participas en 
+                actividades fraudulentas, abusivas o ilegales.
               </p>
             </Subsection>
           </Section>

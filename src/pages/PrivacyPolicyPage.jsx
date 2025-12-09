@@ -1,35 +1,43 @@
 import { motion } from 'framer-motion'
 import { useRef } from 'react'
 import { useInView } from 'framer-motion'
+import { Shield, Eye, Lock, Database, UserCheck, Globe } from 'lucide-react'
 
 const PrivacyPolicyPage = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
-  const lastUpdated = "November 25, 2025"
+  const lastUpdated = "9 de Diciembre, 2024"
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white">
       {/* Hero Section */}
-      <section className="relative py-32 lg:py-40 px-6 lg:px-20 bg-white">
-        <div className="max-w-4xl mx-auto">
+      <section className="relative py-32 lg:py-40 px-6 lg:px-20 overflow-hidden">
+        {/* Gradient Orbs */}
+        <div className="absolute top-20 left-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-fuchsia-500/10 rounded-full blur-3xl" />
+        
+        <div className="max-w-4xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center mb-12"
           >
-            <h1 
-              className="text-stone-800 text-5xl lg:text-7xl font-light tracking-[0.2em] mb-6"
-              style={{ fontFamily: 'Gotham, sans-serif' }}
-            >
-              PRIVACY POLICY
+            <div className="flex justify-center mb-6">
+              <div className="p-4 bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 rounded-2xl backdrop-blur-sm">
+                <Shield className="w-12 h-12 text-purple-600" />
+              </div>
+            </div>
+            
+            <h1 className="text-gray-900 text-5xl lg:text-7xl font-light tracking-tight mb-6">
+              Política de <span className="bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent font-normal">Privacidad</span>
             </h1>
             
-            <div className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mx-auto w-64 mb-6" />
+            <div className="h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent mx-auto w-64 mb-6" />
             
-            <p className="text-stone-500 text-sm tracking-wide">
-              Last Updated: {lastUpdated}
+            <p className="text-gray-500 text-sm tracking-wide">
+              Última actualización: {lastUpdated}
             </p>
           </motion.div>
         </div>
@@ -44,147 +52,169 @@ const PrivacyPolicyPage = () => {
           className="max-w-4xl mx-auto space-y-12"
         >
           {/* Introduction */}
-          <div>
-            <p className="text-stone-600 leading-relaxed mb-4">
-              At Greenleaf Lightworks, we respect your privacy and are committed to protecting your personal information. 
-              This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website.
+          <div className="bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-3xl p-8 border border-purple-100">
+            <p className="text-gray-700 leading-relaxed text-lg">
+              En <span className="font-semibold bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent">LUXMANIA</span>, 
+              tu privacidad es nuestra prioridad. Esta política explica cómo recopilamos, usamos y protegemos tu información personal cuando 
+              visitas nuestro sitio web y utilizas nuestros servicios de branding psicológico, arquetipos de marca, avatares IA, y diseño UX/UI.
             </p>
           </div>
 
           {/* Information We Collect */}
-          <Section title="1. Information We Collect">
-            <Subsection title="1.1 Personal Information">
-              <p>We may collect personal information that you voluntarily provide to us when you:</p>
-              <ul className="list-disc pl-6 space-y-2 mt-3">
-                <li>Register for an account</li>
-                <li>Make a purchase</li>
-                <li>Subscribe to our newsletter</li>
-                <li>Contact us via email or contact forms</li>
-                <li>Enroll in our courses</li>
+          <Section title="1. Información que Recopilamos" icon={Database}>
+            <Subsection title="1.1 Información Personal">
+              <p>Recopilamos información que nos proporcionas voluntariamente cuando:</p>
+              <ul className="list-disc pl-6 space-y-2 mt-3 text-gray-600">
+                <li>Agendas una sesión de consultoría o sesión de sanación</li>
+                <li>Te suscribes a nuestro newsletter</li>
+                <li>Nos contactas vía email o formularios de contacto</li>
+                <li>Realizas una compra en nuestra tienda online</li>
+                <li>Interactúas con nuestro contenido del blog</li>
               </ul>
-              <p className="mt-3">This information may include:</p>
-              <ul className="list-disc pl-6 space-y-2 mt-3">
-                <li>Name and contact information (email address, phone number)</li>
-                <li>Billing and shipping address</li>
-                <li>Payment information (processed securely through third-party providers)</li>
-                <li>Account credentials</li>
-              </ul>
-            </Subsection>
-
-            <Subsection title="1.2 Automatically Collected Information">
-              <p>When you visit our website, we automatically collect certain information about your device, including:</p>
-              <ul className="list-disc pl-6 space-y-2 mt-3">
-                <li>IP address</li>
-                <li>Browser type and version</li>
-                <li>Pages visited and time spent</li>
-                <li>Referring website</li>
-                <li>Operating system</li>
+              <p className="mt-4">Esta información puede incluir:</p>
+              <ul className="list-disc pl-6 space-y-2 mt-3 text-gray-600">
+                <li>Nombre completo y datos de contacto (email, teléfono, WhatsApp)</li>
+                <li>Información sobre tu marca o proyecto</li>
+                <li>Información de facturación y envío</li>
+                <li>Preferencias de comunicación</li>
               </ul>
             </Subsection>
 
-            <Subsection title="1.3 Cookies and Tracking Technologies">
+            <Subsection title="1.2 Información Recopilada Automáticamente">
+              <p>Cuando visitas nuestro sitio web, recopilamos automáticamente:</p>
+              <ul className="list-disc pl-6 space-y-2 mt-3 text-gray-600">
+                <li>Dirección IP y ubicación general</li>
+                <li>Tipo de navegador y dispositivo</li>
+                <li>Páginas visitadas y tiempo de navegación</li>
+                <li>Origen de la visita (referrer)</li>
+                <li>Interacciones con elementos del sitio</li>
+              </ul>
+            </Subsection>
+
+            <Subsection title="1.3 Cookies y Tecnologías de Seguimiento">
               <p>
-                We use cookies and similar tracking technologies to enhance your experience. You can control cookies 
-                through your browser settings. For more information, see our{' '}
-                <a href="/cookie-policy" className="text-[#8dc1ab] hover:text-[#7ab09a] underline">Cookie Policy</a>.
+                Utilizamos cookies para mejorar tu experiencia. Puedes gestionar tus preferencias de cookies a través de 
+                nuestro banner de cookies. Para más información, consulta nuestra{' '}
+                <a href="/politica-cookies" className="text-purple-600 hover:text-fuchsia-600 underline font-medium transition-colors">
+                  Política de Cookies
+                </a>.
               </p>
             </Subsection>
           </Section>
 
           {/* How We Use Your Information */}
-          <Section title="2. How We Use Your Information">
-            <p>We use the information we collect to:</p>
-            <ul className="list-disc pl-6 space-y-2 mt-3">
-              <li>Process and fulfill your orders</li>
-              <li>Provide access to purchased courses and content</li>
-              <li>Send order confirmations and updates</li>
-              <li>Respond to your inquiries and provide customer support</li>
-              <li>Send promotional emails and newsletters (with your consent)</li>
-              <li>Improve our website and services</li>
-              <li>Detect and prevent fraud</li>
-              <li>Comply with legal obligations</li>
+          <Section title="2. Cómo Usamos Tu Información" icon={Eye}>
+            <p className="mb-4">Utilizamos la información recopilada para:</p>
+            <ul className="list-disc pl-6 space-y-2 text-gray-600">
+              <li>Proporcionar y gestionar nuestros servicios de branding, diseño, y consultoría</li>
+              <li>Procesar tus solicitudes de sesiones y consultas</li>
+              <li>Enviarte comunicaciones sobre tus proyectos y servicios contratados</li>
+              <li>Mejorar nuestros servicios basándonos en tu feedback</li>
+              <li>Enviarte contenido relevante del blog y recursos educativos (solo si te suscribiste)</li>
+              <li>Procesar pagos de forma segura a través de proveedores externos</li>
+              <li>Cumplir con obligaciones legales y fiscales</li>
+              <li>Prevenir fraude y garantizar la seguridad de nuestros servicios</li>
             </ul>
           </Section>
 
-          {/* Sharing Your Information */}
-          <Section title="3. Sharing Your Information">
-            <p>We do not sell your personal information. We may share your information with:</p>
-            
-            <Subsection title="3.1 Service Providers">
-              <p>Third-party vendors who perform services on our behalf, such as:</p>
-              <ul className="list-disc pl-6 space-y-2 mt-3">
-                <li>Payment processors (Stripe, PayPal)</li>
-                <li>Email service providers</li>
-                <li>Website hosting and analytics providers</li>
-                <li>Course platform providers</li>
-              </ul>
-            </Subsection>
-
-            <Subsection title="3.2 Legal Requirements">
-              <p>
-                We may disclose your information if required by law or if we believe such action is necessary to 
-                comply with legal obligations or protect our rights.
-              </p>
-            </Subsection>
+          {/* Information Sharing */}
+          <Section title="3. Compartir Tu Información" icon={UserCheck}>
+            <p className="mb-4">
+              No vendemos ni alquilamos tu información personal a terceros. Podemos compartir tu información únicamente con:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 text-gray-600">
+              <li><strong>Proveedores de servicios:</strong> Plataformas de pago, hosting, email marketing (siempre con acuerdos de confidencialidad)</li>
+              <li><strong>Autoridades legales:</strong> Si es requerido por ley o para proteger nuestros derechos</li>
+              <li><strong>Con tu consentimiento:</strong> En cualquier otro caso, solo con tu autorización explícita</li>
+            </ul>
           </Section>
 
           {/* Data Security */}
-          <Section title="4. Data Security">
+          <Section title="4. Seguridad de Datos" icon={Lock}>
             <p>
-              We implement appropriate technical and organizational measures to protect your personal information 
-              against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission 
-              over the internet is 100% secure.
+              Implementamos medidas de seguridad técnicas y organizativas para proteger tu información contra acceso no autorizado, 
+              pérdida, alteración o divulgación. Esto incluye:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 mt-3 text-gray-600">
+              <li>Encriptación SSL/TLS para todas las transmisiones de datos</li>
+              <li>Acceso restringido a información personal (solo personal autorizado)</li>
+              <li>Auditorías regulares de seguridad</li>
+              <li>Backup automático de datos</li>
+            </ul>
+            <p className="mt-4 text-gray-600">
+              Sin embargo, ningún método de transmisión por internet es 100% seguro. Hacemos nuestro mejor esfuerzo, 
+              pero no podemos garantizar seguridad absoluta.
             </p>
           </Section>
 
-          {/* Your Rights (GDPR/CCPA) */}
-          <Section title="5. Your Privacy Rights">
-            <p>Depending on your location, you may have the following rights:</p>
-            <ul className="list-disc pl-6 space-y-2 mt-3">
-              <li><strong>Access:</strong> Request a copy of your personal data</li>
-              <li><strong>Correction:</strong> Request correction of inaccurate data</li>
-              <li><strong>Deletion:</strong> Request deletion of your personal data</li>
-              <li><strong>Opt-out:</strong> Unsubscribe from marketing communications</li>
-              <li><strong>Data Portability:</strong> Request transfer of your data</li>
+          {/* Your Rights */}
+          <Section title="5. Tus Derechos" icon={Shield}>
+            <p className="mb-4">Tienes derecho a:</p>
+            <ul className="list-disc pl-6 space-y-2 text-gray-600">
+              <li><strong>Acceder:</strong> Solicitar una copia de tu información personal</li>
+              <li><strong>Rectificar:</strong> Corregir información inexacta o incompleta</li>
+              <li><strong>Eliminar:</strong> Solicitar la eliminación de tu información (derecho al olvido)</li>
+              <li><strong>Restringir:</strong> Limitar el procesamiento de tu información</li>
+              <li><strong>Portabilidad:</strong> Recibir tus datos en formato estructurado</li>
+              <li><strong>Oposición:</strong> Oponerte al procesamiento de tu información para ciertos fines</li>
+              <li><strong>Retirar consentimiento:</strong> En cualquier momento, sin afectar la legalidad del procesamiento previo</li>
             </ul>
-            <p className="mt-3">
-              To exercise these rights, contact us at{' '}
-              <a href="mailto:privacy@greenleaflightworks.com" className="text-[#8dc1ab] hover:text-[#7ab09a] underline">
-                privacy@greenleaflightworks.com
+            <p className="mt-4 text-gray-600">
+              Para ejercer cualquiera de estos derechos, contáctanos en:{' '}
+              <a href="mailto:contacto@luxmania.com" className="text-purple-600 hover:text-fuchsia-600 underline font-medium transition-colors">
+                contacto@luxmania.com
               </a>
             </p>
           </Section>
 
+          {/* International Transfers */}
+          <Section title="6. Transferencias Internacionales" icon={Globe}>
+            <p>
+              LUXMANIA opera principalmente en México. Si accedes a nuestros servicios desde otras jurisdicciones, 
+              tu información puede ser transferida y procesada en México. Al usar nuestros servicios, consientes estas transferencias.
+            </p>
+          </Section>
+
+          {/* Data Retention */}
+          <Section title="7. Retención de Datos" icon={Database}>
+            <p>
+              Conservamos tu información personal solo durante el tiempo necesario para cumplir con los propósitos 
+              descritos en esta política, a menos que la ley requiera o permita un período de retención más largo.
+            </p>
+            <ul className="list-disc pl-6 space-y-2 mt-3 text-gray-600">
+              <li><strong>Información de clientes:</strong> 5 años después de la última interacción (obligaciones fiscales)</li>
+              <li><strong>Newsletter subscribers:</strong> Hasta que canceles tu suscripción</li>
+              <li><strong>Cookies:</strong> Según lo especificado en nuestra Política de Cookies</li>
+            </ul>
+          </Section>
+
           {/* Children's Privacy */}
-          <Section title="6. Children's Privacy">
+          <Section title="8. Privacidad de Menores">
             <p>
-              Our services are not intended for individuals under 18 years of age. We do not knowingly collect 
-              personal information from children.
+              Nuestros servicios están dirigidos a adultos y profesionales. No recopilamos intencionalmente información 
+              de menores de 18 años. Si eres padre/madre y crees que tu hijo nos ha proporcionado información, 
+              contáctanos inmediatamente.
             </p>
           </Section>
 
-          {/* International Users */}
-          <Section title="7. International Users">
+          {/* Changes to Policy */}
+          <Section title="9. Cambios a Esta Política">
             <p>
-              If you are accessing our website from outside the United States, please note that your information 
-              may be transferred to and processed in the United States.
+              Podemos actualizar esta Política de Privacidad ocasionalmente. Te notificaremos de cambios significativos 
+              publicando la nueva política en esta página y actualizando la fecha de "Última actualización". 
+              Te recomendamos revisar esta política periódicamente.
             </p>
           </Section>
 
-          {/* Changes to This Policy */}
-          <Section title="8. Changes to This Privacy Policy">
-            <p>
-              We may update this Privacy Policy from time to time. We will notify you of any changes by posting 
-              the new policy on this page and updating the "Last Updated" date.
+          {/* Contact */}
+          <Section title="10. Contacto">
+            <p className="mb-4">
+              Si tienes preguntas, inquietudes o solicitudes relacionadas con esta Política de Privacidad, contáctanos:
             </p>
-          </Section>
-
-          {/* Contact Us */}
-          <Section title="9. Contact Us">
-            <p>If you have questions about this Privacy Policy, please contact us:</p>
-            <div className="mt-4 space-y-2 text-stone-600">
-              <p>Email: <a href="mailto:privacy@greenleaflightworks.com" className="text-[#8dc1ab] hover:text-[#7ab09a] underline">privacy@greenleaflightworks.com</a></p>
-              <p>Website: <a href="https://greenleaflightworks.com" className="text-[#8dc1ab] hover:text-[#7ab09a] underline">www.greenleaflightworks.com</a></p>
+            <div className="bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-2xl p-6 border border-purple-100">
+              <p className="font-semibold text-gray-900 mb-2">LUXMANIA</p>
+              <p className="text-gray-600">Email: <a href="mailto:contacto@luxmania.com" className="text-purple-600 hover:text-fuchsia-600 underline">contacto@luxmania.com</a></p>
+              <p className="text-gray-600">Ubicación: México</p>
             </div>
           </Section>
         </motion.div>
@@ -193,24 +223,28 @@ const PrivacyPolicyPage = () => {
   )
 }
 
-const Section = ({ title, children }) => (
+// Section Component
+const Section = ({ title, children, icon: Icon }) => (
   <div className="space-y-4">
-    <h2 
-      className="text-stone-800 text-2xl font-light tracking-wide"
-      style={{ fontFamily: 'Gotham, sans-serif' }}
-    >
-      {title}
-    </h2>
-    <div className="text-stone-600 leading-relaxed space-y-4">
+    <div className="flex items-center gap-3 mb-4">
+      {Icon && (
+        <div className="p-2 bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 rounded-lg">
+          <Icon className="w-5 h-5 text-purple-600" />
+        </div>
+      )}
+      <h2 className="text-2xl font-semibold text-gray-900">{title}</h2>
+    </div>
+    <div className="pl-0 space-y-4 text-gray-600 leading-relaxed">
       {children}
     </div>
   </div>
 )
 
+// Subsection Component
 const Subsection = ({ title, children }) => (
-  <div className="mt-4 space-y-3">
-    <h3 className="text-stone-700 text-lg font-normal">{title}</h3>
-    <div className="text-stone-600 leading-relaxed space-y-3">
+  <div className="mt-6 pl-4 border-l-2 border-purple-200">
+    <h3 className="text-lg font-medium text-gray-800 mb-3">{title}</h3>
+    <div className="space-y-3 text-gray-600">
       {children}
     </div>
   </div>
