@@ -410,7 +410,7 @@ const LuxmaniaVideoSection = () => {
                   title="Luxmania - Cómo construimos marcas"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
-                  className={`w-full h-full object-cover transition-all duration-500 ${!isPlaying ? 'opacity-40 blur-sm scale-105' : 'opacity-100'}`}
+                  className={`w-full h-full object-cover transition-all duration-500 pointer-events-none ${!isPlaying ? 'opacity-40 blur-sm scale-105' : 'opacity-100'}`}
                 />
 
                 {/* Overlay con botón play y copy */}

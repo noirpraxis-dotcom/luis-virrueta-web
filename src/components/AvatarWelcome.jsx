@@ -120,7 +120,7 @@ const AvatarWelcome = () => {
               <div className="absolute inset-[3px] rounded-3xl overflow-hidden border-4 border-black shadow-2xl">
                 <div className="relative w-full h-full flex items-center justify-center">
                   <iframe
-                    className="w-full h-full"
+                    className="w-full h-full pointer-events-none"
                     src="https://www.youtube.com/embed/XonEErWLLTA?autoplay=0&loop=1&playlist=XonEErWLLTA&controls=1&modestbranding=1&rel=0"
                     title="Welcome to LUXMANIA"
                     frameBorder="0"

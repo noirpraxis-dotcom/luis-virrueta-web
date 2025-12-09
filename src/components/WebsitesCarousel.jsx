@@ -135,7 +135,7 @@ const WebsitesCarousel = () => {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 onLoad={() => setVideoLoaded(true)}
-                className="w-full h-full object-cover scale-[1.25]"
+                className="w-full h-full object-cover scale-[1.25] pointer-events-none"
                 style={{ transform: 'scale(1.25)' }}
               />
 

@@ -404,7 +404,7 @@ const LuisViruettaIntro = () => {
                   title="Luis Virrueta Presentación"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
-                  className="w-full aspect-video"
+                  className="w-full aspect-video pointer-events-none"
                 />
               </div>
 

@@ -6,10 +6,12 @@ const ScrollToTop = () => {
 
   useEffect(() => {
     // Scroll instantáneo al cambiar de página
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'instant'
+    // Forzar scroll a 0 inmediatamente sin animación
+    window.scrollTo(0, 0)
+    
+    // Backup: forzar nuevamente después de un frame
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0)
     })
   }, [pathname])
 
