@@ -5,9 +5,9 @@ const Footer = () => {
   const currentYear = new Date().getFullYear()
 
   const footerLinks = [
-    { name: 'Privacy Policy', href: '/privacy-policy' },
-    { name: 'Terms & Conditions', href: '/terms-conditions' },
-    { name: 'Cookie Policy', href: '/cookie-policy' }
+    { name: 'Política de Privacidad', href: '/politica-privacidad' },
+    { name: 'Términos y Condiciones', href: '/terminos-condiciones' },
+    { name: 'Política de Cookies', href: '/politica-cookies' }
   ]
 
   const handleCookieSettings = () => {
@@ -86,7 +86,7 @@ const Footer = () => {
                 className="text-white/60 hover:text-fuchsia-400 transition-colors duration-300"
                 style={{ fontFamily: 'Gotham, sans-serif' }}
               >
-                Cookie Settings
+                Configuración de Cookies
               </button>
             </span>
           </div>

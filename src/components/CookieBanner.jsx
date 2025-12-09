@@ -59,72 +59,86 @@ const CookieBanner = () => {
             onClick={() => setShowBanner(false)}
           />
 
-          {/* Banner */}
+          {/* Banner - PREMIUM MINIMALISTA */}
           <motion.div
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
-            transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
-            className="fixed bottom-0 left-0 right-0 z-[101]"
+            transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
+            className="fixed bottom-6 left-6 right-6 lg:left-auto lg:right-12 lg:max-w-md z-[101]"
           >
-            <div className="bg-black/95 backdrop-blur-xl border-t border-white/10">
-              <div className="max-w-7xl mx-auto px-6 py-8 lg:px-12">
+            <div className="relative overflow-hidden rounded-2xl bg-black/90 backdrop-blur-2xl border border-white/10 shadow-2xl">
+              {/* Glow sutil */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-fuchsia-500/5" />
+              
+              <div className="relative p-6">
                 {!showCustomize ? (
-                  <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-                    {/* Text Content */}
-                    <div className="flex-1 text-center lg:text-left">
-                      <div className="flex items-center justify-center lg:justify-start gap-3 mb-3">
-                        <span className="text-2xl">🍪</span>
-                        <h3 
-                          className="text-white text-lg font-light tracking-wide"
-                          style={{ fontFamily: 'Gotham, sans-serif' }}
-                        >
-                          {t('cookies.title')}
-                        </h3>
-                      </div>
-                      <p className="text-white/70 text-sm leading-relaxed max-w-2xl">
-                        {t('cookies.description')}{' '}
+                  <div className="space-y-5">
+                    {/* Header minimalista */}
+                    <div>
+                      <h3 className="text-white text-base font-light tracking-wide mb-2 font-display">
+                        Privacidad y Experiencia
+                      </h3>
+                      <p className="text-white/60 text-xs font-light leading-relaxed">
+                        Usamos cookies para personalizar tu experiencia en nuestra plataforma de branding psicológico y próxima tienda. Tu privacidad es importante.{' '}
                         <Link 
-                          to="/privacy-policy" 
-                          className="text-[#8dc1ab] hover:text-[#7ab09a] underline transition-colors"
+                          to="/politica-privacidad" 
+                          className="text-fuchsia-400 hover:text-fuchsia-300 underline-offset-2 hover:underline transition-all"
                           onClick={() => setShowBanner(false)}
                         >
-                          {t('cookies.learnMore')}
+                          Más info
                         </Link>
                       </p>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex flex-wrap items-center justify-center gap-3">
+                    {/* Botones premium */}
+                    <div className="flex flex-col gap-2">
                       <motion.button
                         whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={handleRejectAll}
-                        className="px-6 py-2.5 text-white/70 hover:text-white border border-white/20 hover:border-white/40 rounded-full text-sm font-light tracking-wide transition-all duration-300"
-                        style={{ fontFamily: 'Gotham, sans-serif' }}
-                      >
-                        {t('cookies.rejectAll')}
-                      </motion.button>
-
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => setShowCustomize(true)}
-                        className="px-6 py-2.5 text-white/70 hover:text-white border border-white/20 hover:border-white/40 rounded-full text-sm font-light tracking-wide transition-all duration-300"
-                        style={{ fontFamily: 'Gotham, sans-serif' }}
-                      >
-                        {t('cookies.customize')}
-                      </motion.button>
-
-                      <motion.button
-                        whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(141, 193, 171, 0.3)' }}
                         whileTap={{ scale: 0.98 }}
                         onClick={handleAcceptAll}
-                        className="px-8 py-2.5 bg-[#8dc1ab] text-black rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-[#7ab09a]"
-                        style={{ fontFamily: 'Gotham, sans-serif' }}
+                        className="group relative overflow-hidden w-full px-5 py-3 rounded-xl bg-gradient-to-r from-purple-500/20 to-fuchsia-500/20 border border-white/10 hover:border-white/30 transition-all duration-300"
                       >
-                        {t('cookies.acceptAll')}
+                        <motion.div
+                          animate={{
+                            backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                          }}
+                          transition={{
+                            duration: 5,
+                            repeat: Infinity,
+                            ease: "linear"
+                          }}
+                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                          style={{
+                            background: 'linear-gradient(135deg, #a855f7 0%, #d946ef 50%, #a855f7 100%)',
+                            backgroundSize: '200% 200%',
+                            opacity: 0.15
+                          }}
+                        />
+                        <span className="relative text-white text-sm font-light tracking-wide">
+                          Aceptar Todo
+                        </span>
                       </motion.button>
+
+                      <div className="flex gap-2">
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => setShowCustomize(true)}
+                          className="flex-1 px-4 py-2.5 text-white/70 hover:text-white text-xs font-light border border-white/10 hover:border-white/20 rounded-xl transition-all duration-300"
+                        >
+                          Personalizar
+                        </motion.button>
+
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={handleRejectAll}
+                          className="flex-1 px-4 py-2.5 text-white/70 hover:text-white text-xs font-light border border-white/10 hover:border-white/20 rounded-xl transition-all duration-300"
+                        >
+                          Solo Esenciales
+                        </motion.button>
+                      </div>
                     </div>
                   </div>
                 ) : (
@@ -155,96 +169,93 @@ const CustomizePreferences = ({ onSave, onBack, t }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-6"
+      className="space-y-5"
     >
-      <div className="text-center lg:text-left">
-        <h3 
-          className="text-white text-xl font-light tracking-wide mb-2"
-          style={{ fontFamily: 'Gotham, sans-serif' }}
-        >
-          {t('cookies.preferencesTitle')}
+      <div>
+        <h3 className="text-white text-base font-light tracking-wide mb-2 font-display">
+          Preferencias de Cookies
         </h3>
-        <p className="text-white/60 text-sm">
-          {t('cookies.preferencesDescription')}
+        <p className="text-white/60 text-xs font-light">
+          Elige qué cookies deseas permitir en tu experiencia
         </p>
       </div>
 
-      <div className="space-y-4">
-        {/* Necessary Cookies */}
-        <div className="flex items-start justify-between gap-4 p-4 bg-white/5 rounded-lg border border-white/10">
+      <div className="space-y-3">
+        {/* Necesarias */}
+        <div className="flex items-center justify-between gap-4 p-3 bg-white/5 rounded-xl border border-white/10">
           <div className="flex-1">
-            <h4 className="text-white text-sm font-medium mb-1">{t('cookies.necessary')}</h4>
-            <p className="text-white/60 text-xs leading-relaxed">
-              {t('cookies.necessaryDesc')}
+            <h4 className="text-white text-xs font-light mb-1">Esenciales</h4>
+            <p className="text-white/50 text-[10px] leading-relaxed">
+              Necesarias para el funcionamiento del sitio
             </p>
           </div>
-          <div className="flex items-center">
-            <div className="w-12 h-6 bg-[#8dc1ab] rounded-full flex items-center justify-end px-1">
-              <div className="w-4 h-4 bg-white rounded-full" />
-            </div>
+          <div className="w-10 h-5 bg-gradient-to-r from-purple-500 to-fuchsia-500 rounded-full flex items-center justify-end px-0.5">
+            <div className="w-4 h-4 bg-white rounded-full shadow" />
           </div>
         </div>
 
-        {/* Analytics Cookies */}
-        <div className="flex items-start justify-between gap-4 p-4 bg-white/5 rounded-lg border border-white/10">
+        {/* Análisis */}
+        <div className="flex items-center justify-between gap-4 p-3 bg-white/5 rounded-xl border border-white/10">
           <div className="flex-1">
-            <h4 className="text-white text-sm font-medium mb-1">{t('cookies.analytics')}</h4>
-            <p className="text-white/60 text-xs leading-relaxed">
-              {t('cookies.analyticsDesc')}
+            <h4 className="text-white text-xs font-light mb-1">Análisis</h4>
+            <p className="text-white/50 text-[10px] leading-relaxed">
+              Mejoran tu experiencia con datos anónimos
             </p>
           </div>
           <button
             onClick={() => togglePreference('analytics')}
             className="flex items-center"
           >
-            <div className={`w-12 h-6 rounded-full flex items-center transition-colors duration-300 px-1 ${
-              preferences.analytics ? 'bg-[#8dc1ab] justify-end' : 'bg-white/20 justify-start'
+            <div className={`w-10 h-5 rounded-full flex items-center transition-all duration-300 px-0.5 ${
+              preferences.analytics 
+                ? 'bg-gradient-to-r from-purple-500 to-fuchsia-500 justify-end' 
+                : 'bg-white/20 justify-start'
             }`}>
-              <div className="w-4 h-4 bg-white rounded-full" />
+              <div className="w-4 h-4 bg-white rounded-full shadow" />
             </div>
           </button>
         </div>
 
-        {/* Marketing Cookies */}
-        <div className="flex items-start justify-between gap-4 p-4 bg-white/5 rounded-lg border border-white/10">
+        {/* Marketing */}
+        <div className="flex items-center justify-between gap-4 p-3 bg-white/5 rounded-xl border border-white/10">
           <div className="flex-1">
-            <h4 className="text-white text-sm font-medium mb-1">{t('cookies.marketing')}</h4>
-            <p className="text-white/60 text-xs leading-relaxed">
-              {t('cookies.marketingDesc')}
+            <h4 className="text-white text-xs font-light mb-1">Marketing</h4>
+            <p className="text-white/50 text-[10px] leading-relaxed">
+              Para ofertas personalizadas de nuestra tienda
             </p>
           </div>
           <button
             onClick={() => togglePreference('marketing')}
             className="flex items-center"
           >
-            <div className={`w-12 h-6 rounded-full flex items-center transition-colors duration-300 px-1 ${
-              preferences.marketing ? 'bg-[#8dc1ab] justify-end' : 'bg-white/20 justify-start'
+            <div className={`w-10 h-5 rounded-full flex items-center transition-all duration-300 px-0.5 ${
+              preferences.marketing 
+                ? 'bg-gradient-to-r from-purple-500 to-fuchsia-500 justify-end' 
+                : 'bg-white/20 justify-start'
             }`}>
-              <div className="w-4 h-4 bg-white rounded-full" />
+              <div className="w-4 h-4 bg-white rounded-full shadow" />
             </div>
           </button>
         </div>
       </div>
 
-      <div className="flex items-center justify-center gap-3 pt-4">
+      <div className="flex gap-2 pt-2">
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={onBack}
-          className="px-6 py-2.5 text-white/70 hover:text-white border border-white/20 hover:border-white/40 rounded-full text-sm font-light tracking-wide transition-all duration-300"
-          style={{ fontFamily: 'Gotham, sans-serif' }}
+          className="flex-1 px-4 py-2.5 text-white/70 hover:text-white border border-white/10 hover:border-white/20 rounded-xl text-xs font-light transition-all duration-300"
         >
-          {t('cookies.back')}
+          Volver
         </motion.button>
 
         <motion.button
-          whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(141, 193, 171, 0.3)' }}
+          whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => onSave(preferences)}
-          className="px-8 py-2.5 bg-[#8dc1ab] text-black rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-[#7ab09a]"
-          style={{ fontFamily: 'Gotham, sans-serif' }}
+          className="flex-1 px-4 py-2.5 bg-gradient-to-r from-purple-500/20 to-fuchsia-500/20 text-white border border-white/10 hover:border-white/30 rounded-xl text-xs font-light transition-all duration-300"
         >
-          {t('cookies.savePreferences')}
+          Guardar Preferencias
         </motion.button>
       </div>
     </motion.div>
