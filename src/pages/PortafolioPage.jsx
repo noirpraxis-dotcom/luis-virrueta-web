@@ -7,18 +7,20 @@ import WebsitesCarousel from '../components/WebsitesCarousel'
 import AvatarsSection from '../components/AvatarsSection'
 import AnimatedLogosSection from '../components/AnimatedLogosSection'
 import BrandingShowcase from '../components/BrandingShowcase'
+import { useLanguage } from '../context/LanguageContext'
 
 const PortafolioPage = () => {
+  const { t } = useLanguage()
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
   const [activeFilter, setActiveFilter] = useState('all')
 
   const categories = [
-    { id: 'all', label: 'Todos los Proyectos' },
-    { id: 'branding', label: 'Branding' },
-    { id: 'apps', label: 'Apps' },
-    { id: 'motion', label: 'Motion' },
-    { id: 'ai', label: 'IA' },
+    { id: 'all', label: t('portfolio.categories.all') },
+    { id: 'branding', label: t('portfolio.categories.branding') },
+    { id: 'apps', label: t('portfolio.categories.apps') },
+    { id: 'motion', label: t('portfolio.categories.motion') },
+    { id: 'ai', label: t('portfolio.categories.ai') },
   ]
 
   const projects = [
@@ -167,7 +169,7 @@ const PortafolioPage = () => {
               <div className="flex items-center gap-3">
                 <Briefcase className="w-4 h-4 text-white/60" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/80 font-light tracking-wider uppercase">
-                  Proyectos Reales
+                  {t('portfolio.hero.badge')}
                 </span>
               </div>
             </motion.div>
@@ -183,7 +185,7 @@ const PortafolioPage = () => {
               <div className="flex items-center gap-2">
                 <Brain className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Psicología
+                  {t('portfolio.hero.psychology')}
                 </span>
               </div>
 
@@ -193,7 +195,7 @@ const PortafolioPage = () => {
               <div className="flex items-center gap-2">
                 <Palette className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Diseño
+                  {t('portfolio.hero.design')}
                 </span>
               </div>
 
@@ -203,7 +205,7 @@ const PortafolioPage = () => {
               <div className="flex items-center gap-2">
                 <Code className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Tecnología
+                  {t('portfolio.hero.technology')}
                 </span>
               </div>
             </motion.div>
@@ -336,10 +338,10 @@ const PortafolioPage = () => {
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
-              { icon: Award, label: 'Proyectos', value: '50+' },
-              { icon: Heart, label: 'Satisfacción', value: '98%' },
-              { icon: Zap, label: 'Entregas a Tiempo', value: '100%' },
-              { icon: Star, label: 'Clientes Recurrentes', value: '85%' },
+              { icon: Award, label: t('portfolio.stats.projects'), value: t('portfolio.stats.projectsValue') },
+              { icon: Heart, label: t('portfolio.stats.satisfaction'), value: t('portfolio.stats.satisfactionValue') },
+              { icon: Zap, label: t('portfolio.stats.onTime'), value: t('portfolio.stats.onTimeValue') },
+              { icon: Star, label: t('portfolio.stats.recurring'), value: t('portfolio.stats.recurringValue') },
             ].map((stat, i) => (
               <motion.div
                 key={i}
@@ -424,17 +426,17 @@ const ProjectCard = ({ project, index }) => {
           {/* Stats */}
           <div className="pt-4 border-t border-white/10 grid grid-cols-3 gap-4 text-center">
             <div>
-              <p className="text-xs text-white/50 uppercase tracking-wider font-mono mb-1">Satisfacción</p>
+              <p className="text-xs text-white/50 uppercase tracking-wider font-mono mb-1">{t('portfolio.projectCard.satisfaction')}</p>
               <p className={`text-lg font-bold bg-gradient-to-r ${project.gradient} bg-clip-text text-transparent`}>
                 {project.stats.satisfaction}
               </p>
             </div>
             <div>
-              <p className="text-xs text-white/50 uppercase tracking-wider font-mono mb-1">Duración</p>
+              <p className="text-xs text-white/50 uppercase tracking-wider font-mono mb-1">{t('portfolio.projectCard.duration')}</p>
               <p className="text-sm text-white/80">{project.stats.duration}</p>
             </div>
             <div>
-              <p className="text-xs text-white/50 uppercase tracking-wider font-mono mb-1">Inversión</p>
+              <p className="text-xs text-white/50 uppercase tracking-wider font-mono mb-1">{t('portfolio.projectCard.investment')}</p>
               <p className="text-sm text-white/80">{project.stats.investment}</p>
             </div>
           </div>
@@ -453,6 +455,7 @@ const ProjectCard = ({ project, index }) => {
 
 // Componente Lighthouse Section con video que se reproduce en reversa
 const LighthouseSection = () => {
+  const { t } = useLanguage()
   const videoRef = useRef(null)
   const [isReversing, setIsReversing] = useState(false)
   const sectionRef = useRef(null)
@@ -511,7 +514,7 @@ const LighthouseSection = () => {
             className="inline-block px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5 mb-8"
           >
             <span className="text-sm lg:text-base text-white/80 font-light tracking-wider uppercase">
-              Iluminamos Tu Marca
+              {t('portfolio.lighthouse.badge')}
             </span>
           </motion.div>
 
@@ -521,13 +524,13 @@ const LighthouseSection = () => {
               fontWeight: 300
             }}
           >
-            Deja que Nosotros Alumbremos Tu Logo
+            {t('portfolio.lighthouse.title')}
           </h2>
 
           <p className="text-base lg:text-lg text-white/60 font-extralight italic max-w-2xl mx-auto"
             style={{ letterSpacing: '0.08em' }}
           >
-            Como un faro en la oscuridad, guiamos tu marca hacia el éxito
+            {t('portfolio.lighthouse.subtitle')}
           </p>
         </motion.div>
 

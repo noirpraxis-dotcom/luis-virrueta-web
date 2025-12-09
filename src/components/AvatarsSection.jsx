@@ -1,8 +1,10 @@
 import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Play, Volume2 } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 const AvatarsSection = () => {
+  const { t } = useLanguage()
   const ref = useRef(null)
   const videoRef = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
@@ -35,7 +37,7 @@ const AvatarsSection = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="inline-block text-xs uppercase tracking-[0.3em] text-white/70 font-light mb-6 px-4 py-2 border border-white/30 rounded-full"
           >
-            IA Generativa • Voice Cloning
+            {t('portfolio.avatars.badge')}
           </motion.p>
 
           {/* Título principal */}
@@ -49,7 +51,7 @@ const AvatarsSection = () => {
               fontWeight: 300
             }}
           >
-            <span className="italic font-extralight">Avatares</span>
+            {t('portfolio.avatars.title')}
           </motion.h2>
 
           {/* Subtítulo inferior - pregunta provocativa */}
@@ -60,7 +62,7 @@ const AvatarsSection = () => {
             className="text-base lg:text-lg text-white/60 font-extralight italic max-w-2xl mx-auto"
             style={{ letterSpacing: '0.08em' }}
           >
-            ¿Y si tu marca pudiera hablar directamente?
+            {t('portfolio.avatars.subtitle')}
           </motion.p>
         </motion.div>
 
@@ -130,7 +132,7 @@ const AvatarsSection = () => {
                   transition={{ duration: 0.8, delay: 0.7 }}
                   className="mt-8 text-white/80 text-sm font-light tracking-wider text-center px-6"
                 >
-                  Dale play para escuchar a nuestros avatares
+                  {t('portfolio.avatars.playMessage')} {t('portfolio.avatars.digitalAvatars')}
                 </motion.p>
               </motion.div>
             )}

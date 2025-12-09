@@ -1,8 +1,10 @@
 import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Brain } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 const WebsitesCarousel = () => {
+  const { t } = useLanguage()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
   const [videoLoaded, setVideoLoaded] = useState(false)
@@ -30,7 +32,7 @@ const WebsitesCarousel = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="inline-block text-xs uppercase tracking-[0.3em] text-white/70 font-light mb-6 px-4 py-2 border border-white/30 rounded-full"
           >
-            Dev • UI/UX • Responsive
+            {t('portfolio.websites.badge')}
           </motion.p>
 
           {/* Título principal */}
@@ -44,7 +46,7 @@ const WebsitesCarousel = () => {
               fontWeight: 300
             }}
           >
-            Sitios <span className="italic font-extralight">Web</span>
+            {t('portfolio.websites.title')} <span className="italic font-extralight">{t('portfolio.websites.titleItalic')}</span>
           </motion.h2>
 
           {/* Subtítulo inferior - pregunta provocativa */}
@@ -55,7 +57,7 @@ const WebsitesCarousel = () => {
             className="text-base lg:text-lg text-white/60 font-extralight italic max-w-2xl mx-auto"
             style={{ letterSpacing: '0.08em' }}
           >
-            ¿Tu sitio web refleja la experiencia que prometes?
+            {t('portfolio.websites.subtitle')}
           </motion.p>
         </motion.div>
 

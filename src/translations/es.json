@@ -170,6 +170,70 @@
       }
     }
   },
+  "portfolio": {
+    "hero": {
+      "badge": "Proyectos Reales",
+      "psychology": "Psicología",
+      "design": "Diseño",
+      "technology": "Tecnología"
+    },
+    "categories": {
+      "all": "Todos los Proyectos",
+      "branding": "Branding",
+      "apps": "Apps",
+      "motion": "Motion",
+      "ai": "IA"
+    },
+    "stats": {
+      "projects": "Proyectos",
+      "projectsValue": "50+",
+      "satisfaction": "Satisfacción",
+      "satisfactionValue": "98%",
+      "onTime": "Entregas a Tiempo",
+      "onTimeValue": "100%",
+      "recurring": "Clientes Recurrentes",
+      "recurringValue": "85%"
+    },
+    "workSamples": {
+      "badge": "UX • UI • Branding",
+      "title": "Identidades",
+      "titleItalic": "Visuales",
+      "subtitle": "¿Hasta dónde podemos llevar tu marca?"
+    },
+    "websites": {
+      "badge": "Dev • UI/UX • Responsive",
+      "title": "Sitios",
+      "titleItalic": "Web",
+      "subtitle": "¿Tu sitio web refleja la experiencia que prometes?"
+    },
+    "logos": {
+      "badge": "Motion Graphics • After Effects",
+      "title": "Logos",
+      "titleItalic": "Animados",
+      "subtitle": "¿Tu logo se mueve con la misma energía que tu marca?",
+      "videoTitle": "Logotipos Animados",
+      "playMessage": "Dale play para ver",
+      "animatedLogos": "logos animados"
+    },
+    "avatars": {
+      "badge": "IA Generativa • Voice Cloning",
+      "title": "Avatares",
+      "subtitle": "¿Y si tu marca pudiera hablar directamente?",
+      "videoTitle": "Avatares Digitales",
+      "playMessage": "Dale play para ver",
+      "digitalAvatars": "avatares digitales"
+    },
+    "lighthouse": {
+      "badge": "Iluminamos Tu Marca",
+      "title": "Deja que Nosotros Alumbremos Tu Logo",
+      "subtitle": "Como un faro en la oscuridad, guiamos tu marca hacia el éxito"
+    },
+    "projectCard": {
+      "satisfaction": "Satisfacción",
+      "duration": "Duración",
+      "investment": "Inversión"
+    }
+  },
   "hero": {
     "manifesto1": "Más del 90% de las decisiones de compra ocurren en el inconsciente.",
     "manifesto2": "¿Tu marca está hablando el lenguaje correcto?",

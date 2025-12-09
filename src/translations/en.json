@@ -159,6 +159,70 @@
       }
     }
   },
+  "portfolio": {
+    "hero": {
+      "badge": "Real Projects",
+      "psychology": "Psychology",
+      "design": "Design",
+      "technology": "Technology"
+    },
+    "categories": {
+      "all": "All Projects",
+      "branding": "Branding",
+      "apps": "Apps",
+      "motion": "Motion",
+      "ai": "AI"
+    },
+    "stats": {
+      "projects": "Projects",
+      "projectsValue": "50+",
+      "satisfaction": "Satisfaction",
+      "satisfactionValue": "98%",
+      "onTime": "On-Time Delivery",
+      "onTimeValue": "100%",
+      "recurring": "Repeat Clients",
+      "recurringValue": "85%"
+    },
+    "workSamples": {
+      "badge": "UX • UI • Branding",
+      "title": "Visual",
+      "titleItalic": "Identities",
+      "subtitle": "How far can we take your brand?"
+    },
+    "websites": {
+      "badge": "Dev • UI/UX • Responsive",
+      "title": "Web",
+      "titleItalic": "Sites",
+      "subtitle": "Does your site reflect what you promise?"
+    },
+    "logos": {
+      "badge": "Motion Graphics • After Effects",
+      "title": "Animated",
+      "titleItalic": "Logos",
+      "subtitle": "Does your logo move with the energy your brand carries?",
+      "videoTitle": "Animated Logos",
+      "playMessage": "Play to watch",
+      "animatedLogos": "animated logos"
+    },
+    "avatars": {
+      "badge": "Generative AI • Voice Cloning",
+      "title": "Avatars",
+      "subtitle": "What if your brand could speak directly?",
+      "videoTitle": "Digital Avatars",
+      "playMessage": "Play to watch",
+      "digitalAvatars": "digital avatars"
+    },
+    "lighthouse": {
+      "badge": "We Illuminate Your Brand",
+      "title": "Let Us Light Up Your Logo",
+      "subtitle": "Like a beacon in the darkness, we guide your brand to success"
+    },
+    "projectCard": {
+      "satisfaction": "Satisfaction",
+      "duration": "Duration",
+      "investment": "Investment"
+    }
+  },
   "hero": {
     "subtitle": "Certified Past Life Regression therapist, energy healer, and channeler of Ilyari. Former university researcher with two doctorates exploring the intuitive and scientific aspects of energy healing.",
     "seeMore": "See More",

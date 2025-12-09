@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { EffectCoverflow, Navigation, Autoplay } from 'swiper/modules'
 import { motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 // Import Swiper styles
 import 'swiper/css'
@@ -10,6 +11,7 @@ import 'swiper/css/effect-coverflow'
 import 'swiper/css/navigation'
 
 const WorkSamplesCarousel = () => {
+  const { t } = useLanguage()
   const swiperRef = useRef(null)
   const [samples, setSamples] = useState([])
 
@@ -68,7 +70,7 @@ const WorkSamplesCarousel = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="inline-block text-xs uppercase tracking-[0.3em] text-white/70 font-light mb-6 px-4 py-2 border border-white/30 rounded-full"
           >
-            UX • UI • Branding
+            {t('portfolio.workSamples.badge')}
           </motion.p>
 
           {/* Título principal */}
@@ -83,7 +85,7 @@ const WorkSamplesCarousel = () => {
               fontWeight: 300
             }}
           >
-            Identidades <span className="italic font-extralight">Visuales</span>
+            {t('portfolio.workSamples.title')} <span className="italic font-extralight">{t('portfolio.workSamples.titleItalic')}</span>
           </motion.h2>
 
           {/* Subtítulo inferior - pregunta provocativa */}
@@ -95,7 +97,7 @@ const WorkSamplesCarousel = () => {
             className="text-base lg:text-lg text-white/60 font-extralight italic max-w-2xl mx-auto"
             style={{ letterSpacing: '0.08em' }}
           >
-            ¿Hasta dónde podemos llevar tu marca?
+            {t('portfolio.workSamples.subtitle')}
           </motion.p>
         </motion.div>
 
