@@ -71,55 +71,62 @@ const Home = () => {
               {t('home.weBuild')}
             </span>
             
-            {/* Tu Marca - grande con efecto 3D */}
+            {/* Tu Marca / Your Brand - grande con efecto 3D */}
             <span className="block text-6xl lg:text-9xl" style={{ 
               letterSpacing: '0.08em',
               fontWeight: 300,
               textTransform: 'uppercase'
             }}>
-              <span className="relative inline-block">
-                {/* T con efecto lumínico expansivo - SIN letras inclinadas atrás */}
-                <span className="relative inline-block">
-                  {/* Glow animado que expande y contrae - T */}
-                  <motion.span
-                    animate={{
-                      scale: [1, 1.4, 1],
-                      opacity: [0.6, 0.9, 0.6]
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                    className="absolute inset-0 bg-gradient-to-br from-white via-white to-white bg-clip-text text-transparent blur-lg"
-                  >
-                    T
-                  </motion.span>
-                  <span className="relative text-white">T</span>
-                </span>
-                {/* u Marc */}
-                <span className="text-white">u Marc</span>
-                {/* a con efecto lumínico expansivo - SIN letras inclinadas atrás */}
-                <span className="relative inline-block">
-                  {/* Glow animado que expande y contrae - A */}
-                  <motion.span
-                    animate={{
-                      scale: [1, 1.4, 1],
-                      opacity: [0.6, 0.9, 0.6]
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 0.3
-                    }}
-                    className="absolute inset-0 bg-gradient-to-tl from-white via-white to-white bg-clip-text text-transparent blur-lg"
-                  >
-                    a
-                  </motion.span>
-                  <span className="relative text-white">a</span>
-                </span>
-              </span>
+              {(() => {
+                const brandText = t('home.yourBrand')
+                const firstLetter = brandText.charAt(0)
+                const lastLetter = brandText.charAt(brandText.length - 1)
+                const middleText = brandText.slice(1, -1)
+                
+                return (
+                  <span className="relative inline-block">
+                    {/* Primera letra con efecto lumínico */}
+                    <span className="relative inline-block">
+                      <motion.span
+                        animate={{
+                          scale: [1, 1.4, 1],
+                          opacity: [0.6, 0.9, 0.6]
+                        }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                        className="absolute inset-0 bg-gradient-to-br from-white via-white to-white bg-clip-text text-transparent blur-lg"
+                      >
+                        {firstLetter}
+                      </motion.span>
+                      <span className="relative text-white">{firstLetter}</span>
+                    </span>
+                    {/* Texto del medio */}
+                    <span className="text-white">{middleText}</span>
+                    {/* Última letra con efecto lumínico */}
+                    <span className="relative inline-block">
+                      <motion.span
+                        animate={{
+                          scale: [1, 1.4, 1],
+                          opacity: [0.6, 0.9, 0.6]
+                        }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: 0.3
+                        }}
+                        className="absolute inset-0 bg-gradient-to-tl from-white via-white to-white bg-clip-text text-transparent blur-lg"
+                      >
+                        {lastLetter}
+                      </motion.span>
+                      <span className="relative text-white">{lastLetter}</span>
+                    </span>
+                  </span>
+                )
+              })()}
             </span>
           </motion.h1>
 

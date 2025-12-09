@@ -36,7 +36,13 @@
     "ctaSecondary": "Share Your Vision",
     "ctaSubtitle": "Let's talk about what you need",
     "scrollText": "Scroll to explore",
-    "whatsappMessage": "Hi! I'd like to discuss my project and explore how you can help"
+    "whatsappMessage": "Hi! I'd like to discuss my project and explore how you can help",
+    "luisSection": {
+      "badge": "The Creator",
+      "title": "Luis Virrueta",
+      "subtitle": "Psychologist × Designer × AI Innovator",
+      "description": "Founder of LUXMANIA, I merge psychology, design and technology to create visual identities that transcend aesthetics and build deep emotional connections."
+    }
   },
   "hero": {
     "subtitle": "Certified Past Life Regression therapist, energy healer, and channeler of Ilyari. Former university researcher with two doctorates exploring the intuitive and scientific aspects of energy healing.",

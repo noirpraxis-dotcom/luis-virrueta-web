@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Brain, Sparkles, Palette, Code } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 const LuisViruettaIntro = () => {
+  const { t } = useLanguage()
   return (
     <section className="relative bg-black py-16 lg:py-24 overflow-hidden">
       {/* Orbs sutiles - Solo blanco minimal */}

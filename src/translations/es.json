@@ -46,7 +46,13 @@
     "ctaSecondary": "Cuéntanos tu Proyecto",
     "ctaSubtitle": "Iniciemos con una conversación sobre tus necesidades",
     "scrollText": "Desliza para conocer más",
-    "whatsappMessage": "Hola! Me gustaría platicar sobre mi proyecto y ver cómo pueden ayudarme"
+    "whatsappMessage": "Hola! Me gustaría platicar sobre mi proyecto y ver cómo pueden ayudarme",
+    "luisSection": {
+      "badge": "El Creador",
+      "title": "Luis Virrueta",
+      "subtitle": "Psicólogo × Diseñador × Innovador IA",
+      "description": "Fundador de LUXMANIA, fusiono psicología, diseño y tecnología para crear identidades visuales que trascienden lo estético y construyen conexiones emocionales profundas."
+    }
   },
   "hero": {
     "manifesto1": "Más del 90% de las decisiones de compra ocurren en el inconsciente.",
