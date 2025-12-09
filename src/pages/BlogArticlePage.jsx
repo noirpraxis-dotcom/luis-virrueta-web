@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles } from 'lucide-react'
+import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles, Award, Check, Shield } from 'lucide-react'
 import ReadingProgressBar from '../components/ReadingProgressBar'
 import ShareButtons from '../components/ShareButtons'
 import CommentsSection from '../components/CommentsSection'
@@ -350,6 +350,757 @@ const getArticleBySlug = (slug) => {
         {
           type: 'conclusion',
           content: 'El StoryBrand Framework es poderoso porque se alinea con cómo el cerebro humano está programado para procesar información: a través de historias. Cuando posicionas a tu cliente como el héroe y te posicionas como el guía sabio que conoce el camino, tu mensaje corta el ruido, genera confianza, y convierte. No vendas productos. Vende transformaciones. No seas el héroe. Sé el mentor que hace héroes.'
+        },
+      ]
+    },
+    'pre-suasion-cialdini-branding': {
+      title: 'Pre-Suasión: Gana la Venta Antes de que Tu Cliente Sepa que Quiere Comprar',
+      author: 'Luis Virrueta',
+      date: '10 Dic 2024',
+      readTime: '15 min',
+      category: 'Branding × Psicología',
+      tags: ['Pre-Suasion', 'Persuasion', 'Brand Strategy', 'Neuromarketing'],
+      gradient: 'from-indigo-500 to-purple-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'Robert Cialdini, el padrino de la psicología de la persuasión, descubrió algo revolucionario: la venta no ocurre cuando presentas tu oferta. Ocurre en los segundos ANTES de presentarla. Pre-Suasión es el arte de preparar la mente de tu audiencia para que diga "sí" antes de que siquiera sepan que van a comprar. En branding, esto lo cambia todo.'
+        },
+        {
+          type: 'heading',
+          title: 'El Problema: Marcas que Llegan Demasiado Tarde',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'La mayoría de las marcas invierten todo su presupuesto en el momento de la venta: anuncios directos, CTAs agresivos, ofertas, descuentos. Pero Cialdini demostró que para cuando presentas tu oferta, la decisión de compra ya fue tomada (o rechazada) por el cerebro inconsciente del cliente.'
+        },
+        {
+          type: 'highlight',
+          content: '"El momento óptimo para influir en las personas no es durante el intento de cambiar sus mentes, sino antes de que intentes hacerlo. La pre-suasión consiste en optimizar el estado mental de la audiencia ANTES del mensaje."',
+          author: 'Robert Cialdini, Pre-Suasion'
+        },
+        {
+          type: 'heading',
+          title: 'Qué es Pre-Suasión (Y Por Qué Es Branding Aplicado)',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'Pre-Suasión es el proceso de guiar la atención de tu audiencia hacia conceptos y emociones específicas ANTES de presentar tu marca o producto. No se trata de manipulación, sino de diseñar el contexto psicológico óptimo para que tu mensaje resuene.'
+        },
+        {
+          type: 'text',
+          content: 'En branding, esto significa que tu logo, colores, nombre, narrativa y puntos de contacto están trabajando 24/7 para pre-suadir a tu audiencia. Cuando finalmente te necesitan, ya están mentalmente alineados contigo.'
+        },
+        {
+          type: 'heading',
+          title: 'Los 3 Pilares de la Pre-Suasión en Branding',
+          icon: Zap
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'Atención Privilegiada',
+          content: 'Lo que captura la atención del cerebro se vuelve importante. Si tu branding consistentemente dirige la atención hacia ciertos valores (innovación, lujo, confianza), esos valores quedan asociados con tu marca incluso antes de la venta. Ejemplo: Apple dirige atención a simplicidad y creatividad en CADA punto de contacto. Cuando necesitas una laptop, esos valores ya están activos en tu mente.',
+          gradient: 'from-indigo-500 to-purple-500'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'Asociación Contextual',
+          content: 'El cerebro asocia tu marca con el contexto donde la encuentra. Si tu branding aparece en contextos de éxito, lujo, o transformación, tu marca hereda esas asociaciones. Ejemplo: Rolex patrocina eventos de élite (tenis, golf, Fórmula 1). No venden relojes, venden el contexto de excelencia donde aparecen.',
+          gradient: 'from-purple-500 to-fuchsia-500'
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'Momento de Receptividad',
+          content: 'Hay momentos psicológicos donde la audiencia está más abierta a ciertos mensajes. Pre-Suasión identifica y aprovecha esos momentos. Ejemplo: Una marca de fitness que aparece en Enero (propósitos de año nuevo) está aprovechando un momento de receptividad masiva hacia cambio y salud.',
+          gradient: 'from-fuchsia-500 to-pink-500'
+        },
+        {
+          type: 'heading',
+          title: 'Estrategias de Pre-Suasión para Tu Marca',
+          icon: Eye
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: '1. Diseña Tu "Opener" Psicológico',
+              description: 'Antes de presentar tu marca/producto, introduce conceptos que activen los valores que quieres asociar. Si vendes consultoría de branding, no empieces con "somos expertos". Empieza con "¿Alguna vez sentiste que tu marca es invisible?" Ahora su cerebro está enfocado en el problema que resuelves.'
+            },
+            {
+              title: '2. Cura el Entorno Visual',
+              description: 'Todo lo que rodea tu marca comunica. Tu sitio web, redes, emails, presentaciones deben tener coherencia visual que refuerce tus valores. Si eres marca de lujo, hasta tus errores 404 deben respirar elegancia.'
+            },
+            {
+              title: '3. Usa "Priming" Emocional',
+              description: 'Introduce emociones positivas ANTES del mensaje de marca. Ejemplo: Una marca de viajes que muestra fotos de familias felices ANTES de mostrar paquetes turísticos está primando la emoción de felicidad familiar.'
+            },
+            {
+              title: '4. Nombre y Tagline Estratégicos',
+              description: 'Tu nombre y tagline son herramientas de pre-suasión permanentes. "Just Do It" de Nike pre-suade hacia acción. "Think Different" de Apple pre-suade hacia creatividad. Cada vez que alguien ve tu marca, esas palabras están trabajando.'
+            },
+            {
+              title: '5. Storytelling como Pre-Suasión',
+              description: 'Las historias pre-suaden porque activan emociones y valores antes de llegar al CTA. Si tu marca cuenta historias de transformación, cada historia prepara al cerebro para creer que tú eres el agente de transformación.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Casos Reales de Pre-Suasión en Branding',
+          icon: Award
+        },
+        {
+          type: 'text',
+          content: 'Analicemos cómo marcas globales usan pre-suasión sin que te des cuenta:'
+        },
+        {
+          type: 'colorGrid',
+          colors: [
+            { name: 'Tesla', hex: '#E82127', emotion: 'Pre-suasión: Futuro sostenible', brands: 'No venden autos, venden identidad de pionero tech-ecológico. Cada tweet de Elon pre-suade.' },
+            { name: 'Starbucks', hex: '#00704A', emotion: 'Pre-suasión: Tercer lugar', brands: 'No venden café, venden el concepto de "tu lugar entre casa y trabajo". El ambiente pre-suade confort.' },
+            { name: 'Airbnb', hex: '#FF5A5F', emotion: 'Pre-suasión: Pertenencia', brands: 'No rentan casas, pre-suaden con "belong anywhere". Cada foto de experiencia local activa deseo de pertenencia.' },
+            { name: 'Patagonia', hex: '#1B4D3E', emotion: 'Pre-suasión: Activismo ambiental', brands: 'No venden ropa outdoor, pre-suaden con activismo. "Don\'t Buy This Jacket" es pre-suasión inversa genial.' },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Cómo Aplicar Pre-Suasión a Tu Estrategia de Marca',
+          icon: Sparkles
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Paso 1: Identifica el Estado Mental Ideal',
+              description: 'Pregúntate: ¿Qué necesita estar pensando/sintiendo mi cliente ideal para que mi oferta sea irresistible? Ejemplo: Si vendes coaching ejecutivo, el estado mental ideal es "Estoy estancado y necesito un mentor".'
+            },
+            {
+              title: 'Paso 2: Diseña Puntos de Contacto que Activen Ese Estado',
+              description: 'Todos tus contenidos (blog, redes, emails) deben activar sutilmente ese estado mental. Si el estado es "necesito mentor", tu contenido debe hablar de transformación personal, no de tu currículum.'
+            },
+            {
+              title: 'Paso 3: Consistencia Obsesiva',
+              description: 'Pre-Suasión solo funciona con repetición. Tu branding debe repetir los mismos valores, emociones y conceptos hasta que se vuelvan automáticos en la mente de tu audiencia.'
+            },
+            {
+              title: 'Paso 4: Mide la Asociación',
+              description: 'Pregunta a clientes potenciales: "¿Qué tres palabras asocias con nuestra marca?" Si las palabras coinciden con tus valores objetivo, la pre-suasión está funcionando.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Pre-Suasión vs. Persuasión: La Diferencia',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'Persuasión tradicional: "Compra mi producto porque tiene X, Y, Z características y está en oferta." Pre-Suasión: Semanas/meses antes, tu branding ya instaló en la mente del cliente que necesita exactamente X, Y, Z. Cuando finalmente presentas tu oferta, se siente como la respuesta obvia a una necesidad que ellos ya tenían (aunque tú la creaste).'
+        },
+        {
+          type: 'conclusion',
+          content: 'Pre-Suasión no es un hack, es branding estratégico en su máxima expresión. Las marcas más poderosas del mundo no convencen, pre-suaden. Cuando entiendes que la batalla por la mente de tu cliente se gana ANTES del mensaje de venta, tu enfoque de branding cambia por completo. No se trata de gritar más fuerte en el momento de la oferta. Se trata de susurrar constantemente los valores correctos hasta que tu marca sea la única respuesta lógica cuando el cliente esté listo para comprar.'
+        },
+      ]
+    },
+    'seis-armas-persuasion-cialdini': {
+      title: 'Las 6 Armas de la Persuasión: Cómo Aplicarlas a Tu Marca',
+      author: 'Luis Virrueta',
+      date: '10 Dic 2024',
+      readTime: '18 min',
+      category: 'Branding × Psicología',
+      tags: ['Influence', 'Persuasion', 'Psychology', 'Brand Strategy'],
+      gradient: 'from-rose-500 to-pink-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'En 1984, Robert Cialdini publicó "Influence: The Psychology of Persuasion" y cambió para siempre cómo entendemos la toma de decisiones. Después de años infiltrado en organizaciones de ventas, sectas y marketers, descubrió 6 principios psicológicos universales que activan el "sí" automático en el cerebro humano. Estas no son técnicas de manipulación, son atajos mentales (heurísticas) que evolucionamos para sobrevivir. Las marcas más exitosas los usan conscientemente. Hoy los aplicas a tu branding.'
+        },
+        {
+          type: 'heading',
+          title: 'Las 6 Armas de la Persuasión',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'Antes de profundizar en cómo aplicarlas, aquí está el mapa completo de las 6 armas que Cialdini identificó:'
+        },
+        {
+          type: 'colorGrid',
+          colors: [
+            { name: 'Reciprocidad', hex: '#10B981', emotion: 'Principio', brands: 'Cuando alguien nos da algo, sentimos deuda de devolver el favor. Es automático.' },
+            { name: 'Compromiso', hex: '#3B82F6', emotion: 'Principio', brands: 'Una vez hacemos un compromiso público, sentimos presión de ser consistentes con él.' },
+            { name: 'Prueba Social', hex: '#8B5CF6', emotion: 'Principio', brands: 'Vemos a otros hacer algo y asumimos que es correcto. Seguimos a la manada.' },
+            { name: 'Autoridad', hex: '#F59E0B', emotion: 'Principio', brands: 'Obedecemos automáticamente a figuras de autoridad legítimas (o símbolos de autoridad).' },
+            { name: 'Simpatía', hex: '#EC4899', emotion: 'Principio', brands: 'Decimos "sí" a personas que nos agradan. Belleza, similitud y elogios aumentan simpatía.' },
+            { name: 'Escasez', hex: '#EF4444', emotion: 'Principio', brands: 'Valoramos más lo que es raro o está a punto de desaparecer. FOMO elevado a ciencia.' },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '1. Reciprocidad: El Poder de Dar Primero',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'El principio de reciprocidad es simple pero devastadoramente efectivo: cuando alguien nos da algo (un regalo, información, ayuda), sentimos una obligación inconsciente de devolver el favor. Esta obligación es tan fuerte que funciona incluso si no pedimos el regalo inicial.'
+        },
+        {
+          type: 'subsection',
+          number: '',
+          title: 'Cómo aplicarlo a tu marca:',
+          content: '',
+          gradient: 'from-emerald-500 to-teal-500'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Contenido Gratuito de Alto Valor',
+              description: 'No des "muestras gratis", da regalos que resuelvan problemas reales. Ejemplo: LUXMANIA podría ofrecer un "Mini-Análisis de Arquetipo de Marca" gratuito. El cliente recibe valor real, siente reciprocidad, y cuando necesita branding completo, ya existe deuda psicológica.'
+            },
+            {
+              title: 'Sorprende con lo Inesperado',
+              description: 'La reciprocidad es más fuerte cuando el regalo es inesperado. Ejemplo: Una marca de joyería que envía una nota manuscrita + pequeño accesorio gratis con cada compra genera lealtad desproporcionada al costo del gesto.'
+            },
+            {
+              title: 'Sé el Primero en Dar',
+              description: 'No esperes a que el cliente compre para dar valor. Lead magnets, webinars gratuitos, consultas iniciales sin costo son herramientas de reciprocidad. Ejemplo: HubSpot regala herramientas CRM gratis. La reciprocidad los convierte en líderes de mercado.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '2. Compromiso y Consistencia: El Poder de los Pasos Pequeños',
+          icon: Check
+        },
+        {
+          type: 'text',
+          content: 'Una vez hacemos un compromiso (especialmente público o escrito), sentimos presión interna para actuar de manera consistente con ese compromiso. Nuestro cerebro odia la disonancia cognitiva. Este principio explica por qué "probar" algo gratis suele llevar a compras: una vez dijiste "sí" al trial, inconscientemente quieres ser consistente y seguir diciendo "sí".'
+        },
+        {
+          type: 'subsection',
+          number: '',
+          title: 'Cómo aplicarlo a tu marca:',
+          content: '',
+          gradient: 'from-blue-500 to-cyan-500'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Micro-Compromisos Progresivos',
+              description: 'No pidas la venta grande de entrada. Pide micro-sís: suscribirse al newsletter, descargar un PDF, ver un video. Cada "sí" pequeño hace más fácil el "sí" grande. Ejemplo: Amazon Prime empezó con trial de 30 días. Una vez pruebas, el compromiso interno te empuja a quedarte.'
+            },
+            {
+              title: 'Hazlo Público',
+              description: 'Los compromisos públicos son más poderosos. Ejemplo: Fitness brands que piden a usuarios postear su "Día 1" en redes sociales. El compromiso público los ata psicológicamente a continuar.'
+            },
+            {
+              title: 'Escríbelo',
+              description: 'Los compromisos escritos son más vinculantes mentalmente. Ejemplo: Una marca de coaching que hace que escribas tus objetivos en la primera sesión está usando consistencia. Tu cerebro luchará por cumplir lo que escribiste.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '3. Prueba Social: Si Todos Lo Hacen, Debe Estar Bien',
+          icon: Eye
+        },
+        {
+          type: 'text',
+          content: 'Somos animales sociales. Cuando no estamos seguros de qué hacer, miramos qué están haciendo otros como nosotros. Si 1,000 personas compraron, debe ser bueno. Si nadie compró, debe ser malo. La prueba social es el principio más usado (y abusado) en marketing digital.'
+        },
+        {
+          type: 'subsection',
+          number: '',
+          title: 'Cómo aplicarlo a tu marca:',
+          content: '',
+          gradient: 'from-purple-500 to-fuchsia-500'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Testimonios Específicos',
+              description: '"Excelente servicio" no funciona. "Luis transformó mi marca de invisible a referente en mi industria en 3 meses" sí funciona. Especificidad = credibilidad. Bonus: Usa foto, nombre completo, y empresa del testimonio.'
+            },
+            {
+              title: 'Números que Impresionan',
+              description: '"Más de 500 marcas confiaron en nosotros" es prueba social cuantificable. El cerebro reptiliano entiende números. Úsalos estratégicamente en tu web y redes.'
+            },
+            {
+              title: 'User-Generated Content',
+              description: 'Clientes reales usando tu producto/servicio es la prueba social más poderosa. Ejemplo: GoPro construyó un imperio con videos de usuarios. Airbnb muestra fotos reales de huéspedes. Es más creíble que cualquier anuncio.'
+            },
+            {
+              title: 'Certificaciones y Asociaciones',
+              description: 'Logos de medios donde apareciste, certificaciones, premios. "Como visto en Forbes, Entrepreneur, etc." Es prueba social de autoridad prestada.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '4. Autoridad: Obedecemos a Expertos (O Símbolos de Expertise)',
+          icon: Award
+        },
+        {
+          type: 'text',
+          content: 'Experimentos de Milgram demostraron que obedecemos ciegamente a figuras de autoridad. En branding, no necesitas ser médico o profesor para activar este principio. Necesitas SÍMBOLOS de autoridad: títulos, uniformes, premios, apariciones en medios, lenguaje técnico.'
+        },
+        {
+          type: 'subsection',
+          number: '',
+          title: 'Cómo aplicarlo a tu marca:',
+          content: '',
+          gradient: 'from-amber-500 to-orange-500'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Demuestra Experiencia',
+              description: '"15 años en la industria", "Trabajé con +200 marcas", "Certificado en X por Y universidad". No seas modesto. La autoridad no se asume, se comunica explícitamente.'
+            },
+            {
+              title: 'Contenido Educativo Profundo',
+              description: 'Blogs como este artículo establecen autoridad. Cuando das conocimiento sin pedir nada a cambio, te posicionas como experto. Tu blog es tu herramienta #1 de autoridad.'
+            },
+            {
+              title: 'Apariciones y Colaboraciones',
+              description: '"Speaker en TEDx", "Colaboré con [marca grande]", "Featured in [publicación reconocida]". Autoridad prestada es autoridad válida.'
+            },
+            {
+              title: 'Antes/Después y Casos de Estudio',
+              description: 'Mostrar resultados concretos es autoridad demostrada. Un portafolio con casos de éxito dice "sé lo que hago" sin que tengas que decirlo.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '5. Simpatía: Compramos de Quien Nos Cae Bien',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'Parece obvio, pero la ciencia lo confirma: es más probable que digamos "sí" a personas/marcas que nos agradan. La simpatía se construye con: atractivo físico (aplica a diseño de marca), similitud ("somos iguales"), elogios genuinos, cooperación (trabajar juntos hacia un objetivo común), y asociación con cosas que ya nos gustan.'
+        },
+        {
+          type: 'subsection',
+          number: '',
+          title: 'Cómo aplicarlo a tu marca:',
+          content: '',
+          gradient: 'from-pink-500 to-rose-500'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Humaniza Tu Marca',
+              description: 'Muestra al equipo detrás de la marca. "About Us" con fotos, behind-the-scenes, stories personales. La gente compra de gente, no de logos anónimos. Ejemplo: LUXMANIA muestra a Luis Virrueta, su filosofía, su enfoque. Eso genera simpatía.'
+            },
+            {
+              title: 'Encuentra Puntos en Común',
+              description: '"También odio las marcas genéricas", "Yo también empecé sin presupuesto para branding". Similitud genera simpatía. Habla el lenguaje de tu cliente ideal y comparte sus frustraciones.'
+            },
+            {
+              title: 'Elogia Sinceramente',
+              description: 'Reconoce logros de tus clientes. "Me encanta tu enfoque de negocio" o "Tu visión es única" no son ventas, son construcción de simpatía. Cuando pides la venta después, ya hay conexión emocional.'
+            },
+            {
+              title: 'Diseño Atractivo',
+              description: 'La estética importa. Un sitio web feo genera rechazo inconsciente. Un sitio hermoso genera simpatía instantánea. Invierte en diseño premium, es inversión en simpatía automática.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '6. Escasez: Queremos Lo Que Está Por Acabarse',
+          icon: Zap
+        },
+        {
+          type: 'text',
+          content: 'El miedo a perder es más fuerte que el deseo de ganar. Cuando algo es escaso (tiempo limitado, stock limitado, acceso exclusivo), nuestro cerebro entra en modo urgencia. Las oportunidades parecen más valiosas cuando su disponibilidad disminuye. Este es el principio detrás de FOMO (Fear Of Missing Out).'
+        },
+        {
+          type: 'subsection',
+          number: '',
+          title: 'Cómo aplicarlo a tu marca:',
+          content: '',
+          gradient: 'from-red-500 to-orange-500'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Cupos Limitados (Real, No Fake)',
+              description: '"Solo tomo 5 proyectos de branding al mes" es escasez legítima si es verdad. El cerebro valora más lo que no está disponible para todos. Ejemplo: Rolex manufactura deliberadamente menos relojes de los que podría. Escasez = deseo.'
+            },
+            {
+              title: 'Deadlines Reales',
+              description: '"Oferta termina en 48 horas" solo funciona si es real. Mentir destruye confianza. Pero deadlines legítimos (fin de mes, cierre de inscripciones, lanzamiento limitado) activan urgencia verdadera.'
+            },
+            {
+              title: 'Exclusividad',
+              description: '"Acceso solo para miembros", "Early access para suscriptores". La exclusividad es escasez social. No todos pueden tenerlo, lo que lo hace más valioso. Ejemplo: Tesla empezó con lista de espera. La espera aumentó el deseo.'
+            },
+            {
+              title: 'Contenido que Desaparece',
+              description: 'Stories de Instagram, ofertas flash, contenido temporal. El hecho de que no estará ahí mañana lo hace más valioso hoy.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Combinando las 6 Armas: El Sistema de Influencia',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'Las armas son más poderosas cuando se combinan estratégicamente. Analicemos un embudo de branding completo usando las 6:'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Etapa 1: Atracción (Reciprocidad + Autoridad)',
+              description: 'Ofreces contenido educativo gratuito (blog, ebook, webinar) que resuelve problemas reales. Estableces autoridad demostrando expertise. El cliente siente reciprocidad.'
+            },
+            {
+              title: 'Etapa 2: Engagement (Simpatía + Prueba Social)',
+              description: 'Compartes tu historia, humanizas la marca, muestras similitud con tu audiencia. Presentas testimonios y casos de éxito. La simpatía y prueba social construyen confianza.'
+            },
+            {
+              title: 'Etapa 3: Conversión (Compromiso + Escasez)',
+              description: 'Pides micro-compromisos (agendar llamada, completar cuestionario). Introduces escasez real (cupos limitados, fecha de cierre). El compromiso previo hace más fácil el sí final, y la escasez acelera la decisión.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Ética y Persuasión: La Línea que No Debes Cruzar',
+          icon: Shield
+        },
+        {
+          type: 'text',
+          content: 'Cialdini es claro: estos principios son poderosos porque apelan a atajos mentales legítimos. La diferencia entre persuasión ética y manipulación es simple:'
+        },
+        {
+          type: 'text',
+          content: '**Persuasión Ética**: Usas estos principios para ayudar al cliente a tomar una decisión que genuinamente los beneficia. Si tu producto/servicio entrega valor real, facilitar esa decisión es ético.'
+        },
+        {
+          type: 'text',
+          content: '**Manipulación**: Usas estos principios para engañar al cliente para que compre algo que no necesita o que no funciona. Escasez falsa, testimonios inventados, autoridad mentirosa = destrucción de confianza a largo plazo.'
+        },
+        {
+          type: 'text',
+          content: 'En LUXMANIA creemos que el branding debe ser persuasivo, no manipulador. Si tu marca entrega valor real, estas armas simplemente eliminan fricción en el camino del cliente hacia lo que ya necesita.'
+        },
+        {
+          type: 'conclusion',
+          content: 'Las 6 Armas de la Persuasión no son trucos baratos, son principios psicológicos universales que gobiernan la toma de decisiones humana. Cuando tu branding integra estos principios conscientemente, no estás manipulando, estás comunicando de manera alineada con cómo funciona el cerebro. Reciprocidad construye buena voluntad. Compromiso genera momentum. Prueba social reduce riesgo percibido. Autoridad genera confianza. Simpatía crea conexión. Escasez activa decisión. Juntos, transforman tu marca de "otra opción más" a "la única opción lógica".'
+        },
+      ]
+    },
+    'paralisis-eleccion-simplifica-oferta': {
+      title: 'La Parálisis de la Elección: Por Qué Tu Menú de 20 Servicios Está Matando Tus Ventas',
+      author: 'Luis Virrueta',
+      date: '10 Dic 2024',
+      readTime: '14 min',
+      category: 'Branding × Psicología',
+      tags: ['Choice Paradox', 'Psychology', 'Conversion', 'Strategy'],
+      gradient: 'from-sky-500 to-blue-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'En el año 2000, los psicólogos Sheena Iyengar y Mark Lepper realizaron un experimento en un supermercado que cambiaría para siempre nuestra comprensión del comportamiento del consumidor. Montaron dos mesas de degustación de mermeladas: una con 24 variedades, otra con solo 6. El resultado fue devastador para la lógica tradicional del marketing: la mesa con menos opciones generó 10 VECES más ventas. Bienvenido a la Paradoja de la Elección, el fenómeno psicológico que explica por qué tu menú infinito de servicios está saboteando tus conversiones.'
+        },
+        {
+          type: 'heading',
+          title: 'El Experimento que Rompió el Marketing Tradicional',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'Durante décadas, el dogma del marketing fue simple: más opciones = más clientes satisfechos = más ventas. Si un cliente quiere chocolate, ofrece 30 sabores de chocolate. Lógico, ¿no? Barry Schwartz, en su libro "The Paradox of Choice" (2004), demostró que esta lógica es completamente errónea.'
+        },
+        {
+          type: 'text',
+          content: 'El experimento de las mermeladas reveló algo aterrador:'
+        },
+        {
+          type: 'colorGrid',
+          colors: [
+            { name: '24 Opciones', hex: '#EF4444', emotion: 'Resultado', brands: '60% se detuvo a probar. Solo 3% compró.' },
+            { name: '6 Opciones', hex: '#10B981', emotion: 'Resultado', brands: '40% se detuvo a probar. 30% compró (10X más conversión).' },
+          ]
+        },
+        {
+          type: 'text',
+          content: 'Más opciones atrajeron MÁS tráfico (60% vs 40%), pero generaron MENOS ventas. La abundancia de elección no empoderó a los consumidores, los paralizó. Este fenómeno se llama **Parálisis por Análisis** (Analysis Paralysis), y está matando tu negocio.'
+        },
+        {
+          type: 'heading',
+          title: 'Por Qué Demasiadas Opciones Destruyen Conversiones',
+          icon: Zap
+        },
+        {
+          type: 'text',
+          content: 'La psicología detrás de la paradoja es triple:'
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'Sobrecarga Cognitiva',
+          content: 'Nuestro cerebro tiene capacidad limitada de procesamiento. Comparar 3 opciones es fácil. Comparar 20 es agotador. Cuando el esfuerzo mental supera la motivación, el cerebro opta por la salida más fácil: NO decidir. El cliente cierra tu web y "lo piensa" (spoiler: nunca regresa).',
+          gradient: 'from-red-500 to-rose-500'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'Miedo a la Decisión Incorrecta',
+          content: 'Más opciones = más probabilidad de elegir mal. Con 24 mermeladas, si eliges una y resulta mediocre, piensas "debí elegir otra". Con 6, si eliges mal, "solo había 6, mala suerte". Más opciones aumentan el arrepentimiento anticipado, lo que paraliza la decisión.',
+          gradient: 'from-orange-500 to-amber-500'
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'Costo de Oportunidad Psicológico',
+          content: 'Cada opción que NO eliges es una renuncia. Con 3 opciones, renuncias a 2. Con 30, renuncias a 29. El dolor de renunciar a 29 alternativas es 14 veces mayor. Resultado: no elegir ninguna elimina el dolor.',
+          gradient: 'from-yellow-500 to-lime-500'
+        },
+        {
+          type: 'heading',
+          title: 'Marcas que Dominan con Menos Opciones',
+          icon: Award
+        },
+        {
+          type: 'text',
+          content: 'Las marcas más exitosas del mundo entienden esto intuitivamente:'
+        },
+        {
+          type: 'colorGrid',
+          colors: [
+            { name: 'Apple', hex: '#000000', emotion: 'Estrategia', brands: '3 modelos de iPhone (estándar, Pro, Pro Max). Punto. Antes tenían el SE, 5C, 5S, 6, 6 Plus... era un caos. Simplificaron, ventas explotaron.' },
+            { name: 'In-N-Out Burger', hex: '#E31837', emotion: 'Estrategia', brands: 'Menú de 4 items: hamburguesa, cheeseburger, double-double, papas, bebidas. McDonalds tiene 145+ items y genera menos lealtad.' },
+            { name: 'Netflix (pre-2015)', hex: '#E50914', emotion: 'Estrategia', brands: '1 plan, 1 precio. Hoy tienen 3 planes y la gente sufre eligiendo. Antes: "¿Quieres Netflix? $9.99". Conversión inmediata.' },
+            { name: 'Tesla Model 3', hex: '#CC0000', emotion: 'Estrategia', brands: 'Al lanzamiento: 2 versiones (Standard, Long Range). BMW Serie 3 tiene 12 variantes. Adivina quién vende más rápido.' },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Cómo Simplificar Tu Oferta Sin Perder Ventas',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'La simplificación estratégica no significa perder ingresos. Significa maximizar conversiones eliminando fricción. Aquí está el sistema:'
+        },
+        {
+          type: 'subsection',
+          number: '',
+          title: '1. La Regla del 3',
+          content: 'El cerebro humano procesa eficientemente hasta 3 opciones. Más de eso, comienza la sobrecarga. Estructura tu oferta en máximo 3 niveles: Básico, Intermedio, Premium. O Bronce, Plata, Oro. O Esencial, Pro, Elite. Tres es el número mágico.',
+          gradient: 'from-blue-500 to-cyan-500'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Ejemplo LUXMANIA',
+              description: 'En lugar de "Diseño de logo, Branding completo, Rediseño, Consultoría, Estrategia de marca, Manual de marca, Arquetipo, Paleta de colores, Tipografía..." (cliente: 😵), ofrece: "Identidad Esencial" (logo + colores básicos), "Identidad Completa" (sistema visual total), "Identidad Premium" (todo + estrategia + consultoría). Cliente: "Ah, quiero la Completa". Conversión.'
+            },
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '',
+          title: '2. Opción Recomendada Destacada',
+          content: 'Cuando eliminar opciones no es posible, DIRIGE la elección. Marca una opción como "Más Popular", "Recomendado", o "Mejor Valor". El 80% de clientes indecisos elegirá esa. Reduces la carga cognitiva sin reducir opciones.',
+          gradient: 'from-purple-500 to-fuchsia-500'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Ejemplo Hosting',
+              description: 'Bluehost tiene 4 planes. El plan "Choice Plus" tiene una etiqueta amarilla gigante: "MOST POPULAR". ¿Casualidad que es el más vendido? No. Es arquitectura de decisión.'
+            },
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '',
+          title: '3. Cuestionario de Pre-Filtrado',
+          content: 'Si tu oferta es compleja, no muestres todas las opciones. Haz 3 preguntas que filtren al cliente hacia la opción correcta. "¿Eres startup o empresa establecida?" → "¿Necesitas logo o rediseño?" → "¿Cuál es tu presupuesto?". Basado en respuestas, MUESTRA solo 1-2 opciones relevantes.',
+          gradient: 'from-pink-500 to-rose-500'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Ejemplo E-commerce',
+              description: 'Warby Parker (lentes) te hace quiz: forma de cara, estilo preferido, color. Resultado: 5 modelos recomendados en lugar de 200. Conversión disparada.'
+            },
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '',
+          title: '4. Bundles Estratégicos',
+          content: 'En lugar de vender 15 servicios individuales ("¿quiero A? ¿o B? ¿o A+C? ¿o...?"), crea paquetes predefinidos. "Paquete Startup" (logo + web básica + redes), "Paquete Growth" (branding + web + estrategia), "Paquete Enterprise" (todo + mantenimiento). El cliente elige el paquete, no 15 items.',
+          gradient: 'from-emerald-500 to-teal-500'
+        },
+        {
+          type: 'heading',
+          title: 'El Caso Contrario: Cuando Más Opciones Funcionan',
+          icon: Eye
+        },
+        {
+          type: 'text',
+          content: 'La paradoja tiene excepciones. Más opciones funcionan cuando:'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: '1. El Cliente Ya Sabe Qué Quiere',
+              description: 'Amazon tiene millones de productos porque el cliente llega buscando "Audífonos Sony WH-1000XM5". No está descubriendo, está comprando. Si tu cliente es experto y sabe exactamente qué necesita, variedad ayuda. Si está explorando, variedad paraliza.'
+            },
+            {
+              title: '2. La Decisión No Es Importante',
+              description: 'Elegir entre 50 tipos de clips en una papelería no paraliza porque el costo de equivocarse es $1. Elegir entre 20 planes de branding paraliza porque el costo de equivocarse es $5,000 y 3 meses. Regla: Decisiones de alto riesgo → menos opciones. Decisiones triviales → opciones infinitas OK.'
+            },
+            {
+              title: '3. La Variedad ES el Producto',
+              description: 'Baskin Robbins vende "31 sabores" como identidad de marca. La variedad es el diferenciador. Si tu marca promete personalización infinita, las opciones son el valor. Pero entonces necesitas filtros y recomendaciones AI para navegar esa variedad.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Cómo Auditar Tu Menú de Servicios Hoy',
+          icon: Check
+        },
+        {
+          type: 'text',
+          content: 'Haz este ejercicio ahora mismo:'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: '1. Lista Todas Tus Opciones',
+              description: 'Escribe literalmente cada servicio/producto/paquete que ofreces. Si tienes más de 5, continúa.'
+            },
+            {
+              title: '2. Mide el Tiempo de Decisión',
+              description: 'Pregunta a 3 amigos: "¿Qué comprarías de mi oferta?". Si tardan más de 30 segundos o preguntan "¿Cuál es la diferencia entre X y Y?", tienes problema de parálisis.'
+            },
+            {
+              title: '3. Identifica el 80/20',
+              description: 'El 80% de tus ingresos vienen del 20% de tus servicios. Identifica esos top performers. Considera eliminar o esconder el resto.'
+            },
+            {
+              title: '4. Pregunta: "¿Esto Simplifica o Complica?"',
+              description: 'Cada opción nueva debe pasar esta prueba. "Agregar este paquete ¿hace más fácil o más difícil que el cliente elija?" Si complica, no lo agregues.'
+            },
+            {
+              title: '5. Rediseña en 3 Niveles',
+              description: 'Toma todo tu menú y agrúpalo forzosamente en 3 opciones. Nómbralas claramente (no "Plan A, B, C" sino "Essentials, Professional, Enterprise"). Destaca la del medio como recomendada.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'La Psicología del Precio y la Paradoja',
+          icon: Zap
+        },
+        {
+          type: 'text',
+          content: 'Un insight adicional: la paradoja también aplica a rangos de precio. Estudios muestran que 3 opciones de precio funcionan mejor que 2 o 4+, PERO la estructura importa:'
+        },
+        {
+          type: 'colorGrid',
+          colors: [
+            { name: 'Opción 1: Básica', hex: '#94A3B8', emotion: 'Precio bajo', brands: 'Ancla de precio bajo. Pocos la compran, pero hace ver la del medio como "buen valor". Ejemplo: $500' },
+            { name: 'Opción 2: Recomendada', hex: '#3B82F6', emotion: 'Precio medio', brands: 'Aquí quieres que compren. Es "no muy cara, no muy barata". Goldilocks zone. La marcas como "POPULAR". Ejemplo: $1,500' },
+            { name: 'Opción 3: Premium', hex: '#FBBF24', emotion: 'Precio alto', brands: 'Ancla de precio alto. Algunos la compran (bonus), pero principalmente hace ver la del medio como "razonable". Ejemplo: $5,000' },
+          ]
+        },
+        {
+          type: 'text',
+          content: 'Esta estructura (bajo-medio-alto) con énfasis en el medio genera 60-70% más conversiones que mostrar solo 2 opciones o 5+ opciones. Es el sweet spot de decisión.'
+        },
+        {
+          type: 'heading',
+          title: 'El Menú Oculto: Personalización Sin Parálisis',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'La estrategia avanzada: ofrece 3 paquetes públicos, pero menciona "¿Necesitas algo diferente? Contáctanos para personalización". Esto da:'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Ventaja 1: Decisión Fácil para el 90%',
+              description: 'La mayoría elige uno de los 3 paquetes sin fricción. Conversión rápida.'
+            },
+            {
+              title: 'Ventaja 2: Flexibilidad para el 10%',
+              description: 'Clientes con necesidades únicas pueden contactar. Este segmento ya está comprometido (mandó mensaje), entonces la complejidad no los espanta.'
+            },
+            {
+              title: 'Ventaja 3: Percepción de Personalización',
+              description: 'El cliente siente que puede tener justo lo que necesita, pero sin ver un menú abrumador de 40 opciones en tu homepage.'
+            },
+          ]
+        },
+        {
+          type: 'text',
+          content: 'Ejemplo: Tesla muestra 2 modelos en su web (Model 3, Model Y). Pero si llamas o vas a showroom, puedes personalizar colores, interiores, tech packages. La complejidad existe, pero está OCULTA hasta que el cliente demuestra interés serio.'
+        },
+        {
+          type: 'heading',
+          title: 'Test A/B: Prueba la Simplificación',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'Si tienes tráfico suficiente, haz este experimento:'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Versión A (Control)',
+              description: 'Tu página actual con todas tus opciones/servicios/paquetes (digamos 8-12 opciones).'
+            },
+            {
+              title: 'Versión B (Simplificada)',
+              description: 'Misma página pero muestra solo 3 opciones (tus top 3 más vendidos o estratégicamente elegidos). El resto lo mueves a una página secundaria "Ver más opciones".'
+            },
+            {
+              title: 'Métrica a Medir',
+              description: 'Tasa de conversión (clicks en CTA, formularios completados, ventas cerradas). Apuesta: Versión B gana por 20-40%.'
+            },
+          ]
+        },
+        {
+          type: 'text',
+          content: 'Empresas que han hecho este test reportan consistentemente aumentos de conversión entre 15% y 300% (!). El caso extremo fue Procter & Gamble eliminando 25% de sus variantes de Head & Shoulders: ventas AUMENTARON 10% porque los clientes dejaron de confundirse.'
+        },
+        {
+          type: 'conclusion',
+          content: 'La Paradoja de la Elección no es una teoría, es un hecho psicológico comprobado en miles de estudios. Más opciones NO empoderan a tu cliente, lo paralizan. La abundancia de elección crea ansiedad, arrepentimiento anticipado y sobrecarga cognitiva. El resultado: el cliente no compra nada. Las marcas que dominan sus mercados lo entienden: Apple, Netflix, In-N-Out, Tesla, todos simplifican radicalmente sus ofertas. Tu misión no es darle al cliente "todas las opciones posibles". Tu misión es eliminar la fricción entre su necesidad y tu solución. Y la fricción más grande no es el precio, es la complejidad de decidir. Audita tu menú hoy. Si tienes más de 5 opciones sin una jerarquía clara, estás dejando dinero sobre la mesa. Simplifícalo a 3. Marca una como recomendada. Observa cómo tus conversiones se disparan. Porque en branding, como en las mermeladas, menos es exponencialmente más.'
         },
       ]
     },
