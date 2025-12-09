@@ -27,6 +27,7 @@ import CookieBanner from './components/CookieBanner'
 import Footer from './components/Footer'
 import WhatsAppButton from './components/WhatsAppButton'
 import SmoothScroll from './components/SmoothScroll'
+import ScrollToTop from './components/ScrollToTop'
 
 const AppContent = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
