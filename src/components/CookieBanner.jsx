@@ -59,13 +59,13 @@ const CookieBanner = () => {
             onClick={() => setShowBanner(false)}
           />
 
-          {/* Banner - PREMIUM MINIMALISTA */}
+          {/* Banner - PREMIUM MINIMALISTA CENTRADO */}
           <motion.div
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
-            className="fixed bottom-6 left-6 right-6 lg:left-auto lg:right-12 lg:max-w-md z-[101]"
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-2xl z-[101]"
           >
             <div className="relative overflow-hidden rounded-2xl bg-black/90 backdrop-blur-2xl border border-white/10 shadow-2xl">
               {/* Glow sutil */}

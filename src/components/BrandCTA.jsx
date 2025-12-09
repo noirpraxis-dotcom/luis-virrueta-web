@@ -94,7 +94,7 @@ const BrandCTA = () => {
                 title="Muestra de Sitios Web"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                className="w-full aspect-video"
+                className="w-full aspect-video pointer-events-none"
               />
             </div>
           </div>
@@ -227,6 +227,7 @@ const BrandCTA = () => {
               className="group relative overflow-hidden px-8 py-4 rounded-full backdrop-blur-sm"
             >
               {/* Gradiente interno más visible y luminoso */}
+              {/* Gradiente animado BRILLANTE */}
               <motion.div
                 animate={{
                   backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
@@ -240,25 +241,42 @@ const BrandCTA = () => {
                 style={{
                   background: 'linear-gradient(135deg, #a855f7 0%, #3b82f6 25%, #8b5cf6 50%, #6366f1 75%, #a855f7 100%)',
                   backgroundSize: '200% 200%',
-                  opacity: 0.4
+                  opacity: 0.6
                 }}
               />
 
-              {/* Glow exterior */}
+              {/* Shine effect brillante que se mueve */}
               <motion.div
                 animate={{
-                  opacity: [0.3, 0.6, 0.3],
-                  scale: [1, 1.15, 1]
+                  backgroundPosition: ['-200% 0%', '200% 0%']
                 }}
                 transition={{
-                  duration: 4,
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+                className="absolute inset-0"
+                style={{
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)',
+                  backgroundSize: '200% 100%'
+                }}
+              />
+
+              {/* Glow exterior MAS BRILLANTE */}
+              <motion.div
+                animate={{
+                  opacity: [0.5, 0.8, 0.5],
+                  scale: [1, 1.2, 1]
+                }}
+                transition={{
+                  duration: 3,
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
                 className="absolute -inset-4 rounded-full blur-3xl"
                 style={{
                   background: 'linear-gradient(135deg, #a855f7, #3b82f6, #8b5cf6)',
-                  opacity: 0.4
+                  opacity: 0.6
                 }}
               />
 

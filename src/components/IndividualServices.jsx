@@ -223,27 +223,66 @@ const IndividualServices = () => {
           </p>
           
           <motion.a
-            href="#contacto"
+            href="/contacto"
             whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-3 px-8 lg:px-10 py-4 lg:py-5 bg-gradient-to-r from-[#a855f7] to-[#d946ef] text-white rounded-full text-base font-bold tracking-wide hover:shadow-2xl hover:shadow-[#a855f7]/30 transition-all duration-300 relative overflow-hidden group"
+            whileTap={{ scale: 0.98 }}
+            className="group relative overflow-hidden inline-flex items-center gap-3 px-10 py-5 rounded-full backdrop-blur-sm"
           >
-            {/* Shine effect */}
+            {/* Gradiente animado BRILLANTE */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-              style={{ backgroundSize: '200% 100%' }}
               animate={{
-                backgroundPosition: ['-200% 0', '200% 0']
+                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
               }}
               transition={{
-                duration: 2,
+                duration: 5,
                 repeat: Infinity,
-                repeatDelay: 1,
                 ease: "linear"
               }}
+              className="absolute inset-0"
+              style={{
+                background: 'linear-gradient(135deg, #a855f7 0%, #3b82f6 25%, #8b5cf6 50%, #6366f1 75%, #a855f7 100%)',
+                backgroundSize: '200% 200%',
+                opacity: 0.6
+              }}
             />
-            <Calendar className="w-5 h-5 relative z-10" />
-            <span className="relative z-10">Agenda tu Consulta Gratuita</span>
+
+            {/* Shine effect brillante */}
+            <motion.div
+              animate={{
+                backgroundPosition: ['-200% 0%', '200% 0%']
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+              className="absolute inset-0"
+              style={{
+                background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)',
+                backgroundSize: '200% 100%'
+              }}
+            />
+
+            {/* Glow exterior */}
+            <motion.div
+              animate={{
+                opacity: [0.5, 0.8, 0.5],
+                scale: [1, 1.2, 1]
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="absolute -inset-4 rounded-full blur-3xl"
+              style={{
+                background: 'linear-gradient(135deg, #a855f7, #3b82f6, #8b5cf6)',
+                opacity: 0.6
+              }}
+            />
+
+            <Calendar className="w-5 h-5 relative z-10 text-white" />
+            <span className="relative z-10 text-white font-light text-lg tracking-wide">Agenda tu Consulta Gratuita</span>
           </motion.a>
         </motion.div>
       </div>

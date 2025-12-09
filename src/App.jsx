@@ -60,6 +60,7 @@ const AppContent = () => {
 
         {/* Contenido principal con rutas */}
         <main className="relative z-0">
+          <ScrollToTop />
           <Routes>
             {/* Página Home: Video + Hero con "Ver más" */}
             <Route path="/" element={
