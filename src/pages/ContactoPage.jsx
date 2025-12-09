@@ -63,7 +63,7 @@ const ContactoPage = () => {
     {
       icon: MapPin,
       title: 'Ubicación',
-      value: 'Toluca → Checoslovaquia',
+      value: 'República Checa',
       link: null,
       color: 'from-fuchsia-500 to-fuchsia-600',
     },

@@ -17,7 +17,12 @@ import {
   Eye,
   Award,
   Code,
-  Briefcase
+  Briefcase,
+  Camera,
+  Megaphone,
+  Mic,
+  Layout,
+  Layers
 } from 'lucide-react'
 
 const ServiciosPage = () => {
@@ -320,8 +325,103 @@ const ServiciosPage = () => {
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-black pointer-events-none z-30" />
       </section>
 
+      {/* Quick Navigation - Hexagon Grid */}
+      <section className="py-16 px-6 lg:px-20 border-t border-white/10">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl lg:text-5xl font-light text-white mb-4 tracking-wide">
+              Explora Nuestros <span className="italic font-normal">Servicios</span>
+            </h2>
+            <p className="text-white/50 text-sm lg:text-base font-extralight tracking-wide">
+              Selecciona un servicio para conocer más detalles
+            </p>
+          </motion.div>
+
+          {/* Hexagon Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 lg:gap-8">
+            {[
+              { id: 'logo-design', icon: Palette, title: 'Logo Design', subtitle: 'Identidad memorable', color: 'from-purple-500 to-purple-600', target: 'identidad-marca' },
+              { id: 'identidad-visual', icon: Sparkles, title: 'Identidad Visual', subtitle: 'Sistema completo', color: 'from-fuchsia-500 to-pink-600', target: 'identidad-marca' },
+              { id: 'paginas-web', icon: Code, title: 'Páginas Web', subtitle: 'Sitios que convierten', color: 'from-indigo-500 to-blue-600', target: 'apps-premium' },
+              { id: 'apps-moviles', icon: Smartphone, title: 'Apps Móviles', subtitle: 'Experiencias fluidas', color: 'from-cyan-500 to-blue-600', target: 'apps-premium' },
+              { id: 'fotografia', icon: Camera, title: 'Fotografía', subtitle: 'Sesiones profesionales', color: 'from-pink-500 to-rose-600', target: 'contenido-digital' },
+              { id: 'video-branding', icon: Video, title: 'Video Branding', subtitle: 'Contenido visual', color: 'from-violet-500 to-purple-600', target: 'contenido-digital' },
+              { id: 'audio-branding', icon: Mic, title: 'Audio Branding', subtitle: 'Identidad sonora', color: 'from-orange-500 to-amber-600', target: 'contenido-digital' },
+              { id: 'avatares-ia', icon: Bot, title: 'Avatares IA', subtitle: 'Representación digital', color: 'from-emerald-500 to-teal-600', target: 'avatares-ia' },
+              { id: 'consultoria', icon: Brain, title: 'Consultoría', subtitle: 'Estrategia psicológica', color: 'from-purple-500 to-violet-600', target: 'consultoria-psicoanalitica' },
+              { id: 'marketing', icon: Megaphone, title: 'Marketing', subtitle: 'Campañas efectivas', color: 'from-cyan-500 to-teal-600', target: 'contenido-digital' },
+              { id: 'material-impreso', icon: FileText, title: 'Material Impreso', subtitle: 'Tangibles de lujo', color: 'from-fuchsia-500 to-purple-600', target: 'identidad-marca' },
+              { id: 'animacion', icon: Layers, title: 'Animación', subtitle: 'Logos en movimiento', color: 'from-indigo-500 to-violet-600', target: 'contenido-digital' },
+            ].map((item, i) => (
+              <motion.button
+                key={item.id}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.05 }}
+                whileHover={{ scale: 1.05, y: -5 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  const element = document.getElementById(item.target);
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }
+                }}
+                className="group relative flex flex-col items-center"
+              >
+                {/* Hexagon Container */}
+                <div className="relative w-24 h-24 lg:w-28 lg:h-28 flex items-center justify-center">
+                  {/* Hexagon Background with gradient */}
+                  <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full">
+                    <defs>
+                      <linearGradient id={`gradient-${item.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" className={`text-${item.color.split(' ')[0].replace('from-', '')}`} stopColor="currentColor" />
+                        <stop offset="100%" className={`text-${item.color.split(' ')[2]}`} stopColor="currentColor" />
+                      </linearGradient>
+                    </defs>
+                    <polygon
+                      points="50 1 95 25 95 75 50 99 5 75 5 25"
+                      className={`fill-gradient-to-br ${item.color} transition-all duration-300`}
+                      style={{ fill: `url(#gradient-${item.id})`, opacity: 0.9 }}
+                    />
+                    {/* Hexagon border */}
+                    <polygon
+                      points="50 1 95 25 95 75 50 99 5 75 5 25"
+                      className="fill-none stroke-white/20 group-hover:stroke-white/60 transition-all duration-300"
+                      strokeWidth="0.5"
+                    />
+                  </svg>
+                  
+                  {/* Icon */}
+                  <item.icon className="relative z-10 w-8 h-8 lg:w-10 lg:h-10 text-white transition-transform duration-300 group-hover:scale-110" strokeWidth={1.5} />
+                  
+                  {/* Glow effect on hover */}
+                  <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${item.color} opacity-0 blur-xl group-hover:opacity-30 transition-opacity duration-300`} />
+                </div>
+
+                {/* Text */}
+                <div className="mt-4 text-center">
+                  <h3 className="text-white text-sm lg:text-base font-light tracking-wide mb-1">
+                    {item.title}
+                  </h3>
+                  <p className="text-white/40 text-[10px] lg:text-xs font-extralight tracking-wider">
+                    {item.subtitle}
+                  </p>
+                </div>
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Services Grid */}
-      <section className="py-20 px-6 lg:px-20">
+      <section id="servicios-detalle" className="py-20 px-6 lg:px-20">
         <div className="max-w-7xl mx-auto space-y-32">
           {services.map((service, index) => (
             <ServiceDetail key={service.id} service={service} index={index} />
@@ -337,7 +437,7 @@ const ServiceDetail = ({ service, index }) => {
   const isInView = useInView(ref, { once: true, amount: 0.2 })
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} id={service.id} className="relative scroll-mt-32">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
