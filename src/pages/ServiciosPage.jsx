@@ -53,8 +53,7 @@ const ServiciosPage = () => {
         'Manual de Marca + Guidelines',
         'Entrega + Capacitación'
       ],
-      duration: '4-6 semanas',
-      investment: 'Desde $2,500 USD'
+      duration: '4-6 semanas'
     },
     {
       id: 'apps-premium',
@@ -82,8 +81,7 @@ const ServiciosPage = () => {
         'Desarrollo Backend + Database',
         'Testing + Deploy'
       ],
-      duration: '8-12 semanas',
-      investment: 'Desde $5,000 USD'
+      duration: '8-12 semanas'
     },
     {
       id: 'contenido-digital',
@@ -111,8 +109,7 @@ const ServiciosPage = () => {
         'Sound Design + Música',
         'Revisiones + Entrega Final'
       ],
-      duration: '2-4 semanas',
-      investment: 'Desde $1,500 USD'
+      duration: '2-4 semanas'
     },
     {
       id: 'avatares-ia',
@@ -140,8 +137,7 @@ const ServiciosPage = () => {
         'Pruebas + Ajustes',
         'Entrega + Capacitación'
       ],
-      duration: '6-8 semanas',
-      investment: 'Desde $4,000 USD'
+      duration: '6-8 semanas'
     },
     {
       id: 'consultoria-psicoanalitica',
@@ -169,8 +165,7 @@ const ServiciosPage = () => {
         'Identificación de Oportunidades',
         'Reporte + Presentación'
       ],
-      duration: '3-4 semanas',
-      investment: 'Desde $2,000 USD'
+      duration: '3-4 semanas'
     }
   ]
 
@@ -259,31 +254,31 @@ const ServiciosPage = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="flex items-center gap-3 lg:gap-4 flex-wrap justify-center"
             >
-              {/* Psicología */}
+              {/* Estrategia */}
               <div className="flex items-center gap-2">
                 <Brain className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Psicología
+                  Estrategia
                 </span>
               </div>
 
               <span className="text-white/40 text-xs">+</span>
 
-              {/* Diseño */}
+              {/* Creatividad */}
               <div className="flex items-center gap-2">
-                <Palette className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+                <Sparkles className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Diseño
+                  Creatividad
                 </span>
               </div>
 
               <span className="text-white/40 text-xs">+</span>
 
-              {/* Tecnología */}
+              {/* Ejecución */}
               <div className="flex items-center gap-2">
-                <Code className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+                <Zap className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Tecnología
+                  Ejecución
                 </span>
               </div>
             </motion.div>
@@ -347,108 +342,133 @@ const ServiceDetail = ({ service, index }) => {
         initial={{ opacity: 0, y: 50 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8 }}
-        className="grid lg:grid-cols-2 gap-12 items-start"
+        className="grid lg:grid-cols-[1.1fr_1fr] gap-16 items-start"
       >
-        {/* Left: Info */}
-        <div className="space-y-8">
+        {/* Left: Info - Estilo premium */}
+        <div className="space-y-10">
           {/* Icon + Title */}
           <div>
+            {/* Icon con animación sutil */}
             <motion.div
-              className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.gradient} p-3.5 mb-6 inline-block`}
-              whileHover={{ scale: 1.1, rotate: 5 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={isInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-3 px-4 py-2 border border-white/20 rounded-full bg-white/5 backdrop-blur-sm mb-8"
             >
-              <service.icon className="w-full h-full text-white" strokeWidth={1.5} />
+              <service.icon className="w-4 h-4 text-white/60" strokeWidth={1.5} />
+              <span className="text-white/70 text-xs font-light uppercase tracking-[0.25em]">
+                {service.subtitle}
+              </span>
             </motion.div>
             
-            <h2 className="text-3xl lg:text-5xl font-bold text-white mb-3 font-display" style={{ letterSpacing: '0.02em', fontWeight: 400 }}>
+            {/* Título grande y espaciado */}
+            <h2 className="text-4xl lg:text-6xl font-light text-white mb-6 font-display tracking-[0.05em] leading-[1.1]">
               {service.title}
             </h2>
-            <p className="text-white/40 uppercase tracking-[0.25em] text-xs font-light mb-5">
-              {service.subtitle}
-            </p>
-            <p className={`text-xl lg:text-2xl font-light bg-gradient-to-r ${service.gradient} bg-clip-text text-transparent mb-6 italic`} style={{ letterSpacing: '0.01em' }}>
+            
+            {/* Tagline con estilo italic minimalista */}
+            <p className="text-lg lg:text-xl text-white/60 font-light italic leading-relaxed tracking-wide mb-8">
               {service.tagline}
             </p>
           </div>
 
           {/* Description */}
-          <p className="text-base lg:text-lg text-white/70 leading-relaxed font-light" style={{ letterSpacing: '0.01em', lineHeight: '1.8' }}>
+          <p className="text-base lg:text-lg text-white/70 leading-[1.9] font-extralight tracking-wide">
             {service.description}
           </p>
 
-          {/* Investment + Duration */}
-          <div className="flex gap-8 pt-6">
-            <div>
-              <p className="text-white/40 text-xs uppercase tracking-[0.2em] font-light mb-2">Inversión</p>
-              <p className={`text-2xl lg:text-3xl font-light bg-gradient-to-r ${service.gradient} bg-clip-text text-transparent`}>
-                {service.investment}
-              </p>
+          {/* Duration + CTA combinados */}
+          <div className="pt-4 space-y-6">
+            {/* Duration */}
+            <div className="flex items-baseline gap-3">
+              <span className="text-white/40 text-xs uppercase tracking-[0.2em] font-light">Duración</span>
+              <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
+              <span className="text-base lg:text-lg font-light text-white/90 tracking-wide">{service.duration}</span>
             </div>
-            <div>
-              <p className="text-white/40 text-xs uppercase tracking-[0.2em] font-light mb-2">Duración</p>
-              <p className="text-xl lg:text-2xl font-light text-white">{service.duration}</p>
-            </div>
+
+            {/* CTA Premium - Estilo LuisViruettaIntro */}
+            <motion.a
+              href="/contacto"
+              initial={{ opacity: 0, y: 10 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="group relative inline-flex items-center gap-3 overflow-hidden"
+            >
+              {/* Línea animada */}
+              <motion.div
+                className="h-px bg-white/60 transition-all duration-500 group-hover:w-24"
+                style={{ width: '48px' }}
+              />
+              
+              {/* Texto del botón */}
+              <span className="text-sm font-light text-white uppercase tracking-[0.25em] transition-all duration-300 group-hover:tracking-[0.3em]">
+                Solicitar Cotización
+              </span>
+              
+              {/* Ícono con animación */}
+              <motion.div
+                animate={{ x: [0, 5, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <ArrowRight className="w-4 h-4 text-white/80" strokeWidth={1.5} />
+              </motion.div>
+            </motion.a>
           </div>
         </div>
 
-        {/* Right: Features + Process */}
+        {/* Right: Features + Process - Minimalista */}
         <div className="space-y-8">
           {/* Features */}
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
-            <h3 className="text-lg font-light text-white mb-6 flex items-center gap-2" style={{ letterSpacing: '0.05em' }}>
-              <Check className="w-5 h-5 text-emerald-400" strokeWidth={1.5} />
-              ¿Qué incluye?
+          <div className="border border-white/10 rounded-2xl p-8 lg:p-10 bg-white/[0.02] backdrop-blur-sm">
+            <h3 className="text-base font-light text-white/90 mb-8 uppercase tracking-[0.2em]">
+              Qué Incluye
             </h3>
-            <ul className="space-y-4">
+            <ul className="space-y-5">
               {service.features.map((feature, i) => (
                 <motion.li
                   key={i}
                   initial={{ opacity: 0, x: -20 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.5, delay: i * 0.05 }}
-                  className="flex items-start gap-3 text-white/70"
+                  className="flex items-start gap-4 group"
                 >
-                  <div className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${service.gradient} mt-2 flex-shrink-0`} />
-                  <span className="text-sm font-light leading-relaxed" style={{ letterSpacing: '0.01em' }}>{feature}</span>
+                  {/* Punto minimalista que crece en hover */}
+                  <div className="relative mt-2">
+                    <div className="w-1 h-1 rounded-full bg-white/40 transition-all duration-300 group-hover:w-1.5 group-hover:h-1.5 group-hover:bg-white/70" />
+                  </div>
+                  <span className="text-sm font-light text-white/70 leading-[1.8] tracking-wide transition-colors duration-300 group-hover:text-white/90">
+                    {feature}
+                  </span>
                 </motion.li>
               ))}
             </ul>
           </div>
 
           {/* Process */}
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
-            <h3 className="text-lg font-light text-white mb-6 flex items-center gap-2" style={{ letterSpacing: '0.05em' }}>
-              <Zap className="w-5 h-5 text-cyan-400" strokeWidth={1.5} />
+          <div className="border border-white/10 rounded-2xl p-8 lg:p-10 bg-white/[0.02] backdrop-blur-sm">
+            <h3 className="text-base font-light text-white/90 mb-8 uppercase tracking-[0.2em]">
               Proceso
             </h3>
-            <ol className="space-y-4">
+            <ol className="space-y-5">
               {service.process.map((step, i) => (
                 <motion.li
                   key={i}
                   initial={{ opacity: 0, x: -20 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.5, delay: i * 0.07 }}
-                  className="flex items-start gap-4"
+                  className="flex items-start gap-5 group"
                 >
-                  <span className={`text-base font-light bg-gradient-to-r ${service.gradient} bg-clip-text text-transparent flex-shrink-0`}>
+                  {/* Número con tipografía minimalista */}
+                  <span className="text-xs font-light text-white/30 flex-shrink-0 mt-1 tracking-wider transition-colors duration-300 group-hover:text-white/50 tabular-nums">
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <span className="text-white/70 text-sm font-light pt-0.5 leading-relaxed" style={{ letterSpacing: '0.01em' }}>{step}</span>
+                  <span className="text-sm font-light text-white/70 leading-[1.8] tracking-wide transition-colors duration-300 group-hover:text-white/90">
+                    {step}
+                  </span>
                 </motion.li>
               ))}
             </ol>
           </div>
-
-          {/* CTA */}
-          <motion.a
-            href="/contacto"
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
-            className={`flex items-center justify-center gap-2 w-full py-4 bg-gradient-to-r ${service.gradient} rounded-xl text-white font-medium hover:shadow-lg hover:shadow-${service.gradient.split(' ')[0]}/30 transition-all duration-300`}
-          >
-            <span>Solicitar Cotización</span>
-            <ArrowRight className="w-5 h-5" />
-          </motion.a>
         </div>
       </motion.div>
     </div>
