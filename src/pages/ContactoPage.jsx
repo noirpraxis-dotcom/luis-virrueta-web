@@ -193,10 +193,10 @@ const ContactoPage = () => {
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-black pointer-events-none z-30" />
       </section>
 
-      {/* Contact Methods */}
-      <section className="py-12 px-6 lg:px-20">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-6">
+      {/* Contact Methods - Premium Minimal */}
+      <section className="py-20 px-6 lg:px-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8">
             {contactMethods.map((method, i) => (
               <motion.div
                 key={i}
@@ -210,12 +210,24 @@ const ContactoPage = () => {
                     href={method.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block h-full"
+                    className="block h-full group"
                   >
-                    <ContactMethodCard method={method} />
+                    <div className="h-full border border-white/10 rounded-2xl p-8 hover:border-white/20 transition-all duration-500 bg-white/[0.02]">
+                      <method.icon className="w-10 h-10 text-white/40 group-hover:text-white/70 mb-6 transition-colors duration-500" strokeWidth={1} />
+                      <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light mb-3">{method.title}</h3>
+                      <p className="text-white font-extralight text-lg tracking-wide leading-relaxed">
+                        {method.value}
+                      </p>
+                    </div>
                   </a>
                 ) : (
-                  <ContactMethodCard method={method} />
+                  <div className="h-full border border-white/10 rounded-2xl p-8 bg-white/[0.02]">
+                    <method.icon className="w-10 h-10 text-white/40 mb-6 transition-colors" strokeWidth={1} />
+                    <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light mb-3">{method.title}</h3>
+                    <p className="text-white font-extralight text-lg tracking-wide leading-relaxed">
+                      {method.value}
+                    </p>
+                  </div>
                 )}
               </motion.div>
             ))}
@@ -225,23 +237,23 @@ const ContactoPage = () => {
 
       {/* Main Content: Form + Info */}
       <section className="py-20 px-6 lg:px-20">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-[1.1fr_1fr] gap-16">
             {/* Form */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="space-y-6"
+              className="space-y-8"
             >
-              <h2 className="text-3xl lg:text-5xl font-bold mb-8 font-display text-white">
-                Inicia tu proyecto
+              <h2 className="text-4xl lg:text-6xl font-extralight text-white tracking-wide leading-tight">
+                Inicia tu <span className="italic font-light">proyecto</span>
               </h2>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Name */}
                 <div>
-                  <label htmlFor="name" className="block text-white/70 mb-2 text-sm uppercase tracking-wider font-mono">
+                  <label htmlFor="name" className="block text-white/30 mb-3 text-[10px] uppercase tracking-[0.3em] font-light">
                     Nombre completo *
                   </label>
                   <input
@@ -251,14 +263,14 @@ const ContactoPage = () => {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition-all"
+                    className="w-full px-0 py-4 bg-transparent border-b border-white/10 text-white font-extralight text-lg tracking-wide placeholder-white/20 focus:outline-none focus:border-white/30 transition-all"
                     placeholder="Tu nombre"
                   />
                 </div>
 
                 {/* Email */}
                 <div>
-                  <label htmlFor="email" className="block text-white/70 mb-2 text-sm uppercase tracking-wider font-mono">
+                  <label htmlFor="email" className="block text-white/30 mb-3 text-[10px] uppercase tracking-[0.3em] font-light">
                     Email *
                   </label>
                   <input
@@ -268,14 +280,14 @@ const ContactoPage = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition-all"
+                    className="w-full px-0 py-4 bg-transparent border-b border-white/10 text-white font-extralight text-lg tracking-wide placeholder-white/20 focus:outline-none focus:border-white/30 transition-all"
                     placeholder="tu@email.com"
                   />
                 </div>
 
                 {/* Phone */}
                 <div>
-                  <label htmlFor="phone" className="block text-white/70 mb-2 text-sm uppercase tracking-wider font-mono">
+                  <label htmlFor="phone" className="block text-white/30 mb-3 text-[10px] uppercase tracking-[0.3em] font-light">
                     WhatsApp
                   </label>
                   <input
@@ -284,14 +296,14 @@ const ContactoPage = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition-all"
+                    className="w-full px-0 py-4 bg-transparent border-b border-white/10 text-white font-extralight text-lg tracking-wide placeholder-white/20 focus:outline-none focus:border-white/30 transition-all"
                     placeholder="+52 123 456 7890"
                   />
                 </div>
 
                 {/* Service */}
                 <div>
-                  <label htmlFor="service" className="block text-white/70 mb-2 text-sm uppercase tracking-wider font-mono">
+                  <label htmlFor="service" className="block text-white/30 mb-3 text-[10px] uppercase tracking-[0.3em] font-light">
                     Servicio de interés *
                   </label>
                   <select
@@ -300,7 +312,7 @@ const ContactoPage = () => {
                     value={formData.service}
                     onChange={handleChange}
                     required
-                    className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500/50 transition-all appearance-none cursor-pointer"
+                    className="w-full px-0 py-4 bg-transparent border-b border-white/10 text-white font-extralight text-lg tracking-wide focus:outline-none focus:border-white/30 transition-all appearance-none cursor-pointer"
                   >
                     <option value="" className="bg-zinc-900">Selecciona un servicio</option>
                     {services.map((service, i) => (
@@ -311,7 +323,7 @@ const ContactoPage = () => {
 
                 {/* Message */}
                 <div>
-                  <label htmlFor="message" className="block text-white/70 mb-2 text-sm uppercase tracking-wider font-mono">
+                  <label htmlFor="message" className="block text-white/30 mb-3 text-[10px] uppercase tracking-[0.3em] font-light">
                     Cuéntame tu proyecto *
                   </label>
                   <textarea
@@ -321,20 +333,24 @@ const ContactoPage = () => {
                     onChange={handleChange}
                     required
                     rows={6}
-                    className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition-all resize-none"
+                    className="w-full px-0 py-4 bg-transparent border-b border-white/10 text-white font-extralight text-lg tracking-wide placeholder-white/20 focus:outline-none focus:border-white/30 transition-all resize-none leading-relaxed"
                     placeholder="Describe tu visión, objetivos, timeline, presupuesto..."
                   />
                 </div>
 
-                {/* Submit Button */}
+                {/* Submit Button - Minimal */}
                 <motion.button
                   type="submit"
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ x: 4 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-4 bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white font-semibold rounded-xl hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 flex items-center justify-center gap-3"
+                  className="group relative mt-8 flex items-center gap-3 text-white font-extralight text-sm tracking-[0.3em] uppercase overflow-hidden"
                 >
-                  <Send className="w-5 h-5" />
-                  Enviar Mensaje
+                  <span className="relative z-10">Enviar Mensaje</span>
+                  <motion.div
+                    className="w-12 h-px bg-white/40 group-hover:bg-white transition-colors"
+                    whileHover={{ width: 60 }}
+                  />
+                  <Send className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" strokeWidth={1} />
                 </motion.button>
 
                 {/* Status Messages */}
@@ -367,23 +383,23 @@ const ContactoPage = () => {
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="space-y-12"
+              className="space-y-12 lg:pl-8"
             >
               {/* Response Time */}
-              <div className="bg-gradient-to-br from-purple-950/50 to-fuchsia-950/50 border border-purple-500/30 rounded-2xl p-8">
-                <h3 className="text-2xl font-bold text-white mb-4 font-display">Tiempo de respuesta</h3>
-                <p className="text-white/70 leading-relaxed mb-6">
-                  Respondo personalmente todos los mensajes en <span className="text-purple-400 font-semibold">menos de 24 horas</span> (días hábiles).
+              <div className="border border-white/10 rounded-2xl p-8 bg-white/[0.02]">
+                <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light mb-6">Tiempo de respuesta</h3>
+                <p className="text-white/60 font-extralight text-base leading-[1.9] tracking-wide mb-6">
+                  Respondo personalmente todos los mensajes en <span className="text-white font-light">menos de 24 horas</span> (días hábiles).
                 </p>
-                <p className="text-white/70 leading-relaxed">
-                  Para proyectos urgentes, contacta directo por <span className="text-emerald-400 font-semibold">WhatsApp</span>.
+                <p className="text-white/60 font-extralight text-base leading-[1.9] tracking-wide">
+                  Para proyectos urgentes, contacta directo por <span className="text-white font-light">WhatsApp</span>.
                 </p>
               </div>
 
               {/* What Happens Next */}
-              <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-white font-display">¿Qué sigue?</h3>
-                <div className="space-y-4">
+              <div className="space-y-8">
+                <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light">¿Qué sigue?</h3>
+                <div className="space-y-6">
                   {[
                     { number: '01', text: 'Revisamos tu mensaje y respondemos en 24h' },
                     { number: '02', text: 'Agendamos videollamada para conocer tu proyecto' },
@@ -396,12 +412,12 @@ const ContactoPage = () => {
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: i * 0.1 }}
-                      className="flex items-start gap-4"
+                      className="flex items-start gap-6"
                     >
-                      <span className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-fuchsia-400 bg-clip-text text-transparent font-mono">
+                      <span className="text-white/20 font-extralight text-2xl tracking-wider">
                         {step.number}
                       </span>
-                      <p className="text-white/70 leading-relaxed pt-1">{step.text}</p>
+                      <p className="text-white/60 font-extralight text-base leading-[1.9] tracking-wide pt-1">{step.text}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -409,7 +425,7 @@ const ContactoPage = () => {
 
               {/* Social Links */}
               <div>
-                <h3 className="text-xl font-bold text-white mb-4 font-display">Sígueme</h3>
+                <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light mb-6">Sígueme</h3>
                 <div className="flex gap-4">
                   {socialLinks.map((social, i) => (
                     <motion.a
@@ -417,10 +433,10 @@ const ContactoPage = () => {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      className="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/10 rounded-full hover:border-purple-500/50 transition-all"
+                      whileHover={{ x: 4 }}
+                      className="w-12 h-12 flex items-center justify-center border border-white/10 rounded-full hover:border-white/30 transition-all duration-500"
                     >
-                      <social.icon className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+                      <social.icon className="w-5 h-5 text-white/40" strokeWidth={1} />
                     </motion.a>
                   ))}
                 </div>
@@ -429,18 +445,6 @@ const ContactoPage = () => {
           </div>
         </div>
       </section>
-    </div>
-  )
-}
-
-const ContactMethodCard = ({ method }) => {
-  return (
-    <div className="h-full bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-white/30 transition-all duration-300 group cursor-pointer">
-      <method.icon className="w-10 h-10 text-white/70 group-hover:text-white mb-4 transition-colors" strokeWidth={1.5} />
-      <h3 className="text-white/50 uppercase tracking-wider text-xs font-mono mb-2">{method.title}</h3>
-      <p className={`text-lg font-medium bg-gradient-to-r ${method.color} bg-clip-text text-transparent`}>
-        {method.value}
-      </p>
     </div>
   )
 }

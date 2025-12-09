@@ -183,12 +183,12 @@ const AboutPage = () => {
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-black pointer-events-none z-30" />
       </section>
 
-      {/* Photo + Bio Section */}
+      {/* Photo + Bio Section - REDISEÑADO */}
       <section className="py-20 px-6 lg:px-20">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           {/* Grid: Photo + Bio */}
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center max-w-6xl mx-auto">
-            {/* Photo */}
+          <div className="grid lg:grid-cols-[1fr_1.2fr] gap-16 items-start">
+            {/* Photo con placeholder temporal */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={isHeroInView ? { opacity: 1, x: 0 } : {}}
@@ -214,12 +214,16 @@ const AboutPage = () => {
                 }}
               />
 
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-                <img 
-                  src="/about ligera.jpg" 
-                  alt="Luis Virrueta"
-                  className="w-full aspect-[4/5] object-cover"
-                />
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+                {/* Placeholder temporal con gradiente */}
+                <div className="w-full aspect-[4/5] bg-gradient-to-br from-purple-900/30 via-fuchsia-900/20 to-cyan-900/30 flex items-center justify-center">
+                  <div className="text-center space-y-4">
+                    <div className="w-24 h-24 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mx-auto flex items-center justify-center">
+                      <Brain className="w-12 h-12 text-white/40" strokeWidth={1} />
+                    </div>
+                    <p className="text-white/30 text-sm font-extralight tracking-wider">Foto próximamente</p>
+                  </div>
+                </div>
                 
                 {/* Badge overlay minimalista */}
                 <motion.div
@@ -229,65 +233,55 @@ const AboutPage = () => {
                   className="absolute bottom-6 right-6"
                 >
                   <div className="flex items-center gap-3 px-5 py-3 rounded-full bg-black/60 backdrop-blur-xl border border-white/20">
-                    <Brain className="w-4 h-4 text-purple-400" />
-                    <Palette className="w-4 h-4 text-pink-400" />
-                    <Code className="w-4 h-4 text-cyan-400" />
+                    <Brain className="w-4 h-4 text-purple-400" strokeWidth={1} />
+                    <Palette className="w-4 h-4 text-pink-400" strokeWidth={1} />
+                    <Code className="w-4 h-4 text-cyan-400" strokeWidth={1} />
                   </div>
                 </motion.div>
               </div>
             </motion.div>
 
-            {/* Bio elegante */}
+            {/* Bio elegante EXPANDIDA */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={isHeroInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 1, delay: 1 }}
-              className="space-y-8"
+              className="space-y-10"
             >
               <motion.h2
-                className="text-4xl lg:text-5xl font-extralight text-white"
-                style={{ letterSpacing: '0.02em' }}
+                className="text-5xl lg:text-6xl font-extralight text-white tracking-wide"
               >
-                Luis <span className="italic font-serif" style={{ fontFamily: 'Georgia, serif', fontWeight: 200 }}>Virrueta</span>
+                Luis <span className="italic font-light">Virrueta</span>
               </motion.h2>
 
-              <motion.p
-                className="text-white/70 text-lg lg:text-xl font-light leading-relaxed"
-                style={{ letterSpacing: '0.01em' }}
-              >
-                Fundador de{' '}
-                <motion.span
-                  className="bg-gradient-to-r from-purple-400 via-cyan-400 to-pink-400 bg-clip-text text-transparent font-normal"
-                  style={{
-                    backgroundSize: '200% 100%',
-                    backgroundPosition: '0% 50%'
-                  }}
-                  animate={{
-                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
-                  }}
-                  transition={{
-                    duration: 6,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
+              <div className="space-y-6">
+                <motion.p
+                  className="text-white/70 text-base lg:text-lg font-extralight leading-[1.9] tracking-wide"
                 >
-                  Luxmania
-                </motion.span>
-                . Combino mi experiencia en psicología clínica con diseño estratégico y desarrollo full-stack para crear marcas que conectan emocionalmente y convierten.
-              </motion.p>
+                  Fundador de{' '}
+                  <span className="text-white font-light">LUXMANIA</span>
+                  . Especialista en branding psicológico que fusiona neurociencia, diseño estratégico y desarrollo full-stack para crear marcas que no solo se ven excepcionales, sino que <span className="italic text-white/90">conectan, convierten y trascienden</span>.
+                </motion.p>
 
-              <motion.p
-                className="text-white/60 text-base lg:text-lg font-extralight leading-relaxed italic"
-              >
-                Mi enfoque único fusiona neurociencia aplicada, estética premium y tecnología de vanguardia. No solo creo proyectos, construyo experiencias que trascienden la razón.
-              </motion.p>
+                <motion.p
+                  className="text-white/60 text-base lg:text-lg font-extralight leading-[1.9] tracking-wide"
+                >
+                  Con formación en <span className="text-white font-light">psicología clínica</span> y años de experiencia en tecnología, entiendo que las marcas exitosas no venden productos, venden <span className="italic">identidad, pertenencia y transformación</span>.
+                </motion.p>
 
-              {/* Stats minimalistas */}
-              <div className="grid grid-cols-3 gap-6 pt-6">
+                <motion.p
+                  className="text-white/60 text-base lg:text-lg font-extralight leading-[1.9] tracking-wide"
+                >
+                  Mi proceso combina análisis arquetipal, diseño emocional y desarrollo técnico impecable. Trabajo con fundadores y empresas que buscan diferenciarse radicalmente en mercados saturados.
+                </motion.p>
+              </div>
+
+              {/* Stats minimalistas mejorados */}
+              <div className="grid grid-cols-3 gap-8 pt-8 border-t border-white/10">
                 {[
-                  { value: '50+', label: 'Proyectos' },
-                  { value: '98%', label: 'Satisfacción' },
-                  { value: '5', label: 'Años' }
+                  { value: '50+', label: 'Proyectos Completados' },
+                  { value: '98%', label: 'Satisfacción Cliente' },
+                  { value: '5+', label: 'Años Experiencia' }
                 ].map((stat, i) => (
                   <motion.div
                     key={i}
@@ -296,8 +290,8 @@ const AboutPage = () => {
                     transition={{ duration: 0.8, delay: 1.2 + i * 0.1 }}
                     className="text-center"
                   >
-                    <div className="text-3xl lg:text-4xl font-light text-white mb-1">{stat.value}</div>
-                    <div className="text-white/40 text-xs uppercase tracking-wider font-light">{stat.label}</div>
+                    <div className="text-4xl lg:text-5xl font-extralight text-white mb-2 tracking-wide">{stat.value}</div>
+                    <div className="text-white/30 text-[10px] uppercase tracking-[0.3em] font-light">{stat.label}</div>
                   </motion.div>
                 ))}
               </div>
@@ -306,28 +300,88 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* Pillars Section - Los 3 pilares */}
-      <section className="relative py-20 lg:py-32 px-6 lg:px-20">
-        <div className="relative max-w-7xl mx-auto">
+      {/* Experiencia y Trayectoria */}
+      <section className="py-20 px-6 lg:px-20 border-t border-white/10">
+        <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-16"
+            className="mb-16"
           >
-            <h2 className="text-3xl lg:text-5xl font-bold mb-4 font-display text-white"
-              style={{ 
-                letterSpacing: '0.15em',
-                fontWeight: 300,
-                textTransform: 'uppercase'
-              }}
-            >
-              Pilares <span className="italic font-extralight">Fundamentales</span>
+            <h2 className="text-4xl lg:text-6xl font-extralight text-white tracking-wide mb-6">
+              Mi <span className="italic font-light">Trayectoria</span>
+            </h2>
+            <p className="text-white/50 text-base lg:text-lg font-extralight leading-[1.9] tracking-wide max-w-3xl">
+              Cada proyecto es el resultado de años estudiando cómo las personas toman decisiones, qué las motiva y cómo construir experiencias que trascienden lo visual.
+            </p>
+          </motion.div>
+
+          <div className="space-y-12">
+            {[
+              {
+                year: '2020',
+                title: 'Fundación de LUXMANIA',
+                description: 'Después de años trabajando en agencias tradicionales, decidí crear un estudio que fusionara psicología, diseño y tecnología de manera única.'
+              },
+              {
+                year: '2018-2020',
+                title: 'Psicología Clínica + Full Stack Development',
+                description: 'Formación dual que me permite entender tanto la mente del usuario como la arquitectura técnica de productos digitales.'
+              },
+              {
+                year: '2016-2018',
+                title: 'Diseñador Senior en Agencias Boutique',
+                description: 'Lideré proyectos de identidad visual para startups tech y marcas de lujo, descubriendo mi pasión por el branding estratégico.'
+              },
+              {
+                year: '2024',
+                title: 'Especialización en Neuromarketing & IA',
+                description: 'Integración de inteligencia artificial y neurociencia aplicada para crear experiencias de marca que anticipan necesidades.'
+              }
+            ].map((milestone, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="grid lg:grid-cols-[180px_1fr] gap-8 items-start group"
+              >
+                <div className="text-white/20 text-2xl font-extralight tracking-wider lg:text-right">
+                  {milestone.year}
+                </div>
+                <div className="border-l border-white/10 pl-8 group-hover:border-white/20 transition-colors">
+                  <h3 className="text-white text-xl lg:text-2xl font-extralight tracking-wide mb-3">
+                    {milestone.title}
+                  </h3>
+                  <p className="text-white/50 font-extralight text-base leading-[1.9] tracking-wide">
+                    {milestone.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pillars Section - Los 3 pilares MEJORADO */}
+      <section className="relative py-20 lg:py-32 px-6 lg:px-20 border-t border-white/10">
+        <div className="relative max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="mb-16"
+          >
+            <h2 className="text-4xl lg:text-6xl font-extralight text-white tracking-wide">
+              Mi <span className="italic font-light">Enfoque</span>
             </h2>
           </motion.div>
 
-          <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
+          <div className="grid lg:grid-cols-3 gap-8">
             {pillars.map((pillar, index) => {
               const Icon = pillar.icon
               return (
@@ -337,27 +391,22 @@ const AboutPage = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: index * 0.2 }}
-                  whileHover={{ y: -8, scale: 1.02 }}
                   className="relative group"
                 >
-                  <div className="relative bg-white/[0.02] backdrop-blur-sm border border-white/10 rounded-3xl p-8 lg:p-10 hover:border-purple-500/30 transition-all duration-500">
-                    {/* Icon */}
-                    <motion.div
-                      className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600/20 to-cyan-600/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500"
-                    >
-                      <Icon className="w-8 h-8 text-purple-400 group-hover:text-cyan-400 transition-colors" strokeWidth={1.5} />
-                    </motion.div>
+                  <div className="relative border border-white/10 rounded-2xl p-10 hover:border-white/20 transition-all duration-500 bg-white/[0.02]">
+                    {/* Icon minimal */}
+                    <Icon className="w-10 h-10 text-white/30 mb-8 group-hover:text-white/50 transition-colors" strokeWidth={1} />
 
                     {/* Title */}
-                    <h3 className="text-2xl lg:text-3xl font-light text-white mb-2" style={{ letterSpacing: '0.05em' }}>
-                      {pillar.title}
-                    </h3>
-                    <p className="text-sm text-purple-400/70 uppercase tracking-widest font-light mb-4">
+                    <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light mb-3">
                       {pillar.subtitle}
-                    </p>
+                    </h3>
+                    <h4 className="text-2xl lg:text-3xl font-extralight text-white mb-6 tracking-wide">
+                      {pillar.title}
+                    </h4>
 
                     {/* Description */}
-                    <p className="text-white/60 text-base font-light leading-relaxed">
+                    <p className="text-white/50 text-base font-extralight leading-[1.9] tracking-wide">
                       {pillar.description}
                     </p>
                   </div>
@@ -368,37 +417,38 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* CTA Final minimalista */}
-      <section className="relative py-20 lg:py-32 px-6 lg:px-20">
-        <div className="relative max-w-4xl mx-auto text-center">
+      {/* CTA Final minimalista premium */}
+      <section className="relative py-20 lg:py-32 px-6 lg:px-20 border-t border-white/10">
+        <div className="relative max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="space-y-8"
+            className="space-y-12"
           >
-            <h2 className="text-3xl lg:text-5xl font-extralight text-white" style={{ letterSpacing: '0.05em' }}>
-              ¿Listo para crear algo{' '}
-              <span className="bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent italic">extraordinario</span>?
-            </h2>
+            <div className="space-y-6">
+              <h2 className="text-4xl lg:text-6xl font-extralight text-white tracking-wide leading-tight">
+                ¿Listo para crear una marca que{' '}
+                <span className="italic font-light">trascienda</span>?
+              </h2>
+              <p className="text-white/50 text-base lg:text-lg font-extralight leading-[1.9] tracking-wide max-w-3xl">
+                No trabajo con todos. Selecciono proyectos donde puedo generar impacto real y donde existe alineación de visión. Si buscas diferenciarte radicalmente, hablemos.
+              </p>
+            </div>
             
-            <Link to="/contacto">
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="relative px-12 py-4 rounded-full text-white text-base font-light tracking-wider uppercase overflow-hidden group"
-                style={{ letterSpacing: '0.15em' }}
+            <Link to="/contacto" className="inline-block group">
+              <motion.div
+                whileHover={{ x: 4 }}
+                className="flex items-center gap-4 text-white font-extralight text-sm tracking-[0.3em] uppercase"
               >
-                {/* Background gradient animado */}
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 group-hover:scale-110 transition-transform duration-500" />
-                
-                {/* Border */}
-                <div className="absolute inset-0 rounded-full border border-white/20" />
-                
-                {/* Text */}
-                <span className="relative z-10">Trabajemos Juntos</span>
-              </motion.button>
+                <span>Trabajemos Juntos</span>
+                <motion.div
+                  className="w-16 h-px bg-white/40 group-hover:bg-white transition-colors"
+                  whileHover={{ width: 80 }}
+                />
+                <Sparkles className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" strokeWidth={1} />
+              </motion.div>
             </Link>
           </motion.div>
         </div>
