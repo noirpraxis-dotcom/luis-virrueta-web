@@ -223,7 +223,9 @@ const IndividualServices = () => {
           </p>
           
           <motion.a
-            href="/contacto"
+            href="https://wa.me/420776711575?text=Hola! Me gustaría platicar sobre mi proyecto y recibir asesoría personalizada"
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.98 }}
             className="group relative overflow-hidden inline-flex items-center gap-3 px-10 py-5 rounded-full backdrop-blur-sm"
@@ -281,9 +283,32 @@ const IndividualServices = () => {
               }}
             />
 
-            <Calendar className="w-5 h-5 relative z-10 text-white" />
-            <span className="relative z-10 text-white font-light text-lg tracking-wide">Agenda tu Consulta Gratuita</span>
+            <svg className="w-5 h-5 relative z-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            <span className="relative z-10 text-white font-light text-lg tracking-wide">Hablemos de tu Proyecto</span>
           </motion.a>
+
+          {/* Link a servicios completos */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex items-center justify-center gap-3 text-white/50 text-sm font-extralight mt-6"
+          >
+            <span>¿Quieres explorar todos los servicios a detalle?</span>
+            <Link
+              to="/servicios"
+              className="group inline-flex items-center gap-2 text-white hover:text-white/90 transition-colors"
+            >
+              <span className="relative font-light">
+                Ver Servicios Completos
+                <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full" />
+              </span>
+              <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.5} />
+            </Link>
+          </motion.div>
         </motion.div>
       </div>
     </section>

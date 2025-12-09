@@ -331,7 +331,7 @@ const LuxmaniaVideoSection = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="mt-8"
             >
-              <Link to="/about">
+              <Link to="/arquetipos">
                 <motion.button
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
@@ -375,7 +375,7 @@ const LuxmaniaVideoSection = () => {
 
                   <span className="relative flex items-center gap-3">
                     <span className="text-white font-light text-base tracking-wide">
-                      Descubre nuestro método
+                      Conoce Nuestra Metodología
                     </span>
                     {/* Flecha dentro de círculo */}
                     <motion.div

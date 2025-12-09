@@ -178,47 +178,62 @@ const Home = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+            className="flex flex-col items-center gap-6 pt-4"
           >
-            {/* Botón principal - Más elegante */}
-            <Link
-              to="/servicios"
-              className="group relative px-10 py-5 bg-white text-black font-light rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_20px_80px_rgba(255,255,255,0.3)]"
-            >
-              {/* Efecto shine continuo */}
-              <motion.div
-                animate={{
-                  x: ['-100%', '200%']
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  repeatDelay: 1
-                }}
-                className="absolute inset-0 w-1/3 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12"
-              />
-              <span className="relative z-10 flex items-center gap-3 text-base tracking-wide">
-                <span>Explorar Servicios</span>
-                <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </span>
-            </Link>
+            {/* Contenedor de botones */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              {/* Botón principal - Más elegante */}
+              <Link
+                to="/servicios"
+                className="group relative px-10 py-5 bg-white text-black font-light rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_20px_80px_rgba(255,255,255,0.3)]"
+              >
+                {/* Efecto shine continuo */}
+                <motion.div
+                  animate={{
+                    x: ['-100%', '200%']
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    repeatDelay: 1
+                  }}
+                  className="absolute inset-0 w-1/3 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12"
+                />
+                <span className="relative z-10 flex items-center gap-3 text-base tracking-wide">
+                  <span>Descubre Cómo Ayudamos</span>
+                  <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </span>
+              </Link>
 
-            {/* Botón secundario - Más sutil */}
-            <Link
-              to="/contacto"
-              className="group relative px-10 py-5 text-white font-light rounded-full border border-white/30 hover:border-white/60 transition-all duration-500 hover:scale-[1.02] overflow-hidden"
+              {/* Botón secundario - Más sutil */}
+              <a
+                href="https://wa.me/420776711575?text=Hola! Me gustaría platicar sobre mi proyecto y ver cómo pueden ayudarme"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative px-10 py-5 text-white font-light rounded-full border border-white/30 hover:border-white/60 transition-all duration-500 hover:scale-[1.02] overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-white/5 backdrop-blur-sm transition-opacity duration-300 group-hover:bg-white/10" />
+                <span className="relative z-10 flex items-center gap-3 text-base tracking-wide">
+                  <span>Cuéntanos tu Proyecto</span>
+                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                </span>
+              </a>
+            </div>
+
+            {/* Texto aclaratorio debajo de botones */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={isHeroInView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="text-white/40 text-xs font-extralight tracking-wider text-center max-w-md"
             >
-              <div className="absolute inset-0 bg-white/5 backdrop-blur-sm transition-opacity duration-300 group-hover:bg-white/10" />
-              <span className="relative z-10 flex items-center gap-3 text-base tracking-wide">
-                <span>Agendar Consulta</span>
-                <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </span>
-            </Link>
+              Iniciemos con una conversación sobre tus necesidades
+            </motion.p>
           </motion.div>
         </motion.div>
       </div>
