@@ -100,6 +100,22 @@ const BlogPage = () => {
     },
     {
       id: 6,
+      title: 'Tu Cliente es el Héroe, No Tu Marca: El Framework StoryBrand',
+      excerpt: 'Descubre cómo transformar tu estrategia de branding aplicando los 7 elementos del StoryBrand Framework de Donald Miller y convierte a tus clientes en los protagonistas de tu historia.',
+      category: 'branding',
+      author: 'Luis Virrueta',
+      date: '9 Dic 2024',
+      readTime: '16 min',
+      gradient: 'from-amber-500/20 to-orange-500/20',
+      borderGradient: 'from-amber-500 to-orange-500',
+      tags: ['StoryBrand', 'Storytelling', 'Brand Strategy', 'Marketing'],
+      slug: 'cliente-heroe-storybrand-framework',
+      image: '/IMAGENES BLOG/6.jpg',
+      rating: 5.0,
+      commentsCount: 0
+    },
+    {
+      id: 6,
       title: 'Creando Identidades de Marca Memorables',
       excerpt: 'Un sistema paso a paso para desarrollar marcas que resuenan emocionalmente y permanecen en la mente del consumidor.',
       category: 'branding',

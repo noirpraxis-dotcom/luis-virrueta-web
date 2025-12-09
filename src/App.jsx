@@ -44,6 +44,7 @@ const AppContent = () => {
 
   return (
     <Router>
+      <ScrollToTop />
       <SmoothScroll>
         <div className="relative min-h-screen">
           {/* Desktop Header - visible en pantallas md y superiores */}
@@ -61,7 +62,6 @@ const AppContent = () => {
 
         {/* Contenido principal con rutas */}
         <main className="relative z-0">
-          <ScrollToTop />
           <Routes>
             {/* Página Home: Video + Hero con "Ver más" */}
             <Route path="/" element={

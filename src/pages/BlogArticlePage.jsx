@@ -192,6 +192,167 @@ const getArticleBySlug = (slug) => {
         },
       ]
     },
+    'cliente-heroe-storybrand-framework': {
+      title: 'Tu Cliente es el Héroe, No Tu Marca: El Framework StoryBrand',
+      author: 'Luis Virrueta',
+      date: '9 Dic 2024',
+      readTime: '16 min',
+      category: 'Branding',
+      tags: ['StoryBrand', 'Storytelling', 'Brand Strategy', 'Marketing'],
+      gradient: 'from-amber-500 to-orange-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'Después de trabajar con cientos de marcas, Donald Miller descubrió algo revolucionario: las marcas más exitosas no hablan de sí mismas, hablan de ti. El StoryBrand Framework transforma la comunicación de marca aplicando los principios universales del storytelling para posicionar a tu cliente como el héroe de la historia, y a tu marca como el guía que lo lleva al éxito.'
+        },
+        {
+          type: 'heading',
+          title: 'El Problema de las Marcas que No Conectan',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'La mayoría de las marcas cometen el mismo error fatal: se posicionan como el héroe de su propia historia. Hablan de su trayectoria, sus logros, sus premios, sus productos innovadores. Pero el cerebro humano está programado para prestar atención a historias donde podemos vernos reflejados como protagonistas.'
+        },
+        {
+          type: 'highlight',
+          content: '"El cliente es el héroe. Tu marca es el guía. Si posicionas tu marca como el héroe, pierdes."',
+          author: 'Donald Miller, Building a StoryBrand'
+        },
+        {
+          type: 'heading',
+          title: 'Los 7 Elementos del StoryBrand Framework',
+          icon: Sparkles
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'Un Personaje (Tu Cliente)',
+          content: 'El héroe de tu historia no eres tú, es tu cliente. Define claramente quién es, qué quiere, y cuál es su deseo fundamental. No vendas productos, vende transformaciones. Nike no vende zapatos, vende la versión atlética de ti mismo. Apple no vende computadoras, vende creatividad y simplicidad.',
+          gradient: 'from-purple-500 to-fuchsia-500'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'Tiene un Problema',
+          content: 'Define el problema en tres niveles: Externo (el obstáculo tangible), Interno (cómo se siente respecto al problema), y Filosófico (por qué está mal que exista este problema). Tesla vende autos eléctricos (externo), pero realmente resuelve la culpa ambiental (interno) y la visión de un futuro sostenible (filosófico).',
+          gradient: 'from-cyan-500 to-blue-500'
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'Y Encuentra un Guía',
+          content: 'Aquí entras tú. Pero no como el héroe, sino como Yoda, Gandalf o Mr. Miyagi: el sabio mentor que ha estado donde está el héroe y conoce el camino. Demuestra empatía ("entiendo tu dolor") y autoridad ("he ayudado a otros como tú").',
+          gradient: 'from-emerald-500 to-teal-500'
+        },
+        {
+          type: 'subsection',
+          number: '04',
+          title: 'Quien Le Da un Plan',
+          content: 'Los clientes necesitan claridad, no complejidad. Ofrece un plan simple de 3 pasos que elimine la confusión y el riesgo. Ejemplo: "1. Agenda una llamada. 2. Recibe tu estrategia personalizada. 3. Implementa y crece." La simplicidad genera confianza.',
+          gradient: 'from-rose-500 to-pink-500'
+        },
+        {
+          type: 'subsection',
+          number: '05',
+          title: 'Y Los Llama a la Acción',
+          content: 'Dos tipos de call to action: Directo ("Compra ahora", "Agenda tu consulta") y de Transición ("Descarga la guía gratuita", "Mira el video"). La mayoría de visitantes no están listos para comprar hoy, pero sí para dar un paso pequeño. Ofrece ambos caminos.',
+          gradient: 'from-violet-500 to-purple-500'
+        },
+        {
+          type: 'subsection',
+          number: '06',
+          title: 'Que Los Ayuda a Evitar el Fracaso',
+          content: 'Define claramente qué pasa si no actúan. No uses miedo manipulador, usa consecuencias reales y relevantes. "Sin una estrategia clara de marca, seguirás compitiendo solo por precio y perderás clientes con competidores mejor posicionados." El fracaso debe ser específico y creíble.',
+          gradient: 'from-amber-500 to-orange-500'
+        },
+        {
+          type: 'subsection',
+          number: '07',
+          title: 'Y Termina en Éxito',
+          content: 'Pinta una imagen vívida del éxito. No solo "aumentarás ventas", sino "imagina cerrar 3 clientes ideales al mes sin perseguirlos, mientras construyes una marca que te posiciona como la única opción lógica." El éxito debe ser aspiracional, específico y emocionalmente resonante.',
+          gradient: 'from-teal-500 to-cyan-500'
+        },
+        {
+          type: 'heading',
+          title: 'Aplicando StoryBrand a Tu Comunicación',
+          icon: Zap
+        },
+        {
+          type: 'text',
+          content: 'El framework no es solo para tu página web. Es un filtro para toda tu comunicación: emails, posts sociales, presentaciones, publicidad. Cada mensaje debe pasar la prueba: ¿Estoy posicionando al cliente como héroe? ¿Estoy actuando como guía? ¿Ofrezco un plan claro?'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Tu Encabezado Web',
+              description: 'Debe responder en 5 segundos: ¿Qué ofreces? ¿Cómo hace mejor mi vida? ¿Qué debo hacer después? "Construye una marca que vende sola. Estrategia de branding psicológico que convierte. Agenda tu sesión gratuita."'
+            },
+            {
+              title: 'Tu Pitch de Ventas',
+              description: 'Empieza con el problema del cliente, no con tu historia. "¿Cansado de invertir en marketing sin resultados claros?" es infinitamente mejor que "Somos una agencia fundada en 2010..."'
+            },
+            {
+              title: 'Tus Emails',
+              description: 'Cada email debe mover al héroe (cliente) más cerca de su transformación. Comparte valor, historias de éxito, y siempre incluye un CTA claro.'
+            },
+            {
+              title: 'Tu Contenido Social',
+              description: 'Posts que cuentan historias donde tus clientes son protagonistas generan 10x más engagement que posts sobre tu marca.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'El BrandScript: Tu Mapa de Historia',
+          icon: Eye
+        },
+        {
+          type: 'text',
+          content: 'Donald Miller creó una herramienta llamada BrandScript: un documento de una página que responde los 7 elementos del framework para tu marca específica. Es la base de toda tu comunicación. Ejemplo simplificado:'
+        },
+        {
+          type: 'colorGrid',
+          colors: [
+            { name: 'Personaje', hex: '#8B5CF6', emotion: 'Emprendedor creativo', brands: 'Quiere destacar con autenticidad' },
+            { name: 'Problema', hex: '#EC4899', emotion: 'Marcas genéricas sin alma', brands: 'Se siente invisible en su mercado' },
+            { name: 'Guía', hex: '#10B981', emotion: 'LUXMANIA como mentor', brands: 'Empatía + autoridad en branding' },
+            { name: 'Plan', hex: '#F59E0B', emotion: '1.Sesión → 2.Estrategia → 3.Implementación', brands: '3 pasos claros y simples' },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Errores Comunes al Aplicar StoryBrand',
+          icon: Brain
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Ser Demasiado Vago',
+              description: '"Ayudamos empresas a crecer" no dice nada. "Ayudamos a coaches a llenar sus programas sin quemar su energía en redes sociales" es específico y resuena.'
+            },
+            {
+              title: 'Múltiples Mensajes',
+              description: 'Un mensaje confuso = ningún mensaje. Si ofreces 10 servicios, tu cliente no sabrá por dónde empezar. Prioriza.'
+            },
+            {
+              title: 'Olvidar el Stakes (Lo que está en juego)',
+              description: 'Si no hay consecuencias claras de no actuar, no hay urgencia. Pero deben ser reales, no manufacturadas.'
+            },
+            {
+              title: 'Plan Complicado',
+              description: 'Si tu plan tiene más de 4 pasos, es demasiado complejo. Simplifica o perderás al cliente.'
+            },
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'El StoryBrand Framework es poderoso porque se alinea con cómo el cerebro humano está programado para procesar información: a través de historias. Cuando posicionas a tu cliente como el héroe y te posicionas como el guía sabio que conoce el camino, tu mensaje corta el ruido, genera confianza, y convierte. No vendas productos. Vende transformaciones. No seas el héroe. Sé el mentor que hace héroes.'
+        },
+      ]
+    },
     'interfaces-empaticas-machine-learning': {
       title: 'Interfaces que Leen tu Mente: UX Empático con Machine Learning',
       author: 'Luis Virrueta',
