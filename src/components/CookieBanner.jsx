@@ -77,16 +77,16 @@ const CookieBanner = () => {
                     {/* Header minimalista */}
                     <div>
                       <h3 className="text-white text-base font-light tracking-wide mb-2 font-display">
-                        Privacidad y Experiencia
+                        Tu Experiencia, Tu Control
                       </h3>
                       <p className="text-white/60 text-xs font-light leading-relaxed">
-                        Usamos cookies para personalizar tu experiencia en nuestra plataforma de branding psicológico y próxima tienda. Tu privacidad es importante.{' '}
+                        Utilizamos cookies para ofrecerte una experiencia personalizada en nuestros servicios de branding psicológico, arquetipos de marca, avatares IA, diseño UX/UI, contenido del blog y próxima tienda online.{' '}
                         <Link 
                           to="/politica-privacidad" 
                           className="text-fuchsia-400 hover:text-fuchsia-300 underline-offset-2 hover:underline transition-all"
                           onClick={() => setShowBanner(false)}
                         >
-                          Más info
+                          Leer más
                         </Link>
                       </p>
                     </div>
@@ -221,7 +221,7 @@ const CustomizePreferences = ({ onSave, onBack, t }) => {
           <div className="flex-1">
             <h4 className="text-white text-xs font-light mb-1">Marketing</h4>
             <p className="text-white/50 text-[10px] leading-relaxed">
-              Para ofertas personalizadas de nuestra tienda
+              Ofertas de tienda, servicios y contenido relevante
             </p>
           </div>
           <button
