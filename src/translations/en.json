@@ -80,10 +80,11 @@
     "showcaseSection": {
       "title": "SHOWCASE",
       "subtitle": "A glimpse of our work",
+      "eliteBadge": "Elite UX/UI Design",
       "everyClick": "Every click is intentional",
-      "everyScroll": "Every scroll is deliberate",
-      "designGuides": "Design guides to action",
-      "viewPortfolio": "View Full Portfolio"
+      "everyScroll": "Every scroll has purpose",
+      "designGuides": "Design guides action",
+      "viewPortfolio": "View full portfolio"
     },
     "whySection": {
       "badge": "The Difference",
@@ -229,6 +230,8 @@
     },
     "logoCarousel": {
       "badge": "Iconography • Symbols • Identity",
+      "title": "Conceptual",
+      "titleItalic": "Logos",
       "subtitle": "Does your logo tell the story you want to convey?",
       "bottomText": "Selected logo samples that communicate"
     },
@@ -700,6 +703,42 @@
     "5:00 PM"
   ],
   "lang": "en",
+  "servicesPage": {
+    "hero": {
+      "title": "Services",
+      "badge": "Premium Services",
+      "formula": {
+        "strategy": "Strategy",
+        "creativity": "Creativity",
+        "execution": "Execution"
+      }
+    },
+    "hexGrid": {
+      "badge": "Premium Solutions",
+      "title": "What Do You Need",
+      "titleItalic": "to Create?",
+      "description": "Select the service you're looking for and we'll take you straight to the details. Each project is designed to connect, convert and transcend.",
+      "helpQuestion": "Not sure where to start?",
+      "helpAction": "Let Me Help You Decide",
+      "helpWhatsapp": "Hello! I need help choosing the ideal service for my project",
+      "portfolioQuestion": "Want to see examples of our work?",
+      "portfolioAction": "Explore the Portfolio",
+      "hexagons": {
+        "consultoria": { "title": "Consulting", "subtitle": "Start here" },
+        "identidad": { "title": "Visual Identity", "subtitle": "Complete system" },
+        "logo": { "title": "Logo Design", "subtitle": "Memorable identity" },
+        "web": { "title": "Websites", "subtitle": "Sites that convert" },
+        "apps": { "title": "Mobile Apps", "subtitle": "Fluid experiences" },
+        "video": { "title": "Video Branding", "subtitle": "Visual content" },
+        "animacion": { "title": "Animation", "subtitle": "Logos in motion" },
+        "fotografia": { "title": "Photography", "subtitle": "Professional shoots" },
+        "audio": { "title": "Audio Branding", "subtitle": "Sonic identity" },
+        "avatares": { "title": "AI Avatars", "subtitle": "Digital representation" },
+        "marketing": { "title": "Marketing", "subtitle": "Effective campaigns" },
+        "impreso": { "title": "Print Material", "subtitle": "Luxury tangibles" }
+      }
+    }
+  },
   "footer": {
     "privacyPolicy": "Privacy Policy",
     "termsConditions": "Terms & Conditions",

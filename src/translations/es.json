@@ -91,6 +91,7 @@
     "showcaseSection": {
       "title": "MUESTRA",
       "subtitle": "Un poco sobre nuestro trabajo",
+      "eliteBadge": "Diseño UX/UI Élite",
       "everyClick": "Cada clic está pensado",
       "everyScroll": "Cada scroll es intencional",
       "designGuides": "El diseño guía hacia la acción",
@@ -240,6 +241,8 @@
     },
     "logoCarousel": {
       "badge": "Iconografía • Símbolos • Identidad",
+      "title": "Logotipos",
+      "titleItalic": "Conceptuales",
       "subtitle": "¿Tu logo cuenta la historia que quieres transmitir?",
       "bottomText": "Muestras selectas de logotipos que transmiten"
     },
@@ -795,6 +798,42 @@
     "5:00 PM"
   ],
   "lang": "es",
+  "servicesPage": {
+    "hero": {
+      "title": "Servicios",
+      "badge": "Servicios Premium",
+      "formula": {
+        "strategy": "Estrategia",
+        "creativity": "Creatividad",
+        "execution": "Ejecución"
+      }
+    },
+    "hexGrid": {
+      "badge": "Soluciones Premium",
+      "title": "¿Qué Necesitas",
+      "titleItalic": "Crear?",
+      "description": "Selecciona el servicio que buscas y te llevaremos directo a los detalles. Cada proyecto está diseñado para conectar, convertir y trascender.",
+      "helpQuestion": "¿No sabes por dónde empezar?",
+      "helpAction": "Te Ayudo a Decidir",
+      "helpWhatsapp": "Hola! Necesito ayuda para elegir el servicio ideal para mi proyecto",
+      "portfolioQuestion": "¿Quieres ver ejemplos de nuestro trabajo?",
+      "portfolioAction": "Explora el Portafolio",
+      "hexagons": {
+        "consultoria": { "title": "Consultoría", "subtitle": "Empieza aquí" },
+        "identidad": { "title": "Identidad Visual", "subtitle": "Sistema completo" },
+        "logo": { "title": "Logo Design", "subtitle": "Identidad memorable" },
+        "web": { "title": "Páginas Web", "subtitle": "Sitios que convierten" },
+        "apps": { "title": "Apps Móviles", "subtitle": "Experiencias fluidas" },
+        "video": { "title": "Video Branding", "subtitle": "Contenido visual" },
+        "animacion": { "title": "Animación", "subtitle": "Logos en movimiento" },
+        "fotografia": { "title": "Fotografía", "subtitle": "Sesiones profesionales" },
+        "audio": { "title": "Audio Branding", "subtitle": "Identidad sonora" },
+        "avatares": { "title": "Avatares IA", "subtitle": "Representación digital" },
+        "marketing": { "title": "Marketing", "subtitle": "Campañas efectivas" },
+        "impreso": { "title": "Material Impreso", "subtitle": "Tangibles de lujo" }
+      }
+    }
+  },
   "footer": {
     "privacyPolicy": "Política de Privacidad",
     "termsConditions": "Términos y Condiciones",

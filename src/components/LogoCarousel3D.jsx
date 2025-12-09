@@ -107,7 +107,7 @@ const LogoCarousel3D = () => {
               fontWeight: 300
             }}
           >
-            Logotipos <span className="italic font-extralight">Conceptuales</span>
+            {t('portfolio.logoCarousel.title')} <span className="italic font-extralight">{t('portfolio.logoCarousel.titleItalic')}</span>
           </motion.h2>
 
           {/* Subtítulo inferior - pregunta provocativa */}

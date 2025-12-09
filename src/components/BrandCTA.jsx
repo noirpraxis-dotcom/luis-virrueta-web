@@ -123,7 +123,7 @@ const BrandCTA = () => {
           <div className="inline-flex items-center gap-3 px-6 py-2.5 border border-white/10 rounded-full bg-white/5 backdrop-blur-sm">
             <Sparkles className="w-4 h-4 text-white/60" strokeWidth={1.5} />
             <span className="text-white/70 text-xs font-light uppercase tracking-[0.25em]">
-              Diseño UX/UI Élite
+              {t('home.showcaseSection.eliteBadge')}
             </span>
           </div>
         </motion.div>

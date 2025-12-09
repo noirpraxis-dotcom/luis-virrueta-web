@@ -1,5 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
+import { useLanguage } from '../context/LanguageContext'
 import { 
   Palette, 
   Smartphone, 
@@ -26,6 +27,7 @@ import {
 } from 'lucide-react'
 
 const ServiciosPage = () => {
+  const { t } = useLanguage()
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
   const identityRef = useRef(null)
@@ -422,20 +424,29 @@ const ServiciosPage = () => {
               textTransform: 'uppercase'
             }}
           >
-            <span className="relative inline-block">
-              {/* S con degradado */}
-              <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>S</span>
-                <span className="relative text-white">S</span>
-              </span>
-              {/* ervicio */}
-              <span className="text-white">ervicio</span>
-              {/* s con degradado */}
-              <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>s</span>
-                <span className="relative text-white">s</span>
-              </span>
-            </span>
+            {(() => {
+              const title = t('servicesPage.hero.title')
+              const firstLetter = title.charAt(0)
+              const lastLetter = title.charAt(title.length - 1)
+              const middle = title.slice(1, -1)
+              
+              return (
+                <span className="relative inline-block">
+                  {/* First letter with gradient */}
+                  <span className="relative">
+                    <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>{firstLetter}</span>
+                    <span className="relative text-white">{firstLetter}</span>
+                  </span>
+                  {/* Middle */}
+                  <span className="text-white">{middle}</span>
+                  {/* Last letter with gradient */}
+                  <span className="relative">
+                    <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>{lastLetter}</span>
+                    <span className="relative text-white">{lastLetter}</span>
+                  </span>
+                </span>
+              )
+            })()}
           </motion.h1>
 
           {/* Subtitle con iconos elegantes */}
@@ -455,7 +466,7 @@ const ServiciosPage = () => {
               <div className="flex items-center gap-3">
                 <Briefcase className="w-4 h-4 text-white/60" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/80 font-light tracking-wider uppercase">
-                  Servicios Premium
+                  {t('servicesPage.hero.badge')}
                 </span>
               </div>
             </motion.div>
@@ -471,7 +482,7 @@ const ServiciosPage = () => {
               <div className="flex items-center gap-2">
                 <Brain className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Estrategia
+                  {t('servicesPage.hero.formula.strategy')}
                 </span>
               </div>
 
@@ -481,7 +492,7 @@ const ServiciosPage = () => {
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Creatividad
+                  {t('servicesPage.hero.formula.creativity')}
                 </span>
               </div>
 
@@ -491,7 +502,7 @@ const ServiciosPage = () => {
               <div className="flex items-center gap-2">
                 <Zap className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Ejecución
+                  {t('servicesPage.hero.formula.execution')}
                 </span>
               </div>
             </motion.div>
@@ -554,15 +565,15 @@ const ServiciosPage = () => {
             >
               <Sparkles className="w-3 h-3 text-white/60" strokeWidth={1.5} />
               <span className="text-xs text-white/70 font-light uppercase tracking-[0.2em]">
-                Soluciones Premium
+                {t('servicesPage.hexGrid.badge')}
               </span>
             </motion.div>
 
             <h2 className="text-3xl lg:text-5xl font-light text-white mb-6 tracking-wide">
-              ¿Qué Necesitas <span className="italic font-normal">Crear?</span>
+              {t('servicesPage.hexGrid.title')} <span className="italic font-normal">{t('servicesPage.hexGrid.titleItalic')}</span>
             </h2>
             <p className="text-white/60 text-sm lg:text-base font-extralight leading-relaxed tracking-wide max-w-2xl mx-auto mb-8">
-              Selecciona el servicio que buscas y te llevaremos directo a los detalles. Cada proyecto está diseñado para conectar, convertir y trascender.
+              {t('servicesPage.hexGrid.description')}
             </p>
 
             {/* CTA WhatsApp - Ayuda personalizada */}
@@ -574,15 +585,15 @@ const ServiciosPage = () => {
               className="flex items-center justify-center gap-3 text-white/50 text-sm font-extralight"
             >
               <Brain className="w-4 h-4" strokeWidth={1.5} />
-              <span>¿No sabes por dónde empezar?</span>
+              <span>{t('servicesPage.hexGrid.helpQuestion')}</span>
               <a
-                href="https://wa.me/420776711575?text=Hola! Necesito ayuda para elegir el servicio ideal para mi proyecto"
+                href={`https://wa.me/420776711575?text=${encodeURIComponent(t('servicesPage.hexGrid.helpWhatsapp'))}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative inline-flex items-center gap-2 text-white hover:text-white transition-colors"
               >
                 <span className="relative">
-                  Te Ayudo a Decidir
+                  {t('servicesPage.hexGrid.helpAction')}
                   <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full" />
                 </span>
                 <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.5} />
@@ -593,18 +604,18 @@ const ServiciosPage = () => {
           {/* Hexagon Grid - ORDEN POR RELEVANCIA */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 lg:gap-8 mb-12">
             {[
-              { id: 'consultoria', icon: Brain, title: 'Consultoría', subtitle: 'Empieza aquí', color: 'from-purple-500 to-violet-600', target: 'consultoria-psicoanalitica' },
-              { id: 'identidad-visual', icon: Sparkles, title: 'Identidad Visual', subtitle: 'Sistema completo', color: 'from-fuchsia-500 to-pink-500', target: 'identidad-visual' },
-              { id: 'logo-design', icon: Palette, title: 'Logo Design', subtitle: 'Identidad memorable', color: 'from-cyan-400 to-blue-500', target: 'logo-design' },
-              { id: 'paginas-web', icon: Code, title: 'Páginas Web', subtitle: 'Sitios que convierten', color: 'from-emerald-400 to-green-500', target: 'paginas-web' },
-              { id: 'apps-moviles', icon: Smartphone, title: 'Apps Móviles', subtitle: 'Experiencias fluidas', color: 'from-amber-400 to-orange-500', target: 'apps-moviles' },
-              { id: 'video-branding', icon: Video, title: 'Video Branding', subtitle: 'Contenido visual', color: 'from-rose-400 to-red-500', target: 'video-branding' },
-              { id: 'animacion', icon: Layers, title: 'Animación', subtitle: 'Logos en movimiento', color: 'from-indigo-400 to-purple-500', target: 'animacion' },
-              { id: 'fotografia', icon: Camera, title: 'Fotografía', subtitle: 'Sesiones profesionales', color: 'from-pink-400 to-fuchsia-500', target: 'fotografia' },
-              { id: 'audio-branding', icon: Mic, title: 'Audio Branding', subtitle: 'Identidad sonora', color: 'from-yellow-400 to-amber-500', target: 'audio-branding' },
-              { id: 'avatares-ia', icon: Bot, title: 'Avatares IA', subtitle: 'Representación digital', color: 'from-teal-400 to-cyan-500', target: 'avatares-ia' },
-              { id: 'marketing', icon: Megaphone, title: 'Marketing', subtitle: 'Campañas efectivas', color: 'from-lime-400 to-green-500', target: 'marketing' },
-              { id: 'material-impreso', icon: FileText, title: 'Material Impreso', subtitle: 'Tangibles de lujo', color: 'from-violet-400 to-purple-500', target: 'material-impreso' },
+              { id: 'consultoria', icon: Brain, titleKey: 'consultoria', color: 'from-purple-500 to-violet-600', target: 'consultoria-psicoanalitica' },
+              { id: 'identidad-visual', icon: Sparkles, titleKey: 'identidad', color: 'from-fuchsia-500 to-pink-500', target: 'identidad-visual' },
+              { id: 'logo-design', icon: Palette, titleKey: 'logo', color: 'from-cyan-400 to-blue-500', target: 'logo-design' },
+              { id: 'paginas-web', icon: Code, titleKey: 'web', color: 'from-emerald-400 to-green-500', target: 'paginas-web' },
+              { id: 'apps-moviles', icon: Smartphone, titleKey: 'apps', color: 'from-amber-400 to-orange-500', target: 'apps-moviles' },
+              { id: 'video-branding', icon: Video, titleKey: 'video', color: 'from-rose-400 to-red-500', target: 'video-branding' },
+              { id: 'animacion', icon: Layers, titleKey: 'animacion', color: 'from-indigo-400 to-purple-500', target: 'animacion' },
+              { id: 'fotografia', icon: Camera, titleKey: 'fotografia', color: 'from-pink-400 to-fuchsia-500', target: 'fotografia' },
+              { id: 'audio-branding', icon: Mic, titleKey: 'audio', color: 'from-yellow-400 to-amber-500', target: 'audio-branding' },
+              { id: 'avatares-ia', icon: Bot, titleKey: 'avatares', color: 'from-teal-400 to-cyan-500', target: 'avatares-ia' },
+              { id: 'marketing', icon: Megaphone, titleKey: 'marketing', color: 'from-lime-400 to-green-500', target: 'marketing' },
+              { id: 'material-impreso', icon: FileText, titleKey: 'impreso', color: 'from-violet-400 to-purple-500', target: 'material-impreso' },
             ].map((item, i) => (
               <motion.button
                 key={item.id}
@@ -691,10 +702,10 @@ const ServiciosPage = () => {
                 {/* Text */}
                 <div className="mt-5 text-center">
                   <h3 className="text-white/90 group-hover:text-white text-sm lg:text-base font-light tracking-[0.1em] mb-1.5 transition-colors duration-300">
-                    {item.title}
+                    {t(`servicesPage.hexGrid.hexagons.${item.titleKey}.title`)}
                   </h3>
                   <p className="text-white/30 group-hover:text-white/50 text-[10px] lg:text-xs font-extralight tracking-[0.15em] transition-colors duration-300">
-                    {item.subtitle}
+                    {t(`servicesPage.hexGrid.hexagons.${item.titleKey}.subtitle`)}
                   </p>
                 </div>
               </motion.button>
@@ -711,13 +722,13 @@ const ServiciosPage = () => {
           >
             <div className="flex items-center justify-center gap-3 text-white/40 text-sm font-extralight">
               <Eye className="w-4 h-4" strokeWidth={1.5} />
-              <span>¿Quieres ver ejemplos de nuestro trabajo?</span>
+              <span>{t('servicesPage.hexGrid.portfolioQuestion')}</span>
               <a
                 href="/portafolio"
                 className="group relative inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors"
               >
                 <span className="relative">
-                  Explora el Portafolio
+                  {t('servicesPage.hexGrid.portfolioAction')}
                   <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full" />
                 </span>
                 <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.5} />
