@@ -34,12 +34,12 @@ const AppContent = () => {
   const { t } = useLanguage()
 
   const menuItems = [
-    { name: 'Inicio', href: '/' },
-    { name: 'Portafolio', href: '/portafolio' },
-    { name: 'Servicios', href: '/servicios' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Sobre Mí', href: '/sobre-mi' },
-    { name: 'Contacto', href: '/contacto' }
+    { name: t('menu.home'), href: '/' },
+    { name: t('menu.portfolio'), href: '/portafolio' },
+    { name: t('menu.services'), href: '/servicios' },
+    { name: t('menu.blog'), href: '/blog' },
+    { name: t('menu.about'), href: '/sobre-mi' },
+    { name: t('menu.contact'), href: '/contacto' }
   ]
 
   return (

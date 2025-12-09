@@ -2,8 +2,10 @@ import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Brain, Palette, Code, Gem } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 const Home = () => {
+  const { t } = useLanguage()
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
 
@@ -53,7 +55,7 @@ const Home = () => {
           >
             <Gem className="w-4 h-4 text-white/60" strokeWidth={1.5} />
             <span className="text-sm text-white/80 font-light tracking-wider uppercase">
-              Identidad Visual con Fundamento
+              {t('home.badge')}
             </span>
           </motion.div>
 
@@ -66,7 +68,7 @@ const Home = () => {
           >
             {/* Construimos - más pequeño */}
             <span className="block text-white/70 text-2xl lg:text-4xl mb-3" style={{ fontWeight: 200, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-              Construimos
+              {t('home.weBuild')}
             </span>
             
             {/* Tu Marca - grande con efecto 3D */}
@@ -132,7 +134,7 @@ const Home = () => {
             <div className="flex items-center gap-2">
               <Brain className="w-5 h-5 text-white/70" strokeWidth={1.5} />
               <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                Psicología
+                {t('home.psychology')}
               </span>
             </div>
 
@@ -142,7 +144,7 @@ const Home = () => {
             <div className="flex items-center gap-2">
               <Palette className="w-5 h-5 text-white/70" strokeWidth={1.5} />
               <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                Diseño
+                {t('home.design')}
               </span>
             </div>
 
@@ -152,7 +154,7 @@ const Home = () => {
             <div className="flex items-center gap-2">
               <Code className="w-5 h-5 text-white/70" strokeWidth={1.5} />
               <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                Tecnología
+                {t('home.technology')}
               </span>
             </div>
           </motion.div>
@@ -201,7 +203,7 @@ const Home = () => {
                   className="absolute inset-0 w-1/3 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12"
                 />
                 <span className="relative z-10 flex items-center gap-3 text-base tracking-wide">
-                  <span>Descubre Cómo Ayudamos</span>
+                  <span>{t('home.ctaPrimary')}</span>
                   <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
@@ -210,14 +212,14 @@ const Home = () => {
 
               {/* Botón secundario - Más sutil */}
               <a
-                href="https://wa.me/420776711575?text=Hola! Me gustaría platicar sobre mi proyecto y ver cómo pueden ayudarme"
+                href={`https://wa.me/420776711575?text=${encodeURIComponent(t('home.whatsappMessage'))}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative px-10 py-5 text-white font-light rounded-full border border-white/30 hover:border-white/60 transition-all duration-500 hover:scale-[1.02] overflow-hidden"
               >
                 <div className="absolute inset-0 bg-white/5 backdrop-blur-sm transition-opacity duration-300 group-hover:bg-white/10" />
                 <span className="relative z-10 flex items-center gap-3 text-base tracking-wide">
-                  <span>Cuéntanos tu Proyecto</span>
+                  <span>{t('home.ctaSecondary')}</span>
                   <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
@@ -232,7 +234,7 @@ const Home = () => {
               transition={{ duration: 0.8, delay: 0.8 }}
               className="text-white/40 text-xs font-extralight tracking-wider text-center max-w-md"
             >
-              Iniciemos con una conversación sobre tus necesidades
+              {t('home.ctaSubtitle')}
             </motion.p>
           </motion.div>
         </motion.div>
@@ -250,7 +252,7 @@ const Home = () => {
           transition={{ duration: 2, repeat: Infinity }}
           className="text-white/50 text-xs font-light tracking-widest uppercase"
         >
-          Desliza para conocer más
+          {t('home.scrollText')}
         </motion.p>
         <motion.div
           animate={{ y: [0, 10, 0] }}

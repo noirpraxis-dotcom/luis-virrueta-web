@@ -2,20 +2,10 @@
   "menu": {
     "home": "Home",
     "about": "About",
-    "healingSessions": "Sessions",
-    "healingSessionsShort": "Sessions",
-    "emotionCode": "Emotion, Body and Belief Code",
-    "pastLife": "Past Life Regressions",
-    "ilyari": "Ilyari Somatic Transmissions",
-    "animals": "Healing for Animals",
-    "sessionPrices": "Session Prices",
-    "personalCreation": "Creation",
-    "personalCreationShort": "Creation",
-    "books": "Books",
-    "music": "Music",
-    "store": "Store",
-    "prices": "Prices",
-    "courses": "Courses"
+    "services": "Services",
+    "portfolio": "Portfolio",
+    "blog": "Blog",
+    "contact": "Contact"
   },
   "cookies": {
     "title": "We value your privacy",
@@ -34,6 +24,19 @@
     "marketingDesc": "Used to track visitors across websites for advertising purposes.",
     "back": "Back",
     "savePreferences": "Save Preferences"
+  },
+  "home": {
+    "badge": "Purposeful Visual Identity",
+    "weBuild": "We Craft",
+    "yourBrand": "Your Brand",
+    "psychology": "Psychology",
+    "design": "Design",
+    "technology": "Technology",
+    "ctaPrimary": "See How We Help",
+    "ctaSecondary": "Share Your Vision",
+    "ctaSubtitle": "Let's talk about what you need",
+    "scrollText": "Scroll to explore",
+    "whatsappMessage": "Hi! I'd like to discuss my project and explore how you can help"
   },
   "hero": {
     "subtitle": "Certified Past Life Regression therapist, energy healer, and channeler of Ilyari. Former university researcher with two doctorates exploring the intuitive and scientific aspects of energy healing.",
