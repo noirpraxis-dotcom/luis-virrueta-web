@@ -38,10 +38,24 @@
     "scrollText": "Scroll to explore",
     "whatsappMessage": "Hi! I'd like to discuss my project and explore how you can help",
     "luisSection": {
-      "badge": "The Creator",
+      "badge": "About Me",
       "title": "Luis Virrueta",
-      "subtitle": "Psychologist × Designer × AI Innovator",
-      "description": "Founder of LUXMANIA, I merge psychology, design and technology to create visual identities that transcend aesthetics and build deep emotional connections."
+      "subtitle": "Psychologist × Designer",
+      "foundedText": "I Founded",
+      "luxmaniaName": "Luxmania",
+      "description": "To create brands that",
+      "emotionalConnect": "connect emotionally",
+      "fusing": "by merging:",
+      "psychology": "Psychology",
+      "design": "Design",
+      "technology": "Technology",
+      "quote95": "",
+      "quote95Bold": "95% of decisions",
+      "quote95End": "happen unconsciously.",
+      "quoteSecond": "People don't choose with their mind,",
+      "quoteSecondBold": "they choose from emotion.",
+      "cta": "Explore My Approach",
+      "aboutBadge": "The Creator"
     }
   },
   "hero": {

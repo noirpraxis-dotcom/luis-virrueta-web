@@ -63,7 +63,7 @@ const LuisViruettaIntro = () => {
             >
               <Brain className="w-4 h-4 text-white/60" strokeWidth={1.5} />
               <p className="text-white/70 text-xs font-light uppercase tracking-[0.25em]">
-                Sobre Mí
+                {t('home.luisSection.badge')}
               </p>
             </motion.div>
 
@@ -125,7 +125,7 @@ const LuisViruettaIntro = () => {
               transition={{ duration: 0.8, delay: 0.35 }}
               className="text-white/50 text-sm lg:text-base font-light uppercase tracking-[0.3em] mb-6"
             >
-              Psicólogo × Diseñador
+              {t('home.luisSection.subtitle')}
             </motion.p>
 
             {/* Subtitle principal - Más elegante */}
@@ -136,7 +136,7 @@ const LuisViruettaIntro = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-white/70 text-xl lg:text-2xl font-extralight tracking-wide mb-4 max-w-xl leading-relaxed"
             >
-              Fundé{' '}
+              {t('home.luisSection.foundedText')}{' '}
               <motion.span
                 className="text-white font-light"
                 style={{
@@ -155,7 +155,7 @@ const LuisViruettaIntro = () => {
                   ease: "easeInOut"
                 }}
               >
-                Luxmania
+                {t('home.luisSection.luxmaniaName')}
               </motion.span>
             </motion.p>
 
@@ -167,9 +167,9 @@ const LuisViruettaIntro = () => {
               transition={{ duration: 0.8, delay: 0.45 }}
               className="text-white/50 text-base lg:text-lg font-light leading-relaxed mb-10 max-w-xl"
             >
-              Para crear marcas que{' '}
-              <span className="text-white/70">conectan emocionalmente</span>{' '}
-              fusionando:
+              {t('home.luisSection.description')}{' '}
+              <span className="text-white/70">{t('home.luisSection.emotionalConnect')}</span>{' '}
+              {t('home.luisSection.fusing')}
             </motion.p>
 
             {/* Badges con formato inline más elegante */}
@@ -205,7 +205,7 @@ const LuisViruettaIntro = () => {
                 />
                 <div className="relative flex items-center gap-2">
                   <Brain className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Psicología</span>
+                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.luisSection.psychology')}</span>
                 </div>
               </motion.div>
 
@@ -237,7 +237,7 @@ const LuisViruettaIntro = () => {
                 />
                 <div className="relative flex items-center gap-2">
                   <Palette className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Diseño</span>
+                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.luisSection.design')}</span>
                 </div>
               </motion.div>
 
@@ -269,7 +269,7 @@ const LuisViruettaIntro = () => {
                 />
                 <div className="relative flex items-center gap-2">
                   <Code className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">Tecnología</span>
+                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.luisSection.technology')}</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -291,18 +291,18 @@ const LuisViruettaIntro = () => {
                 <Brain className="absolute left-0 top-2 w-5 h-5 text-white/40" strokeWidth={1.5} />
 
                 <p className="text-white/60 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
-                  El{' '}
+                  {t('home.luisSection.quote95')}{t('home.luisSection.quote95') && ' '}
                   <span className="text-white font-normal">
-                    95% de las decisiones
+                    {t('home.luisSection.quote95Bold')}
                   </span>{' '}
-                  ocurren en el inconsciente.
+                  {t('home.luisSection.quote95End')}
                 </p>
 
                 <p className="text-white/60 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
-                  Las personas no eligen con la mente,{' '}
+                  {t('home.luisSection.quoteSecond')}{' '}
                   <span className="text-white font-normal">
-                    eligen desde la emoción
-                  </span>.
+                    {t('home.luisSection.quoteSecondBold')}
+                  </span>
                 </p>
               </div>
 
@@ -369,7 +369,7 @@ const LuisViruettaIntro = () => {
 
                   <span className="relative flex items-center gap-3">
                     <span className="text-white font-light text-base tracking-wide">
-                      Conocer más
+                      {t('home.luisSection.cta')}
                     </span>
                     {/* Flecha dentro de círculo */}
                     <motion.div
