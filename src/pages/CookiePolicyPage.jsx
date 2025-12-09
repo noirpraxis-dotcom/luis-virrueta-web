@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion'
 import { useRef } from 'react'
 import { useInView } from 'framer-motion'
+import { Cookie, Settings, Shield, Globe, Eye, FileCheck } from 'lucide-react'
 
 const CookiePolicyPage = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
-  const lastUpdated = "November 25, 2025"
+  const lastUpdated = "9 de Diciembre, 2024"
 
   const handleCookieSettings = () => {
     localStorage.removeItem('cookieConsent')
@@ -14,27 +15,34 @@ const CookiePolicyPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white">
       {/* Hero Section */}
-      <section className="relative py-32 lg:py-40 px-6 lg:px-20 bg-white">
-        <div className="max-w-4xl mx-auto">
+      <section className="relative py-32 lg:py-40 px-6 lg:px-20 overflow-hidden">
+        {/* Gradient Orbs */}
+        <div className="absolute top-20 left-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-fuchsia-500/10 rounded-full blur-3xl" />
+        
+        <div className="max-w-4xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center mb-12"
           >
-            <h1 
-              className="text-stone-800 text-5xl lg:text-7xl font-light tracking-[0.2em] mb-6"
-              style={{ fontFamily: 'Gotham, sans-serif' }}
-            >
-              COOKIE POLICY
+            <div className="flex justify-center mb-6">
+              <div className="p-4 bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 rounded-2xl backdrop-blur-sm">
+                <Cookie className="w-12 h-12 text-purple-600" />
+              </div>
+            </div>
+            
+            <h1 className="text-gray-900 text-5xl lg:text-7xl font-light tracking-tight mb-6">
+              Política de <span className="bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent font-normal">Cookies</span>
             </h1>
             
-            <div className="h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent mx-auto w-64 mb-6" />
+            <div className="h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent mx-auto w-64 mb-6" />
             
-            <p className="text-stone-500 text-sm tracking-wide">
-              Last Updated: {lastUpdated}
+            <p className="text-gray-500 text-sm tracking-wide">
+              Última actualización: {lastUpdated}
             </p>
           </motion.div>
         </div>
@@ -49,92 +57,95 @@ const CookiePolicyPage = () => {
           className="max-w-4xl mx-auto space-y-12"
         >
           {/* Introduction */}
-          <div>
-            <p className="text-stone-600 leading-relaxed mb-4">
-              This Cookie Policy explains how Greenleaf Lightworks uses cookies and similar technologies when you visit our website. 
-              By continuing to use our website, you consent to our use of cookies as described in this policy.
+          <div className="bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-3xl p-8 border border-purple-100">
+            <p className="text-gray-700 leading-relaxed text-lg">
+              Esta Política de Cookies explica cómo <span className="font-semibold bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent">LUXMANIA</span> utiliza 
+              cookies y tecnologías similares cuando visitas nuestro sitio web. Al continuar usando nuestro sitio web, 
+              consientes el uso de cookies como se describe en esta política.
             </p>
           </div>
 
           {/* What Are Cookies */}
-          <Section title="1. What Are Cookies?">
+          <Section title="1. ¿Qué son las Cookies?" icon={Cookie}>
             <p>
-              Cookies are small text files that are stored on your device when you visit a website. They help websites 
-              remember your preferences and improve your browsing experience.
+              Las cookies son pequeños archivos de texto que se almacenan en tu dispositivo cuando visitas un sitio web. 
+              Ayudan a los sitios web a recordar tus preferencias y mejorar tu experiencia de navegación.
             </p>
           </Section>
 
           {/* Types of Cookies We Use */}
-          <Section title="2. Types of Cookies We Use">
+          <Section title="2. Tipos de Cookies que Usamos" icon={Settings}>
             
             <CookieType 
-              title="2.1 Necessary Cookies" 
+              title="2.1 Cookies Necesarias" 
               required={true}
-              description="These cookies are essential for the website to function properly. They enable basic functions like page navigation and access to secure areas."
+              description="Estas cookies son esenciales para que el sitio web funcione correctamente. Permiten funciones básicas como navegación de páginas y acceso a áreas seguras."
               examples={[
-                "Session cookies for maintaining login status",
-                "Security cookies for authentication",
-                "Shopping cart cookies for eCommerce functionality"
+                "Cookies de sesión para mantener el estado de inicio de sesión",
+                "Cookies de seguridad para autenticación",
+                "Cookies de preferencias (idioma, temas visuales)"
               ]}
             />
 
             <CookieType 
-              title="2.2 Analytics Cookies" 
+              title="2.2 Cookies de Análisis" 
               required={false}
-              description="These cookies help us understand how visitors interact with our website by collecting and reporting information anonymously."
+              description="Estas cookies nos ayudan a entender cómo los visitantes interactúan con nuestro sitio web recopilando y reportando información de manera anónima."
               examples={[
-                "Google Analytics - tracks page views, session duration, and user behavior",
-                "Visitor tracking for site improvements"
+                "Google Analytics - rastrea vistas de página, duración de sesión y comportamiento del usuario",
+                "Seguimiento de visitantes para mejoras del sitio",
+                "Métricas de engagement del blog y contenido"
               ]}
             />
 
             <CookieType 
-              title="2.3 Marketing Cookies" 
+              title="2.3 Cookies de Marketing" 
               required={false}
-              description="These cookies track your browsing habits to deliver personalized advertisements across different websites."
+              description="Estas cookies rastrean tus hábitos de navegación para entregar publicidad personalizada en diferentes sitios web."
               examples={[
-                "Facebook Pixel - for retargeting campaigns (currently not active)",
-                "Google Ads - for advertising purposes (currently not active)"
+                "Facebook Pixel - para campañas de retargeting (actualmente no activo)",
+                "Google Ads - para propósitos publicitarios (actualmente no activo)",
+                "Cookies de afiliados para rastrear referencias"
               ]}
             />
           </Section>
 
           {/* Specific Cookies */}
-          <Section title="3. Specific Cookies We Use">
+          <Section title="3. Cookies Específicas que Usamos" icon={FileCheck}>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left border border-stone-200">
-                <thead className="bg-stone-50">
+              <table className="w-full text-sm text-left border border-purple-200 rounded-lg overflow-hidden">
+                <thead className="bg-gradient-to-r from-purple-50 to-fuchsia-50">
                   <tr>
-                    <th className="px-4 py-3 border-b border-stone-200">Cookie Name</th>
-                    <th className="px-4 py-3 border-b border-stone-200">Purpose</th>
-                    <th className="px-4 py-3 border-b border-stone-200">Duration</th>
-                    <th className="px-4 py-3 border-b border-stone-200">Type</th>
+                    <th className="px-4 py-3 border-b border-purple-200 text-gray-900 font-semibold">Nombre de Cookie</th>
+                    <th className="px-4 py-3 border-b border-purple-200 text-gray-900 font-semibold">Propósito</th>
+                    <th className="px-4 py-3 border-b border-purple-200 text-gray-900 font-semibold">Duración</th>
+                    <th className="px-4 py-3 border-b border-purple-200 text-gray-900 font-semibold">Tipo</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-stone-200">
-                  <tr>
-                    <td className="px-4 py-3">cookieConsent</td>
-                    <td className="px-4 py-3">Stores your cookie preferences</td>
-                    <td className="px-4 py-3">1 year</td>
-                    <td className="px-4 py-3">Necessary</td>
+                <tbody className="divide-y divide-purple-100">
+                  <tr className="hover:bg-purple-50/50 transition-colors">
+                    <td className="px-4 py-3 font-mono text-xs">cookieConsent</td>
+                    <td className="px-4 py-3 text-gray-600">Almacena tus preferencias de cookies</td>
+                    <td className="px-4 py-3 text-gray-600">1 año</td>
+                    <td className="px-4 py-3"><span className="px-2 py-1 bg-amber-100 text-amber-800 text-xs rounded-full">Necesaria</span></td>
                   </tr>
-                  <tr>
-                    <td className="px-4 py-3">_ga</td>
-                    <td className="px-4 py-3">Google Analytics - distinguishes users</td>
-                    <td className="px-4 py-3">2 years</td>
-                    <td className="px-4 py-3">Analytics</td>
+                  <tr className="hover:bg-purple-50/50 transition-colors">
+                    <td className="px-4 py-3 font-mono text-xs">_ga</td>
+                    <td className="px-4 py-3 text-gray-600">Google Analytics - distingue usuarios</td>
+                    <td className="px-4 py-3 text-gray-600">2 años</td>
+                    <td className="px-4 py-3"><span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">Análisis</span></td>
                   </tr>
-                  <tr>
-                    <td className="px-4 py-3">_gid</td>
-                    <td className="px-4 py-3">Google Analytics - distinguishes users</td>
-                    <td className="px-4 py-3">24 hours</td>
-                    <td className="px-4 py-3">Analytics</td>
+                  <tr className="hover:bg-purple-50/50 transition-colors">
+                    <td className="px-4 py-3 font-mono text-xs">_gid</td>
+                    <td className="px-4 py-3 text-gray-600">Google Analytics - distingue usuarios</td>
+                    <td className="px-4 py-3 text-gray-600">24 horas</td>
+                    <td className="px-4 py-3"><span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">Análisis</span></td>
                   </tr>
-                  <tr>
-                    <td className="px-4 py-3">session_id</td>
-                    <td className="px-4 py-3">Maintains user session</td>
-                    <td className="px-4 py-3">Session</td>
-                    <td className="px-4 py-3">Necessary</td>
+                  <tr className="hover:bg-purple-50/50 transition-colors">
+                    <td className="px-4 py-3 font-mono text-xs">session_id</td>
+                    <td className="px-4 py-3 text-gray-600">Mantiene sesión del usuario</td>
+                    <td className="px-4 py-3 text-gray-600">Sesión</td>
+                    <td className="px-4 py-3"><span className="px-2 py-1 bg-amber-100 text-amber-800 text-xs rounded-full">Necesaria</span></td>
                   </tr>
                 </tbody>
               </table>
@@ -142,77 +153,78 @@ const CookiePolicyPage = () => {
           </Section>
 
           {/* Managing Cookies */}
-          <Section title="4. Managing Your Cookie Preferences">
-            <p>You have several options to manage cookies:</p>
+          <Section title="4. Gestiona tus Preferencias de Cookies" icon={Settings}>
+            <p>Tienes varias opciones para gestionar cookies:</p>
 
-            <Subsection title="4.1 Cookie Banner">
+            <Subsection title="4.1 Banner de Cookies">
               <p>
-                When you first visit our website, you'll see a cookie banner allowing you to accept, reject, or 
-                customize your cookie preferences.
+                Cuando visitas nuestro sitio web por primera vez, verás un banner de cookies que te permite aceptar, rechazar o 
+                personalizar tus preferencias de cookies.
               </p>
               <div className="mt-4">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleCookieSettings}
-                  className="px-6 py-3 bg-[#8dc1ab] text-black rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-[#7ab09a]"
-                  style={{ fontFamily: 'Gotham, sans-serif' }}
+                  className="relative px-8 py-4 bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white rounded-xl text-sm font-semibold tracking-wide overflow-hidden group"
                 >
-                  Change Cookie Settings
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
+                  <span className="relative z-10">Cambiar Configuración de Cookies</span>
                 </motion.button>
               </div>
             </Subsection>
 
-            <Subsection title="4.2 Browser Settings">
-              <p>You can also manage cookies through your browser settings:</p>
-              <ul className="list-disc pl-6 space-y-2 mt-3">
-                <li><strong>Chrome:</strong> Settings → Privacy and security → Cookies and other site data</li>
-                <li><strong>Firefox:</strong> Preferences → Privacy & Security → Cookies and Site Data</li>
-                <li><strong>Safari:</strong> Preferences → Privacy → Manage Website Data</li>
-                <li><strong>Edge:</strong> Settings → Privacy, search, and services → Cookies and site permissions</li>
+            <Subsection title="4.2 Configuración del Navegador">
+              <p>También puedes gestionar cookies a través de la configuración de tu navegador:</p>
+              <ul className="list-disc pl-6 space-y-2 mt-3 text-gray-600">
+                <li><strong>Chrome:</strong> Configuración → Privacidad y seguridad → Cookies y otros datos del sitio</li>
+                <li><strong>Firefox:</strong> Preferencias → Privacidad y Seguridad → Cookies y Datos del Sitio</li>
+                <li><strong>Safari:</strong> Preferencias → Privacidad → Administrar Datos del Sitio Web</li>
+                <li><strong>Edge:</strong> Configuración → Privacidad, búsqueda y servicios → Cookies y permisos del sitio</li>
               </ul>
-              <p className="mt-3 text-amber-600">
-                Note: Blocking necessary cookies may affect website functionality.
+              <p className="mt-3 text-amber-600 font-medium">
+                Nota: Bloquear cookies necesarias puede afectar la funcionalidad del sitio web.
               </p>
             </Subsection>
           </Section>
 
           {/* Third-Party Cookies */}
-          <Section title="5. Third-Party Cookies">
+          <Section title="5. Cookies de Terceros" icon={Globe}>
             <p>
-              Some cookies are placed by third-party services that appear on our pages. We do not control these cookies. 
-              Please refer to the third parties' privacy policies:
+              Algunas cookies son colocadas por servicios de terceros que aparecen en nuestras páginas. No controlamos estas cookies. 
+              Por favor, consulta las políticas de privacidad de terceros:
             </p>
-            <ul className="list-disc pl-6 space-y-2 mt-3">
+            <ul className="list-disc pl-6 space-y-2 mt-3 text-gray-600">
               <li>
                 <strong>Google Analytics:</strong>{' '}
-                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[#8dc1ab] hover:text-[#7ab09a] underline">
-                  Google Privacy Policy
+                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-fuchsia-600 underline font-medium transition-colors">
+                  Política de Privacidad de Google
                 </a>
               </li>
               <li>
                 <strong>Stripe:</strong>{' '}
-                <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[#8dc1ab] hover:text-[#7ab09a] underline">
-                  Stripe Privacy Policy
+                <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-fuchsia-600 underline font-medium transition-colors">
+                  Política de Privacidad de Stripe
                 </a>
               </li>
             </ul>
           </Section>
 
           {/* Updates to Policy */}
-          <Section title="6. Changes to This Cookie Policy">
+          <Section title="6. Cambios a Esta Política de Cookies" icon={Eye}>
             <p>
-              We may update this Cookie Policy from time to time to reflect changes in technology or legal requirements. 
-              We will notify you of any significant changes by updating the "Last Updated" date at the top of this page.
+              Podemos actualizar esta Política de Cookies ocasionalmente para reflejar cambios en tecnología o requisitos legales. 
+              Te notificaremos de cualquier cambio significativo actualizando la fecha de "Última actualización" en la parte superior de esta página.
             </p>
           </Section>
 
           {/* Contact */}
-          <Section title="7. Contact Us">
-            <p>If you have questions about our use of cookies, please contact us:</p>
-            <div className="mt-4 space-y-2 text-stone-600">
-              <p>Email: <a href="mailto:privacy@greenleaflightworks.com" className="text-[#8dc1ab] hover:text-[#7ab09a] underline">privacy@greenleaflightworks.com</a></p>
-              <p>Website: <a href="https://greenleaflightworks.com" className="text-[#8dc1ab] hover:text-[#7ab09a] underline">www.greenleaflightworks.com</a></p>
+          <Section title="7. Contacto">
+            <p className="mb-4">Si tienes preguntas sobre nuestro uso de cookies, contáctanos:</p>
+            <div className="bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-2xl p-6 border border-purple-100">
+              <p className="font-semibold text-gray-900 mb-2">LUXMANIA</p>
+              <p className="text-gray-600">Email: <a href="mailto:contacto@luxmania.com" className="text-purple-600 hover:text-fuchsia-600 underline">contacto@luxmania.com</a></p>
+              <p className="text-gray-600">Ubicación: México</p>
             </div>
           </Section>
         </motion.div>
@@ -221,42 +233,47 @@ const CookiePolicyPage = () => {
   )
 }
 
-const Section = ({ title, children }) => (
+// Section Component
+const Section = ({ title, children, icon: Icon }) => (
   <div className="space-y-4">
-    <h2 
-      className="text-stone-800 text-2xl font-light tracking-wide"
-      style={{ fontFamily: 'Gotham, sans-serif' }}
-    >
-      {title}
-    </h2>
-    <div className="text-stone-600 leading-relaxed space-y-4">
+    <div className="flex items-center gap-3 mb-4">
+      {Icon && (
+        <div className="p-2 bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 rounded-lg">
+          <Icon className="w-5 h-5 text-purple-600" />
+        </div>
+      )}
+      <h2 className="text-2xl font-semibold text-gray-900">{title}</h2>
+    </div>
+    <div className="pl-0 space-y-4 text-gray-600 leading-relaxed">
       {children}
     </div>
   </div>
 )
 
+// Subsection Component
 const Subsection = ({ title, children }) => (
-  <div className="mt-4 space-y-3">
-    <h3 className="text-stone-700 text-lg font-normal">{title}</h3>
-    <div className="text-stone-600 leading-relaxed space-y-3">
+  <div className="mt-6 pl-4 border-l-2 border-purple-200">
+    <h3 className="text-lg font-medium text-gray-800 mb-3">{title}</h3>
+    <div className="space-y-3 text-gray-600">
       {children}
     </div>
   </div>
 )
 
+// CookieType Component
 const CookieType = ({ title, required, description, examples }) => (
-  <div className="mt-6 p-6 bg-stone-50 rounded-lg border border-stone-200">
+  <div className="mt-6 p-6 bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-2xl border border-purple-100">
     <div className="flex items-start justify-between mb-3">
-      <h3 className="text-stone-800 text-lg font-normal">{title}</h3>
+      <h3 className="text-gray-900 text-lg font-semibold">{title}</h3>
       {required ? (
-        <span className="px-3 py-1 bg-amber-100 text-amber-800 text-xs rounded-full">Required</span>
+        <span className="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-medium rounded-full">Requerida</span>
       ) : (
-        <span className="px-3 py-1 bg-stone-200 text-stone-600 text-xs rounded-full">Optional</span>
+        <span className="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded-full">Opcional</span>
       )}
     </div>
-    <p className="text-stone-600 leading-relaxed mb-3">{description}</p>
-    <div className="text-stone-600 text-sm">
-      <strong>Examples:</strong>
+    <p className="text-gray-600 leading-relaxed mb-3">{description}</p>
+    <div className="text-gray-600 text-sm">
+      <strong className="text-gray-900">Ejemplos:</strong>
       <ul className="list-disc pl-6 space-y-1 mt-2">
         {examples.map((example, index) => (
           <li key={index}>{example}</li>

@@ -104,148 +104,148 @@ const TermsConditionsPage = () => {
           </Section>
 
           {/* Purchases and Payments */}
-          <Section title="4. Purchases and Payments">
-            <Subsection title="4.1 Pricing">
+          <Section title="4. Compras y Pagos" icon={DollarSign}>
+            <Subsection title="4.1 Precios">
               <p>
-                All prices are displayed in USD and are subject to change without notice. We reserve the right to 
-                modify prices at any time.
+                Todos los precios se muestran en la moneda indicada y están sujetos a cambios sin previo aviso. 
+                Nos reservamos el derecho de modificar precios en cualquier momento.
               </p>
             </Subsection>
 
-            <Subsection title="4.2 Payment">
+            <Subsection title="4.2 Pago">
               <p>
-                Payment is processed securely through third-party payment processors (Stripe, PayPal). By providing 
-                payment information, you represent that you are authorized to use the payment method.
+                El pago se procesa de forma segura a través de procesadores de pago externos (Stripe, PayPal, transferencias bancarias). 
+                Al proporcionar información de pago, declaras que estás autorizado para usar el método de pago.
               </p>
             </Subsection>
 
-            <Subsection title="4.3 Refunds and Cancellations">
+            <Subsection title="4.3 Reembolsos y Cancelaciones">
               <p>
-                <strong>Healing Sessions:</strong> Cancellations must be made at least 24 hours before the scheduled session. 
-                No refunds for missed appointments without 24-hour notice.
+                <strong>Sesiones de Consultoría/Sanación:</strong> Las cancelaciones deben hacerse al menos 24 horas antes de la sesión programada. 
+                No se reembolsan citas perdidas sin aviso de 24 horas.
               </p>
               <p className="mt-3">
-                <strong>Digital Products:</strong> Due to the nature of digital products, all sales are final once access is granted.
+                <strong>Productos Digitales:</strong> Debido a la naturaleza de los productos digitales, todas las ventas son finales una vez que se otorga el acceso.
               </p>
               <p className="mt-3">
-                <strong>Physical Products:</strong> Returns accepted within 14 days of delivery if items are unused and in original condition.
+                <strong>Servicios de Branding/Diseño:</strong> Reembolsos disponibles solo si el proyecto no ha comenzado. Una vez iniciado el trabajo, no se otorgan reembolsos.
               </p>
               <p className="mt-3">
-                <strong>Courses:</strong> Refunds available within 7 days of purchase if less than 20% of course content has been accessed.
+                <strong>Tienda Online (Próximamente):</strong> Devoluciones aceptadas dentro de 14 días de entrega si los artículos no están usados y están en su condición original.
               </p>
             </Subsection>
           </Section>
 
-          {/* Healing Sessions */}
-          <Section title="5. Healing Sessions">
-            <Subsection title="5.1 Nature of Services">
+          {/* Branding & Healing Services */}
+          <Section title="5. Servicios de Branding y Sanación" icon={Palette}>
+            <Subsection title="5.1 Naturaleza de los Servicios de Branding">
               <p>
-                Our healing services are complementary and alternative wellness practices. They are not a substitute 
-                for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or 
-                other qualified health provider.
+                Nuestros servicios de branding psicológico, arquetipos de marca y diseño UX/UI son servicios de consultoría profesional. 
+                Los resultados dependen de la implementación del cliente y factores de mercado externos. No garantizamos resultados específicos de ventas o crecimiento.
               </p>
             </Subsection>
 
-            <Subsection title="5.2 No Guarantees">
+            <Subsection title="5.2 Sesiones de Sanación">
               <p>
-                While we strive to provide beneficial healing experiences, results vary by individual. We make no 
-                guarantees regarding specific outcomes.
+                Nuestros servicios de sanación son prácticas complementarias y alternativas de bienestar. No son un sustituto 
+                del consejo, diagnóstico o tratamiento médico profesional. Siempre busca el consejo de tu médico u otro proveedor de salud calificado.
+              </p>
+              <p className="mt-3">
+                Si bien nos esforzamos por proporcionar experiencias de sanación beneficiosas, los resultados varían por individuo. 
+                No hacemos garantías sobre resultados específicos.
               </p>
             </Subsection>
 
-            <Subsection title="5.3 Session Packages">
+            <Subsection title="5.3 Paquetes de Sesiones">
               <p>
-                Session packages do not expire but must be used by the original purchaser. Packages are non-transferable 
-                and non-refundable once the first session is completed.
+                Los paquetes de sesiones no expiran pero deben ser utilizados por el comprador original. Los paquetes no son transferibles 
+                ni reembolsables una vez completada la primera sesión.
               </p>
             </Subsection>
           </Section>
 
           {/* Intellectual Property */}
-          <Section title="6. Intellectual Property">
+          <Section title="6. Propiedad Intelectual" icon={Shield}>
             <p>
-              All content on this website, including text, graphics, logos, images, videos, and course materials, is 
-              the property of Greenleaf Lightworks and is protected by copyright laws. You may not:
+              Todo el contenido en este sitio web, incluyendo textos, gráficos, logos, imágenes, videos, diseños y materiales del blog, es 
+              propiedad de LUXMANIA y está protegido por leyes de derechos de autor. No puedes:
             </p>
-            <ul className="list-disc pl-6 space-y-2 mt-3">
-              <li>Reproduce, distribute, or display our content without permission</li>
-              <li>Share course login credentials with others</li>
-              <li>Record, screenshot, or redistribute course materials</li>
-              <li>Use our trademarks or branding without authorization</li>
+            <ul className="list-disc pl-6 space-y-2 mt-3 text-gray-600">
+              <li>Reproducir, distribuir o mostrar nuestro contenido sin permiso</li>
+              <li>Usar trabajos de branding creados por LUXMANIA sin acreditar</li>
+              <li>Compartir materiales de consultoría con terceros</li>
+              <li>Usar nuestras marcas registradas o branding sin autorización</li>
+              <li>Copiar o redistribuir contenido del blog sin atribución</li>
             </ul>
+            <p className="mt-4 text-gray-600">
+              Los proyectos de branding creados específicamente para ti son de tu propiedad una vez pagados en su totalidad, 
+              pero LUXMANIA retiene el derecho de usar el trabajo en su portafolio.
+            </p>
           </Section>
 
-          {/* Online Courses (Future) */}
-          <Section title="7. Online Courses">
-            <div className="bg-stone-50 border border-stone-200 rounded-lg p-6 space-y-3">
-              <p className="italic text-stone-500">
-                This section will be activated when course offerings launch.
-              </p>
-              
-              <Subsection title="7.1 Course Access">
-                <p>Upon purchase, you receive a personal, non-transferable license to access course materials for:</p>
-                <ul className="list-disc pl-6 space-y-2 mt-3">
-                  <li>One-time courses: Lifetime access</li>
-                  <li>Subscription courses: Duration of active subscription</li>
-                </ul>
-              </Subsection>
-
-              <Subsection title="7.2 Course Completion">
-                <p>
-                  Certificates of completion are issued only upon finishing all required course modules and assessments. 
-                  Certificates are for personal use only and do not constitute professional licensing.
-                </p>
-              </Subsection>
-            </div>
+          {/* Blog Content */}
+          <Section title="7. Contenido del Blog" icon={BookOpen}>
+            <p>
+              El contenido de nuestro blog es de libre acceso y está diseñado para educar e inspirar. Puedes:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 mt-3 text-gray-600">
+              <li>Compartir enlaces a nuestros artículos en redes sociales</li>
+              <li>Citar hasta 200 palabras con atribución adecuada y enlace</li>
+              <li>Usar información para uso educativo personal</li>
+            </ul>
+            <p className="mt-4 text-gray-600">
+              No puedes republicar artículos completos, vender el contenido, o presentarlo como propio sin permiso explícito.
+            </p>
           </Section>
 
           {/* Privacy and Data */}
-          <Section title="8. Privacy">
+          <Section title="8. Privacidad" icon={Shield}>
             <p>
-              Your privacy is important to us. Please review our{' '}
-              <a href="/privacy-policy" className="text-[#8dc1ab] hover:text-[#7ab09a] underline">Privacy Policy</a> 
-              {' '}to understand how we collect, use, and protect your information.
+              Tu privacidad es importante para nosotros. Por favor revisa nuestra{' '}
+              <a href="/politica-privacidad" className="text-purple-600 hover:text-fuchsia-600 underline font-medium transition-colors">Política de Privacidad</a> 
+              {' '}para entender cómo recopilamos, usamos y protegemos tu información.
             </p>
           </Section>
 
           {/* Limitation of Liability */}
-          <Section title="9. Limitation of Liability">
+          <Section title="9. Limitación de Responsabilidad" icon={Scale}>
             <p>
-              To the fullest extent permitted by law, Greenleaf Lightworks shall not be liable for any indirect, 
-              incidental, special, consequential, or punitive damages arising from your use of our services.
+              En la medida máxima permitida por la ley, LUXMANIA no será responsable de daños indirectos, 
+              incidentales, especiales, consecuentes o punitivos que surjan del uso de nuestros servicios.
             </p>
           </Section>
 
           {/* Disclaimers */}
-          <Section title="10. Disclaimers">
+          <Section title="10. Descargos de Responsabilidad">
             <p>
-              Our services and website are provided "as is" without warranties of any kind, either express or implied. 
-              We do not guarantee that our services will be uninterrupted, error-free, or secure.
+              Nuestros servicios y sitio web se proporcionan "tal cual" sin garantías de ningún tipo, ya sean expresas o implícitas. 
+              No garantizamos que nuestros servicios serán ininterrumpidos, libres de errores o seguros.
             </p>
           </Section>
 
           {/* Governing Law */}
-          <Section title="11. Governing Law">
+          <Section title="11. Ley Aplicable" icon={Scale}>
             <p>
-              These Terms and Conditions are governed by and construed in accordance with the laws of [Your State/Country], 
-              without regard to its conflict of law provisions.
+              Estos Términos y Condiciones se rigen e interpretan de acuerdo con las leyes de México, 
+              sin tener en cuenta sus disposiciones sobre conflictos de leyes.
             </p>
           </Section>
 
           {/* Changes to Terms */}
-          <Section title="12. Changes to Terms">
+          <Section title="12. Cambios a los Términos">
             <p>
-              We reserve the right to modify these terms at any time. We will notify users of any material changes. 
-              Continued use of our services after changes constitutes acceptance of the new terms.
+              Nos reservamos el derecho de modificar estos términos en cualquier momento. Notificaremos a los usuarios de cualquier cambio material. 
+              El uso continuado de nuestros servicios después de los cambios constituye la aceptación de los nuevos términos.
             </p>
           </Section>
 
           {/* Contact Us */}
-          <Section title="13. Contact Information">
-            <p>For questions about these Terms and Conditions, contact us:</p>
-            <div className="mt-4 space-y-2 text-stone-600">
-              <p>Email: <a href="mailto:support@greenleaflightworks.com" className="text-[#8dc1ab] hover:text-[#7ab09a] underline">support@greenleaflightworks.com</a></p>
-              <p>Website: <a href="https://greenleaflightworks.com" className="text-[#8dc1ab] hover:text-[#7ab09a] underline">www.greenleaflightworks.com</a></p>
+          <Section title="13. Información de Contacto">
+            <p className="mb-4">Para preguntas sobre estos Términos y Condiciones, contáctanos:</p>
+            <div className="bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-2xl p-6 border border-purple-100">
+              <p className="font-semibold text-gray-900 mb-2">LUXMANIA</p>
+              <p className="text-gray-600">Email: <a href="mailto:contacto@luxmania.com" className="text-purple-600 hover:text-fuchsia-600 underline">contacto@luxmania.com</a></p>
+              <p className="text-gray-600">Ubicación: México</p>
             </div>
           </Section>
         </motion.div>
@@ -254,24 +254,28 @@ const TermsConditionsPage = () => {
   )
 }
 
-const Section = ({ title, children }) => (
+// Section Component
+const Section = ({ title, children, icon: Icon }) => (
   <div className="space-y-4">
-    <h2 
-      className="text-stone-800 text-2xl font-light tracking-wide"
-      style={{ fontFamily: 'Gotham, sans-serif' }}
-    >
-      {title}
-    </h2>
-    <div className="text-stone-600 leading-relaxed space-y-4">
+    <div className="flex items-center gap-3 mb-4">
+      {Icon && (
+        <div className="p-2 bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 rounded-lg">
+          <Icon className="w-5 h-5 text-purple-600" />
+        </div>
+      )}
+      <h2 className="text-2xl font-semibold text-gray-900">{title}</h2>
+    </div>
+    <div className="pl-0 space-y-4 text-gray-600 leading-relaxed">
       {children}
     </div>
   </div>
 )
 
+// Subsection Component
 const Subsection = ({ title, children }) => (
-  <div className="mt-4 space-y-3">
-    <h3 className="text-stone-700 text-lg font-normal">{title}</h3>
-    <div className="text-stone-600 leading-relaxed space-y-3">
+  <div className="mt-6 pl-4 border-l-2 border-purple-200">
+    <h3 className="text-lg font-medium text-gray-800 mb-3">{title}</h3>
+    <div className="space-y-3 text-gray-600">
       {children}
     </div>
   </div>
