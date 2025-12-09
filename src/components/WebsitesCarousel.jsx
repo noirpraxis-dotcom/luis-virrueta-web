@@ -184,7 +184,7 @@ const WebsitesCarousel = () => {
           className="mt-12 text-center"
         >
           <p className="text-white/40 text-sm font-light tracking-wider uppercase">
-            Que se sienten y trascienden la razón
+            {t('portfolio.websites.bottomText')}
           </p>
         </motion.div>
       </div>

@@ -49,9 +49,9 @@
       "psychology": "Psychology",
       "design": "Design",
       "technology": "Technology",
-      "quote95Start": "",
+      "quote95Start": "Did you know that",
       "quote95Bold": "95% of decisions",
-      "quote95End": "happen unconsciously.",
+      "quote95End": "happen unconsciously?",
       "quoteSecond": "People don't choose with their mind,",
       "quoteSecondBold": "they choose from emotion.",
       "cta": "Explore My Approach",
@@ -193,13 +193,15 @@
       "badge": "UX • UI • Branding",
       "title": "Visual",
       "titleItalic": "Identities",
-      "subtitle": "How far can we take your brand?"
+      "subtitle": "How far can we take your brand?",
+      "bottomText": "A glimpse of our work"
     },
     "websites": {
       "badge": "Dev • UI/UX • Responsive",
       "title": "Web",
       "titleItalic": "Sites",
-      "subtitle": "Does your site reflect what you promise?"
+      "subtitle": "Does your site reflect what you promise?",
+      "bottomText": "That feel and transcend reason"
     },
     "logos": {
       "badge": "Motion Graphics • After Effects",
@@ -208,7 +210,8 @@
       "subtitle": "Does your logo move with the energy your brand carries?",
       "videoTitle": "Animated Logos",
       "playMessage": "Play to watch",
-      "animatedLogos": "animated logos"
+      "animatedLogos": "animated logos",
+      "bottomText": "Logos that come alive with motion"
     },
     "avatars": {
       "badge": "Generative AI • Voice Cloning",
@@ -216,12 +219,18 @@
       "subtitle": "What if your brand could speak directly?",
       "videoTitle": "Digital Avatars",
       "playMessage": "Play to watch",
-      "digitalAvatars": "digital avatars"
+      "digitalAvatars": "digital avatars",
+      "bottomText": "Digital identities with personality"
     },
     "lighthouse": {
       "badge": "We Illuminate Your Brand",
       "title": "Let Us Light Up Your Logo",
       "subtitle": "Like a beacon in the darkness, we guide your brand to success"
+    },
+    "logoCarousel": {
+      "badge": "Iconography • Symbols • Identity",
+      "subtitle": "Does your logo tell the story you want to convey?",
+      "bottomText": "Selected logo samples that communicate"
     },
     "projectCard": {
       "satisfaction": "Satisfaction",

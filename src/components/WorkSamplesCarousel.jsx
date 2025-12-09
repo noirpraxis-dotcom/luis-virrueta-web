@@ -184,7 +184,7 @@ const WorkSamplesCarousel = () => {
           className="mt-12 text-center"
         >
           <p className="text-white/40 text-sm font-light tracking-wider uppercase">
-            Una muestra de nuestro trabajo
+            {t('portfolio.workSamples.bottomText')}
           </p>
         </motion.div>
       </div>

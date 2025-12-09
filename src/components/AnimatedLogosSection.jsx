@@ -147,7 +147,7 @@ const AnimatedLogosSection = () => {
           className="mt-12 text-center"
         >
           <p className="text-white/40 text-sm font-light tracking-wider uppercase">
-            Logotipos que cobran vida con movimiento
+            {t('portfolio.logos.bottomText')}
           </p>
         </motion.div>
       </div>

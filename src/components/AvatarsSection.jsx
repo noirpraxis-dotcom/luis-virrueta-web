@@ -147,7 +147,7 @@ const AvatarsSection = () => {
           className="mt-12 text-center"
         >
           <p className="text-white/40 text-sm font-light tracking-wider uppercase">
-            Identidades digitales con personalidad
+            {t('portfolio.avatars.bottomText')}
           </p>
         </motion.div>
       </div>

@@ -204,13 +204,15 @@
       "badge": "UX • UI • Branding",
       "title": "Identidades",
       "titleItalic": "Visuales",
-      "subtitle": "¿Hasta dónde podemos llevar tu marca?"
+      "subtitle": "¿Hasta dónde podemos llevar tu marca?",
+      "bottomText": "Una muestra de nuestro trabajo"
     },
     "websites": {
       "badge": "Dev • UI/UX • Responsive",
       "title": "Sitios",
       "titleItalic": "Web",
-      "subtitle": "¿Tu sitio web refleja la experiencia que prometes?"
+      "subtitle": "¿Tu sitio web refleja la experiencia que prometes?",
+      "bottomText": "Que se sienten y trascienden la razón"
     },
     "logos": {
       "badge": "Motion Graphics • After Effects",
@@ -219,7 +221,8 @@
       "subtitle": "¿Tu logo se mueve con la misma energía que tu marca?",
       "videoTitle": "Logotipos Animados",
       "playMessage": "Dale play para ver",
-      "animatedLogos": "logos animados"
+      "animatedLogos": "logos animados",
+      "bottomText": "Logotipos que cobran vida con movimiento"
     },
     "avatars": {
       "badge": "IA Generativa • Voice Cloning",
@@ -227,12 +230,18 @@
       "subtitle": "¿Y si tu marca pudiera hablar directamente?",
       "videoTitle": "Avatares Digitales",
       "playMessage": "Dale play para ver",
-      "digitalAvatars": "avatares digitales"
+      "digitalAvatars": "avatares digitales",
+      "bottomText": "Identidades digitales con personalidad"
     },
     "lighthouse": {
       "badge": "Iluminamos Tu Marca",
       "title": "Deja que Nosotros Alumbremos Tu Logo",
       "subtitle": "Como un faro en la oscuridad, guiamos tu marca hacia el éxito"
+    },
+    "logoCarousel": {
+      "badge": "Iconografía • Símbolos • Identidad",
+      "subtitle": "¿Tu logo cuenta la historia que quieres transmitir?",
+      "bottomText": "Muestras selectas de logotipos que transmiten"
     },
     "projectCard": {
       "satisfaction": "Satisfacción",

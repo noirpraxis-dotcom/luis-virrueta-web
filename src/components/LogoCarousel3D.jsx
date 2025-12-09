@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { EffectCoverflow, Navigation, Autoplay } from 'swiper/modules'
 import { motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 // Import Swiper styles
 import 'swiper/css'
@@ -10,6 +11,7 @@ import 'swiper/css/effect-coverflow'
 import 'swiper/css/navigation'
 
 const LogoCarousel3D = () => {
+  const { t } = useLanguage()
   const swiperRef = useRef(null)
   const [logos, setLogos] = useState([])
 
@@ -90,7 +92,7 @@ const LogoCarousel3D = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="inline-block text-xs uppercase tracking-[0.3em] text-white/70 font-light mb-6 px-4 py-2 border border-white/30 rounded-full"
           >
-            Iconografía • Símbolos • Identidad
+            {t('portfolio.logoCarousel.badge')}
           </motion.p>
 
           {/* Título principal */}
@@ -117,7 +119,7 @@ const LogoCarousel3D = () => {
             className="text-base lg:text-lg text-white/60 font-extralight italic max-w-2xl mx-auto"
             style={{ letterSpacing: '0.08em' }}
           >
-            ¿Tu logo cuenta la historia que quieres transmitir?
+            {t('portfolio.logoCarousel.subtitle')}
           </motion.p>
         </motion.div>
 
@@ -204,7 +206,7 @@ const LogoCarousel3D = () => {
           className="mt-12 text-center"
         >
           <p className="text-white/40 text-sm font-light tracking-wider uppercase">
-            Muestras selectas de logotipos que transmiten
+            {t('portfolio.logoCarousel.bottomText')}
           </p>
         </motion.div>
       </div>
