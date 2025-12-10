@@ -137,18 +137,22 @@ const PortafolioPage = () => {
             }}
           >
             <span className="relative inline-block">
-              {/* P con degradado */}
-              <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>P</span>
-                <span className="relative text-white">P</span>
-              </span>
-              {/* ortafoli */}
-              <span className="text-white">ortafoli</span>
-              {/* o con degradado */}
-              <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>o</span>
-                <span className="relative text-white">o</span>
-              </span>
+              {t('portfolio.hero.title').split('').map((char, i, arr) => {
+                const isFirst = i === 0
+                const isLast = i === arr.length - 1
+                
+                if (isFirst || isLast) {
+                  return (
+                    <span key={i} className="relative">
+                      <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>
+                        {char}
+                      </span>
+                      <span className="relative text-white">{char}</span>
+                    </span>
+                  )
+                }
+                return <span key={i} className="text-white">{char}</span>
+              })}
             </span>
           </motion.h1>
 
