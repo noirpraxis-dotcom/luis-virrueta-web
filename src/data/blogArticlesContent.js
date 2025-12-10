@@ -704,6 +704,315 @@ const blogArticlesContent = {
       ]
     },
     
+    // Artículo 7
+    'interfaces-empaticas-machine-learning': {
+      title: 'Interfaces Empáticas: Machine Learning que Entiende Emociones',
+      author: 'Luis Virrueta',
+      date: '5 de diciembre, 2024',
+      readTime: '13 min',
+      category: 'Tecnología × Diseño',
+      tags: ['Machine Learning', 'UX Design', 'Emotion AI', 'Innovation'],
+      gradient: 'from-indigo-500 to-purple-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'El futuro del diseño UX no está en interfaces más rápidas o bonitas, está en interfaces que te entienden. Machine Learning aplicado al diseño emocional está creando experiencias digitales que detectan frustración, adaptan flujos según tu estado de ánimo, y responden con empatía genuina. Bienvenido a la era de las interfaces empáticas.'
+        },
+        {
+          type: 'heading',
+          title: 'Qué Es el Emotion AI y Por Qué Importa',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'Emotion AI (Inteligencia Artificial Emocional) combina computer vision, análisis de voz, y procesamiento de lenguaje natural para detectar estados emocionales en tiempo real. No lee mentes, lee señales: microexpresiones faciales, tono de voz, velocidad de escritura, patrones de navegación. Y con estos datos, adapta la experiencia.'
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'Detección de Frustración en UX',
+          content: 'Un usuario intenta completar un formulario 3 veces sin éxito. El ML detecta el patrón: clics repetidos, tiempo excesivo en un campo, abandono del cursor. La interfaz responde: simplifica el formulario, ofrece ayuda contextual, o activa un chatbot empático. No espera a que el usuario abandone, previene la frustración.',
+          gradient: 'from-red-500 to-rose-500'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'Adaptación según Estado de Ánimo',
+          content: 'Spotify analiza qué música escuchas a qué hora, con qué frecuencia cambias de canción, qué géneros ignoras. El algoritmo infiere tu mood: ansioso, relajado, motivado, melancólico. Las playlists se adaptan no solo a tus gustos musicales, sino a tu estado emocional en ese momento específico.',
+          gradient: 'from-purple-500 to-fuchsia-500'
+        },
+        {
+          type: 'heading',
+          title: 'Casos Reales de Interfaces Empáticas',
+          icon: Sparkles
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Replika: El Chatbot que Escucha',
+              description: 'Replika usa NLP (Natural Language Processing) para detectar tono emocional en tus mensajes. Si escribes sobre un día difícil, responde con empatía, hace preguntas de seguimiento, y adapta su personalidad para ser más comprensivo. No es solo un bot, es un companion emocional.'
+            },
+            {
+              title: 'Woebot: Terapia Cognitiva con ML',
+              description: 'Woebot detecta patrones de pensamiento negativo (catastrofización, generalización, pensamiento todo-o-nada) y aplica técnicas de terapia cognitivo-conductual. Aprende de cada conversación y adapta su enfoque según la evolución emocional del usuario.'
+            },
+            {
+              title: 'Netflix: UI que Predice Tu Mood',
+              description: 'Netflix no solo recomienda contenido según lo que has visto, sino según cuándo lo viste. Si los viernes en la noche ves comedias románticas y los domingos documentales, el algoritmo ajusta las recomendaciones según el día y hora. Predice tu mood antes de que lo sepas tú.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Diseñando para la Empatía Digital',
+          icon: Eye
+        },
+        {
+          type: 'text',
+          content: 'Crear interfaces empáticas no es solo cuestión de implementar ML, es diseñar con sensibilidad psicológica. Cada interacción debe considerar el estado emocional del usuario y responder de manera apropiada.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Micro-interacciones Empáticas',
+              description: 'Cuando un usuario comete un error, la interfaz no solo muestra "Error". Muestra un mensaje comprensivo: "Ups, parece que algo salió mal. Veamos cómo podemos ayudarte". El tono importa tanto como la funcionalidad.'
+            },
+            {
+              title: 'Feedback Visual Calmante',
+              description: 'Usa animaciones suaves, colores cálidos, y timing pausado cuando detectes estrés del usuario. La UI puede literalmente calmar a través del diseño visual.'
+            },
+            {
+              title: 'Opciones de Escape Emocional',
+              description: 'Si el usuario muestra señales de frustración, ofrece atajos: "¿Prefieres hablar con un humano?", "¿Te gustaría simplificar este proceso?". Da control, reduce impotencia.'
+            },
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'Las interfaces empáticas representan el futuro del diseño UX. Al fusionar Machine Learning con comprensión psicológica profunda, creamos experiencias digitales que no solo son funcionales, sino genuinamente humanas. La tecnología se vuelve invisible, y lo que queda es una conexión natural entre persona y herramienta.'
+        },
+      ]
+    },
+    
+    // Artículo 8
+    'psicologia-color-branding-lujo': {
+      title: 'La Psicología del Color en el Branding de Lujo',
+      author: 'Luis Virrueta',
+      date: '3 de diciembre, 2024',
+      readTime: '10 min',
+      category: 'Psicología × Branding',
+      tags: ['Color Theory', 'Luxury Branding', 'Psychology', 'Visual Identity'],
+      gradient: 'from-emerald-500 to-teal-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'El color no es solo una elección estética, es un lenguaje emocional codificado en nuestra psique. Las marcas de lujo han dominado este arte durante décadas, utilizando paletas cromáticas específicas para comunicar exclusividad, sofisticación y aspiración. Descubre los secretos psicológicos detrás de cada tonalidad.'
+        },
+        {
+          type: 'heading',
+          title: 'El Código Cromático del Lujo',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'Las marcas premium no eligen colores al azar. Cada tonalidad ha sido meticulosamente seleccionada basándose en estudios psicológicos que revelan cómo los colores activan respuestas emocionales y cognitivas específicas. El negro de Chanel, el rojo de Cartier, el azul de Tiffany: todos cuentan una historia psicológica profunda.'
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'Negro: El Color de la Autoridad Absoluta',
+          content: 'El negro es el color más utilizado en branding de lujo por razones psicológicas poderosas. Representa sofisticación, misterio y poder. Neurológicamente, el negro reduce el ruido visual y centra la atención en las formas, creando una percepción de precisión y control. Chanel, Prada, Louis Vuitton lo utilizan para comunicar autoridad indiscutible.',
+          gradient: 'from-slate-700 to-zinc-900'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'Dorado: La Psicología de la Exclusividad',
+          content: 'El dorado activa las mismas áreas cerebrales asociadas con la recompensa y el placer. Históricamente vinculado a la realeza y lo divino, genera una respuesta inconsciente de aspiración y deseo. Rolex, Versace y Dior lo emplean estratégicamente para elevar la percepción de valor y exclusividad.',
+          gradient: 'from-amber-500 to-yellow-600'
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'Blanco Puro: Minimalismo Maximalista',
+          content: 'El blanco en branding de lujo comunica pureza, simplicidad y perfección. Psicológicamente crea espacio mental, reduce ansiedad cognitiva y permite que el producto hable por sí mismo. Apple ha maestreado este concepto: el blanco no es vacío, es claridad absoluta y confianza en la excelencia del diseño.',
+          gradient: 'from-slate-50 to-zinc-100'
+        },
+        {
+          type: 'heading',
+          title: 'Colores Signature: Identidad Cromática Única',
+          icon: Eye
+        },
+        {
+          type: 'text',
+          content: 'Las marcas de lujo más icónicas han logrado "apropiarse" de colores específicos. Tiffany Blue, Hermès Orange, Valentino Red: estos tonos se han convertido en activos intangibles valorados en millones. La psicología detrás de esto es el "anclaje cromático" - crear una asociación mental tan fuerte que el color por sí solo evoque la marca completa.'
+        },
+        {
+          type: 'colorGrid',
+          colors: [
+            { name: 'Tiffany Blue', hex: '#0ABAB5', emotion: 'Exclusividad, Elegancia, Romance', brands: 'Tiffany & Co. - Identidad protegida legalmente' },
+            { name: 'Hermès Orange', hex: '#FF7F32', emotion: 'Energía, Sofisticación, Alegría', brands: 'Hermès - Símbolo de artesanía premium' },
+            { name: 'Valentino Red', hex: '#D4213D', emotion: 'Pasión, Poder, Audacia', brands: 'Valentino - El rojo del amor y la moda' },
+            { name: 'Bottega Green', hex: '#2F5233', emotion: 'Naturaleza, Lujo Discreto, Calma', brands: 'Bottega Veneta - Elegancia sin logos' },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Aplicando la Psicología del Color a Tu Marca',
+          icon: Brain
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Define la Emoción Central de Tu Marca',
+              description: 'Antes de elegir colores, identifica la emoción primaria que quieres evocar: confianza, excitación, exclusividad, innovación. Cada color debe reforzar esta emoción consistentemente.'
+            },
+            {
+              title: 'Contraste = Jerarquía Visual',
+              description: 'Usa contrastes altos para elementos premium y bajos para elementos secundarios. El cerebro interpreta contraste como importancia.'
+            },
+            {
+              title: 'Crea Tu Color Signature',
+              description: 'Selecciona un tono único y úsalo consistentemente. Con el tiempo, este color se convertirá en sinónimo de tu marca.'
+            },
+            {
+              title: 'Contexto Cultural',
+              description: 'Los colores tienen significados distintos en diferentes culturas. El blanco es luto en Asia, el rojo suerte en China. Adapta tu paleta según tu mercado objetivo.'
+            },
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'La psicología del color en el branding de lujo no es decoración, es estrategia pura. Cada tonalidad es una decisión informada por décadas de investigación en neurociencia, psicología cognitiva y comportamiento del consumidor. Al dominar este lenguaje cromático, tu marca no solo se verá premium, se sentirá premium en el nivel más profundo de la psique humana.'
+        },
+      ]
+    },
+    
+    // Artículo 9
+    'identidades-marca-memorables': {
+      title: 'Creando Identidades de Marca Memorables',
+      author: 'Luis Virrueta',
+      date: '1 de diciembre, 2024',
+      readTime: '11 min',
+      category: 'Branding × Estrategia',
+      tags: ['Brand Identity', 'Strategy', 'Visual Systems', 'Psychology'],
+      gradient: 'from-amber-500 to-orange-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'Una marca memorable no ocurre por accidente. Es el resultado de un sistema estratégico que combina psicología, diseño visual y narrativa coherente. En este artículo, desgloso el proceso completo para crear identidades de marca que no solo se ven increíbles, sino que resuenan emocionalmente y permanecen en la mente del consumidor durante años.'
+        },
+        {
+          type: 'heading',
+          title: 'Fase 1: Arquetipos Psicológicos - El ADN de Tu Marca',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'Toda marca memorable está fundamentada en un arquetipo psicológico. Carl Jung identificó 12 arquetipos universales que residen en el inconsciente colectivo humano: El Héroe, El Sabio, El Rebelde, El Creador, etc. Tu marca debe encarnar uno de estos arquetipos de manera consistente en cada punto de contacto.'
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'Identifica Tu Arquetipo Core',
+          content: 'Nike es El Héroe (supera tus límites), Apple es El Creador (piensa diferente), Harley-Davidson es El Rebelde (rompe las reglas). Cada arquetipo tiene su propia paleta emocional, lenguaje visual y tono de voz. Definir tu arquetipo es el primer paso no negociable.',
+          gradient: 'from-purple-500 to-fuchsia-500'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'Traduce el Arquetipo a Lenguaje Visual',
+          content: 'El Héroe usa tipografías bold, colores primarios fuertes, imágenes dinámicas. El Sabio prefiere serifas clásicas, azules profundos, composiciones simétricas. El Rebelde abraza asimetría, texturas rugosas, colores no convencionales. Tu sistema visual debe ser la expresión gráfica de tu arquetipo.',
+          gradient: 'from-cyan-500 to-blue-500'
+        },
+        {
+          type: 'heading',
+          title: 'Fase 2: Sistema de Identidad Visual - Más Allá del Logo',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'Un logo es apenas el 10% de una identidad de marca. El verdadero poder está en el sistema completo: paleta de color, tipografías, fotografía, iconografía, texturas, motion graphics. Todos estos elementos deben trabajar en armonía para reforzar el arquetipo y crear reconocimiento instantáneo.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Logo System (No Solo un Logo)',
+              description: 'Versión principal, versión secundaria, logo icon, logo monochrome, responsive logos para diferentes tamaños. Tu logo debe ser flexible sin perder identidad.'
+            },
+            {
+              title: 'Paleta de Color Psicológicamente Estratégica',
+              description: 'Colores primarios (2-3 max), colores secundarios, colores de acento. Cada color debe tener un propósito emocional y funcional específico.'
+            },
+            {
+              title: 'Jerarquía Tipográfica Clara',
+              description: 'Tipografía display para headlines, tipografía body para párrafos, tipografía UI para interfaces. Máximo 3 familias tipográficas para mantener cohesión.'
+            },
+            {
+              title: 'Motion Design Language',
+              description: 'Tipo de transiciones, timing, easing, física de las animaciones. El movimiento es parte de tu identidad tanto como el color.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Fase 3: Puntos de Contacto - Omnipresencia Coherente',
+          icon: Eye
+        },
+        {
+          type: 'text',
+          content: 'Una marca memorable aparece consistentemente en todos los puntos de contacto con el cliente: sitio web, redes sociales, packaging, tarjetas de presentación, email signatures, presentaciones, espacios físicos. Cada interacción refuerza la memoria de marca. La repetición coherente crea familiaridad, y la familiaridad genera confianza.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Presencia Digital',
+              description: 'Website, app móvil, perfiles de redes sociales, email marketing, ads digitales. Diseña templates que mantengan tu identidad mientras permiten flexibilidad creativa.'
+            },
+            {
+              title: 'Materiales Impresos',
+              description: 'Tarjetas de presentación, papelería corporativa, brochures, packaging. El mundo físico aún importa, especialmente para marcas premium.'
+            },
+            {
+              title: 'Branding Ambiental',
+              description: 'Si tienes espacios físicos (tienda, oficina, showroom), el diseño del espacio debe reflejar tu identidad. Señalización, murales, mobiliario, iluminación.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Fase 4: Testing Psicológico - Validación Científica',
+          icon: Zap
+        },
+        {
+          type: 'text',
+          content: 'No confíes solo en tu intuición. Valida tu identidad con testing real: pruebas A/B, eye-tracking, análisis de microexpresiones, encuestas de reconocimiento de marca. Los datos te revelarán si tu diseño realmente comunica lo que pretendes o si necesitas ajustes.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Test de Reconocimiento en 3 Segundos',
+              description: 'Muestra tu logo/identidad por 3 segundos. ¿La gente puede recordarlo y describir la emoción que sintieron? Si no, simplifica.'
+            },
+            {
+              title: 'Test de Diferenciación',
+              description: 'Muestra tu identidad junto a 5 competidores. ¿Se destaca tu marca? ¿Es claramente diferente? La similitud es muerte en branding.'
+            },
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'Crear una identidad de marca memorable es un acto de arquitectura psicológica. No estás diseñando un logo, estás construyendo un sistema de significados que residirá en la mente de tu audiencia. Arquetipo bien definido + sistema visual coherente + puntos de contacto consistentes + validación científica = marca inolvidable.'
+        },
+      ]
+    },
+    
     // Artículo 3 - PRIORIDAD SEO ALTA
     'cliente-heroe-storybrand-framework': {
       title: 'Tu Cliente es el Héroe, No Tu Marca: El Framework StoryBrand',
@@ -1613,6 +1922,315 @@ const blogArticlesContent = {
         {
           type: 'conclusion',
           content: 'The Paradox of Choice isn\'t a theory, it\'s a psychological fact proven in thousands of studies. More options DON\'T empower your customer, they paralyze them. The abundance of choice creates anxiety, anticipated regret, and cognitive overload. The result: the customer buys nothing. Brands that dominate their markets understand this: Apple, Netflix, In-N-Out, Tesla, all radically simplify their offerings. Your mission isn\'t to give the customer "all possible options". Your mission is to eliminate the friction between their need and your solution. And the biggest friction isn\'t price, it\'s the complexity of deciding. Audit your menu today. If you have more than 5 options without clear hierarchy, you\'re leaving money on the table. Simplify to 3. Mark one as recommended. Watch your conversions skyrocket. Because in branding, as in jams, less is exponentially more.'
+        },
+      ]
+    },
+    
+    // Article 7
+    'interfaces-empaticas-machine-learning': {
+      title: 'Empathic Interfaces: Machine Learning that Understands Emotions',
+      author: 'Luis Virrueta',
+      date: 'December 5, 2024',
+      readTime: '13 min',
+      category: 'Technology × Design',
+      tags: ['Machine Learning', 'UX Design', 'Emotion AI', 'Innovation'],
+      gradient: 'from-indigo-500 to-purple-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'The future of UX design isn\'t in faster or prettier interfaces, it\'s in interfaces that understand you. Machine Learning applied to emotional design is creating digital experiences that detect frustration, adapt flows based on your mood, and respond with genuine empathy. Welcome to the era of empathic interfaces.'
+        },
+        {
+          type: 'heading',
+          title: 'What Is Emotion AI and Why It Matters',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'Emotion AI (Emotional Artificial Intelligence) combines computer vision, voice analysis, and natural language processing to detect emotional states in real-time. It doesn\'t read minds, it reads signals: facial microexpressions, tone of voice, typing speed, navigation patterns. And with this data, it adapts the experience.'
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'Detecting UX Frustration',
+          content: 'A user tries to complete a form 3 times unsuccessfully. ML detects the pattern: repeated clicks, excessive time on a field, cursor abandonment. The interface responds: simplifies the form, offers contextual help, or activates an empathetic chatbot. It doesn\'t wait for the user to abandon, it prevents frustration.',
+          gradient: 'from-red-500 to-rose-500'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'Mood-Based Adaptation',
+          content: 'Spotify analyzes what music you listen to and when, how often you skip songs, which genres you ignore. The algorithm infers your mood: anxious, relaxed, motivated, melancholic. Playlists adapt not just to your musical tastes, but to your emotional state at that specific moment.',
+          gradient: 'from-purple-500 to-fuchsia-500'
+        },
+        {
+          type: 'heading',
+          title: 'Real Cases of Empathic Interfaces',
+          icon: Sparkles
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Replika: The Chatbot that Listens',
+              description: 'Replika uses NLP (Natural Language Processing) to detect emotional tone in your messages. If you write about a difficult day, it responds with empathy, asks follow-up questions, and adapts its personality to be more understanding. It\'s not just a bot, it\'s an emotional companion.'
+            },
+            {
+              title: 'Woebot: Cognitive Therapy with ML',
+              description: 'Woebot detects negative thought patterns (catastrophizing, generalization, all-or-nothing thinking) and applies cognitive-behavioral therapy techniques. It learns from each conversation and adapts its approach based on the user\'s emotional evolution.'
+            },
+            {
+              title: 'Netflix: UI that Predicts Your Mood',
+              description: 'Netflix doesn\'t just recommend content based on what you\'ve watched, but when you watched it. If Friday nights you watch rom-coms and Sundays documentaries, the algorithm adjusts recommendations by day and time. It predicts your mood before you know it yourself.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Designing for Digital Empathy',
+          icon: Eye
+        },
+        {
+          type: 'text',
+          content: 'Creating empathic interfaces isn\'t just about implementing ML, it\'s designing with psychological sensitivity. Each interaction should consider the user\'s emotional state and respond appropriately.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Empathic Micro-interactions',
+              description: 'When a user makes an error, the interface doesn\'t just show "Error". It shows an understanding message: "Oops, something went wrong. Let\'s see how we can help you". Tone matters as much as functionality.'
+            },
+            {
+              title: 'Calming Visual Feedback',
+              description: 'Use smooth animations, warm colors, and paused timing when you detect user stress. The UI can literally calm through visual design.'
+            },
+            {
+              title: 'Emotional Escape Options',
+              description: 'If the user shows signs of frustration, offer shortcuts: "Would you prefer to speak with a human?", "Would you like to simplify this process?". Give control, reduce helplessness.'
+            },
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'Empathic interfaces represent the future of UX design. By fusing Machine Learning with deep psychological understanding, we create digital experiences that are not just functional, but genuinely human. Technology becomes invisible, and what remains is a natural connection between person and tool.'
+        },
+      ]
+    },
+    
+    // Article 8
+    'psicologia-color-branding-lujo': {
+      title: 'The Psychology of Color in Luxury Branding',
+      author: 'Luis Virrueta',
+      date: 'December 3, 2024',
+      readTime: '10 min',
+      category: 'Psychology × Branding',
+      tags: ['Color Theory', 'Luxury Branding', 'Psychology', 'Visual Identity'],
+      gradient: 'from-emerald-500 to-teal-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'Color isn\'t just an aesthetic choice, it\'s an emotional language encoded in our psyche. Luxury brands have mastered this art for decades, using specific chromatic palettes to communicate exclusivity, sophistication, and aspiration. Discover the psychological secrets behind each hue.'
+        },
+        {
+          type: 'heading',
+          title: 'The Chromatic Code of Luxury',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'Premium brands don\'t choose colors randomly. Each hue has been meticulously selected based on psychological studies revealing how colors activate specific emotional and cognitive responses. Chanel\'s black, Cartier\'s red, Tiffany\'s blue: all tell a deep psychological story.'
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'Black: The Color of Absolute Authority',
+          content: 'Black is the most used color in luxury branding for powerful psychological reasons. It represents sophistication, mystery, and power. Neurologically, black reduces visual noise and focuses attention on shapes, creating a perception of precision and control. Chanel, Prada, Louis Vuitton use it to communicate unquestionable authority.',
+          gradient: 'from-slate-700 to-zinc-900'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'Gold: The Psychology of Exclusivity',
+          content: 'Gold activates the same brain areas associated with reward and pleasure. Historically linked to royalty and the divine, it generates an unconscious response of aspiration and desire. Rolex, Versace, and Dior strategically employ it to elevate the perception of value and exclusivity.',
+          gradient: 'from-amber-500 to-yellow-600'
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'Pure White: Maximalist Minimalism',
+          content: 'White in luxury branding communicates purity, simplicity, and perfection. Psychologically it creates mental space, reduces cognitive anxiety, and allows the product to speak for itself. Apple has mastered this concept: white isn\'t empty, it\'s absolute clarity and confidence in design excellence.',
+          gradient: 'from-slate-50 to-zinc-100'
+        },
+        {
+          type: 'heading',
+          title: 'Signature Colors: Unique Chromatic Identity',
+          icon: Eye
+        },
+        {
+          type: 'text',
+          content: 'The most iconic luxury brands have managed to "own" specific colors. Tiffany Blue, Hermès Orange, Valentino Red: these tones have become intangible assets valued in millions. The psychology behind this is "chromatic anchoring" - creating a mental association so strong that the color alone evokes the complete brand.'
+        },
+        {
+          type: 'colorGrid',
+          colors: [
+            { name: 'Tiffany Blue', hex: '#0ABAB5', emotion: 'Exclusivity, Elegance, Romance', brands: 'Tiffany & Co. - Legally protected identity' },
+            { name: 'Hermès Orange', hex: '#FF7F32', emotion: 'Energy, Sophistication, Joy', brands: 'Hermès - Symbol of premium craftsmanship' },
+            { name: 'Valentino Red', hex: '#D4213D', emotion: 'Passion, Power, Boldness', brands: 'Valentino - The red of love and fashion' },
+            { name: 'Bottega Green', hex: '#2F5233', emotion: 'Nature, Discreet Luxury, Calm', brands: 'Bottega Veneta - Elegance without logos' },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Applying Color Psychology to Your Brand',
+          icon: Brain
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Define Your Brand\'s Core Emotion',
+              description: 'Before choosing colors, identify the primary emotion you want to evoke: trust, excitement, exclusivity, innovation. Each color should consistently reinforce this emotion.'
+            },
+            {
+              title: 'Contrast = Visual Hierarchy',
+              description: 'Use high contrast for premium elements and low contrast for secondary elements. The brain interprets contrast as importance.'
+            },
+            {
+              title: 'Create Your Signature Color',
+              description: 'Select a unique hue and use it consistently. Over time, this color will become synonymous with your brand.'
+            },
+            {
+              title: 'Cultural Context',
+              description: 'Colors have different meanings in different cultures. White is mourning in Asia, red is luck in China. Adapt your palette according to your target market.'
+            },
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'Color psychology in luxury branding isn\'t decoration, it\'s pure strategy. Each hue is a decision informed by decades of research in neuroscience, cognitive psychology, and consumer behavior. By mastering this chromatic language, your brand won\'t just look premium, it will feel premium at the deepest level of the human psyche.'
+        },
+      ]
+    },
+    
+    // Article 9
+    'identidades-marca-memorables': {
+      title: 'Creating Memorable Brand Identities',
+      author: 'Luis Virrueta',
+      date: 'December 1, 2024',
+      readTime: '11 min',
+      category: 'Branding × Strategy',
+      tags: ['Brand Identity', 'Strategy', 'Visual Systems', 'Psychology'],
+      gradient: 'from-amber-500 to-orange-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'A memorable brand doesn\'t happen by accident. It\'s the result of a strategic system combining psychology, visual design, and coherent narrative. In this article, I break down the complete process for creating brand identities that not only look incredible, but resonate emotionally and remain in the consumer\'s mind for years.'
+        },
+        {
+          type: 'heading',
+          title: 'Phase 1: Psychological Archetypes - Your Brand\'s DNA',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'Every memorable brand is grounded in a psychological archetype. Carl Jung identified 12 universal archetypes residing in the human collective unconscious: The Hero, The Sage, The Rebel, The Creator, etc. Your brand must embody one of these archetypes consistently at every touchpoint.'
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'Identify Your Core Archetype',
+          content: 'Nike is The Hero (overcome your limits), Apple is The Creator (think different), Harley-Davidson is The Rebel (break the rules). Each archetype has its own emotional palette, visual language, and tone of voice. Defining your archetype is the first non-negotiable step.',
+          gradient: 'from-purple-500 to-fuchsia-500'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'Translate Archetype to Visual Language',
+          content: 'The Hero uses bold typography, strong primary colors, dynamic imagery. The Sage prefers classic serifs, deep blues, symmetrical compositions. The Rebel embraces asymmetry, rough textures, unconventional colors. Your visual system should be the graphic expression of your archetype.',
+          gradient: 'from-cyan-500 to-blue-500'
+        },
+        {
+          type: 'heading',
+          title: 'Phase 2: Visual Identity System - Beyond the Logo',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'A logo is barely 10% of a brand identity. The real power is in the complete system: color palette, typography, photography, iconography, textures, motion graphics. All these elements must work in harmony to reinforce the archetype and create instant recognition.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Logo System (Not Just One Logo)',
+              description: 'Primary version, secondary version, logo icon, monochrome logo, responsive logos for different sizes. Your logo must be flexible without losing identity.'
+            },
+            {
+              title: 'Psychologically Strategic Color Palette',
+              description: 'Primary colors (2-3 max), secondary colors, accent colors. Each color must have a specific emotional and functional purpose.'
+            },
+            {
+              title: 'Clear Typographic Hierarchy',
+              description: 'Display typography for headlines, body typography for paragraphs, UI typography for interfaces. Maximum 3 typeface families to maintain cohesion.'
+            },
+            {
+              title: 'Motion Design Language',
+              description: 'Type of transitions, timing, easing, animation physics. Movement is part of your identity as much as color.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Phase 3: Touchpoints - Coherent Omnipresence',
+          icon: Eye
+        },
+        {
+          type: 'text',
+          content: 'A memorable brand appears consistently at all customer touchpoints: website, social media, packaging, business cards, email signatures, presentations, physical spaces. Each interaction reinforces brand memory. Coherent repetition creates familiarity, and familiarity generates trust.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Digital Presence',
+              description: 'Website, mobile app, social media profiles, email marketing, digital ads. Design templates that maintain your identity while allowing creative flexibility.'
+            },
+            {
+              title: 'Print Materials',
+              description: 'Business cards, corporate stationery, brochures, packaging. The physical world still matters, especially for premium brands.'
+            },
+            {
+              title: 'Environmental Branding',
+              description: 'If you have physical spaces (store, office, showroom), space design should reflect your identity. Signage, murals, furniture, lighting.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Phase 4: Psychological Testing - Scientific Validation',
+          icon: Zap
+        },
+        {
+          type: 'text',
+          content: 'Don\'t trust only your intuition. Validate your identity with real testing: A/B tests, eye-tracking, microexpression analysis, brand recognition surveys. Data will reveal whether your design truly communicates what you intend or if adjustments are needed.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: '3-Second Recognition Test',
+              description: 'Show your logo/identity for 3 seconds. Can people remember it and describe the emotion they felt? If not, simplify.'
+            },
+            {
+              title: 'Differentiation Test',
+              description: 'Show your identity alongside 5 competitors. Does your brand stand out? Is it clearly different? Similarity is death in branding.'
+            },
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'Creating a memorable brand identity is an act of psychological architecture. You\'re not designing a logo, you\'re building a system of meanings that will reside in your audience\'s mind. Well-defined archetype + coherent visual system + consistent touchpoints + scientific validation = unforgettable brand.'
         },
       ]
     }
