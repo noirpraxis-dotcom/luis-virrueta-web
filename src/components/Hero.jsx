@@ -30,7 +30,7 @@ const Hero = () => {
   return (
     <section 
       ref={ref}
-      className="relative bg-[#0A0A0A] flex items-center justify-center py-20 lg:py-24 overflow-hidden"
+      className="relative bg-[#0A0A0A] flex items-center justify-center pt-12 pb-20 lg:py-24 overflow-hidden"
     >
       {/* Animated gradient orbs with continuous motion */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
