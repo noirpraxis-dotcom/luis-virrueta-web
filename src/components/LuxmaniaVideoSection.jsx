@@ -28,7 +28,7 @@ const LuxmaniaVideoSection = () => {
   }
 
   return (
-    <section ref={ref} className="relative bg-black py-16 lg:py-24 overflow-hidden">
+    <section ref={ref} className="relative bg-black py-16 lg:py-24 overflow-x-hidden">
       {/* Video de fondo - De lado a lado COMPLETO */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <video
@@ -63,8 +63,8 @@ const LuxmaniaVideoSection = () => {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-        <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 lg:gap-16 items-center overflow-hidden">
+      <div className="relative z-20 w-full max-w-[95vw] sm:max-w-7xl mx-auto px-3 sm:px-6 lg:px-12">
+        <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 lg:gap-16 items-center">
           
           {/* Left: Texto elegante */}
           <motion.div
@@ -80,7 +80,7 @@ const LuxmaniaVideoSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-4xl sm:text-5xl lg:text-7xl font-light text-white mb-6 tracking-[0.08em] sm:tracking-[0.12em] lg:tracking-[0.15em] font-display leading-[1.05] break-words"
+              className="text-3xl sm:text-5xl lg:text-7xl font-light text-white mb-6 tracking-[0.05em] sm:tracking-[0.12em] lg:tracking-[0.15em] font-display leading-[1.05]"
             >
               <span className="inline-block relative">
                 {/* L brillosa */}

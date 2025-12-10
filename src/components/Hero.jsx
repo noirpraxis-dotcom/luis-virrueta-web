@@ -30,7 +30,7 @@ const Hero = () => {
   return (
     <section 
       ref={ref}
-      className="relative bg-[#0A0A0A] flex items-center justify-center pt-12 pb-20 lg:py-24 overflow-hidden"
+      className="relative bg-[#0A0A0A] flex items-center justify-center pt-12 pb-20 lg:py-24 overflow-x-hidden"
     >
       {/* Animated gradient orbs with continuous motion */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -117,7 +117,7 @@ const Hero = () => {
       </div>
 
       <motion.div 
-        className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 text-center z-10 overflow-hidden"
+        className="relative w-full max-w-[95vw] sm:max-w-7xl mx-auto px-3 sm:px-6 lg:px-12 text-center z-10"
         style={{ y: y2 }}
       >
         {/* Floating Icons with enhanced animations */}
@@ -278,7 +278,7 @@ const Hero = () => {
           className="mb-5 lg:mb-6 relative"
         >
           <motion.h1 
-            className="relative text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold font-display leading-tight tracking-wide"
+            className="relative text-3xl sm:text-5xl md:text-6xl lg:text-8xl font-bold font-display leading-tight tracking-wide"
             animate={{
               filter: [
                 'drop-shadow(0 0 30px rgba(255,255,255,0.3)) drop-shadow(0 4px 8px rgba(0,0,0,0.5))',
@@ -297,7 +297,7 @@ const Hero = () => {
               WebkitBackgroundClip: 'text',
               backgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              letterSpacing: '0.05em',
+              letterSpacing: '0.03em',
               animation: 'chrome-shine 8s ease-in-out infinite'
             }}
           >

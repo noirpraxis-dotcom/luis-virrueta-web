@@ -13,7 +13,7 @@ const WhyLuxmania = () => {
   return (
     <section 
       ref={ref}
-      className="relative bg-black py-24 lg:py-32 overflow-hidden"
+      className="relative bg-black py-24 lg:py-32 overflow-x-hidden"
     >
       {/* Video de fondo - Estilo Hero */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
@@ -49,7 +49,7 @@ const WhyLuxmania = () => {
         <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-fuchsia-600/10 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative z-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-12">
+      <div className="relative z-20 w-full max-w-[95vw] sm:max-w-6xl mx-auto px-3 sm:px-6 lg:px-12">
         
         {/* Eyebrow */}
         <motion.div
@@ -73,10 +73,10 @@ const WhyLuxmania = () => {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="text-center mb-6"
         >
-          <h2 className="text-3xl sm:text-5xl lg:text-7xl font-light text-white mb-4 tracking-[0.05em] sm:tracking-[0.08em] lg:tracking-[0.1em] font-display leading-[1.05]">
+          <h2 className="text-3xl sm:text-5xl lg:text-7xl font-light text-white mb-4 tracking-[0.03em] sm:tracking-[0.08em] lg:tracking-[0.1em] font-display leading-[1.05]">
             {t('home.whySection.title')}
           </h2>
-          <p className="text-white/50 text-sm sm:text-base lg:text-lg font-light uppercase tracking-[0.15em] sm:tracking-[0.25em] lg:tracking-[0.3em]">
+          <p className="text-white/50 text-xs sm:text-base lg:text-lg font-light uppercase tracking-[0.1em] sm:tracking-[0.25em] lg:tracking-[0.3em]">
             {t('home.whySection.subtitle')}
           </p>
         </motion.div>
