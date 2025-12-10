@@ -6,10 +6,20 @@ import AvatarWelcome from '../components/AvatarWelcome'
 import BrandCTA from '../components/BrandCTA'
 import IndividualServices from '../components/IndividualServices'
 import WhyLuxmania from '../components/WhyLuxmania'
+import SEOHead from '../components/SEOHead'
 
 const HomePage = () => {
   return (
     <>
+      <SEOHead 
+        title="LUXMANIA - Branding Estratégico con Psicología, Diseño e IA"
+        description="Transformamos marcas con psicología del inconsciente, diseño premium e inteligencia artificial. Identidades visuales, arquetipos de Jung, apps y avatares IA para empresas que quieren conectar profundamente."
+        image="/og-home.jpg"
+        url="/"
+        type="website"
+        tags={['branding', 'psicología', 'diseño', 'inteligencia artificial', 'identidad de marca', 'arquetipos']}
+      />
+      
       {/* Video limpio de fondo */}
       <Home />
       

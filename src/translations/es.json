@@ -179,6 +179,7 @@
   },
   "portfolio": {
     "hero": {
+      "title": "Portafolio",
       "badge": "Proyectos Reales",
       "psychology": "Psicología",
       "design": "Diseño",
@@ -832,6 +833,315 @@
         "marketing": { "title": "Marketing", "subtitle": "Campañas efectivas" },
         "impreso": { "title": "Material Impreso", "subtitle": "Tangibles de lujo" }
       }
+    },
+    "services": {
+      "consultoria": {
+        "title": "Consultoría Psicoanalítica",
+        "subtitle": "Brand Psychology",
+        "tagline": "El punto de partida: descifra tu audiencia",
+        "description": "Auditoría psicoanalítica profunda de tu marca. Desciframos qué emociones generas, arquetipos, deseos inconscientes de tu audiencia. La base estratégica antes de cualquier diseño.",
+        "features": [
+          "Análisis del Inconsciente de tu Audiencia",
+          "Arquetipos de Marca (Jung)",
+          "Mapeo de Deseos y Miedos",
+          "Auditoría de Identidad Visual",
+          "Análisis de Competencia",
+          "Estrategia Emocional",
+          "Reporte Ejecutivo (PDF)",
+          "Sesión de Consultoría (2 horas)"
+        ],
+        "process": [
+          "Recopilación de Material de Marca",
+          "Entrevistas con Stakeholders",
+          "Análisis Psicoanalítico",
+          "Mapeo de Arquetipos",
+          "Identificación de Oportunidades",
+          "Reporte + Presentación"
+        ],
+        "duration": "3-4 semanas"
+      },
+      "identidad": {
+        "title": "Identidad Visual",
+        "subtitle": "Brand Identity System",
+        "tagline": "Sistema completo que conecta y permanece",
+        "description": "Identidad de marca completa basada en psicología y neurociencia. Logo, colores, tipografía, manual de marca. Cada elemento diseñado para conectar con el inconsciente de tu audiencia.",
+        "features": [
+          "Logo + Sistema de Identidad Completo",
+          "Manual de Marca Profesional (PDF)",
+          "Paleta de Color Psicológica",
+          "Tipografía + Jerarquías",
+          "Papelería Corporativa",
+          "Plantillas de Redes Sociales",
+          "Aplicaciones Digitales",
+          "Archivos Editables (AI, SVG, PNG)"
+        ],
+        "process": [
+          "Briefing + Investigación de Mercado",
+          "Análisis Psicoanalítico de Audiencia",
+          "Conceptualización + Bocetos",
+          "Desarrollo de Identidad Visual",
+          "Manual de Marca + Guidelines",
+          "Entrega + Capacitación"
+        ],
+        "duration": "4-6 semanas"
+      },
+      "logo": {
+        "title": "Logo Design",
+        "subtitle": "Visual Identity",
+        "tagline": "Identidad memorable que perdura",
+        "description": "Diseño de logotipo profesional con fundamento psicológico. Minimalista, memorable, versátil. Incluye variaciones, paleta de color y archivos editables.",
+        "features": [
+          "Logotipo Principal + Variaciones",
+          "Versiones: Color, B/N, Negativo",
+          "Paleta de Color Estratégica",
+          "Guía de Uso Básica",
+          "Archivos Vectoriales (AI, EPS, SVG)",
+          "Formatos Web (PNG, WebP)",
+          "Favicon + App Icon",
+          "3 Conceptos + Revisiones Ilimitadas"
+        ],
+        "process": [
+          "Briefing + Moodboard",
+          "Investigación de Competencia",
+          "Conceptualización (3 propuestas)",
+          "Refinamiento del Concepto Elegido",
+          "Vectorización + Versiones",
+          "Entrega Final + Guidelines"
+        ],
+        "duration": "2-3 semanas"
+      },
+      "web": {
+        "title": "Páginas Web",
+        "subtitle": "Web Development",
+        "tagline": "Sitios que convierten visitantes en clientes",
+        "description": "Desarrollo de páginas web profesionales con React. Diseño responsivo, optimización SEO, hosting incluido. UI/UX con psicología aplicada que convierte.",
+        "features": [
+          "Diseño UI/UX Personalizado",
+          "Desarrollo con React/Next.js",
+          "Responsive (Mobile, Tablet, Desktop)",
+          "Optimización SEO",
+          "Animaciones Fluidas (Framer Motion)",
+          "Formularios + Integraciones",
+          "Deploy + Hosting (1 año)",
+          "Mantenimiento + Soporte"
+        ],
+        "process": [
+          "Definición de Estructura + Contenido",
+          "Wireframes + Diseño UI",
+          "Desarrollo Frontend",
+          "Optimización + SEO",
+          "Testing Cross-Browser",
+          "Deploy + Capacitación"
+        ],
+        "duration": "4-6 semanas"
+      },
+      "apps": {
+        "title": "Apps Móviles",
+        "subtitle": "Full-Stack Development",
+        "tagline": "Experiencias fluidas que enamoran",
+        "description": "Desarrollo full-stack de aplicaciones móviles y web. React Native, Node.js, bases de datos, hosting. UI/UX con psicología aplicada que convierte usuarios en clientes leales.",
+        "features": [
+          "UI/UX Design + Prototipos Interactivos",
+          "Desarrollo Frontend (React/React Native)",
+          "Backend + API (Node.js/Express)",
+          "Base de Datos (PostgreSQL/MongoDB)",
+          "Autenticación + Seguridad",
+          "Responsive + PWA",
+          "Deploy + Hosting",
+          "Mantenimiento + Soporte"
+        ],
+        "process": [
+          "Discovery + Definición de Features",
+          "Arquitectura de Información",
+          "Diseño UI/UX + Design System",
+          "Desarrollo Frontend",
+          "Desarrollo Backend + Database",
+          "Testing + Deploy"
+        ],
+        "duration": "8-12 semanas"
+      },
+      "video": {
+        "title": "Video Branding",
+        "subtitle": "Motion Content",
+        "tagline": "Contenido visual que hipnotiza",
+        "description": "Producción de video profesional para tu marca. Shooting, edición cinematográfica, motion graphics, reels para redes. Contenido que viraliza y posiciona.",
+        "features": [
+          "Video Profesional (Shooting + Edición)",
+          "Reels + TikToks Optimizados",
+          "Video Ads para Redes Sociales",
+          "Intro/Outro para YouTube",
+          "Motion Graphics",
+          "Color Grading Cinematográfico",
+          "Subtítulos + Captions",
+          "Formatos Optimizados (IG, TT, YT)"
+        ],
+        "process": [
+          "Briefing Creativo + Referencias",
+          "Storyboard + Guion",
+          "Shooting (si aplica)",
+          "Edición + Motion Graphics",
+          "Color Grading + Audio",
+          "Revisiones + Entrega Final"
+        ],
+        "duration": "2-4 semanas"
+      },
+      "animacion": {
+        "title": "Animación de Logo",
+        "subtitle": "Motion Graphics",
+        "tagline": "Logos que cobran vida",
+        "description": "Animación profesional de tu logotipo. Perfect para intros de video, redes sociales, presentaciones. Motion graphics fluidos con efecto WOW.",
+        "features": [
+          "Animación de Logo (5-10 segundos)",
+          "Motion Graphics Cinematográficos",
+          "Versión Horizontal + Vertical",
+          "Con/Sin Audio",
+          "Formatos: MP4, MOV, GIF",
+          "Transparencia (Alpha Channel)",
+          "Optimizado para Redes Sociales",
+          "Archivos After Effects (Editable)"
+        ],
+        "process": [
+          "Análisis del Logo",
+          "Concepto de Animación",
+          "Storyboard + Timing",
+          "Animación + Motion Graphics",
+          "Sound Design",
+          "Exportación Múltiple"
+        ],
+        "duration": "1-2 semanas"
+      },
+      "fotografia": {
+        "title": "Fotografía",
+        "subtitle": "Professional Shooting",
+        "tagline": "Sesiones que capturan la esencia",
+        "description": "Fotografía profesional para tu marca. Producto, retrato corporativo, lifestyle. Edición profesional con estilo cinematográfico que eleva tu presencia visual.",
+        "features": [
+          "Sesión Fotográfica Profesional",
+          "Edición Profesional (Color Grading)",
+          "Retoque + Composición",
+          "50-100 Fotos Editadas",
+          "Archivos RAW + JPEG",
+          "Optimización para Web/Redes",
+          "Derechos de Uso Comercial",
+          "Banco de Imágenes Personalizado"
+        ],
+        "process": [
+          "Briefing + Concepto Visual",
+          "Preparación de Locación/Producto",
+          "Sesión Fotográfica",
+          "Selección de Mejores Tomas",
+          "Edición + Retoque",
+          "Entrega + Optimización"
+        ],
+        "duration": "1-2 semanas"
+      },
+      "audio": {
+        "title": "Audio Branding",
+        "subtitle": "Sonic Identity",
+        "tagline": "Identidad sonora que se graba en la mente",
+        "description": "Creación de identidad sonora para tu marca. Audio logo, jingles, música corporativa. Sonidos que activan reconocimiento y recuerdo emocional.",
+        "features": [
+          "Audio Logo (3-5 segundos)",
+          "Jingle Corporativo (15-30 seg)",
+          "Música de Fondo para Videos",
+          "Sound Design para Producto",
+          "Variaciones Instrumentales",
+          "Formatos: WAV, MP3, AAC",
+          "Derechos de Uso Comercial",
+          "Guidelines de Uso Sonoro"
+        ],
+        "process": [
+          "Análisis de Identidad de Marca",
+          "Referencias Sonoras",
+          "Composición + Arreglos",
+          "Grabación + Mezcla",
+          "Mastering Profesional",
+          "Entrega + Documentación"
+        ],
+        "duration": "2-3 semanas"
+      },
+      "avatares": {
+        "title": "Avatares IA",
+        "subtitle": "Generative AI",
+        "tagline": "Tu portavoz digital generado con IA",
+        "description": "Creamos avatares digitales generados con IA, entrenados específicamente para tu marca. Aparecen en videos, redes sociales y contenido automatizado.",
+        "features": [
+          "Fine-tuning de Modelo IA",
+          "Avatar Personalizado (Estilo/Personalidad)",
+          "Voice Cloning Profesional",
+          "Lip-sync Automático",
+          "Workflow de Generación",
+          "Scripts + Prompts Optimizados",
+          "Videos Automatizados",
+          "Capacitación + Documentación"
+        ],
+        "process": [
+          "Definición de Personalidad del Avatar",
+          "Entrenamiento del Modelo IA",
+          "Voice Clone + Testing",
+          "Workflow de Producción",
+          "Pruebas + Ajustes",
+          "Entrega + Capacitación"
+        ],
+        "duration": "6-8 semanas"
+      },
+      "marketing": {
+        "title": "Marketing Digital",
+        "subtitle": "Growth Strategy",
+        "tagline": "Campañas que generan resultados reales",
+        "description": "Estrategia y ejecución de campañas de marketing digital. Ads, contenido orgánico, automatización. Enfocado en conversión y ROI medible.",
+        "features": [
+          "Estrategia de Marketing 360°",
+          "Gestión de Redes Sociales",
+          "Campañas de Ads (Meta, Google)",
+          "Email Marketing + Automatización",
+          "Copywriting Persuasivo",
+          "Análisis + Optimización",
+          "Reportes Mensuales",
+          "Consultoría Continua"
+        ],
+        "process": [
+          "Auditoría de Marca + Competencia",
+          "Definición de Objetivos + KPIs",
+          "Estrategia de Contenido",
+          "Implementación de Campañas",
+          "Monitoreo + A/B Testing",
+          "Optimización Continua"
+        ],
+        "duration": "Mensual (retainer)"
+      },
+      "impreso": {
+        "title": "Material Impreso",
+        "subtitle": "Print Design",
+        "tagline": "Tangibles de lujo que impresionan",
+        "description": "Diseño de material impreso premium. Tarjetas de presentación, brochures, packaging, señalética. Impresión en materiales de alta calidad con acabados especiales.",
+        "features": [
+          "Tarjetas de Presentación Premium",
+          "Brochures + Catálogos",
+          "Packaging Personalizado",
+          "Papelería Corporativa",
+          "Señalética + Letreros",
+          "Diseño + Mockups 3D",
+          "Gestión de Impresión",
+          "Archivos Print-Ready (CMYK)"
+        ],
+        "process": [
+          "Briefing + Especificaciones",
+          "Diseño + Mockups",
+          "Selección de Materiales",
+          "Aprobación + Ajustes",
+          "Preparación de Archivos",
+          "Gestión de Impresión + Entrega"
+        ],
+        "duration": "2-4 semanas"
+      }
+    },
+    "detailLabels": {
+      "duration": "Duración",
+      "whatIncludes": "Qué Incluye",
+      "process": "Proceso",
+      "ctaButton": "Solicitar Cotización",
+      "ctaWhatsappMessage": "Hola! Solicito cotización para"
     }
   },
   "footer": {

@@ -2,6 +2,7 @@ import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Brain, Sparkles, Users, Heart, Crown, Zap, Shield, Compass, ArrowRight, Palette, Code, Smile, Flame, Lightbulb, Handshake } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import SEOHead from '../components/SEOHead'
 
 const ArquetiposPage = () => {
   const heroRef = useRef(null)
@@ -124,6 +125,14 @@ const ArquetiposPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28">
+      <SEOHead 
+        title="Arquetipos de Jung para Branding - Los 12 Arquetipos de Marca"
+        description="Descubre cómo los 12 arquetipos de Carl Jung transforman tu marca. Gobernante, Creador, Sabio, Inocente, Explorador y más. Psicología profunda aplicada al branding."
+        image="/ARQUETIPOS CEREBRO.mp4"
+        url="/arquetipos"
+        type="website"
+        tags={['arquetipos de Jung', 'branding', 'psicología', 'identidad de marca', '12 arquetipos', 'Carl Jung']}
+      />
       
       {/* Hero Section - EXACTO como Portafolio */}
       <section ref={heroRef} className="relative py-20 lg:py-40 px-6 lg:px-20 overflow-hidden">

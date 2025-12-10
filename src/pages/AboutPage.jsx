@@ -2,6 +2,7 @@ import { motion, useInView } from 'framer-motion'
 import { Brain, Code, Palette, Heart, Sparkles, Zap, Instagram, Linkedin } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useRef } from 'react'
+import SEOHead from '../components/SEOHead'
 
 const AboutPage = () => {
   const heroRef = useRef(null)
@@ -30,6 +31,15 @@ const AboutPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28">
+      <SEOHead 
+        title="Sobre Luis Virrueta - Psicólogo, Diseñador y Developer"
+        description="Psicólogo especializado en branding estratégico. Combino psicología del inconsciente, diseño premium e inteligencia artificial para crear marcas que conectan emocionalmente."
+        image="/yo mero.png"
+        url="/sobre-mi"
+        type="profile"
+        tags={['Luis Virrueta', 'psicología', 'branding', 'diseñador', 'developer', 'arquetipos']}
+      />
+      
       {/* Hero Section */}
       <section ref={heroRef} className="relative py-20 lg:py-40 px-6 lg:px-20 overflow-hidden">
         {/* Video de fondo cinematográfico */}

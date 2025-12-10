@@ -2,6 +2,7 @@ import { motion, useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Palette, Brain, Zap } from 'lucide-react'
+import SEOHead from '../components/SEOHead'
 
 const categories = [
   { id: 'all', label: 'Todos', icon: BookOpen },
@@ -186,6 +187,15 @@ const BlogPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28">
+      <SEOHead 
+        title="Blog de Branding, Psicología y Diseño"
+        description="Artículos profundos sobre branding estratégico, psicología del consumidor, neuromarketing, diseño y tendencias digitales. StoryBrand, Cialdini, neurociencia aplicada a marcas."
+        image="/blog-compressed/blog-1.webp"
+        url="/blog"
+        type="website"
+        tags={['branding', 'psicología', 'marketing', 'diseño', 'neuromarketing', 'storytelling', 'tendencias']}
+      />
+      
       {/* Hero Section */}
       <section ref={heroRef} className="relative py-20 lg:py-40 px-6 lg:px-20 overflow-hidden">
         {/* Video de fondo */}
