@@ -2,14 +2,6 @@ import { Brain, Zap, Sparkles, Award, Check, Shield, Eye } from 'lucide-react'
 
 // Contenido completo de todos los artículos del blog en ES + EN
 // Este archivo centraliza el contenido para facilitar mantenimiento y traducciones
-export const getArticleContent = (slug, language = 'es') => {
-  const content = blogArticlesContent[language]?.[slug]
-  if (!content) {
-    console.warn(`Article content not found for slug: ${slug}, language: ${language}`)
-    return blogArticlesContent['es'][slug] || null // Fallback to Spanish
-  }
-  return content
-}
 
 const blogArticlesContent = {
   es: {
@@ -2235,6 +2227,16 @@ const blogArticlesContent = {
       ]
     }
   }
+}
+
+// Función para obtener el contenido del artículo según slug e idioma
+export const getArticleContent = (slug, language = 'es') => {
+  const content = blogArticlesContent[language]?.[slug]
+  if (!content) {
+    console.warn(`Article content not found for slug: ${slug}, language: ${language}`)
+    return blogArticlesContent['es'][slug] || null // Fallback to Spanish
+  }
+  return content
 }
 
 export default blogArticlesContent
