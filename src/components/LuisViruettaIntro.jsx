@@ -22,10 +22,10 @@ const LuisViruettaIntro = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-            className="order-2 lg:order-1 flex flex-col justify-center relative"
+            className="order-2 lg:order-1 flex flex-col justify-center relative -mx-3 sm:mx-0"
           >
             {/* Video background solo en esta área - premium y MÁS VISIBLE */}
-            <div className="absolute inset-0 overflow-hidden rounded-xl">
+            <div className="absolute inset-0 overflow-hidden rounded-none sm:rounded-xl">
               <video
                 autoPlay
                 loop
@@ -416,21 +416,21 @@ const LuisViruettaIntro = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="absolute bottom-[-20px] left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm border border-white/20 px-5 py-2 rounded-full shadow-2xl"
+                className="absolute bottom-[-30px] sm:bottom-[-20px] left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm border border-white/20 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-2xl"
               >
-                <div className="flex items-center justify-center gap-2">
-                  <Brain className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                  <span className="text-white/80 text-xs font-light tracking-wider whitespace-nowrap">
+                <div className="flex items-center justify-center gap-1.5 sm:gap-2">
+                  <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-white/60" strokeWidth={1.5} />
+                  <span className="text-white/80 text-[10px] sm:text-xs font-light tracking-wider whitespace-nowrap">
                     Psych
                   </span>
-                  <span className="text-white/30 text-xs">×</span>
-                  <Palette className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                  <span className="text-white/80 text-xs font-light tracking-wider whitespace-nowrap">
+                  <span className="text-white/30 text-[10px] sm:text-xs">×</span>
+                  <Palette className="w-3 h-3 sm:w-4 sm:h-4 text-white/60" strokeWidth={1.5} />
+                  <span className="text-white/80 text-[10px] sm:text-xs font-light tracking-wider whitespace-nowrap">
                     Design
                   </span>
-                  <span className="text-white/30 text-xs">×</span>
-                  <Code className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                  <span className="text-white/80 text-xs font-light tracking-wider whitespace-nowrap">
+                  <span className="text-white/30 text-[10px] sm:text-xs">×</span>
+                  <Code className="w-3 h-3 sm:w-4 sm:h-4 text-white/60" strokeWidth={1.5} />
+                  <span className="text-white/80 text-[10px] sm:text-xs font-light tracking-wider whitespace-nowrap">
                     Tech
                   </span>
                 </div>
@@ -439,6 +439,9 @@ const LuisViruettaIntro = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Espaciado adicional para el badge flotante en móvil */}
+      <div className="h-12 sm:h-0" />
 
       {/* Gradient fade to black at bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent via-black/30 to-black pointer-events-none" />

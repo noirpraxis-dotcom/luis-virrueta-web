@@ -28,7 +28,7 @@ const BrandCTA = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-6xl lg:text-8xl font-light text-white mb-6 tracking-[0.15em] font-display leading-[1.05]"
+            className="text-4xl sm:text-6xl lg:text-8xl font-light text-white mb-6 tracking-[0.08em] sm:tracking-[0.15em] font-display leading-[1.05]"
           >
             {(() => {
               const title = t('home.showcaseSection.title')
@@ -133,13 +133,13 @@ const BrandCTA = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-wrap justify-center items-center gap-3 mb-12"
+          className="flex flex-nowrap justify-center items-center gap-1.5 sm:gap-3 mb-12 overflow-x-auto px-2"
         >
           {/* Chip 1 */}
           <motion.div
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="group relative overflow-hidden px-5 py-2.5 rounded-full cursor-pointer"
+            className="group relative overflow-hidden px-3 sm:px-5 py-2 sm:py-2.5 rounded-full cursor-pointer whitespace-nowrap flex-shrink-0"
           >
             <motion.div
               animate={{
@@ -157,19 +157,19 @@ const BrandCTA = () => {
                 opacity: 0.15
               }}
             />
-            <div className="relative flex items-center gap-2">
-              <Brain className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.showcaseSection.everyClick')}</span>
+            <div className="relative flex items-center gap-1.5 sm:gap-2">
+              <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-white/70" strokeWidth={1.5} />
+              <span className="text-white/80 group-hover:text-white text-xs sm:text-sm font-light transition-colors tracking-wide">{t('home.showcaseSection.everyClick')}</span>
             </div>
           </motion.div>
 
-          <span className="text-white/30 text-xs">+</span>
+          <span className="text-white/30 text-[10px] sm:text-xs">+</span>
 
           {/* Chip 2 */}
           <motion.div
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="group relative overflow-hidden px-5 py-2.5 rounded-full cursor-pointer"
+            className="group relative overflow-hidden px-3 sm:px-5 py-2 sm:py-2.5 rounded-full cursor-pointer whitespace-nowrap flex-shrink-0"
           >
             <motion.div
               animate={{
@@ -188,19 +188,19 @@ const BrandCTA = () => {
                 opacity: 0.15
               }}
             />
-            <div className="relative flex items-center gap-2">
-              <Palette className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.showcaseSection.everyScroll')}</span>
+            <div className="relative flex items-center gap-1.5 sm:gap-2">
+              <Palette className="w-3 h-3 sm:w-4 sm:h-4 text-white/70" strokeWidth={1.5} />
+              <span className="text-white/80 group-hover:text-white text-xs sm:text-sm font-light transition-colors tracking-wide">{t('home.showcaseSection.everyScroll')}</span>
             </div>
           </motion.div>
 
-          <span className="text-white/30 text-xs">+</span>
+          <span className="text-white/30 text-[10px] sm:text-xs">+</span>
 
           {/* Chip 3 */}
           <motion.div
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="group relative overflow-hidden px-5 py-2.5 rounded-full cursor-pointer"
+            className="group relative overflow-hidden px-3 sm:px-5 py-2 sm:py-2.5 rounded-full cursor-pointer whitespace-nowrap flex-shrink-0"
           >
             <motion.div
               animate={{
@@ -219,9 +219,9 @@ const BrandCTA = () => {
                 opacity: 0.15
               }}
             />
-            <div className="relative flex items-center gap-2">
-              <Code className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-              <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.showcaseSection.designGuides')}</span>
+            <div className="relative flex items-center gap-1.5 sm:gap-2">
+              <Code className="w-3 h-3 sm:w-4 sm:h-4 text-white/70" strokeWidth={1.5} />
+              <span className="text-white/80 group-hover:text-white text-xs sm:text-sm font-light transition-colors tracking-wide">{t('home.showcaseSection.designGuides')}</span>
             </div>
           </motion.div>
         </motion.div>
