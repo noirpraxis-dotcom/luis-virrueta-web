@@ -133,13 +133,13 @@ const BrandCTA = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-nowrap justify-center items-center gap-1.5 sm:gap-3 mb-12 overflow-x-auto px-2"
+          className="flex flex-wrap justify-center items-center gap-1.5 sm:gap-3 mb-12 px-2"
         >
           {/* Chip 1 */}
           <motion.div
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="group relative overflow-hidden px-3 sm:px-5 py-2 sm:py-2.5 rounded-full cursor-pointer whitespace-nowrap flex-shrink-0"
+            className="group relative overflow-hidden px-2.5 sm:px-5 py-1.5 sm:py-2.5 rounded-full cursor-pointer whitespace-nowrap"
           >
             <motion.div
               animate={{
@@ -157,9 +157,9 @@ const BrandCTA = () => {
                 opacity: 0.15
               }}
             />
-            <div className="relative flex items-center gap-1.5 sm:gap-2">
+            <div className="relative flex items-center gap-1 sm:gap-2">
               <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-white/70" strokeWidth={1.5} />
-              <span className="text-white/80 group-hover:text-white text-xs sm:text-sm font-light transition-colors tracking-wide">{t('home.showcaseSection.everyClick')}</span>
+              <span className="text-white/80 group-hover:text-white text-[10px] sm:text-sm font-light transition-colors tracking-wide">Cada clic pensado</span>
             </div>
           </motion.div>
 
@@ -169,7 +169,7 @@ const BrandCTA = () => {
           <motion.div
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="group relative overflow-hidden px-3 sm:px-5 py-2 sm:py-2.5 rounded-full cursor-pointer whitespace-nowrap flex-shrink-0"
+            className="group relative overflow-hidden px-2.5 sm:px-5 py-1.5 sm:py-2.5 rounded-full cursor-pointer whitespace-nowrap"
           >
             <motion.div
               animate={{
@@ -188,9 +188,9 @@ const BrandCTA = () => {
                 opacity: 0.15
               }}
             />
-            <div className="relative flex items-center gap-1.5 sm:gap-2">
+            <div className="relative flex items-center gap-1 sm:gap-2">
               <Palette className="w-3 h-3 sm:w-4 sm:h-4 text-white/70" strokeWidth={1.5} />
-              <span className="text-white/80 group-hover:text-white text-xs sm:text-sm font-light transition-colors tracking-wide">{t('home.showcaseSection.everyScroll')}</span>
+              <span className="text-white/80 group-hover:text-white text-[10px] sm:text-sm font-light transition-colors tracking-wide">Scroll intencional</span>
             </div>
           </motion.div>
 
@@ -200,7 +200,7 @@ const BrandCTA = () => {
           <motion.div
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="group relative overflow-hidden px-3 sm:px-5 py-2 sm:py-2.5 rounded-full cursor-pointer whitespace-nowrap flex-shrink-0"
+            className="group relative overflow-hidden px-2.5 sm:px-5 py-1.5 sm:py-2.5 rounded-full cursor-pointer whitespace-nowrap"
           >
             <motion.div
               animate={{
@@ -219,9 +219,9 @@ const BrandCTA = () => {
                 opacity: 0.15
               }}
             />
-            <div className="relative flex items-center gap-1.5 sm:gap-2">
+            <div className="relative flex items-center gap-1 sm:gap-2">
               <Code className="w-3 h-3 sm:w-4 sm:h-4 text-white/70" strokeWidth={1.5} />
-              <span className="text-white/80 group-hover:text-white text-xs sm:text-sm font-light transition-colors tracking-wide">{t('home.showcaseSection.designGuides')}</span>
+              <span className="text-white/80 group-hover:text-white text-[10px] sm:text-sm font-light transition-colors tracking-wide">Diseño guía acción</span>
             </div>
           </motion.div>
         </motion.div>

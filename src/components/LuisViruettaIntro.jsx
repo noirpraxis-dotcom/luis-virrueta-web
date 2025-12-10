@@ -25,7 +25,7 @@ const LuisViruettaIntro = () => {
             className="order-2 lg:order-1 flex flex-col justify-center relative -mx-3 sm:mx-0"
           >
             {/* Video background solo en esta área - premium y MÁS VISIBLE */}
-            <div className="absolute inset-0 overflow-hidden rounded-none sm:rounded-xl">
+            <div className="absolute inset-0 -left-3 -right-3 sm:left-0 sm:right-0 overflow-hidden rounded-none sm:rounded-xl">
               <video
                 autoPlay
                 loop
