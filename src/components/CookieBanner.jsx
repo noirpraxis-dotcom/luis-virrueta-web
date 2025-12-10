@@ -58,7 +58,7 @@ const CookieBanner = () => {
             className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100]"
             onClick={() => setShowBanner(false)}
             role="button"
-            aria-label="Cerrar banner de cookies"
+            aria-label={t('cookies.title')}
             tabIndex={0}
             onKeyDown={(e) => e.key === 'Enter' && setShowBanner(false)}
           />
@@ -108,16 +108,16 @@ const CookieBanner = () => {
                     {/* Texto minimalista */}
                     <div className="flex-1">
                       <h3 className="text-white text-lg lg:text-xl font-light tracking-wide mb-2 font-display">
-                        Tu Experiencia, Tu Control
+                        {t('cookies.title')}
                       </h3>
                       <p className="text-white/70 text-sm lg:text-base font-light leading-relaxed max-w-3xl">
-                        Utilizamos cookies para ofrecerte una experiencia personalizada en nuestros servicios de branding psicológico, arquetipos de marca, avatares IA, diseño UX/UI, contenido del blog y próxima tienda online.{' '}
+                        {t('cookies.description')}{' '}
                         <Link 
                           to="/politica-privacidad" 
                           className="text-fuchsia-400 hover:text-fuchsia-300 underline-offset-2 hover:underline transition-all"
                           onClick={() => setShowBanner(false)}
                         >
-                          Leer más
+                          {t('cookies.learnMore')}
                         </Link>
                       </p>
                     </div>
@@ -147,7 +147,7 @@ const CookieBanner = () => {
                           }}
                         />
                         <span className="relative text-white text-sm font-light tracking-wide whitespace-nowrap">
-                          Aceptar Todo
+                          {t('cookies.acceptAll')}
                         </span>
                       </motion.button>
 
@@ -157,7 +157,7 @@ const CookieBanner = () => {
                         onClick={() => setShowCustomize(true)}
                         className="w-full sm:w-auto px-6 py-3 text-white/70 hover:text-white text-sm font-light border border-white/10 hover:border-white/30 rounded-full transition-all duration-300 whitespace-nowrap"
                       >
-                        Personalizar
+                        {t('cookies.customize')}
                       </motion.button>
 
                       <motion.button
@@ -166,7 +166,7 @@ const CookieBanner = () => {
                         onClick={handleRejectAll}
                         className="w-full sm:w-auto px-6 py-3 text-white/70 hover:text-white text-sm font-light border border-white/10 hover:border-white/30 rounded-full transition-all duration-300 whitespace-nowrap"
                       >
-                        Solo Esenciales
+                        {t('cookies.rejectAll')}
                       </motion.button>
                     </div>
                   </div>
@@ -202,10 +202,10 @@ const CustomizePreferences = ({ onSave, onBack, t }) => {
     >
       <div>
         <h3 className="text-white text-base font-light tracking-wide mb-2 font-display">
-          Preferencias de Cookies
+          {t('cookies.preferencesTitle')}
         </h3>
         <p className="text-white/60 text-xs font-light">
-          Elige qué cookies deseas permitir en tu experiencia
+          {t('cookies.preferencesDescription')}
         </p>
       </div>
 
@@ -213,9 +213,9 @@ const CustomizePreferences = ({ onSave, onBack, t }) => {
         {/* Necesarias */}
         <div className="flex items-center justify-between gap-4 p-3 bg-white/5 rounded-xl border border-white/10">
           <div className="flex-1">
-            <h4 className="text-white text-xs font-light mb-1">Esenciales</h4>
+            <h4 className="text-white text-xs font-light mb-1">{t('cookies.necessary')}</h4>
             <p className="text-white/50 text-[10px] leading-relaxed">
-              Necesarias para el funcionamiento del sitio
+              {t('cookies.necessaryDesc')}
             </p>
           </div>
           <div className="w-10 h-5 bg-gradient-to-r from-purple-500 to-fuchsia-500 rounded-full flex items-center justify-end px-0.5">
@@ -226,9 +226,9 @@ const CustomizePreferences = ({ onSave, onBack, t }) => {
         {/* Análisis */}
         <div className="flex items-center justify-between gap-4 p-3 bg-white/5 rounded-xl border border-white/10">
           <div className="flex-1">
-            <h4 className="text-white text-xs font-light mb-1">Análisis</h4>
+            <h4 className="text-white text-xs font-light mb-1">{t('cookies.analytics')}</h4>
             <p className="text-white/50 text-[10px] leading-relaxed">
-              Mejoran tu experiencia con datos anónimos
+              {t('cookies.analyticsDesc')}
             </p>
           </div>
           <button
@@ -248,9 +248,9 @@ const CustomizePreferences = ({ onSave, onBack, t }) => {
         {/* Marketing */}
         <div className="flex items-center justify-between gap-4 p-3 bg-white/5 rounded-xl border border-white/10">
           <div className="flex-1">
-            <h4 className="text-white text-xs font-light mb-1">Marketing</h4>
+            <h4 className="text-white text-xs font-light mb-1">{t('cookies.marketing')}</h4>
             <p className="text-white/50 text-[10px] leading-relaxed">
-              Ofertas de tienda, servicios y contenido relevante
+              {t('cookies.marketingDesc')}
             </p>
           </div>
           <button
@@ -275,7 +275,7 @@ const CustomizePreferences = ({ onSave, onBack, t }) => {
           onClick={onBack}
           className="flex-1 px-4 py-2.5 text-white/70 hover:text-white border border-white/10 hover:border-white/20 rounded-xl text-xs font-light transition-all duration-300"
         >
-          Volver
+          {t('cookies.back')}
         </motion.button>
 
         <motion.button
@@ -284,7 +284,7 @@ const CustomizePreferences = ({ onSave, onBack, t }) => {
           onClick={() => onSave(preferences)}
           className="flex-1 px-4 py-2.5 bg-gradient-to-r from-purple-500/20 to-fuchsia-500/20 text-white border border-white/10 hover:border-white/30 rounded-xl text-xs font-light transition-all duration-300"
         >
-          Guardar Preferencias
+          {t('cookies.savePreferences')}
         </motion.button>
       </div>
     </motion.div>
