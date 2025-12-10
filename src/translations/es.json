@@ -1144,6 +1144,69 @@
       "ctaWhatsappMessage": "Hola! Solicito cotización para"
     }
   },
+  "aboutPage": {
+    "hero": {
+      "title": "Sobre Mí",
+      "badge": "Mi Historia",
+      "pillar1": "Arquetipos",
+      "pillar2": "Identidad",
+      "pillar3": "Transformación",
+      "question": "¿Qué pasa cuando un psicólogo entiende tu inconsciente y lo convierte en una marca que conecta?"
+    },
+    "profile": {
+      "name": "Luis Virrueta",
+      "title": "Psicólogo Especialista en Identidad de Marca",
+      "badgeFounder": "Fundador LUXMANIA",
+      "mainBio": "Especialista en branding psicológico que fusiona psicoanálisis jungiano, diseño estratégico y desarrollo full-stack para crear marcas que no solo se ven excepcionales, sino que conectan, convierten y trascienden.",
+      "card1Title": "Psicoanálisis & Arquetipos",
+      "card1Desc": "Análisis arquetipal del inconsciente colectivo aplicado a la identidad de marca",
+      "card2Title": "Diseño Estratégico",
+      "card2Desc": "Identidades visuales basadas en arquetipos que comunican valores y generan conexión emocional",
+      "card3Title": "Desarrollo Full-Stack",
+      "card3Desc": "React, Node.js, IA y tecnologías avanzadas para experiencias digitales impecables",
+      "philosophy": "Entiendo que las marcas exitosas no venden productos, venden identidad, pertenencia y transformación. Mi proceso combina análisis arquetipal, diseño emocional y desarrollo técnico para fundadores que buscan diferenciarse radicalmente.",
+      "stat1Value": "50+",
+      "stat1Label": "Proyectos Completados",
+      "stat2Value": "98%",
+      "stat2Label": "Satisfacción Cliente",
+      "stat3Value": "7+",
+      "stat3Label": "Años Experiencia",
+      "connectLabel": "Conecta"
+    },
+    "journey": {
+      "title": "Mi Trayectoria",
+      "subtitle": "Cada proyecto es el resultado de años estudiando cómo las personas toman decisiones, qué las motiva y cómo construir experiencias que trascienden lo visual.",
+      "milestone1Year": "2018",
+      "milestone1Title": "Fundación de LUXMANIA",
+      "milestone1Desc": "Creo un estudio que fusiona psicoanálisis jungiano, diseño estratégico y desarrollo tecnológico para marcas que buscan diferenciación radical.",
+      "milestone2Year": "2015-2018",
+      "milestone2Title": "Psicología Clínica + Diseño Digital",
+      "milestone2Desc": "Formación en psicología profunda y diseño de experiencias. Descubro que las marcas más poderosas hablan al inconsciente antes que a la razón.",
+      "milestone3Year": "2019-2022",
+      "milestone3Title": "Desarrollo Full-Stack & Arquetipos de Marca",
+      "milestone3Desc": "Especializo en identidades visuales basadas en los 12 arquetipos junguianos. Más de 50 proyectos transformados con este enfoque único.",
+      "milestone4Year": "2023-2025",
+      "milestone4Title": "Psicoanálisis Junguiano & Neuromarketing + IA",
+      "milestone4Desc": "Integro análisis arquetipal profundo con inteligencia artificial para crear marcas que anticipan deseos inconscientes y generan conexión emocional instantánea."
+    },
+    "approach": {
+      "title": "Mi Enfoque",
+      "pillar1Label": "Aplicada",
+      "pillar1Title": "Psicología",
+      "pillar1Desc": "Comprendo cómo las personas toman decisiones, qué las motiva y cómo crear experiencias que conectan a nivel emocional.",
+      "pillar2Label": "Estratégico",
+      "pillar2Title": "Diseño",
+      "pillar2Desc": "Cada elemento visual tiene un propósito. Creo identidades que no solo se ven bien, sino que comunican y convierten.",
+      "pillar3Label": "Avanzada",
+      "pillar3Title": "Tecnología",
+      "pillar3Desc": "Desarrollo completo desde la idea hasta el deployment. React, Node.js, IA y las mejores herramientas del mercado."
+    },
+    "cta": {
+      "title": "¿Listo para crear una marca que trascienda?",
+      "subtitle": "No trabajo con todos. Selecciono proyectos donde puedo generar impacto real y donde existe alineación de visión. Si buscas diferenciarte radicalmente, hablemos.",
+      "button": "Trabajemos Juntos"
+    }
+  },
   "contacto": {
     "hero": {
       "title": "Contacto",

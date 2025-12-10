@@ -116,31 +116,31 @@ const AboutPage = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="flex items-center gap-3 lg:gap-4 flex-wrap justify-center"
             >
-              {/* Psicología */}
+              {/* Arquetipos */}
               <div className="flex items-center gap-2">
-                <Brain className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+                <Sparkles className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Psicología
+                  Arquetipos
                 </span>
               </div>
 
               <span className="text-white/40 text-xs">+</span>
 
-              {/* Diseño */}
+              {/* Identidad */}
               <div className="flex items-center gap-2">
-                <Palette className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+                <Heart className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Diseño
+                  Identidad
                 </span>
               </div>
 
               <span className="text-white/40 text-xs">+</span>
 
-              {/* Tecnología */}
+              {/* Transformación */}
               <div className="flex items-center gap-2">
-                <Code className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+                <Zap className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Tecnología
+                  Transformación
                 </span>
               </div>
             </motion.div>
@@ -153,7 +153,7 @@ const AboutPage = () => {
               className="text-base lg:text-lg text-white/60 text-center max-w-3xl mx-auto font-extralight italic"
               style={{ letterSpacing: '0.08em' }}
             >
-              ¿Y si tu marca pudiera pensar como tú, verse como la imaginas y funcionar sin límites?
+              ¿Qué pasa cuando un psicólogo entiende tu inconsciente y lo convierte en una marca que conecta?
             </motion.p>
           </motion.div>
 
@@ -418,24 +418,24 @@ const AboutPage = () => {
           <div className="space-y-12">
             {[
               {
-                year: '2020',
+                year: '2018',
                 title: 'Fundación de LUXMANIA',
-                description: 'Después de años trabajando en agencias tradicionales, decidí crear un estudio que fusionara psicología, diseño y tecnología de manera única.'
+                description: 'Creo un estudio que fusiona psicoanálisis jungiano, diseño estratégico y desarrollo tecnológico para marcas que buscan diferenciación radical.'
               },
               {
-                year: '2018-2020',
-                title: 'Psicología Clínica + Full Stack Development',
-                description: 'Formación dual que me permite entender tanto la mente del usuario como la arquitectura técnica de productos digitales.'
+                year: '2015-2018',
+                title: 'Psicología Clínica + Diseño Digital',
+                description: 'Formación en psicología profunda y diseño de experiencias. Descubro que las marcas más poderosas hablan al inconsciente antes que a la razón.'
               },
               {
-                year: '2016-2018',
-                title: 'Diseñador Senior en Agencias Boutique',
-                description: 'Lideré proyectos de identidad visual para startups tech y marcas de lujo, descubriendo mi pasión por el branding estratégico.'
+                year: '2019-2022',
+                title: 'Desarrollo Full-Stack & Arquetipos de Marca',
+                description: 'Especializo en identidades visuales basadas en los 12 arquetipos junguianos. Más de 50 proyectos transformados con este enfoque único.'
               },
               {
-                year: '2024',
-                title: 'Especialización en Neuromarketing & IA',
-                description: 'Integración de inteligencia artificial y neurociencia aplicada para crear experiencias de marca que anticipan necesidades.'
+                year: '2023-2025',
+                title: 'Psicoanálisis Junguiano & Neuromarketing + IA',
+                description: 'Integro análisis arquetipal profundo con inteligencia artificial para crear marcas que anticipan deseos inconscientes y generan conexión emocional instantánea.'
               }
             ].map((milestone, i) => (
               <motion.div

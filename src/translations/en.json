@@ -1048,6 +1048,69 @@
       "ctaWhatsappMessage": "Hello! I'm requesting a quote for"
     }
   },
+  "aboutPage": {
+    "hero": {
+      "title": "About Me",
+      "badge": "My Story",
+      "pillar1": "Archetypes",
+      "pillar2": "Identity",
+      "pillar3": "Transformation",
+      "question": "What happens when a psychologist understands your unconscious and transforms it into a brand that connects?"
+    },
+    "profile": {
+      "name": "Luis Virrueta",
+      "title": "Psychologist Specializing in Brand Identity",
+      "badgeFounder": "Founder LUXMANIA",
+      "mainBio": "Brand psychology specialist who fuses Jungian psychoanalysis, strategic design and full-stack development to create brands that not only look exceptional, but connect, convert and transcend.",
+      "card1Title": "Psychoanalysis & Archetypes",
+      "card1Desc": "Archetypal analysis of the collective unconscious applied to brand identity",
+      "card2Title": "Strategic Design",
+      "card2Desc": "Visual identities based on archetypes that communicate values and generate emotional connection",
+      "card3Title": "Full-Stack Development",
+      "card3Desc": "React, Node.js, AI and advanced technologies for flawless digital experiences",
+      "philosophy": "I understand that successful brands don't sell products, they sell identity, belonging and transformation. My process combines archetypal analysis, emotional design and technical development for founders seeking radical differentiation.",
+      "stat1Value": "50+",
+      "stat1Label": "Completed Projects",
+      "stat2Value": "98%",
+      "stat2Label": "Client Satisfaction",
+      "stat3Value": "7+",
+      "stat3Label": "Years Experience",
+      "connectLabel": "Connect"
+    },
+    "journey": {
+      "title": "My Journey",
+      "subtitle": "Each project is the result of years studying how people make decisions, what motivates them, and how to build experiences that transcend the visual.",
+      "milestone1Year": "2018",
+      "milestone1Title": "LUXMANIA Founded",
+      "milestone1Desc": "I create a studio that fuses Jungian psychoanalysis, strategic design and technological development for brands seeking radical differentiation.",
+      "milestone2Year": "2015-2018",
+      "milestone2Title": "Clinical Psychology + Digital Design",
+      "milestone2Desc": "Training in depth psychology and experience design. I discover that the most powerful brands speak to the unconscious before reason.",
+      "milestone3Year": "2019-2022",
+      "milestone3Title": "Full-Stack Development & Brand Archetypes",
+      "milestone3Desc": "I specialize in visual identities based on the 12 Jungian archetypes. Over 50 projects transformed with this unique approach.",
+      "milestone4Year": "2023-2025",
+      "milestone4Title": "Jungian Psychoanalysis & Neuromarketing + AI",
+      "milestone4Desc": "I integrate deep archetypal analysis with artificial intelligence to create brands that anticipate unconscious desires and generate instant emotional connection."
+    },
+    "approach": {
+      "title": "My Approach",
+      "pillar1Label": "Applied",
+      "pillar1Title": "Psychology",
+      "pillar1Desc": "I understand how people make decisions, what motivates them, and how to create experiences that connect emotionally.",
+      "pillar2Label": "Strategic",
+      "pillar2Title": "Design",
+      "pillar2Desc": "Every visual element has a purpose. I create identities that not only look good, but communicate and convert.",
+      "pillar3Label": "Advanced",
+      "pillar3Title": "Technology",
+      "pillar3Desc": "Full development from idea to deployment. React, Node.js, AI and the best tools on the market."
+    },
+    "cta": {
+      "title": "Ready to create a brand that transcends?",
+      "subtitle": "I don't work with everyone. I select projects where I can generate real impact and where there is vision alignment. If you seek radical differentiation, let's talk.",
+      "button": "Let's Work Together"
+    }
+  },
   "contacto": {
     "hero": {
       "title": "Contact",
