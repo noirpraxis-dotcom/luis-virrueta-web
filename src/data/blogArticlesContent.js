@@ -379,6 +379,331 @@ const blogArticlesContent = {
       ]
     },
     
+    // Artículo 5 - ALTA PRIORIDAD SEO (800 búsquedas/mes)
+    'seis-armas-persuasion-cialdini': {
+      title: 'Las 6 Armas de la Persuasión: Cómo Aplicarlas a Tu Marca',
+      author: 'Luis Virrueta',
+      date: '10 de diciembre, 2024',
+      readTime: '18 min',
+      category: 'Branding × Psicología',
+      tags: ['Influencia', 'Persuasión', 'Psicología', 'Estrategia de Marca'],
+      gradient: 'from-rose-500 to-pink-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'En 1984, Robert Cialdini publicó "Influence: The Psychology of Persuasion" y cambió para siempre cómo entendemos la toma de decisiones. Después de años infiltrándose en organizaciones de ventas, sectas y mercadólogos, descubrió 6 principios psicológicos universales que activan el "sí" automático en el cerebro humano. No son técnicas de manipulación, son atajos mentales (heurísticas) que evolucionamos para sobrevivir. Las marcas más exitosas los usan conscientemente.'
+        },
+        {
+          type: 'heading',
+          title: 'Las 6 Armas de la Persuasión',
+          icon: Sparkles
+        },
+        {
+          type: 'colorGrid',
+          colors: [
+            { name: 'Reciprocidad', hex: '#10B981', emotion: 'Principio', brands: 'Cuando alguien nos da algo, sentimos la obligación de devolver el favor. Es automático.' },
+            { name: 'Compromiso', hex: '#3B82F6', emotion: 'Principio', brands: 'Una vez hacemos un compromiso público, sentimos presión de ser consistentes con él.' },
+            { name: 'Prueba Social', hex: '#8B5CF6', emotion: 'Principio', brands: 'Vemos a otros hacer algo y asumimos que es correcto. Seguimos a la manada.' },
+            { name: 'Autoridad', hex: '#F59E0B', emotion: 'Principio', brands: 'Obedecemos automáticamente a figuras de autoridad legítimas (o símbolos de autoridad).' },
+            { name: 'Simpatía', hex: '#EC4899', emotion: 'Principio', brands: 'Decimos "sí" a las personas que nos gustan. Belleza, similitud y elogios aumentan la simpatía.' },
+            { name: 'Escasez', hex: '#EF4444', emotion: 'Principio', brands: 'Valoramos más lo que es escaso o está a punto de desaparecer. El FOMO elevado a ciencia.' },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '1. Reciprocidad: El Poder de Dar Primero',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'El principio de reciprocidad es simple pero devastadoramente efectivo: cuando alguien nos da algo (un regalo, información, ayuda), sentimos una obligación inconsciente de devolver el favor. Esta obligación es tan fuerte que funciona incluso si no pedimos el regalo inicial.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Contenido Gratis de Alto Valor',
+              description: 'No des "muestras gratis", da regalos que resuelven problemas reales. Ejemplo: LUXMANIA podría ofrecer un "Mini Análisis de Arquetipo de Marca" gratuito. El cliente recibe valor real, siente reciprocidad, y cuando necesite branding completo, la deuda psicológica ya existe.'
+            },
+            {
+              title: 'Sorprende con lo Inesperado',
+              description: 'La reciprocidad es más fuerte cuando el regalo es inesperado. Ejemplo: Una marca de joyería que envía una nota escrita a mano + un pequeño accesorio gratis con cada compra genera lealtad desproporcionada al costo del gesto.'
+            },
+            {
+              title: 'Sé el Primero en Dar',
+              description: 'No esperes a que el cliente compre para dar valor. Lead magnets, webinars gratuitos, consultorías iniciales gratis son herramientas de reciprocidad. Ejemplo: HubSpot regala herramientas de CRM gratis. La reciprocidad los convierte en líderes de mercado.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '2. Compromiso y Consistencia: El Poder de los Pequeños Pasos',
+          icon: Check
+        },
+        {
+          type: 'text',
+          content: 'Una vez hacemos un compromiso (especialmente público o escrito), sentimos presión interna de actuar consistentemente con ese compromiso. Nuestro cerebro odia la disonancia cognitiva. Este principio explica por qué "probar" algo gratis suele llevar a compras: una vez dijiste "sí" a la prueba, inconscientemente quieres ser consistente y seguir diciendo "sí".'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Micro-Compromisos Progresivos',
+              description: 'No pidas la gran venta de frente. Pide micro-síes: suscribirse al newsletter, descargar un PDF, ver un video. Cada pequeño "sí" hace el gran "sí" más fácil. Ejemplo: Amazon Prime empezó con prueba de 30 días. Una vez pruebas, el compromiso interno te empuja a quedarte.'
+            },
+            {
+              title: 'Hazlo Público',
+              description: 'Los compromisos públicos son más poderosos. Ejemplo: Marcas de fitness que piden a usuarios publicar su "Día 1" en redes sociales. El compromiso público los ata psicológicamente a continuar.'
+            },
+            {
+              title: 'Escríbelo',
+              description: 'Los compromisos escritos son más vinculantes mentalmente. Ejemplo: Una marca de coaching que te hace escribir tus metas en la primera sesión está usando consistencia. Tu cerebro luchará por cumplir lo que escribiste.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '3. Prueba Social: Si Todos lo Hacen, Debe Ser Correcto',
+          icon: Eye
+        },
+        {
+          type: 'text',
+          content: 'Somos animales sociales. Cuando no estamos seguros de qué hacer, miramos qué hacen otros como nosotros. Si 1,000 personas compraron, debe ser bueno. Si nadie compró, debe ser malo. La prueba social es el principio más usado (y abusado) en marketing digital.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Testimonios Específicos',
+              description: '"Excelente servicio" no funciona. "Luis transformó mi marca de invisible a referencia de la industria en 3 meses" sí funciona. Especificidad = credibilidad. Bonus: Usa foto, nombre completo y empresa del testimonio.'
+            },
+            {
+              title: 'Números Impresionantes',
+              description: '"Más de 500 marcas confiaron en nosotros" es prueba social cuantificable. El cerebro reptiliano entiende números. Úsalos estratégicamente en tu web y redes sociales.'
+            },
+            {
+              title: 'Contenido Generado por Usuarios',
+              description: 'Clientes reales usando tu producto/servicio es la prueba social más poderosa. Ejemplo: GoPro construyó un imperio con videos de usuarios. Airbnb muestra fotos reales de huéspedes. Es más creíble que cualquier anuncio.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '4. Autoridad: Obedecemos a Expertos (O Símbolos de Expertise)',
+          icon: Award
+        },
+        {
+          type: 'text',
+          content: 'Los experimentos de Milgram demostraron que obedecemos ciegamente a figuras de autoridad. En branding, no necesitas ser médico o profesor para activar este principio. Necesitas SÍMBOLOS de autoridad: títulos, uniformes, premios, apariciones en medios, lenguaje técnico.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Demuestra Experiencia',
+              description: '"15 años en la industria", "Trabajé con +200 marcas", "Certificado en X por la universidad Y". No seas modesto. La autoridad no se asume, se comunica explícitamente.'
+            },
+            {
+              title: 'Contenido Educativo Profundo',
+              description: 'Blogs como este artículo establecen autoridad. Cuando das conocimiento sin pedir nada a cambio, te posicionas como experto. Tu blog es tu herramienta #1 de autoridad.'
+            },
+            {
+              title: 'Apariciones y Colaboraciones',
+              description: '"Speaker en TEDx", "Colaboré con [marca grande]", "Destacado en [publicación reconocida]". La autoridad prestada es autoridad válida.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '5. Simpatía: Compramos a Quienes Nos Gustan',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'Parece obvio, pero la ciencia lo confirma: somos más propensos a decir "sí" a personas/marcas que nos gustan. La simpatía se construye con: atractivo físico (aplica al diseño de marca), similitud ("somos iguales"), elogios genuinos, cooperación (trabajar juntos hacia un objetivo común), y asociación con cosas que ya nos gustan.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Humaniza Tu Marca',
+              description: 'Muestra al equipo detrás de la marca. "Sobre Nosotros" con fotos, detrás de cámaras, historias personales. La gente compra a personas, no a logos anónimos. Ejemplo: LUXMANIA muestra a Luis Virrueta, su filosofía, su enfoque. Eso genera simpatía.'
+            },
+            {
+              title: 'Encuentra Puntos en Común',
+              description: '"Yo también odio las marcas genéricas", "Yo también empecé sin presupuesto para branding". La similitud genera simpatía. Habla el lenguaje de tu cliente ideal y comparte sus frustraciones.'
+            },
+            {
+              title: 'Elogia Sinceramente',
+              description: 'Reconoce los logros de tus clientes. "Me encanta tu enfoque de negocio" o "Tu visión es única" no son ventas, son construcción de simpatía. Cuando pidas la venta después, ya hay conexión emocional.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '6. Escasez: Queremos lo Que Se Está Acabando',
+          icon: Zap
+        },
+        {
+          type: 'text',
+          content: 'El miedo a perder es más fuerte que el deseo de ganar. Cuando algo es escaso (tiempo limitado, stock limitado, acceso exclusivo), nuestro cerebro entra en modo urgencia. Las oportunidades parecen más valiosas cuando su disponibilidad disminuye. Este es el principio detrás del FOMO (Fear Of Missing Out).'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Cupos Limitados (Reales, No Falsos)',
+              description: '"Solo tomo 5 proyectos de branding al mes" es escasez legítima si es verdad. El cerebro valora más lo que no está disponible para todos. Ejemplo: Rolex deliberadamente fabrica menos relojes de los que podría. Escasez = deseo.'
+            },
+            {
+              title: 'Fechas Límite Reales',
+              description: '"La oferta termina en 48 horas" solo funciona si es real. Mentir destruye confianza. Pero fechas límite legítimas (fin de mes, cierre de inscripciones, lanzamiento limitado) activan urgencia verdadera.'
+            },
+            {
+              title: 'Exclusividad',
+              description: '"Acceso solo para miembros", "Acceso anticipado para suscriptores". La exclusividad es escasez social. No todos pueden tenerlo, lo que lo hace más valioso. Ejemplo: Tesla empezó con lista de espera. La espera aumentó el deseo.'
+            },
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'Las 6 Armas de la Persuasión no son trucos baratos, son principios psicológicos universales que gobiernan la toma de decisiones humana. Cuando tu branding integra conscientemente estos principios, no estás manipulando, estás comunicando alineado con cómo funciona el cerebro. Reciprocidad construye buena voluntad. Compromiso genera momentum. Prueba social reduce riesgo percibido. Autoridad genera confianza. Simpatía crea conexión. Escasez activa la decisión. Juntos, transforman tu marca de "otra opción" a "la única elección lógica".'
+        },
+      ]
+    },
+    
+    // Artículo 6 - ALTA PRIORIDAD SEO (400 búsquedas/mes)
+    'paralisis-eleccion-simplifica-oferta': {
+      title: 'La Paradoja de la Elección: Por Qué Tu Menú de 20 Servicios Está Matando Tus Ventas',
+      author: 'Luis Virrueta',
+      date: '10 de diciembre, 2024',
+      readTime: '14 min',
+      category: 'Branding × Psicología',
+      tags: ['Paradoja de la Elección', 'Psicología', 'Conversión', 'Estrategia'],
+      gradient: 'from-sky-500 to-blue-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'En el año 2000, los psicólogos Sheena Iyengar y Mark Lepper realizaron un experimento en un supermercado que cambiaría para siempre nuestra comprensión del comportamiento del consumidor. Montaron dos mesas de degustación de mermeladas: una con 24 variedades, otra con solo 6. El resultado fue devastador para la lógica tradicional del marketing: la mesa con MENOS opciones generó 10 VECES más ventas. Bienvenido a la Paradoja de la Elección, el fenómeno psicológico que explica por qué tu menú infinito de servicios está saboteando tus conversiones.'
+        },
+        {
+          type: 'heading',
+          title: 'El Experimento Que Rompió el Marketing Tradicional',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'Durante décadas, el dogma del marketing fue simple: más opciones = más clientes satisfechos = más ventas. Si un cliente quiere chocolate, ofrece 30 sabores de chocolate. Lógico, ¿no? Barry Schwartz, en su libro "The Paradox of Choice" (2004), demostró que esta lógica está completamente equivocada.'
+        },
+        {
+          type: 'colorGrid',
+          colors: [
+            { name: '24 Opciones', hex: '#EF4444', emotion: 'Resultado', brands: '60% se detuvo a probar. Solo el 3% compró.' },
+            { name: '6 Opciones', hex: '#10B981', emotion: 'Resultado', brands: '40% se detuvo a probar. El 30% compró (10X más conversión).' },
+          ]
+        },
+        {
+          type: 'text',
+          content: 'Más opciones atrajo MÁS tráfico (60% vs 40%), pero generó MENOS ventas. La abundancia de elección no empoderó a los consumidores, los paralizó. Este fenómeno se llama **Parálisis por Análisis**, y está matando tu negocio.'
+        },
+        {
+          type: 'heading',
+          title: 'Por Qué Demasiadas Opciones Destruyen las Conversiones',
+          icon: Zap
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'Sobrecarga Cognitiva',
+          content: 'Nuestro cerebro tiene capacidad de procesamiento limitada. Comparar 3 opciones es fácil. Comparar 20 es agotador. Cuando el esfuerzo mental supera la motivación, el cerebro opta por la salida más fácil: NO decidir. El cliente cierra tu sitio y "lo piensa" (spoiler: nunca vuelve).',
+          gradient: 'from-red-500 to-rose-500'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'Miedo a Equivocarse',
+          content: 'Más opciones = mayor probabilidad de elegir mal. Con 24 mermeladas, si eliges una y es mediocre, piensas "debí elegir otra". Con 6, si eliges mal, "solo había 6, mala suerte". Más opciones aumentan el arrepentimiento anticipado, lo que paraliza la decisión.',
+          gradient: 'from-orange-500 to-amber-500'
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'Costo de Oportunidad Psicológico',
+          content: 'Cada opción que NO eliges es una renuncia. Con 3 opciones, renuncias a 2. Con 30, renuncias a 29. El dolor de renunciar a 29 alternativas es 14 veces mayor. Resultado: no elegir ninguna elimina el dolor.',
+          gradient: 'from-yellow-500 to-lime-500'
+        },
+        {
+          type: 'heading',
+          title: 'Marcas Que Dominan con Menos Opciones',
+          icon: Award
+        },
+        {
+          type: 'colorGrid',
+          colors: [
+            { name: 'Apple', hex: '#000000', emotion: 'Estrategia', brands: '3 modelos de iPhone (standard, Pro, Pro Max). Punto. Antes tenían SE, 5C, 5S, 6, 6 Plus... era un caos. Simplificaron, las ventas explotaron.' },
+            { name: 'In-N-Out Burger', hex: '#E31837', emotion: 'Estrategia', brands: 'Menú de 4 ítems: hamburguesa, cheeseburger, double-double, papas, bebidas. McDonald\'s tiene 145+ ítems y genera menos lealtad.' },
+            { name: 'Netflix (pre-2015)', hex: '#E50914', emotion: 'Estrategia', brands: '1 plan, 1 precio. Hoy tienen 3 planes y la gente sufre eligiendo. Antes: "¿Quieres Netflix? $9.99". Conversión inmediata.' },
+            { name: 'Tesla Model 3', hex: '#CC0000', emotion: 'Estrategia', brands: 'En lanzamiento: 2 versiones (Standard, Long Range). El BMW Serie 3 tiene 12 variantes. ¿Adivina quién vende más rápido?' },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Cómo Simplificar Tu Oferta Sin Perder Ventas',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'La simplificación estratégica no significa perder ingresos. Significa maximizar conversiones eliminando fricción. Aquí está el sistema:'
+        },
+        {
+          type: 'subsection',
+          number: '',
+          title: '1. La Regla del 3',
+          content: 'El cerebro humano procesa eficientemente hasta 3 opciones. Más de eso, empieza la sobrecarga. Estructura tu oferta en máximo 3 niveles: Básico, Intermedio, Premium. O Bronce, Plata, Oro. O Esencial, Pro, Elite. Tres es el número mágico.',
+          gradient: 'from-blue-500 to-cyan-500'
+        },
+        {
+          type: 'subsection',
+          number: '',
+          title: '2. Opción Recomendada Destacada',
+          content: 'Cuando eliminar opciones no es posible, DIRIGE la elección. Marca una opción como "Más Popular", "Recomendada", o "Mejor Valor". El 80% de clientes indecisos elegirá esa. Reduces carga cognitiva sin reducir opciones.',
+          gradient: 'from-purple-500 to-fuchsia-500'
+        },
+        {
+          type: 'subsection',
+          number: '',
+          title: '3. Cuestionario de Pre-Filtrado',
+          content: 'Si tu oferta es compleja, no muestres todas las opciones. Haz 3 preguntas que filtren al cliente hacia la opción correcta. "¿Eres startup o empresa establecida?" → "¿Necesitas logo o rediseño?" → "¿Cuál es tu presupuesto?". Basado en respuestas, MUESTRA solo 1-2 opciones relevantes.',
+          gradient: 'from-pink-500 to-rose-500'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Audita Tu Menú de Servicios Hoy',
+              description: 'Lista literalmente cada servicio/producto/paquete que ofreces. Si tienes más de 5, continúa al siguiente paso.'
+            },
+            {
+              title: 'Mide el Tiempo de Decisión',
+              description: 'Pregunta a 3 amigos: "¿Qué comprarías de mi oferta?". Si tardan más de 30 segundos o preguntan "¿Cuál es la diferencia entre X y Y?", tienes un problema de parálisis.'
+            },
+            {
+              title: 'Identifica el 80/20',
+              description: 'El 80% de tus ingresos viene del 20% de tus servicios. Identifica esos top performers. Considera eliminar u ocultar el resto.'
+            },
+            {
+              title: 'Rediseña en 3 Niveles',
+              description: 'Toma todo tu menú y agrúpalo forzosamente en 3 opciones. Nómbralas claramente (no "Plan A, B, C" sino "Esenciales, Profesional, Enterprise"). Destaca la del medio como recomendada.'
+            },
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'La Paradoja de la Elección no es una teoría, es un hecho psicológico probado en miles de estudios. Más opciones NO empoderan a tu cliente, lo paralizan. La abundancia de elección crea ansiedad, arrepentimiento anticipado, y sobrecarga cognitiva. El resultado: el cliente no compra nada. Las marcas que dominan sus mercados entienden esto: Apple, Netflix, In-N-Out, Tesla, todas simplifican radicalmente sus ofertas. Tu misión no es dar al cliente "todas las opciones posibles". Tu misión es eliminar la fricción entre su necesidad y tu solución. Y la mayor fricción no es el precio, es la complejidad de decidir. Audita tu menú hoy. Si tienes más de 5 opciones sin jerarquía clara, estás dejando dinero sobre la mesa. Simplifica a 3. Marca una como recomendada. Observa tus conversiones dispararse. Porque en branding, como en mermeladas, menos es exponencialmente más.'
+        },
+      ]
+    },
+    
     // Artículo 3 - PRIORIDAD SEO ALTA
     'cliente-heroe-storybrand-framework': {
       title: 'Tu Cliente es el Héroe, No Tu Marca: El Framework StoryBrand',
@@ -963,6 +1288,331 @@ const blogArticlesContent = {
         {
           type: 'conclusion',
           content: 'Pre-Suasion isn\'t a hack, it\'s strategic branding at its highest expression. The world\'s most powerful brands don\'t convince, they pre-suade. When you understand that the battle for your customer\'s mind is won BEFORE the sales message, your branding approach changes completely.'
+        },
+      ]
+    },
+    
+    // Article 5 - HIGH SEO PRIORITY (800/month searches)
+    'seis-armas-persuasion-cialdini': {
+      title: 'The 6 Weapons of Persuasion: How to Apply Them to Your Brand',
+      author: 'Luis Virrueta',
+      date: 'Dec 10, 2024',
+      readTime: '18 min',
+      category: 'Branding × Psychology',
+      tags: ['Influence', 'Persuasion', 'Psychology', 'Brand Strategy'],
+      gradient: 'from-rose-500 to-pink-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'In 1984, Robert Cialdini published "Influence: The Psychology of Persuasion" and forever changed how we understand decision-making. After years infiltrating sales organizations, cults, and marketers, he discovered 6 universal psychological principles that activate the automatic "yes" in the human brain. These aren\'t manipulation techniques, they\'re mental shortcuts (heuristics) that we evolved to survive. The most successful brands use them consciously.'
+        },
+        {
+          type: 'heading',
+          title: 'The 6 Weapons of Persuasion',
+          icon: Sparkles
+        },
+        {
+          type: 'colorGrid',
+          colors: [
+            { name: 'Reciprocity', hex: '#10B981', emotion: 'Principle', brands: 'When someone gives us something, we feel obligated to return the favor. It\'s automatic.' },
+            { name: 'Commitment', hex: '#3B82F6', emotion: 'Principle', brands: 'Once we make a public commitment, we feel pressure to be consistent with it.' },
+            { name: 'Social Proof', hex: '#8B5CF6', emotion: 'Principle', brands: 'We see others do something and assume it\'s correct. We follow the herd.' },
+            { name: 'Authority', hex: '#F59E0B', emotion: 'Principle', brands: 'We automatically obey legitimate authority figures (or symbols of authority).' },
+            { name: 'Liking', hex: '#EC4899', emotion: 'Principle', brands: 'We say "yes" to people we like. Beauty, similarity, and praise increase liking.' },
+            { name: 'Scarcity', hex: '#EF4444', emotion: 'Principle', brands: 'We value more what is rare or about to disappear. FOMO elevated to science.' },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '1. Reciprocity: The Power of Giving First',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'The principle of reciprocity is simple but devastatingly effective: when someone gives us something (a gift, information, help), we feel an unconscious obligation to return the favor. This obligation is so strong it works even if we didn\'t ask for the initial gift.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'High-Value Free Content',
+              description: 'Don\'t give "free samples", give gifts that solve real problems. Example: LUXMANIA could offer a free "Mini Brand Archetype Analysis". The client receives real value, feels reciprocity, and when they need complete branding, psychological debt already exists.'
+            },
+            {
+              title: 'Surprise with the Unexpected',
+              description: 'Reciprocity is stronger when the gift is unexpected. Example: A jewelry brand that sends a handwritten note + small free accessory with each purchase generates loyalty disproportionate to the gesture\'s cost.'
+            },
+            {
+              title: 'Be the First to Give',
+              description: 'Don\'t wait for the customer to buy to give value. Lead magnets, free webinars, free initial consultations are reciprocity tools. Example: HubSpot gives away CRM tools for free. Reciprocity converts them into market leaders.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '2. Commitment and Consistency: The Power of Small Steps',
+          icon: Check
+        },
+        {
+          type: 'text',
+          content: 'Once we make a commitment (especially public or written), we feel internal pressure to act consistently with that commitment. Our brain hates cognitive dissonance. This principle explains why "trying" something free often leads to purchases: once you said "yes" to the trial, you unconsciously want to be consistent and keep saying "yes".'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Progressive Micro-Commitments',
+              description: 'Don\'t ask for the big sale upfront. Ask for micro-yeses: subscribe to newsletter, download a PDF, watch a video. Each small "yes" makes the big "yes" easier. Example: Amazon Prime started with 30-day trial. Once you try, internal commitment pushes you to stay.'
+            },
+            {
+              title: 'Make It Public',
+              description: 'Public commitments are more powerful. Example: Fitness brands asking users to post their "Day 1" on social media. Public commitment psychologically binds them to continue.'
+            },
+            {
+              title: 'Write It Down',
+              description: 'Written commitments are more mentally binding. Example: A coaching brand that makes you write your goals in the first session is using consistency. Your brain will fight to fulfill what you wrote.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '3. Social Proof: If Everyone Does It, It Must Be Right',
+          icon: Eye
+        },
+        {
+          type: 'text',
+          content: 'We are social animals. When we\'re unsure what to do, we look at what others like us are doing. If 1,000 people bought, it must be good. If nobody bought, it must be bad. Social proof is the most used (and abused) principle in digital marketing.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Specific Testimonials',
+              description: '"Excellent service" doesn\'t work. "Luis transformed my brand from invisible to industry reference in 3 months" does work. Specificity = credibility. Bonus: Use photo, full name, and company of the testimonial.'
+            },
+            {
+              title: 'Impressive Numbers',
+              description: '"Over 500 brands trusted us" is quantifiable social proof. The reptilian brain understands numbers. Use them strategically on your web and social media.'
+            },
+            {
+              title: 'User-Generated Content',
+              description: 'Real customers using your product/service is the most powerful social proof. Example: GoPro built an empire with user videos. Airbnb shows real photos of guests. It\'s more credible than any ad.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '4. Authority: We Obey Experts (Or Symbols of Expertise)',
+          icon: Award
+        },
+        {
+          type: 'text',
+          content: 'Milgram\'s experiments demonstrated we blindly obey authority figures. In branding, you don\'t need to be a doctor or professor to activate this principle. You need SYMBOLS of authority: titles, uniforms, awards, media appearances, technical language.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Demonstrate Experience',
+              description: '"15 years in the industry", "Worked with +200 brands", "Certified in X by Y university". Don\'t be modest. Authority isn\'t assumed, it\'s communicated explicitly.'
+            },
+            {
+              title: 'Deep Educational Content',
+              description: 'Blogs like this article establish authority. When you give knowledge without asking anything in return, you position yourself as an expert. Your blog is your #1 authority tool.'
+            },
+            {
+              title: 'Appearances and Collaborations',
+              description: '"TEDx speaker", "Collaborated with [big brand]", "Featured in [recognized publication]". Borrowed authority is valid authority.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '5. Liking: We Buy from Those We Like',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'It seems obvious, but science confirms it: we\'re more likely to say "yes" to people/brands we like. Liking is built with: physical attractiveness (applies to brand design), similarity ("we\'re alike"), genuine praise, cooperation (working together toward a common goal), and association with things we already like.'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Humanize Your Brand',
+              description: 'Show the team behind the brand. "About Us" with photos, behind-the-scenes, personal stories. People buy from people, not from anonymous logos. Example: LUXMANIA shows Luis Virrueta, his philosophy, his approach. That generates liking.'
+            },
+            {
+              title: 'Find Common Ground',
+              description: '"I also hate generic brands", "I also started without budget for branding". Similarity generates liking. Speak your ideal client\'s language and share their frustrations.'
+            },
+            {
+              title: 'Praise Sincerely',
+              description: 'Recognize your clients\' achievements. "I love your business approach" or "Your vision is unique" aren\'t sales, they\'re building liking. When you ask for the sale later, there\'s already emotional connection.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '6. Scarcity: We Want What\'s Running Out',
+          icon: Zap
+        },
+        {
+          type: 'text',
+          content: 'The fear of losing is stronger than the desire to gain. When something is scarce (limited time, limited stock, exclusive access), our brain enters urgency mode. Opportunities seem more valuable when their availability decreases. This is the principle behind FOMO (Fear Of Missing Out).'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Limited Spots (Real, Not Fake)',
+              description: '"I only take 5 branding projects per month" is legitimate scarcity if it\'s true. The brain values more what isn\'t available to everyone. Example: Rolex deliberately manufactures fewer watches than they could. Scarcity = desire.'
+            },
+            {
+              title: 'Real Deadlines',
+              description: '"Offer ends in 48 hours" only works if it\'s real. Lying destroys trust. But legitimate deadlines (end of month, registration close, limited launch) activate true urgency.'
+            },
+            {
+              title: 'Exclusivity',
+              description: '"Members-only access", "Early access for subscribers". Exclusivity is social scarcity. Not everyone can have it, which makes it more valuable. Example: Tesla started with waiting list. The wait increased desire.'
+            },
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'The 6 Weapons of Persuasion aren\'t cheap tricks, they\'re universal psychological principles that govern human decision-making. When your branding consciously integrates these principles, you\'re not manipulating, you\'re communicating aligned with how the brain works. Reciprocity builds goodwill. Commitment generates momentum. Social proof reduces perceived risk. Authority generates trust. Liking creates connection. Scarcity activates decision. Together, they transform your brand from "another option" to "the only logical choice".'
+        },
+      ]
+    },
+    
+    // Article 6 - HIGH SEO PRIORITY (400/month searches)
+    'paralisis-eleccion-simplifica-oferta': {
+      title: 'The Paradox of Choice: Why Your 20-Service Menu Is Killing Your Sales',
+      author: 'Luis Virrueta',
+      date: 'Dec 10, 2024',
+      readTime: '14 min',
+      category: 'Branding × Psychology',
+      tags: ['Choice Paradox', 'Psychology', 'Conversion', 'Strategy'],
+      gradient: 'from-sky-500 to-blue-500',
+      sections: [
+        {
+          type: 'intro',
+          content: 'In 2000, psychologists Sheena Iyengar and Mark Lepper conducted an experiment in a supermarket that would forever change our understanding of consumer behavior. They set up two jam tasting tables: one with 24 varieties, another with only 6. The result was devastating for traditional marketing logic: the table with fewer options generated 10 TIMES more sales. Welcome to the Paradox of Choice, the psychological phenomenon that explains why your infinite service menu is sabotaging your conversions.'
+        },
+        {
+          type: 'heading',
+          title: 'The Experiment That Broke Traditional Marketing',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'For decades, the marketing dogma was simple: more options = more satisfied customers = more sales. If a customer wants chocolate, offer 30 chocolate flavors. Logical, right? Barry Schwartz, in his book "The Paradox of Choice" (2004), demonstrated that this logic is completely wrong.'
+        },
+        {
+          type: 'colorGrid',
+          colors: [
+            { name: '24 Options', hex: '#EF4444', emotion: 'Result', brands: '60% stopped to taste. Only 3% bought.' },
+            { name: '6 Options', hex: '#10B981', emotion: 'Result', brands: '40% stopped to taste. 30% bought (10X more conversion).' },
+          ]
+        },
+        {
+          type: 'text',
+          content: 'More options attracted MORE traffic (60% vs 40%), but generated LESS sales. Abundance of choice didn\'t empower consumers, it paralyzed them. This phenomenon is called **Analysis Paralysis**, and it\'s killing your business.'
+        },
+        {
+          type: 'heading',
+          title: 'Why Too Many Options Destroy Conversions',
+          icon: Zap
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'Cognitive Overload',
+          content: 'Our brain has limited processing capacity. Comparing 3 options is easy. Comparing 20 is exhausting. When mental effort exceeds motivation, the brain opts for the easiest exit: NOT deciding. The customer closes your site and "thinks about it" (spoiler: they never return).',
+          gradient: 'from-red-500 to-rose-500'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'Fear of Wrong Decision',
+          content: 'More options = higher probability of choosing wrong. With 24 jams, if you choose one and it\'s mediocre, you think "I should have chosen another". With 6, if you choose wrong, "there were only 6, bad luck". More options increase anticipated regret, which paralyzes the decision.',
+          gradient: 'from-orange-500 to-amber-500'
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'Psychological Opportunity Cost',
+          content: 'Each option you DON\'T choose is a renunciation. With 3 options, you renounce 2. With 30, you renounce 29. The pain of renouncing 29 alternatives is 14 times greater. Result: not choosing any eliminates the pain.',
+          gradient: 'from-yellow-500 to-lime-500'
+        },
+        {
+          type: 'heading',
+          title: 'Brands That Dominate with Fewer Options',
+          icon: Award
+        },
+        {
+          type: 'colorGrid',
+          colors: [
+            { name: 'Apple', hex: '#000000', emotion: 'Strategy', brands: '3 iPhone models (standard, Pro, Pro Max). Period. Before they had SE, 5C, 5S, 6, 6 Plus... it was chaos. They simplified, sales exploded.' },
+            { name: 'In-N-Out Burger', hex: '#E31837', emotion: 'Strategy', brands: '4-item menu: burger, cheeseburger, double-double, fries, drinks. McDonald\'s has 145+ items and generates less loyalty.' },
+            { name: 'Netflix (pre-2015)', hex: '#E50914', emotion: 'Strategy', brands: '1 plan, 1 price. Today they have 3 plans and people suffer choosing. Before: "Want Netflix? $9.99". Immediate conversion.' },
+            { name: 'Tesla Model 3', hex: '#CC0000', emotion: 'Strategy', brands: 'At launch: 2 versions (Standard, Long Range). BMW 3 Series has 12 variants. Guess who sells faster.' },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'How to Simplify Your Offer Without Losing Sales',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'Strategic simplification doesn\'t mean losing revenue. It means maximizing conversions by eliminating friction. Here\'s the system:'
+        },
+        {
+          type: 'subsection',
+          number: '',
+          title: '1. The Rule of 3',
+          content: 'The human brain efficiently processes up to 3 options. More than that, overload begins. Structure your offer in maximum 3 levels: Basic, Intermediate, Premium. Or Bronze, Silver, Gold. Or Essential, Pro, Elite. Three is the magic number.',
+          gradient: 'from-blue-500 to-cyan-500'
+        },
+        {
+          type: 'subsection',
+          number: '',
+          title: '2. Highlighted Recommended Option',
+          content: 'When eliminating options isn\'t possible, DIRECT the choice. Mark one option as "Most Popular", "Recommended", or "Best Value". 80% of undecided customers will choose that one. You reduce cognitive load without reducing options.',
+          gradient: 'from-purple-500 to-fuchsia-500'
+        },
+        {
+          type: 'subsection',
+          number: '',
+          title: '3. Pre-Filtering Questionnaire',
+          content: 'If your offer is complex, don\'t show all options. Ask 3 questions that filter the customer toward the right option. "Are you startup or established company?" → "Need logo or redesign?" → "What\'s your budget?". Based on answers, SHOW only 1-2 relevant options.',
+          gradient: 'from-pink-500 to-rose-500'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Audit Your Service Menu Today',
+              description: 'List literally each service/product/package you offer. If you have more than 5, continue to next step.'
+            },
+            {
+              title: 'Measure Decision Time',
+              description: 'Ask 3 friends: "What would you buy from my offer?". If they take more than 30 seconds or ask "What\'s the difference between X and Y?", you have a paralysis problem.'
+            },
+            {
+              title: 'Identify the 80/20',
+              description: '80% of your revenue comes from 20% of your services. Identify those top performers. Consider eliminating or hiding the rest.'
+            },
+            {
+              title: 'Redesign in 3 Levels',
+              description: 'Take your entire menu and forcibly group it into 3 options. Name them clearly (not "Plan A, B, C" but "Essentials, Professional, Enterprise"). Highlight the middle one as recommended.'
+            },
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'The Paradox of Choice isn\'t a theory, it\'s a psychological fact proven in thousands of studies. More options DON\'T empower your customer, they paralyze them. The abundance of choice creates anxiety, anticipated regret, and cognitive overload. The result: the customer buys nothing. Brands that dominate their markets understand this: Apple, Netflix, In-N-Out, Tesla, all radically simplify their offerings. Your mission isn\'t to give the customer "all possible options". Your mission is to eliminate the friction between their need and your solution. And the biggest friction isn\'t price, it\'s the complexity of deciding. Audit your menu today. If you have more than 5 options without clear hierarchy, you\'re leaving money on the table. Simplify to 3. Mark one as recommended. Watch your conversions skyrocket. Because in branding, as in jams, less is exponentially more.'
         },
       ]
     }
