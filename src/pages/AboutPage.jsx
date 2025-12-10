@@ -1,5 +1,5 @@
 import { motion, useInView } from 'framer-motion'
-import { Brain, Code, Palette, Heart, Sparkles, Zap, Instagram, Linkedin } from 'lucide-react'
+import { Brain, Code, Palette, Heart, Sparkles, Zap, Instagram, Linkedin, Lamp } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useRef } from 'react'
 import SEOHead from '../components/SEOHead'
@@ -263,10 +263,14 @@ const AboutPage = () => {
                 >
                   Luis <span style={{ fontWeight: 300, fontStyle: 'italic' }}>Virrueta</span>
                 </motion.h2>
+                {/* Título profesional */}
+                <p className="text-white/70 text-lg lg:text-xl mb-6" style={{ fontWeight: 300, letterSpacing: '0.03em' }}>
+                  Psicólogo Especialista en Identidad de Marca
+                </p>
                 {/* Subtítulo con badge */}
-                <div className="flex items-center gap-4 mt-6">
+                <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5">
-                    <Sparkles className="w-3 h-3 text-purple-400" strokeWidth={1.5} />
+                    <Lamp className="w-3 h-3 text-amber-400" strokeWidth={1.5} />
                     <span className="text-xs text-white/60 font-light tracking-wider uppercase">Fundador LUXMANIA</span>
                   </div>
                   <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
@@ -279,7 +283,7 @@ const AboutPage = () => {
                   className="text-white/80 text-lg lg:text-xl leading-relaxed"
                   style={{ fontWeight: 300, letterSpacing: '0.02em' }}
                 >
-                  Especialista en <span className="text-white" style={{ fontWeight: 400 }}>branding psicológico</span> que fusiona neurociencia, diseño estratégico y desarrollo full-stack para crear marcas que no solo se ven excepcionales, sino que{' '}
+                  Especialista en <span className="text-white" style={{ fontWeight: 400 }}>branding psicológico</span> que fusiona psicoanálisis jungiano, diseño estratégico y desarrollo full-stack para crear marcas que no solo se ven excepcionales, sino que{' '}
                   <span className="italic text-white" style={{ fontWeight: 300 }}>conectan, convierten y trascienden</span>.
                 </motion.p>
 
@@ -290,8 +294,8 @@ const AboutPage = () => {
                       <Brain className="w-5 h-5 text-purple-400" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="text-white text-base mb-1" style={{ fontWeight: 300, letterSpacing: '0.02em' }}>Psicología Clínica</h4>
-                      <p className="text-white/60 text-sm leading-relaxed" style={{ fontWeight: 300 }}>Formación en psicoanálisis y neurociencia aplicada al comportamiento del consumidor</p>
+                      <h4 className="text-white text-base mb-1" style={{ fontWeight: 300, letterSpacing: '0.02em' }}>Psicoanálisis & Arquetipos</h4>
+                      <p className="text-white/60 text-sm leading-relaxed" style={{ fontWeight: 300 }}>Análisis arquetipal del inconsciente colectivo aplicado a la identidad de marca</p>
                     </div>
                   </div>
 
@@ -331,7 +335,7 @@ const AboutPage = () => {
                 {[
                   { value: '50+', label: 'Proyectos Completados' },
                   { value: '98%', label: 'Satisfacción Cliente' },
-                  { value: '5+', label: 'Años Experiencia' }
+                  { value: '7+', label: 'Años Experiencia' }
                 ].map((stat, i) => (
                   <motion.div
                     key={i}
