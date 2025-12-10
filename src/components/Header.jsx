@@ -32,7 +32,7 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
       initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="fixed top-0 left-0 right-0 z-50 lg:hidden"
+      className="fixed top-0 left-0 right-0 z-[100] lg:hidden"
     >
       <nav className="bg-black/90 backdrop-blur-lg border-b border-white/10">
         <div className="px-4 py-3 flex items-center justify-between">

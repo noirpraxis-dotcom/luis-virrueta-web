@@ -188,7 +188,7 @@ const BlogPage = () => {
     : blogPosts.filter(post => post.category === activeCategory)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28">
+    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28">
       <SEOHead 
         title={t('blogPage.seo.title')}
         description={t('blogPage.seo.description')}
@@ -201,7 +201,7 @@ const BlogPage = () => {
       {/* Hero Section */}
       <section ref={heroRef} className="relative py-20 lg:py-40 px-6 lg:px-20 overflow-hidden">
         {/* Video de fondo */}
-        <div className="absolute inset-0 -top-28 -bottom-16 overflow-hidden pointer-events-none z-0">
+        <div className="absolute inset-0 -top-20 lg:-top-28 -bottom-16 overflow-hidden pointer-events-none z-0">
           <video
             autoPlay
             loop

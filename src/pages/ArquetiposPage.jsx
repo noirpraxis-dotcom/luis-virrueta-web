@@ -124,9 +124,9 @@ const ArquetiposPage = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28">
+    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28">
       <SEOHead 
-        title="Arquetipos de Jung para Branding - Los 12 Arquetipos de Marca"
+        title="Arquetipos de Marca - 12 Arquetipos de Carl Jung | LUXMANIA"
         description="Descubre cómo los 12 arquetipos de Carl Jung transforman tu marca. Gobernante, Creador, Sabio, Inocente, Explorador y más. Psicología profunda aplicada al branding."
         image="/ARQUETIPOS CEREBRO.mp4"
         url="/arquetipos"
@@ -137,7 +137,7 @@ const ArquetiposPage = () => {
       {/* Hero Section - EXACTO como Portafolio */}
       <section ref={heroRef} className="relative py-20 lg:py-40 px-6 lg:px-20 overflow-hidden">
         {/* Video de fondo - Expandido horizontalmente, cubriendo incluso el header */}
-        <div className="absolute inset-0 -top-28 -bottom-16 overflow-hidden pointer-events-none z-0">
+        <div className="absolute inset-0 -top-20 lg:-top-28 -bottom-16 overflow-hidden pointer-events-none z-0">
           <video
             autoPlay
             loop
