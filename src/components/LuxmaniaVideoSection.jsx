@@ -64,7 +64,7 @@ const LuxmaniaVideoSection = () => {
       </div>
 
       <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-        <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 lg:gap-16 items-center overflow-hidden">
           
           {/* Left: Texto elegante */}
           <motion.div
@@ -80,7 +80,7 @@ const LuxmaniaVideoSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-4xl sm:text-5xl lg:text-7xl font-light text-white mb-6 tracking-[0.08em] sm:tracking-[0.12em] lg:tracking-[0.15em] font-display leading-[1.05]"
+              className="text-4xl sm:text-5xl lg:text-7xl font-light text-white mb-6 tracking-[0.08em] sm:tracking-[0.12em] lg:tracking-[0.15em] font-display leading-[1.05] break-words"
             >
               <span className="inline-block relative">
                 {/* L brillosa */}
@@ -282,21 +282,21 @@ const LuxmaniaVideoSection = () => {
               <div className="relative pl-8 space-y-1">
                 <Palette className="absolute left-0 top-2 w-5 h-5 text-white/40" strokeWidth={1.5} />
 
-                <p className="text-white/60 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
+                <p className="text-white/60 text-base sm:text-lg lg:text-xl font-light leading-relaxed max-w-lg">
                   {t('home.luxmaniaSection.quote1')}{' '}
                   <span className="text-white font-normal">
                     {t('home.luxmaniaSection.quote1Bold')}
                   </span>.
                 </p>
 
-                <p className="text-white/60 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
+                <p className="text-white/60 text-base sm:text-lg lg:text-xl font-light leading-relaxed max-w-lg">
                   {t('home.luxmaniaSection.quote2')}{' '}
                   <span className="text-white font-normal">
                     {t('home.luxmaniaSection.quote2Bold')}
                   </span>.
                 </p>
 
-                <p className="text-white/60 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
+                <p className="text-white/60 text-base sm:text-lg lg:text-xl font-light leading-relaxed max-w-lg">
                   {t('home.luxmaniaSection.quote3')}{' '}
                   <span className="text-white font-normal">
                     {t('home.luxmaniaSection.quote3Bold')}
@@ -351,10 +351,10 @@ const LuxmaniaVideoSection = () => {
                       transition={{ duration: 0.8, delay: 0.3 }}
                       className="text-center mb-8 px-6"
                     >
-                      <p className="text-white text-lg lg:text-xl font-light mb-2 leading-relaxed">
+                      <p className="text-white text-base sm:text-lg lg:text-xl font-light mb-2 leading-relaxed">
                         {t('home.luxmaniaSection.videoOverlay')}
                       </p>
-                      <p className="text-white/70 text-base font-light">
+                      <p className="text-white/70 text-sm sm:text-base font-light">
                         {t('home.luxmaniaSection.videoOverlayBrand')}
                       </p>
                     </motion.div>
@@ -395,21 +395,21 @@ const LuxmaniaVideoSection = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="absolute bottom-[-20px] left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm border border-white/20 px-5 py-2 rounded-full shadow-2xl"
+                className="absolute bottom-[-20px] left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm border border-white/20 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-2xl"
               >
-                <div className="flex items-center justify-center gap-2">
-                  <Brain className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                  <span className="text-white/80 text-xs font-light tracking-wider whitespace-nowrap">
+                <div className="flex items-center justify-center gap-1.5 sm:gap-2">
+                  <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-white/60" strokeWidth={1.5} />
+                  <span className="text-white/80 text-[10px] sm:text-xs font-light tracking-wider whitespace-nowrap">
                     Psych
                   </span>
-                  <span className="text-white/30 text-xs">×</span>
-                  <Palette className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                  <span className="text-white/80 text-xs font-light tracking-wider whitespace-nowrap">
+                  <span className="text-white/30 text-[10px] sm:text-xs">×</span>
+                  <Palette className="w-3 h-3 sm:w-4 sm:h-4 text-white/60" strokeWidth={1.5} />
+                  <span className="text-white/80 text-[10px] sm:text-xs font-light tracking-wider whitespace-nowrap">
                     Design
                   </span>
-                  <span className="text-white/30 text-xs">×</span>
-                  <Code className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                  <span className="text-white/80 text-xs font-light tracking-wider whitespace-nowrap">
+                  <span className="text-white/30 text-[10px] sm:text-xs">×</span>
+                  <Code className="w-3 h-3 sm:w-4 sm:h-4 text-white/60" strokeWidth={1.5} />
+                  <span className="text-white/80 text-[10px] sm:text-xs font-light tracking-wider whitespace-nowrap">
                     AI
                   </span>
                 </div>

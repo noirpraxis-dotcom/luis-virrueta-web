@@ -49,15 +49,15 @@ const Home = () => {
           transition={{ duration: 0.8 }}
           className="space-y-8"
         >
-          {/* Badge superior - Estilo Portafolio */}
+          {/* Badge superior - Estilo Portafolio - COMPACTO MÓVIL */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="inline-flex items-center gap-3 px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5 mb-4"
+            className="inline-flex items-center gap-2 px-4 py-2 border border-white/20 rounded-full backdrop-blur-sm bg-white/5 mb-4"
           >
-            <Gem className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-            <span className="text-sm text-white/80 font-light tracking-wider uppercase">
+            <Gem className="w-3 h-3 sm:w-4 sm:h-4 text-white/60" strokeWidth={1.5} />
+            <span className="text-xs sm:text-sm text-white/80 font-light tracking-wide whitespace-nowrap uppercase">
               {t('home.badge')}
             </span>
           </motion.div>
@@ -70,12 +70,12 @@ const Home = () => {
             className="font-display leading-tight mb-8"
           >
             {/* Construimos - más pequeño */}
-            <span className="block text-white/70 text-xl lg:text-4xl mb-3" style={{ fontWeight: 200, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+            <span className="block text-white/70 text-base sm:text-xl lg:text-4xl mb-2 sm:mb-3" style={{ fontWeight: 200, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               {t('home.weBuild')}
             </span>
             
-            {/* Tu Marca / Your Brand - grande con efecto 3D */}
-            <span className="block text-4xl sm:text-5xl lg:text-9xl" style={{ 
+            {/* Tu Marca / Your Brand - grande con efecto 3D - MÁS GRANDE EN MÓVIL */}
+            <span className="block text-5xl sm:text-6xl lg:text-9xl" style={{ 
               letterSpacing: '0.05em',
               fontWeight: 300,
               textTransform: 'uppercase'
@@ -242,7 +242,7 @@ const Home = () => {
               initial={{ opacity: 0 }}
               animate={isHeroInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.8, delay: 0.8 }}
-              className="text-white/40 text-xs font-extralight tracking-wider text-center max-w-md"
+              className="text-white/40 text-xs font-extralight tracking-wider text-center max-w-md mb-8 lg:mb-0"
             >
               {t('home.ctaSubtitle')}
             </motion.p>
@@ -250,26 +250,26 @@ const Home = () => {
         </motion.div>
       </div>
 
-      {/* Scroll indicator con texto */}
+      {/* Scroll indicator con texto - MÁS PEQUEÑO Y SEPARADO EN MÓVIL */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
+        className="absolute bottom-4 lg:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
         <motion.p
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="text-white/50 text-xs font-light tracking-widest uppercase"
+          className="text-white/50 text-[10px] sm:text-xs font-light tracking-widest uppercase"
         >
           {t('home.scrollText')}
         </motion.p>
         <motion.div
-          animate={{ y: [0, 10, 0] }}
+          animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2"
+          className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-1.5 sm:p-2"
         >
-          <div className="w-1 h-2 bg-white/60 rounded-full" />
+          <div className="w-0.5 h-1.5 sm:w-1 sm:h-2 bg-white/60 rounded-full" />
         </motion.div>
       </motion.div>
     </section>

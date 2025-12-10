@@ -117,7 +117,7 @@ const Hero = () => {
       </div>
 
       <motion.div 
-        className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 text-center z-10"
+        className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 text-center z-10 overflow-hidden"
         style={{ y: y2 }}
       >
         {/* Floating Icons with enhanced animations */}
@@ -212,7 +212,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-white text-3xl sm:text-4xl lg:text-5xl font-extralight leading-tight max-w-4xl mx-auto mb-16 text-center"
+            className="text-white text-2xl sm:text-3xl lg:text-5xl font-extralight leading-tight max-w-4xl mx-auto mb-16 text-center px-4"
           >
             {t('hero.manifesto1')}
           </motion.h2>
@@ -278,7 +278,7 @@ const Hero = () => {
           className="mb-5 lg:mb-6 relative"
         >
           <motion.h1 
-            className="relative text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold font-display leading-tight tracking-wide"
+            className="relative text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold font-display leading-tight tracking-wide"
             animate={{
               filter: [
                 'drop-shadow(0 0 30px rgba(255,255,255,0.3)) drop-shadow(0 4px 8px rgba(0,0,0,0.5))',
@@ -297,7 +297,7 @@ const Hero = () => {
               WebkitBackgroundClip: 'text',
               backgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              letterSpacing: '0.08em',
+              letterSpacing: '0.05em',
               animation: 'chrome-shine 8s ease-in-out infinite'
             }}
           >
@@ -310,7 +310,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, delay: 0.6 }}
-          className="text-white/30 text-xs font-light tracking-[0.4em] mb-10 font-mono uppercase"
+          className="text-white/30 text-[10px] sm:text-xs font-light tracking-[0.25em] sm:tracking-[0.4em] mb-10 font-mono uppercase"
         >
           {t('hero.subtitle')}
         </motion.p>
