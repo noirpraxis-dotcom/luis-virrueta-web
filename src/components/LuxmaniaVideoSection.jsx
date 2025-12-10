@@ -395,7 +395,7 @@ const LuxmaniaVideoSection = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="absolute bottom-[-30px] sm:bottom-[-20px] left-1/2 -translate-x-1/2 mx-auto bg-white/10 backdrop-blur-sm border border-white/20 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-2xl"
+                className="absolute bottom-[-30px] sm:bottom-[-20px] left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm border border-white/20 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-2xl"
               >
                 <div className="flex items-center justify-center gap-1.5 sm:gap-2">
                   <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-white/60" strokeWidth={1.5} />
