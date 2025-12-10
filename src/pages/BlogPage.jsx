@@ -375,6 +375,15 @@ const BlogCard = ({ post, index }) => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
 
+  // Mapeo de categorías con traducciones
+  const categoryLabels = {
+    'all': t('blogPage.categories.all'),
+    'design': t('blogPage.categories.design'),
+    'branding': t('blogPage.categories.branding'),
+    'psychology': t('blogPage.categories.psychology'),
+    'trends': t('blogPage.categories.trends')
+  }
+
   return (
     <Link to={post.slug ? `/blog/${post.slug}` : '#'}>
       <motion.article
@@ -422,7 +431,7 @@ const BlogCard = ({ post, index }) => {
           {/* Category badge */}
           <div className="absolute top-4 left-4 px-3 py-1.5 bg-black/60 backdrop-blur-md rounded-full border border-white/20 z-20">
             <span className="text-xs text-white/90 uppercase tracking-wider font-medium">
-              {categories.find(c => c.id === post.category)?.label}
+              {categoryLabels[post.category]}
             </span>
           </div>
 
