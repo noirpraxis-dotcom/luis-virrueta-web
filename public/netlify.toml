@@ -1,9 +1,6 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    # Enable compression
-    Content-Encoding = "br, gzip, deflate"
-    
     # Cache assets for 1 year
     Cache-Control = "public, max-age=31536000, immutable"
     
