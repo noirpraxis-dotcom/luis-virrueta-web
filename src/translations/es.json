@@ -1144,6 +1144,66 @@
       "ctaWhatsappMessage": "Hola! Solicito cotización para"
     }
   },
+  "contacto": {
+    "hero": {
+      "title": "Contacto",
+      "badge": "Conversemos",
+      "subtitle": "¿Lista tu marca para una conversación que la transforme?"
+    },
+    "methods": {
+      "email": "Email",
+      "whatsapp": "WhatsApp",
+      "location": "Ubicación"
+    },
+    "form": {
+      "title": "Inicia tu",
+      "titleItalic": "proyecto",
+      "nameLabel": "Nombre completo",
+      "namePlaceholder": "Tu nombre",
+      "emailLabel": "Email",
+      "emailPlaceholder": "tu@email.com",
+      "whatsappLabel": "WhatsApp",
+      "whatsappPlaceholder": "+420 776 711 575",
+      "serviceLabel": "Servicio de interés",
+      "servicePlaceholder": "Selecciona un servicio",
+      "messageLabel": "Cuéntame tu proyecto",
+      "messagePlaceholder": "Describe tu visión, objetivos, timeline, presupuesto...",
+      "submitButton": "Enviar Mensaje",
+      "successMessage": "¡Mensaje enviado! Te responderé en menos de 24 horas.",
+      "errorMessage": "Error al enviar. Por favor intenta por email o WhatsApp.",
+      "required": "*"
+    },
+    "services": {
+      "consultoria": "Consultoría Psicoanalítica",
+      "identidad": "Identidad Visual Completa",
+      "logo": "Logo Design",
+      "web": "Páginas Web",
+      "apps": "Apps Móviles",
+      "video": "Video Branding",
+      "animacion": "Animación de Logo",
+      "fotografia": "Fotografía Profesional",
+      "audio": "Audio Branding",
+      "avatares": "Avatares IA",
+      "marketing": "Marketing Digital",
+      "impreso": "Material Impreso"
+    },
+    "sidebar": {
+      "responseTitle": "Tiempo de respuesta",
+      "responseText1": "Respondo personalmente todos los mensajes en",
+      "responseHighlight1": "menos de 24 horas",
+      "responseText2": "(días hábiles).",
+      "responseText3": "Para proyectos urgentes, contacta directo por",
+      "responseHighlight2": "WhatsApp",
+      "nextTitle": "¿Qué sigue?",
+      "steps": [
+        "Revisamos tu mensaje y respondemos en 24h",
+        "Agendamos videollamada para conocer tu proyecto",
+        "Creamos propuesta personalizada con cotización",
+        "Si conectamos, ¡empezamos a crear magia!"
+      ],
+      "socialTitle": "Sígueme"
+    }
+  },
   "footer": {
     "privacyPolicy": "Política de Privacidad",
     "termsConditions": "Términos y Condiciones",

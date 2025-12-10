@@ -1048,6 +1048,66 @@
       "ctaWhatsappMessage": "Hello! I'm requesting a quote for"
     }
   },
+  "contacto": {
+    "hero": {
+      "title": "Contact",
+      "badge": "Let's Talk",
+      "subtitle": "Is your brand ready for a transformative conversation?"
+    },
+    "methods": {
+      "email": "Email",
+      "whatsapp": "WhatsApp",
+      "location": "Location"
+    },
+    "form": {
+      "title": "Start your",
+      "titleItalic": "project",
+      "nameLabel": "Full name",
+      "namePlaceholder": "Your name",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@email.com",
+      "whatsappLabel": "WhatsApp",
+      "whatsappPlaceholder": "+420 776 711 575",
+      "serviceLabel": "Service of interest",
+      "servicePlaceholder": "Select a service",
+      "messageLabel": "Tell me about your project",
+      "messagePlaceholder": "Describe your vision, goals, timeline, budget...",
+      "submitButton": "Send Message",
+      "successMessage": "Message sent! I'll respond within 24 hours.",
+      "errorMessage": "Error sending. Please try via email or WhatsApp.",
+      "required": "*"
+    },
+    "services": {
+      "consultoria": "Psychoanalytic Consulting",
+      "identidad": "Complete Visual Identity",
+      "logo": "Logo Design",
+      "web": "Websites",
+      "apps": "Mobile Apps",
+      "video": "Video Branding",
+      "animacion": "Logo Animation",
+      "fotografia": "Professional Photography",
+      "audio": "Audio Branding",
+      "avatares": "AI Avatars",
+      "marketing": "Digital Marketing",
+      "impreso": "Print Material"
+    },
+    "sidebar": {
+      "responseTitle": "Response time",
+      "responseText1": "I personally respond to all messages within",
+      "responseHighlight1": "24 hours",
+      "responseText2": "(business days).",
+      "responseText3": "For urgent projects, contact me directly via",
+      "responseHighlight2": "WhatsApp",
+      "nextTitle": "What's next?",
+      "steps": [
+        "We review your message and respond within 24h",
+        "We schedule a video call to learn about your project",
+        "We create a personalized proposal with quote",
+        "If we connect, we start creating magic!"
+      ],
+      "socialTitle": "Follow me"
+    }
+  },
   "footer": {
     "privacyPolicy": "Privacy Policy",
     "termsConditions": "Terms & Conditions",

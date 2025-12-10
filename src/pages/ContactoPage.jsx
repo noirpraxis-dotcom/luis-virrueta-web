@@ -1,8 +1,11 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
-import { Send, Mail, MessageSquare, MapPin, Phone, Instagram, Linkedin, CheckCircle2, XCircle } from 'lucide-react'
+import { Send, Mail, MessageSquare, MapPin, Phone, Instagram, Linkedin } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
+import SEOHead from '../components/SEOHead'
 
 const ContactoPage = () => {
+  const { t } = useLanguage()
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
 
@@ -14,15 +17,20 @@ const ContactoPage = () => {
     message: '',
   })
 
-  const [formStatus, setFormStatus] = useState(null) // 'success', 'error', null
-
+  // 12 servicios desde traducciones
   const services = [
-    'Identidad de Marca',
-    'App Premium',
-    'Contenido Digital',
-    'Avatar IA',
-    'Consultoría Psicoanalítica',
-    'Paquete Custom',
+    { key: 'consultoria', label: t('contacto.services.consultoria') },
+    { key: 'identidad', label: t('contacto.services.identidad') },
+    { key: 'logo', label: t('contacto.services.logo') },
+    { key: 'web', label: t('contacto.services.web') },
+    { key: 'apps', label: t('contacto.services.apps') },
+    { key: 'video', label: t('contacto.services.video') },
+    { key: 'animacion', label: t('contacto.services.animacion') },
+    { key: 'fotografia', label: t('contacto.services.fotografia') },
+    { key: 'audio', label: t('contacto.services.audio') },
+    { key: 'avatares', label: t('contacto.services.avatares') },
+    { key: 'marketing', label: t('contacto.services.marketing') },
+    { key: 'impreso', label: t('contacto.services.impreso') },
   ]
 
   const handleChange = (e) => {
@@ -32,37 +40,44 @@ const ContactoPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     
-    // Simulación de envío (aquí integrarías con backend real o servicio como EmailJS)
-    console.log('Form submitted:', formData)
+    // Crear mensaje formateado para WhatsApp
+    const whatsappMessage = `
+🎯 *NUEVA SOLICITUD DE CONTACTO*
+
+👤 *Nombre:* ${formData.name}
+📧 *Email:* ${formData.email}${formData.phone ? `\n📱 *WhatsApp:* ${formData.phone}` : ''}
+🎨 *Servicio:* ${formData.service}
+
+📝 *Sobre el Proyecto:*
+${formData.message}
+    `.trim()
     
-    // Simular éxito
-    setFormStatus('success')
+    // Abrir WhatsApp con mensaje pre-formateado
+    const whatsappURL = `https://wa.me/420776711575?text=${encodeURIComponent(whatsappMessage)}`
+    window.open(whatsappURL, '_blank')
     
-    // Reset form después de 3 segundos
-    setTimeout(() => {
-      setFormData({ name: '', email: '', phone: '', service: '', message: '' })
-      setFormStatus(null)
-    }, 3000)
+    // Reset form
+    setFormData({ name: '', email: '', phone: '', service: '', message: '' })
   }
 
   const contactMethods = [
     {
       icon: Mail,
-      title: 'Email',
+      title: t('contacto.methods.email'),
       value: 'luxmaniadigital@gmail.com',
       link: 'mailto:luxmaniadigital@gmail.com',
       color: 'from-purple-500 to-purple-600',
     },
     {
       icon: Phone,
-      title: 'WhatsApp',
+      title: t('contacto.methods.whatsapp'),
       value: '+420 776 711 575',
       link: 'https://wa.me/420776711575',
       color: 'from-emerald-500 to-emerald-600',
     },
     {
       icon: MapPin,
-      title: 'Ubicación',
+      title: t('contacto.methods.location'),
       value: 'República Checa',
       link: null,
       color: 'from-fuchsia-500 to-fuchsia-600',
@@ -76,6 +91,15 @@ const ContactoPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28">
+      <SEOHead 
+        title="Contacto - LUXMANIA | Branding Estratégico"
+        description="Conversemos sobre tu proyecto de branding. Respondo en menos de 24 horas. Consultoría gratuita para marcas que quieren conectar auténticamente."
+        image="/Hero Contacto.mp4"
+        url="/contacto"
+        type="website"
+        tags={['contacto', 'consultoría branding', 'agencia diseño', 'luis virrueta']}
+      />
+      
       {/* Hero Section */}
       <section ref={heroRef} className="relative py-20 lg:py-40 px-6 lg:px-20 overflow-hidden">
         {/* Video de fondo cinematográfico */}
@@ -107,20 +131,29 @@ const ContactoPage = () => {
               textTransform: 'uppercase'
             }}
           >
-            <span className="relative inline-block">
-              {/* C con degradado */}
-              <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>C</span>
-                <span className="relative text-white">C</span>
-              </span>
-              {/* ontact */}
-              <span className="text-white">ontact</span>
-              {/* o con degradado */}
-              <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>o</span>
-                <span className="relative text-white">o</span>
-              </span>
-            </span>
+            {(() => {
+              const title = t('contacto.hero.title')
+              const firstLetter = title.charAt(0)
+              const lastLetter = title.charAt(title.length - 1)
+              const middle = title.slice(1, -1)
+              
+              return (
+                <span className="relative inline-block">
+                  {/* First letter with gradient */}
+                  <span className="relative">
+                    <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>{firstLetter}</span>
+                    <span className="relative text-white">{firstLetter}</span>
+                  </span>
+                  {/* Middle */}
+                  <span className="text-white">{middle}</span>
+                  {/* Last letter with gradient */}
+                  <span className="relative">
+                    <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>{lastLetter}</span>
+                    <span className="relative text-white">{lastLetter}</span>
+                  </span>
+                </span>
+              )
+            })()}
           </motion.h1>
 
           {/* Subtitle con estructura elegante */}
@@ -140,7 +173,7 @@ const ContactoPage = () => {
               <div className="flex items-center gap-3">
                 <MessageSquare className="w-4 h-4 text-white/60" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/80 font-light tracking-wider uppercase">
-                  Conversemos
+                  {t('contacto.hero.badge')}
                 </span>
               </div>
             </motion.div>
@@ -153,7 +186,7 @@ const ContactoPage = () => {
               className="text-base lg:text-lg text-white/60 text-center max-w-3xl mx-auto font-extralight italic"
               style={{ letterSpacing: '0.08em' }}
             >
-              ¿Lista tu marca para una conversación que la transforme?
+              {t('contacto.hero.subtitle')}
             </motion.p>
           </motion.div>
 
@@ -247,14 +280,14 @@ const ContactoPage = () => {
               className="space-y-8"
             >
               <h2 className="text-4xl lg:text-6xl font-extralight text-white tracking-wide leading-tight">
-                Inicia tu <span className="italic font-light">proyecto</span>
+                {t('contacto.form.title')} <span className="italic font-light">{t('contacto.form.titleItalic')}</span>
               </h2>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Name */}
                 <div>
                   <label htmlFor="name" className="block text-white/30 mb-3 text-[10px] uppercase tracking-[0.3em] font-light">
-                    Nombre completo *
+                    {t('contacto.form.nameLabel')} {t('contacto.form.required')}
                   </label>
                   <input
                     type="text"
@@ -264,14 +297,14 @@ const ContactoPage = () => {
                     onChange={handleChange}
                     required
                     className="w-full px-0 py-4 bg-transparent border-b border-white/10 text-white font-extralight text-lg tracking-wide placeholder-white/20 focus:outline-none focus:border-white/30 transition-all"
-                    placeholder="Tu nombre"
+                    placeholder={t('contacto.form.namePlaceholder')}
                   />
                 </div>
 
                 {/* Email */}
                 <div>
                   <label htmlFor="email" className="block text-white/30 mb-3 text-[10px] uppercase tracking-[0.3em] font-light">
-                    Email *
+                    {t('contacto.form.emailLabel')} {t('contacto.form.required')}
                   </label>
                   <input
                     type="email"
@@ -281,14 +314,14 @@ const ContactoPage = () => {
                     onChange={handleChange}
                     required
                     className="w-full px-0 py-4 bg-transparent border-b border-white/10 text-white font-extralight text-lg tracking-wide placeholder-white/20 focus:outline-none focus:border-white/30 transition-all"
-                    placeholder="tu@email.com"
+                    placeholder={t('contacto.form.emailPlaceholder')}
                   />
                 </div>
 
                 {/* Phone */}
                 <div>
                   <label htmlFor="phone" className="block text-white/30 mb-3 text-[10px] uppercase tracking-[0.3em] font-light">
-                    WhatsApp
+                    {t('contacto.form.whatsappLabel')}
                   </label>
                   <input
                     type="tel"
@@ -297,14 +330,14 @@ const ContactoPage = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-0 py-4 bg-transparent border-b border-white/10 text-white font-extralight text-lg tracking-wide placeholder-white/20 focus:outline-none focus:border-white/30 transition-all"
-                    placeholder="+420 776 711 575"
+                    placeholder={t('contacto.form.whatsappPlaceholder')}
                   />
                 </div>
 
-                {/* Service */}
+                {/* Service - Dropdown with 12 services */}
                 <div>
                   <label htmlFor="service" className="block text-white/30 mb-3 text-[10px] uppercase tracking-[0.3em] font-light">
-                    Servicio de interés *
+                    {t('contacto.form.serviceLabel')} {t('contacto.form.required')}
                   </label>
                   <select
                     id="service"
@@ -314,9 +347,9 @@ const ContactoPage = () => {
                     required
                     className="w-full px-0 py-4 bg-transparent border-b border-white/10 text-white font-extralight text-lg tracking-wide focus:outline-none focus:border-white/30 transition-all appearance-none cursor-pointer"
                   >
-                    <option value="" className="bg-zinc-900">Selecciona un servicio</option>
+                    <option value="" className="bg-zinc-900">{t('contacto.form.servicePlaceholder')}</option>
                     {services.map((service, i) => (
-                      <option key={i} value={service} className="bg-zinc-900">{service}</option>
+                      <option key={i} value={service.label} className="bg-zinc-900">{service.label}</option>
                     ))}
                   </select>
                 </div>
@@ -324,7 +357,7 @@ const ContactoPage = () => {
                 {/* Message */}
                 <div>
                   <label htmlFor="message" className="block text-white/30 mb-3 text-[10px] uppercase tracking-[0.3em] font-light">
-                    Cuéntame tu proyecto *
+                    {t('contacto.form.messageLabel')} {t('contacto.form.required')}
                   </label>
                   <textarea
                     id="message"
@@ -334,47 +367,24 @@ const ContactoPage = () => {
                     required
                     rows={6}
                     className="w-full px-0 py-4 bg-transparent border-b border-white/10 text-white font-extralight text-lg tracking-wide placeholder-white/20 focus:outline-none focus:border-white/30 transition-all resize-none leading-relaxed"
-                    placeholder="Describe tu visión, objetivos, timeline, presupuesto..."
+                    placeholder={t('contacto.form.messagePlaceholder')}
                   />
                 </div>
 
-                {/* Submit Button - Minimal */}
+                {/* Submit Button - Opens WhatsApp */}
                 <motion.button
                   type="submit"
                   whileHover={{ x: 4 }}
                   whileTap={{ scale: 0.98 }}
                   className="group relative mt-8 flex items-center gap-3 text-white font-extralight text-sm tracking-[0.3em] uppercase overflow-hidden"
                 >
-                  <span className="relative z-10">Enviar Mensaje</span>
+                  <span className="relative z-10">{t('contacto.form.submitButton')}</span>
                   <motion.div
                     className="w-12 h-px bg-white/40 group-hover:bg-white transition-colors"
                     whileHover={{ width: 60 }}
                   />
                   <Send className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" strokeWidth={1} />
                 </motion.button>
-
-                {/* Status Messages */}
-                {formStatus === 'success' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-3 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-400"
-                  >
-                    <CheckCircle2 className="w-5 h-5" />
-                    <span>¡Mensaje enviado! Te responderé en menos de 24 horas.</span>
-                  </motion.div>
-                )}
-
-                {formStatus === 'error' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400"
-                  >
-                    <XCircle className="w-5 h-5" />
-                    <span>Error al enviar. Por favor intenta por email o WhatsApp.</span>
-                  </motion.div>
-                )}
               </form>
             </motion.div>
 
@@ -387,25 +397,20 @@ const ContactoPage = () => {
             >
               {/* Response Time */}
               <div className="border border-white/10 rounded-2xl p-8 bg-white/[0.02]">
-                <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light mb-6">Tiempo de respuesta</h3>
+                <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light mb-6">{t('contacto.sidebar.responseTitle')}</h3>
                 <p className="text-white/60 font-extralight text-base leading-[1.9] tracking-wide mb-6">
-                  Respondo personalmente todos los mensajes en <span className="text-white font-light">menos de 24 horas</span> (días hábiles).
+                  {t('contacto.sidebar.responseText1')} <span className="text-white font-light">{t('contacto.sidebar.responseHighlight1')}</span> {t('contacto.sidebar.responseText2')}
                 </p>
                 <p className="text-white/60 font-extralight text-base leading-[1.9] tracking-wide">
-                  Para proyectos urgentes, contacta directo por <span className="text-white font-light">WhatsApp</span>.
+                  {t('contacto.sidebar.responseText3')} <span className="text-white font-light">{t('contacto.sidebar.responseHighlight2')}</span>.
                 </p>
               </div>
 
               {/* What Happens Next */}
               <div className="space-y-8">
-                <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light">¿Qué sigue?</h3>
+                <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light">{t('contacto.sidebar.nextTitle')}</h3>
                 <div className="space-y-6">
-                  {[
-                    { number: '01', text: 'Revisamos tu mensaje y respondemos en 24h' },
-                    { number: '02', text: 'Agendamos videollamada para conocer tu proyecto' },
-                    { number: '03', text: 'Creamos propuesta personalizada con cotización' },
-                    { number: '04', text: 'Si conectamos, ¡empezamos a crear magia!' },
-                  ].map((step, i) => (
+                  {t('contacto.sidebar.steps').map((step, i) => (
                     <motion.div
                       key={i}
                       initial={{ opacity: 0, x: 20 }}
@@ -415,9 +420,9 @@ const ContactoPage = () => {
                       className="flex items-start gap-6"
                     >
                       <span className="text-white/20 font-extralight text-2xl tracking-wider">
-                        {step.number}
+                        {String(i + 1).padStart(2, '0')}
                       </span>
-                      <p className="text-white/60 font-extralight text-base leading-[1.9] tracking-wide pt-1">{step.text}</p>
+                      <p className="text-white/60 font-extralight text-base leading-[1.9] tracking-wide pt-1">{step}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -425,7 +430,7 @@ const ContactoPage = () => {
 
               {/* Social Links */}
               <div>
-                <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light mb-6">Sígueme</h3>
+                <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light mb-6">{t('contacto.sidebar.socialTitle')}</h3>
                 <div className="flex gap-4">
                   {socialLinks.map((social, i) => (
                     <motion.a
