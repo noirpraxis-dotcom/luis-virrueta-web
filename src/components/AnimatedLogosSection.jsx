@@ -118,6 +118,7 @@ const AnimatedLogosSection = () => {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handlePlay}
+                  aria-label="Reproducir video"
                   className="relative"
                 >
                   <div className="w-20 h-20 lg:w-24 lg:h-24 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center group hover:bg-white/20 transition-all duration-300">

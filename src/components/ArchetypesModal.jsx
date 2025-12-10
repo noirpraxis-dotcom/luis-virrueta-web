@@ -137,6 +137,7 @@ const ArchetypesModal = ({ isOpen, onClose }) => {
                     whileHover={{ scale: 1.1, rotate: 90 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={onClose}
+                    aria-label="Cerrar modal de arquetipos"
                     className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
                   >
                     <X className="w-6 h-6 text-white/70" />

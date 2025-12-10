@@ -57,6 +57,10 @@ const CookieBanner = () => {
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100]"
             onClick={() => setShowBanner(false)}
+            role="button"
+            aria-label="Cerrar banner de cookies"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && setShowBanner(false)}
           />
 
           {/* Banner - PREMIUM MINIMALISTA CENTRADO */}

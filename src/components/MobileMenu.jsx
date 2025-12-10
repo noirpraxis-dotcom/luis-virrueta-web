@@ -57,6 +57,10 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
             exit={{ backdropFilter: "blur(0px)" }}
             className="absolute inset-0 bg-black/60"
             onClick={onClose}
+            role="button"
+            aria-label="Cerrar menú"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && onClose()}
           />
 
           {/* Menu Container */}

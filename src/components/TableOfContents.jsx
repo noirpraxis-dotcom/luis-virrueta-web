@@ -58,6 +58,7 @@ const TableOfContents = ({ sections }) => {
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
+        aria-label={isOpen ? "Cerrar tabla de contenidos" : "Abrir tabla de contenidos"}
         className="fixed right-6 top-32 z-40 w-12 h-12 rounded-full bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 backdrop-blur-xl border border-white/20 items-center justify-center hover:border-white/40 transition-all duration-300 shadow-lg hidden lg:flex"
       >
         {isOpen ? (

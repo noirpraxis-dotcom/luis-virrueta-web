@@ -180,6 +180,7 @@ const LogoCarousel3D = () => {
                 whileHover={{ scale: 1.1, x: -5 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => swiperRef.current?.swiper?.slidePrev()}
+                aria-label="Logo anterior"
                 className="pointer-events-auto w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 transition-all duration-300 flex items-center justify-center group"
               >
                 <ChevronLeft className="w-5 h-5 lg:w-6 lg:h-6 text-white group-hover:text-fuchsia-400 transition-colors" strokeWidth={2} />
@@ -189,6 +190,7 @@ const LogoCarousel3D = () => {
                 whileHover={{ scale: 1.1, x: 5 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => swiperRef.current?.swiper?.slideNext()}
+                aria-label="Logo siguiente"
                 className="pointer-events-auto w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 transition-all duration-300 flex items-center justify-center group"
               >
                 <ChevronRight className="w-5 h-5 lg:w-6 lg:h-6 text-white group-hover:text-fuchsia-400 transition-colors" strokeWidth={2} />

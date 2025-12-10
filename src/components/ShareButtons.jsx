@@ -101,6 +101,7 @@ const ShareButtons = ({ title, url }) => {
               onClick={handleCopyLink}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              aria-label={copied ? "Enlace copiado" : "Copiar enlace del artículo"}
               className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/20 rounded-full text-white transition-all duration-300"
             >
               {copied ? (
