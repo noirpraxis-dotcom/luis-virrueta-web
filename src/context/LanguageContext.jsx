@@ -50,17 +50,34 @@ const detectLanguage = () => {
   const languageCode = userLanguage.split('-')[0]?.toLowerCase()
   const countryCode = userLanguage.split('-')[1]?.toUpperCase()
   
-  // República Checa (idioma checo)
-  if (languageCode === 'cs' || countryCode === 'CZ') {
+  console.log('🌍 Detección de idioma:', { userLanguage, languageCode, countryCode })
+  
+  // PRIORIDAD 1: República Checa (país tiene prioridad sobre idioma)
+  if (countryCode === 'CZ') {
+    console.log('✅ Detectado país CZ → Checo')
     return 'cz'
   }
   
-  // Países hispanohablantes (español como idioma O país hispano)
-  if (languageCode === 'es' || spanishSpeakingCountries.includes(countryCode)) {
+  // PRIORIDAD 2: Idioma checo sin país especificado
+  if (languageCode === 'cs') {
+    console.log('✅ Detectado idioma cs → Checo')
+    return 'cz'
+  }
+  
+  // PRIORIDAD 3: Países hispanohablantes (solo si el país está en la lista)
+  if (countryCode && spanishSpeakingCountries.includes(countryCode)) {
+    console.log('✅ Detectado país hispano:', countryCode, '→ Español')
+    return 'es'
+  }
+  
+  // PRIORIDAD 4: Idioma español SOLO si no hay país o el país no se detectó
+  if (languageCode === 'es' && !countryCode) {
+    console.log('✅ Detectado idioma es sin país → Español')
     return 'es'
   }
   
   // Por defecto inglés (para resto del mundo)
+  console.log('✅ Default → Inglés')
   return 'en'
 }
 
