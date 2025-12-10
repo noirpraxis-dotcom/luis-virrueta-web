@@ -198,7 +198,7 @@ const AboutPage = () => {
         <div className="max-w-6xl mx-auto">
           {/* Grid: Photo + Bio */}
           <div className="grid lg:grid-cols-[1fr_1.2fr] gap-16 items-start">
-            {/* Photo con placeholder temporal */}
+            {/* Photo profesional */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={isHeroInView ? { opacity: 1, x: 0 } : {}}
@@ -207,15 +207,15 @@ const AboutPage = () => {
             >
               {/* Sombras animadas premium */}
               <motion.div
-                className="absolute -inset-12 rounded-3xl blur-[80px]"
+                className="absolute -inset-12 rounded-full blur-[80px]"
                 animate={{
                   background: [
-                    'radial-gradient(ellipse at 50% 80%, rgba(168,85,247,0.5), rgba(217,70,239,0.35), rgba(124,58,237,0.2), transparent)',
-                    'radial-gradient(ellipse at 50% 75%, rgba(217,70,239,0.6), rgba(232,121,249,0.4), rgba(168,85,247,0.25), transparent)',
-                    'radial-gradient(ellipse at 50% 85%, rgba(232,121,249,0.55), rgba(192,38,211,0.4), rgba(217,70,239,0.22), transparent)',
-                    'radial-gradient(ellipse at 50% 80%, rgba(168,85,247,0.5), rgba(217,70,239,0.35), rgba(124,58,237,0.2), transparent)'
+                    'radial-gradient(circle at 50% 50%, rgba(168,85,247,0.4), rgba(217,70,239,0.3), rgba(124,58,237,0.15), transparent)',
+                    'radial-gradient(circle at 50% 50%, rgba(217,70,239,0.5), rgba(232,121,249,0.35), rgba(168,85,247,0.2), transparent)',
+                    'radial-gradient(circle at 50% 50%, rgba(232,121,249,0.45), rgba(192,38,211,0.35), rgba(217,70,239,0.18), transparent)',
+                    'radial-gradient(circle at 50% 50%, rgba(168,85,247,0.4), rgba(217,70,239,0.3), rgba(124,58,237,0.15), transparent)'
                   ],
-                  opacity: [0.4, 0.6, 0.5, 0.4]
+                  opacity: [0.5, 0.7, 0.6, 0.5]
                 }}
                 transition={{
                   duration: 6,
@@ -224,16 +224,13 @@ const AboutPage = () => {
                 }}
               />
 
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10">
-                {/* Placeholder temporal con gradiente */}
-                <div className="w-full aspect-[4/5] bg-gradient-to-br from-purple-900/30 via-fuchsia-900/20 to-cyan-900/30 flex items-center justify-center">
-                  <div className="text-center space-y-4">
-                    <div className="w-24 h-24 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mx-auto flex items-center justify-center">
-                      <Brain className="w-12 h-12 text-white/40" strokeWidth={1} />
-                    </div>
-                    <p className="text-white/30 text-sm font-extralight tracking-wider">Foto próximamente</p>
-                  </div>
-                </div>
+              <div className="relative rounded-full overflow-hidden shadow-2xl border border-white/10">
+                {/* Foto profesional 1:1 */}
+                <img 
+                  src="/luxmania perfil.png" 
+                  alt="Luis Virrueta - Fundador de LUXMANIA"
+                  className="w-full aspect-square object-cover"
+                />
                 
                 {/* Badge overlay minimalista */}
                 <motion.div
@@ -258,31 +255,74 @@ const AboutPage = () => {
               transition={{ duration: 1, delay: 1 }}
               className="space-y-10"
             >
-              <motion.h2
-                className="text-5xl lg:text-6xl font-extralight text-white tracking-wide"
-              >
-                Luis <span className="italic font-light">Virrueta</span>
-              </motion.h2>
-
-              <div className="space-y-6">
-                <motion.p
-                  className="text-white/70 text-base lg:text-lg font-extralight leading-[1.9] tracking-wide"
+              <div>
+                {/* Título con estilo Home */}
+                <motion.h2
+                  className="text-5xl lg:text-7xl text-white mb-2"
+                  style={{ fontWeight: 200, letterSpacing: '0.05em' }}
                 >
-                  Fundador de{' '}
-                  <span className="text-white font-light">LUXMANIA</span>
-                  . Especialista en branding psicológico que fusiona neurociencia, diseño estratégico y desarrollo full-stack para crear marcas que no solo se ven excepcionales, sino que <span className="italic text-white/90">conectan, convierten y trascienden</span>.
+                  Luis <span style={{ fontWeight: 300, fontStyle: 'italic' }}>Virrueta</span>
+                </motion.h2>
+                {/* Subtítulo con badge */}
+                <div className="flex items-center gap-4 mt-6">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5">
+                    <Sparkles className="w-3 h-3 text-purple-400" strokeWidth={1.5} />
+                    <span className="text-xs text-white/60 font-light tracking-wider uppercase">Fundador LUXMANIA</span>
+                  </div>
+                  <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
+                </div>
+              </div>
+
+              <div className="space-y-8">
+                {/* Descripción principal */}
+                <motion.p
+                  className="text-white/80 text-lg lg:text-xl leading-relaxed"
+                  style={{ fontWeight: 300, letterSpacing: '0.02em' }}
+                >
+                  Especialista en <span className="text-white" style={{ fontWeight: 400 }}>branding psicológico</span> que fusiona neurociencia, diseño estratégico y desarrollo full-stack para crear marcas que no solo se ven excepcionales, sino que{' '}
+                  <span className="italic text-white" style={{ fontWeight: 300 }}>conectan, convierten y trascienden</span>.
                 </motion.p>
 
-                <motion.p
-                  className="text-white/60 text-base lg:text-lg font-extralight leading-[1.9] tracking-wide"
-                >
-                  Con formación en <span className="text-white font-light">psicología clínica</span> y años de experiencia en tecnología, entiendo que las marcas exitosas no venden productos, venden <span className="italic">identidad, pertenencia y transformación</span>.
-                </motion.p>
+                {/* Formación con iconos */}
+                <div className="space-y-4 pt-4">
+                  <div className="flex items-start gap-4 group">
+                    <div className="mt-1 p-2 rounded-lg bg-purple-500/10 border border-purple-500/20 group-hover:bg-purple-500/20 transition-colors">
+                      <Brain className="w-5 h-5 text-purple-400" strokeWidth={1.5} />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-white text-base mb-1" style={{ fontWeight: 300, letterSpacing: '0.02em' }}>Psicología Clínica</h4>
+                      <p className="text-white/60 text-sm leading-relaxed" style={{ fontWeight: 300 }}>Formación en psicoanálisis y neurociencia aplicada al comportamiento del consumidor</p>
+                    </div>
+                  </div>
 
+                  <div className="flex items-start gap-4 group">
+                    <div className="mt-1 p-2 rounded-lg bg-pink-500/10 border border-pink-500/20 group-hover:bg-pink-500/20 transition-colors">
+                      <Palette className="w-5 h-5 text-pink-400" strokeWidth={1.5} />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-white text-base mb-1" style={{ fontWeight: 300, letterSpacing: '0.02em' }}>Diseño Estratégico</h4>
+                      <p className="text-white/60 text-sm leading-relaxed" style={{ fontWeight: 300 }}>Identidades visuales basadas en arquetipos que comunican valores y generan conexión emocional</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 group">
+                    <div className="mt-1 p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20 group-hover:bg-cyan-500/20 transition-colors">
+                      <Code className="w-5 h-5 text-cyan-400" strokeWidth={1.5} />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-white text-base mb-1" style={{ fontWeight: 300, letterSpacing: '0.02em' }}>Desarrollo Full-Stack</h4>
+                      <p className="text-white/60 text-sm leading-relaxed" style={{ fontWeight: 300 }}>React, Node.js, IA y tecnologías avanzadas para experiencias digitales impecables</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Filosofía */}
                 <motion.p
-                  className="text-white/60 text-base lg:text-lg font-extralight leading-[1.9] tracking-wide"
+                  className="text-white/70 text-base lg:text-lg leading-relaxed pt-4 border-t border-white/10"
+                  style={{ fontWeight: 300, letterSpacing: '0.02em' }}
                 >
-                  Mi proceso combina análisis arquetipal, diseño emocional y desarrollo técnico impecable. Trabajo con fundadores y empresas que buscan diferenciarse radicalmente en mercados saturados.
+                  Entiendo que las marcas exitosas no venden productos, venden{' '}
+                  <span className="italic text-white">identidad, pertenencia y transformación</span>. Mi proceso combina análisis arquetipal, diseño emocional y desarrollo técnico para fundadores que buscan diferenciarse radicalmente.
                 </motion.p>
               </div>
 
@@ -306,31 +346,45 @@ const AboutPage = () => {
                 ))}
               </div>
 
-              {/* Social Links - Minimalista */}
+              {/* Social Links - Mejorado con WhatsApp */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8, delay: 1.5 }}
-                className="flex items-center gap-6 pt-8"
+                className="space-y-6 pt-8 border-t border-white/10"
               >
-                <span className="text-white/30 text-[10px] uppercase tracking-[0.3em] font-light">Conecta</span>
-                <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
-                <div className="flex gap-4">
+                <div className="flex items-center gap-6">
+                  <span className="text-white/40 text-xs uppercase tracking-[0.3em]" style={{ fontWeight: 300 }}>Conecta</span>
+                  <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
+                </div>
+                <div className="flex flex-wrap gap-4">
+                  {/* WhatsApp */}
+                  <a
+                    href="https://wa.me/420776711575"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 px-6 py-3 rounded-full border border-emerald-400/30 bg-emerald-400/5 hover:bg-emerald-400/10 hover:border-emerald-400/50 transition-all duration-300 group"
+                  >
+                    <Zap className="w-4 h-4 text-emerald-400" strokeWidth={1.5} />
+                    <span className="text-white/80 text-sm" style={{ fontWeight: 300 }}>WhatsApp</span>
+                  </a>
                   {/* Instagram */}
                   <a
                     href="https://www.instagram.com/_horadorada_?igsh=MXRoZDJpaHdqbWRwYg=="
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-fuchsia-400/60 hover:bg-fuchsia-400/10 transition-all duration-300 group"
+                    className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-fuchsia-400/60 hover:bg-fuchsia-400/10 transition-all duration-300 group"
                   >
-                    <Instagram className="w-4 h-4 text-white/50 group-hover:text-fuchsia-400 transition-colors" strokeWidth={1.5} />
+                    <Instagram className="w-5 h-5 text-white/50 group-hover:text-fuchsia-400 transition-colors" strokeWidth={1.5} />
                   </a>
                   {/* LinkedIn */}
                   <a
-                    href="#"
-                    className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-cyan-400/60 hover:bg-cyan-400/10 transition-all duration-300 group"
+                    href="https://www.linkedin.com/in/luis-virrueta/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-cyan-400/60 hover:bg-cyan-400/10 transition-all duration-300 group"
                   >
-                    <Linkedin className="w-4 h-4 text-white/50 group-hover:text-cyan-400 transition-colors" strokeWidth={1.5} />
+                    <Linkedin className="w-5 h-5 text-white/50 group-hover:text-cyan-400 transition-colors" strokeWidth={1.5} />
                   </a>
                 </div>
               </motion.div>
