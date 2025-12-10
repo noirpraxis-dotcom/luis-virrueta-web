@@ -51,22 +51,23 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
           <div className="flex items-center gap-3">
             <LanguageSelector />
             
-            {/* Botón Hamburguesa */}
+            {/* Botón Hamburguesa Elegante */}
             <motion.button
               onClick={onMenuToggle}
-              whileTap={{ scale: 0.9 }}
-              className="relative w-10 h-10 flex items-center justify-center"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative w-11 h-11 flex items-center justify-center rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/20 transition-all duration-300"
               aria-label="Toggle Menu"
             >
-              <div className="relative flex flex-col items-center justify-center w-6 h-5">
+              <div className="relative flex flex-col items-center justify-center w-5 h-5">
                 {/* Línea superior */}
                 <motion.span
                   animate={{
                     rotate: isMenuOpen ? 45 : 0,
-                    y: isMenuOpen ? 8 : 0,
+                    y: isMenuOpen ? 7 : 0,
                   }}
                   transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
-                  className="absolute top-0 w-full h-[2px] bg-white rounded-full origin-center"
+                  className="absolute top-0 w-full h-[1.5px] bg-white rounded-full origin-center"
                 />
                 
                 {/* Línea media */}
@@ -76,17 +77,17 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
                     scaleX: isMenuOpen ? 0 : 1,
                   }}
                   transition={{ duration: 0.2 }}
-                  className="absolute top-1/2 -translate-y-1/2 w-full h-[2px] bg-white rounded-full"
+                  className="absolute top-1/2 -translate-y-1/2 w-full h-[1.5px] bg-white rounded-full"
                 />
                 
                 {/* Línea inferior */}
                 <motion.span
                   animate={{
                     rotate: isMenuOpen ? -45 : 0,
-                    y: isMenuOpen ? -8 : 0,
+                    y: isMenuOpen ? -7 : 0,
                   }}
                   transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
-                  className="absolute bottom-0 w-full h-[2px] bg-white rounded-full origin-center"
+                  className="absolute bottom-0 w-full h-[1.5px] bg-white rounded-full origin-center"
                 />
               </div>
             </motion.button>

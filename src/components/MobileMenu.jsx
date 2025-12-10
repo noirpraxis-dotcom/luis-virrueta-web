@@ -78,6 +78,29 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#8dc1ab]/15 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
               </div>
 
+              {/* Botón Cerrar - Top Left con flecha elegante */}
+              <motion.button
+                onClick={onClose}
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -20, opacity: 0 }}
+                transition={{ delay: 0.1 }}
+                whileHover={{ scale: 1.05, x: -3 }}
+                whileTap={{ scale: 0.95 }}
+                className="absolute top-6 left-6 z-20 w-11 h-11 flex items-center justify-center rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-white/20 transition-all duration-300 group"
+                aria-label="Cerrar menú"
+              >
+                <svg 
+                  className="w-5 h-5 text-white/70 group-hover:text-white transition-colors duration-300" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor" 
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+              </motion.button>
+
               {/* Language Selector - Top Right with elegant background */}
               <motion.div
                 initial={{ y: -20, opacity: 0 }}

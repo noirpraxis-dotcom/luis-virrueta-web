@@ -65,27 +65,27 @@ const Footer = () => {
             </motion.div>
           </Link>
 
-          {/* Legal Links */}
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
+          {/* Legal Links - Optimizado para móvil */}
+          <div className="flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-6 gap-y-2 text-xs sm:text-sm">
             {footerLinks.map((link, index) => (
-              <span key={link.name} className="flex items-center gap-x-6">
+              <span key={link.name} className="flex items-center gap-x-2 sm:gap-x-6">
                 <Link
                   to={link.href}
-                  className="text-white/60 hover:text-fuchsia-400 transition-colors duration-300"
+                  className="text-white/60 hover:text-fuchsia-400 transition-colors duration-300 whitespace-nowrap"
                   style={{ fontFamily: 'Gotham, sans-serif' }}
                 >
                   {link.name}
                 </Link>
                 {index < footerLinks.length - 1 && (
-                  <span className="text-white/20">|</span>
+                  <span className="text-white/20 hidden sm:inline">|</span>
                 )}
               </span>
             ))}
-            <span className="flex items-center gap-x-6">
-              <span className="text-white/20">|</span>
+            <span className="flex items-center gap-x-2 sm:gap-x-6 w-full sm:w-auto justify-center">
+              <span className="text-white/20 hidden sm:inline">|</span>
               <button
                 onClick={handleCookieSettings}
-                className="text-white/60 hover:text-fuchsia-400 transition-colors duration-300"
+                className="text-white/60 hover:text-fuchsia-400 transition-colors duration-300 whitespace-nowrap"
                 style={{ fontFamily: 'Gotham, sans-serif' }}
               >
                 {t('footer.cookieSettings')}
@@ -93,8 +93,8 @@ const Footer = () => {
             </span>
           </div>
 
-          {/* Copyright */}
-          <div className="text-white/40 text-xs tracking-wide font-mono">
+          {/* Copyright - Más compacto en móvil */}
+          <div className="text-white/40 text-[10px] sm:text-xs tracking-wide font-mono text-center px-4">
             © {currentYear} LUXMANIA. {t('footer.tagline')}. {t('footer.rights')}.
           </div>
         </div>
