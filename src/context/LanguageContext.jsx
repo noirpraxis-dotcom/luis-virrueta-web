@@ -11,13 +11,33 @@ const translations = {
   cz: translationsCZ
 }
 
-// Países hispanohablantes
+// Países hispanohablantes (TODOS)
 const spanishSpeakingCountries = [
-  'AR', 'BO', 'CL', 'CO', 'CR', 'CU', 'DO', 'EC', 'SV', 'GT', 
-  'HN', 'MX', 'NI', 'PA', 'PY', 'PE', 'PR', 'ES', 'UY', 'VE'
+  'AR', // Argentina
+  'BO', // Bolivia
+  'CL', // Chile
+  'CO', // Colombia
+  'CR', // Costa Rica
+  'CU', // Cuba
+  'DO', // República Dominicana
+  'EC', // Ecuador
+  'SV', // El Salvador
+  'GQ', // Guinea Ecuatorial
+  'GT', // Guatemala
+  'HN', // Honduras
+  'MX', // México
+  'NI', // Nicaragua
+  'PA', // Panamá
+  'PY', // Paraguay
+  'PE', // Perú
+  'PR', // Puerto Rico
+  'ES', // España
+  'UY', // Uruguay
+  'VE', // Venezuela
+  'US', // Estados Unidos (muchos hispanos)
 ]
 
-// Función para detectar el idioma del navegador y región
+// Función para detectar el idioma del navegador y región INTELIGENTE
 const detectLanguage = () => {
   // Primero verificar si hay idioma guardado en localStorage
   const savedLanguage = localStorage.getItem('preferredLanguage')
@@ -27,19 +47,20 @@ const detectLanguage = () => {
 
   // Detectar basado en la región del navegador
   const userLanguage = navigator.language || navigator.userLanguage
+  const languageCode = userLanguage.split('-')[0]?.toLowerCase()
   const countryCode = userLanguage.split('-')[1]?.toUpperCase()
   
-  // República Checa
-  if (countryCode === 'CZ' || userLanguage.startsWith('cs')) {
+  // República Checa (idioma checo)
+  if (languageCode === 'cs' || countryCode === 'CZ') {
     return 'cz'
   }
   
-  // Países hispanohablantes
-  if (spanishSpeakingCountries.includes(countryCode) || userLanguage.startsWith('es')) {
+  // Países hispanohablantes (español como idioma O país hispano)
+  if (languageCode === 'es' || spanishSpeakingCountries.includes(countryCode)) {
     return 'es'
   }
   
-  // Por defecto inglés (para tu trabajo actual y resto del mundo)
+  // Por defecto inglés (para resto del mundo)
   return 'en'
 }
 

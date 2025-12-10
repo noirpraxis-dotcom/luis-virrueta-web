@@ -63,27 +63,54 @@ const CookieBanner = () => {
             onKeyDown={(e) => e.key === 'Enter' && setShowBanner(false)}
           />
 
-          {/* Banner - PREMIUM MINIMALISTA CENTRADO */}
+          {/* Banner - FULL WIDTH ELEGANTE */}
           <motion.div
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-2xl z-[101]"
+            className="fixed bottom-0 left-0 right-0 z-[101]"
           >
-            <div className="relative overflow-hidden rounded-2xl bg-black/90 backdrop-blur-2xl border border-white/10 shadow-2xl">
-              {/* Glow sutil */}
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-fuchsia-500/5" />
+            <div className="relative overflow-hidden bg-black/95 backdrop-blur-2xl border-t border-white/10 shadow-2xl">
+              {/* Glow effect premium */}
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-fuchsia-500/5 to-purple-500/10" />
               
-              <div className="relative p-6">
+              {/* Orbs luminosos sutiles */}
+              <motion.div
+                animate={{ 
+                  x: [-20, 20, -20],
+                  opacity: [0.1, 0.15, 0.1]
+                }}
+                transition={{ 
+                  duration: 8, 
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="absolute left-1/4 top-0 w-64 h-64 bg-purple-500 rounded-full blur-3xl"
+              />
+              <motion.div
+                animate={{ 
+                  x: [20, -20, 20],
+                  opacity: [0.1, 0.15, 0.1]
+                }}
+                transition={{ 
+                  duration: 10, 
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 1
+                }}
+                className="absolute right-1/4 top-0 w-64 h-64 bg-fuchsia-500 rounded-full blur-3xl"
+              />
+              
+              <div className="relative max-w-7xl mx-auto px-6 py-6 lg:py-8">
                 {!showCustomize ? (
-                  <div className="space-y-5">
-                    {/* Header minimalista */}
-                    <div>
-                      <h3 className="text-white text-base font-light tracking-wide mb-2 font-display">
+                  <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+                    {/* Texto minimalista */}
+                    <div className="flex-1">
+                      <h3 className="text-white text-lg lg:text-xl font-light tracking-wide mb-2 font-display">
                         Tu Experiencia, Tu Control
                       </h3>
-                      <p className="text-white/60 text-xs font-light leading-relaxed">
+                      <p className="text-white/70 text-sm lg:text-base font-light leading-relaxed max-w-3xl">
                         Utilizamos cookies para ofrecerte una experiencia personalizada en nuestros servicios de branding psicológico, arquetipos de marca, avatares IA, diseño UX/UI, contenido del blog y próxima tienda online.{' '}
                         <Link 
                           to="/politica-privacidad" 
@@ -95,13 +122,13 @@ const CookieBanner = () => {
                       </p>
                     </div>
 
-                    {/* Botones premium */}
-                    <div className="flex flex-col gap-2">
+                    {/* Botones premium en horizontal */}
+                    <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={handleAcceptAll}
-                        className="group relative overflow-hidden w-full px-5 py-3 rounded-xl bg-gradient-to-r from-purple-500/20 to-fuchsia-500/20 border border-white/10 hover:border-white/30 transition-all duration-300"
+                        className="group relative overflow-hidden w-full sm:w-auto px-6 py-3 rounded-full bg-gradient-to-r from-purple-500/30 to-fuchsia-500/30 border border-white/20 hover:border-white/40 transition-all duration-300"
                       >
                         <motion.div
                           animate={{
@@ -119,30 +146,28 @@ const CookieBanner = () => {
                             opacity: 0.15
                           }}
                         />
-                        <span className="relative text-white text-sm font-light tracking-wide">
+                        <span className="relative text-white text-sm font-light tracking-wide whitespace-nowrap">
                           Aceptar Todo
                         </span>
                       </motion.button>
 
-                      <div className="flex gap-2">
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={() => setShowCustomize(true)}
-                          className="flex-1 px-4 py-2.5 text-white/70 hover:text-white text-xs font-light border border-white/10 hover:border-white/20 rounded-xl transition-all duration-300"
-                        >
-                          Personalizar
-                        </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setShowCustomize(true)}
+                        className="w-full sm:w-auto px-6 py-3 text-white/70 hover:text-white text-sm font-light border border-white/10 hover:border-white/30 rounded-full transition-all duration-300 whitespace-nowrap"
+                      >
+                        Personalizar
+                      </motion.button>
 
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={handleRejectAll}
-                          className="flex-1 px-4 py-2.5 text-white/70 hover:text-white text-xs font-light border border-white/10 hover:border-white/20 rounded-xl transition-all duration-300"
-                        >
-                          Solo Esenciales
-                        </motion.button>
-                      </div>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={handleRejectAll}
+                        className="w-full sm:w-auto px-6 py-3 text-white/70 hover:text-white text-sm font-light border border-white/10 hover:border-white/30 rounded-full transition-all duration-300 whitespace-nowrap"
+                      >
+                        Solo Esenciales
+                      </motion.button>
                     </div>
                   </div>
                 ) : (
