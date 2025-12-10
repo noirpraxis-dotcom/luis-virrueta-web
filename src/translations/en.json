@@ -1244,5 +1244,16 @@
     "cookieSettings": "Cookie Settings",
     "tagline": "Psych × Design × Tech",
     "rights": "All rights reserved"
+  },
+  "blogArticles": {
+    "common": {
+      "backToBlog": "Back to Blog",
+      "notFound": "Article not found",
+      "share": "Share",
+      "save": "Save",
+      "readyForProject": "Ready to take your brand to the next level?",
+      "applyPrinciples": "Let's apply these principles to your brand and create something unforgettable",
+      "startProject": "Start Project"
+    }
   }
 }

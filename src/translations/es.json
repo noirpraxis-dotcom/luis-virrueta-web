@@ -1339,5 +1339,16 @@
     "cookieSettings": "Configuración de Cookies",
     "tagline": "Psych × Design × Tech",
     "rights": "All rights reserved"
+  },
+  "blogArticles": {
+    "common": {
+      "backToBlog": "Volver al Blog",
+      "notFound": "Artículo no encontrado",
+      "share": "Compartir",
+      "save": "Guardar",
+      "readyForProject": "¿Listo para llevar tu marca al siguiente nivel?",
+      "applyPrinciples": "Apliquemos estos principios a tu marca y creemos algo inolvidable",
+      "startProject": "Iniciar Proyecto"
+    }
   }
 }

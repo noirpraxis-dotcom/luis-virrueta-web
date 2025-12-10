@@ -10,6 +10,8 @@ import NewsletterSignup from '../components/NewsletterSignup'
 import TableOfContents from '../components/TableOfContents'
 import ArticleSchema from '../components/ArticleSchema'
 import { calculateReadTime, toISODate } from '../utils/blogHelpers'
+import { useLanguage } from '../context/LanguageContext'
+import { getArticleContent } from '../data/blogArticlesContent'
 
 // Función para obtener el artículo basado en el slug
 const getArticleBySlug = (slug) => {
@@ -1601,18 +1603,21 @@ const getArticleBySlug = (slug) => {
 
 const BlogArticlePage = () => {
   const { slug } = useParams()
+  const { language, t } = useLanguage()
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
 
-  const article = getArticleBySlug(slug)
+  // Intentar obtener artículo traducido, si no existe usar el código original
+  const translatedArticle = getArticleContent(slug, language)
+  const article = translatedArticle || getArticleBySlug(slug)
 
   if (!article) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">Artículo no encontrado</h1>
+          <h1 className="text-4xl font-bold text-white mb-4">{t('blogArticles.common.notFound')}</h1>
           <Link to="/blog" className="text-cyan-400 hover:text-cyan-300">
-            Volver al Blog
+            {t('blogArticles.common.backToBlog')}
           </Link>
         </div>
       </div>
@@ -1794,7 +1799,7 @@ const BlogArticlePage = () => {
               className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors mb-8 group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              <span className="text-sm">Volver al Blog</span>
+              <span className="text-sm">{t('blogArticles.common.backToBlog')}</span>
             </Link>
           </motion.div>
 
@@ -1869,11 +1874,11 @@ const BlogArticlePage = () => {
           >
             <button className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-white text-sm flex items-center gap-2 transition-all">
               <Share2 className="w-4 h-4" />
-              Compartir
+              {t('blogArticles.common.share')}
             </button>
             <button className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-white text-sm flex items-center gap-2 transition-all">
               <BookmarkPlus className="w-4 h-4" />
-              Guardar
+              {t('blogArticles.common.save')}
             </button>
           </motion.div>
         </div>
@@ -1912,16 +1917,16 @@ const BlogArticlePage = () => {
             
             <div className="relative z-10">
               <h3 className="text-3xl lg:text-4xl font-bold text-white mb-4">
-                ¿Listo para crear un logo inolvidable?
+                {t('blogArticles.common.readyForProject')}
               </h3>
               <p className="text-lg text-white/70 mb-8 max-w-2xl mx-auto">
-                Apliquemos los principios de neurociencia del diseño a tu marca
+                {t('blogArticles.common.applyPrinciples')}
               </p>
               <Link
                 to="/contacto"
                 className="inline-block px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-medium rounded-full hover:shadow-lg hover:shadow-pink-500/50 transition-all duration-300"
               >
-                Iniciar Proyecto
+                {t('blogArticles.common.startProject')}
               </Link>
             </div>
           </motion.div>
