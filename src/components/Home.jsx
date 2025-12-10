@@ -13,7 +13,7 @@ const Home = () => {
     <section 
       ref={heroRef}
       id="home" 
-      className="relative h-screen w-full overflow-hidden flex items-center justify-center"
+      className="relative h-screen w-full overflow-hidden flex items-center justify-center pt-16 lg:pt-0"
     >
       {/* Video Background */}
       <video
@@ -22,6 +22,9 @@ const Home = () => {
         muted
         playsInline
         className="absolute inset-0 w-full h-full object-cover"
+        style={{
+          filter: 'contrast(1.1) saturate(1.2) brightness(1.05)'
+        }}
       >
         <source src="/HERO HOME.mp4" type="video/mp4" />
       </video>
@@ -39,7 +42,7 @@ const Home = () => {
       </div>
 
       {/* Contenido Principal */}
-      <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-20 text-center">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 lg:px-20 text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
@@ -67,13 +70,13 @@ const Home = () => {
             className="font-display leading-tight mb-8"
           >
             {/* Construimos - más pequeño */}
-            <span className="block text-white/70 text-2xl lg:text-4xl mb-3" style={{ fontWeight: 200, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+            <span className="block text-white/70 text-xl lg:text-4xl mb-3" style={{ fontWeight: 200, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
               {t('home.weBuild')}
             </span>
             
             {/* Tu Marca / Your Brand - grande con efecto 3D */}
-            <span className="block text-6xl lg:text-9xl" style={{ 
-              letterSpacing: '0.08em',
+            <span className="block text-4xl sm:text-5xl lg:text-9xl" style={{ 
+              letterSpacing: '0.05em',
               fontWeight: 300,
               textTransform: 'uppercase'
             }}>

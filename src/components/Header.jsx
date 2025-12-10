@@ -3,7 +3,7 @@ import { useState, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import LanguageSelector from './LanguageSelector'
 
-const Header = ({ menuItems }) => {
+const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
   const [hoveredItem, setHoveredItem] = useState(null)
   const location = useLocation()
   const timeoutRef = useRef(null)
@@ -26,6 +26,76 @@ const Header = ({ menuItems }) => {
   }
 
   return (
+    <>
+    {/* Header móvil delgado - Solo móvil */}
+    <motion.header
+      initial={{ y: -60, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="fixed top-0 left-0 right-0 z-50 lg:hidden"
+    >
+      <nav className="bg-black/90 backdrop-blur-lg border-b border-white/10">
+        <div className="px-4 py-3 flex items-center justify-between">
+          {/* Logo LUXMANIA */}
+          <Link to="/">
+            <motion.div
+              whileTap={{ scale: 0.95 }}
+              className="text-white font-display text-lg tracking-[0.2em] font-light"
+              style={{ fontFamily: 'Gotham, sans-serif' }}
+            >
+              LUXMANIA
+            </motion.div>
+          </Link>
+          
+          {/* Contenedor derecho: Language + Hamburguesa */}
+          <div className="flex items-center gap-3">
+            <LanguageSelector />
+            
+            {/* Botón Hamburguesa */}
+            <motion.button
+              onClick={onMenuToggle}
+              whileTap={{ scale: 0.9 }}
+              className="relative w-10 h-10 flex items-center justify-center"
+              aria-label="Toggle Menu"
+            >
+              <div className="relative flex flex-col items-center justify-center w-6 h-5">
+                {/* Línea superior */}
+                <motion.span
+                  animate={{
+                    rotate: isMenuOpen ? 45 : 0,
+                    y: isMenuOpen ? 8 : 0,
+                  }}
+                  transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
+                  className="absolute top-0 w-full h-[2px] bg-white rounded-full origin-center"
+                />
+                
+                {/* Línea media */}
+                <motion.span
+                  animate={{
+                    opacity: isMenuOpen ? 0 : 1,
+                    scaleX: isMenuOpen ? 0 : 1,
+                  }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute top-1/2 -translate-y-1/2 w-full h-[2px] bg-white rounded-full"
+                />
+                
+                {/* Línea inferior */}
+                <motion.span
+                  animate={{
+                    rotate: isMenuOpen ? -45 : 0,
+                    y: isMenuOpen ? -8 : 0,
+                  }}
+                  transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
+                  className="absolute bottom-0 w-full h-[2px] bg-white rounded-full origin-center"
+                />
+              </div>
+            </motion.button>
+          </div>
+        </div>
+      </nav>
+    </motion.header>
+
+    {/* Header desktop - Solo desktop */}
     <motion.header 
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
@@ -317,6 +387,7 @@ const Header = ({ menuItems }) => {
         </div>
       </nav>
     </motion.header>
+    </>
   )
 }
 

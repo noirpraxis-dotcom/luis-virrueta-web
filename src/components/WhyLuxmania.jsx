@@ -28,7 +28,8 @@ const WhyLuxmania = () => {
             minWidth: '100%',
             minHeight: '100%',
             objectFit: 'cover',
-            objectPosition: 'center'
+            objectPosition: 'center',
+            filter: 'contrast(1.15) saturate(1.3) brightness(1.1)'
           }}
         >
           <source src="/ARQUETIPOS CEREBRO.mp4" type="video/mp4" />
@@ -48,7 +49,7 @@ const WhyLuxmania = () => {
         <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-fuchsia-600/10 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative z-20 max-w-6xl mx-auto px-6 lg:px-12">
+      <div className="relative z-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-12">
         
         {/* Eyebrow */}
         <motion.div
@@ -72,10 +73,10 @@ const WhyLuxmania = () => {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="text-center mb-6"
         >
-          <h2 className="text-5xl lg:text-7xl font-light text-white mb-4 tracking-[0.1em] font-display leading-[1.05]">
+          <h2 className="text-3xl sm:text-5xl lg:text-7xl font-light text-white mb-4 tracking-[0.05em] sm:tracking-[0.08em] lg:tracking-[0.1em] font-display leading-[1.05]">
             {t('home.whySection.title')}
           </h2>
-          <p className="text-white/50 text-base lg:text-lg font-light uppercase tracking-[0.3em]">
+          <p className="text-white/50 text-sm sm:text-base lg:text-lg font-light uppercase tracking-[0.15em] sm:tracking-[0.25em] lg:tracking-[0.3em]">
             {t('home.whySection.subtitle')}
           </p>
         </motion.div>
@@ -87,11 +88,11 @@ const WhyLuxmania = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="max-w-3xl mx-auto text-center mb-16"
         >
-          <p className="text-white/70 text-xl lg:text-2xl font-extralight leading-relaxed mb-6">
+          <p className="text-white/70 text-lg sm:text-xl lg:text-2xl font-extralight leading-relaxed mb-6">
             {t('home.whySection.problemText')}{' '}
             <span className="text-white font-light">{t('home.whySection.problemBold')}</span>.
           </p>
-          <p className="text-white/70 text-xl lg:text-2xl font-extralight leading-relaxed mb-8">
+          <p className="text-white/70 text-lg sm:text-xl lg:text-2xl font-extralight leading-relaxed mb-8">
             {t('home.whySection.solutionText')}{' '}
             <motion.span
               className="text-white font-light"

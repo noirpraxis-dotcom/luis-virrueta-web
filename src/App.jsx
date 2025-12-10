@@ -60,10 +60,11 @@ const AppContent = () => {
       <SmoothScroll>
         <div className="relative min-h-screen">
           {/* Desktop Header - visible en pantallas md y superiores */}
-          <Header menuItems={menuItems} />
-
-        {/* Toggle Button - visible en pantallas pequeñas y tablet */}
-        <ToggleButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen(!isMenuOpen)} />
+          <Header 
+            menuItems={menuItems} 
+            onMenuToggle={() => setIsMenuOpen(!isMenuOpen)}
+            isMenuOpen={isMenuOpen}
+          />
 
         {/* Mobile Menu Fullscreen */}
         <MobileMenu 

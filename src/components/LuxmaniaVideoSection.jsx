@@ -43,7 +43,7 @@ const LuxmaniaVideoSection = () => {
             minHeight: '100%',
             objectFit: 'cover',
             objectPosition: 'center',
-            filter: 'brightness(0.9)',
+            filter: 'brightness(1.1) contrast(1.2) saturate(1.25)'
           }}
         >
           <source src="/LUXMANIA HOME.mp4" type="video/mp4" />
@@ -63,7 +63,7 @@ const LuxmaniaVideoSection = () => {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative z-20 max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 lg:gap-16 items-center">
           
           {/* Left: Texto elegante */}
@@ -80,7 +80,7 @@ const LuxmaniaVideoSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-5xl lg:text-7xl font-light text-white mb-6 tracking-[0.15em] font-display leading-[1.05]"
+              className="text-4xl sm:text-5xl lg:text-7xl font-light text-white mb-6 tracking-[0.08em] sm:tracking-[0.12em] lg:tracking-[0.15em] font-display leading-[1.05]"
             >
               <span className="inline-block relative">
                 {/* L brillosa */}
