@@ -74,18 +74,22 @@ const AboutPage = () => {
             }}
           >
             <span className="relative inline-block">
-              {/* S con degradado */}
-              <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>S</span>
-                <span className="relative text-white">S</span>
-              </span>
-              {/* obre M */}
-              <span className="text-white">obre M</span>
-              {/* í con degradado */}
-              <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>í</span>
-                <span className="relative text-white">í</span>
-              </span>
+              {t('aboutPage.hero.title').split('').map((char, i, arr) => {
+                const isFirst = i === 0
+                const isLast = i === arr.length - 1
+                
+                if (isFirst || isLast) {
+                  return (
+                    <span key={i} className="relative">
+                      <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>
+                        {char}
+                      </span>
+                      <span className="relative text-white">{char}</span>
+                    </span>
+                  )
+                }
+                return <span key={i} className="text-white">{char}</span>
+              })}
             </span>
           </motion.h1>
 
