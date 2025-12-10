@@ -2231,11 +2231,16 @@ const blogArticlesContent = {
 
 // Función para obtener el contenido del artículo según slug e idioma
 export const getArticleContent = (slug, language = 'es') => {
+  console.log('🔍 getArticleContent called:', { slug, language })
+  console.log('📦 Available languages:', Object.keys(blogArticlesContent))
+  console.log('📝 Available slugs in', language, ':', Object.keys(blogArticlesContent[language] || {}))
+  
   const content = blogArticlesContent[language]?.[slug]
   if (!content) {
-    console.warn(`Article content not found for slug: ${slug}, language: ${language}`)
+    console.warn(`❌ Article content not found for slug: ${slug}, language: ${language}`)
     return blogArticlesContent['es'][slug] || null // Fallback to Spanish
   }
+  console.log('✅ Article found!', content.title)
   return content
 }
 

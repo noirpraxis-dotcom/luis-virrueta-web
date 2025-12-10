@@ -1603,12 +1603,13 @@ const getArticleBySlug = (slug) => {
 
 const BlogArticlePage = () => {
   const { slug } = useParams()
-  const { language, t } = useLanguage()
+  const { currentLanguage, t } = useLanguage()
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
 
   // Intentar obtener artículo traducido, si no existe usar el código original
-  const translatedArticle = getArticleContent(slug, language)
+  const translatedArticle = getArticleContent(slug, currentLanguage)
+  console.log('🌐 Language:', currentLanguage, '| Slug:', slug, '| Found translation:', !!translatedArticle)
   const article = translatedArticle || getArticleBySlug(slug)
 
   if (!article) {
