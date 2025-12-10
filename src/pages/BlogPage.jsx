@@ -3,25 +3,27 @@ import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Palette, Brain, Zap } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
-
-const categories = [
-  { id: 'all', label: 'Todos', icon: BookOpen },
-  { id: 'design', label: 'Diseño', icon: Palette },
-  { id: 'branding', label: 'Branding', icon: Sparkles },
-  { id: 'psychology', label: 'Psicología', icon: Brain },
-  { id: 'trends', label: 'Tendencias', icon: TrendingUp },
-]
+import { useLanguage } from '../context/LanguageContext'
 
 const BlogPage = () => {
+  const { t } = useLanguage()
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
   const [activeCategory, setActiveCategory] = useState('all')
 
+  const categories = [
+    { id: 'all', label: t('blogPage.categories.all'), icon: BookOpen },
+    { id: 'design', label: t('blogPage.categories.design'), icon: Palette },
+    { id: 'branding', label: t('blogPage.categories.branding'), icon: Sparkles },
+    { id: 'psychology', label: t('blogPage.categories.psychology'), icon: Brain },
+    { id: 'trends', label: t('blogPage.categories.trends'), icon: TrendingUp },
+  ]
+
   const blogPosts = [
     {
       id: 1,
-      title: 'Neurociencia del Diseño: Por Qué Algunos Logos Son Inolvidables',
-      excerpt: 'La ciencia detrás de los logos icónicos y cómo aplicar estos principios neurológicos a tu marca.',
+      title: t('blogPage.posts.post1.title'),
+      excerpt: t('blogPage.posts.post1.excerpt'),
       category: 'psychology',
       author: 'Luis Virrueta',
       date: '15 Nov 2024',
@@ -36,8 +38,8 @@ const BlogPage = () => {
     },
     {
       id: 2,
-      title: 'La IA Generativa en el Diseño: Del Prompt a la Emoción',
-      excerpt: 'Cómo fusionar inteligencia artificial, diseño visual y psicología para crear experiencias que conectan emocionalmente con tu audiencia.',
+      title: t('blogPage.posts.post2.title'),
+      excerpt: t('blogPage.posts.post2.excerpt'),
       category: 'trends',
       author: 'Luis Virrueta',
       date: '22 Nov 2024',
@@ -53,8 +55,8 @@ const BlogPage = () => {
     },
     {
       id: 3,
-      title: 'Interfaces que Leen tu Mente: UX Empático con Machine Learning',
-      excerpt: 'Descubre cómo el ML y la psicología del usuario se unen para crear interfaces que anticipan necesidades y adaptan experiencias en tiempo real.',
+      title: t('blogPage.posts.post3.title'),
+      excerpt: t('blogPage.posts.post3.excerpt'),
       category: 'design',
       author: 'Luis Virrueta',
       date: '28 Nov 2024',
@@ -69,8 +71,8 @@ const BlogPage = () => {
     },
     {
       id: 4,
-      title: 'La Psicología del Color en el Branding de Lujo',
-      excerpt: 'Descubre cómo las marcas premium utilizan la teoría del color para crear conexiones emocionales profundas con su audiencia.',
+      title: t('blogPage.posts.post4.title'),
+      excerpt: t('blogPage.posts.post4.excerpt'),
       category: 'psychology',
       author: 'Luis Virrueta',
       date: '3 Dic 2024',
@@ -85,8 +87,8 @@ const BlogPage = () => {
     },
     {
       id: 5,
-      title: 'Tendencias de Diseño 2025: Minimalismo Maximalista',
-      excerpt: 'El nuevo paradigma que combina la simplicidad estructural con detalles ricos y experiencias sensoriales complejas.',
+      title: t('blogPage.posts.post5.title'),
+      excerpt: t('blogPage.posts.post5.excerpt'),
       category: 'trends',
       author: 'Luis Virrueta',
       date: '5 Dic 2024',
@@ -101,8 +103,8 @@ const BlogPage = () => {
     },
     {
       id: 6,
-      title: 'Tu Cliente es el Héroe, No Tu Marca: El Framework StoryBrand',
-      excerpt: 'Descubre cómo transformar tu estrategia de branding aplicando los 7 elementos del StoryBrand Framework de Donald Miller y convierte a tus clientes en los protagonistas de tu historia.',
+      title: t('blogPage.posts.post6.title'),
+      excerpt: t('blogPage.posts.post6.excerpt'),
       category: 'branding',
       author: 'Luis Virrueta',
       date: '9 Dic 2024',
@@ -117,8 +119,8 @@ const BlogPage = () => {
     },
     {
       id: 7,
-      title: 'Pre-Suasión: Gana la Venta Antes de que Tu Cliente Sepa que Quiere Comprar',
-      excerpt: 'Descubre el poder del contexto y el timing en branding. Cómo las marcas más exitosas preparan la mente de su audiencia para decir "sí" antes de presentar su oferta.',
+      title: t('blogPage.posts.post7.title'),
+      excerpt: t('blogPage.posts.post7.excerpt'),
       category: 'branding',
       author: 'Luis Virrueta',
       date: '10 Dic 2024',
@@ -133,8 +135,8 @@ const BlogPage = () => {
     },
     {
       id: 8,
-      title: 'Las 6 Armas de la Persuasión: Cómo Aplicarlas a Tu Marca',
-      excerpt: 'Los principios científicos de influencia de Robert Cialdini aplicados al branding. Reciprocidad, compromiso, prueba social, autoridad, simpatía y escasez explicados con estrategias prácticas.',
+      title: t('blogPage.posts.post8.title'),
+      excerpt: t('blogPage.posts.post8.excerpt'),
       category: 'branding',
       author: 'Luis Virrueta',
       date: '10 Dic 2024',
@@ -149,8 +151,8 @@ const BlogPage = () => {
     },
     {
       id: 10,
-      title: 'La Parálisis de la Elección: Por Qué Tu Menú de 20 Servicios Está Matando Tus Ventas',
-      excerpt: 'El experimento de las mermeladas que cambió el marketing para siempre. Descubre por qué menos opciones generan más conversiones y cómo simplificar tu oferta puede multiplicar tus ventas.',
+      title: t('blogPage.posts.post10.title'),
+      excerpt: t('blogPage.posts.post10.excerpt'),
       category: 'branding',
       author: 'Luis Virrueta',
       date: '10 Dic 2024',
@@ -165,8 +167,8 @@ const BlogPage = () => {
     },
     {
       id: 9,
-      title: 'Creando Identidades de Marca Memorables',
-      excerpt: 'Un sistema paso a paso para desarrollar marcas que resuenan emocionalmente y permanecen en la mente del consumidor.',
+      title: t('blogPage.posts.post9.title'),
+      excerpt: t('blogPage.posts.post9.excerpt'),
       category: 'branding',
       author: 'Luis Virrueta',
       date: '7 Dic 2024',
@@ -188,12 +190,12 @@ const BlogPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28">
       <SEOHead 
-        title="Blog de Branding, Psicología y Diseño"
-        description="Artículos profundos sobre branding estratégico, psicología del consumidor, neuromarketing, diseño y tendencias digitales. StoryBrand, Cialdini, neurociencia aplicada a marcas."
+        title={t('blogPage.seo.title')}
+        description={t('blogPage.seo.description')}
         image="/blog-compressed/blog-1.webp"
         url="/blog"
         type="website"
-        tags={['branding', 'psicología', 'marketing', 'diseño', 'neuromarketing', 'storytelling', 'tendencias']}
+        tags={['branding', 'psychology', 'marketing', 'design', 'neuromarketing', 'storytelling', 'trends']}
       />
       
       {/* Hero Section */}
@@ -215,7 +217,6 @@ const BlogPage = () => {
             }}
           >
             <source src="/header blog.mp4" type="video/mp4" />
-            Tu navegador no soporta video HTML5.
           </video>
           {/* Overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
@@ -271,7 +272,7 @@ const BlogPage = () => {
               className="inline-block px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5"
             >
               <span className="text-sm lg:text-base text-white/80 font-light tracking-wider uppercase">
-                Insights × Design × Psicología
+                {t('blogPage.hero.badge')}
               </span>
             </motion.div>
 
@@ -283,7 +284,7 @@ const BlogPage = () => {
               className="text-base lg:text-xl text-white/60 text-center max-w-2xl font-extralight italic"
               style={{ letterSpacing: '0.08em' }}
             >
-              Explorando la intersección entre diseño gráfico, psicología y tecnología
+              {t('blogPage.hero.subtitle')}
             </motion.p>
           </motion.div>
 
@@ -370,6 +371,7 @@ const BlogPage = () => {
 }
 
 const BlogCard = ({ post, index }) => {
+  const { t } = useLanguage()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
 
@@ -412,7 +414,7 @@ const BlogCard = ({ post, index }) => {
               transition={{ duration: 0.3 }}
               className="flex items-center gap-2 text-white"
             >
-              <span className="text-sm font-medium">Leer Artículo</span>
+              <span className="text-sm font-medium">{t('blogPage.labels.readArticle')}</span>
               <ArrowRight className="w-5 h-5" />
             </motion.div>
           </div>
@@ -494,7 +496,7 @@ const BlogCard = ({ post, index }) => {
               whileHover={{ x: 5 }}
               className="flex items-center gap-1 text-white/80 group-hover:text-white"
             >
-              <span className="text-xs font-medium">Leer más</span>
+              <span className="text-xs font-medium">{t('blogPage.labels.readMore')}</span>
               <ArrowRight className="w-4 h-4" />
             </motion.div>
           </div>

@@ -1207,6 +1207,71 @@
       "button": "Trabajemos Juntos"
     }
   },
+  "blogPage": {
+    "categories": {
+      "all": "Todos",
+      "design": "Diseño",
+      "branding": "Branding",
+      "psychology": "Psicología",
+      "trends": "Tendencias"
+    },
+    "hero": {
+      "title": "Blog",
+      "badge": "Insights × Design × Psicología",
+      "subtitle": "Explorando la intersección entre diseño gráfico, psicología y tecnología"
+    },
+    "labels": {
+      "readArticle": "Leer Artículo",
+      "readMore": "Leer más",
+      "min": "min"
+    },
+    "seo": {
+      "title": "Blog de Branding, Psicología y Diseño",
+      "description": "Artículos profundos sobre branding estratégico, psicología del consumidor, neuromarketing, diseño y tendencias digitales. StoryBrand, Cialdini, neurociencia aplicada a marcas."
+    },
+    "posts": {
+      "post1": {
+        "title": "Neurociencia del Diseño: Por Qué Algunos Logos Son Inolvidables",
+        "excerpt": "La ciencia detrás de los logos icónicos y cómo aplicar estos principios neurológicos a tu marca."
+      },
+      "post2": {
+        "title": "La IA Generativa en el Diseño: Del Prompt a la Emoción",
+        "excerpt": "Cómo fusionar inteligencia artificial, diseño visual y psicología para crear experiencias que conectan emocionalmente con tu audiencia."
+      },
+      "post3": {
+        "title": "Interfaces que Leen tu Mente: UX Empático con Machine Learning",
+        "excerpt": "Descubre cómo el ML y la psicología del usuario se unen para crear interfaces que anticipan necesidades y adaptan experiencias en tiempo real."
+      },
+      "post4": {
+        "title": "La Psicología del Color en el Branding de Lujo",
+        "excerpt": "Descubre cómo las marcas premium utilizan la teoría del color para crear conexiones emocionales profundas con su audiencia."
+      },
+      "post5": {
+        "title": "Tendencias de Diseño 2025: Minimalismo Maximalista",
+        "excerpt": "El nuevo paradigma que combina la simplicidad estructural con detalles ricos y experiencias sensoriales complejas."
+      },
+      "post6": {
+        "title": "Tu Cliente es el Héroe, No Tu Marca: El Framework StoryBrand",
+        "excerpt": "Descubre cómo transformar tu estrategia de branding aplicando los 7 elementos del StoryBrand Framework de Donald Miller y convierte a tus clientes en los protagonistas de tu historia."
+      },
+      "post7": {
+        "title": "Pre-Suasión: Gana la Venta Antes de que Tu Cliente Sepa que Quiere Comprar",
+        "excerpt": "Descubre el poder del contexto y el timing en branding. Cómo las marcas más exitosas preparan la mente de su audiencia para decir \"sí\" antes de presentar su oferta."
+      },
+      "post8": {
+        "title": "Las 6 Armas de la Persuasión: Cómo Aplicarlas a Tu Marca",
+        "excerpt": "Los principios científicos de influencia de Robert Cialdini aplicados al branding. Reciprocidad, compromiso, prueba social, autoridad, simpatía y escasez explicados con estrategias prácticas."
+      },
+      "post9": {
+        "title": "Creando Identidades de Marca Memorables",
+        "excerpt": "Un sistema paso a paso para desarrollar marcas que resuenan emocionalmente y permanecen en la mente del consumidor."
+      },
+      "post10": {
+        "title": "La Parálisis de la Elección: Por Qué Tu Menú de 20 Servicios Está Matando Tus Ventas",
+        "excerpt": "El experimento de las mermeladas que cambió el marketing para siempre. Descubre por qué menos opciones generan más conversiones y cómo simplificar tu oferta puede multiplicar tus ventas."
+      }
+    }
+  },
   "contacto": {
     "hero": {
       "title": "Contacto",

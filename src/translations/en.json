@@ -1111,6 +1111,71 @@
       "button": "Let's Work Together"
     }
   },
+  "blogPage": {
+    "categories": {
+      "all": "All",
+      "design": "Design",
+      "branding": "Branding",
+      "psychology": "Psychology",
+      "trends": "Trends"
+    },
+    "hero": {
+      "title": "Blog",
+      "badge": "Insights × Design × Psychology",
+      "subtitle": "Exploring the intersection between graphic design, psychology and technology"
+    },
+    "labels": {
+      "readArticle": "Read Article",
+      "readMore": "Read more",
+      "min": "min"
+    },
+    "seo": {
+      "title": "Branding, Psychology & Design Blog",
+      "description": "In-depth articles on strategic branding, consumer psychology, neuromarketing, design and digital trends. StoryBrand, Cialdini, neuroscience applied to brands."
+    },
+    "posts": {
+      "post1": {
+        "title": "Design Neuroscience: Why Some Logos Are Unforgettable",
+        "excerpt": "The science behind iconic logos and how to apply these neurological principles to your brand."
+      },
+      "post2": {
+        "title": "Generative AI in Design: From Prompt to Emotion",
+        "excerpt": "How to merge artificial intelligence, visual design and psychology to create experiences that emotionally connect with your audience."
+      },
+      "post3": {
+        "title": "Mind-Reading Interfaces: Empathetic UX with Machine Learning",
+        "excerpt": "Discover how ML and user psychology come together to create interfaces that anticipate needs and adapt experiences in real time."
+      },
+      "post4": {
+        "title": "The Psychology of Color in Luxury Branding",
+        "excerpt": "Discover how premium brands use color theory to create deep emotional connections with their audience."
+      },
+      "post5": {
+        "title": "Design Trends 2025: Maximalist Minimalism",
+        "excerpt": "The new paradigm that combines structural simplicity with rich details and complex sensory experiences."
+      },
+      "post6": {
+        "title": "Your Customer is the Hero, Not Your Brand: The StoryBrand Framework",
+        "excerpt": "Discover how to transform your branding strategy by applying the 7 elements of Donald Miller's StoryBrand Framework and turn your customers into the protagonists of your story."
+      },
+      "post7": {
+        "title": "Pre-Suasion: Win the Sale Before Your Customer Knows They Want to Buy",
+        "excerpt": "Discover the power of context and timing in branding. How the most successful brands prepare their audience's mind to say \"yes\" before presenting their offer."
+      },
+      "post8": {
+        "title": "The 6 Weapons of Persuasion: How to Apply Them to Your Brand",
+        "excerpt": "Robert Cialdini's scientific principles of influence applied to branding. Reciprocity, commitment, social proof, authority, liking and scarcity explained with practical strategies."
+      },
+      "post9": {
+        "title": "Creating Memorable Brand Identities",
+        "excerpt": "A step-by-step system to develop brands that resonate emotionally and remain in the consumer's mind."
+      },
+      "post10": {
+        "title": "The Choice Paralysis: Why Your Menu of 20 Services Is Killing Your Sales",
+        "excerpt": "The jam experiment that changed marketing forever. Discover why fewer options generate more conversions and how simplifying your offer can multiply your sales."
+      }
+    }
+  },
   "contacto": {
     "hero": {
       "title": "Contact",
