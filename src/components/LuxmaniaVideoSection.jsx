@@ -363,6 +363,8 @@ const LuxmaniaVideoSection = () => {
                     <motion.button
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
+                      onClick={handlePlay}
+                      aria-label="Reproducir video de Luxmania"
                       className="relative group/btn mb-8"
                     >
                       <div className="absolute inset-0 bg-white/20 rounded-full blur-xl group-hover/btn:bg-white/30 transition-colors" />
