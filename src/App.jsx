@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import { LanguageProvider, useLanguage } from './context/LanguageContext'
@@ -6,28 +6,40 @@ import Header from './components/Header'
 import MobileMenu from './components/MobileMenu'
 import ToggleButton from './components/ToggleButton'
 import HomePage from './pages/HomePage'
-import PhilosophyPage from './pages/PhilosophyPage'
-import ServiciosPage from './pages/ServiciosPage'
-import IdentidadMarcaPage from './pages/IdentidadMarcaPage'
-import ArquetiposPage from './pages/ArquetiposPage'
-import AppsPremiumPage from './pages/AppsPremiumPage'
-import ContenidoDigitalPage from './pages/ContenidoDigitalPage'
-import AvataresIAPage from './pages/AvataresIAPage'
-import ConsultoriaPsicologicaPage from './pages/ConsultoriaPsicologicaPage'
-import AboutPage from './pages/AboutPage'
-import PortafolioPage from './pages/PortafolioPage'
-import BlogPage from './pages/BlogPage'
-import BlogArticlePage from './pages/BlogArticlePage'
-import InversionPage from './pages/InversionPage'
-import ContactoPage from './pages/ContactoPage'
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
-import TermsConditionsPage from './pages/TermsConditionsPage'
-import CookiePolicyPage from './pages/CookiePolicyPage'
 import CookieBanner from './components/CookieBanner'
 import Footer from './components/Footer'
 import WhatsAppButton from './components/WhatsAppButton'
 import SmoothScroll from './components/SmoothScroll'
 import ScrollToTop from './components/ScrollToTop'
+
+// Lazy load pages
+const PhilosophyPage = lazy(() => import('./pages/PhilosophyPage'))
+const ServiciosPage = lazy(() => import('./pages/ServiciosPage'))
+const IdentidadMarcaPage = lazy(() => import('./pages/IdentidadMarcaPage'))
+const ArquetiposPage = lazy(() => import('./pages/ArquetiposPage'))
+const AppsPremiumPage = lazy(() => import('./pages/AppsPremiumPage'))
+const ContenidoDigitalPage = lazy(() => import('./pages/ContenidoDigitalPage'))
+const AvataresIAPage = lazy(() => import('./pages/AvataresIAPage'))
+const ConsultoriaPsicologicaPage = lazy(() => import('./pages/ConsultoriaPsicologicaPage'))
+const AboutPage = lazy(() => import('./pages/AboutPage'))
+const PortafolioPage = lazy(() => import('./pages/PortafolioPage'))
+const BlogPage = lazy(() => import('./pages/BlogPage'))
+const BlogArticlePage = lazy(() => import('./pages/BlogArticlePage'))
+const InversionPage = lazy(() => import('./pages/InversionPage'))
+const ContactoPage = lazy(() => import('./pages/ContactoPage'))
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'))
+const TermsConditionsPage = lazy(() => import('./pages/TermsConditionsPage'))
+const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage'))
+
+// Loading component
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-[#0a0a0f]">
+    <div className="text-center">
+      <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <p className="text-gray-400">Cargando...</p>
+    </div>
+  </div>
+)
 
 const AppContent = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -62,7 +74,8 @@ const AppContent = () => {
 
         {/* Contenido principal con rutas */}
         <main className="relative z-0">
-          <Routes>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
             {/* Página Home: Video + Hero con "Ver más" */}
             <Route path="/" element={
               <HomePage />
@@ -148,7 +161,8 @@ const AppContent = () => {
             } />
             
             {/* Aquí irán más rutas/páginas */}
-          </Routes>
+            </Routes>
+          </Suspense>
         </main>
 
         {/* Footer - aparece en todas las páginas */}

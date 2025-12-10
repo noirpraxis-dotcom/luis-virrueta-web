@@ -20,17 +20,13 @@ body {
   cursor: auto;
 }
 
+/* Cursores nativos para mejor performance */
 * {
-  cursor: auto !important;
+  cursor: auto;
 }
 
-/* Asegurar cursor blanco visible en toda la página */
-body, button, a, input, textarea, select {
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" stroke="black" stroke-width="1" d="M5 3l14 9-5 0-3 6z"/></svg>') 12 12, auto !important;
-}
-
-button:hover, a:hover {
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="rgba(168,85,247,1)" stroke="white" stroke-width="1" d="M5 3l14 9-5 0-3 6z"/></svg>') 12 12, pointer !important;
+button, a {
+  cursor: pointer;
 }
 
 /* Ainimation Cinematic Typography */
