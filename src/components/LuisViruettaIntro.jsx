@@ -13,7 +13,7 @@ const LuisViruettaIntro = () => {
         <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="relative w-full max-w-[95vw] sm:max-w-7xl mx-auto px-3 sm:px-6 lg:px-12">
         <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 lg:gap-16 items-center">
           
           {/* Left: Content - CINEMÁTICO Y MINIMALISTA con video background premium */}
@@ -52,7 +52,7 @@ const LuisViruettaIntro = () => {
             </div>
 
             {/* Contenido encima del video */}
-            <div className="relative z-10 p-8 lg:p-12">
+            <div className="relative z-10 p-4 sm:p-6 lg:p-12">
             {/* Eyebrow - quién soy con borde redondeado */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -73,8 +73,8 @@ const LuisViruettaIntro = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-5xl lg:text-7xl font-light text-white mb-6 font-display leading-[1.05]"
-              style={{ letterSpacing: '0.15em' }}
+              className="text-3xl sm:text-5xl lg:text-7xl font-light text-white mb-6 font-display leading-[1.05]"
+              style={{ letterSpacing: '0.05em' }}
             >
               <span className="inline-block relative">
                 {/* L brillosa */}
@@ -123,7 +123,7 @@ const LuisViruettaIntro = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.35 }}
-              className="text-white/50 text-sm lg:text-base font-light uppercase tracking-[0.3em] mb-6"
+              className="text-white/50 text-xs sm:text-sm lg:text-base font-light uppercase tracking-[0.15em] sm:tracking-[0.3em] mb-6"
             >
               {t('home.luisSection.subtitle')}
             </motion.p>
@@ -134,7 +134,7 @@ const LuisViruettaIntro = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-white/70 text-xl lg:text-2xl font-extralight tracking-wide mb-4 max-w-xl leading-relaxed"
+              className="text-white/70 text-base sm:text-xl lg:text-2xl font-extralight tracking-wide mb-4 max-w-xl leading-relaxed"
             >
               {t('home.luisSection.foundedText')}{' '}
               <motion.span
@@ -165,7 +165,7 @@ const LuisViruettaIntro = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.45 }}
-              className="text-white/50 text-base lg:text-lg font-light leading-relaxed mb-10 max-w-xl"
+              className="text-white/50 text-sm sm:text-base lg:text-lg font-light leading-relaxed mb-10 max-w-xl"
             >
               {t('home.luisSection.description')}{' '}
               <span className="text-white/70">{t('home.luisSection.emotionalConnect')}</span>{' '}
@@ -178,13 +178,13 @@ const LuisViruettaIntro = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="flex items-center gap-2 mb-10"
+              className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-10"
             >
               {/* Badge Psicología con degradado animado morado/azul */}
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden px-4 py-2.5 rounded-full cursor-pointer"
+                className="group relative overflow-hidden px-3 sm:px-4 py-2 sm:py-2.5 rounded-full cursor-pointer"
               >
                 {/* Degradado animado morado/azul de fondo */}
                 <motion.div
@@ -203,19 +203,19 @@ const LuisViruettaIntro = () => {
                     opacity: 0.15
                   }}
                 />
-                <div className="relative flex items-center gap-2">
-                  <Brain className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.luisSection.psychology')}</span>
+                <div className="relative flex items-center gap-1.5 sm:gap-2">
+                  <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-white/70" strokeWidth={1.5} />
+                  <span className="text-white/80 group-hover:text-white text-xs sm:text-sm font-light transition-colors tracking-wide">{t('home.luisSection.psychology')}</span>
                 </div>
               </motion.div>
 
-              <span className="text-white/30 text-xs mx-1">+</span>
+              <span className="text-white/30 text-xs mx-0.5 sm:mx-1">+</span>
 
               {/* Badge Diseño con degradado animado morado/azul */}
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden px-4 py-2.5 rounded-full cursor-pointer"
+                className="group relative overflow-hidden px-3 sm:px-4 py-2 sm:py-2.5 rounded-full cursor-pointer"
               >
                 {/* Degradado animado morado/azul de fondo */}
                 <motion.div
@@ -235,19 +235,19 @@ const LuisViruettaIntro = () => {
                     opacity: 0.15
                   }}
                 />
-                <div className="relative flex items-center gap-2">
-                  <Palette className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.luisSection.design')}</span>
+                <div className="relative flex items-center gap-1.5 sm:gap-2">
+                  <Palette className="w-3 h-3 sm:w-4 sm:h-4 text-white/70" strokeWidth={1.5} />
+                  <span className="text-white/80 group-hover:text-white text-xs sm:text-sm font-light transition-colors tracking-wide">{t('home.luisSection.design')}</span>
                 </div>
               </motion.div>
 
-              <span className="text-white/30 text-xs mx-1">+</span>
+              <span className="text-white/30 text-xs mx-0.5 sm:mx-1">+</span>
 
               {/* Badge Tecnología con degradado animado morado/azul */}
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden px-4 py-2.5 rounded-full cursor-pointer"
+                className="group relative overflow-hidden px-3 sm:px-4 py-2 sm:py-2.5 rounded-full cursor-pointer"
               >
                 {/* Degradado animado morado/azul de fondo */}
                 <motion.div
@@ -267,9 +267,9 @@ const LuisViruettaIntro = () => {
                     opacity: 0.15
                   }}
                 />
-                <div className="relative flex items-center gap-2">
-                  <Code className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.luisSection.technology')}</span>
+                <div className="relative flex items-center gap-1.5 sm:gap-2">
+                  <Code className="w-3 h-3 sm:w-4 sm:h-4 text-white/70" strokeWidth={1.5} />
+                  <span className="text-white/80 group-hover:text-white text-xs sm:text-sm font-light transition-colors tracking-wide">{t('home.luisSection.technology')}</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -290,7 +290,7 @@ const LuisViruettaIntro = () => {
                 {/* Ícono elegante - blanco */}
                 <Brain className="absolute left-0 top-2 w-5 h-5 text-white/40" strokeWidth={1.5} />
 
-                <p className="text-white/60 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
+                <p className="text-white/60 text-sm sm:text-base lg:text-xl font-light leading-relaxed max-w-lg">
                   {t('home.luisSection.quote95Start')}{' '}
                   <span className="text-white font-normal">
                     {t('home.luisSection.quote95Bold')}
@@ -298,7 +298,7 @@ const LuisViruettaIntro = () => {
                   {t('home.luisSection.quote95End')}
                 </p>
 
-                <p className="text-white/60 text-lg lg:text-xl font-light leading-relaxed max-w-lg">
+                <p className="text-white/60 text-sm sm:text-base lg:text-xl font-light leading-relaxed max-w-lg">
                   {t('home.luisSection.quoteSecond')}{' '}
                   <span className="text-white font-normal">
                     {t('home.luisSection.quoteSecondBold')}
@@ -398,7 +398,7 @@ const LuisViruettaIntro = () => {
             className="order-1 lg:order-2 relative"
           >
             {/* Video container horizontal - SIN BORDE */}
-            <div className="relative mx-auto w-full max-w-[500px]">
+            <div className="relative mx-auto w-full max-w-[95vw] sm:max-w-[500px]">
               <div className="w-full rounded-xl overflow-hidden bg-black shadow-2xl">
                 {/* YouTube Video Embed */}
                 <iframe

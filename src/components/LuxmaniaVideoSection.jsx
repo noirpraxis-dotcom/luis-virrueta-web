@@ -74,7 +74,7 @@ const LuxmaniaVideoSection = () => {
             className="order-2 lg:order-1 flex flex-col justify-center"
           >
             {/* Contenido */}
-            <div className="relative z-10 p-8 lg:p-12">
+            <div className="relative z-10 p-4 sm:p-6 lg:p-12">
             {/* Título principal - LUXMANIA con L y última A brillosas */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
@@ -177,13 +177,13 @@ const LuxmaniaVideoSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="flex items-center gap-2 mb-10"
+              className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-10"
             >
               {/* Badge Psicología */}
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden px-4 py-2.5 rounded-full cursor-pointer"
+                className="group relative overflow-hidden px-3 sm:px-4 py-2 sm:py-2.5 rounded-full cursor-pointer"
               >
                 <motion.div
                   animate={{
@@ -201,19 +201,19 @@ const LuxmaniaVideoSection = () => {
                     opacity: 0.15
                   }}
                 />
-                <div className="relative flex items-center gap-2">
-                  <Brain className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.luxmaniaSection.psychology')}</span>
+                <div className="relative flex items-center gap-1.5 sm:gap-2">
+                  <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-white/70" strokeWidth={1.5} />
+                  <span className="text-white/80 group-hover:text-white text-xs sm:text-sm font-light transition-colors tracking-wide">{t('home.luxmaniaSection.psychology')}</span>
                 </div>
               </motion.div>
 
-              <span className="text-white/30 text-xs mx-1">+</span>
+              <span className="text-white/30 text-xs mx-0.5 sm:mx-1">+</span>
 
               {/* Badge Diseño */}
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden px-4 py-2.5 rounded-full cursor-pointer"
+                className="group relative overflow-hidden px-3 sm:px-4 py-2 sm:py-2.5 rounded-full cursor-pointer"
               >
                 <motion.div
                   animate={{
@@ -232,19 +232,19 @@ const LuxmaniaVideoSection = () => {
                     opacity: 0.15
                   }}
                 />
-                <div className="relative flex items-center gap-2">
-                  <Palette className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.luxmaniaSection.design')}</span>
+                <div className="relative flex items-center gap-1.5 sm:gap-2">
+                  <Palette className="w-3 h-3 sm:w-4 sm:h-4 text-white/70" strokeWidth={1.5} />
+                  <span className="text-white/80 group-hover:text-white text-xs sm:text-sm font-light transition-colors tracking-wide">{t('home.luxmaniaSection.design')}</span>
                 </div>
               </motion.div>
 
-              <span className="text-white/30 text-xs mx-1">+</span>
+              <span className="text-white/30 text-xs mx-0.5 sm:mx-1">+</span>
 
               {/* Badge Tecnología */}
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden px-4 py-2.5 rounded-full cursor-pointer"
+                className="group relative overflow-hidden px-3 sm:px-4 py-2 sm:py-2.5 rounded-full cursor-pointer"
               >
                 <motion.div
                   animate={{
@@ -263,9 +263,9 @@ const LuxmaniaVideoSection = () => {
                     opacity: 0.15
                   }}
                 />
-                <div className="relative flex items-center gap-2">
-                  <Code className="w-4 h-4 text-white/70" strokeWidth={1.5} />
-                  <span className="text-white/80 group-hover:text-white text-sm font-light transition-colors tracking-wide">{t('home.luxmaniaSection.technology')}</span>
+                <div className="relative flex items-center gap-1.5 sm:gap-2">
+                  <Code className="w-3 h-3 sm:w-4 sm:h-4 text-white/70" strokeWidth={1.5} />
+                  <span className="text-white/80 group-hover:text-white text-xs sm:text-sm font-light transition-colors tracking-wide">{t('home.luxmaniaSection.technology')}</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -322,9 +322,9 @@ const LuxmaniaVideoSection = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.3 }}
-            className="order-1 lg:order-2 relative"
+            className="order-1 lg:order-2 relative flex justify-center"
           >
-            <div className="relative mx-auto w-full max-w-[500px]">
+            <div className="relative w-[85vw] sm:w-[70vw] md:w-[60vw] lg:w-full max-w-[500px]">
               <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-black shadow-2xl">
                 {/* YouTube iframe - se actualiza el src cuando se hace play */}
                 <iframe
