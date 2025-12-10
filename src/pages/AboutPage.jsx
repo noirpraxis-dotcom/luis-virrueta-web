@@ -3,29 +3,31 @@ import { Brain, Code, Palette, Heart, Sparkles, Zap, Instagram, Linkedin, Lamp }
 import { Link } from 'react-router-dom'
 import { useRef } from 'react'
 import SEOHead from '../components/SEOHead'
+import { useLanguage } from '../context/LanguageContext'
 
 const AboutPage = () => {
+  const { t } = useLanguage()
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
 
   const pillars = [
     {
       icon: Brain,
-      title: "Psicología",
-      subtitle: "Aplicada",
-      description: "Comprendo cómo las personas toman decisiones, qué las motiva y cómo crear experiencias que conectan a nivel emocional."
+      title: t('aboutPage.approach.pillar1Title'),
+      subtitle: t('aboutPage.approach.pillar1Label'),
+      description: t('aboutPage.approach.pillar1Desc')
     },
     {
       icon: Palette,
-      title: "Diseño",
-      subtitle: "Estratégico",
-      description: "Cada elemento visual tiene un propósito. Creo identidades que no solo se ven bien, sino que comunican y convierten."
+      title: t('aboutPage.approach.pillar2Title'),
+      subtitle: t('aboutPage.approach.pillar2Label'),
+      description: t('aboutPage.approach.pillar2Desc')
     },
     {
       icon: Code,
-      title: "Tecnología",
-      subtitle: "Avanzada",
-      description: "Desarrollo completo desde la idea hasta el deployment. React, Node.js, IA y las mejores herramientas del mercado."
+      title: t('aboutPage.approach.pillar3Title'),
+      subtitle: t('aboutPage.approach.pillar3Label'),
+      description: t('aboutPage.approach.pillar3Desc')
     }
   ]
 
@@ -104,7 +106,7 @@ const AboutPage = () => {
               <div className="flex items-center gap-3">
                 <Heart className="w-4 h-4 text-white/60" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/80 font-light tracking-wider uppercase">
-                  Mi Historia
+                  {t('aboutPage.hero.badge')}
                 </span>
               </div>
             </motion.div>
@@ -120,7 +122,7 @@ const AboutPage = () => {
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Arquetipos
+                  {t('aboutPage.hero.pillar1')}
                 </span>
               </div>
 
@@ -130,7 +132,7 @@ const AboutPage = () => {
               <div className="flex items-center gap-2">
                 <Heart className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Identidad
+                  {t('aboutPage.hero.pillar2')}
                 </span>
               </div>
 
@@ -140,7 +142,7 @@ const AboutPage = () => {
               <div className="flex items-center gap-2">
                 <Zap className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  Transformación
+                  {t('aboutPage.hero.pillar3')}
                 </span>
               </div>
             </motion.div>
@@ -153,7 +155,7 @@ const AboutPage = () => {
               className="text-base lg:text-lg text-white/60 text-center max-w-3xl mx-auto font-extralight italic"
               style={{ letterSpacing: '0.08em' }}
             >
-              ¿Qué pasa cuando un psicólogo entiende tu inconsciente y lo convierte en una marca que conecta?
+              {t('aboutPage.hero.question')}
             </motion.p>
           </motion.div>
 
@@ -265,13 +267,13 @@ const AboutPage = () => {
                 </motion.h2>
                 {/* Título profesional */}
                 <p className="text-white/70 text-lg lg:text-xl mb-6" style={{ fontWeight: 300, letterSpacing: '0.03em' }}>
-                  Psicólogo Especialista en Identidad de Marca
+                  {t('aboutPage.profile.title')}
                 </p>
                 {/* Subtítulo con badge */}
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5">
                     <Lamp className="w-3 h-3 text-amber-400" strokeWidth={1.5} />
-                    <span className="text-xs text-white/60 font-light tracking-wider uppercase">Fundador LUXMANIA</span>
+                    <span className="text-xs text-white/60 font-light tracking-wider uppercase">{t('aboutPage.profile.badgeFounder')}</span>
                   </div>
                   <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
                 </div>
@@ -282,10 +284,8 @@ const AboutPage = () => {
                 <motion.p
                   className="text-white/80 text-lg lg:text-xl leading-relaxed"
                   style={{ fontWeight: 300, letterSpacing: '0.02em' }}
-                >
-                  Especialista en <span className="text-white" style={{ fontWeight: 400 }}>branding psicológico</span> que fusiona psicoanálisis jungiano, diseño estratégico y desarrollo full-stack para crear marcas que no solo se ven excepcionales, sino que{' '}
-                  <span className="italic text-white" style={{ fontWeight: 300 }}>conectan, convierten y trascienden</span>.
-                </motion.p>
+                  dangerouslySetInnerHTML={{ __html: t('aboutPage.profile.mainBio') }}
+                />
 
                 {/* Formación con iconos */}
                 <div className="space-y-4 pt-4">
@@ -294,8 +294,8 @@ const AboutPage = () => {
                       <Brain className="w-5 h-5 text-purple-400" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="text-white text-base mb-1" style={{ fontWeight: 300, letterSpacing: '0.02em' }}>Psicoanálisis & Arquetipos</h4>
-                      <p className="text-white/60 text-sm leading-relaxed" style={{ fontWeight: 300 }}>Análisis arquetipal del inconsciente colectivo aplicado a la identidad de marca</p>
+                      <h4 className="text-white text-base mb-1" style={{ fontWeight: 300, letterSpacing: '0.02em' }}>{t('aboutPage.profile.card1Title')}</h4>
+                      <p className="text-white/60 text-sm leading-relaxed" style={{ fontWeight: 300 }}>{t('aboutPage.profile.card1Desc')}</p>
                     </div>
                   </div>
 
@@ -304,8 +304,8 @@ const AboutPage = () => {
                       <Palette className="w-5 h-5 text-pink-400" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="text-white text-base mb-1" style={{ fontWeight: 300, letterSpacing: '0.02em' }}>Diseño Estratégico</h4>
-                      <p className="text-white/60 text-sm leading-relaxed" style={{ fontWeight: 300 }}>Identidades visuales basadas en arquetipos que comunican valores y generan conexión emocional</p>
+                      <h4 className="text-white text-base mb-1" style={{ fontWeight: 300, letterSpacing: '0.02em' }}>{t('aboutPage.profile.card2Title')}</h4>
+                      <p className="text-white/60 text-sm leading-relaxed" style={{ fontWeight: 300 }}>{t('aboutPage.profile.card2Desc')}</p>
                     </div>
                   </div>
 
@@ -314,8 +314,8 @@ const AboutPage = () => {
                       <Code className="w-5 h-5 text-cyan-400" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="text-white text-base mb-1" style={{ fontWeight: 300, letterSpacing: '0.02em' }}>Desarrollo Full-Stack</h4>
-                      <p className="text-white/60 text-sm leading-relaxed" style={{ fontWeight: 300 }}>React, Node.js, IA y tecnologías avanzadas para experiencias digitales impecables</p>
+                      <h4 className="text-white text-base mb-1" style={{ fontWeight: 300, letterSpacing: '0.02em' }}>{t('aboutPage.profile.card3Title')}</h4>
+                      <p className="text-white/60 text-sm leading-relaxed" style={{ fontWeight: 300 }}>{t('aboutPage.profile.card3Desc')}</p>
                     </div>
                   </div>
                 </div>
@@ -324,18 +324,16 @@ const AboutPage = () => {
                 <motion.p
                   className="text-white/70 text-base lg:text-lg leading-relaxed pt-4 border-t border-white/10"
                   style={{ fontWeight: 300, letterSpacing: '0.02em' }}
-                >
-                  Entiendo que las marcas exitosas no venden productos, venden{' '}
-                  <span className="italic text-white">identidad, pertenencia y transformación</span>. Mi proceso combina análisis arquetipal, diseño emocional y desarrollo técnico para fundadores que buscan diferenciarse radicalmente.
-                </motion.p>
+                  dangerouslySetInnerHTML={{ __html: t('aboutPage.profile.philosophy') }}
+                />
               </div>
 
               {/* Stats minimalistas mejorados */}
               <div className="grid grid-cols-3 gap-8 pt-8 border-t border-white/10">
                 {[
-                  { value: '50+', label: 'Proyectos Completados' },
-                  { value: '98%', label: 'Satisfacción Cliente' },
-                  { value: '7+', label: 'Años Experiencia' }
+                  { value: t('aboutPage.profile.stat1Value'), label: t('aboutPage.profile.stat1Label') },
+                  { value: t('aboutPage.profile.stat2Value'), label: t('aboutPage.profile.stat2Label') },
+                  { value: t('aboutPage.profile.stat3Value'), label: t('aboutPage.profile.stat3Label') }
                 ].map((stat, i) => (
                   <motion.div
                     key={i}
@@ -358,7 +356,7 @@ const AboutPage = () => {
                 className="space-y-6 pt-8 border-t border-white/10"
               >
                 <div className="flex items-center gap-6">
-                  <span className="text-white/40 text-xs uppercase tracking-[0.3em]" style={{ fontWeight: 300 }}>Conecta</span>
+                  <span className="text-white/40 text-xs uppercase tracking-[0.3em]" style={{ fontWeight: 300 }}>{t('aboutPage.profile.connectLabel')}</span>
                   <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
                 </div>
                 <div className="flex flex-wrap gap-4">
@@ -408,34 +406,34 @@ const AboutPage = () => {
             className="mb-16"
           >
             <h2 className="text-4xl lg:text-6xl font-extralight text-white tracking-wide mb-6">
-              Mi <span className="italic font-light">Trayectoria</span>
+              {t('aboutPage.journey.title').split(' ')[0]} <span className="italic font-light">{t('aboutPage.journey.title').split(' ').slice(1).join(' ')}</span>
             </h2>
             <p className="text-white/50 text-base lg:text-lg font-extralight leading-[1.9] tracking-wide max-w-3xl">
-              Cada proyecto es el resultado de años estudiando cómo las personas toman decisiones, qué las motiva y cómo construir experiencias que trascienden lo visual.
+              {t('aboutPage.journey.subtitle')}
             </p>
           </motion.div>
 
           <div className="space-y-12">
             {[
               {
-                year: '2018',
-                title: 'Fundación de LUXMANIA',
-                description: 'Creo un estudio que fusiona psicoanálisis jungiano, diseño estratégico y desarrollo tecnológico para marcas que buscan diferenciación radical.'
+                year: t('aboutPage.journey.milestone1Year'),
+                title: t('aboutPage.journey.milestone1Title'),
+                description: t('aboutPage.journey.milestone1Desc')
               },
               {
-                year: '2015-2018',
-                title: 'Psicología Clínica + Diseño Digital',
-                description: 'Formación en psicología profunda y diseño de experiencias. Descubro que las marcas más poderosas hablan al inconsciente antes que a la razón.'
+                year: t('aboutPage.journey.milestone2Year'),
+                title: t('aboutPage.journey.milestone2Title'),
+                description: t('aboutPage.journey.milestone2Desc')
               },
               {
-                year: '2019-2022',
-                title: 'Desarrollo Full-Stack & Arquetipos de Marca',
-                description: 'Especializo en identidades visuales basadas en los 12 arquetipos junguianos. Más de 50 proyectos transformados con este enfoque único.'
+                year: t('aboutPage.journey.milestone3Year'),
+                title: t('aboutPage.journey.milestone3Title'),
+                description: t('aboutPage.journey.milestone3Desc')
               },
               {
-                year: '2023-2025',
-                title: 'Psicoanálisis Junguiano & Neuromarketing + IA',
-                description: 'Integro análisis arquetipal profundo con inteligencia artificial para crear marcas que anticipan deseos inconscientes y generan conexión emocional instantánea.'
+                year: t('aboutPage.journey.milestone4Year'),
+                title: t('aboutPage.journey.milestone4Title'),
+                description: t('aboutPage.journey.milestone4Desc')
               }
             ].map((milestone, i) => (
               <motion.div
@@ -474,7 +472,7 @@ const AboutPage = () => {
             className="mb-16"
           >
             <h2 className="text-4xl lg:text-6xl font-extralight text-white tracking-wide">
-              Mi <span className="italic font-light">Enfoque</span>
+              {t('aboutPage.approach.title').split(' ')[0]} <span className="italic font-light">{t('aboutPage.approach.title').split(' ').slice(1).join(' ')}</span>
             </h2>
           </motion.div>
 
@@ -525,12 +523,9 @@ const AboutPage = () => {
             className="space-y-12"
           >
             <div className="space-y-6">
-              <h2 className="text-4xl lg:text-6xl font-extralight text-white tracking-wide leading-tight">
-                ¿Listo para crear una marca que{' '}
-                <span className="italic font-light">trascienda</span>?
-              </h2>
+              <h2 className="text-4xl lg:text-6xl font-extralight text-white tracking-wide leading-tight" dangerouslySetInnerHTML={{ __html: t('aboutPage.cta.title') }} />
               <p className="text-white/50 text-base lg:text-lg font-extralight leading-[1.9] tracking-wide max-w-3xl">
-                No trabajo con todos. Selecciono proyectos donde puedo generar impacto real y donde existe alineación de visión. Si buscas diferenciarte radicalmente, hablemos.
+                {t('aboutPage.cta.subtitle')}
               </p>
             </div>
             
@@ -539,7 +534,7 @@ const AboutPage = () => {
                 whileHover={{ x: 4 }}
                 className="flex items-center gap-4 text-white font-extralight text-sm tracking-[0.3em] uppercase"
               >
-                <span>Trabajemos Juntos</span>
+                <span>{t('aboutPage.cta.button')}</span>
                 <motion.div
                   className="w-16 h-px bg-white/40 group-hover:bg-white transition-colors"
                   whileHover={{ width: 80 }}
