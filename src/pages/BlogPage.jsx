@@ -21,6 +21,23 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 12,
+      title: 'La Inteligencia No Acumula: Reorganiza | Neurociencia del Branding',
+      excerpt: 'Desde Hebb hasta Hinton (IA): la ciencia demuestra que la inteligencia no es acumulación, es reorganización. Descubre cómo aplicar neuroplasticidad y psicología cognitiva para que tu marca sea memorable.',
+      category: 'psychology',
+      author: 'Luis Virrueta',
+      date: '11 Dic 2025',
+      readTime: '12 min',
+      gradient: 'from-cyan-500/20 to-blue-600/20',
+      borderGradient: 'from-cyan-500 to-blue-600',
+      tags: ['Neurociencia', 'Branding Inteligente', 'Psicología Cognitiva', 'IA', 'Diseño'],
+      slug: 'inteligencia-no-acumula-reorganiza-neurociencia-branding',
+      image: '/blog-compressed/neurociencia-branding.webp',
+      rating: 5.0,
+      commentsCount: 0,
+      featured: true
+    },
+    {
       id: 11,
       title: '¿Qué IA Contratar en 2025? ChatGPT vs Gemini vs Grok: Comparativa Real',
       excerpt: 'Guía práctica para decidir qué inteligencia artificial usar en tu negocio. Comparación clara de ChatGPT, Google Gemini y Grok con casos de uso reales, precios y recomendaciones por industria.',
