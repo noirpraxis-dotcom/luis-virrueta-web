@@ -2310,7 +2310,7 @@ const ArticleSection = ({ section, index }) => {
         transition={{ duration: 0.8, delay: index * 0.1 }}
         className="my-12 space-y-8"
       >
-        {section.analyses.map((analysis, i) => (
+        {section.analyses?.map((analysis, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 20 }}
@@ -2384,7 +2384,7 @@ const ArticleSection = ({ section, index }) => {
         className="my-12"
       >
         <div className="relative space-y-8">
-          {section.predictions.map((prediction, i) => (
+          {section.predictions?.map((prediction, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, x: -30 }}
