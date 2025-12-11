@@ -21,6 +21,23 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 14,
+      title: 'Tu Cerebro No Busca Información: Busca Sorpresa Mínima | Andy Clark',
+      excerpt: 'Andy Clark revolucionó la neurociencia: el cerebro es una máquina de predicción. No reacciona al mundo, lo anticipa. Si tu marca entiende el Free Energy Principle, deja de competir por atención y empieza a operar en la capa predictiva donde realmente se toman las decisiones.',
+      category: 'neuroscience',
+      author: 'Luis Virrueta',
+      date: '11 Dic 2025',
+      readTime: '14 min',
+      gradient: 'from-violet-500/20 to-indigo-600/20',
+      borderGradient: 'from-violet-500 to-indigo-600',
+      tags: ['Andy Clark', 'Neurociencia', 'Cerebro Bayesiano', 'Branding Predictivo', 'Free Energy'],
+      slug: 'tu-cerebro-no-busca-informacion-busca-sorpresa-minima-andy-clark',
+      image: '/blog-compressed/andy-clark-prediccion.webp',
+      rating: 5.0,
+      commentsCount: 0,
+      featured: true
+    },
+    {
       id: 13,
       title: '¿Tu Cerebro Decide Antes Que Tú? El Experimento Que Rompe el Marketing',
       excerpt: 'Benjamin Libet demostró que tu cerebro se activa 300ms ANTES de que sientas la intención de actuar. Si el 95% de decisiones son inconscientes, ¿por qué las marcas siguen siendo racionales?',
