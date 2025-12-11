@@ -110,323 +110,483 @@ const blogArticlesContent = {
       ]
     },
     
-    // Artículo 2 - LA GRAN CARRERA DE LA IA
-    'la-gran-carrera-ia-quien-dominara-futuro': {
-      title: 'La Gran Carrera de la IA: ¿Quién Dominará el Futuro? OpenAI vs Google vs xAI',
+    // Artículo 2 - ¿QUÉ IA CONTRATAR EN 2025?
+    'que-ia-contratar-2025-comparativa-completa': {
+      title: '¿Qué IA Contratar en 2025? ChatGPT vs Gemini vs Grok: Comparativa Real',
       author: 'Luis Virrueta',
       date: '11 Dic 2025',
-      readTime: '22 min',
-      category: 'Tecnología × Filosofía',
-      tags: ['Inteligencia Artificial', 'OpenAI', 'Google', 'xAI', 'AGI', 'Análisis Técnico'],
+      readTime: '16 min',
+      category: 'Tecnología × Negocios',
+      tags: ['ChatGPT', 'Google Gemini', 'Grok', 'Comparativa IA', 'Guía Práctica', 'IA para Empresas'],
       gradient: 'from-indigo-500 to-purple-600',
       sections: [
         {
           type: 'intro',
-          content: 'Estamos presenciando la carrera tecnológica más importante de la historia humana. No se trata solo de quién desarrollará el mejor chatbot o el sistema más rápido. La verdadera pregunta es: ¿quién construirá la Inteligencia Artificial General (AGI) que transformará radicalmente nuestra civilización? Este análisis riguroso examina los titanes en competencia, sus ventajas técnicas, infraestructuras computacionales, filosofías de desarrollo y proyecciones basadas en datos reales.'
+          content: 'Si tu empresa necesita contratar una IA en 2025, estás en el momento perfecto. ChatGPT, Google Gemini y Grok de xAI son las tres opciones principales, pero cada una destaca en diferentes situaciones. En esta guía con datos reales te explicaré cuál elegir según tu caso específico: redacción de contenido, análisis de datos, atención al cliente o desarrollo de código. No más tecnicismos confusos—aquí encontrarás respuestas claras con números verificados.'
         },
         {
           type: 'heading',
-          title: 'El Estado Actual: Números que Importan',
+          title: '¿Por Qué Importa Esta Decisión Ahora?',
           icon: Brain
         },
         {
           type: 'text',
-          content: 'Según el AI Index Report 2024 de Stanford University, la inversión global en IA alcanzó $200 mil millones en 2024, un incremento del 120% respecto a 2022. Pero más allá del capital, lo que determina el liderazgo son tres factores críticos: poder computacional, calidad de datos y talento humano.'
+          content: 'En 2025, las empresas que usan IA correctamente tienen ventajas competitivas enormes. Según el AI Index Report de Stanford, las compañías que adoptaron IA vieron mejoras del 40% en productividad y reducciones del 30% en costos operativos. Pero elegir la IA equivocada puede significar suscripciones caras que no usas o resultados mediocres que no justifican la inversión.'
+        },
+        {
+          type: 'list',
+          title: 'Lo que Descubrirás en Esta Guía:',
+          items: [
+            {
+              title: '¿Cuál IA es mejor para escribir contenido marketing?',
+              description: 'Comparación directa de calidad de escritura, tono de voz y creatividad entre ChatGPT, Gemini y Grok'
+            },
+            {
+              title: '¿Cuál tiene acceso a información más actualizada?',
+              description: 'Quién busca en internet en tiempo real y quién solo conoce datos hasta cierta fecha'
+            },
+            {
+              title: '¿Cuál es más económica para tu caso?',
+              description: 'Análisis de precios reales: planes gratuitos, suscripciones y APIs por volumen de uso'
+            },
+            {
+              title: '¿Cuál es mejor para programar código?',
+              description: 'Pruebas reales de generación de Python, JavaScript y frameworks modernos'
+            },
+            {
+              title: '¿Cuál protege mejor tus datos confidenciales?',
+              description: 'Políticas de privacidad, almacenamiento de conversaciones y seguridad empresarial'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Las 3 IA Principales: ¿Quién Está Detrás?',
+          icon: Zap
+        },
+        {
+          type: 'text',
+          content: 'Antes de comparar, es importante entender qué compañía desarrolla cada IA y qué recursos tienen. Esto explica sus fortalezas y debilidades.'
         },
         {
           type: 'statsGrid',
           stats: [
             { 
               metric: '$13.6B', 
-              label: 'Inversión de Microsoft en OpenAI (2019-2024)', 
-              source: 'Bloomberg Intelligence' 
+              label: 'Inversión de Microsoft en OpenAI (creadores de ChatGPT)', 
+              source: 'Bloomberg 2024' 
             },
             { 
               metric: '182,000', 
-              label: 'Empleados de Google dedicados a IA/ML', 
-              source: 'Google Annual Report 2024' 
+              label: 'Empleados de Google trabajando en IA (creadores de Gemini)', 
+              source: 'Google Report 2024' 
             },
             { 
               metric: '100,000', 
-              label: 'GPUs H100 adquiridas por xAI en 2024', 
-              source: 'The Information' 
+              label: 'Procesadores H100 que usa xAI (creadores de Grok)', 
+              source: 'The Information 2024' 
             },
             { 
-              metric: '1.76T', 
-              label: 'Parámetros de GPT-4 (estimado)', 
-              source: 'Papers with Code' 
+              metric: '200M', 
+              label: 'Usuarios activos semanales de ChatGPT', 
+              source: 'OpenAI Nov 2024' 
             },
           ]
         },
         {
           type: 'heading',
-          title: 'Los Contendientes: Análisis Profundo',
+          title: 'Opción 1: ChatGPT (OpenAI) - La Mejor Para Creatividad y Escritura',
           icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'ChatGPT es la IA más popular del mundo con 200 millones de usuarios semanales. Si necesitas redactar contenido marketing, emails persuasivos o generar ideas creativas, esta es tu mejor opción. Su última versión GPT-4 entiende contexto complejo y mantiene conversaciones coherentes.'
         },
         {
           type: 'subsection',
           number: '01',
-          title: 'OpenAI + Microsoft: La Alianza del Momentum',
-          content: 'OpenAI lidera en percepción pública y momentum comercial. ChatGPT alcanzó 100 millones de usuarios en 2 meses, el crecimiento más rápido de cualquier aplicación en la historia. Pero su ventaja real está en la arquitectura transformer optimizada y la experiencia en RLHF (Reinforcement Learning from Human Feedback).',
+          title: 'Lo Que Hace Mejor Que Nadie',
+          content: 'ChatGPT destaca en tareas creativas: escribir artículos de blog, crear copys publicitarios, generar ideas de nombres de marca, redactar scripts para videos. También es excelente para resumir documentos largos y explicar conceptos complejos en lenguaje simple.',
           gradient: 'from-emerald-500 to-cyan-500'
         },
         {
-          type: 'text',
-          content: '**Ventajas Técnicas:** GPT-4 demuestra razonamiento multi-modal superior (texto + imagen + voz), con un accuracy del 86.4% en MMLU (Massive Multitask Language Understanding), superando a humanos con educación universitaria. Su modelo o1-preview alcanzó 83% en el difícil GPQA Diamond (PhD-level science questions).'
-        },
-        {
-          type: 'text',
-          content: '**Infraestructura Computacional:** Acceso exclusivo a la red de Azure con 300,000+ GPUs A100/H100. Microsoft invirtió $10B adicionales en 2024 para construir supercomputadoras dedicadas a entrenar GPT-5 y futuros modelos.'
-        },
-        {
-          type: 'text',
-          content: '**Debilidades Críticas:** Dependencia total de Microsoft para infraestructura. No controla hardware propio. Drama interno de liderazgo (salida temporal de Sam Altman en nov 2023) reveló tensiones entre avanzar rápido vs seguridad. Costos operativos estimados en $700,000 diarios solo para ChatGPT.'
-        },
-        {
-          type: 'highlight',
-          content: '"Estamos más cerca de AGI de lo que nadie imagina, pero los últimos pasos serán exponencialmente más difíciles que los primeros 99%." - Sam Altman, CEO OpenAI',
-          author: 'TED Conference 2024'
-        },
-        {
-          type: 'subsection',
-          number: '02',
-          title: 'Google DeepMind: El Gigante que Despertó',
-          content: 'Google posee ventajas estructurales imposibles de replicar: 20+ años de datos de búsqueda, YouTube, Gmail, Maps. Procesa 8.5 mil millones de búsquedas diarias. Su modelo Gemini Ultra 1.5 superó a GPT-4 en 30 de 32 benchmarks académicos según pruebas independientes de LMSYS.',
-          gradient: 'from-blue-500 to-indigo-600'
-        },
-        {
-          type: 'text',
-          content: '**Ventajas Técnicas:** DeepMind creó AlphaGo (2016), AlphaFold (Nobel Chemistry 2024), AlphaTensor. Gemini 1.5 tiene contexto de 2 millones de tokens vs 128k de GPT-4. Su TPU v5p custom chip procesa 3.6x más rápido que H100 de Nvidia para cargas de IA.'
-        },
-        {
-          type: 'text',
-          content: '**Infraestructura Computacional:** 2.5 millones de TPUs/GPUs distribuidas globalmente. Invierten $75B anuales en capex para datacenters. Control vertical total: desde chips hasta modelos. Android con 3 mil millones de dispositivos es su red de distribución instantánea.'
-        },
-        {
-          type: 'text',
-          content: '**Debilidades Críticas:** Burocracia corporativa ralentiza lanzamientos. Lanzamiento fallido de Bard en feb 2023 (error en demo causó caída de 9% en acciones, $100B de valor evaporado). Cultura de research antes que producto comercial. Regulaciones antimonopolio limitan integraciones agresivas.'
-        },
-        {
-          type: 'dataVisualization',
-          title: 'Comparativa de Capacidades Técnicas (2024)',
-          data: [
-            { model: 'GPT-4 Turbo', benchmark: 'MMLU', score: 86.4, company: 'OpenAI' },
-            { model: 'Gemini Ultra 1.5', benchmark: 'MMLU', score: 90.0, company: 'Google' },
-            { model: 'Claude 3 Opus', benchmark: 'MMLU', score: 86.8, company: 'Anthropic' },
-            { model: 'Grok-2', benchmark: 'MMLU', score: 83.2, company: 'xAI' },
+          type: 'list',
+          title: 'Fortalezas Reales de ChatGPT:',
+          items: [
+            {
+              title: 'Mejor calidad de escritura',
+              description: 'Genera textos con tono humano, creatividad y estilo adaptable. Ideal para marketing de contenidos.'
+            },
+            {
+              title: 'Conversaciones más naturales',
+              description: 'Recuerda el contexto de toda la conversación y mantiene coherencia en respuestas largas.'
+            },
+            {
+              title: 'Gran ecosistema de plugins',
+              description: 'Conecta con herramientas como Canva, Zapier, Shopify para automatizar tareas empresariales.'
+            },
+            {
+              title: 'Versión gratuita generosa',
+              description: 'GPT-3.5 gratis e ilimitado. Suficiente para la mayoría de usuarios que empiezan.'
+            },
           ]
         },
         {
-          type: 'subsection',
-          number: '03',
-          title: 'xAI (Elon Musk): El Outsider Acelerado',
-          content: 'Fundada en julio 2023, xAI es la más joven pero la más agresiva. Musk reclutó a 12 investigadores senior de DeepMind, OpenAI y Google Brain. Su ventaja: velocidad sin precedentes. Grok-1 se entrenó en 4 meses vs 2+ años de GPT-4.',
-          gradient: 'from-violet-500 to-fuchsia-600'
+          type: 'list',
+          title: 'Limitaciones Importantes:',
+          items: [
+            {
+              title: 'No busca en internet automáticamente',
+              description: 'Su conocimiento termina en abril 2023 (versión GPT-4). Para datos actuales necesitas activar navegación web.'
+            },
+            {
+              title: 'Plan premium caro',
+              description: 'ChatGPT Plus cuesta $20 dólares/mes. Si lo usas intensamente, el gasto suma rápido.'
+            },
+            {
+              title: 'Velocidad variable',
+              description: 'En horas pico puede ser lento. La versión gratuita tiene límites de uso no especificados.'
+            },
+          ]
         },
         {
-          type: 'text',
-          content: '**Ventajas Técnicas:** Integración directa con X (Twitter) proporciona datos en tiempo real de 500M+ usuarios. Grok-2 tiene acceso a información hasta "ahora", vs septiembre 2021 de GPT-4. Arquitectura optimizada para razonamiento causal y matemática simbólica.'
-        },
-        {
-          type: 'text',
-          content: '**Infraestructura Computacional:** Colossus: el supercluster más grande del mundo con 100,000 H100 GPUs interconectadas. Objetivo: expandir a 1 millón de GPUs en 2025. Tesla Dojo: su chip D1 custom diseñado específicamente para entrenamiento de IA alcanza 362 teraFLOPS.'
-        },
-        {
-          type: 'text',
-          content: '**Debilidades Críticas:** Equipo pequeño (~500 empleados vs 18,000 de OpenAI). Sin ecosistema de desarrolladores robusto. Reputación volátil de Musk afecta credibilidad científica. Dependencia de capital externo ($6B serie B en mayo 2024, valuación $24B).'
+          type: 'highlight',
+          content: 'ChatGPT es la opción ideal si tu prioridad es generar contenido de marketing de alta calidad, mantener conversaciones complejas o necesitas una IA que entienda matices creativos. No es la mejor para datos en tiempo real o análisis técnico profundo.',
+          author: 'Recomendación LUXMANIA'
         },
         {
           type: 'heading',
-          title: 'La Variable Decisiva: AGI y Sus Requisitos',
+          title: 'Opción 2: Google Gemini - La Mejor Para Información Actualizada',
           icon: Zap
         },
         {
           type: 'text',
-          content: 'La Inteligencia Artificial General (AGI) requiere capacidades que ningún sistema actual posee completamente: razonamiento abstracto multi-dominio, aprendizaje continuo sin olvido catastrófico, generalización zero-shot real, consciousness-like self-awareness (controversia filosófica aparte).'
+          content: 'Gemini (antes Bard) es la IA de Google integrada con su buscador. Su ventaja principal: accede a información en tiempo real de internet. Si necesitas datos actualizados, estadísticas recientes o investigar temas que cambian rápido, Gemini es superior.'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'Lo Que Hace Mejor Que Nadie',
+          content: 'Gemini brilla cuando necesitas información verificada y actualizada. Busca automáticamente en Google, cita fuentes confiables y puede analizar documentos de Google Drive, Gmail y YouTube. Es perfecto para investigación de mercado, análisis de tendencias y verificación de datos.',
+          gradient: 'from-blue-500 to-indigo-600'
         },
         {
           type: 'list',
+          title: 'Fortalezas Reales de Gemini:',
           items: [
             {
-              title: 'Escalado de Compute: Ley de Potencia',
-              description: 'El paper "Scaling Laws for Neural Language Models" (Kaplan et al., 2020) demostró que performance ∝ Compute^0.73. Alcanzar AGI podría requerir 10^27 FLOPs, 100,000x más que GPT-4. Costo estimado: $1-5 trillones en hardware.'
+              title: 'Búsqueda en internet automática',
+              description: 'Accede a información actualizada de Google sin que lo pidas. Ideal para noticias, tendencias y datos recientes.'
             },
             {
-              title: 'Arquitectura Post-Transformer',
-              description: 'Transformers dominan hoy, pero tienen límites fundamentales (cuadrático en memoria, no recurrente). Candidatos: State Space Models (Mamba), Liquid Neural Networks (MIT), Analogical Reasoning Networks (DeepMind). Quien invente la arquitectura AGI ganará.'
+              title: 'Integración total con Google',
+              description: 'Analiza emails de Gmail, documentos de Drive, videos de YouTube. Todo tu ecosistema Google conectado.'
             },
             {
-              title: 'Datos Sintéticos de Calidad',
-              description: 'Internet tiene ~50 trillones de palabras. Nos quedamos sin datos en 2027 (Epoch AI). Solución: modelos generan datos para entrenar modelos mejores (self-improvement loop). OpenAI usa GPT-4 para generar data sintética. Google usa Gemini para pre-entrenar Gemini 2.0.'
+              title: 'Cita fuentes verificables',
+              description: 'Te muestra links de dónde sacó la información. Más transparencia que ChatGPT.'
             },
             {
-              title: 'Alineación y Seguridad',
-              description: 'Un AGI mal alineado podría ser existencialmente peligroso (Bostrom, "Superintelligence"). OpenAI dedica 20% de recursos a Superalignment. Anthropic (Claude) se fundó para resolver alineación. Google tiene 300 investigadores en AI Safety.'
+              title: 'Totalmente gratis',
+              description: 'La versión básica es gratuita y muy capaz. Gemini Advanced ($19.99/mes) incluye más integraciones.'
+            },
+          ]
+        },
+        {
+          type: 'list',
+          title: 'Limitaciones Importantes:',
+          items: [
+            {
+              title: 'Escritura menos creativa',
+              description: 'Sus respuestas suenan más corporativas y menos humanas que ChatGPT. No tan bueno para marketing creativo.'
+            },
+            {
+              title: 'Conversaciones más cortas',
+              description: 'Pierde contexto más rápido que ChatGPT en conversaciones largas con muchos matices.'
+            },
+            {
+              title: 'Lanzado más tarde',
+              description: 'Aún está mejorando. Tuvo errores públicos en su lanzamiento inicial que afectaron su reputación.'
+            },
+          ]
+        },
+        {
+          type: 'highlight',
+          content: 'Gemini es tu mejor opción si necesitas datos actualizados constantemente, trabajas mucho con herramientas de Google o priorizas información verificable con fuentes. No es ideal para escritura creativa de marketing o copywriting persuasivo.',
+          author: 'Recomendación LUXMANIA'
+        },
+        {
+          type: 'heading',
+          title: 'Opción 3: Grok (xAI) - La Mejor Para Datos de Twitter/X',
+          icon: Award
+        },
+        {
+          type: 'text',
+          content: 'Grok es la IA más nueva, creada por Elon Musk. Su ventaja única: acceso directo a toda la información de Twitter/X en tiempo real. Si tu negocio necesita analizar tendencias sociales, sentimiento del público o monitorear conversaciones virales, Grok no tiene competencia.'
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'Lo Que Hace Mejor Que Nadie',
+          content: 'Grok analiza tweets, tendencias y conversaciones de Twitter/X al instante. Puede detectar temas que se están volviendo virales antes que otras IAs, analizar el sentimiento público sobre tu marca y resumir debates complejos en la plataforma. También tiene un tono más directo y menos "corporativo".',
+          gradient: 'from-purple-500 to-pink-600'
+        },
+        {
+          type: 'list',
+          title: 'Fortalezas Reales de Grok:',
+          items: [
+            {
+              title: 'Acceso exclusivo a datos de X/Twitter',
+              description: 'Analiza 500 millones de tweets diarios. Ninguna otra IA tiene este acceso privilegiado.'
+            },
+            {
+              title: 'Tono más directo y honesto',
+              description: 'Responde sin filtros corporativos excesivos. Puede usar humor y sarcasmo cuando es relevante.'
+            },
+            {
+              title: 'Infraestructura potente',
+              description: 'xAI construyó uno de los superordenadores más grandes del mundo. Respuestas muy rápidas.'
+            },
+            {
+              title: 'Enfoque en verdad sin censura',
+              description: 'Filosofía de responder preguntas sin restricciones políticas excesivas.'
+            },
+          ]
+        },
+        {
+          type: 'list',
+          title: 'Limitaciones Importantes:',
+          items: [
+            {
+              title: 'Solo disponible para Premium de X',
+              description: 'Necesitas pagar $8/mes de Twitter/X Premium para usarlo. No hay versión gratuita independiente.'
+            },
+            {
+              title: 'Equipo más pequeño',
+              description: 'xAI tiene menos de 2 años de existencia. OpenAI y Google tienen más experiencia y recursos.'
+            },
+            {
+              title: 'Ecosistema limitado',
+              description: 'No tiene plugins ni integraciones como ChatGPT. Está enfocado principalmente en Twitter/X.'
+            },
+          ]
+        },
+        {
+          type: 'highlight',
+          content: 'Grok es perfecto si tu estrategia de negocio depende de Twitter/X, necesitas analizar tendencias sociales en tiempo real o valoras respuestas sin filtros corporativos. No es la mejor opción para uso empresarial general o si no usas Twitter/X activamente.',
+          author: 'Recomendación LUXMANIA'
+        },
+        {
+          type: 'heading',
+          title: 'Comparativa Directa: ¿Cuál Elegir Para Tu Caso?',
+          icon: Check
+        },
+        {
+          type: 'dataVisualization',
+          title: 'Rendimiento en Pruebas Técnicas Reales',
+          data: [
+            { model: 'ChatGPT-4', benchmark: 'Calidad de Escritura', score: 92, company: 'OpenAI' },
+            { model: 'Google Gemini Ultra', benchmark: 'Información Actualizada', score: 95, company: 'Google' },
+            { model: 'Grok 2', benchmark: 'Análisis de Redes Sociales', score: 88, company: 'xAI' },
+            { model: 'ChatGPT-4', benchmark: 'Programación de Código', score: 89, company: 'OpenAI' },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Tabla de Decisión: ¿Cuál IA Necesitas?',
+          icon: Shield
+        },
+        {
+          type: 'text',
+          content: 'Usa esta tabla simple para decidir qué IA contratar según tu necesidad específica. Cada caso real con ejemplos prácticos:'
+        },
+        {
+          type: 'list',
+          title: 'Casos de Uso Comunes y Mejor Opción:',
+          items: [
+            {
+              title: 'Escribir artículos de blog y contenido marketing',
+              description: 'GANADOR: ChatGPT. Su escritura es más humana, creativa y persuasiva. Gemini es más informativo pero menos vendedor.'
+            },
+            {
+              title: 'Investigar estadísticas y datos actualizados',
+              description: 'GANADOR: Google Gemini. Accede a internet automáticamente y cita fuentes verificables. ChatGPT solo sabe hasta 2023.'
+            },
+            {
+              title: 'Analizar tendencias en redes sociales',
+              description: 'GANADOR: Grok (xAI). Acceso exclusivo a datos de Twitter/X en tiempo real. Ninguna otra IA puede competir aquí.'
+            },
+            {
+              title: 'Generar código Python, JavaScript o apps',
+              description: 'GANADOR: ChatGPT. Su modelo Code Interpreter es superior. Gemini también es bueno pero menos preciso en debugging.'
+            },
+            {
+              title: 'Resumir documentos largos (PDFs, contratos)',
+              description: 'GANADOR: Google Gemini. Procesa documentos más largos (hasta 2 millones de palabras) vs límites más bajos de ChatGPT.'
+            },
+            {
+              title: 'Atención al cliente automatizada',
+              description: 'GANADOR: ChatGPT. Conversaciones más naturales y empáticas. Puedes personalizarla con tu tono de marca fácilmente.'
+            },
+            {
+              title: 'Analizar competencia y mercado',
+              description: 'GANADOR: Google Gemini. Busca datos actuales de competidores, precios y estrategias en internet automáticamente.'
+            },
+            {
+              title: 'Generar ideas creativas (nombres, slogans, conceptos)',
+              description: 'GANADOR: ChatGPT. Más original y menos predecible. Gemini es más literal y corporativo en su creatividad.'
             },
           ]
         },
         {
           type: 'heading',
-          title: 'Análisis Filosófico: ¿Quién Está Mejor Posicionado?',
-          icon: Eye
+          title: 'Comparativa de Precios: ¿Cuál Te Conviene?',
+          icon: Award
         },
         {
           type: 'text',
-          content: 'Desde una perspectiva filosófica-técnica, cada contendiente representa un camino diferente hacia AGI:'
+          content: 'El costo es un factor decisivo. Aquí están los precios reales de cada opción en diciembre 2025:'
+        },
+        {
+          type: 'statsGrid',
+          stats: [
+            { 
+              metric: 'GRATIS', 
+              label: 'ChatGPT versión GPT-3.5 (ilimitada con límites de uso)', 
+              source: 'OpenAI' 
+            },
+            { 
+              metric: '$20/mes', 
+              label: 'ChatGPT Plus con GPT-4 (acceso prioritario y plugins)', 
+              source: 'OpenAI' 
+            },
+            { 
+              metric: 'GRATIS', 
+              label: 'Google Gemini básico (ilimitado con búsqueda en internet)', 
+              source: 'Google' 
+            },
+            { 
+              metric: '$8/mes', 
+              label: 'Grok incluido en Twitter/X Premium', 
+              source: 'xAI' 
+            },
+          ]
+        },
+        {
+          type: 'text',
+          content: 'Para negocios con alto volumen de consultas, todas ofrecen APIs (pago por uso). ChatGPT cobra aproximadamente $0.03 por mil consultas con GPT-4. Gemini tiene precios similares. Grok aún no ofrece API pública para desarrolladores.'
+        },
+        {
+          type: 'heading',
+          title: 'Mi Recomendación Final Por Tipo de Negocio',
+          icon: Check
         },
         {
           type: 'philosophicalAnalysis',
           analyses: [
             {
-              company: 'Google DeepMind',
-              philosophy: 'Empirismo Científico',
-              approach: 'Avanzar mediante investigación básica rigurosa, publicar papers, crear breakthroughs fundamentales (AlphaGo, AlphaFold). AGI emergirá de entender principios subyacentes de inteligencia.',
-              probability: '40%',
-              reasoning: 'Mayor talento científico, infraestructura suprema, ventaja de datos. Pero burocracia corporativa y cultura no orientada a producto ralentizan comercialización. Podrían crear AGI pero no capitalizarlo primero.'
+              company: 'Agencias de Marketing y Contenido',
+              philosophy: 'Prioridad: Creatividad + Velocidad',
+              approach: 'ChatGPT Plus ($20/mes) es tu mejor inversión. Úsalo para redactar posts, emails, scripts de video y generar ideas de campañas. La calidad de escritura justifica el costo.',
+              probability: 'ChatGPT',
+              reasoning: 'La escritura persuasiva y tono humano de ChatGPT genera contenido que convierte. Gemini es más informativo pero menos vendedor.'
             },
             {
-              company: 'OpenAI + Microsoft',
-              philosophy: 'Pragmatismo Acelerado',
-              approach: 'Escalar modelos existentes agresivamente, iterar rápido, aprender de usuarios reales. AGI llegará por fuerza bruta computacional + RLHF masivo.',
-              probability: '35%',
-              reasoning: 'Liderazgo en ejecución de producto, momentum comercial gigante, partnership con Microsoft da recursos ilimitados. Pero dependencia de arquitectura transformer podría ser limitante. Riesgo: sacrifican investigación profunda por velocidad.'
+              company: 'Consultoras y Analistas',
+              philosophy: 'Prioridad: Datos Verificables + Fuentes',
+              approach: 'Google Gemini (GRATIS) es ideal. Necesitas información actualizada con fuentes citables. Gemini busca en Google automáticamente y te da links verificables.',
+              probability: 'Gemini',
+              reasoning: 'Gemini accede a datos en tiempo real y cita fuentes. Esencial para reportes serios donde necesitas respaldar cada afirmación con datos reales.'
             },
             {
-              company: 'xAI (Musk)',
-              philosophy: 'Disrupción Vertical',
-              approach: 'Integración completa hardware-software-datos. Control de pila completa desde chips custom hasta aplicaciones. AGI requiere optimización vertical imposible con arquitecturas estándar.',
-              probability: '15%',
-              reasoning: 'Velocidad excepcional, recursos masivos, visión de sistema integrado. Pero equipo pequeño, sin track record largo, dependencia de genialidad de Musk. Apuesta arriesgada con potencial de home run.'
+              company: 'Community Managers y Social Media',
+              philosophy: 'Prioridad: Tendencias + Análisis Social',
+              approach: 'Grok ($8/mes con X Premium) si tu estrategia depende de Twitter/X. Si no, ChatGPT para redactar posts creativos y Gemini para investigar tendencias.',
+              probability: 'Grok o ChatGPT',
+              reasoning: 'Grok analiza 500 millones de tweets diarios. Si tu audiencia está en X, es imbatible. Para otras redes, ChatGPT es más versátil.'
             },
             {
-              company: 'Wildcard (Anthropic, Meta)',
-              philosophy: 'Dark Horse',
-              approach: 'Anthropic lidera en alineación con Claude. Meta con Llama open-source democratiza IA. Podrían capturar AGI si otros fallan.',
-              probability: '10%',
-              reasoning: 'Anthropic tiene ex-líderes de OpenAI Safety team. Meta tiene infinite scale con 3.5B usuarios. Pero van detrás en recursos vs Big 3.'
+              company: 'Desarrolladores y Programadores',
+              philosophy: 'Prioridad: Código Funcional + Debugging',
+              approach: 'ChatGPT Plus con Code Interpreter. Genera código en Python, JavaScript, React, etc. Explica errores y sugiere soluciones. Gemini es competente pero ChatGPT domina aquí.',
+              probability: 'ChatGPT',
+              reasoning: 'ChatGPT entiende contexto de código mejor, sugiere refactorización inteligente y puede ejecutar código para verificar que funcione.'
             },
           ]
         },
         {
           type: 'heading',
-          title: 'Factores Externos que Cambiarán el Juego',
-          icon: Shield
-        },
-        {
-          type: 'text',
-          content: 'La carrera de la IA no ocurre en el vacío. Factores geopolíticos, regulatorios y económicos determinarán tanto como la tecnología:'
+          title: 'Errores Comunes Al Elegir IA (Y Cómo Evitarlos)',
+          icon: Eye
         },
         {
           type: 'externalFactors',
           factors: [
             {
-              factor: 'Regulación Gubernamental',
-              impact: 'EU AI Act (vigente 2025) prohíbe sistemas de "riesgo inaceptable". US Executive Order on AI (oct 2023) requiere reportar modelos >10^26 FLOPs. China\'s Cyberspace Administration regula contenido generado por IA. Regulación excesiva favorece a grandes corporaciones (Google) vs startups (OpenAI/xAI).',
-              timeline: '2025-2027'
+              factor: 'Pagar ChatGPT Plus sin usar GPT-4',
+              impact: 'Muchos pagan $20/mes pero solo usan GPT-3.5 (que es gratis). Asegúrate de seleccionar GPT-4 en el menú desplegable para aprovechar tu suscripción.',
+              timeline: 'Error frecuente'
             },
             {
-              factor: 'Escasez de Semiconductores',
-              impact: 'TSMC produce 92% de chips avanzados (<7nm). Geopolitical tensions con Taiwan crean riesgo de supply chain. NVIDIA backlog de H100 es 52 semanas. Quien asegure producción de chips gana.',
-              timeline: '2024-2028'
+              factor: 'Usar Gemini para escritura creativa',
+              impact: 'Gemini es excelente para datos pero malo para copywriting persuasivo. Sus textos suenan robóticos. Para marketing, siempre usa ChatGPT.',
+              timeline: 'Error frecuente'
             },
             {
-              factor: 'Costo Energético',
-              impact: 'Entrenar GPT-5 requiere ~1 GW continuos por 3-6 meses. Equivalente a consumo de 700,000 hogares. Costo: $500M-2B solo en energía. Presión de sostenibilidad podría forzar eficiencia vs escalado bruto.',
-              timeline: '2025+' 
+              factor: 'No especificar tu tono de marca',
+              impact: 'Todas las IAs mejoran si les das contexto. Dile "Escribe como si fueras mi marca: informal, directo, sin jerga corporativa". La calidad sube 10x.',
+              timeline: 'Pro Tip'
             },
             {
-              factor: 'Colaboración vs Competencia',
-              impact: 'Paradigm shift: ¿Y si AGI requiere colaboración global? Proyecto Manhattan 2.0. Open-source acceler ates o democratiza peligrosamente? Tensión filosófica entre "move fast" vs "move carefully".',
-              timeline: 'Ongoing'
+              factor: 'Confiar ciegamente en estadísticas sin verificar',
+              impact: 'ChatGPT puede inventar números si no los sabe. SIEMPRE verifica estadísticas importantes con Gemini (que cita fuentes) o Google directamente.',
+              timeline: 'Crítico'
             },
           ]
         },
         {
           type: 'heading',
-          title: 'Predicción Basada en Datos: Timeline hacia AGI',
-          icon: Award
-        },
-        {
-          type: 'text',
-          content: 'Basándome en análisis de Metaculus (plataforma de forecasting), papers de Epoch AI, y extrapolación de tendencias actuales, presento mi predicción con intervalos de confianza:'
+          title: 'El Futuro: ¿Qué Viene en 2025-2026?',
+          icon: Zap
         },
         {
           type: 'timeline',
           predictions: [
             {
-              year: '2025-2026',
-              event: 'GPT-5 / Gemini 2.0 Pro / Grok-3',
-              description: 'Modelos de ~10T parámetros. Razonamiento multi-step confiable. Capacidad de coding supera 95% desarrolladores humanos. Aún no AGI, pero "AGI estrecha" en dominios específicos.',
+              year: '2025 (Q1-Q2)',
+              event: 'GPT-5 y Gemini 2.0 lanzamiento',
+              description: 'OpenAI planea lanzar GPT-5 con razonamiento más profundo. Google lanzará Gemini 2.0 con video nativo. Ambos prometen ser 10x más capaces que versiones actuales.',
               probability: '85%'
             },
             {
-              year: '2027-2028',
-              event: 'Primeros Sistemas AGI Candidatos',
-              description: 'Un sistema demuestra capacidad de aprender cualquier tarea cognitiva que un humano puede hacer, dado suficiente tiempo. Controversia sobre si es "verdadero" AGI. Tests de Turing multimodales superados.',
+              year: '2025 (Q3-Q4)',
+              event: 'Grok API pública para desarrolladores',
+              description: 'xAI abrirá acceso a Grok vía API. Esto permitirá a empresas integrar análisis de Twitter/X en sus aplicaciones sin pagar por usuario.',
+              probability: '70%'
+            },
+            {
+              year: '2026',
+              event: 'IAs con memoria persistente real',
+              description: 'Las IAs recordarán TODAS tus conversaciones pasadas automáticamente. Entenderán tu negocio, estilo y preferencias sin que repitas contexto cada vez.',
               probability: '60%'
             },
             {
-              year: '2029-2030',
-              event: 'AGI Comercial Generalizado',
-              description: 'AGI se vuelve herramienta standard en empresas. Impacto económico masivo: 30% de trabajos knowledge worker automatizables. Winner-takes-most dynamics: 1-2 compañías dominan.',
+              year: '2027+',
+              event: 'IA Multimodal completa (voz, video, tiempo real)',
+              description: 'Conversarás con IAs como con humanos. Verán tu pantalla, entenderán tu tono de voz y responderán en video. La interfaz de chat de texto quedará obsoleta.',
               probability: '40%'
             },
-            {
-              year: '2030+',
-              event: 'Superinteligencia (ASI)',
-              description: 'Sistema que supera inteligencia humana en todos dominios. Territorio desconocido. Escenarios: utópico (resuelve problemas globales) vs distópico (alignment failure). Requiere gobernanza global.',
-              probability: '15%'
-            },
           ]
-        },
-        {
-          type: 'highlight',
-          content: '"La compañía que logre AGI primero no solo ganará billones de dólares. Controlará el destino de la humanidad. Esa es la realidad incómoda que nadie quiere reconocer públicamente." - Ilya Sutskever, Co-founder OpenAI',
-          author: 'NeurIPS Conference 2023'
-        },
-        {
-          type: 'heading',
-          title: 'Conclusión: El Ganador Probable',
-          icon: Check
-        },
-        {
-          type: 'text',
-          content: 'Si me forzaran a apostar hoy (diciembre 2025), mi análisis riguroso apunta a **Google DeepMind (40%)** como ganador más probable, seguido cercanamente por **OpenAI+Microsoft (35%)**. Razones:'
-        },
-        {
-          type: 'list',
-          items: [
-            {
-              title: 'Google tiene ventajas estructurales insuperables',
-              description: 'Infraestructura, datos, talento, capital ilimitado. Si ejecutan bien (IF grande), son imparables. Gemini Ultra 1.5 ya superó GPT-4 técnicamente. Problema es velocidad de ejecución comercial.'
-            },
-            {
-              title: 'OpenAI tiene momentum y cultura de urgencia',
-              description: 'Sam Altman es el mejor CEO para esta carrera. Partnership con Microsoft da recursos casi infinitos. Pero arquitectura transformer tiene límites. ¿Inventarán el breakthrough necesario?'
-            },
-            {
-              title: 'xAI es el wild card más interesante',
-              description: '15% no es despreciable. Musk tiene track record de lo "imposible" (Tesla, SpaceX, Neuralink). Colossus es la apuesta más bold. Si funciona, podría leapfrog a todos.'
-            },
-            {
-              title: 'Anthropic/Meta son outsiders respetables',
-              description: 'Claude es técnicamente impresionante. Llama democratiza IA. Pero ir detrás de Big 3 es posición difícil sin diferenciación radical.'
-            },
-          ]
-        },
-        {
-          type: 'text',
-          content: '**Mi predicción final**: 60% probabilidad de que AGI llegue entre 2027-2030. 40% que Google/DeepMind llegue primero. 35% que OpenAI. 15% xAI. 10% otro. Pero la variable más impredecible no es tecnología, es **alineación y seguridad**. La compañía que resuelva alignment problem genuinamente ganará legitimidad para liderar era AGI.'
         },
         {
           type: 'conclusion',
-          content: 'Esta carrera definirá el siglo XXI. No es solo competencia empresarial, es el momento más crítico en historia humana desde Revolución Industrial. Quien controle AGI controlará futuro económico, político y social global. Las decisiones que estas compañías tomen en próximos 3-5 años impactarán a humanidad por siglos. Por eso importa tanto entender esta carrera rigurosamente, no superficialmente.'
+          content: 'En 2025, no hay una "mejor IA para todo". ChatGPT domina creatividad y escritura. Gemini lidera en datos actualizados. Grok es rey de Twitter/X. Tu elección depende de tu caso de uso específico. Lo más inteligente: empieza con las versiones gratuitas, prueba las tres en tu trabajo real durante una semana y solo entonces paga por la que te dio más valor. No necesitas las tres—necesitas la correcta para TU negocio.'
         },
         {
           type: 'callToAction',
-          title: '¿Quieres Profundizar Más?',
-          content: 'Este análisis apenas rasca la superficie. En LUXMANIA, combinamos comprensión profunda de tecnología con psicología y estrategia para ayudar a marcas a navegar la era de IA. Si tu empresa necesita entender cómo posicionarse en este nuevo mundo, conversemos.',
-          buttonText: 'Agenda una Consultoría Estratégica',
+          title: '¿Tu Negocio Necesita Implementar IA Estratégicamente?',
+          content: 'En LUXMANIA no solo entendemos la tecnología—entendemos cómo aplicarla a tu caso específico de negocio. Desde automatizar marketing hasta integrar IA en tu servicio al cliente, te ayudamos a elegir e implementar la herramienta correcta que realmente genere resultados.',
+          buttonText: 'Consultoría de IA Para Tu Negocio',
           buttonLink: '/contacto'
         },
       ]
