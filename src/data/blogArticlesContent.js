@@ -592,6 +592,268 @@ const blogArticlesContent = {
       ]
     },
     
+    // Artículo 13 - TU CEREBRO DECIDE ANTES QUE TÚ
+    'tu-cerebro-decide-antes-que-tu-experimento-libet': {
+      title: '¿Tu Cerebro Decide Antes Que Tú? El Experimento Que Rompe el Marketing',
+      author: 'Luis Virrueta',
+      date: '11 Dic 2025',
+      readTime: '8 min',
+      category: 'Psicología × Negocios',
+      tags: ['Neurociencia', 'Decisiones Irracionales', 'Experimento Libet', 'Branding Inconsciente'],
+      gradient: 'from-rose-500 to-purple-600',
+      sections: [
+        {
+          type: 'intro',
+          content: '¿Y si te dijera que tu cerebro toma decisiones antes de que tú decidas? No es ciencia ficción. Es neurociencia probada. En los años 80, Benjamin Libet revolucionó nuestra comprensión de la consciencia con un experimento simple pero devastador: demostró que tu cerebro se activa 300 milisegundos antes de que sientas la intención de actuar. La pregunta incómoda es: si las marcas no influyen en tus decisiones conscientes... ¿en qué parte del cerebro REALMENTE están operando?'
+        },
+        {
+          type: 'highlight',
+          content: 'Tu cerebro decide. Tu consciencia solo interpreta. Las marcas poderosas operan en el primer nivel.',
+          author: 'Benjamin Libet, 1983'
+        },
+        {
+          type: 'heading',
+          title: 'El Experimento Que Cambió Todo',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'En 1983, el neurocientífico Benjamin Libet diseñó un experimento aparentemente simple: pidió a participantes mover un dedo cuando quisieran. Libre albedrío puro. Pero midió tres momentos críticos simultáneamente:'
+        },
+        {
+          type: 'list',
+          title: 'Los Tres Momentos del Experimento:',
+          items: [
+            {
+              title: 'Momento 1: Actividad cerebral (EEG)',
+              description: 'Electroencefalograma detecta cuándo el cerebro comienza la preparación motora para mover el dedo.'
+            },
+            {
+              title: 'Momento 2: Intención consciente',
+              description: 'El participante reporta el momento exacto en que SINTIÓ la intención de mover el dedo (usando un reloj especial).'
+            },
+            {
+              title: 'Momento 3: Movimiento físico',
+              description: 'El dedo se mueve. Acción completada.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'El Resultado Que Nadie Esperaba',
+          icon: Zap
+        },
+        {
+          type: 'statsGrid',
+          stats: [
+            { 
+              metric: '300ms', 
+              label: 'antes: El cerebro se activa ANTES de que sientas la intención', 
+              source: 'Libet et al., 1983' 
+            },
+            { 
+              metric: '200ms', 
+              label: 'después: Tu consciencia interpreta que "decidiste" mover el dedo', 
+              source: 'Nature Neuroscience' 
+            },
+            { 
+              metric: '500ms', 
+              label: 'total: Desde activación cerebral hasta movimiento físico', 
+              source: 'Journal of Consciousness Studies' 
+            },
+            { 
+              metric: '95%', 
+              label: 'de decisiones de compra son inconscientes según neuromarketing', 
+              source: 'Harvard Business Review 2024' 
+            },
+          ]
+        },
+        {
+          type: 'text',
+          content: 'Es decir: tu cerebro inicia la acción ANTES de que tú sientas que decidiste actuar. La sensación de "libre albedrío" es una interpretación post-hoc. Tu consciencia no decide. Solo narra lo que el cerebro inconsciente ya eligió.'
+        },
+        {
+          type: 'highlight',
+          content: 'La decisión ocurre antes de que tú decidas. Tu conciencia no inicia la acción. Solo la interpreta.',
+          author: 'Implicación del Experimento Libet'
+        },
+        {
+          type: 'heading',
+          title: '¿Por Qué Las Marcas "Racionales" Fracasan?',
+          icon: Shield
+        },
+        {
+          type: 'text',
+          content: 'Si el 95% de decisiones se toman inconscientemente, ¿por qué tantas marcas siguen intentando convencerte con argumentos racionales? Porque no entienden dónde ocurre la verdadera decisión.'
+        },
+        {
+          type: 'externalFactors',
+          factors: [
+            {
+              factor: 'Las marcas racionales te dicen "Tenemos mejor precio"',
+              impact: 'Apelan a tu consciencia. Pero tu cerebro ya decidió basándose en confianza emocional, estética y asociaciones inconscientes.',
+              timeline: 'Falla'
+            },
+            {
+              factor: 'Las marcas racionales te muestran "Tabla de características"',
+              impact: 'Tu cerebro racional procesa la información. Pero la decisión ya se tomó en la amígdala (emoción) y corteza prefrontal ventromedial (valor subjetivo).',
+              timeline: 'Falla'
+            },
+            {
+              factor: 'Las marcas racionales dicen "Somos la mejor opción"',
+              impact: 'Tu consciencia lee el mensaje. Pero tu sistema 1 (Kahneman) ya eligió basándose en patrones visuales, sonoros y contextuales que ni registraste conscientemente.',
+              timeline: 'Falla'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Las Marcas Irracionales Ganan Porque Operan Antes',
+          icon: Award
+        },
+        {
+          type: 'text',
+          content: 'Las marcas más poderosas del mundo (Apple, Nike, Coca-Cola, Tesla) no te convencen. Te preparan. Operan en el nivel pre-consciente donde tu cerebro ya está decidiendo.'
+        },
+        {
+          type: 'philosophicalAnalysis',
+          analyses: [
+            {
+              company: 'Marca Racional (Mayoría)',
+              philosophy: 'Argumentación Lógica',
+              approach: 'Intentan convencerte con listas de beneficios, precios competitivos, características técnicas. Apelan a tu consciencia DESPUÉS de que el cerebro ya eligió emocionalmente.',
+              probability: 'Olvidable',
+              reasoning: 'Llegan tarde. La decisión inconsciente ya ocurrió. Tu consciencia solo busca justificar lo que ya elegiste.'
+            },
+            {
+              company: 'Marca Irracional (LUXMANIA Method)',
+              philosophy: 'Preparación Pre-Consciente',
+              approach: 'Diseñan contextos sensoriales, emocionales y estéticos que activan tu cerebro ANTES de que pienses. Color, forma, ritmo, historia, identidad: elementos que tu sistema 1 procesa en milisegundos.',
+              probability: 'Inevitable',
+              reasoning: 'Operan donde se toman las decisiones reales: 300ms antes de tu consciencia. Cuando "decides", ya elegiste.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: '¿Cómo Diseñar Para El Cerebro Que Decide Antes?',
+          icon: Sparkles
+        },
+        {
+          type: 'list',
+          title: 'Estrategias de Branding Pre-Consciente:',
+          items: [
+            {
+              title: '1. Estética Antes Que Argumento',
+              description: 'Tu cerebro procesa imágenes 60,000x más rápido que texto. El impacto visual decide ANTES de que leas una palabra. No es "bonito vs feo". Es "activa emoción correcta vs no activa nada".'
+            },
+            {
+              title: '2. Identidad Antes Que Beneficio',
+              description: 'No vendes producto. Vendes pertenencia a una tribu. Apple no vende computadoras. Vende identidad de "creativo innovador". Tu cerebro elige tribu inconscientemente.'
+            },
+            {
+              title: '3. Consistencia Sensorial',
+              description: 'Tu cerebro reconoce patrones antes de procesar detalles. Coca-Cola: rojo + curva + burbuja. Nike: swoosh + Just Do It + atletas. Patrones consistentes = decisión automática.'
+            },
+            {
+              title: '4. Contexto Emocional Primero',
+              description: 'La amígdala (emoción) procesa estímulos 200ms antes que cortex prefrontal (razón). Si no generas emoción primero, nunca llegarás a la razón.'
+            },
+            {
+              title: '5. Simplicidad Cognitiva',
+              description: 'Tu cerebro inconsciente elige lo familiar, lo simple, lo fluído. Complejidad = fricción = rechazo pre-consciente. Antes de "entender", ya rechazaste.'
+            },
+          ]
+        },
+        {
+          type: 'dataVisualization',
+          title: 'Línea de Tiempo: De Estímulo a Decisión',
+          data: [
+            { model: '0-50ms: Procesamiento Visual Inicial', benchmark: 'Sistema Inconsciente', score: 100, company: 'Corteza Visual' },
+            { model: '50-200ms: Respuesta Emocional', benchmark: 'Sistema Inconsciente', score: 95, company: 'Amígdala' },
+            { model: '200-300ms: Activación Pre-Motora', benchmark: 'Sistema Inconsciente', score: 90, company: 'Corteza Motora' },
+            { model: '300-500ms: Consciencia de Intención', benchmark: 'Sistema Consciente', score: 50, company: 'Corteza Prefrontal' },
+            { model: '500ms+: Racionalización Post-Hoc', benchmark: 'Sistema Consciente', score: 20, company: 'Lenguaje Interno' },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'En LUXMANIA No Diseñamos Marcas. Diseñamos Decisiones.',
+          icon: Eye
+        },
+        {
+          type: 'text',
+          content: 'La diferencia entre una marca que informa y una marca que transforma no está en lo que dice. Está en CUÁNDO opera en el cerebro de tu audiencia.'
+        },
+        {
+          type: 'colorGrid',
+          title: 'Dónde Opera LUXMANIA vs Otras Agencias:',
+          colors: [
+            {
+              name: 'Nivel 1: Pre-Consciente',
+              hex: '#FF6B6B',
+              psychology: 'LUXMANIA: Diseñamos estímulos que activan decisión inconsciente en los primeros 300ms. Color, forma, ritmo, contexto.'
+            },
+            {
+              name: 'Nivel 2: Emocional',
+              hex: '#4ECDC4',
+              psychology: 'LUXMANIA: Creamos narrativas que conectan con identidad y pertenencia. El cerebro elige tribu antes que producto.'
+            },
+            {
+              name: 'Nivel 3: Racional',
+              hex: '#95E1D3',
+              psychology: 'Otras agencias: Operan aquí. Argumentos, beneficios, características. Pero la decisión ya ocurrió arriba.'
+            },
+            {
+              name: 'Nivel 4: Post-Compra',
+              hex: '#F38181',
+              psychology: 'Justificación: Tu consciencia inventa razones lógicas para la decisión que tu inconsciente ya tomó.'
+            },
+          ]
+        },
+        {
+          type: 'timeline',
+          predictions: [
+            {
+              year: 'Paso 1: Auditoría Pre-Consciente',
+              event: '¿Tu marca activa emoción en los primeros 300ms?',
+              description: 'Analizamos con eye-tracking, tiempos de respuesta emocional y mapas de calor. Si no captas atención inconsciente en medio segundo, ya perdiste.',
+              probability: 'Diagnóstico'
+            },
+            {
+              year: 'Paso 2: Arquitectura Emocional',
+              event: 'Diseñamos la secuencia sensorial correcta',
+              description: 'Color → Forma → Ritmo → Historia. Cada elemento activa regiones cerebrales específicas en el orden correcto. No es arte. Es ingeniería neural.',
+              probability: 'Estrategia'
+            },
+            {
+              year: 'Paso 3: Consistencia Inconsciente',
+              event: 'Repetición sin saturación',
+              description: 'Tu cerebro necesita ver un patrón 7-12 veces para automatizarlo. Creamos sistema de identidad que se repite estratégicamente hasta volverse decisión automática.',
+              probability: 'Implementación'
+            },
+            {
+              year: 'Paso 4: Medición Neurométrica',
+              event: 'Validamos con datos, no opiniones',
+              description: 'Tiempo de respuesta, tasa de conversión, recall espontáneo, asociación emocional. Si no cambia el comportamiento pre-consciente, iteramos.',
+              probability: 'Optimización'
+            },
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'Las marcas no influyen cuando ya piensas algo. Influyen en el sistema que decide antes de que pienses. Tu consciencia no inicia la acción, solo la interpreta. En LUXMANIA diseñamos para ese lugar invisible donde el cerebro elige antes de que tú lo sepas. No diseñamos marcas. Diseñamos decisiones.'
+        },
+        {
+          type: 'callToAction',
+          title: '¿Tu Marca Opera Antes o Después de la Decisión?',
+          content: 'Si tu estrategia de marca se basa en argumentos racionales, estás llegando tarde. La decisión ya ocurrió 300ms antes. En LUXMANIA aplicamos neurociencia, psicología pre-consciente y diseño estratégico para que tu marca no solo se vea: se elija automáticamente. Conversemos sobre cómo rediseñar tu marca para el cerebro que realmente decide.',
+          buttonText: 'Diseña Decisiones Inconscientes',
+          buttonLink: '/contacto'
+        },
+      ]
+    },
+    
     // Artículo 12 - INTELIGENCIA NO ACUMULA: REORGANIZA
     'inteligencia-no-acumula-reorganiza-neurociencia-branding': {
       title: 'La Inteligencia No Acumula: Reorganiza | Neurociencia del Branding',

@@ -21,6 +21,23 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 13,
+      title: '¿Tu Cerebro Decide Antes Que Tú? El Experimento Que Rompe el Marketing',
+      excerpt: 'Benjamin Libet demostró que tu cerebro se activa 300ms ANTES de que sientas la intención de actuar. Si el 95% de decisiones son inconscientes, ¿por qué las marcas siguen siendo racionales?',
+      category: 'psychology',
+      author: 'Luis Virrueta',
+      date: '11 Dic 2025',
+      readTime: '8 min',
+      gradient: 'from-rose-500/20 to-purple-600/20',
+      borderGradient: 'from-rose-500 to-purple-600',
+      tags: ['Neurociencia', 'Decisiones Irracionales', 'Experimento Libet', 'Branding'],
+      slug: 'tu-cerebro-decide-antes-que-tu-experimento-libet',
+      image: '/blog-compressed/cerebro-decide.webp',
+      rating: 5.0,
+      commentsCount: 0,
+      featured: true
+    },
+    {
       id: 12,
       title: 'La Inteligencia No Acumula: Reorganiza | Neurociencia del Branding',
       excerpt: 'Desde Hebb hasta Hinton (IA): la ciencia demuestra que la inteligencia no es acumulación, es reorganización. Descubre cómo aplicar neuroplasticidad y psicología cognitiva para que tu marca sea memorable.',
