@@ -21,6 +21,23 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 15,
+      title: 'Cloudflare: La Infraestructura Invisible que Hace que Tu Web se Sienta Premium',
+      excerpt: 'Descubre cómo Cloudflare transforma el rendimiento de cualquier sitio web. Explicación clara de CDN, seguridad, y por qué es gratuito. La infraestructura que todos sienten pero nadie ve.',
+      category: 'trends',
+      author: 'Luis Virrueta',
+      date: '11 Dic 2025',
+      readTime: '12 min',
+      gradient: 'from-orange-500/20 to-amber-600/20',
+      borderGradient: 'from-orange-500 to-amber-600',
+      tags: ['Cloudflare', 'CDN', 'Rendimiento Web', 'Seguridad', 'Infraestructura'],
+      slug: 'cloudflare-infraestructura-invisible-que-hace-tu-web-premium',
+      image: '/blog-compressed/blog-1.webp',
+      rating: 5.0,
+      commentsCount: 0,
+      featured: true
+    },
+    {
       id: 14,
       title: 'Tu Cerebro No Busca Información: Busca Sorpresa Mínima | Andy Clark',
       excerpt: 'Andy Clark revolucionó la neurociencia: el cerebro es una máquina de predicción. No reacciona al mundo, lo anticipa. Si tu marca entiende el Free Energy Principle, deja de competir por atención y empieza a operar en la capa predictiva donde realmente se toman las decisiones.',
@@ -32,7 +49,7 @@ const BlogPage = () => {
       borderGradient: 'from-violet-500 to-indigo-600',
       tags: ['Andy Clark', 'Neurociencia', 'Cerebro Bayesiano', 'Branding Predictivo', 'Free Energy'],
       slug: 'tu-cerebro-no-busca-informacion-busca-sorpresa-minima-andy-clark',
-      image: '/blog-compressed/andy-clark-prediccion.webp',
+      image: '/blog-compressed/blog-3.webp',
       rating: 5.0,
       commentsCount: 0,
       featured: true
@@ -49,7 +66,7 @@ const BlogPage = () => {
       borderGradient: 'from-rose-500 to-purple-600',
       tags: ['Neurociencia', 'Decisiones Irracionales', 'Experimento Libet', 'Branding'],
       slug: 'tu-cerebro-decide-antes-que-tu-experimento-libet',
-      image: '/blog-compressed/cerebro-decide.webp',
+      image: '/blog-compressed/blog-2.webp',
       rating: 5.0,
       commentsCount: 0,
       featured: true
@@ -66,7 +83,7 @@ const BlogPage = () => {
       borderGradient: 'from-cyan-500 to-blue-600',
       tags: ['Neurociencia', 'Branding Inteligente', 'Psicología Cognitiva', 'IA', 'Diseño'],
       slug: 'inteligencia-no-acumula-reorganiza-neurociencia-branding',
-      image: '/blog-compressed/neurociencia-branding.webp',
+      image: '/blog-compressed/blog-4.webp',
       rating: 5.0,
       commentsCount: 0,
       featured: true
@@ -83,7 +100,7 @@ const BlogPage = () => {
       borderGradient: 'from-indigo-500 to-purple-600',
       tags: ['ChatGPT', 'Google Gemini', 'Grok', 'Comparativa IA', 'Guía Práctica'],
       slug: 'que-ia-contratar-2025-comparativa-completa',
-      image: '/blog-compressed/ia-carrera.webp',
+      image: '/blog-compressed/blog-5.webp',
       rating: 5.0,
       commentsCount: 0,
       featured: true

@@ -102,7 +102,7 @@ const WorkSamplesCarousel = () => {
         </motion.div>
 
         {/* Carousel Container */}
-        <div className="relative">
+        <div className="relative px-2">
           {/* Swiper Carousel - Horizontal */}
           <Swiper
             ref={swiperRef}
@@ -123,7 +123,7 @@ const WorkSamplesCarousel = () => {
             }}
             loop={true}
             modules={[EffectCoverflow, Navigation, Autoplay]}
-            className="py-12"
+            className="py-16"
             slideActiveClass="swiper-slide-active"
           >
             {samples.map((sample) => (

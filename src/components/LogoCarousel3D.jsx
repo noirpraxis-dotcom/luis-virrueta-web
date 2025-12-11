@@ -124,7 +124,7 @@ const LogoCarousel3D = () => {
         </motion.div>
 
         {/* Carousel Container */}
-        <div className="relative">
+        <div className="relative px-2">
           {/* Swiper Carousel */}
           <Swiper
             ref={swiperRef}
@@ -145,7 +145,7 @@ const LogoCarousel3D = () => {
             }}
             loop={true}
             modules={[EffectCoverflow, Navigation, Autoplay]}
-            className="py-12"
+            className="py-16"
             slideActiveClass="swiper-slide-active"
           >
             {logos.map((logo) => (
