@@ -93,7 +93,7 @@ const PortafolioPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28 overflow-x-hidden">
       {/* Hero Section */}
-      <section ref={heroRef} className="relative py-20 lg:py-40 px-6 lg:px-20 overflow-hidden">
+      <section ref={heroRef} className="relative py-24 md:py-20 lg:py-40 px-6 lg:px-20 overflow-hidden">
         {/* Video de fondo - Expandido horizontalmente, cubriendo incluso el header */}
         <div className="absolute inset-0 -top-20 lg:-top-28 -bottom-16 overflow-hidden pointer-events-none z-0">
           <video
@@ -129,7 +129,7 @@ const PortafolioPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1 }}
-            className="text-6xl lg:text-9xl font-bold text-center mb-8 font-display relative"
+            className="text-4xl md:text-6xl lg:text-9xl font-bold text-center mb-8 font-display relative px-4"
             style={{ 
               letterSpacing: '0.08em',
               fontWeight: 300,
