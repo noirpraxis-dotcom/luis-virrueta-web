@@ -156,12 +156,12 @@ const LogoCarousel3D = () => {
                   className="relative group logo-card"
                 >
                   {/* Card - Imagen cubre TODO sin bordes de color */}
-                  <div className="card-border relative h-[320px] lg:h-[400px] rounded-2xl overflow-hidden bg-zinc-950">
+                  <div className="card-border relative h-[380px] md:h-[320px] lg:h-[400px] rounded-2xl overflow-hidden bg-zinc-950">
                     {/* Imagen como fondo completo */}
                     <img 
                       src={logo.image} 
                       alt={`Logo ${logo.id}`}
-                      className="absolute inset-0 w-full h-full object-cover"
+                      className="absolute inset-0 w-full h-full object-contain md:object-cover"
                       loading="lazy"
                     />
                     

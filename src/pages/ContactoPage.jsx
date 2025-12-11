@@ -90,7 +90,7 @@ ${formData.message}
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28">
+    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28 overflow-x-hidden">
       <SEOHead 
         title="Contacto - LUXMANIA | Branding Estratégico"
         description="Conversemos sobre tu proyecto de branding. Respondo en menos de 24 horas. Consultoría gratuita para marcas que quieren conectar auténticamente."

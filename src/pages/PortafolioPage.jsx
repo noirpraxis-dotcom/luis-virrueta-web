@@ -91,7 +91,7 @@ const PortafolioPage = () => {
     : projects.filter(p => p.category === activeFilter)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28">
+    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28 overflow-x-hidden">
       {/* Hero Section */}
       <section ref={heroRef} className="relative py-20 lg:py-40 px-6 lg:px-20 overflow-hidden">
         {/* Video de fondo - Expandido horizontalmente, cubriendo incluso el header */}
@@ -256,36 +256,6 @@ const PortafolioPage = () => {
 
       {/* Sitios Web */}
       <WebsitesCarousel />
-
-      {/* Video Farolito - Animación pequeña con degradado hacia afuera */}
-      <section className="relative py-12 px-6 lg:px-20">
-        <div className="max-w-xl mx-auto relative">
-          {/* Video */}
-          <div className="relative rounded-lg overflow-hidden">
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-auto"
-            >
-              <source src="/FAROLITO ANIMACION.mp4" type="video/mp4" />
-            </video>
-          </div>
-          
-          {/* Degradado hacia AFUERA - superior */}
-          <div className="absolute -top-20 left-0 right-0 h-32 bg-gradient-to-t from-transparent via-black/40 to-black pointer-events-none" />
-          
-          {/* Degradado hacia AFUERA - inferior */}
-          <div className="absolute -bottom-20 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-black/40 to-black pointer-events-none" />
-          
-          {/* Degradado hacia AFUERA - izquierda */}
-          <div className="absolute top-0 bottom-0 -left-20 w-32 bg-gradient-to-l from-transparent via-black/40 to-black pointer-events-none" />
-          
-          {/* Degradado hacia AFUERA - derecha */}
-          <div className="absolute top-0 bottom-0 -right-20 w-32 bg-gradient-to-r from-transparent via-black/40 to-black pointer-events-none" />
-        </div>
-      </section>
 
       {/* Logotipos 3D */}
       <LogoCarousel3D />
