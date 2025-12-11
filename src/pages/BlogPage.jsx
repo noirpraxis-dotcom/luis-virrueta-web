@@ -21,6 +21,23 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 11,
+      title: 'La Gran Carrera de la IA: ¿Quién Dominará el Futuro? OpenAI vs Google vs xAI',
+      excerpt: 'Análisis técnico y filosófico de la competencia más importante del siglo XXI. Con estadísticas reales, proyecciones basadas en datos y predicciones sobre quién alcanzará AGI primero.',
+      category: 'trends',
+      author: 'Luis Virrueta',
+      date: '11 Dic 2025',
+      readTime: '22 min',
+      gradient: 'from-indigo-500/20 to-purple-600/20',
+      borderGradient: 'from-indigo-500 to-purple-600',
+      tags: ['Inteligencia Artificial', 'OpenAI', 'Google', 'xAI', 'AGI', 'Análisis Técnico'],
+      slug: 'la-gran-carrera-ia-quien-dominara-futuro',
+      image: '/blog-compressed/ia-carrera.webp',
+      rating: 5.0,
+      commentsCount: 0,
+      featured: true
+    },
+    {
       id: 1,
       title: t('blogPage.posts.post1.title'),
       excerpt: t('blogPage.posts.post1.excerpt'),

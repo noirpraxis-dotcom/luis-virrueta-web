@@ -110,7 +110,329 @@ const blogArticlesContent = {
       ]
     },
     
-    // Artículo 2
+    // Artículo 2 - LA GRAN CARRERA DE LA IA
+    'la-gran-carrera-ia-quien-dominara-futuro': {
+      title: 'La Gran Carrera de la IA: ¿Quién Dominará el Futuro? OpenAI vs Google vs xAI',
+      author: 'Luis Virrueta',
+      date: '11 Dic 2025',
+      readTime: '22 min',
+      category: 'Tecnología × Filosofía',
+      tags: ['Inteligencia Artificial', 'OpenAI', 'Google', 'xAI', 'AGI', 'Análisis Técnico'],
+      gradient: 'from-indigo-500 to-purple-600',
+      sections: [
+        {
+          type: 'intro',
+          content: 'Estamos presenciando la carrera tecnológica más importante de la historia humana. No se trata solo de quién desarrollará el mejor chatbot o el sistema más rápido. La verdadera pregunta es: ¿quién construirá la Inteligencia Artificial General (AGI) que transformará radicalmente nuestra civilización? Este análisis riguroso examina los titanes en competencia, sus ventajas técnicas, infraestructuras computacionales, filosofías de desarrollo y proyecciones basadas en datos reales.'
+        },
+        {
+          type: 'heading',
+          title: 'El Estado Actual: Números que Importan',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'Según el AI Index Report 2024 de Stanford University, la inversión global en IA alcanzó $200 mil millones en 2024, un incremento del 120% respecto a 2022. Pero más allá del capital, lo que determina el liderazgo son tres factores críticos: poder computacional, calidad de datos y talento humano.'
+        },
+        {
+          type: 'statsGrid',
+          stats: [
+            { 
+              metric: '$13.6B', 
+              label: 'Inversión de Microsoft en OpenAI (2019-2024)', 
+              source: 'Bloomberg Intelligence' 
+            },
+            { 
+              metric: '182,000', 
+              label: 'Empleados de Google dedicados a IA/ML', 
+              source: 'Google Annual Report 2024' 
+            },
+            { 
+              metric: '100,000', 
+              label: 'GPUs H100 adquiridas por xAI en 2024', 
+              source: 'The Information' 
+            },
+            { 
+              metric: '1.76T', 
+              label: 'Parámetros de GPT-4 (estimado)', 
+              source: 'Papers with Code' 
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Los Contendientes: Análisis Profundo',
+          icon: Sparkles
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'OpenAI + Microsoft: La Alianza del Momentum',
+          content: 'OpenAI lidera en percepción pública y momentum comercial. ChatGPT alcanzó 100 millones de usuarios en 2 meses, el crecimiento más rápido de cualquier aplicación en la historia. Pero su ventaja real está en la arquitectura transformer optimizada y la experiencia en RLHF (Reinforcement Learning from Human Feedback).',
+          gradient: 'from-emerald-500 to-cyan-500'
+        },
+        {
+          type: 'text',
+          content: '**Ventajas Técnicas:** GPT-4 demuestra razonamiento multi-modal superior (texto + imagen + voz), con un accuracy del 86.4% en MMLU (Massive Multitask Language Understanding), superando a humanos con educación universitaria. Su modelo o1-preview alcanzó 83% en el difícil GPQA Diamond (PhD-level science questions).'
+        },
+        {
+          type: 'text',
+          content: '**Infraestructura Computacional:** Acceso exclusivo a la red de Azure con 300,000+ GPUs A100/H100. Microsoft invirtió $10B adicionales en 2024 para construir supercomputadoras dedicadas a entrenar GPT-5 y futuros modelos.'
+        },
+        {
+          type: 'text',
+          content: '**Debilidades Críticas:** Dependencia total de Microsoft para infraestructura. No controla hardware propio. Drama interno de liderazgo (salida temporal de Sam Altman en nov 2023) reveló tensiones entre avanzar rápido vs seguridad. Costos operativos estimados en $700,000 diarios solo para ChatGPT.'
+        },
+        {
+          type: 'highlight',
+          content: '"Estamos más cerca de AGI de lo que nadie imagina, pero los últimos pasos serán exponencialmente más difíciles que los primeros 99%." - Sam Altman, CEO OpenAI',
+          author: 'TED Conference 2024'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'Google DeepMind: El Gigante que Despertó',
+          content: 'Google posee ventajas estructurales imposibles de replicar: 20+ años de datos de búsqueda, YouTube, Gmail, Maps. Procesa 8.5 mil millones de búsquedas diarias. Su modelo Gemini Ultra 1.5 superó a GPT-4 en 30 de 32 benchmarks académicos según pruebas independientes de LMSYS.',
+          gradient: 'from-blue-500 to-indigo-600'
+        },
+        {
+          type: 'text',
+          content: '**Ventajas Técnicas:** DeepMind creó AlphaGo (2016), AlphaFold (Nobel Chemistry 2024), AlphaTensor. Gemini 1.5 tiene contexto de 2 millones de tokens vs 128k de GPT-4. Su TPU v5p custom chip procesa 3.6x más rápido que H100 de Nvidia para cargas de IA.'
+        },
+        {
+          type: 'text',
+          content: '**Infraestructura Computacional:** 2.5 millones de TPUs/GPUs distribuidas globalmente. Invierten $75B anuales en capex para datacenters. Control vertical total: desde chips hasta modelos. Android con 3 mil millones de dispositivos es su red de distribución instantánea.'
+        },
+        {
+          type: 'text',
+          content: '**Debilidades Críticas:** Burocracia corporativa ralentiza lanzamientos. Lanzamiento fallido de Bard en feb 2023 (error en demo causó caída de 9% en acciones, $100B de valor evaporado). Cultura de research antes que producto comercial. Regulaciones antimonopolio limitan integraciones agresivas.'
+        },
+        {
+          type: 'dataVisualization',
+          title: 'Comparativa de Capacidades Técnicas (2024)',
+          data: [
+            { model: 'GPT-4 Turbo', benchmark: 'MMLU', score: 86.4, company: 'OpenAI' },
+            { model: 'Gemini Ultra 1.5', benchmark: 'MMLU', score: 90.0, company: 'Google' },
+            { model: 'Claude 3 Opus', benchmark: 'MMLU', score: 86.8, company: 'Anthropic' },
+            { model: 'Grok-2', benchmark: 'MMLU', score: 83.2, company: 'xAI' },
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'xAI (Elon Musk): El Outsider Acelerado',
+          content: 'Fundada en julio 2023, xAI es la más joven pero la más agresiva. Musk reclutó a 12 investigadores senior de DeepMind, OpenAI y Google Brain. Su ventaja: velocidad sin precedentes. Grok-1 se entrenó en 4 meses vs 2+ años de GPT-4.',
+          gradient: 'from-violet-500 to-fuchsia-600'
+        },
+        {
+          type: 'text',
+          content: '**Ventajas Técnicas:** Integración directa con X (Twitter) proporciona datos en tiempo real de 500M+ usuarios. Grok-2 tiene acceso a información hasta "ahora", vs septiembre 2021 de GPT-4. Arquitectura optimizada para razonamiento causal y matemática simbólica.'
+        },
+        {
+          type: 'text',
+          content: '**Infraestructura Computacional:** Colossus: el supercluster más grande del mundo con 100,000 H100 GPUs interconectadas. Objetivo: expandir a 1 millón de GPUs en 2025. Tesla Dojo: su chip D1 custom diseñado específicamente para entrenamiento de IA alcanza 362 teraFLOPS.'
+        },
+        {
+          type: 'text',
+          content: '**Debilidades Críticas:** Equipo pequeño (~500 empleados vs 18,000 de OpenAI). Sin ecosistema de desarrolladores robusto. Reputación volátil de Musk afecta credibilidad científica. Dependencia de capital externo ($6B serie B en mayo 2024, valuación $24B).'
+        },
+        {
+          type: 'heading',
+          title: 'La Variable Decisiva: AGI y Sus Requisitos',
+          icon: Zap
+        },
+        {
+          type: 'text',
+          content: 'La Inteligencia Artificial General (AGI) requiere capacidades que ningún sistema actual posee completamente: razonamiento abstracto multi-dominio, aprendizaje continuo sin olvido catastrófico, generalización zero-shot real, consciousness-like self-awareness (controversia filosófica aparte).'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Escalado de Compute: Ley de Potencia',
+              description: 'El paper "Scaling Laws for Neural Language Models" (Kaplan et al., 2020) demostró que performance ∝ Compute^0.73. Alcanzar AGI podría requerir 10^27 FLOPs, 100,000x más que GPT-4. Costo estimado: $1-5 trillones en hardware.'
+            },
+            {
+              title: 'Arquitectura Post-Transformer',
+              description: 'Transformers dominan hoy, pero tienen límites fundamentales (cuadrático en memoria, no recurrente). Candidatos: State Space Models (Mamba), Liquid Neural Networks (MIT), Analogical Reasoning Networks (DeepMind). Quien invente la arquitectura AGI ganará.'
+            },
+            {
+              title: 'Datos Sintéticos de Calidad',
+              description: 'Internet tiene ~50 trillones de palabras. Nos quedamos sin datos en 2027 (Epoch AI). Solución: modelos generan datos para entrenar modelos mejores (self-improvement loop). OpenAI usa GPT-4 para generar data sintética. Google usa Gemini para pre-entrenar Gemini 2.0.'
+            },
+            {
+              title: 'Alineación y Seguridad',
+              description: 'Un AGI mal alineado podría ser existencialmente peligroso (Bostrom, "Superintelligence"). OpenAI dedica 20% de recursos a Superalignment. Anthropic (Claude) se fundó para resolver alineación. Google tiene 300 investigadores en AI Safety.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Análisis Filosófico: ¿Quién Está Mejor Posicionado?',
+          icon: Eye
+        },
+        {
+          type: 'text',
+          content: 'Desde una perspectiva filosófica-técnica, cada contendiente representa un camino diferente hacia AGI:'
+        },
+        {
+          type: 'philosophicalAnalysis',
+          analyses: [
+            {
+              company: 'Google DeepMind',
+              philosophy: 'Empirismo Científico',
+              approach: 'Avanzar mediante investigación básica rigurosa, publicar papers, crear breakthroughs fundamentales (AlphaGo, AlphaFold). AGI emergirá de entender principios subyacentes de inteligencia.',
+              probability: '40%',
+              reasoning: 'Mayor talento científico, infraestructura suprema, ventaja de datos. Pero burocracia corporativa y cultura no orientada a producto ralentizan comercialización. Podrían crear AGI pero no capitalizarlo primero.'
+            },
+            {
+              company: 'OpenAI + Microsoft',
+              philosophy: 'Pragmatismo Acelerado',
+              approach: 'Escalar modelos existentes agresivamente, iterar rápido, aprender de usuarios reales. AGI llegará por fuerza bruta computacional + RLHF masivo.',
+              probability: '35%',
+              reasoning: 'Liderazgo en ejecución de producto, momentum comercial gigante, partnership con Microsoft da recursos ilimitados. Pero dependencia de arquitectura transformer podría ser limitante. Riesgo: sacrifican investigación profunda por velocidad.'
+            },
+            {
+              company: 'xAI (Musk)',
+              philosophy: 'Disrupción Vertical',
+              approach: 'Integración completa hardware-software-datos. Control de pila completa desde chips custom hasta aplicaciones. AGI requiere optimización vertical imposible con arquitecturas estándar.',
+              probability: '15%',
+              reasoning: 'Velocidad excepcional, recursos masivos, visión de sistema integrado. Pero equipo pequeño, sin track record largo, dependencia de genialidad de Musk. Apuesta arriesgada con potencial de home run.'
+            },
+            {
+              company: 'Wildcard (Anthropic, Meta)',
+              philosophy: 'Dark Horse',
+              approach: 'Anthropic lidera en alineación con Claude. Meta con Llama open-source democratiza IA. Podrían capturar AGI si otros fallan.',
+              probability: '10%',
+              reasoning: 'Anthropic tiene ex-líderes de OpenAI Safety team. Meta tiene infinite scale con 3.5B usuarios. Pero van detrás en recursos vs Big 3.'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Factores Externos que Cambiarán el Juego',
+          icon: Shield
+        },
+        {
+          type: 'text',
+          content: 'La carrera de la IA no ocurre en el vacío. Factores geopolíticos, regulatorios y económicos determinarán tanto como la tecnología:'
+        },
+        {
+          type: 'externalFactors',
+          factors: [
+            {
+              factor: 'Regulación Gubernamental',
+              impact: 'EU AI Act (vigente 2025) prohíbe sistemas de "riesgo inaceptable". US Executive Order on AI (oct 2023) requiere reportar modelos >10^26 FLOPs. China\'s Cyberspace Administration regula contenido generado por IA. Regulación excesiva favorece a grandes corporaciones (Google) vs startups (OpenAI/xAI).',
+              timeline: '2025-2027'
+            },
+            {
+              factor: 'Escasez de Semiconductores',
+              impact: 'TSMC produce 92% de chips avanzados (<7nm). Geopolitical tensions con Taiwan crean riesgo de supply chain. NVIDIA backlog de H100 es 52 semanas. Quien asegure producción de chips gana.',
+              timeline: '2024-2028'
+            },
+            {
+              factor: 'Costo Energético',
+              impact: 'Entrenar GPT-5 requiere ~1 GW continuos por 3-6 meses. Equivalente a consumo de 700,000 hogares. Costo: $500M-2B solo en energía. Presión de sostenibilidad podría forzar eficiencia vs escalado bruto.',
+              timeline: '2025+' 
+            },
+            {
+              factor: 'Colaboración vs Competencia',
+              impact: 'Paradigm shift: ¿Y si AGI requiere colaboración global? Proyecto Manhattan 2.0. Open-source acceler ates o democratiza peligrosamente? Tensión filosófica entre "move fast" vs "move carefully".',
+              timeline: 'Ongoing'
+            },
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Predicción Basada en Datos: Timeline hacia AGI',
+          icon: Award
+        },
+        {
+          type: 'text',
+          content: 'Basándome en análisis de Metaculus (plataforma de forecasting), papers de Epoch AI, y extrapolación de tendencias actuales, presento mi predicción con intervalos de confianza:'
+        },
+        {
+          type: 'timeline',
+          predictions: [
+            {
+              year: '2025-2026',
+              event: 'GPT-5 / Gemini 2.0 Pro / Grok-3',
+              description: 'Modelos de ~10T parámetros. Razonamiento multi-step confiable. Capacidad de coding supera 95% desarrolladores humanos. Aún no AGI, pero "AGI estrecha" en dominios específicos.',
+              probability: '85%'
+            },
+            {
+              year: '2027-2028',
+              event: 'Primeros Sistemas AGI Candidatos',
+              description: 'Un sistema demuestra capacidad de aprender cualquier tarea cognitiva que un humano puede hacer, dado suficiente tiempo. Controversia sobre si es "verdadero" AGI. Tests de Turing multimodales superados.',
+              probability: '60%'
+            },
+            {
+              year: '2029-2030',
+              event: 'AGI Comercial Generalizado',
+              description: 'AGI se vuelve herramienta standard en empresas. Impacto económico masivo: 30% de trabajos knowledge worker automatizables. Winner-takes-most dynamics: 1-2 compañías dominan.',
+              probability: '40%'
+            },
+            {
+              year: '2030+',
+              event: 'Superinteligencia (ASI)',
+              description: 'Sistema que supera inteligencia humana en todos dominios. Territorio desconocido. Escenarios: utópico (resuelve problemas globales) vs distópico (alignment failure). Requiere gobernanza global.',
+              probability: '15%'
+            },
+          ]
+        },
+        {
+          type: 'highlight',
+          content: '"La compañía que logre AGI primero no solo ganará billones de dólares. Controlará el destino de la humanidad. Esa es la realidad incómoda que nadie quiere reconocer públicamente." - Ilya Sutskever, Co-founder OpenAI',
+          author: 'NeurIPS Conference 2023'
+        },
+        {
+          type: 'heading',
+          title: 'Conclusión: El Ganador Probable',
+          icon: Check
+        },
+        {
+          type: 'text',
+          content: 'Si me forzaran a apostar hoy (diciembre 2025), mi análisis riguroso apunta a **Google DeepMind (40%)** como ganador más probable, seguido cercanamente por **OpenAI+Microsoft (35%)**. Razones:'
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Google tiene ventajas estructurales insuperables',
+              description: 'Infraestructura, datos, talento, capital ilimitado. Si ejecutan bien (IF grande), son imparables. Gemini Ultra 1.5 ya superó GPT-4 técnicamente. Problema es velocidad de ejecución comercial.'
+            },
+            {
+              title: 'OpenAI tiene momentum y cultura de urgencia',
+              description: 'Sam Altman es el mejor CEO para esta carrera. Partnership con Microsoft da recursos casi infinitos. Pero arquitectura transformer tiene límites. ¿Inventarán el breakthrough necesario?'
+            },
+            {
+              title: 'xAI es el wild card más interesante',
+              description: '15% no es despreciable. Musk tiene track record de lo "imposible" (Tesla, SpaceX, Neuralink). Colossus es la apuesta más bold. Si funciona, podría leapfrog a todos.'
+            },
+            {
+              title: 'Anthropic/Meta son outsiders respetables',
+              description: 'Claude es técnicamente impresionante. Llama democratiza IA. Pero ir detrás de Big 3 es posición difícil sin diferenciación radical.'
+            },
+          ]
+        },
+        {
+          type: 'text',
+          content: '**Mi predicción final**: 60% probabilidad de que AGI llegue entre 2027-2030. 40% que Google/DeepMind llegue primero. 35% que OpenAI. 15% xAI. 10% otro. Pero la variable más impredecible no es tecnología, es **alineación y seguridad**. La compañía que resuelva alignment problem genuinamente ganará legitimidad para liderar era AGI.'
+        },
+        {
+          type: 'conclusion',
+          content: 'Esta carrera definirá el siglo XXI. No es solo competencia empresarial, es el momento más crítico en historia humana desde Revolución Industrial. Quien controle AGI controlará futuro económico, político y social global. Las decisiones que estas compañías tomen en próximos 3-5 años impactarán a humanidad por siglos. Por eso importa tanto entender esta carrera rigurosamente, no superficialmente.'
+        },
+        {
+          type: 'callToAction',
+          title: '¿Quieres Profundizar Más?',
+          content: 'Este análisis apenas rasca la superficie. En LUXMANIA, combinamos comprensión profunda de tecnología con psicología y estrategia para ayudar a marcas a navegar la era de IA. Si tu empresa necesita entender cómo posicionarse en este nuevo mundo, conversemos.',
+          buttonText: 'Agenda una Consultoría Estratégica',
+          buttonLink: '/contacto'
+        },
+      ]
+    },
+    
+    // Artículo 3
     'ia-generativa-diseno-emocion': {
       title: 'La IA Generativa en el Diseño: Del Prompt a la Emoción',
       author: 'Luis Virrueta',

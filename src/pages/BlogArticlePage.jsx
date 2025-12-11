@@ -2221,6 +2221,230 @@ const ArticleSection = ({ section, index }) => {
     )
   }
 
+  // Stats Grid - Para estadísticas
+  if (section.type === 'statsGrid') {
+    return (
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 30 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: index * 0.1 }}
+        className="my-12"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {section.stats.map((stat, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={isInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.6, delay: index * 0.1 + i * 0.1 }}
+              className="relative bg-gradient-to-br from-indigo-500/10 to-purple-600/10 backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden group hover:border-indigo-500/30 transition-all"
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500/20 to-purple-600/20 rounded-full blur-3xl" />
+              <div className="relative">
+                <h3 className="text-5xl font-bold bg-gradient-to-br from-indigo-400 to-purple-500 bg-clip-text text-transparent mb-3">
+                  {stat.metric}
+                </h3>
+                <p className="text-base text-white/80 font-medium mb-2">{stat.label}</p>
+                <p className="text-xs text-white/50">{stat.source}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    )
+  }
+
+  // Data Visualization - Para comparativas
+  if (section.type === 'dataVisualization') {
+    return (
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 30 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: index * 0.1 }}
+        className="my-12"
+      >
+        <h3 className="text-2xl font-bold text-white mb-6">{section.title}</h3>
+        <div className="space-y-4">
+          {section.data.map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -20 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.6, delay: index * 0.1 + i * 0.1 }}
+              className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 overflow-hidden group hover:border-white/20 transition-all"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <span className="text-lg font-bold text-white">{item.model}</span>
+                  <span className="text-sm text-white/50 ml-3">{item.company}</span>
+                </div>
+                <span className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent">
+                  {item.score}
+                </span>
+              </div>
+              <div className="relative h-2 bg-white/10 rounded-full overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={isInView ? { width: `${item.score}%` } : {}}
+                  transition={{ duration: 1, delay: index * 0.1 + i * 0.2 }}
+                  className="absolute inset-y-0 left-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full"
+                />
+              </div>
+              <p className="text-xs text-white/50 mt-2">{item.benchmark}</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    )
+  }
+
+  // Philosophical Analysis - Para análisis profundos
+  if (section.type === 'philosophicalAnalysis') {
+    return (
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 30 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: index * 0.1 }}
+        className="my-12 space-y-8"
+      >
+        {section.analyses.map((analysis, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: index * 0.1 + i * 0.15 }}
+            className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 text-9xl font-bold text-white/5 -mr-8 -mt-8">
+              {analysis.probability}
+            </div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-2xl font-bold text-white">{analysis.company}</h4>
+                <span className="px-4 py-2 rounded-full bg-gradient-to-r from-indigo-500/20 to-purple-600/20 border border-white/20 text-white font-mono text-sm">
+                  {analysis.probability}
+                </span>
+              </div>
+              <p className="text-sm text-indigo-400 font-medium mb-3">{analysis.philosophy}</p>
+              <p className="text-base text-white/70 mb-4 leading-relaxed">{analysis.approach}</p>
+              <div className="pt-4 border-t border-white/10">
+                <p className="text-sm text-white/60 leading-relaxed">
+                  <span className="font-semibold text-white/80">Análisis:</span> {analysis.reasoning}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
+    )
+  }
+
+  // External Factors - Para factores externos
+  if (section.type === 'externalFactors') {
+    return (
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 30 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: index * 0.1 }}
+        className="my-12 space-y-6"
+      >
+        {section.factors.map((factor, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, x: -20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: index * 0.1 + i * 0.1 }}
+            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:border-white/20 transition-all"
+          >
+            <div className="flex items-start justify-between mb-3">
+              <h4 className="text-xl font-bold text-white">{factor.factor}</h4>
+              <span className="text-xs px-3 py-1 rounded-full bg-white/10 text-white/70 font-mono">
+                {factor.timeline}
+              </span>
+            </div>
+            <p className="text-sm text-white/70 leading-relaxed">{factor.impact}</p>
+          </motion.div>
+        ))}
+      </motion.div>
+    )
+  }
+
+  // Timeline - Para predicciones temporales
+  if (section.type === 'timeline') {
+    return (
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 30 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: index * 0.1 }}
+        className="my-12"
+      >
+        <div className="relative space-y-8">
+          {section.predictions.map((prediction, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -30 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.6, delay: index * 0.1 + i * 0.15 }}
+              className="relative pl-12"
+            >
+              <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 border-4 border-black flex items-center justify-center">
+                <span className="text-xs font-bold text-white">{i + 1}</span>
+              </div>
+              {i < section.predictions.length - 1 && (
+                <div className="absolute left-4 top-8 bottom-0 w-0.5 bg-gradient-to-b from-indigo-500/50 to-transparent" />
+              )}
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-lg font-bold text-white">{prediction.year}</h4>
+                  <span className="px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-mono">
+                    {prediction.probability} probabilidad
+                  </span>
+                </div>
+                <h5 className="text-xl font-semibold text-white/90 mb-2">{prediction.event}</h5>
+                <p className="text-sm text-white/70 leading-relaxed">{prediction.description}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    )
+  }
+
+  // Call to Action - Para CTAs especiales
+  if (section.type === 'callToAction') {
+    return (
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 30 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: index * 0.1 }}
+        className="my-16"
+      >
+        <div className="relative bg-gradient-to-br from-indigo-500/10 to-purple-600/10 backdrop-blur-sm border border-white/20 rounded-2xl p-10 overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-indigo-500/20 to-purple-600/20 rounded-full blur-3xl" />
+          <div className="relative text-center">
+            <h3 className="text-3xl font-bold text-white mb-4">{section.title}</h3>
+            <p className="text-lg text-white/70 mb-8 max-w-2xl mx-auto">{section.content}</p>
+            <Link to={section.buttonLink}>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-indigo-500/50 transition-all"
+              >
+                {section.buttonText}
+              </motion.button>
+            </Link>
+          </div>
+        </div>
+      </motion.div>
+    )
+  }
+
   return null
 }
 
