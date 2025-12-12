@@ -24,7 +24,8 @@ const imageMapping = {
   'la inteligencia no acumula.jpg': 'blog-12-inteligencia-no-acumula.webp',
   'cerebro decide antes de que tu.jpg': 'blog-13-cerebro-decide-antes.webp',
   'no busca informacion.jpg': 'blog-14-no-busca-informacion.webp',
-  'cloudflare.jpg': 'blog-15-cloudflare.webp'
+  'cloudflare.jpg': 'blog-15-cloudflare.webp',
+  'mapa mental.jpg': 'blog-16-mapa-ias-2025.webp'
 };
 
 async function compressImages() {

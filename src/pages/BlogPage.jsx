@@ -48,6 +48,7 @@ const BlogPage = () => {
         : ['Inteligencia Artificial', 'ChatGPT', 'Claude', 'DeepSeek', 'Gemini', 'Midjourney', 'Runway', 'Sora', 'Guía Completa 2025'],
       slug: 'mapa-completo-inteligencias-artificiales-2025-cual-usar',
       image: '/blog-compressed/blog-16-mapa-ias-2025.webp',
+      heroImage: '/blog-compressed/blog-16-mapa-ias-2025.webp',
       rating: 4.9,
       commentsCount: 28,
       featured: true
