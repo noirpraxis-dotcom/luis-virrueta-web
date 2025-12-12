@@ -10,7 +10,7 @@ const SEOHead = ({
   author = 'Luis Virrueta',
   tags = []
 }) => {
-  const siteUrl = 'https://luxmania.com' // Cambiar por tu dominio real
+  const siteUrl = 'https://lux-mania.com'
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl
   const fullImage = image ? `${siteUrl}${image}` : `${siteUrl}/og-default.jpg`
 

@@ -1743,7 +1743,7 @@ const BlogArticlePage = () => {
         author={article.author}
         publishedTime={toISODate(article.date)}
         tags={article.tags}
-        url={`https://luxmania.com/blog/${slug}`}
+        url={`https://lux-mania.com/blog/${slug}`}
       />
       
       {/* Reading Progress Bar */}

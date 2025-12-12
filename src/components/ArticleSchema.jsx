@@ -10,7 +10,7 @@ const ArticleSchema = ({
   tags = [],
   url
 }) => {
-  const siteUrl = 'https://luxmania.com'
+  const siteUrl = 'https://lux-mania.com'
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl
   const fullImage = image ? `${siteUrl}${image}` : `${siteUrl}/og-default.jpg`
 
