@@ -1941,7 +1941,7 @@ const BlogArticlePage = () => {
       <NewsletterSignup />
 
       {/* Comments Section */}
-      <CommentsSection articleTitle={article.title} />
+      <CommentsSection articleTitle={article.title} articleSlug={slug} />
 
       {/* Related Articles */}
       <RelatedArticles 
