@@ -35,6 +35,25 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 18,
+      ...getPostContent('por-que-tu-logo-no-funciona-7-errores-neurociencia'),
+      category: 'design',
+      author: 'Luis Virrueta',
+      date: currentLanguage === 'en' ? 'Dec 15, 2025' : '15 Dic 2025',
+      readTime: '15 min',
+      gradient: 'from-red-600/20 via-rose-500/20 to-pink-600/20',
+      borderGradient: 'from-red-600 via-rose-500 to-pink-600',
+      tags: currentLanguage === 'en' 
+        ? ['Logo Design', 'Neuroscience', 'Design Errors', 'Visual Identity', 'Brand Recognition', 'Branding']
+        : ['Diseño de Logo', 'Neurociencia', 'Errores de Diseño', 'Identidad Visual', 'Reconocimiento de Marca', 'Branding'],
+      slug: 'por-que-tu-logo-no-funciona-7-errores-neurociencia',
+      image: '/blog-compressed/blog-18-logo-errores.webp',
+      heroImage: '/blog-compressed/blog-18-logo-errores.webp',
+      rating: 5.0,
+      commentsCount: 28,
+      featured: true
+    },
+    {
       id: 17,
       ...getPostContent('12-arquetipos-jung-branding-cual-elegir-marca'),
       category: 'branding',

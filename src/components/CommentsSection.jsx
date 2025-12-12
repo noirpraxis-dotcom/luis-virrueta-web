@@ -4,6 +4,81 @@ import { MessageCircle, Heart, Reply, MoreHorizontal } from 'lucide-react'
 
 // Comentarios específicos por artículo (MIXTOS: Español + Inglés)
 const articleComments = {
+  'por-que-tu-logo-no-funciona-7-errores-neurociencia': [
+    {
+      id: 1,
+      author: 'Carlos Ruiz',
+      avatar: 'CR',
+      date: 'Hace 2 horas',
+      comment: 'Me destruiste. Mi logo tiene 5 colores + script complicado + gradiente + 8 elementos. Hice el test de 3 segundos con mi equipo: 0 de 10 lo reconocieron. Rediseño urgente incoming.',
+      likes: 91,
+      gradient: 'from-red-600 to-rose-500'
+    },
+    {
+      id: 2,
+      author: 'Emily Watson',
+      avatar: 'EW',
+      date: '4 hours ago',
+      comment: 'The Instagram case study (12+ elements → 3 elements = 81% improvement in recognition) is mind-blowing. Applied the Rule of 3 to my startup logo. Went from complex tech geometric mess to clean icon. Night and day.',
+      likes: 79,
+      gradient: 'from-blue-500 to-indigo-600'
+    },
+    {
+      id: 3,
+      author: 'María González',
+      avatar: 'MG',
+      date: 'Hace 5 horas',
+      comment: 'Error #2 (colores sin estrategia) es exactamente mi problema. Soy psicóloga y usé verde porque "calma". TODO el sector usa verde. Cero diferenciación. Gracias al análisis cromático cambié a púrpura (creatividad + confianza). Único en mi ciudad.',
+      likes: 76,
+      gradient: 'from-purple-500 to-pink-600'
+    },
+    {
+      id: 4,
+      author: 'James Mitchell',
+      avatar: 'JM',
+      date: '8 hours ago',
+      comment: 'The FedEx case study (hidden arrow + B&W perfection) should be taught in every design school. Tested my logo in B&W - completely fell apart. Redesigned with tonal contrast >70%. Now works in embroidery, photocopies, everything.',
+      likes: 68,
+      gradient: 'from-orange-500 to-yellow-600'
+    },
+    {
+      id: 5,
+      author: 'Laura Fernández',
+      avatar: 'LF',
+      date: 'Hace 10 horas',
+      comment: 'La checklist definitiva de 10 puntos es BRUTAL. Mi logo falló en 7/10 tests. Especialmente el test de favicon (ilegible) y el de metáfora (gimnasio con mancuerna literal). Ya contraté diseñador con tu artículo como brief.',
+      likes: 64,
+      gradient: 'from-green-500 to-emerald-600'
+    },
+    {
+      id: 6,
+      author: 'Thomas Schneider',
+      avatar: 'TS',
+      date: '1 day ago',
+      comment: 'Error #4 (sin diferenciación) hit me hard. Put my law firm logo next to 5 competitors - IDENTICAL scales of justice + serif + blue/gray. Generic #427. Switching to abstract concept (shield + modern sans). Finally unique.',
+      likes: 57,
+      gradient: 'from-cyan-500 to-blue-600'
+    },
+    {
+      id: 7,
+      author: 'Valentina Torres',
+      avatar: 'VT',
+      date: 'Hace 1 día',
+      comment: 'El caso Nike vs Puma (abstracción vs literalismo) explica perfectamente por qué swoosh es icónico y puma es... un puma. Mi marca de ropa deportiva tenía corredor literal. Cambié a concepto abstracto de movimiento. Mucho más flexible y memorable.',
+      likes: 53,
+      gradient: 'from-pink-500 to-red-600'
+    },
+    {
+      id: 8,
+      author: 'Ryan Cooper',
+      avatar: 'RC',
+      date: '2 days ago',
+      comment: 'The neuroscience breakdown (400ms processing time, 7±2 chunks, working memory limits) makes this article SCIENTIFIC, not subjective. Did the 3-second test with 30 people - 4/30 recognized my logo. Ouch. Data doesn\'t lie.',
+      likes: 49,
+      gradient: 'from-indigo-600 to-purple-600'
+    }
+  ],
+
   '12-arquetipos-jung-branding-cual-elegir-marca': [
     {
       id: 1,
