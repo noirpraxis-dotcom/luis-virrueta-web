@@ -4,9 +4,10 @@ import { Link } from 'react-router-dom'
 import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Palette, Brain, Zap } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 import { useLanguage } from '../context/LanguageContext'
+import { getArticleContent } from '../data/blogArticlesContent'
 
 const BlogPage = () => {
-  const { t } = useLanguage()
+  const { t, currentLanguage } = useLanguage()
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
   const [activeCategory, setActiveCategory] = useState('all')
@@ -19,18 +20,31 @@ const BlogPage = () => {
     { id: 'trends', label: t('blogPage.categories.trends'), icon: TrendingUp },
   ]
 
+  // Helper function to get translated content
+  const getPostContent = (slug) => {
+    const content = getArticleContent(slug, currentLanguage)
+    if (content) {
+      return {
+        title: content.title,
+        excerpt: content.sections?.[0]?.content || ''
+      }
+    }
+    return { title: '', excerpt: '' }
+  }
+
   const blogPosts = [
     {
       id: 16,
-      title: 'Mapa Mental de Inteligencias Artificiales 2025: Cuál Usar Para Qué',
-      excerpt: 'Tu cerebro no quiere elegir entre 47 inteligencias artificiales. Quiere UN mapa mental claro. Guía completa de todas las IAs (ChatGPT, Claude, DeepSeek, Gemini, Midjourney, Runway, Sora, etc.) organizada por psicología de la decisión, no por tecnología.',
+      ...getPostContent('mapa-completo-inteligencias-artificiales-2025-cual-usar'),
       category: 'trends',
       author: 'Luis Virrueta',
-      date: '13 Dic 2025',
+      date: currentLanguage === 'en' ? 'Dec 13, 2025' : '13 Dic 2025',
       readTime: '25 min',
       gradient: 'from-purple-600/20 to-pink-500/20',
       borderGradient: 'from-purple-600 via-pink-500 to-red-500',
-      tags: ['Inteligencia Artificial', 'ChatGPT', 'Claude', 'DeepSeek', 'Gemini', 'Midjourney', 'Runway', 'Sora', 'Guía Completa 2025'],
+      tags: currentLanguage === 'en' 
+        ? ['Artificial Intelligence', 'ChatGPT', 'Claude', 'DeepSeek', 'Gemini', 'Midjourney', 'Runway', 'Complete Guide 2025']
+        : ['Inteligencia Artificial', 'ChatGPT', 'Claude', 'DeepSeek', 'Gemini', 'Midjourney', 'Runway', 'Sora', 'Guía Completa 2025'],
       slug: 'mapa-completo-inteligencias-artificiales-2025-cual-usar',
       image: '/blog-compressed/blog-16-mapa-ias-2025.webp',
       rating: 4.9,
@@ -39,15 +53,16 @@ const BlogPage = () => {
     },
     {
       id: 15,
-      title: 'Cloudflare: La Infraestructura Invisible que Hace que Tu Web se Sienta Premium',
-      excerpt: 'Descubre cómo Cloudflare transforma el rendimiento de cualquier sitio web. Explicación clara de CDN, seguridad, y por qué es gratuito. La infraestructura que todos sienten pero nadie ve.',
+      ...getPostContent('cloudflare-infraestructura-invisible-que-hace-tu-web-premium'),
       category: 'trends',
       author: 'Luis Virrueta',
-      date: '12 Dic 2025',
+      date: currentLanguage === 'en' ? 'Dec 12, 2025' : '12 Dic 2025',
       readTime: '11 min',
       gradient: 'from-orange-500/20 to-amber-600/20',
       borderGradient: 'from-orange-500 to-amber-600',
-      tags: ['Cloudflare', 'CDN', 'Rendimiento Web', 'Seguridad', 'Infraestructura'],
+      tags: currentLanguage === 'en' 
+        ? ['Cloudflare', 'CDN', 'Web Performance', 'Security', 'Infrastructure']
+        : ['Cloudflare', 'CDN', 'Rendimiento Web', 'Seguridad', 'Infraestructura'],
       slug: 'cloudflare-infraestructura-invisible-que-hace-tu-web-premium',
       image: '/blog-compressed/blog-15-cloudflare.webp',
       rating: 4.9,
@@ -56,15 +71,16 @@ const BlogPage = () => {
     },
     {
       id: 14,
-      title: 'Tu Cerebro No Busca Información: Busca Sorpresa Mínima | Andy Clark',
-      excerpt: 'Andy Clark revolucionó la neurociencia: el cerebro es una máquina de predicción. No reacciona al mundo, lo anticipa. Si tu marca entiende el Free Energy Principle, deja de competir por atención y empieza a operar en la capa predictiva donde realmente se toman las decisiones.',
+      ...getPostContent('tu-cerebro-no-busca-informacion-busca-sorpresa-minima-andy-clark'),
       category: 'neuroscience',
       author: 'Luis Virrueta',
-      date: '10 Dic 2025',
-      readTime: '17 min',
+      date: currentLanguage === 'en' ? 'Dec 10, 2025' : '10 Dic 2025',
+      readTime: currentLanguage === 'en' ? '14 min' : '17 min',
       gradient: 'from-violet-500/20 to-indigo-600/20',
       borderGradient: 'from-violet-500 to-indigo-600',
-      tags: ['Andy Clark', 'Neurociencia', 'Cerebro Bayesiano', 'Branding Predictivo', 'Free Energy'],
+      tags: currentLanguage === 'en' 
+        ? ['Andy Clark', 'Neuroscience', 'Bayesian Brain', 'Predictive Branding', 'Free Energy']
+        : ['Andy Clark', 'Neurociencia', 'Cerebro Bayesiano', 'Branding Predictivo', 'Free Energy'],
       slug: 'tu-cerebro-no-busca-informacion-busca-sorpresa-minima-andy-clark',
       image: '/blog-compressed/blog-14-no-busca-informacion.webp',
       rating: 4.8,
@@ -73,15 +89,16 @@ const BlogPage = () => {
     },
     {
       id: 13,
-      title: '¿Tu Cerebro Decide Antes Que Tú? El Experimento Que Rompe el Marketing',
-      excerpt: 'Benjamin Libet demostró que tu cerebro se activa 300ms ANTES de que sientas la intención de actuar. Si el 95% de decisiones son inconscientes, ¿por qué las marcas siguen siendo racionales?',
+      ...getPostContent('tu-cerebro-decide-antes-que-tu-experimento-libet'),
       category: 'psychology',
       author: 'Luis Virrueta',
-      date: '5 Dic 2025',
+      date: currentLanguage === 'en' ? 'Dec 5, 2025' : '5 Dic 2025',
       readTime: '13 min',
       gradient: 'from-rose-500/20 to-purple-600/20',
       borderGradient: 'from-rose-500 to-purple-600',
-      tags: ['Neurociencia', 'Decisiones Irracionales', 'Experimento Libet', 'Branding'],
+      tags: currentLanguage === 'en' 
+        ? ['Neuroscience', 'Irrational Decisions', 'Libet Experiment', 'Branding']
+        : ['Neurociencia', 'Decisiones Irracionales', 'Experimento Libet', 'Branding'],
       slug: 'tu-cerebro-decide-antes-que-tu-experimento-libet',
       image: '/blog-compressed/blog-13-cerebro-decide-antes.webp',
       rating: 4.7,
@@ -90,15 +107,16 @@ const BlogPage = () => {
     },
     {
       id: 12,
-      title: 'La Inteligencia No Acumula: Reorganiza | Neurociencia del Branding',
-      excerpt: 'Desde Hebb hasta Hinton (IA): la ciencia demuestra que la inteligencia no es acumulación, es reorganización. Descubre cómo aplicar neuroplasticidad y psicología cognitiva para que tu marca sea memorable.',
+      ...getPostContent('inteligencia-no-acumula-reorganiza-neurociencia-branding'),
       category: 'psychology',
       author: 'Luis Virrueta',
-      date: '28 Nov 2025',
+      date: currentLanguage === 'en' ? 'Nov 28, 2025' : '28 Nov 2025',
       readTime: '15 min',
       gradient: 'from-cyan-500/20 to-blue-600/20',
       borderGradient: 'from-cyan-500 to-blue-600',
-      tags: ['Neurociencia', 'Branding Inteligente', 'Psicología Cognitiva', 'IA', 'Diseño'],
+      tags: currentLanguage === 'en' 
+        ? ['Neuroscience', 'Intelligent Branding', 'Cognitive Psychology', 'AI', 'Design']
+        : ['Neurociencia', 'Branding Inteligente', 'Psicología Cognitiva', 'IA', 'Diseño'],
       slug: 'inteligencia-no-acumula-reorganiza-neurociencia-branding',
       image: '/blog-compressed/blog-12-inteligencia-no-acumula.webp',
       rating: 4.9,
@@ -107,15 +125,16 @@ const BlogPage = () => {
     },
     {
       id: 11,
-      title: '¿Qué IA Contratar en 2025? ChatGPT vs Gemini vs Grok: Comparativa Real',
-      excerpt: 'Guía práctica para decidir qué inteligencia artificial usar en tu negocio. Comparación clara de ChatGPT, Google Gemini y Grok con casos de uso reales, precios y recomendaciones por industria.',
+      ...getPostContent('que-ia-contratar-2025-comparativa-completa'),
       category: 'trends',
       author: 'Luis Virrueta',
-      date: '21 Nov 2025',
+      date: currentLanguage === 'en' ? 'Nov 21, 2025' : '21 Nov 2025',
       readTime: '19 min',
       gradient: 'from-indigo-500/20 to-purple-600/20',
       borderGradient: 'from-indigo-500 to-purple-600',
-      tags: ['ChatGPT', 'Google Gemini', 'Grok', 'Comparativa IA', 'Guía Práctica'],
+      tags: currentLanguage === 'en' 
+        ? ['ChatGPT', 'Google Gemini', 'Grok', 'AI Comparison', 'Practical Guide']
+        : ['ChatGPT', 'Google Gemini', 'Grok', 'Comparativa IA', 'Guía Práctica'],
       slug: 'que-ia-contratar-2025-comparativa-completa',
       image: '/blog-compressed/blog-11-que-ia-contratar.webp',
       rating: 4.8,
