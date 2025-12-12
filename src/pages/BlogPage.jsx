@@ -35,6 +35,25 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 17,
+      ...getPostContent('12-arquetipos-jung-branding-cual-elegir-marca'),
+      category: 'branding',
+      author: 'Luis Virrueta',
+      date: currentLanguage === 'en' ? 'Dec 14, 2025' : '14 Dic 2025',
+      readTime: '24 min',
+      gradient: 'from-amber-600/20 via-orange-500/20 to-rose-600/20',
+      borderGradient: 'from-amber-600 via-orange-500 to-rose-600',
+      tags: currentLanguage === 'en' 
+        ? ['Jung Archetypes', 'Brand Psychology', 'Brand Strategy', 'Carl Jung', 'Brand Personality', 'Design']
+        : ['Arquetipos de Jung', 'Psicología de Marca', 'Estrategia de Marca', 'Carl Jung', 'Personalidad de Marca', 'Diseño'],
+      slug: '12-arquetipos-jung-branding-cual-elegir-marca',
+      image: '/blog-compressed/blog-17-arquetipos-jung.webp',
+      heroImage: '/blog-compressed/blog-17-arquetipos-jung.webp',
+      rating: 5.0,
+      commentsCount: 32,
+      featured: true
+    },
+    {
       id: 16,
       ...getPostContent('mapa-completo-inteligencias-artificiales-2025-cual-usar'),
       category: 'trends',

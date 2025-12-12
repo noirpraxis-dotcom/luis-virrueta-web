@@ -4,6 +4,80 @@ import { MessageCircle, Heart, Reply, MoreHorizontal } from 'lucide-react'
 
 // Comentarios específicos por artículo (MIXTOS: Español + Inglés)
 const articleComments = {
+  '12-arquetipos-jung-branding-cual-elegir-marca': [
+    {
+      id: 1,
+      author: 'Sofía Mendoza',
+      avatar: 'SM',
+      date: 'Hace 3 horas',
+      comment: 'WOW. Llevaba 2 años sin entender POR QUÉ mi branding no conectaba. Soy fotógrafa y me di cuenta que intentaba ser Gobernante (exclusiva, cara) cuando mi esencia real es Creador. Game changer total.',
+      likes: 83,
+      gradient: 'from-amber-600 to-orange-500'
+    },
+    {
+      id: 2,
+      author: 'Michael Chen',
+      avatar: 'MC',
+      date: '5 hours ago',
+      comment: 'The case study breakdown of Apple evolving from Rebel (1984) to Magician (2001+) is fascinating. Shows archetypes can evolve but need DECADES of consistency first. This article is a masterclass.',
+      likes: 71,
+      gradient: 'from-blue-500 to-cyan-500'
+    },
+    {
+      id: 3,
+      author: 'Isabella Romano',
+      avatar: 'IR',
+      date: 'Hace 6 horas',
+      comment: 'El framework LUXMANIA de Color + Tipografía + Tono de Voz + Motion Graphics por arquetipo es oro puro. Ya rediseñé toda mi marca de cafetería siguiendo el arquetipo Inocente. Clientes dicen "se siente más auténtica".',
+      likes: 68,
+      gradient: 'from-pink-500 to-rose-600'
+    },
+    {
+      id: 4,
+      author: 'David Thompson',
+      avatar: 'DT',
+      date: '12 hours ago',
+      comment: 'I\'m a brand strategist and have read DOZENS of archetype articles. This is the ONLY one that combines Jung theory + practical design implementation + real brand examples. The 4-week roadmap is actionable gold.',
+      likes: 64,
+      gradient: 'from-purple-600 to-indigo-600'
+    },
+    {
+      id: 5,
+      author: 'Ana Martínez',
+      avatar: 'AM',
+      date: 'Hace 1 día',
+      comment: 'Error #1 (mezclar arquetipos incompatibles) explica TODO lo que estaba haciendo mal. Intentaba ser Héroe + Cuidador al mismo tiempo. Ahora soy 100% Cuidador y mis ventas de terapia aumentaron 40% en 2 meses.',
+      likes: 59,
+      gradient: 'from-green-500 to-emerald-600'
+    },
+    {
+      id: 6,
+      author: 'Lucas Silva',
+      avatar: 'LS',
+      date: 'Hace 1 día',
+      comment: 'Los 12 arquetipos con paleta + tipografía + casos reales (Nike, Patagonia, Disney, Harley) es una educación completa de branding. Guardé este artículo como Biblia. Volveré cada vez que diseñe marca.',
+      likes: 52,
+      gradient: 'from-red-500 to-orange-600'
+    },
+    {
+      id: 7,
+      author: 'Emma Lindström',
+      avatar: 'EL',
+      date: '2 days ago',
+      comment: 'The Patagonia case study (Explorer archetype + environmental consciousness) shows how authenticity = loyalty. "Don\'t Buy This Jacket" campaign is coherence at its peak. Inspiring for my sustainable brand.',
+      likes: 48,
+      gradient: 'from-teal-500 to-cyan-600'
+    },
+    {
+      id: 8,
+      author: 'Roberto Gómez',
+      avatar: 'RG',
+      date: 'Hace 2 días',
+      comment: 'El análisis de Old Spice transformándose de marca de abuelos a Bufón millennial (+125% ventas en 1 año) demuestra el PODER de elegir el arquetipo correcto. Brutal caso de rebranding.',
+      likes: 41,
+      gradient: 'from-yellow-500 to-amber-600'
+    }
+  ],
   'mapa-completo-inteligencias-artificiales-2025-cual-usar': [
     {
       id: 1,

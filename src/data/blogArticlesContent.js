@@ -406,6 +406,441 @@ const blogArticlesContent = {
       ]
     },
 
+    // Artículo 17 - Los 12 Arquetipos de Jung
+    '12-arquetipos-jung-branding-cual-elegir-marca': {
+      title: 'Los 12 Arquetipos de Jung Aplicados al Branding: Descubre la Personalidad Oculta de Tu Marca',
+      author: 'Luis Virrueta',
+      date: '14 Dic 2025',
+      readTime: '24 min',
+      category: 'Branding × Psychology',
+      tags: ['Arquetipos de Jung', 'Carl Jung', 'Personalidad de Marca', 'Brand Archetype', 'Estrategia de Marca', 'Psicología'],
+      gradient: 'from-amber-600 via-orange-500 to-rose-600',
+      sections: [
+        {
+          type: 'intro',
+          content: 'Tu marca ya tiene personalidad. Solo que aún no la has descubierto. El 89% de las decisiones de compra son emocionales, no racionales (Harvard Business Review). Pero aquí está el secreto que las grandes marcas conocen: las emociones humanas no son infinitas ni aleatorias. Carl Jung descubrió que existen exactamente 12 arquetipos universales que resuenan en el inconsciente colectivo de toda la humanidad. Apple, Nike, Patagonia no son exitosas por accidente. Son exitosas porque dominaron su arquetipo y lo ejecutan con consistencia absoluta en cada punto de contacto. Este artículo une Diseño + Psicología + Estrategia para que descubras cuál de los 12 arquetipos define tu marca y cómo implementarlo en tu sistema visual completo.'
+        },
+        {
+          type: 'heading',
+          title: '¿Qué Son los Arquetipos de Jung? La Ciencia Detrás de la Conexión Emocional',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'Carl Jung, psicólogo suizo y fundador de la psicología analítica, descubrió algo revolucionario: existen patrones universales de comportamiento humano que se repiten en todas las culturas, épocas y geografías. Los llamó arquetipos, y viven en lo que Jung denominó el "inconsciente colectivo" - una capa profunda de la psique humana que compartimos todos como especie.'
+        },
+        {
+          type: 'highlight',
+          content: '"Los arquetipos son formas o imágenes de naturaleza colectiva que se dan prácticamente en toda la tierra como elementos constitutivos de los mitos y, al mismo tiempo, como productos autóctonos e individuales de origen inconsciente."',
+          author: 'Carl Jung, Arquetipos e Inconsciente Colectivo'
+        },
+        {
+          type: 'text',
+          content: 'En branding, los arquetipos funcionan como atajos psicológicos. Cuando tu marca adopta un arquetipo claro, el cerebro de tu audiencia lo reconoce instantáneamente a nivel subconsciente. No necesitas explicar quién eres. Tu cliente lo siente. Es la diferencia entre una marca que comunica y una marca que resuena.'
+        },
+        {
+          type: 'statsGrid',
+          stats: [
+            { metric: '12', label: 'Arquetipos universales identificados por Carl Jung que definen toda personalidad de marca posible', source: 'Jung, 1959' },
+            { metric: '89%', label: 'De las decisiones de compra son emocionales, no racionales', source: 'Harvard Business Review' },
+            { metric: '3.2 seg', label: 'Tiempo que tarda el cerebro en formar impresión de marca basada en arquetipo visual', source: 'Princeton University, 2006' },
+            { metric: '64%', label: 'De consumidores sienten conexión emocional con marcas que comparten sus valores arquetipos', source: 'Harvard Business Review, 2015' }
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'La Matriz de Motivaciones: Los 4 Impulsos Humanos Fundamentales',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'Los 12 arquetipos no son arbitrarios. Se organizan en 4 cuadrantes según la motivación humana fundamental que buscan satisfacer:'
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'ESTABILIDAD Y CONTROL (Orden del Caos)',
+          content: 'Arquetipos que buscan crear estructura, protección y dominio del entorno.\n\n**• El Gobernante:** Liderazgo, control, prosperidad\n**• El Cuidador:** Protección, servicio, compasión\n**• El Creador:** Innovación, expresión, construcción\n\n**Marcas ejemplo:** Mercedes-Benz, Johnson & Johnson, LEGO',
+          gradient: 'from-blue-600 to-indigo-700'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'INDEPENDENCIA Y MAESTRÍA (Paraíso)',
+          content: 'Arquetipos que buscan conocimiento, libertad y autenticidad.\n\n**• El Inocente:** Felicidad, simplicidad, optimismo\n**• El Sabio:** Verdad, sabiduría, comprensión\n**• El Explorador:** Libertad, aventura, autodescubrimiento\n\n**Marcas ejemplo:** Coca-Cola, Google, Patagonia',
+          gradient: 'from-green-500 to-emerald-600'
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'CAMBIO Y RIESGO (Revolución)',
+          content: 'Arquetipos que buscan transformación, ruptura y trascendencia.\n\n**• El Héroe:** Valentía, maestría, dejar huella\n**• El Mago:** Transformación, hacer realidad lo imposible\n**• El Rebelde:** Revolución, romper reglas, liberación\n\n**Marcas ejemplo:** Nike, Disney, Harley-Davidson',
+          gradient: 'from-red-500 to-rose-600'
+        },
+        {
+          type: 'subsection',
+          number: '04',
+          title: 'CONEXIÓN Y PERTENENCIA (Comunidad)',
+          content: 'Arquetipos que buscan intimidad, diversión y aceptación social.\n\n**• El Hombre Corriente:** Pertenencia, autenticidad, conexión\n**• El Amante:** Intimidad, placer, belleza\n**• El Bufón:** Diversión, alegría, vivir el momento\n\n**Marcas ejemplo:** IKEA, Chanel, Old Spice',
+          gradient: 'from-pink-500 to-fuchsia-600'
+        },
+        {
+          type: 'heading',
+          title: 'Los 12 Arquetipos Explicados: Psicología + Diseño + Estrategia',
+          icon: Award
+        },
+        {
+          type: 'text',
+          content: 'A continuación, cada arquetipo desglosado con todo lo que necesitas para implementarlo: motivación profunda, promesa al cliente, paleta de colores, tipografía, tono de voz y marca icónica ejemplo con análisis de por qué funciona.'
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'EL INOCENTE (The Innocent)',
+          content: '**Motivación central:** Felicidad pura, simplicidad, optimismo ante la vida\n\n**Promesa al cliente:** "La vida puede ser simple y feliz. Mereces sentirte bien."\n\n**Miedos profundos:** Hacer algo malo, ser castigado, complejidad abrumadora\n\n**Valores de marca:** Honestidad, bondad, nostalgia, pureza, tradición\n\n**Paleta de colores:** Pasteles suaves, blanco puro, amarillo cálido, azul cielo, rosa bebé\n\n**Tipografía:** Sans-serif redondeada, amigable, legible. Ejemplos: Avenir Round, Gilroy, Quicksand\n\n**Tono de voz:** Positivo, optimista, sincero, simple. "Abre la felicidad" (Coca-Cola)\n\n**Industrias frecuentes:** Bebidas, snacks, productos infantiles, productos de limpieza, cosmética natural',
+          gradient: 'from-yellow-300 to-amber-400'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Coca-Cola',
+          archetype: 'El Inocente',
+          analysis: 'Coca-Cola es el ejemplo perfecto del arquetipo Inocente ejecutado con maestría durante más de un siglo. Su promesa nunca ha cambiado: felicidad simple y pura.\n\n**Evidencia visual:**\n• Rojo brillante = energía positiva, pasión inocente\n• Tipografía Spencerian Script (1887) = nostalgia, tradición, autenticidad\n• Imágenes: familias felices, Santa Claus, osos polares, momentos compartidos\n\n**Evidencia verbal:**\n• "Open Happiness" (2009-2016)\n• "Taste the Feeling" (2016-presente)\n• Copy: siempre sobre momentos simples de alegría\n\n**Por qué funciona:** Coca-Cola no vende bebida. Vende la fantasía del Inocente: un mundo donde la felicidad es simple, pura y está a solo un sorbo de distancia. En un mundo cada vez más complejo, esta promesa arquetípica resuena profundamente.',
+          results: [
+            'Valor de marca: $97.9 mil millones (Interbrand 2023)',
+            'Reconocimiento global: 94% de la población mundial',
+            'Consistencia arquetípica: 138 años manteniendo el mismo arquetipo'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'EL SABIO (The Sage)',
+          content: '**Motivación central:** Buscar la verdad, adquirir conocimiento, compartir sabiduría\n\n**Promesa al cliente:** "La verdad te hará libre. Te ayudaré a entender el mundo."\n\n**Miedos profundos:** Ignorancia, ser engañado, desinformación\n\n**Valores de marca:** Inteligencia, análisis, investigación, objetividad, enseñanza\n\n**Paleta de colores:** Azules profundos (confianza, sabiduría), grises (neutralidad), blancos (claridad)\n\n**Tipografía:** Serif clásica (autoridad intelectual) o sans-serif limpia (claridad moderna). Ejemplos: Garamond, Georgia, Product Sans\n\n**Tono de voz:** Educativo, objetivo, analítico, experto. "Organizar la información del mundo" (Google)\n\n**Industrias frecuentes:** Tecnología, educación, noticias, consultoría, salud, investigación',
+          gradient: 'from-blue-600 to-indigo-700'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Google',
+          archetype: 'El Sabio',
+          analysis: 'Google domina el arquetipo del Sabio desde su fundación. Su misión siempre fue democratizar el conocimiento.\n\n**Evidencia visual:**\n• Logo multicolor = diversidad de conocimiento, accesibilidad\n• Interfaz minimalista = claridad, sin distracciones del conocimiento\n• Fondo blanco = página en blanco, neutralidad, objetividad\n\n**Evidencia verbal:**\n• Misión original: "Organizar la información del mundo y hacerla universalmente accesible y útil"\n• Lema histórico: "Don\'t be evil" = verdad por encima de todo\n• Productos: Search, Scholar, Books, Maps = herramientas de conocimiento\n\n**Por qué funciona:** Google no vende publicidad (aunque eso genere ingresos). Vende la promesa del Sabio: acceso ilimitado al conocimiento humano. Cada producto refuerza este arquetipo: desde YouTube (aprender cualquier habilidad) hasta Google Scholar (investigación académica).',
+          results: [
+            'Valor de marca: $281 mil millones (2023)',
+            '92% de cuota de mercado en búsquedas',
+            'Verbo universal: "Googlear" = buscar conocimiento'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'EL EXPLORADOR (The Explorer)',
+          content: '**Motivación central:** Libertad absoluta, aventura, autodescubrimiento auténtico\n\n**Promesa al cliente:** "Descubre quién eres realmente. El mundo es tu frontera."\n\n**Miedos profundos:** Quedarse atrapado, conformismo, vacío interior, dependencia\n\n**Valores de marca:** Independencia, autenticidad, aventura, individualidad, naturaleza\n\n**Paleta de colores:** Tierra (marrón, beige), verdes naturales, naranjas aventureros, azules cielo\n\n**Tipografía:** Sans-serif robusta, aventurera. Ejemplos: Interstate, DIN, Trade Gothic\n\n**Tono de voz:** Aventurero, auténtico, inspirador, desafiante. "Because it\'s there" (mentalidad exploradora)\n\n**Industrias frecuentes:** Outdoor, viajes, automóviles, tecnología disruptiva, moda auténtica',
+          gradient: 'from-green-600 to-teal-600'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Patagonia',
+          archetype: 'El Explorador',
+          analysis: 'Patagonia es el arquetipo del Explorador con conciencia. No solo invita a la aventura, sino a la exploración consciente.\n\n**Evidencia visual:**\n• Colores tierra y montaña: conexión con naturaleza\n• Fotografía real de expediciones: autenticidad total\n• Logo minimalista: esencialismo del explorador (solo lo necesario)\n\n**Evidencia verbal:**\n• Manifiesto: "Build the best product, cause no unnecessary harm, use business to protect nature"\n• Campaña "Don\'t Buy This Jacket" (Black Friday): anti-consumismo, autenticidad radical\n• Copy: siempre sobre aventuras reales, no fantasías publicitarias\n\n**Por qué funciona:** Patagonia atrae al Explorador auténtico, no al turista. Su postura ambiental radical no es marketing: es coherencia arquetípica. El verdadero Explorador respeta la naturaleza que explora. Esta autenticidad genera lealtad fanática.',
+          results: [
+            'Ingresos: $3 mil millones (2023) sin publicidad tradicional',
+            'Clientes más leales de cualquier marca outdoor (NPS 73)',
+            'Yvon Chouinard donó empresa ($3B) a lucha climática = coherencia arquetípica absoluta'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '04',
+          title: 'EL REBELDE (The Outlaw / Rebel)',
+          content: '**Motivación central:** Romper reglas, liberar, revolucionar el status quo\n\n**Promesa al cliente:** "Las reglas están para romperse. Únete a la revolución."\n\n**Miedos profundos:** Ser impotente, trivial, ordinario, conformista\n\n**Valores de marca:** Disrupción, libertad, cambio radical, autenticidad salvaje\n\n**Paleta de colores:** Negro (rebeldía), rojo (revolución), plateado metálico (futuro), morado oscuro\n\n**Tipografía:** Display bold, gótica, o sans-serif agresiva. Ejemplos: Impact, Bebas Neue, Druk\n\n**Tono de voz:** Confrontacional, desafiante, disruptivo, liberador. "Think Different" (Apple)\n\n**Industrias frecuentes:** Motos, música, moda alternativa, tecnología disruptiva, bebidas energéticas',
+          gradient: 'from-black via-red-700 to-black'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Harley-Davidson',
+          archetype: 'El Rebelde',
+          analysis: 'Harley-Davidson no vende motos. Vende la fantasía de libertad absoluta del Rebelde.\n\n**Evidencia visual:**\n• Negro + naranja = rebeldía + energía\n• Logo águila = libertad americana, espíritu indomable\n• Fotografía: carreteras abiertas, jinetes solitarios, actitud desafiante\n\n**Evidencia verbal:**\n• "Screw it, let\'s ride" = anti-planificación, anti-conformismo\n• No hablan de especificaciones técnicas, hablan de LIBERTAD\n• Comunidad HOG (Harley Owners Group) = hermandad de rebeldes\n\n**Por qué funciona:** Harley vende a ejecutivos corporativos de 50 años la ilusión de ser rebeldes los fines de semana. No importa que nunca rompan reglas reales. El arquetipo les permite experimentar la FANTASÍA de rebeldía de forma segura. Esto es branding arquetípico maestro.',
+          results: [
+            'Lealtad extrema: 90% de clientes vuelven a comprar Harley',
+            'Tatuajes de marca: miles de fans tatuados con logo (ultimate brand loyalty)',
+            'Comunidad global: 1+ millón de miembros activos en HOG'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '05',
+          title: 'EL MAGO (The Magician)',
+          content: '**Motivación central:** Transformar realidad, hacer realidad lo imposible, crear experiencias trascendentes\n\n**Promesa al cliente:** "Puedo hacer que tus sueños se vuelvan realidad. Lo imposible es posible."\n\n**Miedos profundos:** Consecuencias negativas imprevistas, no lograr transformación deseada\n\n**Valores de marca:** Transformación, visión, innovación, experiencias memorables, expansión de consciencia\n\n**Paleta de colores:** Púrpura (magia, misterio), dorado (transformación), negro profundo (misterio), azul eléctrico\n\n**Tipografía:** Futurista, elegante con toques místicos. Ejemplos: Futura, Avant Garde, custom experimental\n\n**Tono de voz:** Visionario, transformador, inspirador, místico. "Where dreams come true" (Disney)\n\n**Industrias frecuentes:** Entretenimiento, tecnología transformadora, cosmética high-end, experiencias premium',
+          gradient: 'from-purple-600 via-violet-500 to-fuchsia-600'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Disney',
+          archetype: 'El Mago',
+          analysis: 'Disney es el Mago arquetípico perfecto: transforma la realidad ordinaria en experiencia mágica.\n\n**Evidencia visual:**\n• Castillo = portal a mundo mágico transformado\n• Fuegos artificiales = transformación visual de la noche\n• Imagineering (no "construcción") = lenguaje de transformación\n\n**Evidencia verbal:**\n• "Where dreams come true" = promesa de transformación directa\n• "Imagineering" = ingeniería + imaginación = magia aplicada\n• No son "empleados", son "cast members" = actores en transformación de realidad\n\n**Por qué funciona:** Disney no vende parques temáticos. Vende la capacidad de transformar tu realidad durante tu visita. Cada detalle está diseñado para mantener la ilusión de que la magia es real. Esta coherencia arquetípica total genera experiencias que la gente recuerda toda la vida.',
+          results: [
+            'Valor de marca: $57 mil millones (2023)',
+            'NPS (lealtad) promedio: 77 (excepcional)',
+            'Visitantes repiten 10+ veces en su vida (transformación adictiva)'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '06',
+          title: 'EL HÉROE (The Hero)',
+          content: '**Motivación central:** Valentía, maestría, dejar huella, superar desafíos imposibles\n\n**Promesa al cliente:** "Si puedes soñarlo, puedes lograrlo. Yo te daré las herramientas."\n\n**Miedos profundos:** Debilidad, vulnerabilidad, ser cobarde, no estar a la altura\n\n**Valores de marca:** Coraje, determinación, excelencia, superación, victoria\n\n**Paleta de colores:** Rojo (acción, poder), negro (fortaleza), dorado (victoria), blanco (pureza del héroe)\n\n**Tipografía:** Sans-serif bold, fuerte, dinámica. Ejemplos: Futura Bold, Helvetica Bold, Trade Gothic Bold\n\n**Tono de voz:** Motivacional, retador, inspirador, empoderador. "Just Do It" (Nike)\n\n**Industrias frecuentes:** Deportes, fitness, automóviles de alto rendimiento, seguros, militar',
+          gradient: 'from-red-600 to-orange-600'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Nike',
+          archetype: 'El Héroe',
+          analysis: 'Nike es el caso de estudio definitivo del arquetipo Héroe con 35+ años de consistencia absoluta.\n\n**Evidencia visual:**\n• Swoosh = movimiento, velocidad, victoria\n• Negro + rojo = poder + acción\n• Fotografía: atletas en momento de máximo esfuerzo, sudor, determinación\n\n**Evidencia verbal:**\n• "Just Do It" (1988-presente) = llamado a la acción heroica\n• "Find Your Greatness" = todo el mundo puede ser héroe\n• "Winning Isn\'t Comfortable" = el camino del héroe es duro\n\n**Por qué funciona:** Nike no vende zapatos. Vende la identidad del Héroe. Cuando usas Nike, adoptas temporalmente la mentalidad heroica. Esta transformación psicológica es tan poderosa que justifica precios premium y lealtad fanática. El arquetipo está tan interiorizado que "Just Do It" se convirtió en filosofía de vida global.',
+          results: [
+            'Valor de marca: $50 mil millones (2023)',
+            'Crecimiento: 35% ingresos (2019-2023) durante pandemia',
+            'Frase universal: "Just Do It" reconocida por 93% población global'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '07',
+          title: 'EL AMANTE (The Lover)',
+          content: '**Motivación central:** Intimidad, placer sensorial, belleza, conexión romántica\n\n**Promesa al cliente:** "Mereces sentirte deseado, especial, hermoso. Yo te haré irresistible."\n\n**Miedos profundos:** No ser amado, ser ignorado, soledad, ser ordinario/invisible\n\n**Valores de marca:** Pasión, sensualidad, belleza, intimidad, exclusividad\n\n**Paleta de colores:** Rojo pasión, rosa romántico, dorado (lujo), negro elegante, morado sensual\n\n**Tipografía:** Serif elegante, script sofisticado. Ejemplos: Didot, Bodoni, Great Vibes\n\n**Tono de voz:** Seductor, sensorial, íntimo, aspiracional. "Pour Homme" (lenguaje exclusivo)\n\n**Industrias frecuentes:** Moda de lujo, perfumes, joyería, lencería, chocolate premium, vinos',
+          gradient: 'from-rose-500 via-pink-500 to-red-500'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Chanel',
+          archetype: 'El Amante',
+          analysis: 'Chanel domina el arquetipo del Amante desde 1921 con Chanel No. 5, el perfume más icónico de la historia.\n\n**Evidencia visual:**\n• Negro + blanco + dorado = elegancia, sofisticación, lujo\n• Fotografía: close-ups sensuales, texturas lujosas, luz dramática\n• Packaging: minimalista pero precioso = belleza refinada\n\n**Evidencia verbal:**\n• Marilyn Monroe: "What do I wear to bed? Chanel No. 5" = sensualidad pura\n• No describen productos, describen SENSACIONES\n• Copy siempre sobre sentirse irresistible, no sobre ingredientes\n\n**Por qué funciona:** Chanel no vende perfume o ropa. Vende la fantasía del Amante: sentirte deseado, elegante, irresistible. Cada producto es un objeto de deseo diseñado para transformarte en objeto de deseo. Esta promesa arquetípica justifica precios estratosféricos.',
+          results: [
+            'Chanel No. 5: se vende 1 botella cada 30 segundos globalmente',
+            'Valor marca: $19.4 mil millones (2023)',
+            'Margen promedio: 60-80% (poder arquetípico = premium pricing)'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '08',
+          title: 'EL BUFÓN (The Jester)',
+          content: '**Motivación central:** Diversión, vivir el momento, hacer reír, conectar mediante alegría\n\n**Promesa al cliente:** "La vida es demasiado corta para ser seria. Divirtámonos juntos."\n\n**Miedos profundos:** Ser aburrido, que lo ignoren, no encajar, monotonía\n\n**Valores de marca:** Diversión, humor, espontaneidad, irreverencia, vivir el presente\n\n**Paleta de colores:** Brillantes, contrastantes, juguetonas: amarillo, naranja, rosa intenso, verde limón\n\n**Tipografía:** Display divertida, redondeada, juguetona. Ejemplos: Cooper Black, VAG Rounded, Comic Sans (sí, en serio)\n\n**Tono de voz:** Divertido, irónico, irreverente, ligero. "Smell like a man, man" (Old Spice)\n\n**Industrias frecuentes:** Snacks, bebidas, entretenimiento, apps sociales, marcas que necesitan rebranding joven',
+          gradient: 'from-yellow-400 via-orange-400 to-pink-500'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Old Spice',
+          archetype: 'El Bufón',
+          analysis: 'Old Spice ejecutó uno de los rebrandings más exitosos de la historia (2010) al adoptar completamente el arquetipo del Bufón.\n\n**Evidencia visual:**\n• Colores brillantes, ridículamente saturados\n• Hombre en caballo shirtless = absurdo visual intencional\n• Edición rápida, transiciones imposibles = comedia física\n\n**Evidencia verbal:**\n• "Smell Like a Man, Man" = auto-parodia de masculinidad\n• "I\'m on a horse" = absurdo total\n• Responses de Twitter en tiempo real = espontaneidad del bufón\n\n**Por qué funciona:** Old Spice era marca de abuelos (problema grave). Al adoptar el arquetipo del Bufón, se auto-parodió y se volvió cool para millennials. El humor absurdo viral generó 1.4 mil millones de impresiones. Las ventas subieron 125% en 1 año. Esta es la transformación arquetípica perfecta.',
+          results: [
+            'Ventas: +125% en primer año post-rebranding (2010-2011)',
+            'YouTube: 1.4 mil millones de views (campaña viral)',
+            'Target demográfico: 11-34 años, antes era 45+ (rejuvenecimiento total)'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '09',
+          title: 'EL HOMBRE CORRIENTE (The Everyman / Regular Guy)',
+          content: '**Motivación central:** Pertenencia, conexión auténtica, ser uno más (en el buen sentido)\n\n**Promesa al cliente:** "Eres uno de nosotros. Aquí todos son bienvenidos tal como son."\n\n**Miedos profundos:** Ser excluido, destacar de forma negativa, no pertenecer, elitismo\n\n**Valores de marca:** Autenticidad, igualdad, honestidad, pragmatismo, comunidad\n\n**Paleta de colores:** Azules denim, tierra, neutros cálidos, colores "reales" no aspiracionales\n\n**Tipografía:** Sans-serif honesta, legible, sin pretensiones. Ejemplos: Arial, Helvetica, Open Sans\n\n**Tono de voz:** Cercano, honesto, directo, inclusivo. "Para la mayoría de la gente" (IKEA)\n\n**Industrias frecuentes:** Retail masivo, comida rápida, bancos retail, apps de uso diario, transporte público',
+          gradient: 'from-blue-600 to-cyan-600'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'IKEA',
+          archetype: 'El Hombre Corriente',
+          analysis: 'IKEA es el Hombre Corriente perfecto: diseño democrático accesible para todos.\n\n**Evidencia visual:**\n• Azul + amarillo = colores bandera sueca (orgullo de origen común)\n• Fotografía: familias reales, hogares vividos (no mansiones aspiracionales)\n• Showrooms: departamentos pequeños realistas, no palacios\n\n**Evidencia verbal:**\n• "Para la mayoría de la gente" = manifiesto del Hombre Corriente\n• Nombres de productos suecos = autenticidad, no pretensión\n• Copy: siempre sobre problemas reales de gente real\n\n**Por qué funciona:** IKEA no vende muebles de lujo. Vende la promesa de que el buen diseño NO es solo para ricos. Esta democratización del diseño resuena profundamente con el arquetipo del Hombre Corriente: "Tú también mereces belleza funcional". Esta honestidad arquetípica genera lealtad masiva.',
+          results: [
+            'Visitas anuales: 820 millones (pre-pandemia)',
+            'Catálogo: publicación más distribuida del mundo después de la Biblia',
+            'Modelo flat-pack: democratización del diseño = coherencia arquetípica'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '10',
+          title: 'EL CUIDADOR (The Caregiver)',
+          content: '**Motivación central:** Proteger, nutrir, servir, cuidar del bienestar ajeno\n\n**Promesa al cliente:** "Te cuidaré como a mi propia familia. Estás seguro conmigo."\n\n**Miedos profundos:** Egoísmo, ingratitud, ver sufrir a otros que podría haber ayudado\n\n**Valores de marca:** Compasión, protección, servicio, generosidad, altruismo\n\n**Paleta de colores:** Azules suaves (confianza, calma), verdes (salud), blancos (pureza, limpieza)\n\n**Tipografía:** Serif cálida o sans-serif amable. Ejemplos: Georgia, Merriweather, Source Sans Pro\n\n**Tono de voz:** Compasivo, protector, cálido, servicial. "A company that cares" (Johnson & Johnson)\n\n**Industrias frecuentes:** Salud, seguros, ONG, productos infantiles, servicios de cuidado, hospitales',
+          gradient: 'from-blue-400 to-teal-500'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Johnson & Johnson',
+          archetype: 'El Cuidador',
+          analysis: 'Johnson & Johnson encarna el arquetipo del Cuidador desde 1886 con consistencia absoluta.\n\n**Evidencia visual:**\n• Logo script = calidez, toque humano personal\n• Packaging: azules suaves, blancos = limpieza, confianza\n• Fotografía: madres con bebés, momentos de cuidado íntimo\n\n**Evidencia verbal:**\n• Credo corporativo (1943): "Nuestra primera responsabilidad es con los pacientes"\n• "A Family Company" = cuidado extendido a toda familia\n• Crisis Tylenol (1982): retiraron $100M en producto proactivamente = cuidado por encima de ganancias\n\n**Por qué funciona:** J&J no vende productos. Vende la promesa del Cuidador: "Confía en nosotros con lo más vulnerable (tus hijos)". Esta confianza arquetípica es tan profunda que sobrevivió múltiples crisis. El credo de poner pacientes primero no es marketing: es coherencia arquetípica total.',
+          results: [
+            'Valor de marca: $16.8 mil millones (2023)',
+            'Trust score: 92% (uno de los más altos industria farmacéutica)',
+            'Crisis management: caso de estudio Harvard sobre coherencia arquetípica en crisis'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '11',
+          title: 'EL GOBERNANTE (The Ruler)',
+          content: '**Motivación central:** Control, liderazgo, crear orden del caos, prosperidad\n\n**Promesa al cliente:** "El poder y control crean orden. Yo te daré lo mejor, porque lo mereces."\n\n**Miedos profundos:** Caos, ser derrocado, perder control, anarquía\n\n**Valores de marca:** Poder, responsabilidad, liderazgo, exclusividad, estabilidad\n\n**Paleta de colores:** Negro (poder), dorado (riqueza), azul marino profundo (autoridad), plateado (premium)\n\n**Tipografía:** Serif clásica autoritaria. Ejemplos: Trajan, Caslon, Times New Roman refinado\n\n**Tono de voz:** Autoritario, exclusivo, refinado, comandante. "The best or nothing" (Mercedes)\n\n**Industrias frecuentes:** Autos de lujo, hoteles premium, bancos privados, relojes de lujo, marcas de status',
+          gradient: 'from-gray-900 via-yellow-600 to-gray-900'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Mercedes-Benz',
+          archetype: 'El Gobernante',
+          analysis: 'Mercedes-Benz es el Gobernante perfecto: liderazgo a través de excelencia ingenieril y status.\n\n**Evidencia visual:**\n• Estrella de tres puntas = dominio de tierra, mar y aire\n• Plateado metálico = tecnología premium, futuro controlado\n• Fotografía: ejecutivos, carreteras perfectas, arquitectura imponente\n\n**Evidencia verbal:**\n• "The best or nothing" = no hay alternativa cuando eres líder\n• "Unlike any other" = exclusividad del gobernante\n• Lenguaje técnico preciso = control total de ingeniería\n\n**Por qué funciona:** Mercedes no vende transporte. Vende la fantasía del Gobernante: control absoluto, status incuestionable, liderazgo reconocido. Cada detalle refuerza que comprando Mercedes, entras al club de quienes controlan su destino. Esta promesa arquetípica justifica precios 3-5x superiores a competencia.',
+          results: [
+            'Valor de marca: $56 mil millones (2023)',
+            'Precio promedio: $65,000 vs $35,000 industria',
+            'Retention: 69% clientes repiten Mercedes (lealtad del gobernante)'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '12',
+          title: 'EL CREADOR (The Creator)',
+          content: '**Motivación central:** Innovar, expresar, construir algo duradero, dar forma al mundo\n\n**Promesa al cliente:** "Si puedes imaginarlo, podemos crearlo juntos. Tu imaginación no tiene límites."\n\n**Miedos profundos:** Mediocridad, ejecutar mal una visión, no ser original\n\n**Valores de marca:** Imaginación, innovación, expresión, artesanía, originalidad\n\n**Paleta de colores:** Variados, creativos, arcoíris (LEGO), primarios brillantes, o monocromáticos bold\n\n**Tipografía:** Variable según industria, pero siempre con personalidad única. Ejemplos: custom fonts, display creativas\n\n**Tono de voz:** Imaginativo, inspirador, original, invitador. "Imagine" (LEGO)\n\n**Industrias frecuentes:** Juguetes, software creativo, arte, arquitectura, diseño, herramientas creativas',
+          gradient: 'from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'LEGO',
+          archetype: 'El Creador',
+          analysis: 'LEGO es el arquetipo del Creador en su forma más pura: herramientas para construir cualquier cosa imaginable.\n\n**Evidencia visual:**\n• Colores primarios brillantes = posibilidades infinitas\n• Sistema modular = construcción infinita\n• Sets sin instrucciones "Creative" = expresión total\n\n**Evidencia verbal:**\n• "Play well" (significado danés de LEGO) = crear jugando\n• "Build the future" = construcción como metáfora de vida\n• LEGO Movie: "Everything is Awesome" = celebración de creatividad\n\n**Por qué funciona:** LEGO no vende juguetes. Vende herramientas de creación ilimitada. Un set puede ser castillo, nave espacial, ciudad, lo que imagines. Esta promesa del Creador (tu imaginación es el límite) resuena con niños Y adultos. De ahí que LEGO sea jugado por toda la vida, no solo infancia.',
+          results: [
+            'Valor de marca: $7.5 mil millones (2023)',
+            'Ventas: +27% crecimiento anual (2020-2023)',
+            'AFOL (Adult Fans of LEGO): 20% de ventas = creadores de por vida'
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Framework LUXMANIA: Implementación Práctica del Arquetipo en Tu Sistema Visual',
+          icon: Zap
+        },
+        {
+          type: 'text',
+          content: 'Conocer tu arquetipo es solo el inicio. Ahora viene la parte crítica: implementarlo consistentemente en cada punto de contacto con tu audiencia. Este es el framework LUXMANIA que combina Diseño + Psicología + Estrategia para traducir arquetipo en sistema visual coherente.'
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'PALETA DE COLOR ARQUETÍPICA (Psicología Chromática)',
+          content: 'Cada arquetipo tiene familias cromáticas que resuenan con su motivación profunda:\n\n**El Inocente:** Pasteles, blanco, amarillo cálido → optimismo, pureza, simplicidad\n**El Sabio:** Azules profundos, grises, blanco → confianza, neutralidad, claridad\n**El Explorador:** Tierra, verdes naturales, naranjas → naturaleza, aventura, autenticidad\n**El Rebelde:** Negro, rojo, plateado metálico → ruptura, revolución, futuro alternativo\n**El Mago:** Púrpura, dorado, negro misterioso → transformación, magia, misterio\n**El Héroe:** Rojo, negro, dorado → acción, poder, victoria\n**El Amante:** Rojo pasión, rosa, dorado, negro elegante → deseo, lujo, intimidad\n**El Bufón:** Brillantes contrastantes (amarillo, naranja, rosa) → diversión, energía, juego\n**El Hombre Corriente:** Azul denim, tierra, neutros → accesibilidad, honestidad, realismo\n**El Cuidador:** Azul suave, verde salud, blanco → confianza, cuidado, limpieza\n**El Gobernante:** Negro, dorado, azul marino, plateado → poder, lujo, autoridad\n**El Creador:** Variado, primarios brillantes, o monocromático bold → expresión, posibilidad',
+          gradient: 'from-cyan-500 to-blue-600'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'TIPOGRAFÍA CON PERSONALIDAD (Letterform Arquetípico)',
+          content: 'La tipografía comunica personalidad antes de que lean una palabra:\n\n**Sans-serif moderna (Futura, Helvetica, Avenir):** Mago, Creador, Explorador, Sabio moderno\n• Limpia, futurista, objetiva, versátil\n\n**Serif clásica (Garamond, Caslon, Georgia):** Gobernante, Sabio tradicional, Cuidador\n• Autoritaria, confiable, establecida, sofisticada\n\n**Script/Caligráfica (Great Vibes, Lobster, Pacifico):** Amante, Inocente\n• Elegante, personal, sensual, cálida\n\n**Display Bold (Impact, Bebas Neue, Druk):** Héroe, Rebelde\n• Fuerte, confrontacional, impactante, energética\n\n**Redondeada/Juguetona (VAG Rounded, Cooper Black, Quicksand):** Bufón, Inocente, Hombre Corriente\n• Amigable, accesible, divertida, no amenazante',
+          gradient: 'from-purple-500 to-pink-600'
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'TONO DE VOZ (Copywriting Arquetípico)',
+          content: 'Cómo tu marca habla es tan importante como lo que dice:\n\n**El Inocente:** "Sonríe. La vida es simple y hermosa." (positivo, optimista, sincero)\n**El Sabio:** "Entendamos esto juntos." (educativo, objetivo, intelectual)\n**El Explorador:** "Descubre quién eres realmente." (aventurero, inspirador, auténtico)\n**El Rebelde:** "Rompe las reglas. Vive libre." (confrontacional, desafiante, liberador)\n**El Mago:** "Imagina lo imposible. Hazlo realidad." (visionario, transformador, inspirador)\n**El Héroe:** "Solo hazlo. Tú puedes." (motivacional, retador, empoderador)\n**El Amante:** "Mereces sentirte irresistible." (seductor, sensorial, íntimo)\n**El Bufón:** "La vida es corta. Divirtámonos." (divertido, irónico, irreverente)\n**El Hombre Corriente:** "Todos somos iguales aquí." (cercano, honesto, inclusivo)\n**El Cuidador:** "Te cuidamos como familia." (compasivo, protector, cálido)\n**El Gobernante:** "Lo mejor. O nada." (autoritario, exclusivo, refinado)\n**El Creador:** "Construyamos algo increíble juntos." (imaginativo, original, invitador)',
+          gradient: 'from-rose-500 to-orange-600'
+        },
+        {
+          type: 'subsection',
+          number: '04',
+          title: 'MOTION GRAPHICS (Animación con Personalidad)',
+          content: 'El movimiento comunica arquetipo de forma subconsciente:\n\n**Héroe:** Transiciones rápidas, cortes energéticos, movimiento ascendente (victoria)\n**Sabio:** Transiciones suaves, fades contemplativos, movimiento horizontal (equilibrio)\n**Bufón:** Bounces juguetonas, squash & stretch, movimiento aleatorio (caos divertido)\n**Rebelde:** Glitches intencionales, cortes abruptos, movimiento disruptivo\n**Mago:** Morphs imposibles, partículas, transformaciones fluidas\n**Explorador:** Parallax depth, cámara en movimiento, zoom outs expansivos\n**Amante:** Movimiento lento sensual, close-ups íntimos, fades románticos\n**Inocente:** Movimiento suave ligero, flotante, ascendente optimista',
+          gradient: 'from-indigo-500 to-cyan-500'
+        },
+        {
+          type: 'heading',
+          title: 'Los 4 Errores Fatales Al Elegir Tu Arquetipo (Y Cómo Evitarlos)',
+          icon: Shield
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Error #1: Mezclar Arquetipos Incompatibles',
+              description: '❌ **Problema:** Tu marca intenta ser Gobernante (exclusivo, autoritario) Y Hombre Corriente (inclusivo, accesible) al mismo tiempo.\n\n**Por qué falla:** El cerebro no puede procesar identidades contradictorias. ¿Eres para élites o para todos? No puedes ser ambos.\n\n✅ **Solución:** Elige UN arquetipo dominante (70-80%) y permite un arquetipo secundario compatible (20-30%). Ejemplo válido: Explorador (dominante) + Creador (secundario) = Patagonia.'
+            },
+            {
+              title: 'Error #2: Elegir Arquetipo Aspiracional vs Real',
+              description: '❌ **Problema:** Tu servicio real es Hombre Corriente (restaurante familiar local) pero quieres proyectar Mago (experiencia transformadora).\n\n**Por qué falla:** Promesa arquetípica que no cumples = decepción = pérdida de confianza.\n\n✅ **Solución:** Honestidad antes que aspiración. Si eres Hombre Corriente, DOMINA ese arquetipo. IKEA no pretende ser Gobernante. Es auténticamente Hombre Corriente y genera $40 mil millones anuales.'
+            },
+            {
+              title: 'Error #3: Cambiar de Arquetipo Cada 2 Años',
+              description: '❌ **Problema:** 2020 eres Rebelde, 2022 eres Sabio, 2024 eres Bufón.\n\n**Por qué falla:** La memoria de marca se construye con REPETICIÓN. Cambiar arquetipo = resetear memoria de marca = empezar de cero.\n\n✅ **Solución:** Consistencia arquetípica por DÉCADAS. Nike: 36 años del Héroe (1988-2024). Coca-Cola: 138 años del Inocente. La evolución es permitida, la revolución no.'
+            },
+            {
+              title: 'Error #4: Copiar Arquetipo de Tu Competencia Líder',
+              description: '❌ **Problema:** Tu competencia principal es Héroe (Nike), entonces tú también eres Héroe.\n\n**Por qué falla:** Nunca ganarás copiando al líder en su propio arquetipo. El líder ya posee esa posición mental.\n\n✅ **Solución:** Diferenciación estratégica. Si tu competencia es Héroe, tú sé Explorador o Rebelde o Creador. Encuentra el "white space" arquetípico en tu industria.'
+            }
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Roadmap de Implementación: De Arquetipo a Marca Coherente en 4 Semanas',
+          icon: Award
+        },
+        {
+          type: 'timeline',
+          title: 'Plan de Ejecución Práctica',
+          items: [
+            {
+              phase: 'Semana 1',
+              title: 'DESCUBRIMIENTO',
+              tasks: [
+                'Test del arquetipo con tu equipo (sesión 2 horas)',
+                'Encuesta a 10 clientes actuales: ¿Cómo describirían tu marca en 3 palabras?',
+                'Análisis de competencia: ¿Qué arquetipos dominan tu industria?',
+                'Identificación de "white space" (arquetipo poco usado en tu nicho)',
+                'Decisión final: Arquetipo primario (80%) + secundario opcional (20%)'
+              ]
+            },
+            {
+              phase: 'Semana 2',
+              title: 'DEFINICIÓN',
+              tasks: [
+                'Documentar arquetipo elegido en 1 página: motivación, promesa, miedos',
+                'Lista de 10 atributos de personalidad de tu marca',
+                'Lista de 15 palabras clave de tono de voz (y 10 que NUNCA usarás)',
+                'Definir 3 emociones core que quieres generar',
+                'Crear moodboard visual (20-30 imágenes) que capturen esencia arquetípica'
+              ]
+            },
+            {
+              phase: 'Semana 3',
+              title: 'DISEÑO',
+              tasks: [
+                'Paleta de color basada en arquetipo (3 primarios, 3 secundarios)',
+                'Selección tipográfica (1 display, 1 texto) alineada a arquetipo',
+                'Pruebas de tono de voz: reescribir 5 piezas existentes',
+                'Crear style guide visual de 1 página: color + tipo + voz + ejemplos',
+                'Diseñar 3 aplicaciones: tarjeta, post Instagram, header web'
+              ]
+            },
+            {
+              phase: 'Semana 4',
+              title: 'ACTIVACIÓN',
+              tasks: [
+                'Reescribir copy de homepage según arquetipo',
+                'Actualizar bio de Instagram/LinkedIn con voz arquetípica',
+                'Rediseñar 5 posts de redes sociales alineados',
+                'Crear template de email con personalidad arquetípica',
+                'Entrenar equipo: "Cómo hablar/actuar desde nuestro arquetipo"'
+              ]
+            }
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'Tu arquetipo no es una etiqueta. Es la brújula que guía cada decisión de tu marca: desde el tono de un email hasta la paleta de tu logo. Las marcas más poderosas del mundo no lo son por accidente. Son poderosas porque eligieron un arquetipo, lo dominaron y lo ejecutaron con consistencia obsesiva durante décadas. Nike lleva 36 años siendo el Héroe. Coca-Cola lleva 138 años siendo el Inocente. Patagonia lleva 50 años siendo el Explorador. La claridad arquetípica no limita tu creatividad. La libera. Porque cuando sabes QUIÉN eres, sabes QUÉ decir, CÓMO decirlo y DÓNDE estar. Los arquetipos no son teoría. Son la arquitectura psicológica del branding que funciona.'
+        },
+        {
+          type: 'cta',
+          title: '¿Listo Para Descubrir y Diseñar Tu Arquetipo de Marca?',
+          content: 'En LUXMANIA no adivinamos. Aplicamos Psicología + Diseño + Estrategia para identificar tu arquetipo correcto y traducirlo en sistema visual coherente que resuena con tu audiencia ideal.',
+          buttonText: 'Consultoría de Arquetipos LUXMANIA',
+          buttonLink: '/contacto'
+        }
+      ]
+    },
+
     // Artículo 16 - MEGA ARTÍCULO IAs 2025
     'mapa-completo-inteligencias-artificiales-2025-cual-usar': {
       title: 'Mapa Mental de Inteligencias Artificiales 2025: Cuál Usar Para Qué (ChatGPT, Claude, DeepSeek, Gemini, Grok + IAs de Video/Imagen)',
@@ -2858,6 +3293,434 @@ const blogArticlesContent = {
           title: 'Does Your Business Need To Implement AI Strategically?',
           content: 'At LUXMANIA we don\'t just understand technology—we understand how to apply it to your specific business case. From automating marketing to integrating AI into your customer service, we help you choose and implement the right tool that actually generates results.',
           buttonText: 'AI Consulting For Your Business',
+          buttonLink: '/contacto'
+        }
+      ]
+    },
+
+    // Article 17 - The 12 Jung Archetypes (English)
+    '12-arquetipos-jung-branding-cual-elegir-marca': {
+      title: 'The 12 Jung Archetypes Applied to Branding: Discover Your Brand\'s Hidden Personality',
+      author: 'Luis Virrueta',
+      date: 'Dec 14, 2025',
+      readTime: '24 min',
+      category: 'Branding × Psychology',
+      tags: ['Jung Archetypes', 'Carl Jung', 'Brand Personality', 'Brand Archetype', 'Brand Strategy', 'Psychology'],
+      gradient: 'from-amber-600 via-orange-500 to-rose-600',
+      sections: [
+        {
+          type: 'intro',
+          content: 'Your brand already has a personality. You just haven\'t discovered it yet. 89% of purchasing decisions are emotional, not rational (Harvard Business Review). But here\'s the secret that great brands know: human emotions aren\'t infinite or random. Carl Jung discovered there are exactly 12 universal archetypes that resonate in the collective unconscious of all humanity. Apple, Nike, Patagonia aren\'t successful by accident. They\'re successful because they mastered their archetype and execute it with absolute consistency at every touchpoint. This article combines Design + Psychology + Strategy so you can discover which of the 12 archetypes defines your brand and how to implement it in your complete visual system.'
+        },
+        {
+          type: 'heading',
+          title: 'What Are Jung\'s Archetypes? The Science Behind Emotional Connection',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'Carl Jung, Swiss psychologist and founder of analytical psychology, discovered something revolutionary: there are universal patterns of human behavior that repeat across all cultures, eras, and geographies. He called them archetypes, and they live in what Jung termed the "collective unconscious" - a deep layer of the human psyche we all share as a species.'
+        },
+        {
+          type: 'highlight',
+          content: '"Archetypes are forms or images of a collective nature which occur practically all over the earth as constituents of myths and at the same time as autochthonous individual products of unconscious origin."',
+          author: 'Carl Jung, Archetypes and the Collective Unconscious'
+        },
+        {
+          type: 'text',
+          content: 'In branding, archetypes function as psychological shortcuts. When your brand adopts a clear archetype, your audience\'s brain recognizes it instantly at a subconscious level. You don\'t need to explain who you are. Your customer feels it. It\'s the difference between a brand that communicates and a brand that resonates.'
+        },
+        {
+          type: 'statsGrid',
+          stats: [
+            { metric: '12', label: 'Universal archetypes identified by Carl Jung that define every possible brand personality', source: 'Jung, 1959' },
+            { metric: '89%', label: 'Of purchasing decisions are emotional, not rational', source: 'Harvard Business Review' },
+            { metric: '3.2 sec', label: 'Time it takes the brain to form brand impression based on visual archetype', source: 'Princeton University, 2006' },
+            { metric: '64%', label: 'Of consumers feel emotional connection with brands that share their archetypal values', source: 'Harvard Business Review, 2015' }
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'The Motivation Matrix: The 4 Fundamental Human Drives',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'The 12 archetypes aren\'t arbitrary. They\'re organized into 4 quadrants based on the fundamental human motivation they seek to satisfy:'
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'STABILITY AND CONTROL (Order from Chaos)',
+          content: 'Archetypes that seek to create structure, protection, and environmental mastery.\n\n**• The Ruler:** Leadership, control, prosperity\n**• The Caregiver:** Protection, service, compassion\n**• The Creator:** Innovation, expression, construction\n\n**Brand examples:** Mercedes-Benz, Johnson & Johnson, LEGO',
+          gradient: 'from-blue-600 to-indigo-700'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'INDEPENDENCE AND MASTERY (Paradise)',
+          content: 'Archetypes that seek knowledge, freedom, and authenticity.\n\n**• The Innocent:** Happiness, simplicity, optimism\n**• The Sage:** Truth, wisdom, understanding\n**• The Explorer:** Freedom, adventure, self-discovery\n\n**Brand examples:** Coca-Cola, Google, Patagonia',
+          gradient: 'from-green-500 to-emerald-600'
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'CHANGE AND RISK (Revolution)',
+          content: 'Archetypes that seek transformation, disruption, and transcendence.\n\n**• The Hero:** Courage, mastery, leaving a mark\n**• The Magician:** Transformation, making the impossible real\n**• The Rebel:** Revolution, breaking rules, liberation\n\n**Brand examples:** Nike, Disney, Harley-Davidson',
+          gradient: 'from-red-500 to-rose-600'
+        },
+        {
+          type: 'subsection',
+          number: '04',
+          title: 'CONNECTION AND BELONGING (Community)',
+          content: 'Archetypes that seek intimacy, fun, and social acceptance.\n\n**• The Everyman:** Belonging, authenticity, connection\n**• The Lover:** Intimacy, pleasure, beauty\n**• The Jester:** Fun, joy, living in the moment\n\n**Brand examples:** IKEA, Chanel, Old Spice',
+          gradient: 'from-pink-500 to-fuchsia-600'
+        },
+        {
+          type: 'heading',
+          title: 'The 12 Archetypes Explained: Psychology + Design + Strategy',
+          icon: Award
+        },
+        {
+          type: 'text',
+          content: 'Below, each archetype broken down with everything you need to implement it: deep motivation, promise to customer, color palette, typography, tone of voice, and iconic brand example with analysis of why it works.'
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'THE INNOCENT',
+          content: '**Core motivation:** Pure happiness, simplicity, optimism toward life\n\n**Promise to customer:** "Life can be simple and happy. You deserve to feel good."\n\n**Deep fears:** Doing something wrong, being punished, overwhelming complexity\n\n**Brand values:** Honesty, goodness, nostalgia, purity, tradition\n\n**Color palette:** Soft pastels, pure white, warm yellow, sky blue, baby pink\n\n**Typography:** Rounded sans-serif, friendly, legible. Examples: Avenir Round, Gilroy, Quicksand\n\n**Tone of voice:** Positive, optimistic, sincere, simple. "Open Happiness" (Coca-Cola)\n\n**Common industries:** Beverages, snacks, children\'s products, cleaning products, natural cosmetics',
+          gradient: 'from-yellow-300 to-amber-400'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Coca-Cola',
+          archetype: 'The Innocent',
+          analysis: 'Coca-Cola is the perfect example of the Innocent archetype executed with mastery for over a century. Its promise has never changed: simple, pure happiness.\n\n**Visual evidence:**\n• Bright red = positive energy, innocent passion\n• Spencerian Script typography (1887) = nostalgia, tradition, authenticity\n• Imagery: happy families, Santa Claus, polar bears, shared moments\n\n**Verbal evidence:**\n• "Open Happiness" (2009-2016)\n• "Taste the Feeling" (2016-present)\n• Copy: always about simple moments of joy\n\n**Why it works:** Coca-Cola doesn\'t sell beverage. It sells the Innocent fantasy: a world where happiness is simple, pure, and just a sip away. In an increasingly complex world, this archetypal promise resonates deeply.',
+          results: [
+            'Brand value: $97.9 billion (Interbrand 2023)',
+            'Global recognition: 94% of world population',
+            'Archetypal consistency: 138 years maintaining same archetype'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'THE SAGE',
+          content: '**Core motivation:** Seeking truth, acquiring knowledge, sharing wisdom\n\n**Promise to customer:** "The truth will set you free. I\'ll help you understand the world."\n\n**Deep fears:** Ignorance, being deceived, misinformation\n\n**Brand values:** Intelligence, analysis, research, objectivity, teaching\n\n**Color palette:** Deep blues (trust, wisdom), grays (neutrality), whites (clarity)\n\n**Typography:** Classic serif (intellectual authority) or clean sans-serif (modern clarity). Examples: Garamond, Georgia, Product Sans\n\n**Tone of voice:** Educational, objective, analytical, expert. "Organize the world\'s information" (Google)\n\n**Common industries:** Technology, education, news, consulting, health, research',
+          gradient: 'from-blue-600 to-indigo-700'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Google',
+          archetype: 'The Sage',
+          analysis: 'Google dominates the Sage archetype since its founding. Its mission has always been to democratize knowledge.\n\n**Visual evidence:**\n• Multicolor logo = diversity of knowledge, accessibility\n• Minimalist interface = clarity, no distractions from knowledge\n• White background = blank page, neutrality, objectivity\n\n**Verbal evidence:**\n• Original mission: "Organize the world\'s information and make it universally accessible and useful"\n• Historical motto: "Don\'t be evil" = truth above all\n• Products: Search, Scholar, Books, Maps = knowledge tools\n\n**Why it works:** Google doesn\'t sell advertising (though that generates revenue). It sells the Sage promise: unlimited access to human knowledge. Every product reinforces this archetype: from YouTube (learn any skill) to Google Scholar (academic research).',
+          results: [
+            'Brand value: $281 billion (2023)',
+            '92% search market share',
+            'Universal verb: "Google" = search for knowledge'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'THE EXPLORER',
+          content: '**Core motivation:** Absolute freedom, adventure, authentic self-discovery\n\n**Promise to customer:** "Discover who you really are. The world is your frontier."\n\n**Deep fears:** Being trapped, conformism, inner emptiness, dependence\n\n**Brand values:** Independence, authenticity, adventure, individuality, nature\n\n**Color palette:** Earth tones (brown, beige), natural greens, adventurous oranges, sky blues\n\n**Typography:** Robust sans-serif, adventurous. Examples: Interstate, DIN, Trade Gothic\n\n**Tone of voice:** Adventurous, authentic, inspiring, challenging. "Because it\'s there" (explorer mentality)\n\n**Common industries:** Outdoor, travel, automobiles, disruptive technology, authentic fashion',
+          gradient: 'from-green-600 to-teal-600'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Patagonia',
+          archetype: 'The Explorer',
+          analysis: 'Patagonia is the Explorer archetype with consciousness. It doesn\'t just invite adventure, but conscious exploration.\n\n**Visual evidence:**\n• Earth and mountain colors: connection with nature\n• Real expedition photography: total authenticity\n• Minimalist logo: explorer essentialism (only the necessary)\n\n**Verbal evidence:**\n• Manifesto: "Build the best product, cause no unnecessary harm, use business to protect nature"\n• "Don\'t Buy This Jacket" campaign (Black Friday): anti-consumerism, radical authenticity\n• Copy: always about real adventures, not advertising fantasies\n\n**Why it works:** Patagonia attracts the authentic Explorer, not the tourist. Its radical environmental stance isn\'t marketing: it\'s archetypal coherence. The true Explorer respects the nature they explore. This authenticity generates fanatic loyalty.',
+          results: [
+            'Revenue: $3 billion (2023) with no traditional advertising',
+            'Most loyal customers of any outdoor brand (NPS 73)',
+            'Yvon Chouinard donated company ($3B) to climate fight = absolute archetypal coherence'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '04',
+          title: 'THE REBEL (The Outlaw)',
+          content: '**Core motivation:** Breaking rules, liberating, revolutionizing the status quo\n\n**Promise to customer:** "Rules are meant to be broken. Join the revolution."\n\n**Deep fears:** Being powerless, trivial, ordinary, conformist\n\n**Brand values:** Disruption, freedom, radical change, wild authenticity\n\n**Color palette:** Black (rebellion), red (revolution), metallic silver (future), dark purple\n\n**Typography:** Bold display, gothic, or aggressive sans-serif. Examples: Impact, Bebas Neue, Druk\n\n**Tone of voice:** Confrontational, defiant, disruptive, liberating. "Think Different" (Apple)\n\n**Common industries:** Motorcycles, music, alternative fashion, disruptive technology, energy drinks',
+          gradient: 'from-black via-red-700 to-black'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Harley-Davidson',
+          archetype: 'The Rebel',
+          analysis: 'Harley-Davidson doesn\'t sell motorcycles. It sells the fantasy of absolute freedom of the Rebel.\n\n**Visual evidence:**\n• Black + orange = rebellion + energy\n• Eagle logo = American freedom, indomitable spirit\n• Photography: open roads, solitary riders, defiant attitude\n\n**Verbal evidence:**\n• "Screw it, let\'s ride" = anti-planning, anti-conformism\n• They don\'t talk about technical specs, they talk about FREEDOM\n• HOG community (Harley Owners Group) = brotherhood of rebels\n\n**Why it works:** Harley sells 50-year-old corporate executives the illusion of being rebels on weekends. It doesn\'t matter if they never break real rules. The archetype allows them to experience the FANTASY of rebellion safely. This is master archetypal branding.',
+          results: [
+            'Extreme loyalty: 90% of customers return to buy Harley',
+            'Brand tattoos: thousands of fans tattooed with logo (ultimate brand loyalty)',
+            'Global community: 1+ million active HOG members'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '05',
+          title: 'THE MAGICIAN',
+          content: '**Core motivation:** Transforming reality, making the impossible real, creating transcendent experiences\n\n**Promise to customer:** "I can make your dreams come true. The impossible is possible."\n\n**Deep fears:** Unforeseen negative consequences, failing to achieve desired transformation\n\n**Brand values:** Transformation, vision, innovation, memorable experiences, consciousness expansion\n\n**Color palette:** Purple (magic, mystery), gold (transformation), deep black (mystery), electric blue\n\n**Typography:** Futuristic, elegant with mystical touches. Examples: Futura, Avant Garde, custom experimental\n\n**Tone of voice:** Visionary, transformative, inspiring, mystical. "Where dreams come true" (Disney)\n\n**Common industries:** Entertainment, transformative technology, high-end cosmetics, premium experiences',
+          gradient: 'from-purple-600 via-violet-500 to-fuchsia-600'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Disney',
+          archetype: 'The Magician',
+          analysis: 'Disney is the perfect archetypal Magician: transforms ordinary reality into magical experience.\n\n**Visual evidence:**\n• Castle = portal to transformed magical world\n• Fireworks = visual transformation of night\n• Imagineering (not "construction") = transformation language\n\n**Verbal evidence:**\n• "Where dreams come true" = direct transformation promise\n• "Imagineering" = engineering + imagination = applied magic\n• Not "employees," they\'re "cast members" = actors in reality transformation\n\n**Why it works:** Disney doesn\'t sell theme parks. It sells the ability to transform your reality during your visit. Every detail is designed to maintain the illusion that magic is real. This total archetypal coherence generates experiences people remember for life.',
+          results: [
+            'Brand value: $57 billion (2023)',
+            'Average NPS (loyalty): 77 (exceptional)',
+            'Visitors repeat 10+ times in lifetime (addictive transformation)'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '06',
+          title: 'THE HERO',
+          content: '**Core motivation:** Courage, mastery, leaving a mark, overcoming impossible challenges\n\n**Promise to customer:** "If you can dream it, you can achieve it. I\'ll give you the tools."\n\n**Deep fears:** Weakness, vulnerability, being cowardly, not measuring up\n\n**Brand values:** Courage, determination, excellence, overcoming, victory\n\n**Color palette:** Red (action, power), black (strength), gold (victory), white (hero purity)\n\n**Typography:** Bold sans-serif, strong, dynamic. Examples: Futura Bold, Helvetica Bold, Trade Gothic Bold\n\n**Tone of voice:** Motivational, challenging, inspiring, empowering. "Just Do It" (Nike)\n\n**Common industries:** Sports, fitness, high-performance automobiles, insurance, military',
+          gradient: 'from-red-600 to-orange-600'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Nike',
+          archetype: 'The Hero',
+          analysis: 'Nike is the definitive Hero archetype case study with 35+ years of absolute consistency.\n\n**Visual evidence:**\n• Swoosh = movement, speed, victory\n• Black + red = power + action\n• Photography: athletes at peak effort, sweat, determination\n\n**Verbal evidence:**\n• "Just Do It" (1988-present) = call to heroic action\n• "Find Your Greatness" = everyone can be hero\n• "Winning Isn\'t Comfortable" = hero\'s path is hard\n\n**Why it works:** Nike doesn\'t sell shoes. It sells Hero identity. When you wear Nike, you temporarily adopt heroic mentality. This psychological transformation is so powerful it justifies premium prices and fanatic loyalty. The archetype is so internalized that "Just Do It" became a global life philosophy.',
+          results: [
+            'Brand value: $50 billion (2023)',
+            'Growth: 35% revenue (2019-2023) during pandemic',
+            'Universal phrase: "Just Do It" recognized by 93% global population'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '07',
+          title: 'THE LOVER',
+          content: '**Core motivation:** Intimacy, sensory pleasure, beauty, romantic connection\n\n**Promise to customer:** "You deserve to feel desired, special, beautiful. I\'ll make you irresistible."\n\n**Deep fears:** Not being loved, being ignored, loneliness, being ordinary/invisible\n\n**Brand values:** Passion, sensuality, beauty, intimacy, exclusivity\n\n**Color palette:** Passion red, romantic pink, gold (luxury), elegant black, sensual purple\n\n**Typography:** Elegant serif, sophisticated script. Examples: Didot, Bodoni, Great Vibes\n\n**Tone of voice:** Seductive, sensorial, intimate, aspirational. "Pour Homme" (exclusive language)\n\n**Common industries:** Luxury fashion, perfumes, jewelry, lingerie, premium chocolate, wines',
+          gradient: 'from-rose-500 via-pink-500 to-red-500'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Chanel',
+          archetype: 'The Lover',
+          analysis: 'Chanel dominates the Lover archetype since 1921 with Chanel No. 5, the most iconic perfume in history.\n\n**Visual evidence:**\n• Black + white + gold = elegance, sophistication, luxury\n• Photography: sensual close-ups, luxurious textures, dramatic lighting\n• Packaging: minimalist but precious = refined beauty\n\n**Verbal evidence:**\n• Marilyn Monroe: "What do I wear to bed? Chanel No. 5" = pure sensuality\n• They don\'t describe products, they describe SENSATIONS\n• Copy always about feeling irresistible, not about ingredients\n\n**Why it works:** Chanel doesn\'t sell perfume or clothes. It sells the Lover fantasy: feeling desired, elegant, irresistible. Each product is an object of desire designed to transform you into an object of desire. This archetypal promise justifies stratospheric prices.',
+          results: [
+            'Chanel No. 5: sold 1 bottle every 30 seconds globally',
+            'Brand value: $19.4 billion (2023)',
+            'Average margin: 60-80% (archetypal power = premium pricing)'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '08',
+          title: 'THE JESTER',
+          content: '**Core motivation:** Fun, living in the moment, making people laugh, connecting through joy\n\n**Promise to customer:** "Life\'s too short to be serious. Let\'s have fun together."\n\n**Deep fears:** Being boring, being ignored, not fitting in, monotony\n\n**Brand values:** Fun, humor, spontaneity, irreverence, living in present\n\n**Color palette:** Bright, contrasting, playful: yellow, orange, hot pink, lime green\n\n**Typography:** Fun display, rounded, playful. Examples: Cooper Black, VAG Rounded, Comic Sans (yes, seriously)\n\n**Tone of voice:** Funny, ironic, irreverent, light. "Smell like a man, man" (Old Spice)\n\n**Common industries:** Snacks, beverages, entertainment, social apps, brands needing young rebranding',
+          gradient: 'from-yellow-400 via-orange-400 to-pink-500'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Old Spice',
+          archetype: 'The Jester',
+          analysis: 'Old Spice executed one of the most successful rebrandings in history (2010) by completely adopting the Jester archetype.\n\n**Visual evidence:**\n• Bright colors, ridiculously saturated\n• Shirtless man on horse = intentional visual absurdity\n• Fast editing, impossible transitions = physical comedy\n\n**Verbal evidence:**\n• "Smell Like a Man, Man" = self-parody of masculinity\n• "I\'m on a horse" = total absurdity\n• Real-time Twitter responses = jester spontaneity\n\n**Why it works:** Old Spice was grandpa brand (serious problem). By adopting Jester archetype, it self-parodied and became cool for millennials. Absurd viral humor generated 1.4 billion impressions. Sales rose 125% in 1 year. This is perfect archetypal transformation.',
+          results: [
+            'Sales: +125% in first year post-rebranding (2010-2011)',
+            'YouTube: 1.4 billion views (viral campaign)',
+            'Target demographic: 11-34 years, was 45+ before (total rejuvenation)'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '09',
+          title: 'THE EVERYMAN (Regular Guy)',
+          content: '**Core motivation:** Belonging, authentic connection, being one of many (in good sense)\n\n**Promise to customer:** "You\'re one of us. Everyone is welcome here as they are."\n\n**Deep fears:** Being excluded, standing out negatively, not belonging, elitism\n\n**Brand values:** Authenticity, equality, honesty, pragmatism, community\n\n**Color palette:** Denim blues, earth tones, warm neutrals, "real" non-aspirational colors\n\n**Typography:** Honest sans-serif, legible, unpretentious. Examples: Arial, Helvetica, Open Sans\n\n**Tone of voice:** Close, honest, direct, inclusive. "For the many people" (IKEA)\n\n**Common industries:** Mass retail, fast food, retail banks, daily-use apps, public transport',
+          gradient: 'from-blue-600 to-cyan-600'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'IKEA',
+          archetype: 'The Everyman',
+          analysis: 'IKEA is the perfect Everyman: democratic design accessible to all.\n\n**Visual evidence:**\n• Blue + yellow = Swedish flag colors (pride of common origin)\n• Photography: real families, lived-in homes (not aspirational mansions)\n• Showrooms: realistic small apartments, not palaces\n\n**Verbal evidence:**\n• "For the many people" = Everyman manifesto\n• Swedish product names = authenticity, no pretense\n• Copy: always about real problems of real people\n\n**Why it works:** IKEA doesn\'t sell luxury furniture. It sells the promise that good design is NOT just for the rich. This design democratization resonates deeply with Everyman archetype: "You too deserve functional beauty." This archetypal honesty generates massive loyalty.',
+          results: [
+            'Annual visits: 820 million (pre-pandemic)',
+            'Catalog: most distributed publication after Bible',
+            'Flat-pack model: design democratization = archetypal coherence'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '10',
+          title: 'THE CAREGIVER',
+          content: '**Core motivation:** Protecting, nurturing, serving, caring for others\' well-being\n\n**Promise to customer:** "I\'ll care for you like my own family. You\'re safe with me."\n\n**Deep fears:** Selfishness, ingratitude, seeing others suffer when could have helped\n\n**Brand values:** Compassion, protection, service, generosity, altruism\n\n**Color palette:** Soft blues (trust, calm), greens (health), whites (purity, cleanliness)\n\n**Typography:** Warm serif or kind sans-serif. Examples: Georgia, Merriweather, Source Sans Pro\n\n**Tone of voice:** Compassionate, protective, warm, helpful. "A company that cares" (Johnson & Johnson)\n\n**Common industries:** Healthcare, insurance, NGOs, children\'s products, care services, hospitals',
+          gradient: 'from-blue-400 to-teal-500'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Johnson & Johnson',
+          archetype: 'The Caregiver',
+          analysis: 'Johnson & Johnson embodies Caregiver archetype since 1886 with absolute consistency.\n\n**Visual evidence:**\n• Script logo = warmth, personal human touch\n• Packaging: soft blues, whites = cleanliness, trust\n• Photography: mothers with babies, intimate care moments\n\n**Verbal evidence:**\n• Corporate Credo (1943): "Our first responsibility is to patients"\n• "A Family Company" = extended care to entire family\n• Tylenol Crisis (1982): withdrew $100M product proactively = care over profits\n\n**Why it works:** J&J doesn\'t sell products. It sells Caregiver promise: "Trust us with the most vulnerable (your children)." This archetypal trust is so deep it survived multiple crises. The credo of putting patients first isn\'t marketing: it\'s total archetypal coherence.',
+          results: [
+            'Brand value: $16.8 billion (2023)',
+            'Trust score: 92% (one of highest in pharma industry)',
+            'Crisis management: Harvard case study on archetypal coherence in crisis'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '11',
+          title: 'THE RULER',
+          content: '**Core motivation:** Control, leadership, creating order from chaos, prosperity\n\n**Promise to customer:** "Power and control create order. I\'ll give you the best, because you deserve it."\n\n**Deep fears:** Chaos, being overthrown, losing control, anarchy\n\n**Brand values:** Power, responsibility, leadership, exclusivity, stability\n\n**Color palette:** Black (power), gold (wealth), deep navy blue (authority), silver (premium)\n\n**Typography:** Authoritative classic serif. Examples: Trajan, Caslon, refined Times New Roman\n\n**Tone of voice:** Authoritative, exclusive, refined, commanding. "The best or nothing" (Mercedes)\n\n**Common industries:** Luxury cars, premium hotels, private banks, luxury watches, status brands',
+          gradient: 'from-gray-900 via-yellow-600 to-gray-900'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'Mercedes-Benz',
+          archetype: 'The Ruler',
+          analysis: 'Mercedes-Benz is the perfect Ruler: leadership through engineering excellence and status.\n\n**Visual evidence:**\n• Three-pointed star = mastery of land, sea, and air\n• Metallic silver = premium technology, controlled future\n• Photography: executives, perfect roads, imposing architecture\n\n**Verbal evidence:**\n• "The best or nothing" = no alternative when you\'re leader\n• "Unlike any other" = ruler exclusivity\n• Precise technical language = total engineering control\n\n**Why it works:** Mercedes doesn\'t sell transportation. It sells Ruler fantasy: absolute control, unquestionable status, recognized leadership. Every detail reinforces that buying Mercedes, you enter the club of those who control their destiny. This archetypal promise justifies prices 3-5x above competition.',
+          results: [
+            'Brand value: $56 billion (2023)',
+            'Average price: $65,000 vs $35,000 industry',
+            'Retention: 69% customers repeat Mercedes (ruler loyalty)'
+          ]
+        },
+        {
+          type: 'subsection',
+          number: '12',
+          title: 'THE CREATOR',
+          content: '**Core motivation:** Innovating, expressing, building something lasting, shaping the world\n\n**Promise to customer:** "If you can imagine it, we can create it together. Your imagination has no limits."\n\n**Deep fears:** Mediocrity, poorly executing a vision, not being original\n\n**Brand values:** Imagination, innovation, expression, craftsmanship, originality\n\n**Color palette:** Varied, creative, rainbow (LEGO), bright primaries, or bold monochromes\n\n**Typography:** Variable by industry, but always with unique personality. Examples: custom fonts, creative displays\n\n**Tone of voice:** Imaginative, inspiring, original, inviting. "Imagine" (LEGO)\n\n**Common industries:** Toys, creative software, art, architecture, design, creative tools',
+          gradient: 'from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500'
+        },
+        {
+          type: 'caseStudy',
+          brand: 'LEGO',
+          archetype: 'The Creator',
+          analysis: 'LEGO is the Creator archetype in its purest form: tools to build anything imaginable.\n\n**Visual evidence:**\n• Bright primary colors = infinite possibilities\n• Modular system = infinite construction\n• Instruction-free "Creative" sets = total expression\n\n**Verbal evidence:**\n• "Play well" (Danish meaning of LEGO) = creating through play\n• "Build the future" = construction as life metaphor\n• LEGO Movie: "Everything is Awesome" = creativity celebration\n\n**Why it works:** LEGO doesn\'t sell toys. It sells unlimited creation tools. One set can be castle, spaceship, city, whatever you imagine. This Creator promise (your imagination is the limit) resonates with kids AND adults. That\'s why LEGO is played for life, not just childhood.',
+          results: [
+            'Brand value: $7.5 billion (2023)',
+            'Sales: +27% annual growth (2020-2023)',
+            'AFOL (Adult Fans of LEGO): 20% of sales = lifelong creators'
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'LUXMANIA Framework: Practical Implementation of Archetype in Your Visual System',
+          icon: Zap
+        },
+        {
+          type: 'text',
+          content: 'Knowing your archetype is just the beginning. Now comes the critical part: implementing it consistently at every touchpoint with your audience. This is the LUXMANIA framework that combines Design + Psychology + Strategy to translate archetype into coherent visual system.'
+        },
+        {
+          type: 'subsection',
+          number: '01',
+          title: 'ARCHETYPAL COLOR PALETTE (Chromatic Psychology)',
+          content: 'Each archetype has chromatic families that resonate with its deep motivation:\n\n**The Innocent:** Pastels, white, warm yellow → optimism, purity, simplicity\n**The Sage:** Deep blues, grays, white → trust, neutrality, clarity\n**The Explorer:** Earth tones, natural greens, oranges → nature, adventure, authenticity\n**The Rebel:** Black, red, metallic silver → disruption, revolution, alternative future\n**The Magician:** Purple, gold, mysterious black → transformation, magic, mystery\n**The Hero:** Red, black, gold → action, power, victory\n**The Lover:** Passion red, pink, gold, elegant black → desire, luxury, intimacy\n**The Jester:** Bright contrasts (yellow, orange, pink) → fun, energy, play\n**The Everyman:** Denim blue, earth, neutrals → accessibility, honesty, realism\n**The Caregiver:** Soft blue, health green, white → trust, care, cleanliness\n**The Ruler:** Black, gold, navy, silver → power, luxury, authority\n**The Creator:** Varied, bright primaries, or bold monochrome → expression, possibility',
+          gradient: 'from-cyan-500 to-blue-600'
+        },
+        {
+          type: 'subsection',
+          number: '02',
+          title: 'TYPOGRAPHY WITH PERSONALITY (Archetypal Letterform)',
+          content: 'Typography communicates personality before they read a word:\n\n**Modern sans-serif (Futura, Helvetica, Avenir):** Magician, Creator, Explorer, modern Sage\n• Clean, futuristic, objective, versatile\n\n**Classic serif (Garamond, Caslon, Georgia):** Ruler, traditional Sage, Caregiver\n• Authoritative, trustworthy, established, sophisticated\n\n**Script/Calligraphic (Great Vibes, Lobster, Pacifico):** Lover, Innocent\n• Elegant, personal, sensual, warm\n\n**Bold display (Impact, Bebas Neue, Druk):** Hero, Rebel\n• Strong, confrontational, impactful, energetic\n\n**Rounded/Playful (VAG Rounded, Cooper Black, Quicksand):** Jester, Innocent, Everyman\n• Friendly, accessible, fun, non-threatening',
+          gradient: 'from-purple-500 to-pink-600'
+        },
+        {
+          type: 'subsection',
+          number: '03',
+          title: 'TONE OF VOICE (Archetypal Copywriting)',
+          content: 'How your brand speaks is as important as what it says:\n\n**The Innocent:** "Smile. Life is simple and beautiful." (positive, optimistic, sincere)\n**The Sage:** "Let\'s understand this together." (educational, objective, intellectual)\n**The Explorer:** "Discover who you really are." (adventurous, inspiring, authentic)\n**The Rebel:** "Break the rules. Live free." (confrontational, defiant, liberating)\n**The Magician:** "Imagine the impossible. Make it real." (visionary, transformative, inspiring)\n**The Hero:** "Just do it. You can." (motivational, challenging, empowering)\n**The Lover:** "You deserve to feel irresistible." (seductive, sensorial, intimate)\n**The Jester:** "Life is short. Let\'s have fun." (funny, ironic, irreverent)\n**The Everyman:** "We\'re all equal here." (close, honest, inclusive)\n**The Caregiver:** "We care for you like family." (compassionate, protective, warm)\n**The Ruler:** "The best. Or nothing." (authoritative, exclusive, refined)\n**The Creator:** "Let\'s build something amazing together." (imaginative, original, inviting)',
+          gradient: 'from-rose-500 to-orange-600'
+        },
+        {
+          type: 'heading',
+          title: 'The 4 Fatal Errors When Choosing Your Archetype (And How To Avoid Them)',
+          icon: Shield
+        },
+        {
+          type: 'list',
+          items: [
+            {
+              title: 'Error #1: Mixing Incompatible Archetypes',
+              description: '❌ **Problem:** Your brand tries to be Ruler (exclusive, authoritative) AND Everyman (inclusive, accessible) at the same time.\n\n**Why it fails:** The brain can\'t process contradictory identities. Are you for elites or everyone? You can\'t be both.\n\n✅ **Solution:** Choose ONE dominant archetype (70-80%) and allow a compatible secondary archetype (20-30%). Valid example: Explorer (dominant) + Creator (secondary) = Patagonia.'
+            },
+            {
+              title: 'Error #2: Choosing Aspirational vs Real Archetype',
+              description: '❌ **Problem:** Your real service is Everyman (local family restaurant) but you want to project Magician (transformative experience).\n\n**Why it fails:** Archetypal promise you don\'t fulfill = disappointment = loss of trust.\n\n✅ **Solution:** Honesty before aspiration. If you\'re Everyman, MASTER that archetype. IKEA doesn\'t pretend to be Ruler. It\'s authentically Everyman and generates $40 billion annually.'
+            },
+            {
+              title: 'Error #3: Changing Archetype Every 2 Years',
+              description: '❌ **Problem:** 2020 you\'re Rebel, 2022 you\'re Sage, 2024 you\'re Jester.\n\n**Why it fails:** Brand memory is built with REPETITION. Changing archetype = resetting brand memory = starting from zero.\n\n✅ **Solution:** Archetypal consistency for DECADES. Nike: 36 years of Hero (1988-2024). Coca-Cola: 138 years of Innocent. Evolution is allowed, revolution is not.'
+            },
+            {
+              title: 'Error #4: Copying Your Competition\'s Archetype',
+              description: '❌ **Problem:** Your main competition is Hero (Nike), so you\'re also Hero.\n\n**Why it fails:** You\'ll never win by copying the leader at their own archetype. The leader already owns that mental position.\n\n✅ **Solution:** Strategic differentiation. If your competition is Hero, you be Explorer or Rebel or Creator. Find the archetypal "white space" in your industry.'
+            }
+          ]
+        },
+        {
+          type: 'heading',
+          title: 'Implementation Roadmap: From Archetype to Coherent Brand in 4 Weeks',
+          icon: Award
+        },
+        {
+          type: 'timeline',
+          title: 'Practical Execution Plan',
+          items: [
+            {
+              phase: 'Week 1',
+              title: 'DISCOVERY',
+              tasks: [
+                'Archetype test with your team (2-hour session)',
+                'Survey 10 current clients: How would they describe your brand in 3 words?',
+                'Competition analysis: What archetypes dominate your industry?',
+                'Identification of "white space" (underused archetype in your niche)',
+                'Final decision: Primary archetype (80%) + optional secondary (20%)'
+              ]
+            },
+            {
+              phase: 'Week 2',
+              title: 'DEFINITION',
+              tasks: [
+                'Document chosen archetype on 1 page: motivation, promise, fears',
+                'List of 10 personality attributes of your brand',
+                'List of 15 tone of voice keywords (and 10 you\'ll NEVER use)',
+                'Define 3 core emotions you want to generate',
+                'Create visual moodboard (20-30 images) capturing archetypal essence'
+              ]
+            },
+            {
+              phase: 'Week 3',
+              title: 'DESIGN',
+              tasks: [
+                'Color palette based on archetype (3 primary, 3 secondary)',
+                'Typographic selection (1 display, 1 text) aligned to archetype',
+                'Tone of voice tests: rewrite 5 existing pieces',
+                'Create 1-page visual style guide: color + type + voice + examples',
+                'Design 3 applications: business card, Instagram post, web header'
+              ]
+            },
+            {
+              phase: 'Week 4',
+              title: 'ACTIVATION',
+              tasks: [
+                'Rewrite homepage copy according to archetype',
+                'Update Instagram/LinkedIn bio with archetypal voice',
+                'Redesign 5 aligned social media posts',
+                'Create email template with archetypal personality',
+                'Train team: "How to speak/act from our archetype"'
+              ]
+            }
+          ]
+        },
+        {
+          type: 'conclusion',
+          content: 'Your archetype isn\'t a label. It\'s the compass that guides every decision of your brand: from the tone of an email to your logo palette. The world\'s most powerful brands aren\'t powerful by accident. They\'re powerful because they chose an archetype, mastered it, and executed it with obsessive consistency for decades. Nike has been the Hero for 36 years. Coca-Cola has been the Innocent for 138 years. Patagonia has been the Explorer for 50 years. Archetypal clarity doesn\'t limit your creativity. It liberates it. Because when you know WHO you are, you know WHAT to say, HOW to say it, and WHERE to be. Archetypes aren\'t theory. They\'re the psychological architecture of branding that works.'
+        },
+        {
+          type: 'cta',
+          title: 'Ready To Discover and Design Your Brand Archetype?',
+          content: 'At LUXMANIA we don\'t guess. We apply Psychology + Design + Strategy to identify your correct archetype and translate it into a coherent visual system that resonates with your ideal audience.',
+          buttonText: 'LUXMANIA Archetype Consultation',
           buttonLink: '/contacto'
         }
       ]
