@@ -23,6 +23,7 @@ const BlogPage = () => {
   // Helper function to get translated content
   const getPostContent = (slug) => {
     const content = getArticleContent(slug, currentLanguage)
+    console.log(`🌐 BlogPage - Getting content for: ${slug}, language: ${currentLanguage}`, content?.title)
     if (content) {
       return {
         title: content.title,
