@@ -4,6 +4,62 @@ import { MessageCircle, Heart, Reply, MoreHorizontal } from 'lucide-react'
 
 // Comentarios específicos por artículo (MIXTOS: Español + Inglés)
 const articleComments = {
+  'mapa-completo-inteligencias-artificiales-2025-cual-usar': [
+    {
+      id: 1,
+      author: 'Alejandro Torres',
+      avatar: 'AT',
+      date: 'Hace 2 horas',
+      comment: 'Este es EL artículo sobre IAs que necesitaba. Cubrir 47 IAs organizadas por psicología de decisión en lugar de specs técnicas es GENIAL. La tabla comparativa de precios me ahorró semanas de research.',
+      likes: 67,
+      gradient: 'from-purple-600 to-pink-500'
+    },
+    {
+      id: 2,
+      author: 'Jessica Morgan',
+      avatar: 'JM',
+      date: '4 hours ago',
+      comment: 'The "4 Essential Stacks" section is pure gold. I\'m a content creator and the Creator Stack (ChatGPT + Pika + DALL-E + ElevenLabs = $66/mo) is exactly what I needed. Already implemented.',
+      likes: 59,
+      gradient: 'from-cyan-500 to-blue-500'
+    },
+    {
+      id: 3,
+      author: 'Daniel Kovacs',
+      avatar: 'DK',
+      date: 'Hace 8 horas',
+      comment: 'Como desarrollador, el Technical Stack (DeepSeek FREE + Claude Pro $20 + Stable Diffusion FREE = $20/mo) es perfecto. DeepSeek para código, Claude para arquitectura. Brillante.',
+      likes: 52,
+      gradient: 'from-emerald-500 to-teal-500'
+    },
+    {
+      id: 4,
+      author: 'Martina Rossi',
+      avatar: 'MR',
+      date: '1 day ago',
+      comment: 'The psychological framework explaining Choice Overload, Zero-Price Effect, Social Proof and Identity Coherence is mind-blowing. Now I understand WHY I choose ChatGPT over objectively better free options.',
+      likes: 48,
+      gradient: 'from-violet-500 to-indigo-500'
+    },
+    {
+      id: 5,
+      author: 'Carlos Gutiérrez',
+      avatar: 'CG',
+      date: 'Hace 1 día',
+      comment: 'La sección de casos de uso por industria (E-commerce, Agencias, Developers, Creators) me salvó. Soy community manager y el stack de Grok + Perplexity + ChatGPT está funcionando perfecto.',
+      likes: 41,
+      gradient: 'from-amber-500 to-orange-500'
+    },
+    {
+      id: 6,
+      author: 'Sophie Chen',
+      avatar: 'SC',
+      date: '2 days ago',
+      comment: 'Finally someone explains video AIs properly! Sora vs Runway vs Pika vs HeyGen comparison is exactly what I needed. Started with Pika Pro for speed and it\'s amazing.',
+      likes: 37,
+      gradient: 'from-rose-500 to-pink-500'
+    }
+  ],
   'cloudflare-infraestructura-invisible-que-hace-tu-web-premium': [
     {
       id: 1,
