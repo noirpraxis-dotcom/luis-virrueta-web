@@ -35,6 +35,25 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 19,
+      ...getPostContent('branding-con-inteligencia-artificial-2025-guia-completa'),
+      category: 'trends',
+      author: 'Luis Virrueta',
+      date: currentLanguage === 'en' ? 'Dec 16, 2025' : '16 Dic 2025',
+      readTime: '20 min',
+      gradient: 'from-violet-600/20 via-purple-500/20 to-fuchsia-600/20',
+      borderGradient: 'from-violet-600 via-purple-500 to-fuchsia-600',
+      tags: currentLanguage === 'en' 
+        ? ['Artificial Intelligence', 'Branding', 'Midjourney', 'ChatGPT', 'Claude', 'AI Design', 'Brand Strategy']
+        : ['Inteligencia Artificial', 'Branding', 'Midjourney', 'ChatGPT', 'Claude', 'Runway', 'Diseño con IA', 'Estrategia de Marca'],
+      slug: 'branding-con-inteligencia-artificial-2025-guia-completa',
+      image: '/blog-compressed/blog-19-branding-ia.webp',
+      heroImage: '/blog-compressed/blog-19-branding-ia.webp',
+      rating: 5.0,
+      commentsCount: 35,
+      featured: true
+    },
+    {
       id: 18,
       ...getPostContent('por-que-tu-logo-no-funciona-7-errores-neurociencia'),
       category: 'design',

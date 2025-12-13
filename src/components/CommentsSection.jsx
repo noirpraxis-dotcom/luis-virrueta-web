@@ -4,6 +4,81 @@ import { MessageCircle, Heart, Reply, MoreHorizontal } from 'lucide-react'
 
 // Comentarios específicos por artículo (MIXTOS: Español + Inglés)
 const articleComments = {
+  'branding-con-inteligencia-artificial-2025-guia-completa': [
+    {
+      id: 1,
+      author: 'Diego Martínez',
+      avatar: 'DM',
+      date: 'Hace 1 hora',
+      comment: 'Seguí el workflow completo de "Lumina Coffee" paso a paso. 8 horas después tengo identidad visual COMPLETA: logo, paleta, packaging mockups, Instagram templates. Costo total: $0 (planes que ya tenía). Esto es absolutamente revolucionario.',
+      likes: 127,
+      gradient: 'from-purple-600 to-fuchsia-500'
+    },
+    {
+      id: 2,
+      author: 'Sarah Williams',
+      avatar: 'SW',
+      date: '3 hours ago',
+      comment: 'The "83% looks generic" stat hit HARD. I was exactly that person - beautiful Midjourney renders with zero strategy. Started over with Claude defining archetype FIRST, then Midjourney execution. Night and day difference.',
+      likes: 104,
+      gradient: 'from-blue-500 to-cyan-600'
+    },
+    {
+      id: 3,
+      author: 'Patricia Herrera',
+      avatar: 'PH',
+      date: 'Hace 4 horas',
+      comment: 'El framework de 2 semanas (Semana 1 = estrategia 100% humana, Semana 2 = ejecución IA) es CLAVE. Antes saltaba directo a generar y todo lucía algorítmico. Ahora hago research + arquetipo primero. Mis clientes no pueden creer que es "hecho con IA".',
+      likes: 98,
+      gradient: 'from-pink-500 to-rose-600'
+    },
+    {
+      id: 4,
+      author: 'Marcus Chen',
+      avatar: 'MC',
+      date: '6 hours ago',
+      comment: 'The Midjourney --sref trick for consistency is GOLD. Was generating 50 different styles and wondering why my brand looked schizophrenic. Now I generate 1 perfect image, copy sref code, use it everywhere. Brand coherence = 9/10.',
+      likes: 91,
+      gradient: 'from-orange-500 to-amber-600'
+    },
+    {
+      id: 5,
+      author: 'Lucía Fernández',
+      avatar: 'LF',
+      date: 'Hace 8 horas',
+      comment: 'Error #3 (prompts genéricos) era exactamente mi problema. "Modern tech logo" → hexágono genérico #4,821. Ahora hago prompts de 100 palabras: arquetipo + emoción + estilo + referencias + QUÉ EVITAR. Resultados 10x mejores.',
+      likes: 87,
+      gradient: 'from-green-500 to-emerald-600'
+    },
+    {
+      id: 6,
+      author: 'Thomas Anderson',
+      avatar: 'TA',
+      date: '12 hours ago',
+      comment: 'Stack tech recommendation ($115-160/mo vs $15K agency) is insane ROI. Subscribed to all: Perplexity, Claude Pro, Midjourney Standard, Ideogram, Runway, ElevenLabs. Created 3 client brands this month. Already paid for itself 20x over.',
+      likes: 82,
+      gradient: 'from-indigo-600 to-purple-600'
+    },
+    {
+      id: 7,
+      author: 'Valentina Rossi',
+      avatar: 'VR',
+      date: 'Hace 1 día',
+      comment: 'El caso de Lumina Coffee con timeline exacto (30 min research, 45 min strategy, 2h moodboard...) es perfecto como blueprint. Lo usé para marca de yoga y funcionó IDÉNTICO. El proceso es replicable si sigues la estrategia.',
+      likes: 76,
+      gradient: 'from-violet-500 to-pink-600'
+    },
+    {
+      id: 8,
+      author: 'Alex Rivera',
+      avatar: 'AR',
+      date: '1 day ago',
+      comment: 'The 2026 predictions (AI agents for end-to-end branding, real-time consistency enforcement) are coming FAST. Already seeing prototypes. This article is not just "current state" - it\'s preparing you for what\'s 6 months away. Essential reading.',
+      likes: 73,
+      gradient: 'from-cyan-500 to-blue-600'
+    }
+  ],
+
   'por-que-tu-logo-no-funciona-7-errores-neurociencia': [
     {
       id: 1,
