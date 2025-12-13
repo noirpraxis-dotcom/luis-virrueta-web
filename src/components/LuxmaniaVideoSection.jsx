@@ -166,7 +166,7 @@ const LuxmaniaVideoSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.45 }}
-              className="text-white/50 text-base lg:text-lg font-light leading-relaxed mb-10 max-w-xl"
+              className="text-white/50 text-base md:text-lg lg:text-lg font-light leading-relaxed mb-10 max-w-xl"
             >
               {t('home.luxmaniaSection.description')}{' '}
               <span className="text-white/70">{t('home.luxmaniaSection.feelBefore')}</span>.
@@ -324,7 +324,7 @@ const LuxmaniaVideoSection = () => {
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.3 }}
             className="order-1 lg:order-2 relative flex justify-center"
           >
-            <div className="relative w-[85vw] sm:w-[70vw] md:w-[60vw] lg:w-full max-w-[500px]">
+            <div className="relative w-[85vw] sm:w-[70vw] md:w-[95vw] lg:w-full max-w-[500px]">
               <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-black shadow-2xl">
                 {/* YouTube iframe - se actualiza el src cuando se hace play */}
                 <iframe
@@ -333,7 +333,7 @@ const LuxmaniaVideoSection = () => {
                   title="Luxmania - Cómo construimos marcas"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
-                  className={`w-full h-full object-cover transition-all duration-500 pointer-events-none ${!isPlaying ? 'opacity-40 blur-sm scale-105' : 'opacity-100'}`}
+                  className={`w-full h-full object-cover transition-all duration-500 ${!isPlaying ? 'opacity-40 blur-sm scale-105 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}
                 />
 
                 {/* Overlay con botón play y copy */}

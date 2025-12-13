@@ -13,7 +13,7 @@ const Home = () => {
     <section 
       ref={heroRef}
       id="home" 
-      className="relative h-screen w-full overflow-x-hidden overflow-y-auto flex items-center justify-center pt-16 md:pt-20 lg:pt-0"
+      className="relative h-screen w-full overflow-x-hidden overflow-y-auto flex items-center justify-center pt-16 md:pt-0 lg:pt-0"
     >
       {/* Video Background */}
       <video

@@ -140,23 +140,23 @@ const ServicesOverview = () => {
                 <motion.div
                   whileHover={{ scale: 1.1, rotate: 5 }}
                   transition={{ duration: 0.3 }}
-                  className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br ${service.gradient} p-3 sm:p-3.5 mb-6 sm:mb-8`}
+                  className={`relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-xl sm:rounded-2xl bg-gradient-to-br ${service.gradient} p-3 sm:p-3.5 md:p-4 mb-6 sm:mb-8`}
                 >
                   <service.icon className="w-full h-full text-white" strokeWidth={1.5} />
                 </motion.div>
 
                 {/* Title & Subtitle */}
                 <div className="mb-4 sm:mb-6">
-                  <h3 className="text-2xl sm:text-3xl font-medium text-white mb-2 font-display">
+                  <h3 className="text-2xl sm:text-3xl md:text-2xl font-medium text-white mb-2 font-display">
                     {service.title}
                   </h3>
-                  <p className="text-sm sm:text-base text-white/50 uppercase tracking-widest font-mono">
+                  <p className="text-sm sm:text-base md:text-sm text-white/50 uppercase tracking-widest font-mono">
                     {service.subtitle}
                   </p>
                 </div>
 
                 {/* Description */}
-                <p className="text-sm sm:text-base text-white/70 leading-relaxed mb-6 sm:mb-8 font-light font-body">
+                <p className="text-sm sm:text-base md:text-sm text-white/70 leading-relaxed mb-6 sm:mb-8 font-light font-body">
                   {service.description}
                 </p>
 

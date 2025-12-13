@@ -66,7 +66,7 @@ const AboutLuisSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-            className="text-white text-3xl sm:text-5xl lg:text-7xl font-light tracking-[0.08em] sm:tracking-[0.15em] lg:tracking-[0.2em] font-display mb-6"
+            className="text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-[0.08em] sm:tracking-[0.15em] lg:tracking-[0.2em] font-display mb-6"
           >
             SOBRE MÍ
           </motion.h2>
