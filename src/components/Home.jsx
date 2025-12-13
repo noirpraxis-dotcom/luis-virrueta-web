@@ -13,7 +13,7 @@ const Home = () => {
     <section 
       ref={heroRef}
       id="home" 
-      className="relative h-screen w-full overflow-x-hidden overflow-y-auto flex items-center justify-center pt-16 lg:pt-0"
+      className="relative h-screen w-full overflow-x-hidden overflow-y-auto flex items-center justify-center pt-16 md:pt-20 lg:pt-0"
     >
       {/* Video Background */}
       <video
@@ -21,9 +21,11 @@ const Home = () => {
         loop
         muted
         playsInline
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover object-center"
         style={{
-          filter: 'contrast(1.1) saturate(1.2) brightness(1.05)'
+          filter: 'contrast(1.1) saturate(1.2) brightness(1.05)',
+          maxWidth: '100vw',
+          maxHeight: '100vh'
         }}
       >
         <source src="/HERO HOME.mp4" type="video/mp4" />
@@ -42,7 +44,7 @@ const Home = () => {
       </div>
 
       {/* Contenido Principal */}
-      <div className="relative z-10 w-full max-w-[95vw] sm:max-w-6xl mx-auto px-4 lg:px-20 text-center">
+      <div className="relative z-10 w-full max-w-[95vw] sm:max-w-6xl mx-auto px-4 md:px-8 lg:px-20 text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
@@ -57,7 +59,7 @@ const Home = () => {
             className="inline-flex items-center gap-2 px-4 py-2 border border-white/20 rounded-full backdrop-blur-sm bg-white/5 mb-4"
           >
             <Gem className="w-3 h-3 sm:w-4 sm:h-4 text-white/60" strokeWidth={1.5} />
-            <span className="text-xs sm:text-sm text-white/80 font-light tracking-wide whitespace-nowrap uppercase">
+            <span className="text-xs sm:text-sm md:text-base text-white/80 font-light tracking-wide whitespace-nowrap uppercase">
               {t('home.badge')}
             </span>
           </motion.div>
@@ -70,12 +72,12 @@ const Home = () => {
             className="font-display leading-tight mb-8"
           >
             {/* Construimos - más pequeño */}
-            <span className="block text-white/70 text-lg sm:text-xl lg:text-4xl mb-2 sm:mb-3" style={{ fontWeight: 200, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+            <span className="block text-white/70 text-lg sm:text-xl md:text-2xl lg:text-4xl mb-2 sm:mb-3" style={{ fontWeight: 200, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               {t('home.weBuild')}
             </span>
             
             {/* Tu Marca / Your Brand - MUY GRANDE EN MÓVIL */}
-            <span className="block text-6xl sm:text-7xl lg:text-9xl" style={{ 
+            <span className="block text-6xl sm:text-7xl md:text-8xl lg:text-9xl" style={{ 
               letterSpacing: '0.04em',
               fontWeight: 300,
               textTransform: 'uppercase'
@@ -193,11 +195,11 @@ const Home = () => {
             className="flex flex-col items-center gap-6 pt-4"
           >
             {/* Contenedor de botones */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-5">
               {/* Botón principal - Más elegante */}
               <Link
                 to="/servicios"
-                className="group relative px-10 py-5 bg-white text-black font-light rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_20px_80px_rgba(255,255,255,0.3)]"
+                className="group relative px-10 py-5 md:px-12 md:py-6 bg-white text-black font-light rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_20px_80px_rgba(255,255,255,0.3)]"
               >
                 {/* Efecto shine continuo */}
                 <motion.div
@@ -212,9 +214,9 @@ const Home = () => {
                   }}
                   className="absolute inset-0 w-1/3 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12"
                 />
-                <span className="relative z-10 flex items-center gap-3 text-base tracking-wide">
+                <span className="relative z-10 flex items-center gap-3 text-base md:text-lg tracking-wide">
                   <span>{t('home.ctaPrimary')}</span>
-                  <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </span>
@@ -225,12 +227,12 @@ const Home = () => {
                 href={`https://wa.me/420776711575?text=${encodeURIComponent(t('home.whatsappMessage'))}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative px-10 py-5 text-white font-light rounded-full border border-white/30 hover:border-white/60 transition-all duration-500 hover:scale-[1.02] overflow-hidden"
+                className="group relative px-10 py-5 md:px-12 md:py-6 text-white font-light rounded-full border border-white/30 hover:border-white/60 transition-all duration-500 hover:scale-[1.02] overflow-hidden"
               >
                 <div className="absolute inset-0 bg-white/5 backdrop-blur-sm transition-opacity duration-300 group-hover:bg-white/10" />
-                <span className="relative z-10 flex items-center gap-3 text-base tracking-wide">
+                <span className="relative z-10 flex items-center gap-3 text-base md:text-lg tracking-wide">
                   <span>{t('home.ctaSecondary')}</span>
-                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                 </span>
@@ -242,7 +244,7 @@ const Home = () => {
               initial={{ opacity: 0 }}
               animate={isHeroInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.8, delay: 0.8 }}
-              className="text-white/40 text-xs font-extralight tracking-wider text-center max-w-md mb-8 lg:mb-0"
+              className="text-white/40 text-xs md:text-sm font-extralight tracking-wider text-center max-w-md mb-8 lg:mb-0"
             >
               {t('home.ctaSubtitle')}
             </motion.p>

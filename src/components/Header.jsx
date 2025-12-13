@@ -27,7 +27,7 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
 
   return (
     <>
-    {/* Header móvil delgado - Solo móvil */}
+    {/* Header móvil delgado - Solo móvil y tablet */}
     <motion.header
       initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
@@ -35,12 +35,12 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
       className="fixed top-0 left-0 right-0 z-[100] lg:hidden"
     >
       <nav className="bg-black/90 backdrop-blur-lg border-b border-white/10">
-        <div className="px-4 py-3 flex items-center justify-between">
+        <div className="px-4 md:px-8 py-3 md:py-4 flex items-center justify-between">
           {/* Logo LUXMANIA */}
           <Link to="/">
             <motion.div
               whileTap={{ scale: 0.95 }}
-              className="text-white font-display text-lg tracking-[0.2em] font-light"
+              className="text-white font-display text-lg md:text-xl tracking-[0.2em] font-light"
               style={{ fontFamily: 'Gotham, sans-serif' }}
             >
               LUXMANIA
