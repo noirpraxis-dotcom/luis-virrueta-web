@@ -6,6 +6,7 @@ import SEOHead from '../components/SEOHead'
 import { useLanguage } from '../context/LanguageContext'
 import { getArticleContent } from '../data/blogArticlesContent'
 
+// Updated: Dec 17, 2025 - New images for articles 17-20
 const BlogPage = () => {
   const { t, currentLanguage } = useLanguage()
   const heroRef = useRef(null)
