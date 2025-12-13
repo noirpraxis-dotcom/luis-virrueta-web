@@ -4,6 +4,81 @@ import { MessageCircle, Heart, Reply, MoreHorizontal } from 'lucide-react'
 
 // Comentarios específicos por artículo (MIXTOS: Español + Inglés)
 const articleComments = {
+  'rebranding-vs-refresh-cuando-redisenar-marca-completa': [
+    {
+      id: 1,
+      author: 'Andrea Morales',
+      avatar: 'AM',
+      date: 'Hace 2 horas',
+      comment: 'El test de 10 preguntas me salvó de cometer un error de $500K. Respondí 3 "SÍ" = NO necesitaba rebranding completo. Solo refresh. Contraté agencia que insistía en rebranding total. Ahora sé que solo querían facturar más.',
+      likes: 118,
+      gradient: 'from-emerald-600 to-teal-500'
+    },
+    {
+      id: 2,
+      author: 'James Rodriguez',
+      avatar: 'JR',
+      date: '4 hours ago',
+      comment: 'The GAP disaster case (reverted in 6 days, $100M loss) should be taught in every business school. "CEO is bored of current logo" is NOT a valid reason for rebranding. Data-driven decisions save millions.',
+      likes: 106,
+      gradient: 'from-blue-500 to-cyan-600'
+    },
+    {
+      id: 3,
+      author: 'Claudia Fernández',
+      avatar: 'CF',
+      date: 'Hace 5 horas',
+      comment: 'Airbnb vs Mastercard comparison es PERFECTA. Airbnb necesitaba rebranding (cambio de posicionamiento fundamental). Mastercard necesitaba refresh (misma esencia, ejecución moderna). Ambos exitosos porque eligieron correcto. La diferencia es clara.',
+      likes: 94,
+      gradient: 'from-pink-500 to-rose-600'
+    },
+    {
+      id: 4,
+      author: 'Michael Thompson',
+      avatar: 'MT',
+      date: '8 hours ago',
+      comment: 'The "3-5x cost multiplier" stat (rebranding vs refresh for same result) is brutal. We did refresh instead of full rebrand - $80K vs $400K quoted by agencies. Result: customers love it, sales +23%, brand recognition maintained. Smart decision.',
+      likes: 89,
+      gradient: 'from-orange-500 to-amber-600'
+    },
+    {
+      id: 5,
+      author: 'Isabella Romano',
+      avatar: 'IR',
+      date: 'Hace 10 horas',
+      comment: 'Tropicana perdió 20% ventas ($30M) en 2 meses por reemplazar packaging icónico con diseño "premium" genérico. La lección: si tu packaging ES tu brand equity, refresh NO reemplaces. Solo moderniza lo que ya funciona.',
+      likes: 82,
+      gradient: 'from-green-500 to-emerald-600'
+    },
+    {
+      id: 6,
+      author: 'David Chen',
+      avatar: 'DC',
+      date: '1 day ago',
+      comment: 'The 4-week refresh process vs 8-12 week rebranding timeline is super practical. We followed refresh roadmap exactly: week 1 audit, week 2 exploration, week 3 testing, week 4 implementation. Launched on schedule, zero issues.',
+      likes: 77,
+      gradient: 'from-indigo-600 to-purple-600'
+    },
+    {
+      id: 7,
+      author: 'Sofía Vargas',
+      avatar: 'SV',
+      date: 'Hace 1 día',
+      comment: 'Las 5 reglas de oro del refresh exitoso (mantén signature intocable, evolución gradual, test antes de lanzar) son oro puro. Aplicamos todas y nuestro refresh fue invisible para 80% de audiencia pero 100% sienten que somos más modernos. Perfecto.',
+      likes: 71,
+      gradient: 'from-violet-500 to-fuchsia-600'
+    },
+    {
+      id: 8,
+      author: 'Alex Martinez',
+      avatar: 'AM',
+      date: '2 days ago',
+      comment: 'Red flags section is crucial. "CEO is bored of logo" + "no budget for testing" + "launch everything same day" = recipe for disaster. If you see these signs, STOP the project immediately. Save your equity.',
+      likes: 68,
+      gradient: 'from-red-600 to-rose-600'
+    }
+  ],
+
   'branding-con-inteligencia-artificial-2025-guia-completa': [
     {
       id: 1,

@@ -25,7 +25,11 @@ const imageMapping = {
   'cerebro decide antes de que tu.jpg': 'blog-13-cerebro-decide-antes.webp',
   'no busca informacion.jpg': 'blog-14-no-busca-informacion.webp',
   'cloudflare.jpg': 'blog-15-cloudflare.webp',
-  'mapa mental.jpg': 'blog-16-mapa-ias-2025.webp'
+  'mapa mental.jpg': 'blog-16-mapa-ias-2025.webp',
+  '12 arquitipos.jpg': 'blog-17-arquetipos-jung.webp',
+  'tu logo no funciona.jpg': 'blog-18-logo-errores.webp',
+  'branding con ia.jpg': 'blog-19-branding-ia.webp',
+  'rebranding.jpg': 'blog-20-rebranding-refresh.webp'
 };
 
 async function compressImages() {

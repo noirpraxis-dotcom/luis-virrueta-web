@@ -35,6 +35,25 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 20,
+      ...getPostContent('rebranding-vs-refresh-cuando-redisenar-marca-completa'),
+      category: 'branding',
+      author: 'Luis Virrueta',
+      date: currentLanguage === 'en' ? 'Dec 17, 2025' : '17 Dic 2025',
+      readTime: '18 min',
+      gradient: 'from-emerald-600/20 via-teal-500/20 to-cyan-600/20',
+      borderGradient: 'from-emerald-600 via-teal-500 to-cyan-600',
+      tags: currentLanguage === 'en' 
+        ? ['Rebranding', 'Brand Refresh', 'Brand Strategy', 'Brand Evolution', 'Visual Identity', 'Brand Redesign']
+        : ['Rebranding', 'Brand Refresh', 'Rediseño de Marca', 'Estrategia de Marca', 'Evolución de Marca', 'Identidad Visual'],
+      slug: 'rebranding-vs-refresh-cuando-redisenar-marca-completa',
+      image: '/blog-compressed/blog-20-rebranding-refresh.webp',
+      heroImage: '/blog-compressed/blog-20-rebranding-refresh.webp',
+      rating: 5.0,
+      commentsCount: 30,
+      featured: true
+    },
+    {
       id: 19,
       ...getPostContent('branding-con-inteligencia-artificial-2025-guia-completa'),
       category: 'trends',
