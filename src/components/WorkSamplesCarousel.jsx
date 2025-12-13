@@ -123,7 +123,7 @@ const WorkSamplesCarousel = () => {
             }}
             loop={true}
             modules={[EffectCoverflow, Navigation, Autoplay]}
-            className="py-20 md:py-24"
+            className="py-32 md:py-40"
             slideActiveClass="swiper-slide-active"
           >
             {samples.map((sample) => (

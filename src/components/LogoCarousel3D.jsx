@@ -145,7 +145,7 @@ const LogoCarousel3D = () => {
             }}
             loop={true}
             modules={[EffectCoverflow, Navigation, Autoplay]}
-            className="py-20 md:py-24"
+            className="py-32 md:py-40"
             slideActiveClass="swiper-slide-active"
           >
             {logos.map((logo) => (

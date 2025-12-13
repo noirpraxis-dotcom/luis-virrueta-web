@@ -132,8 +132,8 @@ const IndividualServices = () => {
           </motion.p>
         </motion.div>
 
-        {/* Services Grid - Cuadrados: 3 columnas en móvil, 6 en desktop (2 filas) */}
-        <div className="grid grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6">
+        {/* Services Grid - Cuadrados: 3 columnas en móvil, 4 en iPad, 6 en desktop */}
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-5 lg:gap-6">
           {services.map((service, index) => {
             const Icon = service.icon
             return (
@@ -151,7 +151,7 @@ const IndividualServices = () => {
                 className="group relative aspect-square"
               >
                 {/* Card container - Más compacto y elegante */}
-                <div className="relative h-full bg-gradient-to-br from-[#1A1A1A] to-[#0d0d0d] border border-white/10 rounded-2xl lg:rounded-3xl p-4 lg:p-6 hover:border-white/30 transition-all duration-500 flex flex-col items-center justify-center text-center">
+                <div className="relative h-full bg-gradient-to-br from-[#1A1A1A] to-[#0d0d0d] border border-white/10 rounded-2xl lg:rounded-3xl p-4 md:p-5 lg:p-6 hover:border-white/30 transition-all duration-500 flex flex-col items-center justify-center text-center">
                   
                   {/* Animated glow on hover */}
                   <motion.div
@@ -163,11 +163,11 @@ const IndividualServices = () => {
 
                   {/* Icon with gradient background - Proporción optimizada */}
                   <motion.div
-                    className={`relative mb-3 lg:mb-4 p-3 lg:p-4 rounded-xl lg:rounded-2xl bg-gradient-to-br ${service.color} opacity-90 group-hover:opacity-100 transition-opacity flex-shrink-0`}
+                    className={`relative mb-3 md:mb-3.5 lg:mb-4 p-3 md:p-3.5 lg:p-4 rounded-xl lg:rounded-2xl bg-gradient-to-br ${service.color} opacity-90 group-hover:opacity-100 transition-opacity flex-shrink-0`}
                     whileHover={{ rotate: [0, -10, 10, -10, 0] }}
                     transition={{ duration: 0.5 }}
                   >
-                    <Icon className="w-6 h-6 lg:w-8 lg:h-8 text-white" strokeWidth={1.5} />
+                    <Icon className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 text-white" strokeWidth={1.5} />
                     
                     {/* Shimmer effect */}
                     <motion.div
@@ -190,10 +190,10 @@ const IndividualServices = () => {
 
                   {/* Text content - Compacto y responsive */}
                   <div className="relative z-10 flex-1 flex flex-col justify-center min-h-0">
-                    <h3 className="text-white text-sm lg:text-base font-bold mb-0.5 lg:mb-1 group-hover:text-[#d946ef] transition-colors leading-tight">
+                    <h3 className="text-white text-sm md:text-[15px] lg:text-base font-bold mb-0.5 lg:mb-1 group-hover:text-[#d946ef] transition-colors leading-tight">
                       {service.name}
                     </h3>
-                    <p className="text-white/50 text-[10px] lg:text-xs font-light group-hover:text-white/70 transition-colors leading-tight line-clamp-2">
+                    <p className="text-white/50 text-[10px] md:text-[11px] lg:text-xs font-light group-hover:text-white/70 transition-colors leading-tight line-clamp-2">
                       {service.description}
                     </p>
                   </div>

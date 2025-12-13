@@ -122,7 +122,7 @@ const AboutLuisSection = () => {
           >
             {/* Name - Cinematic */}
             <div>
-              <h3 className="text-4xl sm:text-5xl lg:text-6xl font-light text-white mb-3 sm:mb-4 tracking-[0.1em] sm:tracking-[0.15em] font-display">
+              <h3 className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl font-light text-white mb-3 sm:mb-4 tracking-[0.1em] sm:tracking-[0.15em] font-display">
                 Luis Virrueta
               </h3>
               <motion.div
@@ -140,11 +140,11 @@ const AboutLuisSection = () => {
               transition={{ duration: 1, delay: 0.9 }}
               className="space-y-4 sm:space-y-6"
             >
-              <p className="text-white/90 text-lg sm:text-xl lg:text-2xl leading-relaxed font-light tracking-wide font-body">
+              <p className="text-white/90 text-lg sm:text-xl md:text-2xl lg:text-2xl leading-relaxed font-light tracking-wide font-body">
                 Fundador de <span className="text-transparent bg-gradient-to-r from-purple-400 via-fuchsia-500 to-cyan-400 bg-clip-text font-medium">Ainimation</span>, 
                 donde fusiono psicoanálisis, diseño gráfico, programación e inteligencia artificial para crear marcas que conectan con el inconsciente humano.
               </p>
-              <p className="text-white/70 text-base sm:text-lg lg:text-xl leading-relaxed font-light font-body">
+              <p className="text-white/70 text-base sm:text-lg md:text-xl lg:text-xl leading-relaxed font-light font-body">
                 Combino mi formación en psicoanálisis con habilidades técnicas avanzadas: desarrollo apps, entreno modelos de IA, 
                 y diseño sistemas visuales que no solo se ven increíbles, sino que están fundamentados en cómo funciona la mente humana.
               </p>

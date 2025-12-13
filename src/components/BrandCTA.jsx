@@ -95,7 +95,7 @@ const BrandCTA = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.4 }}
-          className="relative mb-8 -mx-6 lg:-mx-12"
+          className="relative mb-8 -mx-6 md:-mx-8 lg:-mx-12"
         >
           <div className="relative w-full">
             {/* Glow sutil alrededor del video */}

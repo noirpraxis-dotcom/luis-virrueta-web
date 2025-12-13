@@ -80,7 +80,7 @@ const LuxmaniaVideoSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-3xl sm:text-5xl lg:text-7xl font-light text-white mb-6 tracking-[0.05em] sm:tracking-[0.12em] lg:tracking-[0.15em] font-display leading-[1.05]"
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white mb-6 tracking-[0.05em] sm:tracking-[0.12em] lg:tracking-[0.15em] font-display leading-[1.05]"
             >
               <span className="inline-block relative">
                 {/* L brillosa */}
@@ -341,7 +341,7 @@ const LuxmaniaVideoSection = () => {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60 flex flex-col items-center justify-center cursor-pointer z-10"
+                    className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60 flex flex-col items-center justify-center cursor-pointer z-20"
                     onClick={handlePlay}
                   >
                     {/* Copy arriba del botón */}
