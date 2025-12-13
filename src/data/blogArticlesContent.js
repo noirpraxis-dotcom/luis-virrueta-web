@@ -729,7 +729,7 @@ const blogArticlesContent = {
         {
           type: 'heading',
           title: 'Red Flags: Señales de Que Tu Rebranding Va a Fracasar',
-          icon: AlertTriangle
+          icon: Shield
         },
         {
           type: 'list',
