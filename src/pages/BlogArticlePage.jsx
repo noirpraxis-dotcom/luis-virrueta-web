@@ -2051,9 +2051,11 @@ const ArticleSection = ({ section, index }) => {
         id={`section-${index}`}
       >
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500/20 to-rose-500/20 border border-white/10 flex items-center justify-center">
-            <Icon className="w-5 h-5 text-white" />
-          </div>
+          {Icon && (
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500/20 to-rose-500/20 border border-white/10 flex items-center justify-center">
+              <Icon className="w-5 h-5 text-white" />
+            </div>
+          )}
           <h2 className="text-3xl lg:text-4xl font-bold text-white" style={{ fontWeight: 300 }}>
             {section.title}
           </h2>

@@ -1,0 +1,122 @@
+{
+  "articleNumber": 22,
+  "slug": "tu-slug-aqui",
+  "shortTitle": "Título Corto",
+  "author": "Luis Virrueta",
+  "readTime": "12 min",
+  "category": "Content Strategy",
+  "tags": [
+    "Tag1",
+    "Tag2",
+    "Tag3",
+    "Tag4"
+  ],
+  "gradient": "from-blue-600 via-purple-600 to-pink-600",
+  "heroImage": "/blog-compressed/blog-22-slug.webp",
+  "relatedArticles": [
+    "slug-articulo-1",
+    "slug-articulo-2",
+    "slug-articulo-3"
+  ],
+  "es": {
+    "title": "Título del Artículo en Español",
+    "extract": "Extract corto que aparece en la lista de blogs (1-2 líneas máximo)",
+    "metaDescription": "Meta description para SEO (máx 160 caracteres)",
+    "date": "15 Dec 2025",
+    "sections": [
+      {
+        "type": "intro",
+        "content": "Introducción del artículo. Primera impresión. Hook que captura atención."
+      },
+      {
+        "type": "heading",
+        "title": "Primera Sección Principal",
+        "icon": "Brain",
+        "__comment": "Icons disponibles: Brain, Sparkles, Zap, Award, Shield, Check, Eye, Target, TrendingUp, BarChart, Activity, Lightbulb, Rocket, Star, Heart, ThumbsUp"
+      },
+      {
+        "type": "text",
+        "content": "Contenido de texto regular. Párrafos de desarrollo."
+      },
+      {
+        "type": "highlight",
+        "content": "Quote destacado que resalta una idea clave del artículo",
+        "author": "Fuente o Autor del Quote"
+      },
+      {
+        "type": "heading",
+        "title": "Segunda Sección",
+        "icon": "Sparkles"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "title": "Punto 1",
+            "description": "Descripción del punto 1"
+          },
+          {
+            "title": "Punto 2",
+            "description": "Descripción del punto 2"
+          }
+        ]
+      },
+      {
+        "type": "callToAction",
+        "title": "¿Listo para Transformar tu Marca?",
+        "description": "Descripción del CTA",
+        "buttonText": "Agenda tu Consulta",
+        "buttonLink": "/contacto"
+      },
+      {
+        "type": "conclusion",
+        "content": "Conclusión final del artículo. Cierre con impacto."
+      }
+    ],
+    "comments": [
+      {
+        "id": 1,
+        "author": "María González",
+        "avatar": "MG",
+        "date": "15 Dec 2025",
+        "content": "Comentario de ejemplo en español",
+        "language": "es"
+      }
+    ]
+  },
+  "en": {
+    "title": "Article Title in English",
+    "extract": "Short extract that appears in blog list (1-2 lines max)",
+    "metaDescription": "Meta description for SEO (max 160 characters)",
+    "date": "Dec 15, 2025",
+    "sections": [
+      {
+        "type": "intro",
+        "content": "Article introduction. First impression. Hook that captures attention."
+      },
+      {
+        "type": "heading",
+        "title": "First Main Section",
+        "icon": "Brain"
+      },
+      {
+        "type": "text",
+        "content": "Regular text content. Development paragraphs."
+      },
+      {
+        "type": "conclusion",
+        "content": "Final conclusion. Impactful closing."
+      }
+    ],
+    "comments": [
+      {
+        "id": 1,
+        "author": "John Doe",
+        "avatar": "JD",
+        "date": "Dec 15, 2025",
+        "content": "Sample comment in English",
+        "language": "en"
+      }
+    ]
+  }
+}
