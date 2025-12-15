@@ -3445,7 +3445,7 @@ const blogArticlesContent = {
           content: 'La IA generativa no reemplaza al diseñador, lo potencia. Al combinar tecnología de punta, principios de diseño atemporales y comprensión psicológica profunda, creamos experiencias visuales que no solo se ven increíbles, sino que conectan genuinamente con las personas.'
         },
       ]
-    }
+    },
   'trend-vs-keyword-gap-contenido-viral-no-construye-crecimiento': {
     title: 'Por Qué el Contenido Viral No Construye Crecimiento: Trend vs Keyword Gap',
     author: 'Luis Virrueta',
