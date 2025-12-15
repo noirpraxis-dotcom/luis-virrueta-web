@@ -36,6 +36,25 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 21,
+      ...getPostContent('trend-vs-keyword-gap-contenido-viral-no-construye-crecimiento'),
+      category: 'trends',
+      author: 'Luis Virrueta',
+      date: currentLanguage === 'en' ? 'Dec 15, 2025' : '15 Dic 2025',
+      readTime: '16 min',
+      gradient: 'from-indigo-600/20 via-purple-600/20 to-fuchsia-600/20',
+      borderGradient: 'from-indigo-600 via-purple-600 to-fuchsia-600',
+      tags: currentLanguage === 'en' 
+        ? ['Content Marketing', 'SEO Strategy', 'Trend Monitoring', 'Keyword Research', 'Growth Strategy']
+        : ['Content Marketing', 'Estrategia SEO', 'Monitoreo de Tendencias', 'Keyword Research', 'Estrategia de Crecimiento'],
+      slug: 'trend-vs-keyword-gap-contenido-viral-no-construye-crecimiento',
+      image: '/blog-compressed/blog-21-trend-keyword-gap.webp',
+      heroImage: '/blog-compressed/blog-21-trend-keyword-gap.webp',
+      rating: 5.0,
+      commentsCount: 12,
+      featured: true
+    },
+    {
       id: 20,
       ...getPostContent('rebranding-vs-refresh-cuando-redisenar-marca-completa'),
       category: 'branding',

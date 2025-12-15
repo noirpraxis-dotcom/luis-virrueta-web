@@ -17,8 +17,8 @@ const Hero = () => {
   const y2 = useTransform(scrollY, [0, 500], [0, -100])
   const opacity = useTransform(scrollY, [0, 300], [1, 0])
 
-  // Floating particles data
-  const particles = Array.from({ length: 20 }, (_, i) => ({
+  // Floating particles data - reducido para mejor rendimiento
+  const particles = Array.from({ length: 8 }, (_, i) => ({
     id: i,
     size: Math.random() * 4 + 2,
     x: Math.random() * 100,

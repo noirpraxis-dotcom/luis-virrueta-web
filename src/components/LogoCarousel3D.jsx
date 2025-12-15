@@ -38,33 +38,13 @@ const LogoCarousel3D = () => {
 
   // Detectar automáticamente los logos de la carpeta comprimida
   useEffect(() => {
-    const loadLogos = async () => {
-      try {
-        // Cargar todos los logos numerados en orden
-        const logoFiles = []
-        for (let i = 1; i <= 50; i++) { // Intentar hasta 50 logos
-          try {
-            const img = new Image()
-            img.src = `/logos-compressed/logo-${i}.webp`
-            await new Promise((resolve, reject) => {
-              img.onload = resolve
-              img.onerror = reject
-            })
-            logoFiles.push({
-              id: i,
-              image: `/logos-compressed/logo-${i}.webp`,
-              gradient: gradients[(i - 1) % gradients.length]
-            })
-          } catch {
-            break // Si no existe, detenerse
-          }
-        }
-        setLogos(logoFiles)
-      } catch (error) {
-        console.error('Error cargando logos:', error)
-      }
-    }
-    loadLogos()
+    // Generar lista de logos conocidos sin verificación asíncrona costosa
+    const logoFiles = Array.from({ length: 17 }, (_, i) => ({
+      id: i + 1,
+      image: `/logos-compressed/logo-${i + 1}.webp`,
+      gradient: gradients[i % gradients.length]
+    }))
+    setLogos(logoFiles)
   }, [])
 
   return (
