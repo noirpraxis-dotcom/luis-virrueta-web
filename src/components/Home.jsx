@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Brain, Sparkles, Atom, Gem, GitBranch } from 'lucide-react'
+import { ArrowRight, Brain, CircleDot, Atom, Gem, GitBranch } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 
 const Home = () => {
@@ -31,8 +31,8 @@ const Home = () => {
         <source src="/header psicologia.mp4" type="video/mp4" />
       </video>
 
-      {/* Degradado sutil en la parte inferior para transición suave */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70" />
+      {/* Degradado sutil en la parte inferior para transición suave - MAS PRONUNCIADO */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
 
       {/* Overlay oscuro cinematográfico - Más transparente */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
@@ -154,7 +154,7 @@ const Home = () => {
 
             {/* Sabiduría Ancestral */}
             <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+              <CircleDot className="w-5 h-5 text-white/70" strokeWidth={1.5} />
               <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
                 {t('home.design')}
               </span>
