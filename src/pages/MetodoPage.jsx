@@ -8,7 +8,7 @@ const MetodoPage = () => {
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
   const storyRef = useRef(null)
-  const isStoryInView = useInView(storyRef, { once: true, amount: 0.3 })
+  const isStoryInView = useInView(storyRef, { once: true, amount: 0.1 })
   const scienceRef = useRef(null)
   const isScienceInView = useInView(scienceRef, { once: true, amount: 0.3 })
 
@@ -104,18 +104,31 @@ const MetodoPage = () => {
               </div>
             </motion.div>
 
-            {/* Título Hero */}
+            {/* Título Hero - AIÓN */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 1, delay: 0.2 }}
-              className="text-4xl sm:text-5xl lg:text-7xl font-light text-center text-white mb-8 leading-tight"
+              className="text-center"
             >
-              La Intersección Entre
-              <br />
-              <span className="bg-gradient-to-r from-purple-300 via-fuchsia-300 to-purple-300 bg-clip-text text-transparent">
-                Lo Ancestral y Lo Contemporáneo
-              </span>
+              <motion.span
+                animate={{
+                  textShadow: [
+                    '0 0 30px rgba(255, 255, 255, 0.3)',
+                    '0 0 60px rgba(255, 255, 255, 0.5)',
+                    '0 0 30px rgba(255, 255, 255, 0.3)'
+                  ]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="text-7xl sm:text-8xl lg:text-9xl font-light text-white inline-block mb-8"
+                style={{ letterSpacing: '0.3em' }}
+              >
+                AIÓN
+              </motion.span>
             </motion.h1>
 
             <motion.p
@@ -124,9 +137,9 @@ const MetodoPage = () => {
               transition={{ duration: 1, delay: 0.4 }}
               className="text-lg sm:text-xl lg:text-2xl font-light text-center text-white/70 max-w-4xl mx-auto leading-relaxed"
             >
-              He trabajado con personas en <span className="text-white/90">México y Europa</span>,{' '}
-              estudiando culturas, tradiciones ancestrales y{' '}
-              <span className="text-purple-300">lo más nuevo de la psicología</span>
+              La intersección entre{' '}
+              <span className="text-purple-300">lo ancestral</span> y{' '}
+              <span className="text-fuchsia-300">lo contemporáneo</span>
             </motion.p>
           </div>
         </section>
@@ -140,17 +153,27 @@ const MetodoPage = () => {
               transition={{ duration: 1 }}
               className="space-y-8"
             >
-              {/* Párrafo introductorio fuerte */}
+              {/* Párrafo introductorio - Contexto personal */}
               <p className="text-xl lg:text-2xl font-light text-white/80 leading-relaxed">
-                Trabajando en diferentes países, algo empezó a volverse imposible de ignorar:{' '}
-                <span className="text-white/90 font-normal">intersecciones</span>.
+                Actualmente vivo en <span className="text-white/90 font-normal">Europa</span>.{' '}
+                He trabajado con cientos de pacientes en <span className="text-purple-300 font-normal">México</span> y{' '}
+                en distintas ciudades europeas, estudiando{' '}
+                <span className="text-fuchsia-300">culturas ancestrales</span>,{' '}
+                <span className="text-violet-300">tradiciones filosóficas</span> y{' '}
+                <span className="text-white/90">lo más nuevo de la psicología contemporánea</span>.
               </p>
 
               <p className="text-xl lg:text-2xl font-light text-white/70 leading-relaxed">
-                Lo que <span className="text-purple-300 font-normal">científicos contemporáneos</span> están descubriendo hoy{' '}
-                <span className="text-white/90">ya había sido descubierto</span> por{' '}
-                <span className="text-fuchsia-300 font-normal">sabios de la antigüedad</span>.{' '}
-                <span className="italic text-white/80">Las mismas verdades, diferentes lenguajes</span>.
+                Y algo se volvió imposible de ignorar:{' '}
+                <span className="text-white font-normal">intersecciones</span> que se repiten a través del tiempo.
+              </p>
+
+              <p className="text-xl lg:text-2xl font-light text-white/70 leading-relaxed">
+                Lo que <span className="text-purple-300 font-normal">científicos contemporáneos</span> están descubriendo hoy—{' '}
+                con microscopios electrónicos y aceleradores de partículas—{' '}
+                <span className="text-white/90 font-normal">ya había sido descubierto</span> por{' '}
+                <span className="text-fuchsia-300 font-normal">sabios ancestrales</span> a través de la contemplación profunda.{' '}
+                <span className="italic text-white/80">Las mismas verdades, diferentes lenguajes, diferentes épocas</span>.
               </p>
 
               {/* Quote sobre tiempo no-lineal - Einstein */}
@@ -165,14 +188,41 @@ const MetodoPage = () => {
                   <br />
                   <span className="text-white/90">El tiempo es una ilusión persistente</span>."
                 </p>
-                <p className="text-sm text-purple-300 font-normal not-italic">— Albert Einstein, Físico Teórico</p>
+                <p className="text-sm text-purple-300 font-normal not-italic">— Albert Einstein</p>
               </motion.div>
 
               <p className="text-xl lg:text-2xl font-light text-white/70 leading-relaxed">
-                El físico cuántico <span className="text-white/90 font-normal">Hugh Everett</span> propuso que{' '}
-                <span className="text-purple-300">todas las líneas de realidad</span> existen al mismo tiempo.{' '}
-                Los místicos védicos lo llamaban <span className="text-fuchsia-300 italic">"El Eterno Ahora"</span>.
+                El físico cuántico <span className="text-white/90 font-normal">Hugh Everett</span> propuso la teoría de los{' '}
+                <span className="text-purple-300">universos múltiples</span> coexistiendo simultáneamente.{' '}
+                Los <span className="text-fuchsia-300 font-normal">místicos védicos</span> lo llamaban{' '}
+                <span className="italic text-white/90">"El Eterno Ahora"</span>.{' '}
+                Los <span className="text-fuchsia-300 font-normal">griegos antiguos</span> lo personificaron en{' '}
+                <span className="text-white font-normal">Aión</span>.
               </p>
+
+              {/* Explicación del nombre AIÓN */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={isStoryInView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 1, delay: 0.6 }}
+                className="my-12 p-8 lg:p-10 bg-gradient-to-br from-purple-900/40 to-fuchsia-900/40 backdrop-blur-xl border-2 border-purple-500/50 rounded-3xl"
+              >
+                <p className="text-lg lg:text-xl font-light text-white/80 leading-relaxed mb-4">
+                  Por eso puse a este método el nombre <span className="text-transparent bg-gradient-to-r from-purple-300 to-fuchsia-300 bg-clip-text font-normal text-2xl">AIÓN</span>.
+                </p>
+                <p className="text-lg lg:text-xl font-light text-white/70 leading-relaxed">
+                  En la <span className="text-purple-300">mitología y filosofía griega</span>,{' '}
+                  <span className="text-white/90 font-normal">Aión</span> es la entidad que personifica el{' '}
+                  <span className="text-fuchsia-300">tiempo eterno, infinito y cíclico</span>—a diferencia de{' '}
+                  <span className="text-white/80 italic">Cronos</span>, que representa el{' '}
+                  <span className="text-white/70">tiempo lineal y medible</span>.
+                </p>
+                <p className="text-lg lg:text-xl font-light text-white/70 leading-relaxed mt-4">
+                  Aión es el tiempo donde <span className="text-white/90">todo coexiste</span>.{' '}
+                  Donde el conocimiento ancestral y la ciencia contemporánea{' '}
+                  <span className="text-purple-300 italic">se encuentran en el mismo instante</span>.
+                </p>
+              </motion.div>
 
               {/* Divisor visual */}
               <motion.div
@@ -182,24 +232,25 @@ const MetodoPage = () => {
                 className="h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent my-12"
               />
 
-              {/* Primera persona directa - AUNQUE NO LO CREAS */}
+              {/* Primera persona directa - Autoridad filosófica */}
               <p className="text-2xl lg:text-3xl font-light text-white/90 leading-relaxed">
-                Aunque no lo creas...
+                Sabes algo que probablemente ya intuyes, pero que la cultura del diagnóstico te ha hecho olvidar...
               </p>
 
               <p className="text-xl lg:text-2xl font-light text-white/70 leading-relaxed">
-                Cuando te dan un <span className="text-white/90">diagnóstico</span>, tiendes a pensar que es{' '}
-                <span className="text-white font-normal">la única solución</span>.{' '}
-                Existen muchas otras, pero <span className="text-purple-300">la gente siempre busca las soluciones más complicadas</span>{' '}
-                porque la razón ve más veracidad en lo complejo.
+                Cuando te dan un <span className="text-white/90">diagnóstico</span>\u2014ya sea médico, psicológico o económico\u2014{' '}
+                la mente tiende a cerrarse alrededor de él como si fuera{' '}
+                <span className="text-white font-normal">la única realidad posible</span>.{' '}
+                Paradójicamente, la gente busca las <span className="text-purple-300">soluciones más complicadas</span>{' '}
+                porque la razón ha aprendido a <span className="italic text-white/80">confundir complejidad con veracidad</span>.
               </p>
 
               <p className="text-xl lg:text-2xl font-light text-white/80 leading-relaxed">
-                ¿Y si te dijera que <span className="text-white font-normal">esto se trata más de concientizar</span>{' '}
-                que de arreglar el síntoma?
+                Pero, ¿y si el problema no es{' '}<span className="text-white font-normal italic">lo que te pasa</span>,{' '}
+                sino <span className="text-purple-300 font-normal">cómo lo estás interpretando</span>?
               </p>
 
-              {/* Ejemplo de la fiebre */}
+              {/* Ejemplo de la fiebre - metáfora profunda */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={isStoryInView ? { opacity: 1, y: 0 } : {}}
@@ -207,29 +258,39 @@ const MetodoPage = () => {
                 className="relative p-8 bg-gradient-to-br from-purple-900/20 to-fuchsia-900/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl my-10"
               >
                 <p className="text-lg lg:text-xl font-light text-white/70 leading-relaxed">
-                  Piensa en la <span className="text-purple-300 font-normal">fiebre</span>:{' '}
-                  no es el problema, es la <span className="text-white/90">respuesta del cuerpo</span> intentando curarse.{' '}
-                  Si solo eliminas la fiebre sin entender <span className="text-fuchsia-300">por qué apareció</span>,{' '}
-                  el problema real sigue ahí.
-                </p>
+                  Considera la <span className="text-purple-300 font-normal">fiebre</span>:{' '}
+                  no es una enfermedad, es una <span className="text-white/90">respuesta inteligente del organismo</span>{' '}
+                  elevando su temperatura para neutralizar patógenos.{' '}
+                  Si solo suprimes el síntoma sin <span className="text-fuchsia-300">comprender su función</span>,{' '}
+                  estás <span className="italic text-white/80">interrumpiendo el proceso de curación</span>.\n                </p>
                 <p className="text-lg lg:text-xl font-light text-white/80 leading-relaxed mt-4">
-                  Lo mismo ocurre con la <span className="text-white font-normal">ansiedad</span>,{' '}
-                  los <span className="text-white font-normal">conflictos de pareja</span>,{' '}
-                  o el <span className="text-white font-normal">estancamiento económico</span>.{' '}
-                  <span className="text-purple-300 italic">Son síntomas de un filtro que necesita ser consciente</span>.
-                </p>
+                  La <span className="text-white font-normal">ansiedad</span>, los{' '}
+                  <span className="text-white font-normal">conflictos relacionales recurrentes</span>,{' '}
+                  el <span className="text-white font-normal">estancamiento económico</span>\u2014{' '}
+                  todos operan bajo el mismo principio.{' '}
+                  <span className="text-purple-300 font-normal italic">Son manifestaciones de un filtro inconsciente pidiendo ser reconocido</span>.\n                </p>
               </motion.div>
 
-              {/* Transición al descubrimiento científico */}
+              {/* Transición al descubrimiento científico - Con más profundidad */}
               <p className="text-2xl lg:text-3xl font-light text-white/90 leading-relaxed">
-                Entonces descubrí algo que cambió mi forma de trabajar por completo:
+                Y fue entonces cuando la revelación se volvió innegable:
               </p>
 
               <p className="text-xl lg:text-2xl font-light text-white/70 leading-relaxed">
-                La <span className="text-purple-300 font-normal">ciencia más rigurosa</span> de nuestra época—{' '}
-                <span className="text-white/90">epigenética, física cuántica, neuropsicología</span>—estaba llegando{' '}
-                <span className="text-white font-normal">exactamente a las mismas conclusiones</span> que{' '}
-                <span className="text-fuchsia-300">Buda, los griegos, Hermes Trismegisto</span> habían descubierto hace milenios.
+                La <span className="text-purple-300 font-normal">ciencia más rigurosa</span> de nuestra época\u2014{' '}
+                <span className="text-white/90">epigenética molecular, física cuántica, neuropsicología afectiva, psicología económica</span>\u2014{' '}
+                estaba llegando <span className="text-white font-normal">exactamente a las mismas conclusiones</span> que{' '}
+                <span className="text-fuchsia-300 font-normal">Buda Gautama</span>,{' '}
+                <span className="text-fuchsia-300 font-normal">los filósofos presocráticos</span> y{' '}
+                <span className="text-fuchsia-300 font-normal">Hermes Trismegisto</span> habían alcanzado{' '}
+                <span className="italic text-white/80">hace más de dos milenios</span>.
+              </p>
+
+              <p className="text-xl lg:text-2xl font-light text-white/70 leading-relaxed">
+                <span className="text-white/90">Bruce Lipton</span> demostrando que las creencias alteran la expresión genética.{' '}
+                <span className="text-white/90">Niels Bohr</span> confirmando que el observador modifica lo observado.{' '}
+                <span className="text-white/90">Daniel Kahneman</span> revelando que los mercados se mueven por narrativas emocionales,{' '}
+                no por datos objetivos.
               </p>
 
               {/* Quote final contundente */}
@@ -243,22 +304,32 @@ const MetodoPage = () => {
                   Los físicos cuánticos confirman lo que los místicos siempre supieron:
                   <br />
                   <span className="text-transparent bg-gradient-to-r from-purple-300 to-fuchsia-300 bg-clip-text font-normal not-italic">
-                    la consciencia colapsa la realidad
+                    la consciencia colapsa la realidad en el acto de observarla
                   </span>
                 </p>
               </motion.div>
 
               <p className="text-xl lg:text-2xl font-light text-white/80 leading-relaxed">
-                Todo está sucediendo <span className="text-white font-normal">simultáneamente</span>.{' '}
-                Y en este preciso momento, <span className="text-purple-300">múltiples versiones de tu vida</span> coexisten.{' '}
-                La que experimentas depende del <span className="text-white font-normal">filtro que sostienes</span>.
+                En el marco de <span className="text-purple-300 italic">Aión</span>,{' '}
+                <span className="text-white font-normal">todo está sucediendo simultáneamente</span>.{' '}
+                En este preciso instante, <span className="text-fuchsia-300">múltiples versiones de tu vida</span> coexisten\u2014{' '}
+                múltiples estados de salud, de relación, de economía, de consciencia.{' '}
+                <span className="text-white font-normal">La que experimentas como "real"</span> es simplemente aquella hacia la que{' '}
+                <span className="text-purple-300 italic">tu filtro inconsciente ha colapsado tu atención</span>.
+              </p>
+
+              <p className="text-xl lg:text-2xl font-light text-white/70 leading-relaxed">
+                Hermes Trismegisto lo codificó en el <span className="italic text-fuchsia-300">Kybalión</span>:{' '}
+                <span className="text-white/90">"Como es arriba, es abajo; como es adentro, es afuera"</span>.{' '}
+                Buda lo enseñó de otra forma: <span className="text-white/90">"Somos lo que pensamos; todo lo que somos surge con nuestros pensamientos"</span>.{' '}
+                Los griegos lo grabaron en el templo de Delfos: <span className="text-white/90">"Conócete a ti mismo"</span>.
               </p>
 
               <p className="text-2xl lg:text-3xl font-normal text-white/90 leading-relaxed mt-12">
                 No estamos descubriendo nada nuevo.
                 <br />
                 <span className="bg-gradient-to-r from-purple-300 to-fuchsia-300 bg-clip-text text-transparent">
-                  Estamos recordando lo que siempre supimos.
+                  Estamos recordando lo que, en Aión, siempre hemos sabido.
                 </span>
               </p>
             </motion.div>
