@@ -18,12 +18,12 @@ const blogArticlesContent = {
       image: 'PERRO.jpg',
       sections: [
         {
-          type: 'intro',
-          content: 'Vuelvo a casa. Mi perro me espera con la euforia de siempre. Corre, salta, me busca. Me dejo abrazar por ese momento: lo leo como amor. Lo siento como validación. Como prueba de que soy alguien para alguien. Pero a los pocos segundos, en la grieta del entusiasmo, emerge una pregunta: ¿Me ama… o responde a una necesidad? Y no tardo en ver que la pregunta, aunque comienza en él, no le pertenece. No se trata de su amor, sino del mío.'
+          type: 'reflection',
+          content: 'Al volver a casa, mi perro me espera con la euforia de siempre. Corre, salta, me busca. Me dejo abrazar por ese momento: lo leo como amor. Lo siento como validación. Como prueba de que soy alguien para alguien. Pero a los pocos segundos, en la grieta del entusiasmo, emerge una pregunta: ¿Me ama… o responde a una necesidad? Y no tardo en ver que la pregunta, aunque comienza en él, no le pertenece. No se trata de su amor, sino del mío.'
         },
         {
           type: 'heading',
-          title: 'I. El punto de partida: El perro que corre hacia mí',
+          title: 'El punto de partida: El perro que corre hacia mí',
           icon: Brain
         },
         {
@@ -32,7 +32,7 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'II. El primer desarme: ¿Me ama a mí… o ama lo que hago por él?',
+          title: 'El primer desarme: ¿Me ama a mí… o ama lo que hago por él?',
           icon: Eye
         },
         {
@@ -41,7 +41,7 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'III. El otro me ama, pero… ¿qué parte de mí?',
+          title: 'El otro me ama, pero… ¿qué parte de mí?',
           icon: Sparkles
         },
         {
@@ -54,7 +54,7 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'IV. El yo como eco: no hay esencia que pueda ser amada',
+          title: 'El yo como eco: no hay esencia que pueda ser amada',
           icon: Zap
         },
         {
@@ -67,7 +67,7 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'V. El amor como intento de tapar la falta',
+          title: 'El amor como intento de tapar la falta',
           icon: Shield
         },
         {
@@ -85,7 +85,7 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'VI. El giro trágico: El otro no puede salvarme',
+          title: 'El giro trágico: El otro no puede salvarme',
           icon: Award
         },
         {
@@ -94,7 +94,7 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'VII. El dolor de fondo (Nisargadatta)',
+          title: 'El dolor de fondo (Nisargadatta)',
           icon: Brain
         },
         {
@@ -112,7 +112,7 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'VIII. Nietzsche y el abismo que nos mira',
+          title: 'Nietzsche y el abismo que nos mira',
           icon: Eye
         },
         {
@@ -126,7 +126,7 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'IX. Simone Weil: de la gravedad a la gracia',
+          title: 'Simone Weil: de la gravedad a la gracia',
           icon: Sparkles
         },
         {
@@ -140,7 +140,7 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'X. La caída de la relación patológica',
+          title: 'La caída de la relación patológica',
           icon: Shield
         },
         {
@@ -149,7 +149,7 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'XI. Habitar la falta como plenitud',
+          title: 'Habitar la falta como plenitud',
           icon: Check
         },
         {

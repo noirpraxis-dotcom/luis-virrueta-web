@@ -2039,6 +2039,31 @@ const ArticleSection = ({ section, index }) => {
     )
   }
 
+  if (section.type === 'reflection') {
+    return (
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 30 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: index * 0.1 }}
+        className="mb-16"
+      >
+        <div className="relative">
+          {/* Decorative quote icon */}
+          <div className="absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-purple-500/50 via-fuchsia-500/30 to-transparent rounded-full" />
+          
+          <div className="pl-8 pr-4 py-1">
+            <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic relative">
+              <span className="absolute -left-2 -top-1 text-5xl text-purple-400/20 font-serif">“</span>
+              {section.content}
+              <span className="absolute -bottom-6 right-0 text-5xl text-purple-400/20 font-serif">”</span>
+            </p>
+          </div>
+        </div>
+      </motion.div>
+    )
+  }
+
   if (section.type === 'heading') {
     const Icon = section.icon
     return (
