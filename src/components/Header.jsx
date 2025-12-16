@@ -36,14 +36,14 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
     >
       <nav className="bg-black/90 backdrop-blur-lg border-b border-white/10">
         <div className="px-4 md:px-8 py-3 md:py-4 flex items-center justify-between">
-          {/* Logo LUXMANIA */}
+          {/* Logo Luis Virrueta */}
           <Link to="/">
             <motion.div
               whileTap={{ scale: 0.95 }}
-              className="text-white font-display text-lg md:text-xl tracking-[0.2em] font-light"
+              className="text-white font-display text-lg md:text-xl tracking-[0.15em] font-light"
               style={{ fontFamily: 'Gotham, sans-serif' }}
             >
-              LUXMANIA
+              <span className="text-[#a855f7]">PSIC.</span>LUIS<span className="text-white/60">VIRRUETA</span>
             </motion.div>
           </Link>
           
@@ -163,42 +163,30 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
                 className="cursor-pointer relative"
                 style={{ fontFamily: 'Gotham, sans-serif' }}
               >
-                {/* LUXMANIA - Con efecto de ondas animadas */}
-                <div className="text-[2.2rem] font-bold tracking-wider font-display flex">
-                  {/* LUX - Con efecto 3D MEJORADO en la X */}
-                  <span className="text-white" style={{ letterSpacing: '0.1em' }}>
-                    <span className="relative inline-block">LU</span>
-                    <span className="relative inline-block">
-                      {/* Capa 0 - Glow ultra extendido */}
-                      <span className="absolute inset-0 bg-gradient-to-br from-cyan-300 via-blue-300 to-white bg-clip-text text-transparent blur-2xl" style={{ transform: 'translateY(-5px) translateX(3px)', opacity: 0.6, fontSize: '1.15em' }}>X</span>
-                      {/* Capa 1 - Glow azul/cyan más grande */}
-                      <span className="absolute inset-0 bg-gradient-to-br from-cyan-400 via-blue-400 to-white bg-clip-text text-transparent blur-xl" style={{ transform: 'translateY(-4px) translateX(2.5px)', opacity: 0.8 }}>X</span>
-                      {/* Capa 2 - Glow intermedio cyan */}
-                      <span className="absolute inset-0 bg-gradient-to-br from-blue-300 via-cyan-300 to-white bg-clip-text text-transparent blur-lg" style={{ transform: 'translateY(-2px) translateX(1.5px)', opacity: 0.9 }}>X</span>
-                      {/* Capa 3 - Glow morado/púrpura extendido */}
-                      <span className="absolute inset-0 bg-gradient-to-tl from-purple-400 via-fuchsia-400 to-white bg-clip-text text-transparent blur-xl" style={{ transform: 'translateY(3px) translateX(-2.5px)', opacity: 0.8 }}>X</span>
-                      {/* Capa 4 - Glow rosa intermedio */}
-                      <span className="absolute inset-0 bg-gradient-to-tl from-pink-400 via-purple-300 to-white bg-clip-text text-transparent blur-lg" style={{ transform: 'translateY(2px) translateX(-1.5px)', opacity: 0.9 }}>X</span>
-                      {/* Capa 5 - Glow púrpura ultra extendido */}
-                      <span className="absolute inset-0 bg-gradient-to-tl from-purple-300 via-fuchsia-300 to-white bg-clip-text text-transparent blur-2xl" style={{ transform: 'translateY(4px) translateX(-3px)', opacity: 0.6, fontSize: '1.15em' }}>X</span>
-                      {/* X principal blanca */}
-                      <span className="relative text-white" style={{ textShadow: '0 0 30px rgba(255, 255, 255, 0.7)' }}>X</span>
-                    </span>
+                {/* Luis Virrueta - Logo moderno */}
+                <div className="text-[1.8rem] font-bold tracking-wide font-display flex items-center gap-1">
+                  {/* PSIC. - En morado */}
+                  <span className="text-[#a855f7] font-semibold" style={{ letterSpacing: '0.05em' }}>
+                    PSIC.
                   </span>
-                  {/* MANIA - Animado con ondas de colores superpuestas */}
-                  <span className="relative inline-block" style={{ letterSpacing: '0.1em' }}>
-                    {/* Capa 1 - Onda azul */}
+                  {/* LUIS - En blanco */}
+                  <span className="text-white font-bold" style={{ letterSpacing: '0.08em' }}>
+                    LUIS
+                  </span>
+                  {/* VIRRUETA - Animado con degradado */}
+                  <span className="relative inline-block" style={{ letterSpacing: '0.08em' }}>
+                    {/* Capa 1 - Onda morada */}
                     <motion.span
                       animate={{
                         backgroundPosition: ['0% 0%', '100% 100%']
                       }}
                       transition={{
-                        duration: 3,
+                        duration: 4,
                         repeat: Infinity,
                         ease: "linear"
                       }}
                       style={{
-                        background: 'linear-gradient(135deg, transparent 0%, transparent 40%, #3b82f6 50%, transparent 60%, transparent 100%)',
+                        background: 'linear-gradient(135deg, transparent 0%, transparent 40%, #a855f7 50%, transparent 60%, transparent 100%)',
                         backgroundSize: '200% 200%',
                         WebkitBackgroundClip: 'text',
                         backgroundClip: 'text',
@@ -206,7 +194,7 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
                       }}
                       className="absolute inset-0"
                     >
-                      MANIA
+                      VIRRUETA
                     </motion.span>
                     
                     {/* Capa 2 - Onda fucsia */}
@@ -215,7 +203,7 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
                         backgroundPosition: ['0% 0%', '100% 100%']
                       }}
                       transition={{
-                        duration: 4,
+                        duration: 5,
                         repeat: Infinity,
                         ease: "linear",
                         delay: 0.5
@@ -229,22 +217,22 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
                       }}
                       className="absolute inset-0"
                     >
-                      MANIA
+                      VIRRUETA
                     </motion.span>
                     
-                    {/* Capa 3 - Onda morada */}
+                    {/* Capa 3 - Onda rosa */}
                     <motion.span
                       animate={{
                         backgroundPosition: ['0% 0%', '100% 100%']
                       }}
                       transition={{
-                        duration: 5,
+                        duration: 6,
                         repeat: Infinity,
                         ease: "linear",
                         delay: 1
                       }}
                       style={{
-                        background: 'linear-gradient(135deg, transparent 0%, transparent 40%, #8b5cf6 50%, transparent 60%, transparent 100%)',
+                        background: 'linear-gradient(135deg, transparent 0%, transparent 40%, #e879f9 50%, transparent 60%, transparent 100%)',
                         backgroundSize: '200% 200%',
                         WebkitBackgroundClip: 'text',
                         backgroundClip: 'text',
@@ -255,8 +243,8 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
                       MANIA
                     </motion.span>
                     
-                    {/* Texto base en blanco */}
-                    <span className="relative text-white">MANIA</span>
+                    {/* Texto base en blanco con opacidad */}
+                    <span className="relative text-white/60">VIRRUETA</span>
                   </span>
                 </div>
                 

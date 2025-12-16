@@ -15,7 +15,7 @@ const Home = () => {
       id="home" 
       className="relative h-screen w-full overflow-x-hidden overflow-y-auto flex items-center justify-center pt-16 md:pt-0 lg:pt-0"
     >
-      {/* Video Background */}
+      {/* Video Background - Home Cerebro */}
       <video
         autoPlay
         loop
@@ -28,7 +28,7 @@ const Home = () => {
           maxHeight: '100vh'
         }}
       >
-        <source src="/HERO HOME.mp4" type="video/mp4" />
+        <source src="/home cerebro.mp4" type="video/mp4" />
       </video>
 
       {/* Degradado sutil en la parte inferior para transición suave */}

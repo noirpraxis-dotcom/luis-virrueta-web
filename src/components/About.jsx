@@ -66,10 +66,10 @@ const About = () => {
             className="lg:col-span-2 relative group"
           >
             <div className="relative aspect-[3/4] overflow-hidden rounded-3xl shadow-2xl border border-amber-600/30">
-              {/* Foto de Zuzana */}
+              {/* Foto de Luis */}
               <img 
-                src="/about ligera.jpg" 
-                alt="Zuzana Erdösová" 
+                src="/Luis.png" 
+                alt="Luis Virrueta" 
                 className="w-full h-full object-cover"
               />
 
@@ -98,7 +98,7 @@ const About = () => {
             {/* Nombre cinematográfico */}
             <div>
               <h3 className="text-5xl lg:text-6xl font-light text-stone-800 mb-4 tracking-[0.15em]" style={{ fontFamily: 'Gotham, sans-serif' }}>
-                Zuzana Erdösová
+                Luis Virrueta
               </h3>
               <motion.div
                 initial={{ scaleX: 0 }}

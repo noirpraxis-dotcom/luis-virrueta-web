@@ -31,7 +31,7 @@ const ArticleSchema = ({
     },
     "publisher": {
       "@type": "Organization",
-      "name": "LUXMANIA",
+      "name": "Luis Virrueta",
       "url": siteUrl,
       "logo": {
         "@type": "ImageObject",

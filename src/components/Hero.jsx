@@ -266,7 +266,7 @@ const Hero = () => {
           </div>
         </motion.div>
 
-        {/* Brand Name - LUXMANIA reducido para elegancia */}
+        {/* Brand Name - LUIS VIRRUETA */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -301,7 +301,7 @@ const Hero = () => {
               animation: 'chrome-shine 8s ease-in-out infinite'
             }}
           >
-            LUXMANIA
+            LUIS VIRRUETA
           </motion.h1>
         </motion.div>
 

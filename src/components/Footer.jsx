@@ -30,19 +30,19 @@ const Footer = () => {
               className="cursor-pointer relative"
               style={{ fontFamily: 'Gotham, sans-serif' }}
             >
-              {/* LUXMANIA - Elegant silver chrome */}
+              {/* Luis Virrueta - Elegant silver chrome */}
               <div 
-                className="text-[2.2rem] font-bold tracking-wider font-display"
+                className="text-[1.8rem] font-bold tracking-wider font-display"
                 style={{
                   background: 'linear-gradient(135deg, #a8a9ad 0%, #ffffff 20%, #d4d4d8 40%, #fafafa 60%, #e4e4e7 80%, #ffffff 100%)',
                   WebkitBackgroundClip: 'text',
                   backgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.25))',
-                  letterSpacing: '0.1em'
+                  letterSpacing: '0.08em'
                 }}
               >
-                LUXMANIA
+                LUIS VIRRUETA
               </div>
               
               {/* Tagline - Elegant subtle */}
@@ -95,7 +95,7 @@ const Footer = () => {
 
           {/* Copyright - Más compacto en móvil */}
           <div className="text-white/40 text-[10px] sm:text-xs tracking-wide font-mono text-center px-4">
-            © {currentYear} LUXMANIA. {t('footer.tagline')}. {t('footer.rights')}.
+            © {currentYear} Luis Virrueta. {t('footer.tagline')}. {t('footer.rights')}.
           </div>
         </div>
       </div>

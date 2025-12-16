@@ -197,8 +197,8 @@ const AboutCreator = () => {
               className="border-l-2 border-[#d946ef]/40 pl-6 py-4 mt-8"
             >
               <p className="text-[#d946ef] text-lg lg:text-xl italic font-light">
-                "Hoy, LUXMANIA es la fusión de dos mundos: la precisión psicológica del análisis humano 
-                y la belleza estratégica del diseño."
+                "Como psicólogo y diseñador, fusiono la precisión del análisis humano 
+                con la belleza estratégica del diseño."
               </p>
             </motion.div>
 
@@ -219,7 +219,7 @@ const AboutCreator = () => {
               Mi Triple Formación
             </h4>
             <p className="text-white/60 text-lg max-w-3xl mx-auto mb-8">
-              La combinación única que hace que LUXMANIA sea diferente a cualquier agencia de branding
+              La combinación única que hace que mi trabajo sea diferente a cualquier agencia de branding
             </p>
             <motion.div
               initial={{ scaleX: 0 }}
