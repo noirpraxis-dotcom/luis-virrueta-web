@@ -12,12 +12,12 @@ const HomePage = () => {
   return (
     <>
       <SEOHead 
-        title="LUXMANIA - Branding Estratégico con Psicología, Diseño e IA"
-        description="Transformamos marcas con psicología del inconsciente, diseño premium e inteligencia artificial. Identidades visuales, arquetipos de Jung, apps y avatares IA para empresas que quieren conectar profundamente."
+        title="Luis Virrueta | Psicólogo · Psicoanalista"
+        description="Psicólogo especializado en branding estratégico con enfoque en el inconsciente. Fusiono psicología, diseño e IA para crear identidades de marca que conectan emocionalmente."
         image="/og-home.jpg"
         url="/"
         type="website"
-        tags={['branding', 'psicología', 'diseño', 'inteligencia artificial', 'identidad de marca', 'arquetipos']}
+        tags={['psicología', 'branding', 'inconsciente', 'diseño', 'arquetipos', 'psicoanálisis']}
       />
       
       {/* Video limpio de fondo */}

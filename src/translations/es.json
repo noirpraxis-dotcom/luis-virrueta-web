@@ -37,15 +37,15 @@
     "savePreferences": "Guardar Preferencias"
   },
   "home": {
-    "badge": "Identidad Visual con Fundamento",
-    "weBuild": "Construimos",
-    "yourBrand": "Tu Marca",
+    "badge": "El Puente Entre Pasado y Futuro",
+    "weBuild": "Tu Realidad Son",
+    "yourBrand": "Tus Filtros",
     "psychology": "Psicología",
-    "design": "Diseño",
-    "technology": "Tecnología",
-    "ctaPrimary": "Descubre Cómo Ayudamos",
-    "ctaSecondary": "Cuéntanos tu Proyecto",
-    "ctaSubtitle": "Iniciemos con una conversación sobre tus necesidades",
+    "design": "Sabiduría Ancestral",
+    "technology": "Ciencia Contemporánea",
+    "ctaPrimary": "Explorar el Enfoque",
+    "ctaSecondary": "Hablar Conmigo",
+    "ctaSubtitle": "Iniciemos una conversación sobre tus necesidades",
     "scrollText": "Desliza para conocer más",
     "whatsappMessage": "Hola! Me gustaría platicar sobre mi proyecto y ver cómo pueden ayudarme",
     "luisSection": {

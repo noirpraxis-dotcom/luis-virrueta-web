@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Brain, Palette, Code, Gem } from 'lucide-react'
+import { ArrowRight, Brain, Sparkles, Atom, Gem } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 
 const Home = () => {
@@ -15,7 +15,7 @@ const Home = () => {
       id="home" 
       className="relative h-screen w-full overflow-x-hidden overflow-y-auto flex items-center justify-center pt-16 md:pt-0 lg:pt-0"
     >
-      {/* Video Background - Home Cerebro */}
+      {/* Video Background - Header Psicologia */}
       <video
         autoPlay
         loop
@@ -28,7 +28,7 @@ const Home = () => {
           maxHeight: '100vh'
         }}
       >
-        <source src="/home cerebro.mp4" type="video/mp4" />
+        <source src="/header psicologia.mp4" type="video/mp4" />
       </video>
 
       {/* Degradado sutil en la parte inferior para transición suave */}
@@ -58,8 +58,8 @@ const Home = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="inline-flex items-center gap-2 px-4 py-2 border border-white/20 rounded-full backdrop-blur-sm bg-white/5 mb-4"
           >
-            <Gem className="w-3 h-3 sm:w-4 sm:h-4 text-white/60" strokeWidth={1.5} />
-            <span className="text-xs sm:text-sm md:text-base text-white/80 font-light tracking-wide whitespace-nowrap uppercase">
+            <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 text-white/60 rotate-0" strokeWidth={1.5} />
+            <span className="text-xs sm:text-sm md:text-base text-white/80 font-light tracking-wide uppercase">
               {t('home.badge')}
             </span>
           </motion.div>
@@ -152,9 +152,9 @@ const Home = () => {
 
             <span className="text-white/40 text-xs">+</span>
 
-            {/* Diseño */}
+            {/* Sabiduría Ancestral */}
             <div className="flex items-center gap-2">
-              <Palette className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+              <Sparkles className="w-5 h-5 text-white/70" strokeWidth={1.5} />
               <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
                 {t('home.design')}
               </span>
@@ -162,9 +162,9 @@ const Home = () => {
 
             <span className="text-white/40 text-xs">+</span>
 
-            {/* Tecnología */}
+            {/* Ciencia Contemporánea */}
             <div className="flex items-center gap-2">
-              <Code className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+              <Atom className="w-5 h-5 text-white/70" strokeWidth={1.5} />
               <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
                 {t('home.technology')}
               </span>
@@ -216,8 +216,8 @@ const Home = () => {
                 />
                 <span className="relative z-10 flex items-center gap-3 text-base md:text-lg tracking-wide">
                   <span>{t('home.ctaPrimary')}</span>
-                  <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
                   </svg>
                 </span>
               </Link>
