@@ -22,7 +22,7 @@ const ContenidoDigitalPage = lazy(() => import('./pages/ContenidoDigitalPage'))
 const AvataresIAPage = lazy(() => import('./pages/AvataresIAPage'))
 const ConsultoriaPsicologicaPage = lazy(() => import('./pages/ConsultoriaPsicologicaPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
-const PortafolioPage = lazy(() => import('./pages/PortafolioPage'))
+const MetodoPage = lazy(() => import('./pages/MetodoPage'))
 const BlogPage = lazy(() => import('./pages/BlogPage'))
 const BlogArticlePage = lazy(() => import('./pages/BlogArticlePage'))
 const InversionPage = lazy(() => import('./pages/InversionPage'))
@@ -47,7 +47,7 @@ const AppContent = () => {
 
   const menuItems = [
     { name: t('menu.home'), href: '/' },
-    { name: t('menu.portfolio'), href: '/portafolio' },
+    { name: t('menu.metodo'), href: '/metodo' },
     { name: t('menu.services'), href: '/servicios' },
     { name: t('menu.blog'), href: '/blog' },
     { name: t('menu.about'), href: '/sobre-mi' },
@@ -123,9 +123,9 @@ const AppContent = () => {
               <AboutPage />
             } />
 
-            {/* Página Portafolio: Casos de éxito */}
-            <Route path="/portafolio" element={
-              <PortafolioPage />
+            {/* Página El Método: Aión */}
+            <Route path="/metodo" element={
+              <MetodoPage />
             } />
 
             {/* Página Blog: Artículos sobre diseño */}
