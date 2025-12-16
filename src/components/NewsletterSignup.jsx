@@ -79,7 +79,7 @@ const NewsletterSignup = () => {
               viewport={{ once: true }}
               className="text-3xl lg:text-4xl font-bold text-white mb-4"
             >
-              Insights que Transforman Marcas
+              Transformación Desde el Inconsciente
             </motion.h3>
 
             <motion.p
@@ -89,7 +89,7 @@ const NewsletterSignup = () => {
               viewport={{ once: true }}
               className="text-lg text-white/70 mb-8 max-w-2xl mx-auto leading-relaxed"
             >
-              Únete a +5,000 emprendedores y creatives que reciben cada semana análisis profundos sobre psicología de marca, filosofía del diseño y estrategias que funcionan en el mundo real.
+              Únete a +5,000 personas que reciben cada semana las intersecciones entre sabiduría ancestral y ciencia contemporánea. Psicología del inconsciente, neurociencia y filosofía aplicada a tu realidad.
             </motion.p>
 
             {/* Form */}

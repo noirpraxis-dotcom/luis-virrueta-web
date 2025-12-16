@@ -11,20 +11,17 @@
     </linearGradient>
   </defs>
   
-  <!-- "LV" Letters - Bold & Centered -->
+  <!-- "LV" Letters - Bold, Centered & Visible -->
   <text 
     x="256" 
-    y="320" 
-    font-family="'Playfair Display', serif" 
-    font-size="280" 
+    y="340" 
+    font-family="Arial, sans-serif" 
+    font-size="240" 
     font-weight="900" 
     text-anchor="middle" 
     fill="url(#faviconGradient)"
-    letter-spacing="-10"
+    letter-spacing="8"
   >
     LV
   </text>
-  
-  <!-- Subtle accent dot -->
-  <circle cx="256" cy="150" r="20" fill="url(#faviconGradient)" opacity="0.6"/>
 </svg>
