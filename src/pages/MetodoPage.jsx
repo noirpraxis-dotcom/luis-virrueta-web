@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { Brain, Sparkles, ArrowRight, Zap, Users, Heart, TrendingUp, Activity } from 'lucide-react'
+import { Brain, Sparkles, ArrowRight, Zap, Users, Heart, TrendingUp, Activity, Infinity, Atom } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 
 const MetodoPage = () => {
@@ -63,9 +63,9 @@ const MetodoPage = () => {
 
       <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28 overflow-hidden">
         {/* Hero Section con Video */}
-        <section ref={heroRef} className="relative py-20 lg:py-40 px-6 lg:px-20 overflow-hidden">
+        <section ref={heroRef} className="relative pt-4 lg:pt-8 pb-8 lg:pb-16 px-6 lg:px-20 overflow-hidden">
           {/* Video de fondo */}
-          <div className="absolute inset-0 -top-20 lg:-top-28 -bottom-16 overflow-hidden pointer-events-none z-0">
+          <div className="absolute inset-0 -top-16 lg:-top-24 -bottom-48 lg:-bottom-64 overflow-hidden pointer-events-none z-0">
             <video
               autoPlay
               loop
@@ -85,7 +85,7 @@ const MetodoPage = () => {
             {/* Gradiente superior que se mezcla con el header */}
             <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black via-black/80 to-transparent z-10" />
             {/* Gradiente inferior que se mezcla con el contenido */}
-            <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-black via-black/90 to-transparent z-10" />
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black via-black/90 to-transparent z-10" />
           </div>
 
           <div className="relative max-w-6xl mx-auto z-10">
@@ -97,9 +97,9 @@ const MetodoPage = () => {
               className="flex justify-center mb-8"
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 border border-white/20 rounded-full backdrop-blur-sm bg-white/5">
-                <Sparkles className="w-4 h-4 text-purple-400" strokeWidth={1.5} />
+                <Infinity className="w-4 h-4 text-purple-400" strokeWidth={1.5} />
                 <span className="text-xs sm:text-sm text-white/80 font-light tracking-wide uppercase">
-                  El Método
+                  La Síntesis
                 </span>
               </div>
             </motion.div>
@@ -111,24 +111,15 @@ const MetodoPage = () => {
               transition={{ duration: 1, delay: 0.2 }}
               className="text-center"
             >
-              <motion.span
-                animate={{
-                  textShadow: [
-                    '0 0 30px rgba(255, 255, 255, 0.3)',
-                    '0 0 60px rgba(255, 255, 255, 0.5)',
-                    '0 0 30px rgba(255, 255, 255, 0.3)'
-                  ]
+              <span
+                className="text-7xl sm:text-8xl lg:text-9xl font-light text-white inline-block mb-8 animate-pulse-glow"
+                style={{ 
+                  letterSpacing: '0.35em',
+                  textShadow: '0 0 40px rgba(255, 255, 255, 0.4)'
                 }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="text-7xl sm:text-8xl lg:text-9xl font-light text-white inline-block mb-8"
-                style={{ letterSpacing: '0.5em' }}
               >
                 AIÓN
-              </motion.span>
+              </span>
             </motion.h1>
 
             <motion.p
@@ -137,10 +128,26 @@ const MetodoPage = () => {
               transition={{ duration: 1, delay: 0.4 }}
               className="text-lg sm:text-xl lg:text-2xl font-light text-center text-white/70 max-w-4xl mx-auto leading-relaxed"
             >
-              La intersección entre{' '}
-              <span className="text-purple-300">lo ancestral</span> y{' '}
-              <span className="text-fuchsia-300">lo contemporáneo</span>
+              La intersección entre
             </motion.p>
+            
+            {/* Chips elegantes sin fondo */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 1, delay: 0.6 }}
+              className="flex flex-wrap items-center justify-center gap-4 mt-6"
+            >
+              <div className="flex items-center gap-2">
+                <Infinity className="w-5 h-5 text-purple-400" strokeWidth={1.5} />
+                <span className="text-lg sm:text-xl lg:text-2xl font-light text-purple-300">lo ancestral</span>
+              </div>
+              <span className="text-white/50 text-xl">&</span>
+              <div className="flex items-center gap-2">
+                <Atom className="w-5 h-5 text-fuchsia-400" strokeWidth={1.5} />
+                <span className="text-lg sm:text-xl lg:text-2xl font-light text-fuchsia-300">lo contemporáneo</span>
+              </div>
+            </motion.div>
           </div>
         </section>
 
@@ -506,30 +513,12 @@ const MetodoPage = () => {
               transition={{ duration: 1, delay: 1.6 }}
               className="relative p-10 lg:p-14 bg-gradient-to-br from-purple-900/30 to-fuchsia-900/30 backdrop-blur-2xl border-2 border-purple-500/40 rounded-[2rem] overflow-hidden mb-16"
             >
-              <motion.div
-                animate={{
-                  opacity: [0.3, 0.6, 0.3],
-                  scale: [1, 1.05, 1]
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-fuchsia-500/20 to-violet-500/20 rounded-[2rem]"
+              <div
+                className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-fuchsia-500/20 to-violet-500/20 rounded-[2rem] animate-pulse-scale"
               />
               
-              <motion.div
-                animate={{
-                  x: ['-100%', '200%']
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "linear",
-                  repeatDelay: 2
-                }}
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+              <div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"
                 style={{ width: '50%' }}
               />
               
@@ -573,17 +562,8 @@ const MetodoPage = () => {
                 className="group relative inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-purple-600 via-fuchsia-600 to-purple-600 text-white rounded-full font-light text-lg overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/50"
                 style={{ backgroundSize: '200% 100%' }}
               >
-                <motion.div
-                  animate={{
-                    x: ['-100%', '200%']
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatDelay: 1,
-                    ease: "easeInOut"
-                  }}
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                <div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer-fast"
                   style={{ width: '50%' }}
                 />
                 
