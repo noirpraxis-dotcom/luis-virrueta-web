@@ -40,10 +40,19 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
           <Link to="/">
             <motion.div
               whileTap={{ scale: 0.95 }}
-              className="text-white font-display text-lg md:text-xl tracking-[0.15em] font-light"
+              className="cursor-pointer text-center"
               style={{ fontFamily: 'Gotham, sans-serif' }}
             >
-              <span className="text-[#a855f7]">PSIC.</span>LUIS<span className="text-white/60">VIRRUETA</span>
+              <div className="text-white font-bold text-lg md:text-xl leading-tight"
+                style={{ letterSpacing: '0.05em' }}
+              >
+                Luis Virrueta
+              </div>
+              <div className="text-white/50 text-[0.45rem] md:text-[0.5rem] font-medium uppercase mt-0.5"
+                style={{ letterSpacing: '0.3em' }}
+              >
+                Psicólogo · Psicoanalista
+              </div>
             </motion.div>
           </Link>
           
@@ -163,121 +172,48 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
                 className="cursor-pointer relative"
                 style={{ fontFamily: 'Gotham, sans-serif' }}
               >
-                {/* Luis Virrueta - Logo moderno */}
-                <div className="text-[1.8rem] font-bold tracking-wide font-display flex items-center gap-1">
-                  {/* PSIC. - En morado */}
-                  <span className="text-[#a855f7] font-semibold" style={{ letterSpacing: '0.05em' }}>
-                    PSIC.
-                  </span>
-                  {/* LUIS - En blanco */}
-                  <span className="text-white font-bold" style={{ letterSpacing: '0.08em' }}>
-                    LUIS
-                  </span>
-                  {/* VIRRUETA - Animado con degradado */}
-                  <span className="relative inline-block" style={{ letterSpacing: '0.08em' }}>
-                    {/* Capa 1 - Onda morada */}
-                    <motion.span
-                      animate={{
-                        backgroundPosition: ['0% 0%', '100% 100%']
-                      }}
-                      transition={{
-                        duration: 4,
-                        repeat: Infinity,
-                        ease: "linear"
-                      }}
-                      style={{
-                        background: 'linear-gradient(135deg, transparent 0%, transparent 40%, #a855f7 50%, transparent 60%, transparent 100%)',
-                        backgroundSize: '200% 200%',
-                        WebkitBackgroundClip: 'text',
-                        backgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                      }}
-                      className="absolute inset-0"
-                    >
-                      VIRRUETA
-                    </motion.span>
-                    
-                    {/* Capa 2 - Onda fucsia */}
-                    <motion.span
-                      animate={{
-                        backgroundPosition: ['0% 0%', '100% 100%']
-                      }}
-                      transition={{
-                        duration: 5,
-                        repeat: Infinity,
-                        ease: "linear",
-                        delay: 0.5
-                      }}
-                      style={{
-                        background: 'linear-gradient(135deg, transparent 0%, transparent 40%, #d946ef 50%, transparent 60%, transparent 100%)',
-                        backgroundSize: '200% 200%',
-                        WebkitBackgroundClip: 'text',
-                        backgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                      }}
-                      className="absolute inset-0"
-                    >
-                      VIRRUETA
-                    </motion.span>
-                    
-                    {/* Capa 3 - Onda rosa */}
-                    <motion.span
-                      animate={{
-                        backgroundPosition: ['0% 0%', '100% 100%']
-                      }}
-                      transition={{
-                        duration: 6,
-                        repeat: Infinity,
-                        ease: "linear",
-                        delay: 1
-                      }}
-                      style={{
-                        background: 'linear-gradient(135deg, transparent 0%, transparent 40%, #e879f9 50%, transparent 60%, transparent 100%)',
-                        backgroundSize: '200% 200%',
-                        WebkitBackgroundClip: 'text',
-                        backgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                      }}
-                      className="absolute inset-0"
-                    >
-                      MANIA
-                    </motion.span>
-                    
-                    {/* Texto base en blanco con opacidad */}
-                    <span className="relative text-white/60">VIRRUETA</span>
-                  </span>
+                {/* Luis Virrueta - Con efectos originales */}
+                <div className="text-center">
+                  {/* Luis Virrueta - Estilo chrome elegante */}
+                  <div 
+                    className="text-[2.2rem] font-bold tracking-wide font-display"
+                    style={{
+                      background: 'linear-gradient(135deg, #a8a9ad 0%, #ffffff 25%, #d4d4d8 45%, #fafafa 65%, #e4e4e7 85%, #ffffff 100%)',
+                      backgroundSize: '200% 200%',
+                      WebkitBackgroundClip: 'text',
+                      backgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      letterSpacing: '0.05em',
+                      filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.25))'
+                    }}
+                  >
+                    Luis Virrueta
+                  </div>
+                  
+                  {/* Tagline - Efecto platino/chrome animado */}
+                  <motion.div 
+                    className="text-[0.5rem] uppercase font-bold tracking-[0.4em] text-center -mt-0.5 font-mono"
+                    animate={{
+                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    style={{
+                      background: 'linear-gradient(90deg, #71717a 0%, #fafafa 20%, #ffffff 40%, #fafafa 60%, #71717a 80%, #52525b 100%)',
+                      backgroundSize: '200% 100%',
+                      WebkitBackgroundClip: 'text',
+                      backgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      letterSpacing: '0.4em',
+                      filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.4))'
+                    }}
+                  >
+                    Psicólogo · Psicoanalista
+                  </motion.div>
                 </div>
-                
-                {/* Tagline - Efecto platino/chrome animado */}
-                <motion.div 
-                  className="text-[0.5rem] uppercase font-bold tracking-[0.4em] text-center -mt-0.5 font-mono"
-                  animate={{
-                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                  style={{
-                    background: 'linear-gradient(90deg, #71717a 0%, #fafafa 20%, #ffffff 40%, #fafafa 60%, #71717a 80%, #52525b 100%)',
-                    backgroundSize: '200% 100%',
-                    WebkitBackgroundClip: 'text',
-                    backgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    letterSpacing: '0.4em',
-                    filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.4))'
-                  }}
-                >
-                  Psych × Design × Tech
-                </motion.div>
-                
-                {/* Underline decorativo */}
-                <motion.div 
-                  className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0"
-                  whileHover={{ opacity: 0.5 }}
-                  transition={{ duration: 0.3 }}
-                />
               </motion.div>
             </Link>
 
