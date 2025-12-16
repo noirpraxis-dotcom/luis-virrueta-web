@@ -1897,9 +1897,15 @@ const BlogArticlePage = () => {
       {/* Article Content */}
       <section className="relative py-12 px-6 lg:px-20">
         <div className="max-w-3xl mx-auto">
-          {article.sections.map((section, index) => (
-            <ArticleSection key={index} section={section} index={index} />
-          ))}
+          {(() => {
+            let headingCount = 0
+            return article.sections.map((section, index) => {
+              if (section.type === 'heading') {
+                headingCount++
+              }
+              return <ArticleSection key={index} section={section} index={index} headingNumber={headingCount} />
+            })
+          })()}
         </div>
       </section>
 
@@ -2019,7 +2025,7 @@ const BlogArticlePage = () => {
   )
 }
 
-const ArticleSection = ({ section, index }) => {
+const ArticleSection = ({ section, index, headingNumber }) => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
 
@@ -2080,9 +2086,9 @@ const ArticleSection = ({ section, index }) => {
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-fuchsia-500 to-purple-500" />
           
           {/* Number badge */}
-          {index > 0 && (
+          {headingNumber > 0 && (
             <div className="inline-flex items-center gap-2 mb-4 px-4 py-1.5 bg-purple-500/10 border border-purple-500/30 rounded-full">
-              <span className="text-xs font-mono text-purple-300 tracking-wider">SECCIÓN {String(index).padStart(2, '0')}</span>
+              <span className="text-xs font-mono text-purple-300 tracking-wider">SECCIÓN {String(headingNumber).padStart(2, '0')}</span>
               {Icon && <Icon className="w-3.5 h-3.5 text-purple-400" />}
             </div>
           )}
