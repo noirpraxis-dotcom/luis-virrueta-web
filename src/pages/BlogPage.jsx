@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Palette, Brain, Zap } from 'lucide-react'
+import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Palette, Brain, Zap, Eye } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 import { useLanguage } from '../context/LanguageContext'
 import { getArticleContent } from '../data/blogArticlesContent'
@@ -19,6 +19,7 @@ const BlogPage = () => {
     { id: 'branding', label: t('blogPage.categories.branding'), icon: Sparkles },
     { id: 'psychology', label: t('blogPage.categories.psychology'), icon: Brain },
     { id: 'trends', label: t('blogPage.categories.trends'), icon: TrendingUp },
+    { id: 'philosophy', label: currentLanguage === 'en' ? 'Philosophy' : 'Filosofía', icon: Eye },
   ]
 
   // Helper function to get translated content
@@ -238,6 +239,28 @@ const BlogPage = () => {
       rating: 4.8,
       commentsCount: 21,
       featured: true
+    },
+    {
+      id: 23,
+      title: currentLanguage === 'en' 
+        ? 'From the Dog Who Loves Me to the Void I Inhabit'
+        : 'Del perro que me ama al vacío que me habita',
+      excerpt: currentLanguage === 'en'
+        ? 'A reflection on love, use, lack and grace'
+        : 'Una reflexión sobre el amor, el uso, la falta y la gracia',
+      category: 'philosophy',
+      author: 'Luis Virrueta',
+      date: '16 Dic 2025',
+      readTime: '18 min',
+      gradient: 'from-purple-500/20 to-fuchsia-600/20',
+      borderGradient: 'from-purple-500 to-fuchsia-600',
+      tags: currentLanguage === 'en'
+        ? ['Lacan', 'Nisargadatta Maharaj', 'Simone Weil', 'Nietzsche', 'Existential Void', 'Psychoanalysis', 'Non-duality']
+        : ['Lacan', 'Nisargadatta Maharaj', 'Simone Weil', 'Nietzsche', 'Vacío Existencial', 'Psicoanálisis', 'No-dualidad'],
+      slug: 'del-perro-que-me-ama-al-vacio-que-me-habita',
+      image: '/IMAGENES BLOG/PERRO.jpg',
+      rating: 5.0,
+      commentsCount: 8
     },
     {
       id: 1,
@@ -600,7 +623,8 @@ const BlogCard = ({ post, index }) => {
     'design': t('blogPage.categories.design'),
     'branding': t('blogPage.categories.branding'),
     'psychology': t('blogPage.categories.psychology'),
-    'trends': t('blogPage.categories.trends')
+    'trends': t('blogPage.categories.trends'),
+    'philosophy': currentLanguage === 'en' ? 'Philosophy' : 'Filosofía'
   }
 
   return (
