@@ -63,16 +63,16 @@ const MetodoPage = () => {
 
       <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28 overflow-hidden">
         {/* Hero Section con Video */}
-        <section ref={heroRef} className="relative pt-4 lg:pt-8 pb-8 lg:pb-16 px-6 lg:px-20 overflow-hidden">
+        <section ref={heroRef} className="relative pt-12 lg:pt-20 pb-40 lg:pb-56 px-6 lg:px-20 overflow-hidden">
           {/* Video de fondo */}
-          <div className="absolute inset-0 -top-16 lg:-top-24 -bottom-48 lg:-bottom-64 overflow-hidden pointer-events-none z-0">
+          <div className="absolute inset-0 -top-16 lg:-top-24 -bottom-80 lg:-bottom-96 overflow-hidden pointer-events-none z-0">
             <video
               autoPlay
               loop
               muted
               playsInline
               preload="auto"
-              className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-40"
+              className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-60"
               style={{
                 minWidth: '100vw',
                 minHeight: '100%',
@@ -82,11 +82,10 @@ const MetodoPage = () => {
             >
               <source src="/tiempo metodo.mp4" type="video/mp4" />
             </video>
-            {/* Gradiente superior que se mezcla con el header */}
-            <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black via-black/80 to-transparent z-10" />
-            {/* Gradiente inferior que se mezcla con el contenido */}
-            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black via-black/90 to-transparent z-10" />
           </div>
+          
+          {/* Gradiente inferior que se mezcla con el contenido */}
+          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/100 via-black/50 to-transparent z-[5] pointer-events-none" />
 
           <div className="relative max-w-6xl mx-auto z-10">
             {/* Badge de entrada */}
