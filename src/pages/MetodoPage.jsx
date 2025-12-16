@@ -10,43 +10,43 @@ const MetodoPage = () => {
   const storyRef = useRef(null)
   const isStoryInView = useInView(storyRef, { once: true, amount: 0.1 })
   const scienceRef = useRef(null)
-  const isScienceInView = useInView(scienceRef, { once: true, amount: 0.3 })
+  const isScienceInView = useInView(scienceRef, { once: true, amount: 0.05 })
 
   const problemAreas = [
     {
       icon: Activity,
       title: 'Salud',
-      problem: 'Síntomas físicos sin causa aparente',
-      science: 'La epigenética demuestra que tus pensamientos alteran la expresión de tus genes',
-      ancestral: 'La medicina ancestral siempre supo: "La enfermedad nace en la mente"',
-      reversible: 'Al cambiar los filtros mentales, el cuerpo responde',
+      problem: 'Síntomas físicos crónicos, enfermedades autoinmunes, dolor sin diagnóstico claro',
+      science: 'Bruce Lipton (biólogo celular) demostró en su libro que las señales del entorno, filtradas por nuestras percepciones, alteran la expresión genética sin modificar el ADN. Joe Dispenza documenta en sus investigaciones cómo estados meditativos sostenidos regeneran tejidos y revierten condiciones crónicas al cambiar las señales electromagnéticas del corazón y cerebro.',
+      ancestral: 'La medicina tradicional china (3000 años) identifica que el Shen (mente-espíritu) gobierna el Qi (energía vital) del cuerpo. Los Upanishads védicos enseñaban que como es en el cuerpo, es en el universo. Los curanderos mazatecos sabían que la enfermedad es el alma que perdió su camino.',
+      reversible: 'Cuando la consciencia cambia su interpretación del entorno, el cuerpo altera su bioquímica en tiempo real',
       delay: 0.2
     },
     {
       icon: Heart,
       title: 'Relaciones',
-      problem: 'Las mismas dinámicas con diferentes personas',
-      science: 'La neurociencia afectiva revela que tu cerebro busca lo familiar, no lo sano',
-      ancestral: 'Los griegos enseñaban: "Conócete a ti mismo para conocer al otro"',
-      reversible: 'Transforma tu filtro interno y tus relaciones se transforman',
+      problem: 'Repetir los mismos conflictos con personas diferentes, atracción hacia dinámicas tóxicas',
+      science: 'El Dr. Dan Siegel (neuropsiquiatra de UCLA) explica que los modelos internos de apego se forman en los primeros años y crean filtros neuronales que buscan inconscientemente lo familiar, aunque sea disfuncional. Sue Johnson (creadora de la Terapia Enfocada en Emociones) documenta que el 70% de los conflictos de pareja provienen de patrones inconscientes heredados, no de incompatibilidad real.',
+      ancestral: 'Los sufíes persas enseñaban que no vemos a los demás como son, los vemos como somos nosotros. La filosofía Ubuntu africana establece que yo soy porque tú eres, reconociendo que nuestras relaciones son espejos de nuestra consciencia interna. Los toltecas hablaban del espejo humeante (tezcatlipoca): cada persona refleja aspectos no reconocidos de ti mismo.',
+      reversible: 'Al volver consciente el filtro relacional interno, atraes dinámicas coherentes con tu nueva percepción',
       delay: 0.3
     },
     {
       icon: Brain,
       title: 'Emociones',
-      problem: 'Ansiedad y depresión que no ceden',
-      science: 'La psicobiología confirma que la mente crea los químicos que experimentas',
-      ancestral: 'Buda enseñó: "El sufrimiento viene de la interpretación, no del evento"',
-      reversible: 'Cambia el filtro, cambia la emoción',
+      problem: 'Ansiedad crónica, depresión recurrente, estados emocionales que no responden a tratamiento convencional',
+      science: 'Candace Pert (neurocientífica) descubrió que las emociones son moléculas de información (neuropéptidos) que el cerebro secreta según cómo interpreta los eventos. Richard Davidson (neurocientífico de Wisconsin) demostró con neuroimagen que la práctica contemplativa reorganiza la corteza prefrontal, alterando permanentemente los umbrales emocionales. La psiconeuroinmunología confirma que pensamientos sostenidos modifican citoquinas inflamatorias.',
+      ancestral: 'El Abhidharma budista (500 a.C.) clasificó 52 estados mentales y enseñó que todos surgen de la percepción errónea (vipallasa). Los estoicos romanos diferenciaban entre lo que ocurre (acontecimientos) y lo que pensamos sobre ello (juicios). Los chamanes shipibo-conibo del Amazonas identifican que las emociones atrapadas crean nudos energéticos (yoshin) que distorsionan la percepción.',
+      reversible: 'Modificar el filtro interpretativo disuelve el patrón emocional en su origen neuroquímico',
       delay: 0.4
     },
     {
       icon: TrendingUp,
       title: 'Dinero',
-      problem: 'Patrones económicos repetitivos',
-      science: 'La psicología económica prueba que el mercado se mueve por creencias colectivas',
-      ancestral: 'Hermes Trismegisto: "Como es arriba, es abajo; como adentro, es afuera"',
-      reversible: 'Tu realidad financiera es tu filtro monetario materializado',
+      problem: 'Ciclos de escasez repetitivos, incapacidad de sostener abundancia, autosabotaje económico',
+      science: 'Daniel Kahneman (Premio Nobel de Economía) demostró que el 90% de las decisiones financieras se basan en sesgos cognitivos inconscientes, no en análisis racional. Brad Klontz (psicólogo financiero) identifica guiones monetarios implícitos heredados familiarmente que operan como filtros automáticos. Robert Cialdini documenta cómo las creencias sobre el dinero actúan como profecías autocumplidas que alteran el comportamiento y los resultados.',
+      ancestral: 'El Kybalión hermético (tradición egipcia) establece que el TODO es Mente y el Universo es mental, explicando que la riqueza externa refleja la riqueza interna percibida. La Kábala judía enseña que la Shefa (abundancia divina) fluye según el recipiente de consciencia (kli) que uno sostiene. Los Huna hawaianos sabían que el mana (poder vital) sigue al foco de atención: donde pones tu consciencia, ahí fluye la energía y los recursos.',
+      reversible: 'La realidad financiera se reorganiza cuando el filtro de escasez colapsa hacia suficiencia',
       delay: 0.5
     }
   ]
@@ -125,7 +125,7 @@ const MetodoPage = () => {
                   ease: "easeInOut"
                 }}
                 className="text-7xl sm:text-8xl lg:text-9xl font-light text-white inline-block mb-8"
-                style={{ letterSpacing: '0.3em' }}
+                style={{ letterSpacing: '0.5em' }}
               >
                 AIÓN
               </motion.span>
@@ -169,8 +169,8 @@ const MetodoPage = () => {
               </p>
 
               <p className="text-xl lg:text-2xl font-light text-white/70 leading-relaxed">
-                Lo que <span className="text-purple-300 font-normal">científicos contemporáneos</span> están descubriendo hoy—{' '}
-                con microscopios electrónicos y aceleradores de partículas—{' '}
+                Lo que <span className="text-purple-300 font-normal">científicos contemporáneos</span> están descubriendo hoy,{' '}
+                con microscopios electrónicos y aceleradores de partículas,{' '}
                 <span className="text-white/90 font-normal">ya había sido descubierto</span> por{' '}
                 <span className="text-fuchsia-300 font-normal">sabios ancestrales</span> a través de la contemplación profunda.{' '}
                 <span className="italic text-white/80">Las mismas verdades, diferentes lenguajes, diferentes épocas</span>.
@@ -213,7 +213,7 @@ const MetodoPage = () => {
                 <p className="text-lg lg:text-xl font-light text-white/70 leading-relaxed">
                   En la <span className="text-purple-300">mitología y filosofía griega</span>,{' '}
                   <span className="text-white/90 font-normal">Aión</span> es la entidad que personifica el{' '}
-                  <span className="text-fuchsia-300">tiempo eterno, infinito y cíclico</span>—a diferencia de{' '}
+                <span className="text-fuchsia-300">tiempo eterno, infinito y cíclico</span>, a diferencia de{' '}
                   <span className="text-white/80 italic">Cronos</span>, que representa el{' '}
                   <span className="text-white/70">tiempo lineal y medible</span>.
                 </p>
@@ -238,7 +238,7 @@ const MetodoPage = () => {
               </p>
 
               <p className="text-xl lg:text-2xl font-light text-white/70 leading-relaxed">
-                Cuando te dan un <span className="text-white/90">diagnóstico</span>\u2014ya sea médico, psicológico o económico\u2014{' '}
+                Cuando te dan un <span className="text-white/90">diagnóstico</span> (ya sea médico, psicológico o económico),{' '}
                 la mente tiende a cerrarse alrededor de él como si fuera{' '}
                 <span className="text-white font-normal">la única realidad posible</span>.{' '}
                 Paradójicamente, la gente busca las <span className="text-purple-300">soluciones más complicadas</span>{' '}
@@ -262,13 +262,15 @@ const MetodoPage = () => {
                   no es una enfermedad, es una <span className="text-white/90">respuesta inteligente del organismo</span>{' '}
                   elevando su temperatura para neutralizar patógenos.{' '}
                   Si solo suprimes el síntoma sin <span className="text-fuchsia-300">comprender su función</span>,{' '}
-                  estás <span className="italic text-white/80">interrumpiendo el proceso de curación</span>.\n                </p>
+                  estás <span className="italic text-white/80">interrumpiendo el proceso de curación</span>.
+                </p>
                 <p className="text-lg lg:text-xl font-light text-white/80 leading-relaxed mt-4">
                   La <span className="text-white font-normal">ansiedad</span>, los{' '}
                   <span className="text-white font-normal">conflictos relacionales recurrentes</span>,{' '}
-                  el <span className="text-white font-normal">estancamiento económico</span>\u2014{' '}
+                  el <span className="text-white font-normal">estancamiento económico</span>,{' '}
                   todos operan bajo el mismo principio.{' '}
-                  <span className="text-purple-300 font-normal italic">Son manifestaciones de un filtro inconsciente pidiendo ser reconocido</span>.\n                </p>
+                  <span className="text-purple-300 font-normal italic">Son manifestaciones de un filtro inconsciente pidiendo ser reconocido</span>.
+                </p>
               </motion.div>
 
               {/* Transición al descubrimiento científico - Con más profundidad */}
@@ -312,7 +314,7 @@ const MetodoPage = () => {
               <p className="text-xl lg:text-2xl font-light text-white/80 leading-relaxed">
                 En el marco de <span className="text-purple-300 italic">Aión</span>,{' '}
                 <span className="text-white font-normal">todo está sucediendo simultáneamente</span>.{' '}
-                En este preciso instante, <span className="text-fuchsia-300">múltiples versiones de tu vida</span> coexisten\u2014{' '}
+                En este preciso instante, <span className="text-fuchsia-300">múltiples versiones de tu vida</span> coexisten:{' '}
                 múltiples estados de salud, de relación, de economía, de consciencia.{' '}
                 <span className="text-white font-normal">La que experimentas como "real"</span> es simplemente aquella hacia la que{' '}
                 <span className="text-purple-300 italic">tu filtro inconsciente ha colapsado tu atención</span>.
