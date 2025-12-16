@@ -5,8 +5,248 @@ import { Brain, Zap, Sparkles, Award, Check, Shield, Eye } from 'lucide-react'
 
 const blogArticlesContent = {
   es: {
-    // Artículo 21 - Trend vs Keyword Gap ya está agregado al final
-    
+    // Artículo NUEVO - Del Perro que me Ama al Vacío que me Habita
+    'del-perro-que-me-ama-al-vacio-que-me-habita': {
+      title: 'Del perro que me ama al vacío que me habita',
+      subtitle: 'Una reflexión sobre el amor, el uso, la falta y la gracia',
+      author: 'Luis Virrueta',
+      date: '16 Dic 2025',
+      readTime: '18 min',
+      category: 'philosophy',
+      tags: ['Lacan', 'Nisargadatta Maharaj', 'Simone Weil', 'Nietzsche', 'Vacío Existencial', 'Psicoanálisis', 'No-dualidad'],
+      gradient: 'from-purple-500 to-fuchsia-600',
+      image: 'PERRO.jpg',
+      sections: [
+        {
+          type: 'intro',
+          content: 'Vuelvo a casa. Mi perro me espera con la euforia de siempre. Corre, salta, me busca. Me dejo abrazar por ese momento: lo leo como amor. Lo siento como validación. Como prueba de que soy alguien para alguien. Pero a los pocos segundos, en la grieta del entusiasmo, emerge una pregunta: ¿Me ama… o responde a una necesidad? Y no tardo en ver que la pregunta, aunque comienza en él, no le pertenece. No se trata de su amor, sino del mío.'
+        },
+        {
+          type: 'heading',
+          title: 'I. El punto de partida: El perro que corre hacia mí',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: '¿Por qué necesito que me ame? ¿Por qué ese gesto suyo me reconforta, me da sentido, me devuelve a mí? Lo que su conducta activa en mí no es solo ternura, sino una estructura mucho más profunda: la necesidad de ser reflejado, confirmado, devuelto. Lo que amo en su amor —si es que podemos seguir llamándolo así— es lo que me devuelve de mí mismo. No es que lo ame porque él exista, sino porque me hace sentir que yo existo para él.'
+        },
+        {
+          type: 'heading',
+          title: 'II. El primer desarme: ¿Me ama a mí… o ama lo que hago por él?',
+          icon: Eye
+        },
+        {
+          type: 'text',
+          content: 'Y aquí ocurre el primer desarme: ¿Ama lo que soy… o ama la función que cumplo? ¿Me ama él… o ama su propia necesidad cubierta a través de mí? Este mismo patrón, con sus infinitas variaciones, lo repito en mis relaciones humanas.'
+        },
+        {
+          type: 'heading',
+          title: 'III. El otro me ama, pero… ¿qué parte de mí?',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'En la pareja, la amistad, incluso en los vínculos familiares, se repite esta pregunta disfrazada: ¿Qué parte de mí está siendo amada? ¿Mi inteligencia? ¿Mi belleza? ¿Mi disponibilidad? ¿Mi poder económico? ¿Mi dulzura? ¿Mi rareza? Y cuando el otro ama solo "eso", aparece la sospecha: ¿Entonces todo lo demás en mí es prescindible? ¿Qué pasa si cambio, si caigo, si ya no soy útil?'
+        },
+        {
+          type: 'text',
+          content: 'En ese momento, el amor comienza a sentirse como una validación condicional. Y el drama se despliega: Deseo que me amen por completo, "tal y como soy", pero incluso eso es imposible porque ese "yo" es un constructo.'
+        },
+        {
+          type: 'heading',
+          title: 'IV. El yo como eco: no hay esencia que pueda ser amada',
+          icon: Zap
+        },
+        {
+          type: 'text',
+          content: 'Aquí llegamos a un punto crucial. Quiero que me amen por mi "esencia", pero ¿qué es eso? Cuando empiezo a desmontarlo, veo que ese "yo esencial" no es más que una construcción: Un cúmulo de heridas, hábitos, respuestas, automatismos, poses, demandas sociales. Un eco de lo que los otros proyectaron en mí y que yo asumí como identidad.'
+        },
+        {
+          type: 'text',
+          content: 'Entonces lo que el otro ama de mí no soy "yo", sino un reflejo, un eco con piernas. Y más aún: el otro también es eco, también es trauma, también es ausencia disfrazada de forma. Por tanto: ¿Cómo puede el eco amar al eco? ¿Cómo puede la falta amar a la falta sin convertir la relación en un eterno reclamo?'
+        },
+        {
+          type: 'heading',
+          title: 'V. El amor como intento de tapar la falta',
+          icon: Shield
+        },
+        {
+          type: 'text',
+          content: 'Aquí el psicoanálisis entra con fuerza. Lacan lo dijo con crudeza: el deseo no tiene objeto, sólo causa. Y esa causa es la falta. El sujeto desea porque está estructuralmente incompleto. El histérico desea infinitamente. Nunca se satisface. Aunque el otro diga "te amo", el deseo no se detiene. Solo se desplaza. Siempre habrá una nueva demanda.'
+        },
+        {
+          type: 'highlight',
+          content: 'El deseo no tiene objeto, sólo causa. Y esa causa es la falta.',
+          author: 'Jacques Lacan'
+        },
+        {
+          type: 'text',
+          content: 'Por eso las relaciones se construyen como negociaciones simbólicas de carencias. No amamos al otro por lo que es, sino por lo que nos hace sentir respecto a nuestra herida. Y cuando el otro no cumple su papel —el de sostenernos, reflejarnos, completarnos— nos sentimos utilizados. Pero si somos honestos: todos usamos al otro. Todos buscamos, desde nuestra falta, lo que creemos que puede completarnos. No hay relación humana sin interés.'
+        },
+        {
+          type: 'heading',
+          title: 'VI. El giro trágico: El otro no puede salvarme',
+          icon: Award
+        },
+        {
+          type: 'text',
+          content: 'Llega entonces el punto en que la estructura colapsa. Nos damos cuenta de algo insoportable, pero verdadero: el otro no puede completarme, porque él también está roto. Y más todavía: yo no puedo ser amado como totalidad, porque no soy una totalidad. Entonces todo el sistema simbólico del amor romántico —"quiero que me amen por quien soy", "quiero sentirme especial", "quiero que me necesiten"— se revela como lo que es: una ficción sostenida por el miedo a enfrentar la falta.'
+        },
+        {
+          type: 'heading',
+          title: 'VII. El dolor de fondo (Nisargadatta)',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'Aquí aparece lo que Nisargadatta Maharaj llamaba el dolor de fondo. Ese malestar constante, esa incomodidad que persiste incluso cuando todo parece ir bien. No desaparece con el amor, ni con el éxito, ni con la iluminación "mental".'
+        },
+        {
+          type: 'highlight',
+          content: 'El dolor de fondo es la vibración misma de la existencia condicionada.',
+          author: 'Nisargadatta Maharaj'
+        },
+        {
+          type: 'text',
+          content: 'Y lo que hacemos casi siempre es huir de ese dolor, disfrazarlo con espiritualidad, proyectos, vínculos intensos, o la euforia de "estar sanando". Pero es todo parte del mismo juego.'
+        },
+        {
+          type: 'heading',
+          title: 'VIII. Nietzsche y el abismo que nos mira',
+          icon: Eye
+        },
+        {
+          type: 'highlight',
+          content: 'Cuando miras largo tiempo al abismo, el abismo también te mira.',
+          author: 'Friedrich Nietzsche'
+        },
+        {
+          type: 'text',
+          content: 'Él lo decía en clave existencial, sí. Pero podemos leerlo desde una clave más espiritual. Porque no se trata de "mirar" el vacío como si fuera un objeto, sino de habitarlo. Y al hacerlo, no aparece terror ni condena. Aparece algo que ninguna huida puede dar: la paz radical de no necesitar más huida.'
+        },
+        {
+          type: 'heading',
+          title: 'IX. Simone Weil: de la gravedad a la gracia',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'Simone Weil articula esto de forma conmovedora. La gravedad es esa fuerza que nos hace repetir, desear, buscar al otro como salvador. La gracia, en cambio, no se produce. No es voluntad. Es lo que desciende cuando dejamos de llenar el vacío.'
+        },
+        {
+          type: 'highlight',
+          content: 'La gracia no es una recompensa. Es una interrupción.',
+          author: 'Simone Weil'
+        },
+        {
+          type: 'heading',
+          title: 'X. La caída de la relación patológica',
+          icon: Shield
+        },
+        {
+          type: 'text',
+          content: 'Entonces, cuando el sujeto atraviesa esta comprensión, las relaciones que antes sostenía —basadas en la función, el reflejo, la ilusión del "complemento"— se desmoronan. Ya no puedo buscar al otro para que me salve, porque sé que no puede. Ya no quiero que el otro me ame para yo sentirme real, porque sé que eso es usarlo como espejo. Y en ese desierto, algo nuevo puede nacer.'
+        },
+        {
+          type: 'heading',
+          title: 'XI. Habitar la falta como plenitud',
+          icon: Check
+        },
+        {
+          type: 'text',
+          content: 'La falta ya no es vacío angustiante, sino espacio fértil. Ya no es lo que hay que rellenar, sino el lugar desde el cual puedo estar sin necesitar justificarme. Y desde ahí, cualquier relación que surja ya no es demanda, sino regalo. El perro ya no es prueba de que soy alguien. La pareja ya no es refugio del dolor. El mundo ya no es teatro de mis carencias.'
+        },
+        {
+          type: 'heading',
+          title: 'Epílogo',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'No busco que el perro me ame. No busco que el otro me confirme. Ya no me niego a la falta. La miro. La habito. La dejo estar. Y al hacerlo, ocurre lo que Simone Weil llamaría gracia. No como éxtasis. No como revelación. Sino como ligereza. Una ligereza que no necesita ser amada porque ya no es carga.'
+        },
+        {
+          type: 'highlight',
+          content: 'La falta no es algo que deba superarse. Es el portal por el cual lo real puede entrar sin máscaras.',
+          author: 'Luis Virrueta'
+        }
+      ],
+      comments: [
+        {
+          id: 1,
+          author: 'María Santos',
+          avatar: 'MS',
+          date: '16 Dic 2025',
+          content: 'Este texto me partió. Llevo años en terapia intentando "sanar" mi relación con el amor, pero nunca nadie me había explicado tan claro que la falta no es algo que deba rellenarse. Gracias Luis.',
+          language: 'es'
+        },
+        {
+          id: 2,
+          author: 'Luis Virrueta',
+          avatar: 'LV',
+          date: '16 Dic 2025',
+          content: '@María Santos - Es que ese es el truco: la terapia muchas veces promete "completarte", pero la verdadera liberación viene cuando aceptas que esa completud nunca existió. No hay nada que reparar porque nunca estuviste rota. Solo eres.',
+          language: 'es',
+          isAuthor: true
+        },
+        {
+          id: 3,
+          author: 'Javier Romero',
+          avatar: 'JR',
+          date: '16 Dic 2025',
+          content: 'La parte de Lacan sobre el deseo sin objeto es brutal. Nunca había conectado eso con mis relaciones de pareja. Siempre pensé que el problema era que no encontraba "a la persona correcta", pero el problema es que estoy buscando algo que no existe.',
+          language: 'es'
+        },
+        {
+          id: 4,
+          author: 'Ana Delgado',
+          avatar: 'AD',
+          date: '16 Dic 2025',
+          content: 'No entiendo cómo esto se relaciona con branding o psicología aplicada. ¿Esto no es más bien un diario personal? No me malinterpretes, está bien escrito, pero esperaba algo más profesional.',
+          language: 'es'
+        },
+        {
+          id: 5,
+          author: 'Luis Virrueta',
+          avatar: 'LV',
+          date: '16 Dic 2025',
+          content: '@Ana Delgado - Fair point. Este no es un artículo de branding. Es filosofía aplicada a la existencia. Pero si trabajas con personas (branding, terapia, coaching), entender la estructura del deseo y la falta es fundamental. Las marcas no venden productos, venden la ilusión de completud. Este texto desmonta esa ilusión desde la raíz.',
+          language: 'es',
+          isAuthor: true
+        },
+        {
+          id: 6,
+          author: 'Carlos Mendoza',
+          avatar: 'CM',
+          date: '16 Dic 2025',
+          content: 'La cita de Simone Weil sobre la gracia como "interrupción" me voló la cabeza. Siempre pensé que la gracia era algo que se ganaba con meditación o práctica espiritual. Pero tiene más sentido que sea lo que aparece cuando dejas de intentar.',
+          language: 'es'
+        },
+        {
+          id: 7,
+          author: 'Sofía Torres',
+          avatar: 'ST',
+          date: '16 Dic 2025',
+          content: 'Esto me recuerda mucho a "Gravity and Grace" de Simone Weil. ¿Has leído ese libro Luis? La forma en que articulas el paso de la gravedad (repetición del deseo) a la gracia (interrupción) es casi idéntica a lo que ella describe.',
+          language: 'es'
+        },
+        {
+          id: 8,
+          author: 'Luis Virrueta',
+          avatar: 'LV',
+          date: '16 Dic 2025',
+          content: '@Sofía Torres - Sí, Simone Weil es una de mis mayores influencias. "Gravity and Grace" cambió mi vida. Lo que intento hacer aquí es conectar su filosofía cristiana mística con el psicoanálisis lacaniano y la no-dualidad de Nisargadatta. Son tres tradiciones que dicen lo mismo con lenguajes distintos.',
+          language: 'es',
+          isAuthor: true
+        }
+      ],
+      relatedArticles: [
+        'tu-cerebro-no-busca-informacion-busca-sorpresa-minima-andy-clark',
+        'pre-suasion-cialdini-branding',
+        'storybrand-framework-no-eres-heroe-eres-guia'
+      ]
+    },
+
     // Artículo 14 - PREMIUM
     'tu-cerebro-no-busca-informacion-busca-sorpresa-minima-andy-clark': {
       title: 'Tu Cerebro No Busca Información: Busca Sorpresa Mínima | Andy Clark y el Futuro del Branding',
