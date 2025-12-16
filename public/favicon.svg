@@ -11,7 +11,7 @@
     </linearGradient>
   </defs>
   
-  <!-- "AI" Letters - Bold & Centered -->
+  <!-- "LV" Letters - Bold & Centered -->
   <text 
     x="256" 
     y="320" 
@@ -22,7 +22,7 @@
     fill="url(#faviconGradient)"
     letter-spacing="-10"
   >
-    AI
+    LV
   </text>
   
   <!-- Subtle accent dot -->

@@ -79,7 +79,7 @@ const NewsletterSignup = () => {
               viewport={{ once: true }}
               className="text-3xl lg:text-4xl font-bold text-white mb-4"
             >
-              Eleva Tu Juego de Diseño
+              Insights que Transforman Marcas
             </motion.h3>
 
             <motion.p
@@ -89,7 +89,7 @@ const NewsletterSignup = () => {
               viewport={{ once: true }}
               className="text-lg text-white/70 mb-8 max-w-2xl mx-auto leading-relaxed"
             >
-              Únete a +5,000 diseñadores, emprendedores y creativos que reciben insights exclusivos sobre psicología del diseño, tendencias y estrategias de branding cada semana.
+              Únete a +5,000 emprendedores y creatives que reciben cada semana análisis profundos sobre psicología de marca, filosofía del diseño y estrategias que funcionan en el mundo real.
             </motion.p>
 
             {/* Form */}
