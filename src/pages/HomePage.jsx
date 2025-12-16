@@ -7,6 +7,7 @@ import BrandCTA from '../components/BrandCTA'
 import IndividualServices from '../components/IndividualServices'
 import WhyLuxmania from '../components/WhyLuxmania'
 import SEOHead from '../components/SEOHead'
+import AionSection from '../components/AionSection'
 
 const HomePage = () => {
   return (
@@ -22,6 +23,9 @@ const HomePage = () => {
       
       {/* Video limpio de fondo */}
       <Home />
+      
+      {/* Aion Section: Tu realidad son tus filtros - Problema y solución */}
+      <AionSection />
       
       {/* Luis Virrueta Intro: Compact elegant section - BEFORE Hero stats */}
       <LuisViruettaIntro />
