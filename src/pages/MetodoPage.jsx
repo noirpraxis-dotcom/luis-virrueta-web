@@ -88,30 +88,15 @@ const MetodoPage = () => {
           <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/100 via-black/50 to-transparent z-[5] pointer-events-none" />
 
           <div className="relative max-w-6xl mx-auto z-10">
-            {/* Badge de entrada */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8 }}
-              className="flex justify-center mb-8"
-            >
-              <div className="inline-flex items-center gap-2 px-4 py-2 border border-white/20 rounded-full backdrop-blur-sm bg-white/5">
-                <Infinity className="w-4 h-4 text-purple-400" strokeWidth={1.5} />
-                <span className="text-xs sm:text-sm text-white/80 font-light tracking-wide uppercase">
-                  La Síntesis
-                </span>
-              </div>
-            </motion.div>
-
             {/* Título Hero - AIÓN */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 1, delay: 0.2 }}
-              className="text-center"
+              transition={{ duration: 1 }}
+              className="text-center mb-12"
             >
               <span
-                className="text-7xl sm:text-8xl lg:text-9xl font-light text-white inline-block mb-8 animate-pulse-glow"
+                className="text-7xl sm:text-8xl lg:text-9xl font-light text-white inline-block animate-pulse-glow"
                 style={{ 
                   letterSpacing: '0.35em',
                   textShadow: '0 0 40px rgba(255, 255, 255, 0.4)'
@@ -121,32 +106,47 @@ const MetodoPage = () => {
               </span>
             </motion.h1>
 
+            {/* Descripción del método */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 1, delay: 0.4 }}
-              className="text-lg sm:text-xl lg:text-2xl font-light text-center text-white/70 max-w-4xl mx-auto leading-relaxed"
+              transition={{ duration: 1, delay: 0.2 }}
+              className="text-lg sm:text-xl font-light text-center text-white/60 mb-8"
             >
-              La intersección entre
+              El método que combina
             </motion.p>
             
-            {/* Chips elegantes sin fondo */}
+            {/* Chips elegantes estilo Servicios */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 1, delay: 0.6 }}
-              className="flex flex-wrap items-center justify-center gap-4 mt-6"
+              transition={{ duration: 1, delay: 0.4 }}
+              className="flex flex-wrap items-center justify-center gap-4 mb-8"
             >
-              <div className="flex items-center gap-2">
-                <Infinity className="w-5 h-5 text-purple-400" strokeWidth={1.5} />
-                <span className="text-lg sm:text-xl lg:text-2xl font-light text-purple-300">lo ancestral</span>
+              {/* Chip ancestral */}
+              <div className="group relative px-5 py-2.5 border border-purple-500/30 rounded-full backdrop-blur-sm bg-purple-500/5 hover:bg-purple-500/10 hover:border-purple-500/50 transition-all duration-300">
+                <div className="flex items-center gap-2">
+                  <Infinity className="w-4 h-4 text-purple-400" strokeWidth={1.5} />
+                  <span className="text-sm sm:text-base font-light text-purple-300 tracking-wide">Lo Ancestral</span>
+                </div>
               </div>
-              <span className="text-white/50 text-xl">&</span>
-              <div className="flex items-center gap-2">
-                <Atom className="w-5 h-5 text-fuchsia-400" strokeWidth={1.5} />
-                <span className="text-lg sm:text-xl lg:text-2xl font-light text-fuchsia-300">lo contemporáneo</span>
+
+              {/* Chip contemporáneo */}
+              <div className="group relative px-5 py-2.5 border border-fuchsia-500/30 rounded-full backdrop-blur-sm bg-fuchsia-500/5 hover:bg-fuchsia-500/10 hover:border-fuchsia-500/50 transition-all duration-300">
+                <div className="flex items-center gap-2">
+                  <Atom className="w-4 h-4 text-fuchsia-400" strokeWidth={1.5} />
+                  <span className="text-sm sm:text-base font-light text-fuchsia-300 tracking-wide">Lo Contemporáneo</span>
+                </div>
               </div>
             </motion.div>
+
+            {/* Línea decorativa */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={isHeroInView ? { scaleX: 1 } : {}}
+              transition={{ duration: 1.5, delay: 0.6 }}
+              className="h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent mx-auto w-64 sm:w-96"
+            />
           </div>
         </section>
 
