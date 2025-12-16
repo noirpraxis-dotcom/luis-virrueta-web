@@ -2,9 +2,9 @@ import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { User2 } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 const AboutLuisSection = () => {
-  const { t } = useLanguage()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
 
@@ -14,108 +14,162 @@ const AboutLuisSection = () => {
       ref={ref}
       className="relative bg-black py-24 lg:py-32 overflow-hidden"
     >
-      {/* Gradient orbs minimalistas */}
+      {/* Gradient orbs premium */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           animate={{ 
             scale: [1, 1.2, 1],
-            opacity: [0.1, 0.15, 0.1]
+            opacity: [0.08, 0.12, 0.08]
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/3 right-1/4 w-96 h-96 bg-purple-600 rounded-full blur-3xl"
+          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-600 rounded-full blur-3xl"
         />
         <motion.div
           animate={{ 
             scale: [1, 1.3, 1],
-            opacity: [0.08, 0.12, 0.08]
+            opacity: [0.06, 0.1, 0.06]
           }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-fuchsia-600 rounded-full blur-3xl"
+          className="absolute bottom-1/4 right-1/3 w-[600px] h-[600px] bg-fuchsia-600 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{ 
+            scale: [1, 1.15, 1],
+            opacity: [0.05, 0.08, 0.05]
+          }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+          className="absolute top-1/2 right-1/4 w-[450px] h-[450px] bg-violet-600 rounded-full blur-3xl"
         />
       </div>
 
       <div className="relative max-w-6xl mx-auto px-6 lg:px-12">
-        {/* Badge superior */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="flex justify-center mb-12"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 border border-white/20 rounded-full backdrop-blur-sm bg-white/5">
-            <User2 className="w-4 h-4 text-purple-400" strokeWidth={1.5} />
-            <span className="text-xs sm:text-sm text-white/80 font-light tracking-wide uppercase">
-              Sobre Mí
-            </span>
-          </div>
-        </motion.div>
+        <div className="max-w-5xl mx-auto">
+          
+          {/* Foto circular premium */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 1 }}
+            className="flex justify-center mb-8"
+          >
+            <div className="relative">
+              {/* Glow ring */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-500/30 via-fuchsia-500/30 to-purple-500/30 blur-2xl animate-pulse-scale" />
+              {/* Photo */}
+              <div className="relative w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 rounded-full overflow-hidden border-2 border-white/20 backdrop-blur-sm">
+                <img 
+                  src="/luxmania perfil.png" 
+                  alt="Luis Virrueta" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </motion.div>
 
-        {/* Contenido principal minimalista y centrado */}
-        <div className="max-w-4xl mx-auto text-center space-y-12">
-          {/* Título principal */}
+          {/* Badge premium */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="flex justify-center mb-12"
+          >
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 border border-white/20 rounded-full backdrop-blur-sm bg-white/5">
+              <User2 className="w-4 h-4 text-purple-400" strokeWidth={1.5} />
+              <span className="text-sm text-white/80 font-light tracking-wide">
+                Psicólogo y Creador de AIÓN
+              </span>
+            </div>
+          </motion.div>
+
+          {/* Título estilo AionSection */}
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-light text-white leading-tight"
+            transition={{ duration: 1, delay: 0.3 }}
+            className="text-3xl sm:text-4xl lg:text-6xl font-light text-white text-center leading-tight mb-8"
           >
-            Actualmente vivo en Europa.
-            <br />
+            Actualmente vivo en Europa.{' '}
             <span className="text-white/60">
               He trabajado con cientos de pacientes en México y distintas ciudades europeas.
             </span>
           </motion.h2>
 
-          {/* Descripción filosófica */}
+          {/* Descripción con gradient text animado */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.4 }}
-            className="space-y-8"
+            transition={{ duration: 1, delay: 0.5 }}
+            className="text-center space-y-8 mb-12"
           >
-            <p className="text-xl lg:text-2xl text-white/80 font-light leading-relaxed">
+            <p className="text-xl lg:text-2xl text-white/80 font-light leading-relaxed max-w-4xl mx-auto">
               En cada caso, descubrí que{' '}
-              <span className="text-purple-300">lo que los científicos contemporáneos están descubriendo</span>
+              <span 
+                className="font-normal bg-gradient-to-r from-purple-400 via-fuchsia-400 to-purple-400 bg-clip-text text-transparent"
+                style={{
+                  backgroundSize: '200% 100%',
+                  animation: 'gradient-x 5s ease infinite'
+                }}
+              >
+                lo que los científicos contemporáneos están descubriendo
+              </span>
               {' '}ya lo sabían los sabios ancestrales.
             </p>
 
-            <p className="text-lg lg:text-xl text-white/70 font-light leading-relaxed">
-              Bruce Lipton habla de epigenética. Los chinos llamaban a esto <span className="text-fuchsia-300">Shen-Qi</span>.
-              <br />
-              Daniel Kahneman describe sesgos cognitivos. Los budistas los llamaron <span className="text-purple-300">Vipallasa</span> hace 2,500 años.
+            <p className="text-lg lg:text-xl text-white/70 font-light leading-relaxed max-w-3xl mx-auto">
+              Bruce Lipton habla de epigenética. Los chinos llamaban a esto{' '}
+              <span className="text-fuchsia-300 font-normal">Shen-Qi</span>.
+              <br className="hidden sm:block" />
+              Daniel Kahneman describe sesgos cognitivos. Los budistas los llamaron{' '}
+              <span className="text-purple-300 font-normal">Vipallasa</span> hace 2,500 años.
             </p>
-
-            {/* Box destacado con filosofía AIÓN */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 1, delay: 0.6 }}
-              className="relative p-8 lg:p-10 bg-gradient-to-br from-purple-900/30 to-fuchsia-900/30 backdrop-blur-xl border border-purple-500/30 rounded-2xl overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-fuchsia-500/5 animate-pulse-scale" />
-              
-              <div className="relative space-y-4">
-                <p className="text-xl lg:text-2xl font-light text-white/90 leading-relaxed">
-                  En <span className="font-normal bg-gradient-to-r from-purple-300 to-fuchsia-300 bg-clip-text text-transparent">AIÓN</span>,{' '}
-                  estas verdades siempre han coexistido.
-                </p>
-                <p className="text-base lg:text-lg text-white/70 font-light">
-                  No estamos descubriendo nada nuevo.{' '}
-                  <span className="text-purple-300">Estamos recordando</span>.
-                </p>
-              </div>
-            </motion.div>
           </motion.div>
 
-          {/* CTA al About completo */}
+          {/* Box premium con filosofía AIÓN */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 1, delay: 0.7 }}
+            className="relative max-w-4xl mx-auto p-8 lg:p-12 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl overflow-hidden mb-12"
+          >
+            {/* Animated gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-fuchsia-500/10 to-purple-500/10 opacity-50" 
+                 style={{
+                   backgroundSize: '200% 200%',
+                   animation: 'gradient-xy 8s ease infinite'
+                 }}
+            />
+            
+            <div className="relative text-center space-y-6">
+              <p className="text-2xl lg:text-3xl font-light text-white/90 leading-relaxed">
+                En{' '}
+                <span 
+                  className="font-normal bg-gradient-to-r from-purple-400 via-fuchsia-400 to-purple-400 bg-clip-text text-transparent"
+                  style={{
+                    backgroundSize: '200% 100%',
+                    animation: 'gradient-x 5s ease infinite'
+                  }}
+                >
+                  AIÓN
+                </span>
+                , estas verdades siempre han coexistido.
+              </p>
+              <p className="text-lg lg:text-xl text-white/70 font-light">
+                No estamos descubriendo nada nuevo.{' '}
+                <span className="text-purple-300 font-normal">Estamos recordando</span>.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* CTA premium */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.8 }}
+            transition={{ duration: 0.8, delay: 0.9 }}
+            className="flex justify-center"
           >
             <Link
               to="/sobre-mi"
-              className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white rounded-full font-light text-lg hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-500"
+              className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white rounded-full font-light text-lg hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-500 hover:scale-105"
             >
               <span>Conoce Mi Trayectoria</span>
               <motion.svg 
@@ -131,8 +185,8 @@ const AboutLuisSection = () => {
               </motion.svg>
             </Link>
           </motion.div>
-        </div>
 
+        </div>
       </div>
     </section>
   )

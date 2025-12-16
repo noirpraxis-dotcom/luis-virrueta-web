@@ -252,3 +252,29 @@ button, a {
 .animate-shimmer-fast {
   animation: shimmer-fast 3s ease-in-out infinite;
 }
+
+/* Animación de gradient horizontal para texto */
+@keyframes gradient-x {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Animación de gradient diagonal para fondos */
+@keyframes gradient-xy {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 50%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 50% 100%;
+  }
+}
