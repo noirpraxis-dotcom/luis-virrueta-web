@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Brain, Sparkles, Atom, Gem } from 'lucide-react'
+import { ArrowRight, Brain, Sparkles, Atom, Gem, GitBranch } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 
 const Home = () => {
@@ -58,7 +58,7 @@ const Home = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="inline-flex items-center gap-2 px-4 py-2 border border-white/20 rounded-full backdrop-blur-sm bg-white/5 mb-4"
           >
-            <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 text-white/60 rotate-0" strokeWidth={1.5} />
+            <GitBranch className="w-3 h-3 sm:w-4 sm:h-4 text-white/60" strokeWidth={1.5} />
             <span className="text-xs sm:text-sm md:text-base text-white/80 font-light tracking-wide uppercase">
               {t('home.badge')}
             </span>
@@ -239,15 +239,18 @@ const Home = () => {
               </a>
             </div>
 
-            {/* Texto aclaratorio debajo de botones */}
-            <motion.p
+            {/* Texto aclaratorio debajo de botones - Clickeable */}
+            <motion.a
+              href={`https://wa.me/420776711575?text=${encodeURIComponent(t('home.whatsappMessage'))}`}
+              target="_blank"
+              rel="noopener noreferrer"
               initial={{ opacity: 0 }}
               animate={isHeroInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.8, delay: 0.8 }}
-              className="text-white/40 text-xs md:text-sm font-extralight tracking-wider text-center max-w-md mb-8 lg:mb-0"
+              className="text-white/40 text-xs md:text-sm font-extralight tracking-wider text-center max-w-md mb-8 lg:mb-0 hover:text-white/70 transition-colors duration-300 cursor-pointer underline decoration-white/20 hover:decoration-white/50"
             >
               {t('home.ctaSubtitle')}
-            </motion.p>
+            </motion.a>
           </motion.div>
         </motion.div>
       </div>
