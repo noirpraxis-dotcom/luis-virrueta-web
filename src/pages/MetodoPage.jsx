@@ -80,7 +80,7 @@ const MetodoPage = () => {
                 objectPosition: 'center'
               }}
             >
-              <source src="/header psicologia.mp4" type="video/mp4" />
+              <source src="/tiempo metodo.mp4" type="video/mp4" />
             </video>
             {/* Gradiente superior que se mezcla con el header */}
             <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black via-black/80 to-transparent z-10" />
@@ -122,92 +122,145 @@ const MetodoPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 1, delay: 0.4 }}
-              className="text-xl lg:text-2xl font-light text-center text-white/70 max-w-4xl mx-auto leading-relaxed"
+              className="text-lg sm:text-xl lg:text-2xl font-light text-center text-white/70 max-w-4xl mx-auto leading-relaxed"
             >
-              Lo que estamos por descubrir ya lo habíamos descubierto.
-              <br />
-              <span className="text-white/90">El tiempo no es lineal cuando hablamos del conocimiento profundo.</span>
+              He trabajado con personas en <span className="text-white/90">México y Europa</span>,{' '}
+              estudiando culturas, tradiciones ancestrales y{' '}
+              <span className="text-purple-300">lo más nuevo de la psicología</span>
             </motion.p>
           </div>
         </section>
 
-        {/* Mi Historia - Sección filosófica */}
+        {/* Story Section - Descubrimiento de Intersecciones Temporales */}
         <section ref={storyRef} className="relative py-20 lg:py-32 px-6 lg:px-20">
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={isStoryInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 1 }}
               className="space-y-8"
             >
-              {/* Inicio filosófico */}
-              <div className="text-center mb-16">
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={isStoryInView ? { opacity: 1 } : {}}
-                  transition={{ duration: 1, delay: 0.2 }}
-                  className="text-2xl lg:text-4xl font-light text-white/90 leading-relaxed mb-8"
-                >
-                  Desde hace tiempo me di cuenta de algo fundamental
-                </motion.p>
-              </div>
+              {/* Párrafo introductorio fuerte */}
+              <p className="text-xl lg:text-2xl font-light text-white/80 leading-relaxed">
+                Trabajando en diferentes países, algo empezó a volverse imposible de ignorar:{' '}
+                <span className="text-white/90 font-normal">intersecciones</span>.
+              </p>
 
-              {/* Párrafos narrativos */}
+              <p className="text-xl lg:text-2xl font-light text-white/70 leading-relaxed">
+                Lo que <span className="text-purple-300 font-normal">científicos contemporáneos</span> están descubriendo hoy{' '}
+                <span className="text-white/90">ya había sido descubierto</span> por{' '}
+                <span className="text-fuchsia-300 font-normal">sabios de la antigüedad</span>.{' '}
+                <span className="italic text-white/80">Las mismas verdades, diferentes lenguajes</span>.
+              </p>
+
+              {/* Quote sobre tiempo no-lineal - Einstein */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={isStoryInView ? { opacity: 1, y: 0 } : {}}
+                initial={{ opacity: 0, x: -20 }}
+                animate={isStoryInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 1, delay: 0.4 }}
-                className="space-y-6 text-lg lg:text-xl font-light text-white/70 leading-relaxed"
+                className="relative pl-8 border-l-2 border-purple-500/50 py-6 my-10"
               >
-                <p>
-                  Trabajando como psicólogo en Europa, atendiendo pacientes de distintas culturas y realidades, empecé a notar un patrón invisible que se repetía una y otra vez: <span className="text-white">las mismas historias, diferentes personas</span>.
-                </p>
-                
-                <p>
-                  No importaba si venían por ansiedad, por problemas de pareja, por una enfermedad crónica o por estancamiento económico. <span className="text-purple-300">El problema nunca era el problema</span>. Era el <span className="text-fuchsia-300 italic">filtro</span> con el que miraban su realidad.
-                </p>
-
-                <p>
-                  Y entonces descubrí algo que cambió todo: <span className="text-white">la ciencia más rigurosa de nuestra época estaba llegando a las mismas conclusiones que la sabiduría más antigua de la humanidad</span>.
-                </p>
-              </motion.div>
-
-              {/* Quote destacado */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={isStoryInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 1, delay: 0.6 }}
-                className="my-16 p-10 lg:p-14 bg-gradient-to-br from-purple-900/30 to-fuchsia-900/30 backdrop-blur-xl border-2 border-purple-500/40 rounded-3xl"
-              >
-                <p className="text-2xl lg:text-3xl font-light text-white/90 leading-relaxed text-center italic">
-                  "Los físicos cuánticos confirman lo que los místicos siempre supieron:
+                <p className="text-xl lg:text-2xl font-light italic text-white/70 leading-relaxed mb-4">
+                  "El pasado, presente y futuro coexisten simultáneamente.
                   <br />
-                  <span className="text-purple-300 font-normal">el observador crea la realidad observada</span>"
+                  <span className="text-white/90">El tiempo es una ilusión persistente</span>."
                 </p>
+                <p className="text-sm text-purple-300 font-normal not-italic">— Albert Einstein, Físico Teórico</p>
               </motion.div>
 
+              <p className="text-xl lg:text-2xl font-light text-white/70 leading-relaxed">
+                El físico cuántico <span className="text-white/90 font-normal">Hugh Everett</span> propuso que{' '}
+                <span className="text-purple-300">todas las líneas de realidad</span> existen al mismo tiempo.{' '}
+                Los místicos védicos lo llamaban <span className="text-fuchsia-300 italic">"El Eterno Ahora"</span>.
+              </p>
+
+              {/* Divisor visual */}
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={isStoryInView ? { scaleX: 1 } : {}}
+                transition={{ duration: 1, delay: 0.6 }}
+                className="h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent my-12"
+              />
+
+              {/* Primera persona directa - AUNQUE NO LO CREAS */}
+              <p className="text-2xl lg:text-3xl font-light text-white/90 leading-relaxed">
+                Aunque no lo creas...
+              </p>
+
+              <p className="text-xl lg:text-2xl font-light text-white/70 leading-relaxed">
+                Cuando te dan un <span className="text-white/90">diagnóstico</span>, tiendes a pensar que es{' '}
+                <span className="text-white font-normal">la única solución</span>.{' '}
+                Existen muchas otras, pero <span className="text-purple-300">la gente siempre busca las soluciones más complicadas</span>{' '}
+                porque la razón ve más veracidad en lo complejo.
+              </p>
+
+              <p className="text-xl lg:text-2xl font-light text-white/80 leading-relaxed">
+                ¿Y si te dijera que <span className="text-white font-normal">esto se trata más de concientizar</span>{' '}
+                que de arreglar el síntoma?
+              </p>
+
+              {/* Ejemplo de la fiebre */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={isStoryInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 1, delay: 0.8 }}
-                className="space-y-6 text-lg lg:text-xl font-light text-white/70 leading-relaxed"
+                className="relative p-8 bg-gradient-to-br from-purple-900/20 to-fuchsia-900/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl my-10"
               >
-                <p>
-                  La epigenética demostrando que <span className="text-white">tus pensamientos cambian tu ADN</span>. La psicología económica revelando que <span className="text-white">el mercado se mueve por emociones colectivas</span>. La neurociencia afectiva confirmando que <span className="text-white">repites relaciones porque tu cerebro busca lo familiar</span>.
+                <p className="text-lg lg:text-xl font-light text-white/70 leading-relaxed">
+                  Piensa en la <span className="text-purple-300 font-normal">fiebre</span>:{' '}
+                  no es el problema, es la <span className="text-white/90">respuesta del cuerpo</span> intentando curarse.{' '}
+                  Si solo eliminas la fiebre sin entender <span className="text-fuchsia-300">por qué apareció</span>,{' '}
+                  el problema real sigue ahí.
                 </p>
-
-                <p>
-                  Y hace 2,500 años, Buda ya lo sabía: <span className="text-purple-300 italic">"Tu sufrimiento no viene de lo que te pasa, sino de cómo lo interpretas"</span>.
+                <p className="text-lg lg:text-xl font-light text-white/80 leading-relaxed mt-4">
+                  Lo mismo ocurre con la <span className="text-white font-normal">ansiedad</span>,{' '}
+                  los <span className="text-white font-normal">conflictos de pareja</span>,{' '}
+                  o el <span className="text-white font-normal">estancamiento económico</span>.{' '}
+                  <span className="text-purple-300 italic">Son síntomas de un filtro que necesita ser consciente</span>.
                 </p>
+              </motion.div>
 
-                <p className="text-white/90 text-2xl lg:text-3xl font-normal mt-12">
-                  No estamos descubriendo nada nuevo.
+              {/* Transición al descubrimiento científico */}
+              <p className="text-2xl lg:text-3xl font-light text-white/90 leading-relaxed">
+                Entonces descubrí algo que cambió mi forma de trabajar por completo:
+              </p>
+
+              <p className="text-xl lg:text-2xl font-light text-white/70 leading-relaxed">
+                La <span className="text-purple-300 font-normal">ciencia más rigurosa</span> de nuestra época—{' '}
+                <span className="text-white/90">epigenética, física cuántica, neuropsicología</span>—estaba llegando{' '}
+                <span className="text-white font-normal">exactamente a las mismas conclusiones</span> que{' '}
+                <span className="text-fuchsia-300">Buda, los griegos, Hermes Trismegisto</span> habían descubierto hace milenios.
+              </p>
+
+              {/* Quote final contundente */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={isStoryInView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 1, delay: 1 }}
+                className="my-16 p-10 lg:p-14 bg-gradient-to-br from-purple-900/30 to-fuchsia-900/30 backdrop-blur-xl border-2 border-purple-500/40 rounded-3xl"
+              >
+                <p className="text-2xl lg:text-3xl font-light text-white/90 leading-relaxed text-center italic">
+                  Los físicos cuánticos confirman lo que los místicos siempre supieron:
                   <br />
-                  <span className="bg-gradient-to-r from-purple-300 to-fuchsia-300 bg-clip-text text-transparent">
-                    Estamos recordando lo que siempre supimos.
+                  <span className="text-transparent bg-gradient-to-r from-purple-300 to-fuchsia-300 bg-clip-text font-normal not-italic">
+                    la consciencia colapsa la realidad
                   </span>
                 </p>
               </motion.div>
+
+              <p className="text-xl lg:text-2xl font-light text-white/80 leading-relaxed">
+                Todo está sucediendo <span className="text-white font-normal">simultáneamente</span>.{' '}
+                Y en este preciso momento, <span className="text-purple-300">múltiples versiones de tu vida</span> coexisten.{' '}
+                La que experimentas depende del <span className="text-white font-normal">filtro que sostienes</span>.
+              </p>
+
+              <p className="text-2xl lg:text-3xl font-normal text-white/90 leading-relaxed mt-12">
+                No estamos descubriendo nada nuevo.
+                <br />
+                <span className="bg-gradient-to-r from-purple-300 to-fuchsia-300 bg-clip-text text-transparent">
+                  Estamos recordando lo que siempre supimos.
+                </span>
+              </p>
             </motion.div>
           </div>
         </section>
