@@ -37,6 +37,29 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 23,
+      title: currentLanguage === 'en' 
+        ? 'From the Dog Who Loves Me to the Void I Inhabit'
+        : 'Del perro que me ama al vacío que me habita',
+      excerpt: currentLanguage === 'en'
+        ? 'A reflection on love, use, lack and grace'
+        : 'Una reflexión sobre el amor, el uso, la falta y la gracia',
+      category: 'philosophy',
+      author: 'Luis Virrueta',
+      date: '16 Dic 2025',
+      readTime: '18 min',
+      gradient: 'from-purple-500/20 to-fuchsia-600/20',
+      borderGradient: 'from-purple-500 to-fuchsia-600',
+      tags: currentLanguage === 'en'
+        ? ['Lacan', 'Nisargadatta Maharaj', 'Simone Weil', 'Nietzsche', 'Existential Void', 'Psychoanalysis', 'Non-duality']
+        : ['Lacan', 'Nisargadatta Maharaj', 'Simone Weil', 'Nietzsche', 'Vacío Existencial', 'Psicoanálisis', 'No-dualidad'],
+      slug: 'del-perro-que-me-ama-al-vacio-que-me-habita',
+      image: '/IMAGENES BLOG/PERRO.jpg',
+      rating: 5.0,
+      commentsCount: 8,
+      featured: true
+    },
+    {
       id: 21,
       ...getPostContent('trend-vs-keyword-gap-contenido-viral-no-construye-crecimiento'),
       category: 'trends',
@@ -239,28 +262,6 @@ const BlogPage = () => {
       rating: 4.8,
       commentsCount: 21,
       featured: true
-    },
-    {
-      id: 23,
-      title: currentLanguage === 'en' 
-        ? 'From the Dog Who Loves Me to the Void I Inhabit'
-        : 'Del perro que me ama al vacío que me habita',
-      excerpt: currentLanguage === 'en'
-        ? 'A reflection on love, use, lack and grace'
-        : 'Una reflexión sobre el amor, el uso, la falta y la gracia',
-      category: 'philosophy',
-      author: 'Luis Virrueta',
-      date: '16 Dic 2025',
-      readTime: '18 min',
-      gradient: 'from-purple-500/20 to-fuchsia-600/20',
-      borderGradient: 'from-purple-500 to-fuchsia-600',
-      tags: currentLanguage === 'en'
-        ? ['Lacan', 'Nisargadatta Maharaj', 'Simone Weil', 'Nietzsche', 'Existential Void', 'Psychoanalysis', 'Non-duality']
-        : ['Lacan', 'Nisargadatta Maharaj', 'Simone Weil', 'Nietzsche', 'Vacío Existencial', 'Psicoanálisis', 'No-dualidad'],
-      slug: 'del-perro-que-me-ama-al-vacio-que-me-habita',
-      image: '/IMAGENES BLOG/PERRO.jpg',
-      rating: 5.0,
-      commentsCount: 8
     },
     {
       id: 1,
@@ -613,7 +614,7 @@ const BlogPage = () => {
 }
 
 const BlogCard = ({ post, index }) => {
-  const { t } = useLanguage()
+  const { t, currentLanguage } = useLanguage()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
 
