@@ -2047,20 +2047,25 @@ const ArticleSection = ({ section, index }) => {
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8, delay: index * 0.1 }}
-        className="mb-8 mt-16"
+        className="mb-12 mt-16"
         id={`section-${index}`}
       >
-        <div className="flex items-center gap-3 mb-4">
-          {Icon && (
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500/20 to-rose-500/20 border border-white/10 flex items-center justify-center">
-              <Icon className="w-5 h-5 text-white" />
+        <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden">
+          {/* Gradient accent top */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-fuchsia-500 to-purple-500" />
+          
+          {/* Number badge */}
+          {index > 0 && (
+            <div className="inline-flex items-center gap-2 mb-4 px-4 py-1.5 bg-purple-500/10 border border-purple-500/30 rounded-full">
+              <span className="text-xs font-mono text-purple-300 tracking-wider">SECCIÓN {String(index).padStart(2, '0')}</span>
+              {Icon && <Icon className="w-3.5 h-3.5 text-purple-400" />}
             </div>
           )}
-          <h2 className="text-3xl lg:text-4xl font-bold text-white" style={{ fontWeight: 300 }}>
+          
+          <h2 className="text-3xl lg:text-4xl font-light text-white leading-tight">
             {section.title}
           </h2>
         </div>
-        <div className="h-px bg-gradient-to-r from-pink-500/50 to-transparent w-full" />
       </motion.div>
     )
   }
@@ -2088,13 +2093,23 @@ const ArticleSection = ({ section, index }) => {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={isInView ? { opacity: 1, scale: 1 } : {}}
         transition={{ duration: 0.8, delay: index * 0.1 }}
-        className="my-12 relative"
+        className="my-16 relative"
       >
-        <div className="relative bg-gradient-to-br from-pink-500/10 to-rose-500/10 backdrop-blur-sm border-l-4 border-pink-500 rounded-r-2xl p-8">
-          <blockquote className="text-2xl text-white font-light italic leading-relaxed mb-4">
+        <div className="relative bg-gradient-to-br from-purple-900/30 via-fuchsia-900/20 to-purple-900/30 backdrop-blur-xl border-2 border-purple-500/30 rounded-3xl p-10 lg:p-12 overflow-hidden">
+          {/* Decorative corner accents */}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-fuchsia-500/20 to-transparent rounded-bl-full" />
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-purple-500/20 to-transparent rounded-tr-full" />
+          
+          {/* Quote icon */}
+          <div className="absolute top-8 left-8 text-6xl text-purple-500/20 font-serif leading-none">“</div>
+          
+          <blockquote className="relative text-2xl lg:text-3xl text-white font-light italic leading-relaxed mb-6 pl-8">
             {section.content}
           </blockquote>
-          <cite className="text-sm text-white/60 not-italic">— {section.author}</cite>
+          
+          <div className="h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent mb-4" />
+          
+          <cite className="block text-sm text-purple-300 not-italic font-normal tracking-wide">— {section.author}</cite>
         </div>
       </motion.div>
     )
