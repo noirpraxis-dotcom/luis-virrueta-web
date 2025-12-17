@@ -219,12 +219,13 @@ const MetodoPage = () => {
               </motion.div>
 
               <p className="text-xl lg:text-2xl font-light text-white/70 leading-relaxed">
-                El físico cuántico <span className="text-white/90 font-normal">Hugh Everett</span> propuso la teoría de los{' '}
-                <span className="text-purple-300">universos múltiples</span> coexistiendo simultáneamente.{' '}
+                Esta idea de que <span className="text-purple-300 font-normal">el tiempo no avanza en línea recta</span>, que{' '}
+                <span className="text-white/90 font-normal">pasado, presente y futuro coexisten</span>,{' '}
+                no es nueva.{' '}
                 Los <span className="text-fuchsia-300 font-normal">místicos védicos</span> lo llamaban{' '}
                 <span className="italic text-white/90">"El Eterno Ahora"</span>.{' '}
                 Los <span className="text-fuchsia-300 font-normal">griegos antiguos</span> lo personificaron en{' '}
-                <span className="text-white font-normal">Aión</span>.
+                <span className="text-white font-normal">Aión</span>, el dios del tiempo circular e infinito.
               </p>
 
               {/* Explicación del nombre AIÓN */}
@@ -306,8 +307,8 @@ const MetodoPage = () => {
               </p>
 
               <p className="text-xl lg:text-2xl font-light text-white/70 leading-relaxed">
-                La <span className="text-purple-300 font-normal">ciencia más rigurosa</span> de nuestra época\u2014{' '}
-                <span className="text-white/90">epigenética molecular, física cuántica, neuropsicología afectiva, psicología económica</span>\u2014{' '}
+                La <span className="text-purple-300 font-normal">ciencia más rigurosa</span> de nuestra época{' '}
+                <span className="text-white/90">(epigenética molecular, física cuántica, neuropsicología afectiva, psicología económica)</span>{' '}
                 estaba llegando <span className="text-white font-normal">exactamente a las mismas conclusiones</span> que{' '}
                 <span className="text-fuchsia-300 font-normal">Buda Gautama</span>,{' '}
                 <span className="text-fuchsia-300 font-normal">los filósofos presocráticos</span> y{' '}
