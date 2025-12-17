@@ -49,7 +49,7 @@ const FasesPage = () => {
                 objectPosition: 'center'
               }}
             >
-              <source src="/Metodología Fases.mp4" type="video/mp4" />
+              <source src="/metodologia fases.mp4" type="video/mp4" />
             </video>
           </div>
           
