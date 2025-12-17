@@ -252,6 +252,22 @@ const MetodoPage = () => {
                 </p>
               </motion.div>
 
+              {/* Botón a las fases */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={isStoryInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.8 }}
+                className="flex justify-center my-16"
+              >
+                <Link
+                  to="/metodo/fases"
+                  className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600/20 via-fuchsia-600/20 to-purple-600/20 border border-purple-500/40 hover:border-purple-500/60 text-white rounded-full font-light text-base lg:text-lg backdrop-blur-sm overflow-hidden transition-all duration-500 hover:shadow-xl hover:shadow-purple-500/30"
+                >
+                  <span className="relative z-10">Ver las Cuatro Fases de la Metodología</span>
+                  <ArrowRight className="relative z-10 w-5 h-5 group-hover:translate-x-1 transition-transform" strokeWidth={1.5} />
+                </Link>
+              </motion.div>
+
               {/* Divisor visual */}
               <motion.div
                 initial={{ scaleX: 0 }}

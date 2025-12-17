@@ -23,6 +23,7 @@ const AvataresIAPage = lazy(() => import('./pages/AvataresIAPage'))
 const ConsultoriaPsicologicaPage = lazy(() => import('./pages/ConsultoriaPsicologicaPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
 const MetodoPage = lazy(() => import('./pages/MetodoPage'))
+const FasesPage = lazy(() => import('./pages/FasesPage'))
 const BlogPage = lazy(() => import('./pages/BlogPage'))
 const BlogArticlePage = lazy(() => import('./pages/BlogArticlePage'))
 const InversionPage = lazy(() => import('./pages/InversionPage'))
@@ -126,6 +127,11 @@ const AppContent = () => {
             {/* Página El Método: Aión */}
             <Route path="/metodo" element={
               <MetodoPage />
+            } />
+
+            {/* Página Las Fases del Método */}
+            <Route path="/metodo/fases" element={
+              <FasesPage />
             } />
 
             {/* Página Blog: Artículos sobre diseño */}
