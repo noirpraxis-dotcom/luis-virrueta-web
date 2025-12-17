@@ -1,6 +1,7 @@
 import Home from '../components/Home'
 import Hero from '../components/Hero'
 import LuisViruettaIntro from '../components/LuisViruettaIntro'
+import ProblemSolutionSection from '../components/ProblemSolutionSection'
 import LuxmaniaVideoSection from '../components/LuxmaniaVideoSection'
 import AvatarWelcome from '../components/AvatarWelcome'
 import BrandCTA from '../components/BrandCTA'
@@ -29,6 +30,9 @@ const HomePage = () => {
       
       {/* Luis Virrueta Intro: Compact elegant section - BEFORE Hero stats */}
       <LuisViruettaIntro />
+      
+      {/* Problem Solution Section: Aquello que llamas problema - Con CTA al método */}
+      <ProblemSolutionSection />
       
       {/* Luxmania Video Section: ¿Qué es Luxmania? Con video - MOVIDO AQUÍ */}
       <LuxmaniaVideoSection />
