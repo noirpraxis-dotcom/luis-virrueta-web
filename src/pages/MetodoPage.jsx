@@ -151,11 +151,21 @@ const MetodoPage = () => {
               </motion.div>
             </motion.div>
 
+            {/* Pregunta relacionada con el método */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 1, delay: 0.6 }}
+              className="text-lg sm:text-xl text-white/60 text-center font-light italic mb-8"
+            >
+              ¿Qué cambia cuando comprendes de dónde viene tu realidad?
+            </motion.p>
+
             {/* Línea decorativa */}
             <motion.div
               initial={{ scaleX: 0 }}
               animate={isHeroInView ? { scaleX: 1 } : {}}
-              transition={{ duration: 1.5, delay: 0.6 }}
+              transition={{ duration: 1.5, delay: 0.8 }}
               className="h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent mx-auto w-64 sm:w-96"
             />
           </div>

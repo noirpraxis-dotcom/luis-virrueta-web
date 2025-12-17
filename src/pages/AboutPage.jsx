@@ -43,131 +43,109 @@ const AboutPage = () => {
       />
       
       {/* Hero Section */}
-      <section ref={heroRef} className="relative py-20 lg:py-40 px-6 lg:px-20 overflow-hidden">
-        {/* Video de fondo cinematográfico */}
-        <div className="absolute inset-0 -top-20 lg:-top-28 -bottom-16 overflow-hidden pointer-events-none z-0">
+      <section ref={heroRef} className="relative pt-12 lg:pt-20 pb-40 lg:pb-56 px-6 lg:px-20 overflow-hidden">
+        {/* Video de fondo */}
+        <div className="absolute inset-0 -top-16 lg:-top-24 -bottom-80 lg:-bottom-96 overflow-hidden pointer-events-none z-0">
           <video
             autoPlay
             loop
             muted
             playsInline
             preload="auto"
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-50"
-            style={{ minWidth: '100vw', minHeight: '100%', objectFit: 'cover', objectPosition: 'center' }}
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-60"
+            style={{
+              minWidth: '100vw',
+              minHeight: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center'
+            }}
           >
-            <source src="/hero Sobre mi.mp4" type="video/mp4" />
+            <source src="/sobre mi vid.mp4" type="video/mp4" />
           </video>
-          <div className="absolute inset-0 bg-black/30" />
         </div>
+        
+        {/* Gradiente inferior que se mezcla con el contenido */}
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/100 via-black/50 to-transparent z-[5] pointer-events-none" />
 
-        <div className="relative z-20 max-w-7xl mx-auto">
-          {/* Title con efecto 3D igual que Portafolio */}
+        <div className="relative max-w-6xl mx-auto z-10">
+          {/* Título Hero - Sobre Mí */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="text-6xl lg:text-9xl font-bold text-center mb-12 font-display relative"
-            style={{ 
-              letterSpacing: '0.08em',
-              fontWeight: 300,
-              textTransform: 'uppercase'
-            }}
+            transition={{ duration: 1 }}
+            className="text-center mb-12"
           >
-            <span className="relative inline-block">
-              {t('aboutPage.hero.title').split('').map((char, i, arr) => {
-                const isFirst = i === 0
-                const isLast = i === arr.length - 1
-                
-                if (isFirst || isLast) {
-                  return (
-                    <span key={i} className="relative">
-                      <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>
-                        {char}
-                      </span>
-                      <span className="relative text-white">{char}</span>
-                    </span>
-                  )
-                }
-                return <span key={i} className="text-white">{char}</span>
-              })}
+            <span
+              className="text-6xl sm:text-7xl lg:text-8xl font-light text-white inline-block"
+              style={{ 
+                letterSpacing: '0.15em',
+                textShadow: '0 0 60px rgba(255, 255, 255, 0.15), 0 10px 40px rgba(168, 85, 247, 0.1)'
+              }}
+            >
+              SOBRE MÍ
             </span>
           </motion.h1>
 
-          {/* Subtitle con estructura elegante */}
+          {/* Descripción encerrada */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="flex justify-center mb-10"
+          >
+            <div className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5">
+              <span className="text-sm sm:text-base font-light text-white/70 tracking-wide">
+                Psicología · Filosofía · Transformación
+              </span>
+            </div>
+          </motion.div>
+          
+          {/* Conceptos clave - Sin encerrar, en blanco, elegantes */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.4 }}
-            className="flex flex-col items-center gap-6 mb-12"
+            className="flex flex-wrap items-center justify-center gap-8 mb-8"
           >
-            {/* Etiqueta superior con borde */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="relative px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5"
+            {/* Inconsciente */}
+            <motion.div 
+              className="flex items-center gap-2"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
             >
-              <div className="flex items-center gap-3">
-                <Heart className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                <span className="text-sm lg:text-base text-white/80 font-light tracking-wider uppercase">
-                  {t('aboutPage.hero.badge')}
-                </span>
-              </div>
+              <Brain className="w-5 h-5 text-white/40" strokeWidth={1.5} />
+              <span className="text-base sm:text-lg font-light text-white tracking-wide">Inconsciente</span>
             </motion.div>
 
-            {/* Fórmula con iconos */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="flex items-center gap-3 lg:gap-4 flex-wrap justify-center"
+            {/* Separador minimalista */}
+            <div className="w-px h-6 bg-white/20" />
+
+            {/* Percepción */}
+            <motion.div 
+              className="flex items-center gap-2"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
             >
-              {/* Arquetipos */}
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-white/70" strokeWidth={1.5} />
-                <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  {t('aboutPage.hero.pillar1')}
-                </span>
-              </div>
-
-              <span className="text-white/40 text-xs">+</span>
-
-              {/* Identidad */}
-              <div className="flex items-center gap-2">
-                <Heart className="w-5 h-5 text-white/70" strokeWidth={1.5} />
-                <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  {t('aboutPage.hero.pillar2')}
-                </span>
-              </div>
-
-              <span className="text-white/40 text-xs">+</span>
-
-              {/* Transformación */}
-              <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-white/70" strokeWidth={1.5} />
-                <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  {t('aboutPage.hero.pillar3')}
-                </span>
-              </div>
+              <Sparkles className="w-5 h-5 text-white/40" strokeWidth={1.5} />
+              <span className="text-base sm:text-lg font-light text-white tracking-wide">Percepción</span>
             </motion.div>
-
-            {/* Pregunta provocativa */}
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.7 }}
-              className="text-base lg:text-lg text-white/60 text-center max-w-3xl mx-auto font-extralight italic"
-              style={{ letterSpacing: '0.08em' }}
-            >
-              {t('aboutPage.hero.question')}
-            </motion.p>
           </motion.div>
 
-          {/* Línea con efecto desde el centro expandiéndose */}
+          {/* Pregunta relacionada con About */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.6 }}
+            className="text-lg sm:text-xl text-white/60 text-center font-light italic mb-8"
+          >
+            ¿Y si el problema no es tu vida, sino cómo la estás mirando?
+          </motion.p>
+
+          {/* Línea decorativa */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={isHeroInView ? { opacity: 1 } : {}}
-            transition={{ duration: 1, delay: 0.8 }}
+            initial={{ scaleX: 0 }}
+            animate={isHeroInView ? { scaleX: 1 } : {}}
+            transition={{ duration: 1.5, delay: 0.8 }}
             className="relative h-px mx-auto w-96 overflow-hidden"
           >
             <motion.div
