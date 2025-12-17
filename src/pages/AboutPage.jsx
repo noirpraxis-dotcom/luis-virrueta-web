@@ -199,17 +199,30 @@ const AboutPage = () => {
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-black pointer-events-none z-30" />
       </section>
 
-      {/* Photo + Bio Section - REDISEÑADO */}
+      {/* Photo + Bio Section con nueva información */}
       <section className="py-20 px-6 lg:px-20">
-        <div className="max-w-6xl mx-auto">
-          {/* Grid: Photo + Bio */}
-          <div className="grid lg:grid-cols-[1fr_1.2fr] gap-16 items-start">
+        <div className="max-w-7xl mx-auto">
+          {/* Nombre principal centrado */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-6xl lg:text-8xl font-light text-white mb-4" style={{ letterSpacing: '0.05em' }}>
+              Luis <span className="italic font-normal">Virrueta</span>
+            </h2>
+            <p className="text-white/50 text-lg lg:text-xl font-light tracking-wide">Psicólogo · Filósofo · Investigador</p>
+          </motion.div>
+
+          {/* Grid: Photo + Contenido */}
+          <div className="grid lg:grid-cols-[1fr_1.5fr] gap-16 items-start mb-20">
             {/* Photo profesional */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={isHeroInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 1, delay: 0.8 }}
-              className="relative"
+              className="relative sticky top-32"
             >
               {/* Sombras animadas premium */}
               <motion.div
@@ -230,167 +243,155 @@ const AboutPage = () => {
                 }}
               />
 
-              <div className="relative rounded-full overflow-hidden shadow-2xl border border-white/10">
-                {/* Foto profesional 1:1 */}
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10">
                 <img 
                   src="/luxmania perfil.png" 
-                  alt="Luis Virrueta - Fundador de LUXMANIA"
+                  alt="Luis Virrueta - Psicólogo"
                   className="w-full aspect-square object-cover"
                 />
-                
-                {/* Badge overlay minimalista */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 1.2 }}
-                  className="absolute bottom-6 right-6"
-                >
-                  <div className="flex items-center gap-3 px-5 py-3 rounded-full bg-black/60 backdrop-blur-xl border border-white/20">
-                    <Brain className="w-4 h-4 text-purple-400" strokeWidth={1} />
-                    <Palette className="w-4 h-4 text-pink-400" strokeWidth={1} />
-                    <Code className="w-4 h-4 text-cyan-400" strokeWidth={1} />
-                  </div>
-                </motion.div>
               </div>
             </motion.div>
 
-            {/* Bio elegante EXPANDIDA */}
+            {/* Contenido nuevo - Información de Luis */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={isHeroInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 1, delay: 1 }}
-              className="space-y-10"
+              className="space-y-12"
             >
-              <div>
-                {/* Título con estilo Home */}
-                <motion.h2
-                  className="text-5xl lg:text-7xl text-white mb-2"
-                  style={{ fontWeight: 200, letterSpacing: '0.05em' }}
-                >
-                  Luis <span style={{ fontWeight: 300, fontStyle: 'italic' }}>Virrueta</span>
-                </motion.h2>
-                {/* Título profesional */}
-                <p className="text-white/70 text-lg lg:text-xl mb-6" style={{ fontWeight: 300, letterSpacing: '0.03em' }}>
-                  {t('aboutPage.profile.title')}
-                </p>
-                {/* Subtítulo con badge */}
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5">
-                    <Lamp className="w-3 h-3 text-amber-400" strokeWidth={1.5} />
-                    <span className="text-xs text-white/60 font-light tracking-wider uppercase">{t('aboutPage.profile.badgeFounder')}</span>
-                  </div>
-                  <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
-                </div>
-              </div>
-
-              <div className="space-y-8">
-                {/* Descripción principal */}
-                <motion.p
-                  className="text-white/80 text-lg lg:text-xl leading-relaxed"
-                  style={{ fontWeight: 300, letterSpacing: '0.02em' }}
-                  dangerouslySetInnerHTML={{ __html: t('aboutPage.profile.mainBio') }}
-                />
-
-                {/* Formación con iconos */}
-                <div className="space-y-4 pt-4">
-                  <div className="flex items-start gap-4 group">
-                    <div className="mt-1 p-2 rounded-lg bg-purple-500/10 border border-purple-500/20 group-hover:bg-purple-500/20 transition-colors">
-                      <Brain className="w-5 h-5 text-purple-400" strokeWidth={1.5} />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-white text-base mb-1" style={{ fontWeight: 300, letterSpacing: '0.02em' }}>{t('aboutPage.profile.card1Title')}</h4>
-                      <p className="text-white/60 text-sm leading-relaxed" style={{ fontWeight: 300 }}>{t('aboutPage.profile.card1Desc')}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4 group">
-                    <div className="mt-1 p-2 rounded-lg bg-pink-500/10 border border-pink-500/20 group-hover:bg-pink-500/20 transition-colors">
-                      <Palette className="w-5 h-5 text-pink-400" strokeWidth={1.5} />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-white text-base mb-1" style={{ fontWeight: 300, letterSpacing: '0.02em' }}>{t('aboutPage.profile.card2Title')}</h4>
-                      <p className="text-white/60 text-sm leading-relaxed" style={{ fontWeight: 300 }}>{t('aboutPage.profile.card2Desc')}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4 group">
-                    <div className="mt-1 p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20 group-hover:bg-cyan-500/20 transition-colors">
-                      <Code className="w-5 h-5 text-cyan-400" strokeWidth={1.5} />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-white text-base mb-1" style={{ fontWeight: 300, letterSpacing: '0.02em' }}>{t('aboutPage.profile.card3Title')}</h4>
-                      <p className="text-white/60 text-sm leading-relaxed" style={{ fontWeight: 300 }}>{t('aboutPage.profile.card3Desc')}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Filosofía */}
-                <motion.p
-                  className="text-white/70 text-base lg:text-lg leading-relaxed pt-4 border-t border-white/10"
-                  style={{ fontWeight: 300, letterSpacing: '0.02em' }}
-                  dangerouslySetInnerHTML={{ __html: t('aboutPage.profile.philosophy') }}
-                />
-              </div>
-
-              {/* Stats minimalistas mejorados */}
-              <div className="grid grid-cols-3 gap-8 pt-8 border-t border-white/10">
-                {[
-                  { value: t('aboutPage.profile.stat1Value'), label: t('aboutPage.profile.stat1Label') },
-                  { value: t('aboutPage.profile.stat2Value'), label: t('aboutPage.profile.stat2Label') },
-                  { value: t('aboutPage.profile.stat3Value'), label: t('aboutPage.profile.stat3Label') }
-                ].map((stat, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.8, delay: 1.2 + i * 0.1 }}
-                    className="text-center"
-                  >
-                    <div className="text-4xl lg:text-5xl font-extralight text-white mb-2 tracking-wide">{stat.value}</div>
-                    <div className="text-white/30 text-[10px] uppercase tracking-[0.3em] font-light">{stat.label}</div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Social Links - Mejorado con WhatsApp */}
+              {/* Párrafo 1 - Interpretación vs Realidad */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 1.5 }}
-                className="space-y-6 pt-8 border-t border-white/10"
+                transition={{ duration: 0.8, delay: 1.2 }}
+                className="relative"
               >
-                <div className="flex items-center gap-6">
-                  <span className="text-white/40 text-xs uppercase tracking-[0.3em]" style={{ fontWeight: 300 }}>{t('aboutPage.profile.connectLabel')}</span>
+                <div className="absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-purple-500/50 via-fuchsia-500/30 to-transparent rounded-full" />
+                <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light pl-6">
+                  La mayoría de las personas no vive la realidad. Vive la interpretación que hace de ella. Y rara vez se detiene a preguntarse desde dónde está interpretando.
+                </p>
+              </motion.div>
+
+              {/* Tarjeta especial - Pregunta central */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.8, delay: 1.4 }}
+                className="relative bg-gradient-to-br from-purple-900/20 to-fuchsia-900/20 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-8"
+              >
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="p-2 rounded-lg bg-purple-500/20 border border-purple-500/30">
+                    <Brain className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <h3 className="text-white text-lg font-light">Mi trabajo gira alrededor de una pregunta central:</h3>
+                </div>
+                <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic">
+                  ¿Cómo se construye la experiencia que llamamos realidad?
+                </p>
+              </motion.div>
+
+              {/* Párrafo 2 - Tiempo */}
+              <p className="text-lg lg:text-xl text-white/80 leading-relaxed font-light">
+                No como una teoría abstracta ni como una promesa de cambio rápido, sino como un fenómeno vivo que ocurre en el tiempo. Porque lo que hoy comenzamos a descubrir, en muchos sentidos, ya había sido intuido: la idea de que el inicio y el final no están separados, de que el tiempo no avanza solo en línea recta, y de que la forma en que percibimos el mundo modifica profundamente cómo lo habitamos. Sabidurías antiguas lo nombraron de una forma; la ciencia contemporánea empieza a describirlo con otra. Pero ambas señalan hacia el mismo punto.
+              </p>
+
+              {/* Párrafo 3 - Formación */}
+              <p className="text-lg lg:text-xl text-white/80 leading-relaxed font-light">
+                Me formé como psicólogo, pero muy pronto entendí que los modelos tradicionales explicaban conductas, no experiencias. Desde entonces estudio, conecto y aplico psicología profunda, psicoanálisis, neurociencia, filosofía y sistemas contemporáneos de pensamiento para comprender cómo una persona se interpreta a sí misma a lo largo del tiempo… y cómo esa interpretación se convierte en su historia, en su cuerpo y en su realidad cotidiana. No como algo fijo, sino como un proceso que se sostiene mientras cumple una función.
+              </p>
+
+              {/* Tarjeta especial - Método */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8"
+              >
+                <h3 className="text-white text-xl lg:text-2xl font-light mb-4">Mi Método</h3>
+                <p className="text-white/80 text-lg leading-relaxed font-light mb-6">
+                  No trabajo motivando. No trabajo "reprogramando". No trabajo prometiendo cambios rápidos. Trabajo modificando el marco desde el cual alguien observa su vida. Y cuando ese marco cambia, lo que antes parecía absolutamente real comienza a perder su evidencia.
+                </p>
+                <Link 
+                  to="/metodo"
+                  className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors group"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span className="text-sm font-light tracking-wide">Conoce el Método AIÓN</span>
+                  <motion.div
+                    className="w-8 h-px bg-purple-400/50 group-hover:bg-purple-300 transition-colors"
+                    whileHover={{ width: 48 }}
+                  />
+                </Link>
+              </motion.div>
+
+              {/* Párrafo 4 - Proceso (con mención del ego) */}
+              <div className="space-y-4">
+                <p className="text-lg lg:text-xl text-white/80 leading-relaxed font-light">
+                  No porque fuera mentira, sino porque pertenecía a una forma específica de sostenerse: a un síntoma, a una identidad, a una manera de habitar el tiempo. Cuando eso se mueve, esa realidad ya no tiene por qué seguir ahí.
+                </p>
+                <p className="text-lg lg:text-xl text-white/80 leading-relaxed font-light">
+                  Y ese tránsito no es cómodo: implica dejar atrás certezas, vínculos, narrativas y versiones de uno mismo. Hay una pérdida real. Una{' '}
+                  <Link to="/metodo" className="text-purple-400 hover:text-purple-300 underline decoration-purple-400/30 hover:decoration-purple-300/50 transition-all">
+                    pequeña muerte del ego
+                  </Link>
+                  . Pero es justamente ahí donde algo más amplio puede comenzar a organizarse.
+                </p>
+              </div>
+
+              {/* Párrafo 5 - Trabajo actual */}
+              <p className="text-lg lg:text-xl text-white/80 leading-relaxed font-light">
+                Actualmente acompaño a personas, proyectos y equipos que sienten que algo no encaja, aunque desde fuera todo parezca funcionar. Personas que piensan mucho, sienten profundo y saben que repetir fórmulas no es la salida. A través de sesiones, contenidos y proyectos exploro cómo operan los filtros mentales, el deseo, la percepción del tiempo y la forma en que construimos sentido, entendiendo que no toda transformación es ganancia, pero sí puede ser verdad.
+              </p>
+
+              {/* Conclusión destacada */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="relative border-l-2 border-purple-500/50 pl-8 py-4"
+              >
+                <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light">
+                  No creo que el problema sea la vida que tienes. Creo que es la forma en que la estás mirando. Y cambiar la mirada no siempre es cómodo, pero puede ser profundamente liberador.
+                </p>
+                <p className="text-white/50 text-sm font-light mt-4 italic">— Luis Virrueta</p>
+              </motion.div>
+
+              {/* Social Links */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="pt-8 border-t border-white/10"
+              >
+                <div className="flex items-center gap-6 mb-6">
+                  <span className="text-white/40 text-xs uppercase tracking-[0.3em] font-light">Conecta</span>
                   <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
                 </div>
                 <div className="flex flex-wrap gap-4">
-                  {/* WhatsApp */}
                   <a
                     href="https://wa.me/420776711575"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 px-6 py-3 rounded-full border border-emerald-400/30 bg-emerald-400/5 hover:bg-emerald-400/10 hover:border-emerald-400/50 transition-all duration-300 group"
+                    className="flex items-center gap-3 px-6 py-3 rounded-full border border-emerald-400/30 bg-emerald-400/5 hover:bg-emerald-400/10 hover:border-emerald-400/50 transition-all duration-300"
                   >
                     <Zap className="w-4 h-4 text-emerald-400" strokeWidth={1.5} />
-                    <span className="text-white/80 text-sm" style={{ fontWeight: 300 }}>WhatsApp</span>
+                    <span className="text-white/80 text-sm font-light">WhatsApp</span>
                   </a>
-                  {/* Instagram */}
                   <a
                     href="https://www.instagram.com/_horadorada_?igsh=MXRoZDJpaHdqbWRwYg=="
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-fuchsia-400/60 hover:bg-fuchsia-400/10 transition-all duration-300 group"
+                    className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-fuchsia-400/60 hover:bg-fuchsia-400/10 transition-all"
                   >
-                    <Instagram className="w-5 h-5 text-white/50 group-hover:text-fuchsia-400 transition-colors" strokeWidth={1.5} />
+                    <Instagram className="w-5 h-5 text-white/50" strokeWidth={1.5} />
                   </a>
-                  {/* LinkedIn */}
                   <a
                     href="https://www.linkedin.com/in/luis-virrueta/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-cyan-400/60 hover:bg-cyan-400/10 transition-all duration-300 group"
+                    className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-cyan-400/60 hover:bg-cyan-400/10 transition-all"
                   >
-                    <Linkedin className="w-5 h-5 text-white/50 group-hover:text-cyan-400 transition-colors" strokeWidth={1.5} />
+                    <Linkedin className="w-5 h-5 text-white/50" strokeWidth={1.5} />
                   </a>
                 </div>
               </motion.div>
