@@ -49,7 +49,7 @@ const FasesPage = () => {
                 objectPosition: 'center'
               }}
             >
-              <source src="/metodología fases.mp4" type="video/mp4" />
+              <source src="/Metodología Fases.mp4" type="video/mp4" />
             </video>
           </div>
           
@@ -170,14 +170,14 @@ const FasesPage = () => {
                   transition={{ duration: 0.8 }}
                   className="flex items-center gap-4 mb-6"
                 >
-                  <div className="p-3 bg-purple-500/10 border border-purple-500/30 rounded-xl">
-                    <CircleDot className="w-6 h-6 text-purple-400" strokeWidth={1.5} />
+                  <div className="p-3 bg-cyan-500/10 border border-cyan-500/30 rounded-xl">
+                    <CircleDot className="w-6 h-6 text-cyan-400" strokeWidth={1.5} />
                   </div>
                   <div>
                     <h2 className="text-4xl lg:text-5xl font-light text-white mb-2">
                       Fase I
                     </h2>
-                    <h3 className="text-2xl lg:text-3xl font-light text-transparent bg-gradient-to-r from-purple-400 to-fuchsia-400 bg-clip-text">
+                    <h3 className="text-2xl lg:text-3xl font-light text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text">
                       El síntoma como ancla de realidad
                     </h3>
                   </div>
@@ -213,7 +213,7 @@ const FasesPage = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={isFaseIInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 1, delay: 0.4 }}
-                className="relative pl-8 border-l-2 border-purple-500/50 py-6 my-10 bg-purple-900/10 rounded-r-2xl pr-6"
+                className="relative pl-8 border-l-2 border-cyan-500/50 py-6 my-10 bg-cyan-900/10 rounded-r-2xl pr-6"
               >
                 <p className="text-xl lg:text-2xl font-light italic text-white/80 leading-relaxed">
                   "El síntoma no es un enemigo: es una solución. Una solución costosa, pero eficaz."
@@ -225,7 +225,7 @@ const FasesPage = () => {
 
         {/* Divisor visual */}
         <div className="max-w-4xl mx-auto px-6">
-          <div className="h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
+          <div className="h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent" />
         </div>
 
         {/* Fase II */}
@@ -245,14 +245,14 @@ const FasesPage = () => {
                   transition={{ duration: 0.8 }}
                   className="flex items-center gap-4 mb-6"
                 >
-                  <div className="p-3 bg-fuchsia-500/10 border border-fuchsia-500/30 rounded-xl">
-                    <Zap className="w-6 h-6 text-fuchsia-400" strokeWidth={1.5} />
+                  <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl">
+                    <Zap className="w-6 h-6 text-amber-400" strokeWidth={1.5} />
                   </div>
                   <div>
                     <h2 className="text-4xl lg:text-5xl font-light text-white mb-2">
                       Fase II
                     </h2>
-                    <h3 className="text-2xl lg:text-3xl font-light text-transparent bg-gradient-to-r from-fuchsia-400 to-purple-400 bg-clip-text">
+                    <h3 className="text-2xl lg:text-3xl font-light text-transparent bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text">
                       La alquimia del sostén
                     </h3>
                   </div>
@@ -289,7 +289,7 @@ const FasesPage = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={isFaseIIInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 1, delay: 0.4 }}
-                className="relative pl-8 border-l-2 border-fuchsia-500/50 py-6 my-10 bg-fuchsia-900/10 rounded-r-2xl pr-6"
+                className="relative pl-8 border-l-2 border-amber-500/50 py-6 my-10 bg-gradient-to-r from-amber-900/10 to-orange-900/10 rounded-r-2xl pr-6"
               >
                 <p className="text-xl lg:text-2xl font-light italic text-white/80 leading-relaxed">
                   "Lo que entregas y lo que recibes no son opuestos: son la misma cosa."
@@ -301,7 +301,7 @@ const FasesPage = () => {
 
         {/* Divisor visual */}
         <div className="max-w-4xl mx-auto px-6">
-          <div className="h-px bg-gradient-to-r from-transparent via-fuchsia-500/30 to-transparent" />
+          <div className="h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent" />
         </div>
 
         {/* Fase III */}
@@ -321,14 +321,14 @@ const FasesPage = () => {
                   transition={{ duration: 0.8 }}
                   className="flex items-center gap-4 mb-6"
                 >
-                  <div className="p-3 bg-violet-500/10 border border-violet-500/30 rounded-xl">
-                    <Heart className="w-6 h-6 text-violet-400" strokeWidth={1.5} />
+                  <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl">
+                    <Heart className="w-6 h-6 text-rose-400" strokeWidth={1.5} />
                   </div>
                   <div>
                     <h2 className="text-4xl lg:text-5xl font-light text-white mb-2">
                       Fase III
                     </h2>
-                    <h3 className="text-2xl lg:text-3xl font-light text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text">
+                    <h3 className="text-2xl lg:text-3xl font-light text-transparent bg-gradient-to-r from-rose-400 to-pink-400 bg-clip-text">
                       La muerte funcional del ego
                     </h3>
                   </div>
@@ -367,7 +367,7 @@ const FasesPage = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={isFaseIIIInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 1, delay: 0.4 }}
-                className="relative pl-8 border-l-2 border-violet-500/50 py-6 my-10 bg-violet-900/10 rounded-r-2xl pr-6"
+                className="relative pl-8 border-l-2 border-rose-500/50 py-6 my-10 bg-gradient-to-r from-rose-900/10 to-pink-900/10 rounded-r-2xl pr-6"
               >
                 <p className="text-xl lg:text-2xl font-light italic text-white/80 leading-relaxed">
                   "Hay una pérdida real: de certezas, de relatos, de vínculos, de sentido. Es una muerte funcional del ego."
@@ -379,7 +379,7 @@ const FasesPage = () => {
 
         {/* Divisor visual */}
         <div className="max-w-4xl mx-auto px-6">
-          <div className="h-px bg-gradient-to-r from-transparent via-violet-500/30 to-transparent" />
+          <div className="h-px bg-gradient-to-r from-transparent via-rose-500/30 to-transparent" />
         </div>
 
         {/* Fase IV */}
