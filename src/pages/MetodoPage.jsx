@@ -96,48 +96,59 @@ const MetodoPage = () => {
               className="text-center mb-12"
             >
               <span
-                className="text-7xl sm:text-8xl lg:text-9xl font-light text-white inline-block animate-pulse-glow"
+                className="text-7xl sm:text-8xl lg:text-9xl font-extralight text-white inline-block"
                 style={{ 
-                  letterSpacing: '0.35em',
-                  textShadow: '0 0 40px rgba(255, 255, 255, 0.4)'
+                  letterSpacing: '0.4em',
+                  textShadow: '0 0 60px rgba(255, 255, 255, 0.15), 0 10px 40px rgba(168, 85, 247, 0.1)'
                 }}
               >
                 AIÓN
               </span>
             </motion.h1>
 
-            {/* Descripción del método */}
-            <motion.p
+            {/* Descripción encerrada - El método que combina */}
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 1, delay: 0.2 }}
-              className="text-lg sm:text-xl font-light text-center text-white/60 mb-8"
+              className="flex justify-center mb-10"
             >
-              El método que combina
-            </motion.p>
+              <div className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5">
+                <span className="text-sm sm:text-base font-light text-white/70 tracking-wide">
+                  El método que combina
+                </span>
+              </div>
+            </motion.div>
             
-            {/* Chips elegantes estilo Servicios */}
+            {/* Lo Ancestral y Lo Contemporáneo - Sin encerrar, en blanco, elegantes */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 1, delay: 0.4 }}
-              className="flex flex-wrap items-center justify-center gap-4 mb-8"
+              className="flex flex-wrap items-center justify-center gap-8 mb-8"
             >
-              {/* Chip ancestral */}
-              <div className="group relative px-5 py-2.5 border border-purple-500/30 rounded-full backdrop-blur-sm bg-purple-500/5 hover:bg-purple-500/10 hover:border-purple-500/50 transition-all duration-300">
-                <div className="flex items-center gap-2">
-                  <Infinity className="w-4 h-4 text-purple-400" strokeWidth={1.5} />
-                  <span className="text-sm sm:text-base font-light text-purple-300 tracking-wide">Lo Ancestral</span>
-                </div>
-              </div>
+              {/* Lo Ancestral - sin border */}
+              <motion.div 
+                className="flex items-center gap-2"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Infinity className="w-5 h-5 text-white/40" strokeWidth={1.5} />
+                <span className="text-base sm:text-lg font-light text-white tracking-wide">Lo Ancestral</span>
+              </motion.div>
 
-              {/* Chip contemporáneo */}
-              <div className="group relative px-5 py-2.5 border border-fuchsia-500/30 rounded-full backdrop-blur-sm bg-fuchsia-500/5 hover:bg-fuchsia-500/10 hover:border-fuchsia-500/50 transition-all duration-300">
-                <div className="flex items-center gap-2">
-                  <Atom className="w-4 h-4 text-fuchsia-400" strokeWidth={1.5} />
-                  <span className="text-sm sm:text-base font-light text-fuchsia-300 tracking-wide">Lo Contemporáneo</span>
-                </div>
-              </div>
+              {/* Separador minimalista */}
+              <div className="w-px h-6 bg-white/20" />
+
+              {/* Lo Contemporáneo - sin border */}
+              <motion.div 
+                className="flex items-center gap-2"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Atom className="w-5 h-5 text-white/40" strokeWidth={1.5} />
+                <span className="text-base sm:text-lg font-light text-white tracking-wide">Lo Contemporáneo</span>
+              </motion.div>
             </motion.div>
 
             {/* Línea decorativa */}
