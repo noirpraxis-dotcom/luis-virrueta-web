@@ -67,43 +67,37 @@ const LuisViruettaIntro = () => {
             </div>
           </motion.div>
 
-          {/* Badge premium */}
+          {/* Nombre y Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex justify-center mb-12"
+            className="text-center mb-10"
           >
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 border border-white/20 rounded-full backdrop-blur-sm bg-white/5">
-              <User2 className="w-4 h-4 text-purple-400" strokeWidth={1.5} />
-              <span className="text-sm text-white/80 font-light tracking-wide">
-                Psicólogo y Creador de AIÓN
-              </span>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-light text-white mb-4">
+              Luis Virrueta
+            </h2>
+            <div className="flex justify-center">
+              <div className="inline-flex items-center gap-2 px-5 py-2.5 border border-white/20 rounded-full backdrop-blur-sm bg-white/5">
+                <User2 className="w-4 h-4 text-purple-400" strokeWidth={1.5} />
+                <span className="text-sm text-white/80 font-light tracking-wide">
+                  Psicólogo · Creador de AIÓN
+                </span>
+              </div>
             </div>
           </motion.div>
 
-          {/* Título estilo AionSection */}
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="text-3xl sm:text-4xl lg:text-6xl font-light text-white text-center leading-tight mb-8"
-          >
-            Actualmente vivo en Europa.{' '}
-            <span className="text-white/60">
-              He trabajado con cientos de pacientes en México y distintas ciudades europeas.
-            </span>
-          </motion.h2>
-
-          {/* Descripción con gradient text animado */}
+          {/* Frase impactante principal */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="text-center space-y-8 mb-12"
+            transition={{ duration: 1, delay: 0.3 }}
+            className="text-center mb-10"
           >
-            <p className="text-xl lg:text-2xl text-white/80 font-light leading-relaxed max-w-4xl mx-auto">
-              En cada caso, descubrí que{' '}
+            <p className="text-2xl sm:text-3xl lg:text-4xl font-light text-white leading-tight mb-6">
+              La mayoría de las personas no vive la realidad.
+              <br />
+              Vive la{' '}
               <span 
                 className="font-normal bg-gradient-to-r from-purple-400 via-fuchsia-400 to-purple-400 bg-clip-text text-transparent"
                 style={{
@@ -111,26 +105,52 @@ const LuisViruettaIntro = () => {
                   animation: 'gradient-x 5s ease infinite'
                 }}
               >
-                lo que los científicos contemporáneos están descubriendo
+                interpretación
               </span>
-              {' '}ya lo sabían los sabios ancestrales.
+              {' '}que hace de ella.
             </p>
-
-            <p className="text-lg lg:text-xl text-white/70 font-light leading-relaxed max-w-3xl mx-auto">
-              Bruce Lipton habla de epigenética. Los chinos llamaban a esto{' '}
-              <span className="text-fuchsia-300 font-normal">Shen-Qi</span>.
-              <br className="hidden sm:block" />
-              Daniel Kahneman describe sesgos cognitivos. Los budistas los llamaron{' '}
-              <span className="text-purple-300 font-normal">Vipallasa</span> hace 2,500 años.
+            <p className="text-xl lg:text-2xl font-light text-white/70 leading-relaxed">
+              ¿Qué están viviendo entonces?
             </p>
           </motion.div>
 
-          {/* Box premium con filosofía AIÓN */}
+          {/* La promesa/propuesta de valor */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="text-center max-w-4xl mx-auto mb-12 space-y-6"
+          >
+            <p className="text-lg lg:text-xl text-white/80 font-light leading-relaxed">
+              Tu <span className="text-purple-300 font-normal">enfermedad</span>, tu{' '}
+              <span className="text-fuchsia-300 font-normal">ansiedad</span>, tus{' '}
+              <span className="text-violet-300 font-normal">relaciones</span>, tu{' '}
+              <span className="text-pink-300 font-normal">economía</span>...{' '}
+              no responden a la realidad.{' '}
+              <span className="text-white/90 font-normal">Responden a esa interpretación</span>.
+            </p>
+            
+            <p className="text-xl lg:text-2xl font-light text-white/90 leading-relaxed">
+              Cuando cambias el{' '}
+              <span 
+                className="font-normal bg-gradient-to-r from-purple-400 to-fuchsia-400 bg-clip-text text-transparent"
+              >
+                marco desde el que interpretas
+              </span>
+              , todo se reorganiza.
+            </p>
+
+            <p className="text-base lg:text-lg text-white/60 font-light italic">
+              Actualmente en Europa. Cientos de casos en México y distintas ciudades europeas.
+            </p>
+          </motion.div>
+
+          {/* Pregunta central en tarjeta */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 1, delay: 0.7 }}
-            className="relative max-w-4xl mx-auto p-8 lg:p-12 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl overflow-hidden mb-12"
+            className="relative max-w-3xl mx-auto p-8 lg:p-10 bg-gradient-to-br from-purple-900/20 to-fuchsia-900/20 backdrop-blur-xl border border-purple-500/30 rounded-2xl overflow-hidden mb-12"
           >
             {/* Animated gradient background */}
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-fuchsia-500/10 to-purple-500/10 opacity-50" 
@@ -140,23 +160,12 @@ const LuisViruettaIntro = () => {
                  }}
             />
             
-            <div className="relative text-center space-y-6">
-              <p className="text-2xl lg:text-3xl font-light text-white/90 leading-relaxed">
-                En{' '}
-                <span 
-                  className="font-normal bg-gradient-to-r from-purple-400 via-fuchsia-400 to-purple-400 bg-clip-text text-transparent"
-                  style={{
-                    backgroundSize: '200% 100%',
-                    animation: 'gradient-x 5s ease infinite'
-                  }}
-                >
-                  AIÓN
-                </span>
-                , estas verdades siempre han coexistido.
+            <div className="relative text-center space-y-4">
+              <p className="text-xl lg:text-2xl font-light text-white/90 leading-relaxed italic">
+                ¿Cómo se construye la experiencia que llamamos realidad?
               </p>
-              <p className="text-lg lg:text-xl text-white/70 font-light">
-                No estamos descubriendo nada nuevo.{' '}
-                <span className="text-purple-300 font-normal">Estamos recordando</span>.
+              <p className="text-base lg:text-lg text-white/60 font-light">
+                Esta es la pregunta central de mi trabajo.
               </p>
             </div>
           </motion.div>
