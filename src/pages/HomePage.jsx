@@ -2,13 +2,10 @@ import Home from '../components/Home'
 import Hero from '../components/Hero'
 import LuisViruettaIntro from '../components/LuisViruettaIntro'
 import ProblemSolutionSection from '../components/ProblemSolutionSection'
-import LuxmaniaVideoSection from '../components/LuxmaniaVideoSection'
-import AvatarWelcome from '../components/AvatarWelcome'
-import BrandCTA from '../components/BrandCTA'
 import IndividualServices from '../components/IndividualServices'
-import WhyLuxmania from '../components/WhyLuxmania'
 import SEOHead from '../components/SEOHead'
 import AionSection from '../components/AionSection'
+import BrandingShowcase from '../components/BrandingShowcase'
 
 const HomePage = () => {
   return (
@@ -34,16 +31,10 @@ const HomePage = () => {
       {/* Problem Solution Section: Aquello que llamas problema - Con CTA al método */}
       <ProblemSolutionSection />
       
-      {/* Luxmania Video Section: ¿Qué es Luxmania? Con video - MOVIDO AQUÍ */}
-      <LuxmaniaVideoSection />
+      {/* Branding Showcase: Muestra de trabajo */}
+      <BrandingShowcase />
       
-      {/* Brand CTA: Llamado a acción principal - Construye tu marca */}
-      <BrandCTA />
-      
-      {/* Por Qué LUXMANIA: El diferenciador psicológico */}
-      <WhyLuxmania />
-      
-      {/* Individual Services: Servicios a medida en cuadros elegantes */}
+      {/* Individual Services: Servicios psicológicos y consultoría */}
       <IndividualServices />
     </>
   )

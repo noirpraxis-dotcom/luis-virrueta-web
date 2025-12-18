@@ -1,83 +1,48 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { Camera, Palette, Smartphone, Mic, Brain, FileText, Sparkles, Video, Code, Megaphone, Calendar, ArrowRight } from 'lucide-react'
+import { Users, Heart, Brain, Mic, Baby, ExternalLink, ArrowRight } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 
 const IndividualServices = () => {
-  const { t } = useLanguage()
+  const { t, currentLanguage } = useLanguage()
   
   const services = [
     { 
-      name: t('home.servicesSection.services.logoDesign.name'),
-      description: t('home.servicesSection.services.logoDesign.description'),
-      icon: Palette,
+      name: currentLanguage === 'en' ? 'Individual Consultation' : 'Consulta Individual',
+      description: currentLanguage === 'en' ? 'Deep psychological work from psychoanalysis' : 'Trabajo psicológico profundo desde el psicoanálisis',
+      icon: Brain,
       color: "from-[#a855f7] to-[#7c3aed]"
     },
     { 
-      name: t('home.servicesSection.services.brandIdentity.name'),
-      description: t('home.servicesSection.services.brandIdentity.description'),
-      icon: Sparkles,
-      color: "from-[#d946ef] to-[#c026d3]"
-    },
-    { 
-      name: t('home.servicesSection.services.websites.name'),
-      description: t('home.servicesSection.services.websites.description'),
-      icon: Code,
-      color: "from-[#6366f1] to-[#4f46e5]"
-    },
-    { 
-      name: t('home.servicesSection.services.mobileApps.name'),
-      description: t('home.servicesSection.services.mobileApps.description'),
-      icon: Smartphone,
-      color: "from-[#0ea5e9] to-[#0284c7]"
-    },
-    { 
-      name: t('home.servicesSection.services.photography.name'),
-      description: t('home.servicesSection.services.photography.description'),
-      icon: Camera,
+      name: currentLanguage === 'en' ? 'Couple Consultation' : 'Consulta de Pareja',
+      description: currentLanguage === 'en' ? 'Explore unconscious dynamics in your relationship' : 'Explora las dinámicas inconscientes en tu relación',
+      icon: Heart,
       color: "from-[#ec4899] to-[#db2777]"
     },
     { 
-      name: t('home.servicesSection.services.videoBranding.name'),
-      description: t('home.servicesSection.services.videoBranding.description'),
-      icon: Video,
-      color: "from-[#8b5cf6] to-[#7c3aed]"
-    },
-    { 
-      name: t('home.servicesSection.services.audioBranding.name'),
-      description: t('home.servicesSection.services.audioBranding.description'),
-      icon: Mic,
-      color: "from-[#f97316] to-[#ea580c]"
-    },
-    { 
-      name: t('home.servicesSection.services.aiAvatars.name'),
-      description: t('home.servicesSection.services.aiAvatars.description'),
-      icon: Brain,
-      color: "from-[#10b981] to-[#059669]"
-    },
-    { 
-      name: t('home.servicesSection.services.consulting.name'),
-      description: t('home.servicesSection.services.consulting.description'),
-      icon: Brain,
-      color: "from-[#a855f7] to-[#d946ef]"
-    },
-    { 
-      name: t('home.servicesSection.services.marketing.name'),
-      description: t('home.servicesSection.services.marketing.description'),
-      icon: Megaphone,
+      name: currentLanguage === 'en' ? 'Psychological Consulting' : 'Consultoría Psicológica',
+      description: currentLanguage === 'en' ? 'For teams, organizations and projects' : 'Para equipos, organizaciones y proyectos',
+      icon: Users,
       color: "from-[#06b6d4] to-[#0891b2]"
     },
     { 
-      name: t('home.servicesSection.services.printMaterial.name'),
-      description: t('home.servicesSection.services.printMaterial.description'),
-      icon: FileText,
-      color: "from-[#d946ef] to-[#a855f7]"
+      name: currentLanguage === 'en' ? 'Unconscious Reprogramming Audios' : 'Audios Reprogramables del Inconsciente',
+      description: currentLanguage === 'en' ? 'Personalized tools to transform your perception' : 'Herramientas personalizadas para transformar tu percepción',
+      icon: Mic,
+      color: "from-[#8b5cf6] to-[#7c3aed]"
     },
     { 
-      name: t('home.servicesSection.services.animation.name'),
-      description: t('home.servicesSection.services.animation.description'),
-      icon: Sparkles,
-      color: "from-[#6366f1] to-[#8b5cf6]"
+      name: currentLanguage === 'en' ? 'Apps for Children' : 'Aplicaciones para Niños',
+      description: currentLanguage === 'en' ? 'Interactive tools for childhood development' : 'Herramientas interactivas para el desarrollo infantil',
+      icon: Baby,
+      color: "from-[#10b981] to-[#059669]"
+    },
+    { 
+      name: 'LUXMANIA',
+      description: currentLanguage === 'en' ? 'Premium branding and design projects' : 'Proyectos de branding y diseño premium',
+      icon: ExternalLink,
+      color: "from-[#d946ef] to-[#c026d3]",
+      link: 'https://luxmania.com'
     }
   ]
 
@@ -105,7 +70,7 @@ const IndividualServices = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-white/50 text-sm font-mono uppercase tracking-widest mb-4"
           >
-            {t('home.servicesSection.badge')}
+            {currentLanguage === 'en' ? 'WHAT I OFFER' : 'LO QUE OFREZCO'}
           </motion.p>
           
           <motion.h2
@@ -115,9 +80,9 @@ const IndividualServices = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-5xl lg:text-7xl font-light mb-6 font-display tracking-tight"
           >
-            <span className="text-white">{t('home.servicesSection.title')} </span>
+            <span className="text-white">{currentLanguage === 'en' ? 'Services ' : 'Servicios '}</span>
             <span className="text-white italic" style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 300 }}>
-              {t('home.servicesSection.titleItalic')}
+              {currentLanguage === 'en' ? 'tailored' : 'a tu medida'}
             </span>
           </motion.h2>
 
@@ -128,50 +93,60 @@ const IndividualServices = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-white/50 text-xl lg:text-2xl max-w-2xl mx-auto font-light"
           >
-            {t('home.servicesSection.subtitle')}
+            {currentLanguage === 'en' 
+              ? 'Each process is designed to transform how you perceive and inhabit your reality'
+              : 'Cada proceso está diseñado para transformar cómo percibes y habitas tu realidad'}
           </motion.p>
         </motion.div>
 
-        {/* Services Grid - Cuadrados: 3 columnas en móvil, 4 en iPad, 6 en desktop */}
-        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-5 lg:gap-6">
+        {/* Services Grid - Hexágonos: 3 columnas responsive */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
           {services.map((service, index) => {
             const Icon = service.icon
+            const isExternal = service.link
+            const CardWrapper = isExternal ? 'a' : 'div'
+            
             return (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ 
                   y: -8, 
-                  scale: 1.05,
+                  scale: 1.02,
                   transition: { duration: 0.3 }
                 }}
-                className="group relative aspect-square"
+                className="group relative"
               >
-                {/* Card container - Más compacto y elegante */}
-                <div className="relative h-full bg-gradient-to-br from-[#1A1A1A] to-[#0d0d0d] border border-white/10 rounded-2xl lg:rounded-3xl p-4 md:p-5 lg:p-6 hover:border-white/30 transition-all duration-500 flex flex-col items-center justify-center text-center">
+                {/* Card container - Más grande y espacioso */}
+                <CardWrapper 
+                  href={isExternal ? service.link : undefined}
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noopener noreferrer" : undefined}
+                  className="relative block h-full bg-gradient-to-br from-[#1A1A1A] to-[#0d0d0d] border border-white/10 rounded-3xl p-8 lg:p-10 hover:border-white/30 transition-all duration-500"
+                >
                   
                   {/* Animated glow on hover */}
                   <motion.div
-                    className="absolute inset-0 rounded-2xl lg:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                     style={{
                       background: `radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.15), transparent 70%)`
                     }}
                   />
 
-                  {/* Icon with gradient background - Proporción optimizada */}
+                  {/* Icon with gradient background - Más grande */}
                   <motion.div
-                    className={`relative mb-3 md:mb-3.5 lg:mb-4 p-3 md:p-3.5 lg:p-4 rounded-xl lg:rounded-2xl bg-gradient-to-br ${service.color} opacity-90 group-hover:opacity-100 transition-opacity flex-shrink-0`}
+                    className={`relative mb-6 p-5 rounded-2xl bg-gradient-to-br ${service.color} opacity-90 group-hover:opacity-100 transition-opacity inline-block`}
                     whileHover={{ rotate: [0, -10, 10, -10, 0] }}
                     transition={{ duration: 0.5 }}
                   >
-                    <Icon className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 text-white" strokeWidth={1.5} />
+                    <Icon className="w-10 h-10 lg:w-12 lg:h-12 text-white" strokeWidth={1.5} />
                     
                     {/* Shimmer effect */}
                     <motion.div
-                      className="absolute inset-0 rounded-xl lg:rounded-2xl"
+                      className="absolute inset-0 rounded-2xl"
                       style={{
                         background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
                         backgroundSize: '200% 100%'
@@ -188,15 +163,22 @@ const IndividualServices = () => {
                     />
                   </motion.div>
 
-                  {/* Text content - Compacto y responsive */}
-                  <div className="relative z-10 flex-1 flex flex-col justify-center min-h-0">
-                    <h3 className="text-white text-sm md:text-[15px] lg:text-base font-bold mb-0.5 lg:mb-1 group-hover:text-[#d946ef] transition-colors leading-tight">
+                  {/* Text content - Más espacioso */}
+                  <div className="relative z-10">
+                    <h3 className="text-white text-xl lg:text-2xl font-bold mb-3 group-hover:text-[#d946ef] transition-colors">
                       {service.name}
                     </h3>
-                    <p className="text-white/50 text-[10px] md:text-[11px] lg:text-xs font-light group-hover:text-white/70 transition-colors leading-tight line-clamp-2">
+                    <p className="text-white/50 text-base lg:text-lg font-light group-hover:text-white/70 transition-colors leading-relaxed">
                       {service.description}
                     </p>
                   </div>
+                  
+                  {/* External link icon */}
+                  {isExternal && (
+                    <div className="absolute top-6 right-6 text-white/30 group-hover:text-white/60 transition-colors">
+                      <ArrowRight className="w-5 h-5" />
+                    </div>
+                  )}
 
                   {/* Bottom gradient line appears on hover */}
                   <motion.div
@@ -220,14 +202,21 @@ const IndividualServices = () => {
           className="text-center mt-12 lg:mt-16"
         >
           <p className="text-white/60 text-base lg:text-lg mb-4">
-            {t('home.servicesSection.question')}
+            {currentLanguage === 'en' 
+              ? 'Each path is unique. Each process, singular.' 
+              : 'Cada camino es único. Cada proceso, singular.'}
           </p>
           <p className="text-white text-lg lg:text-xl mb-6">
-            <span className="text-[#a855f7] font-semibold">{t('home.servicesSection.answer')}</span> {t('home.servicesSection.answerEnd')}
+            <span className="text-[#a855f7] font-semibold">
+              {currentLanguage === 'en' ? 'Let\'s talk' : 'Hablemos'}
+            </span> 
+            {currentLanguage === 'en' 
+              ? ' and design together what you need' 
+              : ' y diseñemos juntos lo que necesitas'}
           </p>
           
           <motion.a
-            href="https://wa.me/420776711575?text=Hola! Me gustaría platicar sobre mi proyecto y recibir asesoría personalizada"
+            href="https://wa.me/420776711575?text=Hola! Me gustaría explorar cómo podemos trabajar juntos"
             target="_blank"
             rel="noopener noreferrer"
             whileHover={{ scale: 1.05, y: -2 }}

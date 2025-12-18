@@ -36,12 +36,12 @@ const BrandingShowcase = () => {
 
           {/* Título principal en blanco */}
           <h2 className="text-4xl lg:text-6xl font-bold mb-4 font-display text-white tracking-wide">
-            Branding Completo
+            Un vistazo al proceso
           </h2>
 
           {/* Subtítulo */}
           <p className="text-lg lg:text-xl text-white/50 max-w-2xl mx-auto font-light">
-            Proyectos integrales de identidad de marca que van más allá del logotipo
+            Cómo trabajamos para transformar tu realidad desde el inconsciente
           </p>
 
           {/* Línea decorativa */}
