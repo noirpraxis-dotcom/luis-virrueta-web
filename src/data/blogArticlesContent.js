@@ -1,10 +1,198 @@
-import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle } from 'lucide-react'
+import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle, Fish } from 'lucide-react'
 
 // Contenido completo de todos los artículos del blog en ES + EN
 // Este archivo centraliza el contenido para facilitar mantenimiento y traducciones
 
 const blogArticlesContent = {
   es: {
+    // Artículo NUEVO - El pez que no se come
+    'el-pez-que-no-se-come': {
+      title: 'El pez que no se come',
+      subtitle: 'Notas sobre el vínculo, la escucha y ese gesto mínimo que sostiene una relación',
+      author: 'Luis Virrueta',
+      date: '18 Dic 2025',
+      readTime: '12 min',
+      category: 'philosophy',
+      tags: ['Žižek', 'Lacan', 'Vínculo', 'Escucha', 'Relaciones', 'Deseo del Otro', 'Psicoanálisis'],
+      gradient: 'from-cyan-500 to-blue-600',
+      image: 'gaviota.jpg',
+      sections: [
+        {
+          type: 'heading',
+          icon: Fish,
+          title: 'I. El gesto inútil'
+        },
+        {
+          type: 'text',
+          content: 'Hay una escena que Žižek menciona —no importa tanto en qué libro— donde unas gaviotas se pasan un pez entre ellas sin comérselo. El gesto es desconcertante. El pez está ahí, presente, brillante, pero no cumple su destino natural. No alimenta. No sacia. Circula.'
+        },
+        {
+          type: 'text',
+          content: 'Ese pez no existe para ser devorado, sino para ser sostenido un instante y devuelto. No es un objeto de consumo, es un objeto de tránsito. Y en ese tránsito ocurre algo decisivo: no se satisface una necesidad, se mantiene un lazo. No se comparte para llenar al otro, se comparte para que la relación no se rompa.'
+        },
+        {
+          type: 'highlight',
+          content: 'El pez, ahí, no importa por lo que es, sino por lo que hace pasar entre unos y otros.'
+        },
+        {
+          type: 'heading',
+          icon: Brain,
+          title: 'II. Hablar para existir'
+        },
+        {
+          type: 'text',
+          content: 'Esa imagen vuelve con fuerza cuando se observa a un niño —una sobrina— hablar de sí sin parar. Cuenta lo que piensa, lo que siente, lo que imagina. El mundo gira alrededor de su decir. El otro está presente, sí, pero más como un espejo que como una alteridad plena.'
+        },
+        {
+          type: 'text',
+          content: 'Esto no es egoísmo. No es un defecto moral. Es una forma de habitar el mundo. El niño todavía no se instala en el registro del Otro como lugar distinto, sino como superficie de resonancia: hablo para oírme existir. Hablo para asegurarme de que estoy ahí.'
+        },
+        {
+          type: 'highlight',
+          content: 'En ese hablar incesante, el pez ya está siendo pasado.'
+        },
+        {
+          type: 'heading',
+          icon: Eye,
+          title: 'III. Preguntar sin querer saber'
+        },
+        {
+          type: 'text',
+          content: 'A veces el niño pregunta. Pero no siempre pregunta porque le importe la respuesta. Pregunta porque "así se hace". Porque la forma de la pregunta ya fue aprendida, aunque el deseo todavía no la habite.'
+        },
+        {
+          type: 'text',
+          content: 'Y aquí aparece una incomodidad que conviene no maquillar: ¿a quién le importa realmente lo que el otro dice? En la mayoría de las conversaciones adultas sucede lo mismo. Se escucha esperando el turno. Se escucha para responder. Se escucha para volver a decir lo propio.'
+        },
+        {
+          type: 'highlight',
+          content: 'No escuchamos para dejarnos afectar, sino para sostener nuestra escena. Lacan lo sabía: el sujeto no busca al otro, busca su lugar en el deseo.'
+        },
+        {
+          type: 'heading',
+          icon: Target,
+          title: 'IV. La fantasía del intercambio justo'
+        },
+        {
+          type: 'text',
+          content: 'Desde ahí se construye una fantasía persistente: la de la reciprocidad perfecta. Yo te escucho, tú me escuchas. Yo pregunto, tú preguntas. Yo cedo, tú cedes.'
+        },
+        {
+          type: 'text',
+          content: 'Pero el vínculo no se sostiene en la simetría. Se sostiene en el desajuste. En esa leve torcedura donde lo que doy nunca coincide exactamente con lo que el otro puede recibir. Si coincidiera del todo, no habría relación: habría prolongación narcisista.'
+        },
+        {
+          type: 'highlight',
+          content: 'Las relaciones viven de ese pequeño error estructural.'
+        },
+        {
+          type: 'heading',
+          icon: Sparkles,
+          title: 'V. Pasar el pez'
+        },
+        {
+          type: 'text',
+          content: 'Desde una lectura psicoanalítica, el niño aún no accede plenamente al deseo del Otro, pero ya juega con él. Cuando habla sin parar, no está cerrando el vínculo: está ofreciendo el pez. No para que el otro lo consuma, sino para que lo sostenga un momento y lo devuelva.'
+        },
+        {
+          type: 'text',
+          content: 'El problema no es que no pregunte. El problema sería que el pez dejara de circular.'
+        },
+        {
+          type: 'text',
+          content: 'Mientras haya tránsito —el niño habla, el adulto escucha; el adulto devuelve algo; el niño, a veces, pregunta aunque todavía no le importe demasiado— el juego simbólico sigue vivo. Torpe, incompleto, pero vivo.'
+        },
+        {
+          type: 'heading',
+          icon: AlertCircle,
+          title: 'VI. La pregunta que vuelve al adulto'
+        },
+        {
+          type: 'text',
+          content: 'Aquí aparece el punto más delicado, el que no se puede delegar al niño: ¿qué espera escuchar el adulto? ¿Está escuchando al niño o a la fantasía de que "aprenda a relacionarse bien"? ¿No hay ahí un deseo de completud, de cierre, de armonía… que el vínculo nunca promete?'
+        },
+        {
+          type: 'text',
+          content: 'Tal vez la función del adulto no sea exigir acceso al registro del otro, sino mostrar —sin pedagogía moral— que él también desea ser escuchado. Que él también pasa su pez. A veces hablando. A veces callando. A veces devolviendo algo que no encaja del todo.'
+        },
+        {
+          type: 'highlight',
+          content: 'No como demanda. Como gesto.'
+        },
+        {
+          type: 'heading',
+          icon: Heart,
+          title: 'VII. Sostener el vacío'
+        },
+        {
+          type: 'text',
+          content: 'Aprender a dar y recibir no es aprender a equilibrar cantidades. Es aprender a tolerar que el intercambio nunca se ajusta a la expectativa. Que a veces uno da más. Que a veces recibe menos. Que a veces pasa el pez… y nadie lo toma.'
+        },
+        {
+          type: 'text',
+          content: 'Y aun así, el lazo no se rompe.'
+        },
+        {
+          type: 'highlight',
+          content: 'Tal vez eso sea lo que realmente se transmite, mucho antes que las buenas preguntas o la escucha atenta: la capacidad de sostener el vacío entre lo que uno dice y lo que el otro puede recibir.'
+        },
+        {
+          type: 'text',
+          content: 'Ahí, en ese espacio incómodo y abierto, comienza —si comienza en algún lugar— el encuentro con el otro.'
+        }
+      ],
+      comments: [
+        {
+          id: 1,
+          author: 'Patricia Moreno',
+          avatar: '/avatars/avatar-23.jpg',
+          date: '18 Dic 2025',
+          content: 'La metáfora de las gaviotas es perfecta. Nunca había pensado las relaciones como ese "pasar el pez" sin consumirlo. Cambia todo.',
+          likes: 34
+        },
+        {
+          id: 2,
+          author: 'Fernando Díaz',
+          avatar: '/avatars/avatar-24.jpg',
+          date: '18 Dic 2025',
+          content: 'Me identifiqué totalmente con lo del niño que habla sin parar. Mi hijo hace exactamente eso, y ahora entiendo que no es egoísmo.',
+          likes: 28
+        },
+        {
+          id: 3,
+          author: 'Lucía Ramírez',
+          avatar: '/avatars/avatar-25.jpg',
+          date: '18 Dic 2025',
+          content: '"Las relaciones viven de ese pequeño error estructural." Esta línea me voló la cabeza. Gracias Luis.',
+          likes: 41
+        },
+        {
+          id: 4,
+          author: 'Diego Castro',
+          avatar: '/avatars/avatar-26.jpg',
+          date: '18 Dic 2025',
+          content: 'La parte sobre escuchar esperando el turno para responder... me sentí totalmente expuesto. Eso hago siempre.',
+          likes: 36
+        },
+        {
+          id: 5,
+          author: 'Valentina Soto',
+          avatar: '/avatars/avatar-27.jpg',
+          date: '18 Dic 2025',
+          content: 'Žižek y Lacan explicados sin academicismos. Esto debería ser lectura obligatoria en terapia.',
+          likes: 47
+        },
+        {
+          id: 6,
+          author: 'Manuel Herrera',
+          avatar: '/avatars/avatar-28.jpg',
+          date: '18 Dic 2025',
+          content: 'El concepto de "sostener el vacío" entre lo que digo y lo que el otro recibe es devastadoramente preciso.',
+          likes: 39
+        }
+      ]
+    },
+
     // Artículo NUEVO - Amar desde la herida
     'amar-desde-la-herida': {
       title: 'Amar desde la herida',

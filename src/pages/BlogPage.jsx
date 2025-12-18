@@ -37,6 +37,29 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 27,
+      title: currentLanguage === 'en' 
+        ? 'The Fish That Is Not Eaten'
+        : 'El pez que no se come',
+      excerpt: currentLanguage === 'en'
+        ? 'Seagulls pass a fish between them without eating it. What does that say about relationships?'
+        : 'Las gaviotas se pasan un pez sin comerlo. ¿Qué dice eso sobre las relaciones?',
+      category: 'philosophy',
+      author: 'Luis Virrueta',
+      date: '18 Dic 2025',
+      readTime: '12 min',
+      gradient: 'from-cyan-500/20 to-blue-600/20',
+      borderGradient: 'from-cyan-500 to-blue-600',
+      tags: currentLanguage === 'en'
+        ? ['Žižek', 'Lacan', 'Bond', 'Listening', 'Relationships', 'Desire of the Other', 'Psychoanalysis']
+        : ['Žižek', 'Lacan', 'Vínculo', 'Escucha', 'Relaciones', 'Deseo del Otro', 'Psicoanálisis'],
+      slug: 'el-pez-que-no-se-come',
+      image: '/IMAGENES BLOG/gaviota.jpg',
+      rating: 5.0,
+      commentsCount: 6,
+      featured: true
+    },
+    {
       id: 26,
       title: currentLanguage === 'en' 
         ? 'Loving from the Wound'
