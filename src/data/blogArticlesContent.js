@@ -1,10 +1,168 @@
-import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock } from 'lucide-react'
+import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle } from 'lucide-react'
 
 // Contenido completo de todos los artículos del blog en ES + EN
 // Este archivo centraliza el contenido para facilitar mantenimiento y traducciones
 
 const blogArticlesContent = {
   es: {
+    // Artículo NUEVO - Amar desde la herida
+    'amar-desde-la-herida': {
+      title: 'Amar desde la herida',
+      subtitle: 'No hay amor sin herida, pero sí puede haber amor sin engaño sobre ella',
+      author: 'Luis Virrueta',
+      date: '18 Dic 2025',
+      readTime: '14 min',
+      category: 'philosophy',
+      tags: ['Amor', 'Lacan', 'Falta', 'Deseo', 'Vínculo', 'Herida constitutiva', 'Psicoanálisis'],
+      gradient: 'from-rose-500 to-red-600',
+      image: 'herida.jpg',
+      sections: [
+        {
+          type: 'text',
+          content: 'Hay una dificultad fundamental cuando se intenta pensar el amor: no admite una respuesta clara sin perder su verdad. El amor no es algo que se esclarezca del todo; es algo que se sostiene, algo que se atraviesa sin garantía. Por eso, cualquier intento honesto de pensarlo tropieza pronto con una paradoja.'
+        },
+        {
+          type: 'highlight',
+          content: 'Lacan lo formuló con una precisión incómoda: amar es dar lo que no se tiene a quien no es.'
+        },
+        {
+          type: 'text',
+          content: 'No como un juego de palabras, sino como una descripción estructural del vínculo amoroso. El amor no surge de la plenitud, sino de la falta; no se origina en la posesión de algo, sino en la imposibilidad de poseerlo. Se ama desde lo que no se es, ofreciendo no una sustancia, sino una grieta.'
+        },
+        {
+          type: 'text',
+          content: 'Esta formulación suele malentenderse como una crítica al amor, como si lo redujera a ilusión o proyección. Pero ocurre lo contrario. El amor no es falso por estar atravesado por la falta; es posible gracias a ella. Sin falta no hay deseo, y sin deseo no hay dirección hacia el otro.'
+        },
+        {
+          type: 'text',
+          content: 'Esta lógica se hace visible incluso en los afectos más simples. El vínculo con un animal, la ternura que surge al abrazar, la calma que produce la cercanía: todo eso es real, corporal, inmediato. Pero incluso ahí aparece la pregunta silenciosa: ¿desde dónde se ama? ¿Es solo amor hacia el otro, o también una forma de sostener algo propio? No como engaño, sino como condición.'
+        },
+        {
+          type: 'heading',
+          icon: AlertCircle,
+          title: 'El amor siempre toca una herida'
+        },
+        {
+          type: 'text',
+          content: 'No porque sea patológico, sino porque el sujeto mismo está estructurado alrededor de una falta. No existe un punto neutro desde el cual amar sin herida, porque no existe un sujeto sin ella. La herida no es un accidente del vínculo; es su condición de posibilidad.'
+        },
+        {
+          type: 'text',
+          content: 'Por eso los lazos humanos se organizan alrededor de la falta. No nos encontramos porque estemos completos, sino porque algo no cierra. Algo insiste, algo duele, algo busca. El amor no es la unión de dos totalidades, sino la fricción de dos incompletudes que se reconocen, aunque sea de manera equívoca.'
+        },
+        {
+          type: 'heading',
+          icon: Brain,
+          title: 'El riesgo fundamental del amor'
+        },
+        {
+          type: 'text',
+          content: 'Esto permite entender por qué un discurso puede ser impecable y, aun así, no producir el mismo efecto. Una inteligencia artificial puede articular ideas profundas, incluso conmovedoras, pero carece de herida. No pierde nada al decir. No desea. No se expone. El amor humano no se juega en la corrección del mensaje, sino en el riesgo que implica decirlo. Amar no es comunicar algo verdadero; es arriesgar algo propio.'
+        },
+        {
+          type: 'highlight',
+          content: 'El riesgo fundamental del amor no es que el otro se vaya, sino que la propia falta quede al descubierto.'
+        },
+        {
+          type: 'heading',
+          icon: Eye,
+          title: 'La distinción decisiva'
+        },
+        {
+          type: 'text',
+          content: 'Sin embargo, reconocer esto no implica que todo amor sea una repetición del trauma. Aquí aparece una distinción decisiva. No es lo mismo amar desde la herida que amar para taparla. Lo primero es inevitable; lo segundo es lo que vuelve alienante al vínculo.'
+        },
+        {
+          type: 'text',
+          content: 'Cuando el otro es exigido como anestesia, como reparación, como garantía de estabilidad, el amor se vuelve funcional, aunque esté lleno de ternura. Pero cuando el otro no es convocado para cerrar la herida, sino para acompañarla; cuando no se le pide completud, sino presencia, aparece una forma distinta de amor: menos ruidosa, menos idealizada, más frágil.'
+        },
+        {
+          type: 'heading',
+          icon: Heart,
+          title: 'Cuando el amor cambia de forma'
+        },
+        {
+          type: 'text',
+          content: 'En ese punto, el amor deja de prometer curación. Ya no dice "te amo porque me sanas", sino "te amo aunque no puedas sanarme". No se sostiene en la necesidad, sino en el deseo; no en la ilusión de completud, sino en el reconocimiento de la falta.'
+        },
+        {
+          type: 'text',
+          content: 'Por eso la idea de que, si un sujeto sanara todas sus heridas, ya no habría relación, es parcialmente cierta. Si sanar significa clausurar la falta, el amor desaparece. Pero si sanar significa dejar de exigir que el otro repare lo irreparable, entonces el amor no muere: cambia de forma.'
+        },
+        {
+          type: 'text',
+          content: 'Se vuelve menos fantasmático, menos demandante, menos infantil. Pero también más silencioso. Más vulnerable. Menos espectacular.'
+        },
+        {
+          type: 'heading',
+          icon: Shield,
+          title: 'El amor verdadero'
+        },
+        {
+          type: 'text',
+          content: 'Tal vez por eso el amor así entendido resulta menos atractivo que sus versiones idealizadas. No promete plenitud, ni salvación, ni sentido definitivo. Ofrece algo mucho más precario y, por eso mismo, más verdadero: la posibilidad de estar con otro sin negar la falta que los constituye.'
+        },
+        {
+          type: 'text',
+          content: 'No hay amor sin herida. Pero sí puede haber amor sin engaño sobre la herida.'
+        },
+        {
+          type: 'highlight',
+          content: 'Y quizá eso —no la fusión, no la curación, no la promesa de totalidad— sea lo más cercano que tenemos a algo que merezca llamarse amor verdadero.'
+        }
+      ],
+      comments: [
+        {
+          id: 1,
+          author: 'Elena Ruiz',
+          avatar: '/avatars/avatar-17.jpg',
+          date: '18 Dic 2025',
+          content: 'Esto describe exactamente lo que viví durante años sin poder nombrarlo. Amaba para que el otro reparara algo irreparable. Gracias por esta claridad.',
+          likes: 38
+        },
+        {
+          id: 2,
+          author: 'Tomás Fernández',
+          avatar: '/avatars/avatar-18.jpg',
+          date: '18 Dic 2025',
+          content: '"Amar es dar lo que no se tiene a quien no es." Esta frase de Lacan me había parecido siempre críptica. Ahora tiene sentido completo.',
+          likes: 29
+        },
+        {
+          id: 3,
+          author: 'Daniela Ortega',
+          avatar: '/avatars/avatar-19.jpg',
+          date: '18 Dic 2025',
+          content: 'La distinción entre amar desde la herida y amar para taparla es devastadora. Cambió mi forma de entender todas mis relaciones.',
+          likes: 45
+        },
+        {
+          id: 4,
+          author: 'Miguel Vargas',
+          avatar: '/avatars/avatar-20.jpg',
+          date: '18 Dic 2025',
+          content: 'Siempre creí que el amor "sano" era el que no tocaba heridas. Ahora veo que eso era la fantasía, no la realidad.',
+          likes: 33
+        },
+        {
+          id: 5,
+          author: 'Carolina Méndez',
+          avatar: '/avatars/avatar-21.jpg',
+          date: '18 Dic 2025',
+          content: '"El riesgo fundamental del amor no es que el otro se vaya, sino que la propia falta quede al descubierto." Esto es profundamente cierto.',
+          likes: 51
+        },
+        {
+          id: 6,
+          author: 'Rodrigo Silva',
+          avatar: '/avatars/avatar-22.jpg',
+          date: '18 Dic 2025',
+          content: 'Tu forma de escribir sobre Lacan sin academicismos es increíble. Esto debería leerse en consultorios, no solo en universidades.',
+          likes: 27
+        }
+      ]
+    },
+
     // Artículo NUEVO - Ser libre no es elegir
     'ser-libre-no-es-elegir-es-no-poder-dejar-de-repetir': {
       title: 'Ser libre no es elegir: es no poder dejar de repetir',

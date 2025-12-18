@@ -37,13 +37,36 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 26,
+      title: currentLanguage === 'en' 
+        ? 'Loving from the Wound'
+        : 'Amar desde la herida',
+      excerpt: currentLanguage === 'en'
+        ? 'If love requires a wound, what happens when you stop asking the other to heal it?'
+        : 'Si el amor requiere una herida, ¿qué pasa cuando dejas de pedirle al otro que la cure?',
+      category: 'philosophy',
+      author: 'Luis Virrueta',
+      date: '18 Dic 2025',
+      readTime: '14 min',
+      gradient: 'from-rose-500/20 to-red-600/20',
+      borderGradient: 'from-rose-500 to-red-600',
+      tags: currentLanguage === 'en'
+        ? ['Love', 'Lacan', 'Lack', 'Desire', 'Bond', 'Constitutive Wound', 'Psychoanalysis']
+        : ['Amor', 'Lacan', 'Falta', 'Deseo', 'Vínculo', 'Herida constitutiva', 'Psicoanálisis'],
+      slug: 'amar-desde-la-herida',
+      image: '/IMAGENES BLOG/herida.jpg',
+      rating: 5.0,
+      commentsCount: 6,
+      featured: true
+    },
+    {
       id: 25,
       title: currentLanguage === 'en' 
         ? 'Being Free Is Not Choosing: It Is Not Being Able to Stop Repeating'
         : 'Ser libre no es elegir: es no poder dejar de repetir',
       excerpt: currentLanguage === 'en'
-        ? 'Freedom is not in choice, but in assuming one\'s own repetition'
-        : 'La libertad no está en la elección, sino en asumir la propia repetición',
+        ? 'You change masks, but always fail in the same place. What if that\'s your only freedom?'
+        : 'Cambias de máscara, pero siempre fallas en el mismo lugar. ¿Y si esa es tu única libertad?',
       category: 'philosophy',
       author: 'Luis Virrueta',
       date: '18 Dic 2025',
@@ -65,8 +88,8 @@ const BlogPage = () => {
         ? 'I Used to Be Happy'
         : 'Antes era feliz',
       excerpt: currentLanguage === 'en'
-        ? 'The desire to return to a place that never existed'
-        : 'El deseo de volver a un lugar que nunca existió',
+        ? 'The place you want to return to never existed. Then what is it that you\'re really looking for?'
+        : 'El lugar al que quieres volver nunca existió. Entonces, ¿qué es lo que buscas realmente?',
       category: 'philosophy',
       author: 'Luis Virrueta',
       date: '17 Dic 2025',
@@ -88,8 +111,8 @@ const BlogPage = () => {
         ? 'From the Dog Who Loves Me to the Void I Inhabit'
         : 'Del perro que me ama al vacío que me habita',
       excerpt: currentLanguage === 'en'
-        ? 'A reflection on love, use, lack and grace'
-        : 'Una reflexión sobre el amor, el uso, la falta y la gracia',
+        ? 'Your dog loves without asking. You love and demand. Who actually knows how to love?'
+        : 'Tu perro ama sin pedir. Tú amas y exiges. ¿Quién sabe realmente amar?',
       category: 'philosophy',
       author: 'Luis Virrueta',
       date: '16 Dic 2025',
@@ -104,372 +127,7 @@ const BlogPage = () => {
       rating: 5.0,
       commentsCount: 8,
       featured: true
-    },
-    {
-      id: 21,
-      ...getPostContent('trend-vs-keyword-gap-contenido-viral-no-construye-crecimiento'),
-      category: 'trends',
-      author: 'Luis Virrueta',
-      date: currentLanguage === 'en' ? 'Dec 15, 2025' : '15 Dic 2025',
-      readTime: '16 min',
-      gradient: 'from-indigo-600/20 via-purple-600/20 to-fuchsia-600/20',
-      borderGradient: 'from-indigo-600 via-purple-600 to-fuchsia-600',
-      tags: currentLanguage === 'en' 
-        ? ['Content Marketing', 'SEO Strategy', 'Trend Monitoring', 'Keyword Research', 'Growth Strategy']
-        : ['Content Marketing', 'Estrategia SEO', 'Monitoreo de Tendencias', 'Keyword Research', 'Estrategia de Crecimiento'],
-      slug: 'trend-vs-keyword-gap-contenido-viral-no-construye-crecimiento',
-      image: '/blog-compressed/blog-21-trend-keyword-gap.webp',
-      heroImage: '/blog-compressed/blog-21-trend-keyword-gap.webp',
-      rating: 5.0,
-      commentsCount: 12,
-      featured: true
-    },
-    {
-      id: 20,
-      ...getPostContent('rebranding-vs-refresh-cuando-redisenar-marca-completa'),
-      category: 'branding',
-      author: 'Luis Virrueta',
-      date: currentLanguage === 'en' ? 'Dec 17, 2025' : '17 Dic 2025',
-      readTime: '18 min',
-      gradient: 'from-emerald-600/20 via-teal-500/20 to-cyan-600/20',
-      borderGradient: 'from-emerald-600 via-teal-500 to-cyan-600',
-      tags: currentLanguage === 'en' 
-        ? ['Rebranding', 'Brand Refresh', 'Brand Strategy', 'Brand Evolution', 'Visual Identity', 'Brand Redesign']
-        : ['Rebranding', 'Brand Refresh', 'Rediseño de Marca', 'Estrategia de Marca', 'Evolución de Marca', 'Identidad Visual'],
-      slug: 'rebranding-vs-refresh-cuando-redisenar-marca-completa',
-      image: '/blog-compressed/blog-20-rebranding-refresh.webp',
-      heroImage: '/blog-compressed/blog-20-rebranding-refresh.webp',
-      rating: 5.0,
-      commentsCount: 30,
-      featured: true
-    },
-    {
-      id: 19,
-      ...getPostContent('branding-con-inteligencia-artificial-2025-guia-completa'),
-      category: 'trends',
-      author: 'Luis Virrueta',
-      date: currentLanguage === 'en' ? 'Dec 16, 2025' : '16 Dic 2025',
-      readTime: '20 min',
-      gradient: 'from-violet-600/20 via-purple-500/20 to-fuchsia-600/20',
-      borderGradient: 'from-violet-600 via-purple-500 to-fuchsia-600',
-      tags: currentLanguage === 'en' 
-        ? ['Artificial Intelligence', 'Branding', 'Midjourney', 'ChatGPT', 'Claude', 'AI Design', 'Brand Strategy']
-        : ['Inteligencia Artificial', 'Branding', 'Midjourney', 'ChatGPT', 'Claude', 'Runway', 'Diseño con IA', 'Estrategia de Marca'],
-      slug: 'branding-con-inteligencia-artificial-2025-guia-completa',
-      image: '/blog-compressed/blog-19-branding-ia.webp',
-      heroImage: '/blog-compressed/blog-19-branding-ia.webp',
-      rating: 5.0,
-      commentsCount: 35,
-      featured: true
-    },
-    {
-      id: 18,
-      ...getPostContent('por-que-tu-logo-no-funciona-7-errores-neurociencia'),
-      category: 'design',
-      author: 'Luis Virrueta',
-      date: currentLanguage === 'en' ? 'Dec 15, 2025' : '15 Dic 2025',
-      readTime: '15 min',
-      gradient: 'from-red-600/20 via-rose-500/20 to-pink-600/20',
-      borderGradient: 'from-red-600 via-rose-500 to-pink-600',
-      tags: currentLanguage === 'en' 
-        ? ['Logo Design', 'Neuroscience', 'Design Errors', 'Visual Identity', 'Brand Recognition', 'Branding']
-        : ['Diseño de Logo', 'Neurociencia', 'Errores de Diseño', 'Identidad Visual', 'Reconocimiento de Marca', 'Branding'],
-      slug: 'por-que-tu-logo-no-funciona-7-errores-neurociencia',
-      image: '/blog-compressed/blog-18-logo-errores.webp',
-      heroImage: '/blog-compressed/blog-18-logo-errores.webp',
-      rating: 5.0,
-      commentsCount: 28,
-      featured: true
-    },
-    {
-      id: 17,
-      ...getPostContent('12-arquetipos-jung-branding-cual-elegir-marca'),
-      category: 'branding',
-      author: 'Luis Virrueta',
-      date: currentLanguage === 'en' ? 'Dec 14, 2025' : '14 Dic 2025',
-      readTime: '24 min',
-      gradient: 'from-amber-600/20 via-orange-500/20 to-rose-600/20',
-      borderGradient: 'from-amber-600 via-orange-500 to-rose-600',
-      tags: currentLanguage === 'en' 
-        ? ['Jung Archetypes', 'Brand Psychology', 'Brand Strategy', 'Carl Jung', 'Brand Personality', 'Design']
-        : ['Arquetipos de Jung', 'Psicología de Marca', 'Estrategia de Marca', 'Carl Jung', 'Personalidad de Marca', 'Diseño'],
-      slug: '12-arquetipos-jung-branding-cual-elegir-marca',
-      image: '/blog-compressed/blog-17-arquetipos-jung.webp',
-      heroImage: '/blog-compressed/blog-17-arquetipos-jung.webp',
-      rating: 5.0,
-      commentsCount: 32,
-      featured: true
-    },
-    {
-      id: 16,
-      ...getPostContent('mapa-completo-inteligencias-artificiales-2025-cual-usar'),
-      category: 'trends',
-      author: 'Luis Virrueta',
-      date: currentLanguage === 'en' ? 'Dec 13, 2025' : '13 Dic 2025',
-      readTime: '25 min',
-      gradient: 'from-purple-600/20 to-pink-500/20',
-      borderGradient: 'from-purple-600 via-pink-500 to-red-500',
-      tags: currentLanguage === 'en' 
-        ? ['Artificial Intelligence', 'ChatGPT', 'Claude', 'DeepSeek', 'Gemini', 'Midjourney', 'Runway', 'Complete Guide 2025']
-        : ['Inteligencia Artificial', 'ChatGPT', 'Claude', 'DeepSeek', 'Gemini', 'Midjourney', 'Runway', 'Sora', 'Guía Completa 2025'],
-      slug: 'mapa-completo-inteligencias-artificiales-2025-cual-usar',
-      image: '/blog-compressed/blog-16-mapa-ias-2025.webp',
-      heroImage: '/blog-compressed/blog-16-mapa-ias-2025.webp',
-      rating: 4.9,
-      commentsCount: 28,
-      featured: true
-    },
-    {
-      id: 15,
-      ...getPostContent('cloudflare-infraestructura-invisible-que-hace-tu-web-premium'),
-      category: 'trends',
-      author: 'Luis Virrueta',
-      date: currentLanguage === 'en' ? 'Dec 12, 2025' : '12 Dic 2025',
-      readTime: '11 min',
-      gradient: 'from-orange-500/20 to-amber-600/20',
-      borderGradient: 'from-orange-500 to-amber-600',
-      tags: currentLanguage === 'en' 
-        ? ['Cloudflare', 'CDN', 'Web Performance', 'Security', 'Infrastructure']
-        : ['Cloudflare', 'CDN', 'Rendimiento Web', 'Seguridad', 'Infraestructura'],
-      slug: 'cloudflare-infraestructura-invisible-que-hace-tu-web-premium',
-      image: '/blog-compressed/blog-15-cloudflare.webp',
-      rating: 4.9,
-      commentsCount: 12,
-      featured: true
-    },
-    {
-      id: 14,
-      ...getPostContent('tu-cerebro-no-busca-informacion-busca-sorpresa-minima-andy-clark'),
-      category: 'neuroscience',
-      author: 'Luis Virrueta',
-      date: currentLanguage === 'en' ? 'Dec 10, 2025' : '10 Dic 2025',
-      readTime: currentLanguage === 'en' ? '14 min' : '17 min',
-      gradient: 'from-violet-500/20 to-indigo-600/20',
-      borderGradient: 'from-violet-500 to-indigo-600',
-      tags: currentLanguage === 'en' 
-        ? ['Andy Clark', 'Neuroscience', 'Bayesian Brain', 'Predictive Branding', 'Free Energy']
-        : ['Andy Clark', 'Neurociencia', 'Cerebro Bayesiano', 'Branding Predictivo', 'Free Energy'],
-      slug: 'tu-cerebro-no-busca-informacion-busca-sorpresa-minima-andy-clark',
-      image: '/blog-compressed/blog-14-no-busca-informacion.webp',
-      rating: 4.8,
-      commentsCount: 18,
-      featured: true
-    },
-    {
-      id: 13,
-      ...getPostContent('tu-cerebro-decide-antes-que-tu-experimento-libet'),
-      category: 'psychology',
-      author: 'Luis Virrueta',
-      date: currentLanguage === 'en' ? 'Dec 5, 2025' : '5 Dic 2025',
-      readTime: '13 min',
-      gradient: 'from-rose-500/20 to-purple-600/20',
-      borderGradient: 'from-rose-500 to-purple-600',
-      tags: currentLanguage === 'en' 
-        ? ['Neuroscience', 'Irrational Decisions', 'Libet Experiment', 'Branding']
-        : ['Neurociencia', 'Decisiones Irracionales', 'Experimento Libet', 'Branding'],
-      slug: 'tu-cerebro-decide-antes-que-tu-experimento-libet',
-      image: '/blog-compressed/blog-13-cerebro-decide-antes.webp',
-      rating: 4.7,
-      commentsCount: 15,
-      featured: true
-    },
-    {
-      id: 12,
-      ...getPostContent('inteligencia-no-acumula-reorganiza-neurociencia-branding'),
-      category: 'psychology',
-      author: 'Luis Virrueta',
-      date: currentLanguage === 'en' ? 'Nov 28, 2025' : '28 Nov 2025',
-      readTime: '15 min',
-      gradient: 'from-cyan-500/20 to-blue-600/20',
-      borderGradient: 'from-cyan-500 to-blue-600',
-      tags: currentLanguage === 'en' 
-        ? ['Neuroscience', 'Intelligent Branding', 'Cognitive Psychology', 'AI', 'Design']
-        : ['Neurociencia', 'Branding Inteligente', 'Psicología Cognitiva', 'IA', 'Diseño'],
-      slug: 'inteligencia-no-acumula-reorganiza-neurociencia-branding',
-      image: '/blog-compressed/blog-12-inteligencia-no-acumula.webp',
-      rating: 4.9,
-      commentsCount: 14,
-      featured: true
-    },
-    {
-      id: 11,
-      ...getPostContent('que-ia-contratar-2025-comparativa-completa'),
-      category: 'trends',
-      author: 'Luis Virrueta',
-      date: currentLanguage === 'en' ? 'Nov 21, 2025' : '21 Nov 2025',
-      readTime: '19 min',
-      gradient: 'from-indigo-500/20 to-purple-600/20',
-      borderGradient: 'from-indigo-500 to-purple-600',
-      tags: currentLanguage === 'en' 
-        ? ['ChatGPT', 'Google Gemini', 'Grok', 'AI Comparison', 'Practical Guide']
-        : ['ChatGPT', 'Google Gemini', 'Grok', 'Comparativa IA', 'Guía Práctica'],
-      slug: 'que-ia-contratar-2025-comparativa-completa',
-      image: '/blog-compressed/blog-11-que-ia-contratar.webp',
-      rating: 4.8,
-      commentsCount: 21,
-      featured: true
-    },
-    {
-      id: 1,
-      title: t('blogPage.posts.post1.title'),
-      excerpt: t('blogPage.posts.post1.excerpt'),
-      category: 'psychology',
-      author: 'Luis Virrueta',
-      date: '15 Nov 2024',
-      readTime: '12 min',
-      gradient: 'from-pink-500/20 to-rose-500/20',
-      borderGradient: 'from-pink-500 to-rose-500',
-      tags: ['Neuroscience', 'Logo Design', 'Brand Recognition'],
-      slug: 'neurociencia-del-diseno',
-      image: '/blog-compressed/blog-1.webp',
-      rating: 4.9,
-      commentsCount: 27
-    },
-    {
-      id: 2,
-      title: t('blogPage.posts.post2.title'),
-      excerpt: t('blogPage.posts.post2.excerpt'),
-      category: 'trends',
-      author: 'Luis Virrueta',
-      date: '22 Nov 2024',
-      readTime: '14 min',
-      gradient: 'from-purple-500/20 to-fuchsia-500/20',
-      borderGradient: 'from-purple-500 to-fuchsia-500',
-      tags: ['AI', 'Generative Design', 'Emotional Design', 'Psychology'],
-      slug: 'ia-generativa-diseno-emocion',
-      image: '/blog-compressed/blog-2.webp',
-      heroImage: '/blog-compressed/blog-2.webp',
-      rating: 5.0,
-      commentsCount: 34
-    },
-    {
-      id: 3,
-      title: t('blogPage.posts.post3.title'),
-      excerpt: t('blogPage.posts.post3.excerpt'),
-      category: 'design',
-      author: 'Luis Virrueta',
-      date: '28 Nov 2024',
-      readTime: '13 min',
-      gradient: 'from-cyan-500/20 to-blue-500/20',
-      borderGradient: 'from-cyan-500 to-blue-500',
-      tags: ['Machine Learning', 'UX Design', 'User Psychology', 'Technology'],
-      slug: 'interfaces-empaticas-machine-learning',
-      image: '/blog-compressed/blog-3.webp',
-      rating: 4.8,
-      commentsCount: 19
-    },
-    {
-      id: 4,
-      title: t('blogPage.posts.post4.title'),
-      excerpt: t('blogPage.posts.post4.excerpt'),
-      category: 'psychology',
-      author: 'Luis Virrueta',
-      date: '3 Dic 2024',
-      readTime: '10 min',
-      gradient: 'from-emerald-500/20 to-teal-500/20',
-      borderGradient: 'from-emerald-500 to-teal-500',
-      tags: ['Color Theory', 'Luxury Branding', 'Psychology'],
-      slug: 'psicologia-color-branding-lujo',
-      image: '/blog-compressed/blog-4.webp',
-      rating: 4.7,
-      commentsCount: 15
-    },
-    {
-      id: 5,
-      title: t('blogPage.posts.post5.title'),
-      excerpt: t('blogPage.posts.post5.excerpt'),
-      category: 'trends',
-      author: 'Luis Virrueta',
-      date: '5 Dic 2024',
-      readTime: '9 min',
-      gradient: 'from-violet-500/20 to-purple-500/20',
-      borderGradient: 'from-violet-500 to-purple-500',
-      tags: ['Trends 2025', 'Minimalism', 'Visual Design'],
-      slug: 'tendencias-diseno-2025',
-      image: '/blog-compressed/blog-5.webp',
-      rating: 4.9,
-      commentsCount: 22
-    },
-    {
-      id: 6,
-      title: t('blogPage.posts.post6.title'),
-      excerpt: t('blogPage.posts.post6.excerpt'),
-      category: 'branding',
-      author: 'Luis Virrueta',
-      date: '9 Dic 2024',
-      readTime: '16 min',
-      gradient: 'from-amber-500/20 to-orange-500/20',
-      borderGradient: 'from-amber-500 to-orange-500',
-      tags: ['StoryBrand', 'Storytelling', 'Brand Strategy', 'Marketing'],
-      slug: 'cliente-heroe-storybrand-framework',
-      image: '/blog-compressed/cliente-heroe.webp',
-      rating: 5.0,
-      commentsCount: 0
-    },
-    {
-      id: 7,
-      title: t('blogPage.posts.post7.title'),
-      excerpt: t('blogPage.posts.post7.excerpt'),
-      category: 'branding',
-      author: 'Luis Virrueta',
-      date: '10 Dic 2024',
-      readTime: '15 min',
-      gradient: 'from-indigo-500/20 to-purple-500/20',
-      borderGradient: 'from-indigo-500 to-purple-500',
-      tags: ['Pre-Suasion', 'Persuasion', 'Brand Strategy', 'Neuromarketing'],
-      slug: 'pre-suasion-cialdini-branding',
-      image: '/blog-compressed/presuasion.webp',
-      rating: 5.0,
-      commentsCount: 0
-    },
-    {
-      id: 8,
-      title: t('blogPage.posts.post8.title'),
-      excerpt: t('blogPage.posts.post8.excerpt'),
-      category: 'branding',
-      author: 'Luis Virrueta',
-      date: '10 Dic 2024',
-      readTime: '18 min',
-      gradient: 'from-rose-500/20 to-pink-500/20',
-      borderGradient: 'from-rose-500 to-pink-500',
-      tags: ['Influence', 'Persuasion', 'Psychology', 'Brand Strategy'],
-      slug: 'seis-armas-persuasion-cialdini',
-      image: '/blog-compressed/persuasion.webp',
-      rating: 5.0,
-      commentsCount: 0
-    },
-    {
-      id: 10,
-      title: t('blogPage.posts.post10.title'),
-      excerpt: t('blogPage.posts.post10.excerpt'),
-      category: 'branding',
-      author: 'Luis Virrueta',
-      date: '10 Dic 2024',
-      readTime: '14 min',
-      gradient: 'from-sky-500/20 to-blue-500/20',
-      borderGradient: 'from-sky-500 to-blue-500',
-      tags: ['Choice Paradox', 'Psychology', 'Conversion', 'Strategy'],
-      slug: 'paralisis-eleccion-simplifica-oferta',
-      image: '/blog-compressed/paralisis-eleccion.webp',
-      rating: 5.0,
-      commentsCount: 0
-    },
-    {
-      id: 9,
-      title: t('blogPage.posts.post9.title'),
-      excerpt: t('blogPage.posts.post9.excerpt'),
-      category: 'branding',
-      author: 'Luis Virrueta',
-      date: '7 Dic 2024',
-      readTime: '11 min',
-      gradient: 'from-amber-500/20 to-orange-500/20',
-      borderGradient: 'from-amber-500 to-orange-500',
-      tags: ['Brand Identity', 'Strategy', 'Visual Systems'],
-      slug: 'identidades-marca-memorables',
-      image: '/blog-compressed/blog-6.webp',
-      rating: 5.0,
-      commentsCount: 31
-    },
+    }
   ]
 
   const filteredPosts = activeCategory === 'all'
