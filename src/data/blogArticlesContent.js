@@ -1,10 +1,242 @@
-import { Brain, Zap, Sparkles, Award, Check, Shield, Eye } from 'lucide-react'
+import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock } from 'lucide-react'
 
 // Contenido completo de todos los artículos del blog en ES + EN
 // Este archivo centraliza el contenido para facilitar mantenimiento y traducciones
 
 const blogArticlesContent = {
   es: {
+    // Artículo NUEVO - Ser libre no es elegir
+    'ser-libre-no-es-elegir-es-no-poder-dejar-de-repetir': {
+      title: 'Ser libre no es elegir: es no poder dejar de repetir',
+      subtitle: 'La libertad no está en la elección, sino en asumir la propia repetición',
+      author: 'Luis Virrueta',
+      date: '18 Dic 2025',
+      readTime: '15 min',
+      category: 'philosophy',
+      tags: ['Libertad', 'Hegel', 'Lacan', 'Žižek', 'Síntoma', 'Repetición', 'Acto subjetivo', 'Psicoanálisis'],
+      gradient: 'from-sky-500 to-indigo-600',
+      image: 'ser libres.jpg',
+      sections: [
+        {
+          type: 'reflection',
+          content: 'No somos libres cuando elegimos quién somos. Somos libres cuando ya no podemos dejar de repetir cierto gesto.'
+        },
+        {
+          type: 'text',
+          content: 'Esta frase suele sonar absurda. Desde el sentido común psicológico, la libertad se entiende como la capacidad de elegir: elegir entre opciones, entre caminos, entre identidades posibles. Sin embargo, desde la tradición que va de Hegel a Lacan —y que Žižek radicaliza—, esta idea de libertad es precisamente el problema.'
+        },
+        {
+          type: 'text',
+          content: '¿Por qué? Porque toda elección presupone un marco previo. Elegir A o B solo es posible porque el campo de lo elegible ya está dado. Y ese marco no lo elegimos nosotros. Lo hereda el sujeto: del lenguaje, de la cultura, de la familia, de la ideología. Lo hereda del Otro.'
+        },
+        {
+          type: 'text',
+          content: 'Por eso, cuando alguien dice "yo elijo ser auténtico", "yo elijo ser diferente" o "yo elijo ser rebelde", sigue eligiendo dentro del menú del Otro. Cambia de opción, pero no sale del sistema que organiza las opciones. Eso no es libertad; es consumo identitario.'
+        },
+        {
+          type: 'highlight',
+          content: 'Aquí aparece la pregunta clave: si la libertad no está en elegir, ¿dónde está entonces?'
+        },
+        {
+          type: 'heading',
+          icon: Repeat,
+          title: 'La repetición no es lo que crees'
+        },
+        {
+          type: 'text',
+          content: 'Cuando se habla de "repetir un gesto", no se trata de repetir una conducta visible: enojarse siempre, fracasar siempre, elegir siempre el mismo tipo de relación. Eso es solo la superficie.'
+        },
+        {
+          type: 'text',
+          content: 'La repetición de la que habla el psicoanálisis es más profunda. Es una forma singular de fallar frente al Otro. Un punto específico donde el sujeto tropieza una y otra vez.'
+        },
+        {
+          type: 'text',
+          content: 'Lacan es muy preciso aquí: el sujeto no se define por lo que hace, sino por cómo falla siempre en el mismo lugar. Ese lugar es donde el lenguaje no alcanza, donde la identificación no termina de cerrar, donde el deseo no se satisface. Ese lugar es el síntoma.'
+        },
+        {
+          type: 'text',
+          content: 'Y aquí conviene decir algo importante: el síntoma no es un error que haya que borrar. No es un defecto accidental. Es el punto donde el sujeto aparece.'
+        },
+        {
+          type: 'heading',
+          icon: Sparkles,
+          title: 'El síntoma no te limita: te hace único'
+        },
+        {
+          type: 'text',
+          content: 'Žižek lo formula de manera brutal: no somos sujetos a pesar del síntoma, sino en el síntoma.'
+        },
+        {
+          type: 'text',
+          content: '¿Por qué? Porque el síntoma no es elegido, no es consciente, no es intercambiable ni copiable. No se aprende ni se imita. Es la forma irrepetible en la que cada sujeto no encaja del todo en el orden simbólico.'
+        },
+        {
+          type: 'text',
+          content: 'Eso es lo más original que existe. No la identidad que uno se inventa, no la historia que uno se cuenta, sino ese punto donde uno no puede adaptarse del todo.'
+        },
+        {
+          type: 'highlight',
+          content: '¿Y por qué ahí aparece la libertad?'
+        },
+        {
+          type: 'text',
+          content: 'Aquí entra el giro hegeliano. Para Hegel, la libertad no es ausencia de determinación. No es "poder ser cualquier cosa". La libertad es apropiarse de la necesidad.'
+        },
+        {
+          type: 'text',
+          content: 'Ser libre no es negar lo que te determina, sino reconocerte en ello. Cuando el sujeto descubre que no puede dejar de repetir cierto gesto —no como hábito, sino como estructura— ocurre algo radical: deja de fantasear con que podría ser otro.'
+        },
+        {
+          type: 'text',
+          content: 'Deja de huir hacia identidades imaginarias. Deja de negociar con el Ideal del Yo.'
+        },
+        {
+          type: 'text',
+          content: 'Y entonces asume su imposibilidad como punto de partida.'
+        },
+        {
+          type: 'highlight',
+          content: 'Eso es libertad.'
+        },
+        {
+          type: 'heading',
+          icon: Eye,
+          title: 'El verdadero obstáculo: la fantasía de escapar'
+        },
+        {
+          type: 'text',
+          content: '¿Qué pasa cuando el sujeto no asume su repetición? Pasa lo contrario de la libertad. Vive en la fantasía constante de que podría ser distinto. Cambia de máscara, de discurso, de rol. Se reinventa una y otra vez.'
+        },
+        {
+          type: 'text',
+          content: 'Pero esa reinvención permanente no es potencia; es huida. Huida del punto donde el deseo se atasca.'
+        },
+        {
+          type: 'highlight',
+          content: 'Žižek lo dice con precisión clínica: el sujeto neurótico no está atrapado en su síntoma, está atrapado en la fantasía de que podría escapar de él.'
+        },
+        {
+          type: 'heading',
+          icon: Zap,
+          title: 'Cuando la repetición se vuelve acto'
+        },
+        {
+          type: 'text',
+          content: 'Asumir la repetición no significa que desaparezca. No se cura ni se sublima mágicamente. Lo que cambia es su estatuto.'
+        },
+        {
+          type: 'text',
+          content: 'El gesto deja de vivirse como destino y se vuelve acto.'
+        },
+        {
+          type: 'text',
+          content: 'En Lacan, un acto no garantiza sentido, no busca aprobación y no promete identidad. Es simplemente: "esto es lo que hago cuando estoy en juego". No porque sea correcto, sino porque ahí el sujeto aparece.'
+        },
+        {
+          type: 'heading',
+          icon: Target,
+          title: 'La originalidad verdadera'
+        },
+        {
+          type: 'text',
+          content: 'No es original quien se inventa una identidad. No es original quien se narra mejor. No es original quien se diferencia más.'
+        },
+        {
+          type: 'text',
+          content: 'Es original quien asume su repetición sin convertirla en identidad.'
+        },
+        {
+          type: 'text',
+          content: 'No dice "soy así". Dice: "aquí es donde no puedo no aparecer".'
+        },
+        {
+          type: 'text',
+          content: 'Eso no se copia. Eso no se enseña. Eso no se elige.'
+        },
+        {
+          type: 'heading',
+          icon: Shield,
+          title: 'Volviendo al hijo que se rebela'
+        },
+        {
+          type: 'text',
+          content: 'Un hijo no es libre cuando dice "yo elijo ser distinto". Eso sigue siendo espejo del Otro. Empieza a rozar la libertad cuando descubre que siempre se rebela en un punto específico. No contra todo, no por sistema, sino ahí donde no puede ceder.'
+        },
+        {
+          type: 'text',
+          content: 'En ese punto no hay ideología ni personaje. Hay acto subjetivo.'
+        },
+        {
+          type: 'heading',
+          icon: Brain,
+          title: 'Entonces, ¿qué es la libertad?'
+        },
+        {
+          type: 'text',
+          content: 'No es elección. No es autenticidad. No es expresión del yo.'
+        },
+        {
+          type: 'text',
+          content: 'La libertad es la capacidad de habitar la propia imposibilidad sin pedirle permiso al Otro para existir.'
+        },
+        {
+          type: 'highlight',
+          content: 'O dicho aún más seco: ser fiel a la grieta que te constituye.'
+        }
+      ],
+      comments: [
+        {
+          id: 1,
+          author: 'Mariana Estrada',
+          avatar: '/avatars/avatar-11.jpg',
+          date: '18 Dic 2025',
+          content: 'Esto es brutal. Llevo años cambiando de "identidad" creyendo que estaba evolucionando. Ahora entiendo que solo huía de algo que no sabía nombrar.',
+          likes: 24
+        },
+        {
+          id: 2,
+          author: 'Ricardo Palacios',
+          avatar: '/avatars/avatar-12.jpg',
+          date: '18 Dic 2025',
+          content: '"El sujeto neurótico no está atrapado en su síntoma, está atrapado en la fantasía de que podría escapar de él." Esto debería estar en cada consultorio.',
+          likes: 18
+        },
+        {
+          id: 3,
+          author: 'Sofía Méndez',
+          avatar: '/avatars/avatar-13.jpg',
+          date: '18 Dic 2025',
+          content: 'Me pasé años buscando ser "auténtica". Ahora veo que solo estaba eligiendo dentro del catálogo del Otro. Gracias por esta claridad.',
+          likes: 31
+        },
+        {
+          id: 4,
+          author: 'Javier Torres',
+          avatar: '/avatars/avatar-14.jpg',
+          date: '18 Dic 2025',
+          content: 'La parte del hijo que se rebela me atravesó. Siempre creí que mi rebeldía era libertad. Ahora veo que era puro espejo.',
+          likes: 15
+        },
+        {
+          id: 5,
+          author: 'Camila Ortiz',
+          avatar: '/avatars/avatar-15.jpg',
+          date: '18 Dic 2025',
+          content: '"Ser fiel a la grieta que te constituye." Esta frase vale todo el artículo. Devastador y liberador a la vez.',
+          likes: 42
+        },
+        {
+          id: 6,
+          author: 'Andrés Navarro',
+          avatar: '/avatars/avatar-16.jpg',
+          date: '18 Dic 2025',
+          content: 'Increíble cómo conectas Hegel, Lacan y Žižek sin academicismos vacíos. Esto es filosofía aplicada de verdad.',
+          likes: 27
+        }
+      ]
+    },
+
     // Artículo NUEVO - Antes era feliz (El punto cero)
     'antes-era-feliz-el-punto-cero': {
       title: 'Antes era feliz',

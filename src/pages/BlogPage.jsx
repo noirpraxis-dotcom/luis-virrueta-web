@@ -37,6 +37,29 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 25,
+      title: currentLanguage === 'en' 
+        ? 'Being Free Is Not Choosing: It Is Not Being Able to Stop Repeating'
+        : 'Ser libre no es elegir: es no poder dejar de repetir',
+      excerpt: currentLanguage === 'en'
+        ? 'Freedom is not in choice, but in assuming one\'s own repetition'
+        : 'La libertad no está en la elección, sino en asumir la propia repetición',
+      category: 'philosophy',
+      author: 'Luis Virrueta',
+      date: '18 Dic 2025',
+      readTime: '15 min',
+      gradient: 'from-sky-500/20 to-indigo-600/20',
+      borderGradient: 'from-sky-500 to-indigo-600',
+      tags: currentLanguage === 'en'
+        ? ['Freedom', 'Hegel', 'Lacan', 'Žižek', 'Symptom', 'Repetition', 'Subjective Act', 'Psychoanalysis']
+        : ['Libertad', 'Hegel', 'Lacan', 'Žižek', 'Síntoma', 'Repetición', 'Acto subjetivo', 'Psicoanálisis'],
+      slug: 'ser-libre-no-es-elegir-es-no-poder-dejar-de-repetir',
+      image: '/IMAGENES BLOG/ser libres.jpg',
+      rating: 5.0,
+      commentsCount: 6,
+      featured: true
+    },
+    {
       id: 24,
       title: currentLanguage === 'en' 
         ? 'I Used to Be Happy'
