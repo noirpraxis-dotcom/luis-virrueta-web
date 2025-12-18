@@ -37,6 +37,29 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 24,
+      title: currentLanguage === 'en' 
+        ? 'I Used to Be Happy'
+        : 'Antes era feliz',
+      excerpt: currentLanguage === 'en'
+        ? 'The desire to return to a place that never existed'
+        : 'El deseo de volver a un lugar que nunca existió',
+      category: 'philosophy',
+      author: 'Luis Virrueta',
+      date: '17 Dic 2025',
+      readTime: '16 min',
+      gradient: 'from-violet-500/20 to-purple-600/20',
+      borderGradient: 'from-violet-500 to-purple-600',
+      tags: currentLanguage === 'en'
+        ? ['Psychoanalysis', 'Lacan', 'Nostalgia', 'Identity', 'Constitutive Wound', 'Point Zero', 'Subjectivity']
+        : ['Psicoanálisis', 'Lacan', 'Nostalgia', 'Identidad', 'Herida constitutiva', 'Punto cero', 'Subjetividad'],
+      slug: 'antes-era-feliz-el-punto-cero',
+      image: '/IMAGENES BLOG/ANTES ERA 0.png',
+      rating: 5.0,
+      commentsCount: 6,
+      featured: true
+    },
+    {
       id: 23,
       title: currentLanguage === 'en' 
         ? 'From the Dog Who Loves Me to the Void I Inhabit'

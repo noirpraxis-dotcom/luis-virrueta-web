@@ -5,6 +5,272 @@ import { Brain, Zap, Sparkles, Award, Check, Shield, Eye } from 'lucide-react'
 
 const blogArticlesContent = {
   es: {
+    // Artículo NUEVO - Antes era feliz (El punto cero)
+    'antes-era-feliz-el-punto-cero': {
+      title: 'Antes era feliz',
+      subtitle: 'El deseo de volver a un lugar que nunca existió',
+      author: 'Luis Virrueta',
+      date: '17 Dic 2025',
+      readTime: '16 min',
+      category: 'philosophy',
+      tags: ['Psicoanálisis', 'Lacan', 'Nostalgia', 'Identidad', 'Herida constitutiva', 'Punto cero', 'Subjetividad'],
+      gradient: 'from-violet-500 to-purple-600',
+      image: 'ANTES ERA 0.png',
+      sections: [
+        {
+          type: 'reflection',
+          content: 'El sujeto no añora realmente un pasado feliz, añora la cancelación de la condición misma de sujeto. Pero lo hace desde la conciencia de ser sujeto, lo cual vuelve su deseo paradójico e imposible.'
+        },
+        {
+          type: 'heading',
+          title: 'El deseo de volver a un lugar que nunca existió',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'Hay personas que llegan a análisis diciendo que quieren volver a ser como antes. Volver a un momento donde —según ellas— todo estaba bien. Donde había sentido, dirección, estabilidad, felicidad.'
+        },
+        {
+          type: 'text',
+          content: 'Lo dicen con convicción. Y sin embargo, ese lugar no existe.'
+        },
+        {
+          type: 'text',
+          content: 'No porque haya sido destruido, sino porque nunca fue un lugar propio.'
+        },
+        {
+          type: 'highlight',
+          content: 'Lo que el sujeto añora no es un pasado real, sino una ficción retroactiva producida desde el presente de la pérdida.'
+        },
+        {
+          type: 'text',
+          content: 'Aquí aparece la primera paradoja: el sujeto cree querer regresar a un punto estable, cuando en realidad desea regresar a un punto anterior a la división.'
+        },
+        {
+          type: 'heading',
+          title: 'El malentendido de la felicidad pasada',
+          icon: Eye
+        },
+        {
+          type: 'text',
+          content: 'Cuando alguien dice "antes era feliz", suele olvidar algo esencial: esa felicidad no se sostenía en sí misma.'
+        },
+        {
+          type: 'subsection',
+          title: 'Dependía de:',
+          items: [
+            'una mirada que confirmaba',
+            'un Otro que garantizaba',
+            'un lugar simbólico que no exigía aún responsabilidad subjetiva'
+          ]
+        },
+        {
+          type: 'text',
+          content: 'No era una felicidad elegida. Era una felicidad delegada.'
+        },
+        {
+          type: 'text',
+          content: 'El sujeto no era feliz a pesar del Otro, sino a través del Otro.'
+        },
+        {
+          type: 'highlight',
+          content: 'Por eso no era un lugar propio, sino una posición prestada.'
+        },
+        {
+          type: 'heading',
+          title: 'El punto cero: una nostalgia imposible',
+          icon: Sparkles
+        },
+        {
+          type: 'text',
+          content: 'El sujeto no quiere volver a un momento de la historia. Quiere volver a un momento lógico.'
+        },
+        {
+          type: 'subsection',
+          title: 'Un momento en el que:',
+          items: [
+            'no había aún que responder por el deseo',
+            'no había que sostener la falta',
+            'no había que asumir la escisión'
+          ]
+        },
+        {
+          type: 'text',
+          content: 'Quiere volver a un punto donde no había sujeto.'
+        },
+        {
+          type: 'text',
+          content: 'Ese punto es lo que podríamos llamar el punto cero: no un origen real, sino una fantasía de anterioridad absoluta.'
+        },
+        {
+          type: 'highlight',
+          content: 'Pero ese punto cero es imposible, porque el sujeto solo existe desde la herida.'
+        },
+        {
+          type: 'heading',
+          title: 'La herida no es un accidente: es constitutiva',
+          icon: Zap
+        },
+        {
+          type: 'text',
+          content: 'Aquí se produce el quiebre fundamental.'
+        },
+        {
+          type: 'text',
+          content: 'El sujeto cree que la herida es algo que le ocurrió. Algo que podría cerrarse. Algo que podría no haber pasado.'
+        },
+        {
+          type: 'text',
+          content: 'Pero la herida no es contingente. Es estructural.'
+        },
+        {
+          type: 'highlight',
+          content: 'No hay sujeto antes de la herida, porque el sujeto es esa herida simbolizada.'
+        },
+        {
+          type: 'text',
+          content: 'La división, la falta, la no-coincidencia consigo mismo no vienen después: son la condición de posibilidad de que algo como un "yo" exista.'
+        },
+        {
+          type: 'heading',
+          title: 'El deseo más radical: dejar de ser sujeto',
+          icon: Shield
+        },
+        {
+          type: 'text',
+          content: 'Y aquí aparece la paradoja máxima.'
+        },
+        {
+          type: 'text',
+          content: 'El sujeto dice querer volver a ser feliz, pero lo que en realidad desea es dejar de ser sujeto.'
+        },
+        {
+          type: 'subsection',
+          title: 'Desea:',
+          items: [
+            'no tener que responder',
+            'no tener que desear',
+            'no tener que sostener su falta'
+          ]
+        },
+        {
+          type: 'text',
+          content: 'Desea el cierre de la herida, sin advertir que cerrar la herida equivale a borrar al sujeto.'
+        },
+        {
+          type: 'highlight',
+          content: 'Por eso el deseo es imposible: se formula desde la conciencia, pero apunta a la anulación de esa misma conciencia.'
+        },
+        {
+          type: 'heading',
+          title: 'La trampa de la nostalgia',
+          icon: Award
+        },
+        {
+          type: 'text',
+          content: 'La nostalgia no es amor al pasado. Es rechazo del presente como lugar sin garantías.'
+        },
+        {
+          type: 'subsection',
+          title: 'Es la fantasía de que alguna vez:',
+          items: [
+            'el sentido estuvo dado',
+            'el deseo no dolía',
+            'la existencia no exigía'
+          ]
+        },
+        {
+          type: 'text',
+          content: 'Pero ese "alguna vez" es una construcción defensiva.'
+        },
+        {
+          type: 'highlight',
+          content: 'El sujeto no perdió su lugar. Perdió la ilusión de que ese lugar alguna vez fue propio.'
+        },
+        {
+          type: 'heading',
+          title: 'Lo que el análisis no promete',
+          icon: Check
+        },
+        {
+          type: 'text',
+          content: 'El análisis no devuelve al sujeto a ningún punto cero. No repara la herida. No restituye una identidad previa.'
+        },
+        {
+          type: 'text',
+          content: 'Hace algo mucho más inquietante:'
+        },
+        {
+          type: 'highlight',
+          content: 'Le permite descubrir que nunca hubo un lugar al cual regresar, y que su tarea no es sanar la herida, sino habitarla sin delegarla.'
+        },
+        {
+          type: 'heading',
+          title: 'Conclusión (sin consuelo)',
+          icon: Brain
+        },
+        {
+          type: 'text',
+          content: 'El sufrimiento no proviene de haber caído desde un lugar pleno, sino de haber descubierto que ese lugar nunca existió.'
+        },
+        {
+          type: 'text',
+          content: 'Y sin embargo —paradoja final— solo desde esa caída puede producirse algo propio.'
+        },
+        {
+          type: 'text',
+          content: 'No un origen. No una esencia. No una identidad.'
+        },
+        {
+          type: 'highlight',
+          content: 'Sino un modo singular de estar siendo, sostenido en la falta, sin nostalgia de un punto que jamás fue real.'
+        }
+      ],
+      comments: [
+        {
+          id: 1,
+          author: 'Ana Morales',
+          date: '17 Dic 2025',
+          content: 'Este artículo me hizo repensar completamente mi relación con el pasado. Siempre creí que quería "volver" a un momento mejor, pero ahora veo que estaba huyendo del presente.',
+          likes: 42
+        },
+        {
+          id: 2,
+          author: 'Carlos Mendoza',
+          date: '17 Dic 2025',
+          content: 'La parte sobre la herida constitutiva es devastadora pero necesaria. No somos a pesar de la herida, sino desde ella.',
+          likes: 38
+        },
+        {
+          id: 3,
+          author: 'Lucía Torres',
+          date: '17 Dic 2025',
+          content: '"El sujeto no perdió su lugar. Perdió la ilusión de que ese lugar alguna vez fue propio." Esta línea me va a perseguir por días.',
+          likes: 56
+        },
+        {
+          id: 4,
+          author: 'Miguel Ángel Ruiz',
+          date: '17 Dic 2025',
+          content: 'Brutal. La paradoja de querer dejar de ser sujeto desde la condición de sujeto es probablemente el círculo más vicioso del que nos hablas.',
+          likes: 31
+        },
+        {
+          id: 5,
+          author: 'Patricia Sánchez',
+          date: '17 Dic 2025',
+          content: 'Me identifiqué profundamente con esto. Años en terapia tratando de "recuperar" algo que nunca tuve. Ahora entiendo mejor el proceso.',
+          likes: 49
+        },
+        {
+          id: 6,
+          author: 'Diego Fernández',
+          date: '17 Dic 2025',
+          content: 'La conclusión sin consuelo es paradójicamente reconfortante. No prometes falsas curaciones, y eso es lo que necesitaba leer.',
+          likes: 44
+        }
+      ]
+    },
     // Artículo NUEVO - Del Perro que me Ama al Vacío que me Habita
     'del-perro-que-me-ama-al-vacio-que-me-habita': {
       title: 'Del perro que me ama al vacío que me habita',
