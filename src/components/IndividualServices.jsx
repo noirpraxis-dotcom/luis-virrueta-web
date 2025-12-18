@@ -187,7 +187,7 @@ const IndividualServices = () => {
                     whileHover={{ scaleX: 1 }}
                     transition={{ duration: 0.3 }}
                   />
-                </div>
+                </CardWrapper>
               </motion.div>
             )
           })}
