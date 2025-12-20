@@ -1,10 +1,180 @@
-import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle, Fish } from 'lucide-react'
+import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle, Fish, Flame, Users, Link } from 'lucide-react'
 
 // Contenido completo de todos los artículos del blog en ES + EN
 // Este archivo centraliza el contenido para facilitar mantenimiento y traducciones
 
 const blogArticlesContent = {
   es: {
+    // Artículo NUEVO - El desgarro de la unidad
+    'el-desgarro-de-la-unidad': {
+      title: 'El desgarro de la unidad',
+      subtitle: 'Sobre el inicio del amor, la caída de la ilusión y el vínculo entre dos faltas',
+      author: 'Luis Virrueta',
+      date: '19 Dic 2025',
+      readTime: '14 min',
+      category: 'philosophy',
+      tags: ['Amor', 'Unidad', 'Enamoramiento', 'Falta', 'Psicoanálisis', 'Ontología', 'Relación'],
+      gradient: 'from-amber-500 to-rose-600',
+      image: 'desgarro.jpg',
+      sections: [
+        {
+          type: 'heading',
+          icon: Flame,
+          title: 'I. El desgarro primero'
+        },
+        {
+          type: 'text',
+          content: 'El amor no empieza cuando dos personas se encuentran. Empieza mucho antes: cuando la unidad se rompe. Antes de que haya vínculo, tiene que haber desgarro. No se trata de una metáfora poética, sino de una estructura ontológica: no hay relación sin separación previa. No hay encuentro sin pérdida.'
+        },
+        {
+          type: 'text',
+          content: 'El mito del andrógino, ese relato platónico que tanto nos gusta repetir, dice que el amor es la búsqueda de la mitad perdida. Pero la clave no está en la promesa del reencuentro, sino en el hecho de que *hubo un corte*. No nacimos completos. Nacimos partidos. Y esa fractura no es reparable. Lo que llamamos amor no es la restauración del Todo, sino el intento desesperado y condenado de fingir que todavía es posible.'
+        },
+        {
+          type: 'highlight',
+          content: 'El amor no surge de la suma de dos, sino de la herida que cada uno carga por no ser Uno.'
+        },
+        {
+          type: 'heading',
+          icon: Heart,
+          title: 'II. Enamorarse: el refugio en el otro'
+        },
+        {
+          type: 'text',
+          content: 'Enamorarse es creer que encontraste lo que te faltaba. Que el otro es esa pieza perdida, ese complemento, ese reflejo que restaura lo roto. El enamoramiento funciona como un *refugio ontológico*: ante la insoportable evidencia de tu incompletud, el otro aparece como solución. Lo vistes con la promesa de plenitud. Lo idealizas. Le otorgas la función de tapar tu falta.'
+        },
+        {
+          type: 'text',
+          content: 'Pero esa operación tiene fecha de vencimiento. Porque el otro también está partido. También carga con su desgarro. Y lo que proyectabas en él como completud, tarde o temprano se revela como impostura. La idealización se cae. Y cuando cae, lo que queda es más doloroso que el desgarro original: porque ahora no solo cargas con tu falta, sino también con la del otro. Y ninguno de los dos puede salvar al otro de eso.'
+        },
+        {
+          type: 'highlight',
+          content: 'Enamorarse es esperar que el otro repare lo que nunca debió repararse. Es pedirle al otro que cumpla una función que no existe.'
+        },
+        {
+          type: 'heading',
+          icon: Eye,
+          title: 'III. La caída del enamoramiento'
+        },
+        {
+          type: 'text',
+          content: 'La relación empieza cuando el enamoramiento se cae. No antes. Mientras el otro sea el refugio, no hay vínculo real. Hay proyección, demanda, dependencia. Pero no hay encuentro. El encuentro solo es posible cuando el otro deja de ser la solución. Cuando aceptas que el otro no vino a completarte. Que el otro no es tu salvación.'
+        },
+        {
+          type: 'text',
+          content: 'Es entonces —y solo entonces— que la relación puede comenzar de verdad. Porque ya no le pides al otro que te salve. Ya no lo vistes con tus fantasías. Lo ves tal como es: roto, incompleto, falto, igual que tú. Y sin embargo, eliges estar ahí. No porque él llene lo que te falta, sino porque en la distancia entre los dos hay algo que sostiene. Algo que no tiene que ver con la fusión, sino con la articulación de dos faltas que no se confunden.'
+        },
+        {
+          type: 'highlight',
+          content: 'La relación verdadera empieza cuando dejas de buscar en el otro lo que nunca perdiste, porque nunca lo tuviste.'
+        },
+        {
+          type: 'heading',
+          icon: Link,
+          title: 'IV. Amar sin engañarse'
+        },
+        {
+          type: 'text',
+          content: 'Amar es mantener un lazo entre dos incompletudes sin pretender que se vuelvan una sola. Es renunciar a la fantasía del Todo. Es saber que el otro no va a llenarte, y aun así, elegir estar. No porque sea útil. No porque te repare. Sino porque en ese vínculo imperfecto hay algo que sostiene la posibilidad de existir sin fundirse.'
+        },
+        {
+          type: 'text',
+          content: 'El amor, entonces, no es la solución al desgarro. Es la forma ética de habitarlo. Es decir: sí, estoy roto. Y tú también. Y no vamos a repararnos. Pero vamos a estar aquí, juntos, sin engañarnos. Sin pedirle al otro que sea lo que no puede ser. Sin esperar que la unidad se restaure. Porque la unidad nunca existió. Y lo que existe ahora es esto: dos faltas articuladas que no se confunden, pero que se sostienen.'
+        },
+        {
+          type: 'highlight',
+          content: 'Amar es renunciar a la promesa de completud y elegir el vínculo a pesar de eso. O mejor: justo por eso.'
+        },
+        {
+          type: 'heading',
+          icon: Brain,
+          title: 'V. El amor como posición ética'
+        },
+        {
+          type: 'text',
+          content: 'Desde la perspectiva del psicoanálisis —y de cierta ontología crítica—, el amor no es un sentimiento. Es una posición. Una forma de estar en relación con el otro que no pretende tapar lo real. Que no busca fusionarse para negar la falta. Que no idealiza. Que no demanda. Que no espera que el otro cumpla la función de sostén ontológico.'
+        },
+        {
+          type: 'text',
+          content: 'El amor es, más bien, esa operación delicada en la que dos sujetos se articulan sin confundirse. En la que el vínculo no es la negación de la separación, sino su reconocimiento. En la que la distancia entre los dos no se cierra, pero se transita.'
+        },
+        {
+          type: 'text',
+          content: 'Y eso es lo contrario de lo que promete el enamoramiento. El enamoramiento dice: "el otro me completa". El amor dice: "el otro es tan incompleto como yo, y aun así, estamos aquí". El enamoramiento es fantasía. El amor es lucidez.'
+        },
+        {
+          type: 'heading',
+          icon: Target,
+          title: 'VI. El desgarro no se cura'
+        },
+        {
+          type: 'text',
+          content: 'El desgarro no se cura. No hay vuelta a la unidad. No hay síntesis dialéctica que restaure lo perdido. Lo que se perdió nunca existió. La unidad es retroactiva: solo podemos pensarla desde su ausencia. Y el amor —el amor verdadero, el que no miente— no pretende negar eso.'
+        },
+        {
+          type: 'text',
+          content: 'El amor acepta que el desgarro es la condición de posibilidad del vínculo. Que sin ruptura no hay relación. Que sin falta no hay deseo. Y que el otro, lejos de ser la cura, es alguien que también sangra. Que también busca. Que también falla.'
+        },
+        {
+          type: 'highlight',
+          content: 'Amar es aceptar que nunca hubo completud, y aun así, sostener un vínculo que no promete llenar nada.'
+        },
+        {
+          type: 'heading',
+          icon: Sparkles,
+          title: 'VII. Hacia una ontología del vínculo'
+        },
+        {
+          type: 'text',
+          content: 'Lo que aquí se propone no es una teoría del amor romántico, sino una ontología del vínculo. Una forma de pensar la relación no como fusión, sino como articulación. No como complementariedad, sino como encuentro entre dos faltas que no se completan, pero que se reconocen.'
+        },
+        {
+          type: 'text',
+          content: 'El amor, desde este lugar, es el modo en que dos sujetos desgarrados construyen algo sin negar su desgarro. Es la forma en que dos incompletudes se sostienen sin pretender volverse una sola. Es la operación por la cual la separación no se elimina, sino que se habita.'
+        },
+        {
+          type: 'text',
+          content: 'Y si esto suena poco romántico, es porque lo es. Porque el romanticismo es la fantasía de que el desgarro puede curarse. El amor, en cambio, es la lucidez de que no puede. Y que, sin embargo, se puede estar.'
+        },
+        {
+          type: 'reflection',
+          content: '¿Y si el amor no fuera la solución al desgarro, sino la única forma honesta de habitarlo? ¿Y si amar no fuera buscar la completud, sino aceptar que nunca estuvo ahí? ¿Y si la relación verdadera comenzara justo cuando dejas de pedirle al otro que te salve?'
+        }
+      ],
+      comments: [
+        {
+          author: 'Mariana L.',
+          date: '19 Dic 2025',
+          text: 'Esto duele. Y a la vez, libera. Gracias por decir lo que muchos no nos animamos a pensar.'
+        },
+        {
+          author: 'Diego Ramos',
+          date: '19 Dic 2025',
+          text: 'Nunca había leído algo que explique tan claro por qué todas mis relaciones se sienten igual de rotas, sin importar con quién esté.'
+        },
+        {
+          author: 'Camila S.',
+          date: '20 Dic 2025',
+          text: 'El enamoramiento como refugio ontológico… eso lo cambia todo. No buscaba llenar nada, buscaba que el otro me llenara. Ahora entiendo.'
+        },
+        {
+          author: 'Pablo Aguirre',
+          date: '20 Dic 2025',
+          text: 'La frase "el amor es lucidez" me va a quedar grabada. Llevaba años esperando que alguien dijera esto.'
+        },
+        {
+          author: 'Ana Paula',
+          date: '20 Dic 2025',
+          text: '¿Y qué pasa si uno ya aceptó su desgarro, pero el otro sigue esperando que lo repares? ¿Ahí qué haces?'
+        },
+        {
+          author: 'Fernando Ibarra',
+          date: '21 Dic 2025',
+          text: 'Esto me hizo repensar todo. Mi relación de 7 años terminó porque yo seguía esperando la completud. Nunca iba a llegar.'
+        }
+      ]
+    },
+    
     // Artículo NUEVO - El pez que no se come
     'el-pez-que-no-se-come': {
       title: 'El pez que no se come',

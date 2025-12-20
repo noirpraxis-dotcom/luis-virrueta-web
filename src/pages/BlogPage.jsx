@@ -37,6 +37,29 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 28,
+      title: currentLanguage === 'en' 
+        ? 'The Tearing of Unity'
+        : 'El desgarro de la unidad',
+      excerpt: currentLanguage === 'en'
+        ? 'What if love isn\'t born from uniting two pieces, but from tearing a single one?'
+        : '¿Y si el amor no nace de unir dos piezas, sino de desgarrar una sola?',
+      category: 'philosophy',
+      author: 'Luis Virrueta',
+      date: '19 Dic 2025',
+      readTime: '14 min',
+      gradient: 'from-amber-500/20 to-rose-600/20',
+      borderGradient: 'from-amber-500 to-rose-600',
+      tags: currentLanguage === 'en'
+        ? ['Love', 'Unity', 'Falling in Love', 'Lack', 'Psychoanalysis', 'Ontology', 'Relationship']
+        : ['Amor', 'Unidad', 'Enamoramiento', 'Falta', 'Psicoanálisis', 'Ontología', 'Relación'],
+      slug: 'el-desgarro-de-la-unidad',
+      image: '/IMAGENES BLOG/desgarro.jpg',
+      rating: 5.0,
+      commentsCount: 6,
+      featured: true
+    },
+    {
       id: 27,
       title: currentLanguage === 'en' 
         ? 'The Fish That Is Not Eaten'
