@@ -880,8 +880,9 @@
           "Development and deliveries"
         ],
         "duration": "According to project"
-      },
-      "identidad": {
+      }
+    },
+    "detailLabels": {
         "title": "Visual Identity",
         "subtitle": "Brand Identity System",
         "tagline": "Complete system that connects and endures",
