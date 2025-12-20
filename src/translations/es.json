@@ -820,47 +820,162 @@
       "portfolioQuestion": "¿Quieres ver ejemplos de nuestro trabajo?",
       "portfolioAction": "Explora el Portafolio",
       "hexagons": {
-        "consultoria": { "title": "Consultoría", "subtitle": "Empieza aquí" },
-        "identidad": { "title": "Identidad Visual", "subtitle": "Sistema completo" },
-        "logo": { "title": "Logo Design", "subtitle": "Identidad memorable" },
-        "web": { "title": "Páginas Web", "subtitle": "Sitios que convierten" },
-        "apps": { "title": "Apps Móviles", "subtitle": "Experiencias fluidas" },
-        "video": { "title": "Video Branding", "subtitle": "Contenido visual" },
-        "animacion": { "title": "Animación", "subtitle": "Logos en movimiento" },
-        "fotografia": { "title": "Fotografía", "subtitle": "Sesiones profesionales" },
-        "audio": { "title": "Audio Branding", "subtitle": "Identidad sonora" },
-        "avatares": { "title": "Avatares IA", "subtitle": "Representación digital" },
-        "marketing": { "title": "Marketing", "subtitle": "Campañas efectivas" },
-        "impreso": { "title": "Material Impreso", "subtitle": "Tangibles de lujo" }
+        "individual": { "title": "Consulta Individual", "subtitle": "Trabajo profundo" },
+        "pareja": { "title": "Consulta de Pareja", "subtitle": "Vínculo auténtico" },
+        "familiar": { "title": "Consulta Familiar", "subtitle": "Patrones sistémicos" },
+        "consultoria": { "title": "Consultoría Psicoanalítica", "subtitle": "Para organizaciones" },
+        "audios": { "title": "Audios del Inconsciente", "subtitle": "Reprogramación" },
+        "luxmania": { "title": "LUXMANIA", "subtitle": "Psicología aplicada" }
       }
     },
     "services": {
-      "consultoria": {
-        "title": "Consultoría Psicoanalítica",
-        "subtitle": "Brand Psychology",
-        "tagline": "El punto de partida: descifra tu audiencia",
-        "description": "Auditoría psicoanalítica profunda de tu marca. Desciframos qué emociones generas, arquetipos, deseos inconscientes de tu audiencia. La base estratégica antes de cualquier diseño.",
+      "individual": {
+        "title": "Consulta Individual",
+        "subtitle": "Psicoanálisis",
+        "tagline": "Trabajo profundo desde el psicoanálisis para explorar la estructura inconsciente que da forma a tu realidad",
+        "description": "Proceso de análisis profundo donde exploramos los mecanismos inconscientes que estructuran tu forma de percibir, relacionarte y vivir. No se trata de resolver síntomas, sino de atravesar la estructura que los produce.",
         "features": [
-          "Análisis del Inconsciente de tu Audiencia",
-          "Arquetipos de Marca (Jung)",
-          "Mapeo de Deseos y Miedos",
-          "Auditoría de Identidad Visual",
-          "Análisis de Competencia",
-          "Estrategia Emocional",
-          "Reporte Ejecutivo (PDF)",
-          "Sesión de Consultoría (2 horas)"
+          "Sesiones individuales de 50 minutos",
+          "Análisis de sueños y lapsus",
+          "Trabajo con la transferencia",
+          "Exploración de síntomas y repeticiones",
+          "Análisis de fantasías inconscientes",
+          "Proceso a largo plazo",
+          "Seguimiento personalizado"
         ],
         "process": [
-          "Recopilación de Material de Marca",
-          "Entrevistas con Stakeholders",
-          "Análisis Psicoanalítico",
-          "Mapeo de Arquetipos",
-          "Identificación de Oportunidades",
-          "Reporte + Presentación"
+          "Entrevistas preliminares",
+          "Establecimiento del encuadre",
+          "Análisis de la demanda",
+          "Trabajo con asociación libre",
+          "Elaboración e interpretación",
+          "Atravesamiento del fantasma"
         ],
-        "duration": "3-4 semanas"
+        "duration": "Proceso continuo"
       },
-      "identidad": {
+      "pareja": {
+        "title": "Consulta de Pareja",
+        "subtitle": "Vínculo Auténtico",
+        "tagline": "No para completarse, sino para desmontar las ilusiones que impiden el encuentro",
+        "description": "Trabajo psicoanalítico con parejas enfocado en desmontar las fantasías y proyecciones que obstruyen el vínculo auténtico. No buscamos la armonía, sino la verdad del deseo de cada uno.",
+        "features": [
+          "Sesiones conjuntas de 90 minutos",
+          "Análisis de dinámicas inconscientes",
+          "Trabajo con proyecciones mutuas",
+          "Exploración del deseo de cada uno",
+          "Desmontaje de fantasías románticas",
+          "Sesiones individuales cuando sea necesario",
+          "Seguimiento del proceso vincular"
+        ],
+        "process": [
+          "Entrevista inicial conjunta",
+          "Definición de la demanda de cada uno",
+          "Análisis de la historia vincular",
+          "Exploración de repeticiones",
+          "Trabajo con el conflicto",
+          "Reposicionamiento subjetivo"
+        ],
+        "duration": "Proceso según necesidad"
+      },
+      "familiar": {
+        "title": "Consulta Familiar",
+        "subtitle": "Patrones Sistémicos",
+        "tagline": "Los patrones que se repiten no son destino, solo estructura aún no atravesada",
+        "description": "Trabajo con sistemas familiares desde el psicoanálisis. Exploramos las repeticiones trans generacionales, los mandatos no dichos y las estructuras que se heredan sin saberlo.",
+        "features": [
+          "Sesiones con configuraciones variables",
+          "Análisis de mandatos familiares",
+          "Trabajo con mitos y secretos",
+          "Exploración transgeneracional",
+          "Identificación de repeticiones",
+          "Genograma psicoanalítico",
+          "Seguimiento del sistema familiar"
+        ],
+        "process": [
+          "Entrevista con el sistema completo",
+          "Mapeo de la estructura familiar",
+          "Análisis de mandatos y lealtades",
+          "Exploración de síntomas familiares",
+          "Trabajo con cada posición subjetiva",
+          "Elaboración de nuevas posibilidades"
+        ],
+        "duration": "Según complejidad del sistema"
+      },
+      "consultoria": {
+        "title": "Consultoría Psicoanalítica",
+        "subtitle": "Para Organizaciones",
+        "tagline": "Para organizaciones que quieren comprender el inconsciente que gobierna sus dinámicas",
+        "description": "Análisis psicoanalítico de organizaciones. No vendemos soluciones, sino comprensión de las dinámicas inconscientes que estructuran la cultura, los conflictos y las repeticiones institucionales.",
+        "features": [
+          "Análisis de cultura organizacional",
+          "Identificación de dinámicas inconscientes",
+          "Trabajo con liderazgos y equipos",
+          "Análisis de conflictos sistémicos",
+          "Exploración de síntomas institucionales",
+          "Reporte psicoanalítico detallado",
+          "Sesiones de devolución",
+          "Acompañamiento en procesos de cambio"
+        ],
+        "process": [
+          "Entrevistas con stakeholders clave",
+          "Observación de dinámicas grupales",
+          "Análisis documental y cultural",
+          "Identificación de estructuras inconscientes",
+          "Elaboración de hipótesis psicoanalíticas",
+          "Presentación y trabajo conjunto"
+        ],
+        "duration": "4-8 semanas"
+      },
+      "audios": {
+        "title": "Audios Reprogramables del Inconsciente",
+        "subtitle": "Modificación Estructural",
+        "tagline": "No pensamiento positivo, sino modificación estructural de cómo percibes",
+        "description": "Audios diseñados desde el psicoanálisis y la neurociencia para modificar patrones perceptivos inconscientes. No son afirmaciones vacías, sino trabajo estructural con la percepción.",
+        "features": [
+          "Audios personalizados según estructura",
+          "Basados en análisis psicoanalítico previo",
+          "Trabajo con patrones perceptivos",
+          "Técnicas de sugestión profunda",
+          "Frecuencias binaurales específicas",
+          "Guión psicoanalíticamente fundamentado",
+          "Seguimiento del proceso",
+          "Ajustes según evolución"
+        ],
+        "process": [
+          "Análisis de la estructura perceptiva",
+          "Identificación de patrones a modificar",
+          "Diseño del guión psicoanalítico",
+          "Producción del audio con frecuencias",
+          "Instrucciones de uso",
+          "Seguimiento y ajustes"
+        ],
+        "duration": "2-3 semanas"
+      },
+      "luxmania": {
+        "title": "LUXMANIA - Psicología Aplicada a Proyectos",
+        "subtitle": "Branding desde el Inconsciente",
+        "tagline": "Branding, diseño y comunicación desde el inconsciente · Un proyecto separado",
+        "description": "LUXMANIA es mi proyecto de branding y diseño donde aplico toda la psicología del inconsciente al desarrollo de identidades de marca. Si buscas servicios de diseño, branding o desarrollo web, visita luxmania.com",
+        "features": [
+          "Identidad de marca completa",
+          "Diseño web y aplicaciones",
+          "Estrategia de branding",
+          "Análisis psicológico de audiencia",
+          "Arquetipos de marca (Jung)",
+          "Motion graphics y video",
+          "Fotografía de producto/marca",
+          "Consultoría integral"
+        ],
+        "process": [
+          "Ir a luxmania.com",
+          "Agendar consultoría inicial",
+          "Definir alcance del proyecto",
+          "Propuesta y cotización",
+          "Inicio del proyecto",
+          "Desarrollo y entregas"
+        ],
+        "duration": "Según proyecto"
+      }
         "title": "Identidad Visual",
         "subtitle": "Brand Identity System",
         "tagline": "Sistema completo que conecta y permanece",
@@ -983,157 +1098,7 @@
           "Color Grading + Audio",
           "Revisiones + Entrega Final"
         ],
-        "duration": "2-4 semanas"
-      },
-      "animacion": {
-        "title": "Animación de Logo",
-        "subtitle": "Motion Graphics",
-        "tagline": "Logos que cobran vida",
-        "description": "Animación profesional de tu logotipo. Perfect para intros de video, redes sociales, presentaciones. Motion graphics fluidos con efecto WOW.",
-        "features": [
-          "Animación de Logo (5-10 segundos)",
-          "Motion Graphics Cinematográficos",
-          "Versión Horizontal + Vertical",
-          "Con/Sin Audio",
-          "Formatos: MP4, MOV, GIF",
-          "Transparencia (Alpha Channel)",
-          "Optimizado para Redes Sociales",
-          "Archivos After Effects (Editable)"
-        ],
-        "process": [
-          "Análisis del Logo",
-          "Concepto de Animación",
-          "Storyboard + Timing",
-          "Animación + Motion Graphics",
-          "Sound Design",
-          "Exportación Múltiple"
-        ],
-        "duration": "1-2 semanas"
-      },
-      "fotografia": {
-        "title": "Fotografía",
-        "subtitle": "Professional Shooting",
-        "tagline": "Sesiones que capturan la esencia",
-        "description": "Fotografía profesional para tu marca. Producto, retrato corporativo, lifestyle. Edición profesional con estilo cinematográfico que eleva tu presencia visual.",
-        "features": [
-          "Sesión Fotográfica Profesional",
-          "Edición Profesional (Color Grading)",
-          "Retoque + Composición",
-          "50-100 Fotos Editadas",
-          "Archivos RAW + JPEG",
-          "Optimización para Web/Redes",
-          "Derechos de Uso Comercial",
-          "Banco de Imágenes Personalizado"
-        ],
-        "process": [
-          "Briefing + Concepto Visual",
-          "Preparación de Locación/Producto",
-          "Sesión Fotográfica",
-          "Selección de Mejores Tomas",
-          "Edición + Retoque",
-          "Entrega + Optimización"
-        ],
-        "duration": "1-2 semanas"
-      },
-      "audio": {
-        "title": "Audio Branding",
-        "subtitle": "Sonic Identity",
-        "tagline": "Identidad sonora que se graba en la mente",
-        "description": "Creación de identidad sonora para tu marca. Audio logo, jingles, música corporativa. Sonidos que activan reconocimiento y recuerdo emocional.",
-        "features": [
-          "Audio Logo (3-5 segundos)",
-          "Jingle Corporativo (15-30 seg)",
-          "Música de Fondo para Videos",
-          "Sound Design para Producto",
-          "Variaciones Instrumentales",
-          "Formatos: WAV, MP3, AAC",
-          "Derechos de Uso Comercial",
-          "Guidelines de Uso Sonoro"
-        ],
-        "process": [
-          "Análisis de Identidad de Marca",
-          "Referencias Sonoras",
-          "Composición + Arreglos",
-          "Grabación + Mezcla",
-          "Mastering Profesional",
-          "Entrega + Documentación"
-        ],
-        "duration": "2-3 semanas"
-      },
-      "avatares": {
-        "title": "Avatares IA",
-        "subtitle": "Generative AI",
-        "tagline": "Tu portavoz digital generado con IA",
-        "description": "Creamos avatares digitales generados con IA, entrenados específicamente para tu marca. Aparecen en videos, redes sociales y contenido automatizado.",
-        "features": [
-          "Fine-tuning de Modelo IA",
-          "Avatar Personalizado (Estilo/Personalidad)",
-          "Voice Cloning Profesional",
-          "Lip-sync Automático",
-          "Workflow de Generación",
-          "Scripts + Prompts Optimizados",
-          "Videos Automatizados",
-          "Capacitación + Documentación"
-        ],
-        "process": [
-          "Definición de Personalidad del Avatar",
-          "Entrenamiento del Modelo IA",
-          "Voice Clone + Testing",
-          "Workflow de Producción",
-          "Pruebas + Ajustes",
-          "Entrega + Capacitación"
-        ],
-        "duration": "6-8 semanas"
-      },
-      "marketing": {
-        "title": "Marketing Digital",
-        "subtitle": "Growth Strategy",
-        "tagline": "Campañas que generan resultados reales",
-        "description": "Estrategia y ejecución de campañas de marketing digital. Ads, contenido orgánico, automatización. Enfocado en conversión y ROI medible.",
-        "features": [
-          "Estrategia de Marketing 360°",
-          "Gestión de Redes Sociales",
-          "Campañas de Ads (Meta, Google)",
-          "Email Marketing + Automatización",
-          "Copywriting Persuasivo",
-          "Análisis + Optimización",
-          "Reportes Mensuales",
-          "Consultoría Continua"
-        ],
-        "process": [
-          "Auditoría de Marca + Competencia",
-          "Definición de Objetivos + KPIs",
-          "Estrategia de Contenido",
-          "Implementación de Campañas",
-          "Monitoreo + A/B Testing",
-          "Optimización Continua"
-        ],
-        "duration": "Mensual (retainer)"
-      },
-      "impreso": {
-        "title": "Material Impreso",
-        "subtitle": "Print Design",
-        "tagline": "Tangibles de lujo que impresionan",
-        "description": "Diseño de material impreso premium. Tarjetas de presentación, brochures, packaging, señalética. Impresión en materiales de alta calidad con acabados especiales.",
-        "features": [
-          "Tarjetas de Presentación Premium",
-          "Brochures + Catálogos",
-          "Packaging Personalizado",
-          "Papelería Corporativa",
-          "Señalética + Letreros",
-          "Diseño + Mockups 3D",
-          "Gestión de Impresión",
-          "Archivos Print-Ready (CMYK)"
-        ],
-        "process": [
-          "Briefing + Especificaciones",
-          "Diseño + Mockups",
-          "Selección de Materiales",
-          "Aprobación + Ajustes",
-          "Preparación de Archivos",
-          "Gestión de Impresión + Entrega"
-        ],
-        "duration": "2-4 semanas"
+        "duration": "Según proyecto"
       }
     },
     "detailLabels": {

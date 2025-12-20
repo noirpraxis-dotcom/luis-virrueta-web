@@ -725,45 +725,161 @@
       "portfolioQuestion": "Want to see examples of our work?",
       "portfolioAction": "Explore the Portfolio",
       "hexagons": {
-        "consultoria": { "title": "Consulting", "subtitle": "Start here" },
-        "identidad": { "title": "Visual Identity", "subtitle": "Complete system" },
-        "logo": { "title": "Logo Design", "subtitle": "Memorable identity" },
-        "web": { "title": "Websites", "subtitle": "Sites that convert" },
-        "apps": { "title": "Mobile Apps", "subtitle": "Fluid experiences" },
-        "video": { "title": "Video Branding", "subtitle": "Visual content" },
-        "animacion": { "title": "Animation", "subtitle": "Logos in motion" },
-        "fotografia": { "title": "Photography", "subtitle": "Professional shoots" },
-        "audio": { "title": "Audio Branding", "subtitle": "Sonic identity" },
-        "avatares": { "title": "AI Avatars", "subtitle": "Digital representation" },
-        "marketing": { "title": "Marketing", "subtitle": "Effective campaigns" },
-        "impreso": { "title": "Print Material", "subtitle": "Luxury tangibles" }
+        "individual": { "title": "Individual Consultation", "subtitle": "Deep work" },
+        "pareja": { "title": "Couple Consultation", "subtitle": "Authentic bond" },
+        "familiar": { "title": "Family Consultation", "subtitle": "Systemic patterns" },
+        "consultoria": { "title": "Psychoanalytic Consulting", "subtitle": "For organizations" },
+        "audios": { "title": "Unconscious Audios", "subtitle": "Reprogramming" },
+        "luxmania": { "title": "LUXMANIA", "subtitle": "Applied psychology" }
       }
     },
     "services": {
-      "consultoria": {
-        "title": "Psychoanalytic Consulting",
-        "subtitle": "Brand Psychology",
-        "tagline": "The starting point: decode your audience",
-        "description": "Deep psychoanalytic audit of your brand. We decipher what emotions you generate, archetypes, unconscious desires of your audience. The strategic foundation before any design.",
+      "individual": {
+        "title": "Individual Consultation",
+        "subtitle": "Psychoanalysis",
+        "tagline": "Deep work from psychoanalysis to explore the unconscious structure that shapes your reality",
+        "description": "Deep analysis process where we explore the unconscious mechanisms that structure your way of perceiving, relating and living. It's not about resolving symptoms, but traversing the structure that produces them.",
         "features": [
-          "Unconscious Analysis of Your Audience",
-          "Brand Archetypes (Jung)",
-          "Mapping Desires and Fears",
-          "Visual Identity Audit",
-          "Competition Analysis",
-          "Emotional Strategy",
-          "Executive Report (PDF)",
-          "Consulting Session (2 hours)"
+          "Individual 50-minute sessions",
+          "Dream and slip analysis",
+          "Work with transference",
+          "Exploration of symptoms and repetitions",
+          "Analysis of unconscious fantasies",
+          "Long-term process",
+          "Personalized follow-up"
         ],
         "process": [
-          "Brand Material Collection",
-          "Stakeholder Interviews",
-          "Psychoanalytic Analysis",
-          "Archetype Mapping",
-          "Opportunity Identification",
-          "Report + Presentation"
+          "Preliminary interviews",
+          "Establishment of framework",
+          "Analysis of demand",
+          "Work with free association",
+          "Elaboration and interpretation",
+          "Traversing the fantasy"
         ],
-        "duration": "3-4 weeks"
+        "duration": "Ongoing process"
+      },
+      "pareja": {
+        "title": "Couple Consultation",
+        "subtitle": "Authentic Bond",
+        "tagline": "Not to complete each other, but to dismantle the illusions that prevent the encounter",
+        "description": "Psychoanalytic work with couples focused on dismantling the fantasies and projections that obstruct the authentic bond. We don't seek harmony, but the truth of each one's desire.",
+        "features": [
+          "Joint 90-minute sessions",
+          "Analysis of unconscious dynamics",
+          "Work with mutual projections",
+          "Exploration of each one's desire",
+          "Dismantling romantic fantasies",
+          "Individual sessions when necessary",
+          "Follow-up of bonding process"
+        ],
+        "process": [
+          "Initial joint interview",
+          "Definition of each one's demand",
+          "Analysis of bonding history",
+          "Exploration of repetitions",
+          "Work with conflict",
+          "Subjective repositioning"
+        ],
+        "duration": "Process according to need"
+      },
+      "familiar": {
+        "title": "Family Consultation",
+        "subtitle": "Systemic Patterns",
+        "tagline": "The patterns that repeat are not destiny, just structure not yet traversed",
+        "description": "Work with family systems from psychoanalysis. We explore transgenerational repetitions, unspoken mandates and structures that are inherited unknowingly.",
+        "features": [
+          "Sessions with variable configurations",
+          "Analysis of family mandates",
+          "Work with myths and secrets",
+          "Transgenerational exploration",
+          "Identification of repetitions",
+          "Psychoanalytic genogram",
+          "Family system follow-up"
+        ],
+        "process": [
+          "Interview with complete system",
+          "Mapping of family structure",
+          "Analysis of mandates and loyalties",
+          "Exploration of family symptoms",
+          "Work with each subjective position",
+          "Elaboration of new possibilities"
+        ],
+        "duration": "According to system complexity"
+      },
+      "consultoria": {
+        "title": "Psychoanalytic Consulting",
+        "subtitle": "For Organizations",
+        "tagline": "For organizations that want to understand the unconscious that governs their dynamics",
+        "description": "Psychoanalytic analysis of organizations. We don't sell solutions, but understanding of the unconscious dynamics that structure culture, conflicts and institutional repetitions.",
+        "features": [
+          "Organizational culture analysis",
+          "Identification of unconscious dynamics",
+          "Work with leaderships and teams",
+          "Analysis of systemic conflicts",
+          "Exploration of institutional symptoms",
+          "Detailed psychoanalytic report",
+          "Feedback sessions",
+          "Support in change processes"
+        ],
+        "process": [
+          "Interviews with key stakeholders",
+          "Observation of group dynamics",
+          "Documentary and cultural analysis",
+          "Identification of unconscious structures",
+          "Elaboration of psychoanalytic hypotheses",
+          "Presentation and joint work"
+        ],
+        "duration": "4-8 weeks"
+      },
+      "audios": {
+        "title": "Unconscious Reprogramming Audios",
+        "subtitle": "Structural Modification",
+        "tagline": "Not positive thinking, but structural modification of how you perceive",
+        "description": "Audios designed from psychoanalysis and neuroscience to modify unconscious perceptive patterns. They're not empty affirmations, but structural work with perception.",
+        "features": [
+          "Personalized audios according to structure",
+          "Based on previous psychoanalytic analysis",
+          "Work with perceptive patterns",
+          "Deep suggestion techniques",
+          "Specific binaural frequencies",
+          "Psychoanalytically grounded script",
+          "Process follow-up",
+          "Adjustments according to evolution"
+        ],
+        "process": [
+          "Analysis of perceptive structure",
+          "Identification of patterns to modify",
+          "Design of psychoanalytic script",
+          "Audio production with frequencies",
+          "Usage instructions",
+          "Follow-up and adjustments"
+        ],
+        "duration": "2-3 weeks"
+      },
+      "luxmania": {
+        "title": "LUXMANIA - Psychology Applied to Projects",
+        "subtitle": "Branding from the Unconscious",
+        "tagline": "Branding, design and communication from the unconscious · A separate project",
+        "description": "LUXMANIA is my branding and design project where I apply all unconscious psychology to brand identity development. If you're looking for design, branding or web development services, visit luxmania.com",
+        "features": [
+          "Complete brand identity",
+          "Web design and applications",
+          "Branding strategy",
+          "Psychological audience analysis",
+          "Brand archetypes (Jung)",
+          "Motion graphics and video",
+          "Product/brand photography",
+          "Comprehensive consulting"
+        ],
+        "process": [
+          "Go to luxmania.com",
+          "Schedule initial consulting",
+          "Define project scope",
+          "Proposal and quote",
+          "Project start",
+          "Development and deliveries"
+        ],
+        "duration": "According to project"
       },
       "identidad": {
         "title": "Visual Identity",
@@ -1038,7 +1154,7 @@
           "File Preparation",
           "Print Management + Delivery"
         ],
-        "duration": "2-4 weeks"
+        "duration": "According to project"
       }
     },
     "detailLabels": {
