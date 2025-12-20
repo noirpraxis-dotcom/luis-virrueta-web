@@ -1,10 +1,155 @@
-import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle, Fish, Flame, Users, Link, Activity, Radio, Wind, Focus } from 'lucide-react'
+import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle, Fish, Flame, Users, Link, Activity, Radio, Wind, Focus, Moon } from 'lucide-react'
 
 // Contenido completo de todos los artículos del blog en ES + EN
 // Este archivo centraliza el contenido para facilitar mantenimiento y traducciones
 
 const blogArticlesContent = {
   es: {
+    // Artículo NUEVO - La ruptura de la ruptura
+    'la-ruptura-de-la-ruptura': {
+      title: 'La ruptura de la ruptura',
+      subtitle: 'O por qué lo que alivia primero, después deja de hacerlo',
+      author: 'Luis Virrueta',
+      date: '20 Dic 2025',
+      readTime: '14 min',
+      category: 'philosophy',
+      tags: ['Meditación', 'Noche Oscura', 'Iluminación', 'Unidad', 'Presencia', 'Conciencia', 'Espiritualidad'],
+      gradient: 'from-indigo-500 to-purple-600',
+      image: 'ruptura.jpg',
+      sections: [
+        {
+          type: 'heading',
+          icon: Sparkles,
+          title: 'I. El alivio primero'
+        },
+        {
+          type: 'text',
+          content: 'Cuando alguien comienza a meditar —o simplemente a observarse con cierta honestidad— lo primero que ocurre no es una crisis, sino todo lo contrario. Hay alivio. Algo se afloja. La mente deja de perseguirse a sí misma con la misma violencia, el juicio pierde fuerza, el cuerpo se vuelve menos protagonista. La experiencia empieza a sentirse más amplia, más respirable. Uno deja de estar tan fijado a un punto y empieza a sentirse más como fondo que como figura.'
+        },
+        {
+          type: 'text',
+          content: 'En ese primer momento, la vida se vuelve más liviana porque algo muy concreto sucede: el dolor deja de ser el ancla principal. Antes, el sufrimiento organizaba la identidad; daba peso, densidad, sentido. Al observar sin intervenir, al suspender la identificación automática, ese anclaje se debilita. Ya no hace falta sufrir para sentirse real. Por eso hay paz. Por eso hay estabilidad. Por eso muchas personas creen haber llegado.'
+        },
+        {
+          type: 'highlight',
+          content: 'Lo que ocurre ahí no es exceso de presencia, sino presencia indiscriminada. La experiencia se vuelve más continua, menos fragmentada.'
+        },
+        {
+          type: 'text',
+          content: 'El yo narrativo —ese que compara, evalúa y se defiende— pierde centralidad. No desaparece, pero deja de gobernar. Y como el juicio se atenúa, también se atenúa la fricción interna. Se vive más "aquí", más en el devenir, menos atrapado en un punto fijo.'
+        },
+        {
+          type: 'text',
+          content: 'Hasta aquí, nada es oscuro. Todo es comprensible. Todo alivia.'
+        },
+        {
+          type: 'heading',
+          icon: Eye,
+          title: 'II. La unidad distinguida'
+        },
+        {
+          type: 'text',
+          content: 'El problema —si puede llamarse así— es que esta forma de unidad sigue siendo distinguida. Aunque más amplia, aunque más amable, todavía hay alguien que observa, alguien que se sabe observador, alguien que se experimenta como fondo frente a lo observado. Hay unidad, sí, pero una unidad todavía sostenida por una diferencia sutil. Y mientras esa diferencia exista, también existe un lugar desde el cual retirarse.'
+        },
+        {
+          type: 'text',
+          content: 'Con el tiempo —no por decisión, no por voluntad, no por técnica— esa amortiguación empieza a caer. No de golpe, sino como cae un andamiaje que ya cumplió su función. El yo ya no sirve como ancla, pero tampoco sirve ya la posición de "yo soy el observador". La distancia que hacía habitable la experiencia empieza a reducirse. Y entonces ocurre algo que suele malinterpretarse: la unidad que antes aliviaba empieza a no bastar.'
+        },
+        {
+          type: 'heading',
+          icon: Moon,
+          title: 'III. La noche oscura'
+        },
+        {
+          type: 'text',
+          content: 'Aquí es donde muchas tradiciones hablan de la noche oscura del alma. No porque algo se haya perdido, sino porque ya no hay suficientes mediaciones. No es que la paz se rompa; es que la paz deja de proteger. No aparece el caos; aparece una presencia más desnuda, menos filtrada, menos simbólica. La experiencia ya no puede organizarse en términos de dentro y fuera, sujeto y objeto, observador y observado.'
+        },
+        {
+          type: 'highlight',
+          content: 'Esto no ocurre al inicio del camino, sino después. Y no ocurre porque algo esté mal hecho, sino porque incluso la unidad puede convertirse en refugio.'
+        },
+        {
+          type: 'text',
+          content: 'En este punto se rompe algo más sutil: se rompe la ruptura misma. Ya no se trata de separarse del ego, sino de soltar la operación de separación. Ya no se trata de alcanzar unidad, sino de dejar de usar la unidad como posición.'
+        },
+        {
+          type: 'text',
+          content: 'Por eso esta fase puede sentirse intensa, cruda, incluso inhabitable. No porque falte sentido, sino porque ya no hay distancia suficiente para producirlo. No hay un lugar desde el cual mirar. Y cuando no hay lugar desde el cual mirar, tampoco hay alguien que pueda decir "esto me está pasando".'
+        },
+        {
+          type: 'heading',
+          icon: Unlock,
+          title: 'IV. La paradoja de la iluminación'
+        },
+        {
+          type: 'text',
+          content: 'Aquí aparece una paradoja que suele desconcertar: se corre durante años buscando la iluminación, pero cuando se llega, ya no hay quien pueda darse cuenta de haber llegado. Porque la iluminación —si usamos esa palabra con cuidado— no es una experiencia distinguible. Es el punto en el que ya no hay diferencia entre tú y aquello que estabas buscando. No hay testigo. No hay relato. No hay logro que pueda decirse.'
+        },
+        {
+          type: 'highlight',
+          content: 'Por eso tantos textos dicen que quien cree haber llegado, no ha llegado. Y quien ha llegado, no lo sabe. No porque esté confundido, sino porque ya no hay distancia para saber.'
+        },
+        {
+          type: 'heading',
+          icon: Wind,
+          title: 'V. El pasaje'
+        },
+        {
+          type: 'text',
+          content: 'La noche oscura no es entonces una caída, sino un pasaje. No es la negación de la unidad, sino su radicalización. No quita el mundo: lo llena hasta no dejar espacio para otra cosa. Y por eso duele. No porque algo se rompa, sino porque algo ya no puede romperse más.'
+        },
+        {
+          type: 'text',
+          content: 'No todos atraviesan este punto. No todos lo necesitan. No todos lo nombran igual. Pero cuando aparece, no pide soluciones ni técnicas, sino una sola cosa: capacidad de sostener sin refugio. No de entender, no de explicar, no de iluminar, sino de permanecer sin punto fijo.'
+        },
+        {
+          type: 'heading',
+          icon: Target,
+          title: 'VI. La desaparición como llegada'
+        },
+        {
+          type: 'text',
+          content: 'Tal vez por eso el verdadero final del camino no se parece a una llegada, sino a una desaparición. No a un saber, sino a una forma de estar. Y no a una paz extática, sino a una sobriedad profunda, en la que ya no hay quien se pregunte si todo está bien… porque ya no hay separación desde la cual hacer la pregunta.'
+        },
+        {
+          type: 'reflection',
+          content: '¿Y si lo que buscas durante años no puede ser encontrado porque, al llegar, ya no hay quien pueda encontrarlo?'
+        }
+      ],
+      comments: [
+        {
+          author: 'Isabel Fernández',
+          date: '20 Dic 2025',
+          text: 'Llevo 8 años meditando y recién ahora entiendo por qué la paz que encontré al principio ya no basta.'
+        },
+        {
+          author: 'Miguel Ángel Soto',
+          date: '20 Dic 2025',
+          text: 'La frase "se rompe la ruptura misma" lo cambia todo. No se trata de separarse del ego, sino de soltar la operación de separación.'
+        },
+        {
+          author: 'Carolina Vega',
+          date: '21 Dic 2025',
+          text: 'Este artículo describe exactamente lo que me está pasando ahora. La noche oscura no es una caída, es un pasaje.'
+        },
+        {
+          author: 'Rodrigo Navarro',
+          date: '21 Dic 2025',
+          text: 'La paradoja de la iluminación: cuando llegas, ya no hay quien pueda darse cuenta. Esto lo cambia todo sobre el "despertar".'
+        },
+        {
+          author: 'Laura Ibarra',
+          date: '21 Dic 2025',
+          text: 'Por fin alguien habla de esto sin romantizarlo. La unidad también puede convertirse en refugio. Brutal.'
+        },
+        {
+          author: 'Tomás Reyes',
+          date: '21 Dic 2025',
+          text: 'La sobriedad profunda en lugar de la paz extática. Eso es lo que nunca te dicen las tradiciones espirituales.'
+        }
+      ]
+    },
+    
     // Artículo NUEVO - No duele porque algo se rompe
     'no-duele-porque-algo-se-rompe': {
       title: 'No duele porque algo se rompe, duele porque algo no puede romperse',

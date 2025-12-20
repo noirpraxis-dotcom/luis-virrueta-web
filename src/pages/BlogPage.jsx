@@ -37,6 +37,29 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 31,
+      title: currentLanguage === 'en' 
+        ? 'The Breaking of the Break'
+        : 'La ruptura de la ruptura',
+      excerpt: currentLanguage === 'en'
+        ? 'Why what relieves you at first stops working later. The dark night of the soul explained.'
+        : '¿Por qué lo que alivia primero, después deja de hacerlo? La noche oscura del alma explicada.',
+      category: 'philosophy',
+      author: 'Luis Virrueta',
+      date: '20 Dic 2025',
+      readTime: '14 min',
+      gradient: 'from-indigo-500/20 to-purple-600/20',
+      borderGradient: 'from-indigo-500 to-purple-600',
+      tags: currentLanguage === 'en'
+        ? ['Meditation', 'Dark Night', 'Enlightenment', 'Unity', 'Presence', 'Consciousness', 'Spirituality']
+        : ['Meditación', 'Noche Oscura', 'Iluminación', 'Unidad', 'Presencia', 'Conciencia', 'Espiritualidad'],
+      slug: 'la-ruptura-de-la-ruptura',
+      image: '/IMAGENES BLOG/ruptura.jpg',
+      rating: 5.0,
+      commentsCount: 6,
+      featured: true
+    },
+    {
       id: 30,
       title: currentLanguage === 'en' 
         ? 'It Doesn\'t Hurt Because Something Breaks'
