@@ -1143,18 +1143,12 @@
       "required": "*"
     },
     "services": {
+      "individual": "Consulta Individual",
+      "pareja": "Consulta de Pareja",
+      "familiar": "Consulta Familiar",
       "consultoria": "Consultoría Psicoanalítica",
-      "identidad": "Identidad Visual Completa",
-      "logo": "Logo Design",
-      "web": "Páginas Web",
-      "apps": "Apps Móviles",
-      "video": "Video Branding",
-      "animacion": "Animación de Logo",
-      "fotografia": "Fotografía Profesional",
-      "audio": "Audio Branding",
-      "avatares": "Avatares IA",
-      "marketing": "Marketing Digital",
-      "impreso": "Material Impreso"
+      "audios": "Audios Reprogramables",
+      "luxmania": "LUXMANIA · Psicología Aplicada a Proyectos"
     },
     "sidebar": {
       "responseTitle": "Tiempo de respuesta",
