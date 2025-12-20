@@ -37,6 +37,29 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 29,
+      title: currentLanguage === 'en' 
+        ? 'Where Is the Body When Everything Works?'
+        : '¿Dónde está el cuerpo cuando todo funciona?',
+      excerpt: currentLanguage === 'en'
+        ? 'Your arm falls asleep and suddenly you feel what was always there. What does that reveal?'
+        : 'Tu brazo se duerme y de pronto sientes lo que siempre estuvo ahí. ¿Qué revela eso?',
+      category: 'philosophy',
+      author: 'Luis Virrueta',
+      date: '20 Dic 2025',
+      readTime: '13 min',
+      gradient: 'from-purple-500/20 to-violet-600/20',
+      borderGradient: 'from-purple-500 to-violet-600',
+      tags: currentLanguage === 'en'
+        ? ['Body', 'Perception', 'Merleau-Ponty', 'Lacan', 'Kybalion', 'Consciousness', 'Psychoanalysis']
+        : ['Cuerpo', 'Percepción', 'Merleau-Ponty', 'Lacan', 'Kybalion', 'Conciencia', 'Psicoanálisis'],
+      slug: 'donde-esta-el-cuerpo-cuando-todo-funciona',
+      image: '/IMAGENES BLOG/gas.jpg',
+      rating: 5.0,
+      commentsCount: 6,
+      featured: true
+    },
+    {
       id: 28,
       title: currentLanguage === 'en' 
         ? 'The Tearing of Unity'

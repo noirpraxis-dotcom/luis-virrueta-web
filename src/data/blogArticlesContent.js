@@ -1,10 +1,147 @@
-import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle, Fish, Flame, Users, Link } from 'lucide-react'
+import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle, Fish, Flame, Users, Link, Activity, Radio, Wind } from 'lucide-react'
 
 // Contenido completo de todos los artículos del blog en ES + EN
 // Este archivo centraliza el contenido para facilitar mantenimiento y traducciones
 
 const blogArticlesContent = {
   es: {
+    // Artículo NUEVO - ¿Dónde está el cuerpo cuando todo funciona?
+    'donde-esta-el-cuerpo-cuando-todo-funciona': {
+      title: '¿Dónde está el cuerpo cuando todo funciona?',
+      subtitle: 'La anestesia de la continuidad',
+      author: 'Luis Virrueta',
+      date: '20 Dic 2025',
+      readTime: '13 min',
+      category: 'philosophy',
+      tags: ['Cuerpo', 'Percepción', 'Merleau-Ponty', 'Lacan', 'Kybalion', 'Conciencia', 'Psicoanálisis'],
+      gradient: 'from-purple-500 to-violet-600',
+      image: 'gas.jpg',
+      sections: [
+        {
+          type: 'heading',
+          icon: Activity,
+          title: 'I. La ebullición contenida'
+        },
+        {
+          type: 'text',
+          content: 'Hace unos días, mientras leía en la cama, ocurrió algo que al principio no supe situar. No fue un sobresalto ni una interrupción clara, sino una modificación lenta, casi imperceptible, como cuando un líquido aparentemente quieto empieza a cargarse de burbujas desde el fondo sin que nada en la superficie lo delate todavía. Algo comenzó a moverse por dentro con una insistencia extraña, no localizada, no exactamente intensa, pero tampoco neutra. No era dolor. No era calma. Era más bien una ebullición contenida, una presión sin forma, como si el cuerpo se hubiera convertido en un recipiente saturado de algo que todavía no encontraba por dónde salir.'
+        },
+        {
+          type: 'text',
+          content: 'Durante un momento —imposible decir cuánto— la experiencia se sintió desproporcionada, exagerada, como si asistiera a un fenómeno demasiado grande para su causa. La sensación no avanzaba en línea recta; se acumulaba, se dispersaba, volvía a concentrarse, como el gas de una bebida cerrada que insiste contra las paredes del envase. Pensé, sin formularlo del todo, en eso que a veces se nombra como energía, no por convicción mística, sino porque la experiencia parecía exceder el lenguaje habitual con el que solemos describir el cuerpo. Era demasiado continua para ser emoción, demasiado viva para ser simple ruido.'
+        },
+        {
+          type: 'highlight',
+          content: 'Solo más tarde apareció la explicación trivial, casi ridícula por contraste con lo que se había sentido: llevaba demasiado tiempo apoyando la cabeza sobre el brazo. El brazo estaba dormido. Nada más.'
+        },
+        {
+          type: 'text',
+          content: 'Y, sin embargo, esa constatación no deshizo la experiencia. No la redujo. De algún modo, la volvió más inquietante. Porque lo que se había hecho presente no apareció cuando el brazo dejó de funcionar, sino en ese punto ambiguo en el que todavía no había dejado de ser brazo, pero ya no lo era del todo. Como si la materia misma estuviera atravesando un cambio de estado, ni sólida ni ausente, sino suspendida en una transición inestable.'
+        },
+        {
+          type: 'heading',
+          icon: Eye,
+          title: 'II. Lo que se siente no es la cosa, sino la pérdida de forma'
+        },
+        {
+          type: 'text',
+          content: 'Ahí comenzó a insinuarse otra pregunta, menos formulable aún: ¿qué era exactamente lo que se estaba sintiendo? No el brazo, no el hormigueo en sí, sino algo más difuso, como si la atención no se posara sobre un objeto, sino sobre el proceso mismo por el cual algo empieza a perder su forma habitual. No se sentía el cuerpo como cosa, sino el movimiento por el cual el cuerpo deja de ser transparente.'
+        },
+        {
+          type: 'text',
+          content: 'Desde fuera, la explicación es conocida: cuando un nervio se comprime o el flujo sanguíneo disminuye, la señal nerviosa se vuelve caótica. No desaparece; se desordena. El cerebro traduce ese desorden como cosquilleo, vibración, corriente. Pero mientras esa explicación se imponía, algo no terminaba de encajar. Porque la sensación no parecía provenir del fallo en sí, sino de la ruptura de una continuidad más profunda, como si se hubiera levantado por un instante el velo que normalmente mantiene estable la percepción.'
+        },
+        {
+          type: 'highlight',
+          content: 'Antes también había flujo, intercambio constante, circulación ininterrumpida. Solo que no se sentía. No porque no estuviera ahí, sino porque era demasiado regular, demasiado integrado. La continuidad anestesia.'
+        },
+        {
+          type: 'heading',
+          icon: Radio,
+          title: 'III. El cuerpo que se borra mientras funciona'
+        },
+        {
+          type: 'text',
+          content: 'El cuerpo, mientras funciona, se borra. Maurice Merleau-Ponty lo sugirió con precisión: el cuerpo no aparece mientras sirve; se hace presente cuando algo se interrumpe.'
+        },
+        {
+          type: 'text',
+          content: 'Lo que se sentía ahora no era la ausencia de ese fondo, sino su súbita visibilidad. Como cuando una aspirina empieza a disolverse en agua y, por un momento, el líquido entero se llena de movimiento, de trayectorias microscópicas, de un dinamismo que siempre estuvo latente pero que solo se vuelve visible al alterarse la estabilidad. No había nada nuevo: solo se había hecho sensible lo que nunca dejó de ocurrir.'
+        },
+        {
+          type: 'heading',
+          icon: Wind,
+          title: 'IV. La paradoja de la atención'
+        },
+        {
+          type: 'text',
+          content: 'Y entonces apareció la paradoja, no como idea cerrada, sino como incomodidad persistente. Cuanto más atención se prestaba a ese flujo, más se intensificaba. Pero, al mismo tiempo, surgía la sospecha de que una conciencia verdaderamente pura no debería intensificarse así. Que si existiera una presencia más allá de toda discriminación, no vibraría, no ardería, no se volvería excesiva. Porque esa intensidad parecía necesitar todavía de un recorte, de un borde, de un punto de fijación.'
+        },
+        {
+          type: 'text',
+          content: 'Lo que estaba ocurriendo no era conciencia pura, sino algo más frágil y más inquietante: la atención detenida sobre un proceso que normalmente permanece continuo e invisible. No se estaba sintiendo el cuerpo como unidad, sino el pasaje mismo por el cual el cuerpo entra y sale de su forma. Ese umbral, ese entre, ese ir y venir entre apagarse y encenderse, entre no-ser y ser, que el Kybalion habría descrito como movimiento permanente disfrazado de reposo.'
+        },
+        {
+          type: 'highlight',
+          content: 'Tal vez por eso la misma sensación aparece también cuando el brazo comienza a despertar. Cuando la sangre regresa, cuando la sensibilidad vuelve, el flujo es el mismo, solo que invertido. La percepción no capta el estado pleno, sino la transición. No el ser, sino la oscilación que lo sostiene.'
+        },
+        {
+          type: 'heading',
+          icon: Brain,
+          title: 'V. El exceso que no se deja simbolizar'
+        },
+        {
+          type: 'text',
+          content: 'En ese punto, el cuerpo deja de responder al circuito habitual de la utilidad y roza algo que el psicoanálisis ha señalado sin terminar de fijar: un resto de experiencia que no sirve, que no comunica, que no se organiza en imagen. Jacques Lacan habló de un cuerpo que no coincide consigo mismo, un cuerpo atravesado por un exceso que no se deja simbolizar del todo. Tal vez ese exceso no sea otra cosa que este flujo continuo volviéndose sensible cuando la continuidad se quiebra.'
+        },
+        {
+          type: 'heading',
+          icon: Target,
+          title: 'VI. Fisuras breves'
+        },
+        {
+          type: 'text',
+          content: 'Quizá por eso estas experiencias no se dejan atrapar ni como explicación ni como revelación. Son fisuras breves, momentos en los que la atención alcanza a rozar lo que siempre estuvo ahí, justo antes de que el gas vuelva a disolverse, el brazo recupere su función y el cuerpo, una vez más, vuelva a hacer lo que mejor sabe hacer: desaparecer de la percepción mientras sigue ocurriendo.'
+        },
+        {
+          type: 'reflection',
+          content: '¿Qué ocurre cuando el cuerpo deja de ser transparente? ¿Qué es lo que se siente cuando sentimos el flujo mismo en lugar de la forma? ¿Y si la experiencia más profunda del cuerpo no fuera su presencia, sino ese umbral donde oscila entre ser y no ser?'
+        }
+      ],
+      comments: [
+        {
+          author: 'Sofía Morales',
+          date: '20 Dic 2025',
+          text: 'Me pasó algo parecido hace poco y pensé que era solo yo. Esto le da otro sentido completamente.'
+        },
+        {
+          author: 'Andrés Fuentes',
+          date: '20 Dic 2025',
+          text: 'La frase "la continuidad anestesia" es brutal. Nunca había pensado que el cuerpo se borra cuando funciona.'
+        },
+        {
+          author: 'Julia Campos',
+          date: '21 Dic 2025',
+          text: 'Merleau-Ponty + Lacan + experiencia cotidiana. Exactamente el tipo de artículos que necesito leer.'
+        },
+        {
+          author: 'Ricardo Navarro',
+          date: '21 Dic 2025',
+          text: 'Esto me hizo pensar en todas las veces que no presto atención al cuerpo hasta que algo falla. ¿Cuánto me pierdo?'
+        },
+        {
+          author: 'Elena Vargas',
+          date: '21 Dic 2025',
+          text: 'La paradoja de que la atención intensifica lo que observa... eso cambia todo sobre cómo entiendo la meditación.'
+        },
+        {
+          author: 'Pablo Ríos',
+          date: '21 Dic 2025',
+          text: 'El brazo dormido como portal filosófico. Solo Luis podía escribir esto y que tenga tanto sentido.'
+        }
+      ]
+    },
+    
     // Artículo NUEVO - El desgarro de la unidad
     'el-desgarro-de-la-unidad': {
       title: 'El desgarro de la unidad',
