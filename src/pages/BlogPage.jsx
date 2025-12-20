@@ -37,6 +37,29 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 32,
+      title: currentLanguage === 'en' 
+        ? 'The Game No One Confesses to Playing'
+        : 'El juego que nadie confiesa estar jugando',
+      excerpt: currentLanguage === 'en'
+        ? 'Calling something "corruption" is sometimes just a way to avoid seeing yourself in the game.'
+        : 'Llamar "corrupción" a algo es a veces solo una forma de no verte jugando.',
+      category: 'philosophy',
+      author: 'Luis Virrueta',
+      date: '20 Dic 2025',
+      readTime: '15 min',
+      gradient: 'from-slate-600/20 to-zinc-700/20',
+      borderGradient: 'from-slate-600 to-zinc-700',
+      tags: currentLanguage === 'en'
+        ? ['Morality', 'Ethics', 'Lacan', 'Žižek', 'Language', 'Symbolic Game', 'Responsibility', 'Spirituality']
+        : ['Moral', 'Ética', 'Lacan', 'Žižek', 'Lenguaje', 'Juego Simbólico', 'Responsabilidad', 'Espiritualidad'],
+      slug: 'el-juego-que-nadie-confiesa-estar-jugando',
+      image: '/IMAGENES BLOG/ajedrez.jpg',
+      rating: 5.0,
+      commentsCount: 6,
+      featured: true
+    },
+    {
       id: 31,
       title: currentLanguage === 'en' 
         ? 'The Breaking of the Break'

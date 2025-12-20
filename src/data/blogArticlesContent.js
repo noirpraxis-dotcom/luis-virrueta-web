@@ -1,10 +1,183 @@
-import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle, Fish, Flame, Users, Link, Activity, Radio, Wind, Focus, Moon } from 'lucide-react'
+import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle, Fish, Flame, Users, Link, Activity, Radio, Wind, Focus, Moon, Crown } from 'lucide-react'
 
 // Contenido completo de todos los artículos del blog en ES + EN
 // Este archivo centraliza el contenido para facilitar mantenimiento y traducciones
 
 const blogArticlesContent = {
   es: {
+    // Artículo NUEVO - El juego que nadie confiesa estar jugando
+    'el-juego-que-nadie-confiesa-estar-jugando': {
+      title: 'El juego que nadie confiesa estar jugando',
+      subtitle: 'O por qué llamar "corrupción" a veces es una forma de no mirar',
+      author: 'Luis Virrueta',
+      date: '20 Dic 2025',
+      readTime: '15 min',
+      category: 'philosophy',
+      tags: ['Moral', 'Ética', 'Lacan', 'Žižek', 'Lenguaje', 'Juego Simbólico', 'Responsabilidad', 'Espiritualidad'],
+      gradient: 'from-slate-600 to-zinc-700',
+      image: 'ajedrez.jpg',
+      sections: [
+        {
+          type: 'heading',
+          icon: Crown,
+          title: 'I. El mundo funciona'
+        },
+        {
+          type: 'text',
+          content: 'Hay una forma muy cómoda —y profundamente moral— de decir que el mundo está corrompido. Se dice con tono grave, casi con nostalgia, como si hubiera existido alguna vez un afuera limpio, una escena previa a la caída. Pero quizá esa frase no describe nada del mundo, sino algo del sujeto que la pronuncia: la imposibilidad de aceptar que ya está dentro. Porque llamar "corrupción" a la estructura es una manera elegante de no asumir la partida. El mundo no está mal: el mundo funciona. Funciona como un juego simbólico, inevitable, anterior a cualquier intención de pureza. Y ahí aparece la primera herida: no hay vida "natural", no hay gesto "solo bueno", no hay palabra que no esté ya inscrita en una red de reglas, roles y efectos. El verdadero error no es jugar —porque nadie puede no hacerlo—, sino creerse inocente. Quien se piensa fuera del juego no está más libre, está más capturado.'
+        },
+        {
+          type: 'subsection',
+          title: 'Preguntas que quedan abiertas',
+          items: [
+            '¿Desde dónde se habla cuando se denuncia la "corrupción del mundo"?',
+            '¿Es crítica… o es nostalgia de una inocencia que nunca existió?',
+            '¿Qué se evita asumir cuando se insiste en que el problema siempre está afuera?'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: Eye,
+          title: 'II. Del juego al lenguaje: cuando la trampa no se presenta como trampa'
+        },
+        {
+          type: 'text',
+          content: 'Si el mundo es un juego, el lenguaje es su tablero más eficaz. No porque engañe, sino porque opera sin pedir permiso. El lenguaje no se presenta como técnica, sino como descripción; no como intervención, sino como neutralidad. Pero nombrar no es reflejar: es cortar. Es decidir qué aparece y qué queda fuera, qué se vuelve visible y qué se vuelve ruido. Por eso la oposición entre manipulación y pureza es infantil. No hay palabra que no haga algo al otro. No hay discurso sin efecto. La diferencia no está entre manipular o no manipular, sino entre hacerlo sin saberlo o jugar sabiendo que se juega. Porque jugar sin saber que se juega no vuelve al sujeto más ético, lo vuelve más dependiente del discurso que lo habita. Como sabía Jacques Lacan, no hay exterior al lenguaje desde donde hablar limpio; solo hay posiciones que se ignoran a sí mismas y posiciones que se asumen.'
+        },
+        {
+          type: 'subsection',
+          title: 'Preguntas que quedan abiertas',
+          items: [
+            '¿Desde qué lugar se habla cuando se dice "yo solo digo la verdad"?',
+            '¿Qué responsabilidad aparece cuando se acepta que toda palabra produce efectos?',
+            '¿Puede existir una ética del lenguaje sin fantasía de pureza?'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: Shield,
+          title: 'III. Cuando el lenguaje se vuelve identidad: el refugio del "yo soy bueno"'
+        },
+        {
+          type: 'text',
+          content: 'Cuando el lenguaje deja de percibirse como operación y se vive como identidad, aparece la moral. "Yo soy bueno" suena a virtud, pero clínicamente se parece más a un refugio. No es una decisión, es una identificación. No elijo, obedezco. No cargo con mi ambigüedad, la cubro con el Ideal. El bien se vuelve una forma pulida de pasividad. No se trata de hacer el mal, sino de no decidir. La moral, así entendida, no es una ética: es una manera elegante de evitar el deseo. Slavoj Žižek lo dice con crudeza: muchas veces el bien funciona como la coartada perfecta para no atravesar la responsabilidad subjetiva. No se actúa desde el sujeto, se actúa desde el discurso correcto.'
+        },
+        {
+          type: 'subsection',
+          title: 'Preguntas que quedan abiertas',
+          items: [
+            '¿Quién habla cuando alguien dice "yo soy bueno"?',
+            '¿El sujeto… o el Ideal que lo habita?',
+            '¿Cuántas veces la bondad es solo obediencia bien presentada?'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: Sparkles,
+          title: 'IV. La tentación espiritual: la fantasía de salir del juego'
+        },
+        {
+          type: 'text',
+          content: 'Cuando la moral ya no alcanza, aparece otra promesa más sutil: la de no jugar en absoluto. La espiritualidad puede volverse ese lugar donde el sujeto cree que ha salido del tablero. "Soy la totalidad" suena a liberación, pero puede funcionar como una nueva coartada. Nisargadatta Maharaj rompe esa ilusión sin anestesia: comprender lo absoluto no enseña a habitar lo relativo. La realización no elimina la técnica. La trascendencia no borra las reglas del plano. Ser el Todo no vuelve competente. Y ahí se produce otra herida: la técnica no es una traición a lo sagrado, es su encarnación. No hay iluminación que dispense del aprendizaje, de la repetición, del error.'
+        },
+        {
+          type: 'subsection',
+          title: 'Preguntas que quedan abiertas',
+          items: [
+            '¿La espiritualidad es despertar… o a veces una forma refinada de evasión?',
+            '¿Qué se evita aprender cuando se invoca lo absoluto demasiado rápido?',
+            'Por qué incomoda tanto aceptar que incluso lo divino necesita forma?'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: Heart,
+          title: 'V. La moral encarnada: empatía, ayuda y colusión'
+        },
+        {
+          type: 'text',
+          content: 'Todo lo anterior no queda en ideas: baja al vínculo. En nombre de la empatía se comete, a menudo, una violencia silenciosa. Se calla para no herir, pero también para no verse. Se evita señalar la vulnerabilidad del otro porque eso obligaría a tocar la propia. Así se construye un pacto implícito: yo no nombro tu falta si tú no nombras la mía. Parece cuidado, pero es miedo. Parece amor, pero es colusión narcisista. Ayudar se vuelve una forma de completarse. El bien deja de ser decisión y se vuelve necesidad defensiva.'
+        },
+        {
+          type: 'subsection',
+          title: 'Preguntas que quedan abiertas',
+          items: [
+            '¿Desde dónde se ayuda cuando se ayuda demasiado?',
+            '¿A quién se protege realmente cuando se calla una verdad?',
+            '¿La empatía libera… o a veces inmoviliza?'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: Activity,
+          title: 'VI. El falso cojo: cuando el que puede se encoge'
+        },
+        {
+          type: 'text',
+          content: 'Aquí aparece una escena recurrente: el que puede sostenerse se minimiza, se muestra herido, se rebaja. No porque esté roto, sino para no confrontar al otro con su falta. El fuerte se debilita para que el débil no caiga. El resultado es estéril: nadie crece, nadie se mueve, todo queda suspendido en una falsa igualdad. No hay libertad ahí, hay sacrificio encubierto. Como diría Martin Heidegger, no es una caída moral, es estructural: el sujeto se pierde cuando se disuelve en el "así se debe".'
+        },
+        {
+          type: 'subsection',
+          title: 'Preguntas que quedan abiertas',
+          items: [
+            '¿A quién se traiciona cuando uno se encoge para no incomodar?',
+            'Qué tipo de vínculo se sostiene cuando nadie puede caer ni levantarse?',
+            'Cuánta fuerza se pierde en nombre de no herir?'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: Target,
+          title: 'VII. Ética sin coartadas: jugar sin fingir pureza'
+        },
+        {
+          type: 'text',
+          content: 'Conviene decirlo sin rodeos: esto no es soberbia. La soberbia es creer que no se juega, creer que se está por encima. Lo que aparece aquí es lucidez. Saber que se juega, conocer las reglas, no fingir pureza, no necesitar validación moral. Pasar por las heridas del otro no significa ignorarlas, sino no permitir que dicten la propia posición. Porque cuando la empatía se vuelve consumo —cuando completar al otro sirve para completarse— el sujeto desaparece. Tal vez la ética no tenga que ver con ser bueno ni con ser malo, sino con algo más incómodo: no mentirse sobre la partida que se está jugando. Aceptar la terrenalidad no traiciona lo divino; lo vuelve habitable. Como insinuaba Meister Eckhart, el problema no es caer en el mundo, sino querer salvarse de él sin haberlo atravesado.'
+        },
+        {
+          type: 'subsection',
+          title: 'Preguntas que quedan abiertas (y no deberían cerrarse)',
+          items: [
+            '¿Qué parte de mí sigue necesitando la moral como coartada?',
+            'Dónde sigo fingiendo que no juego?',
+            'Qué pasaría si dejara de llamar "corrupción" a lo que en realidad es miedo a decidir?'
+          ]
+        }
+      ],
+      comments: [
+        {
+          author: 'Lucía Moreno',
+          date: '20 Dic 2025',
+          text: 'La frase "el mundo no está mal: el mundo funciona" me sacudió. Dejé de victimizarme al leer esto.'
+        },
+        {
+          author: 'Fernando Castro',
+          date: '20 Dic 2025',
+          text: 'Esto desmonta toda la fantasía moral que cargaba. No estoy fuera del juego, nunca lo estuve.'
+        },
+        {
+          author: 'Andrea Silva',
+          date: '21 Dic 2025',
+          text: 'La empatía como colusión narcisista... eso explica tantas relaciones donde ayudo sin ayudar realmente.'
+        },
+        {
+          author: 'Javier Romero',
+          date: '21 Dic 2025',
+          text: 'El falso cojo. Esa sección me dolió. Cuántas veces me he minimizado para no incomodar al otro.'
+        },
+        {
+          author: 'Mónica Herrera',
+          date: '21 Dic 2025',
+          text: 'La espiritualidad como evasión... nunca lo había visto así. A veces invoco lo absoluto para no aprender lo técnico.'
+        },
+        {
+          author: 'Carlos Mendoza',
+          date: '21 Dic 2025',
+          text: 'Las preguntas finales no me dejan dormir. ¿Dónde sigo fingiendo que no juego? En todos lados, aparentemente.'
+        }
+      ]
+    },
+    
     // Artículo NUEVO - La ruptura de la ruptura
     'la-ruptura-de-la-ruptura': {
       title: 'La ruptura de la ruptura',
