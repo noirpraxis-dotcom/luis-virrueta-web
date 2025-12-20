@@ -1,10 +1,265 @@
-import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle, Fish, Flame, Users, Link, Activity, Radio, Wind } from 'lucide-react'
+import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle, Fish, Flame, Users, Link, Activity, Radio, Wind, Focus } from 'lucide-react'
 
 // Contenido completo de todos los artículos del blog en ES + EN
 // Este archivo centraliza el contenido para facilitar mantenimiento y traducciones
 
 const blogArticlesContent = {
   es: {
+    // Artículo NUEVO - No duele porque algo se rompe
+    'no-duele-porque-algo-se-rompe': {
+      title: 'No duele porque algo se rompe, duele porque algo no puede romperse',
+      subtitle: 'Una filosofía del dolor como exceso de presencia',
+      author: 'Luis Virrueta',
+      date: '20 Dic 2025',
+      readTime: '16 min',
+      category: 'philosophy',
+      tags: ['Dolor', 'Merleau-Ponty', 'Lacan', 'Lo Real', 'Cuerpo', 'Conciencia', 'Psicoanálisis', 'Fenomenología'],
+      gradient: 'from-red-500 to-orange-600',
+      image: 'no duele.jpg',
+      sections: [
+        {
+          type: 'heading',
+          icon: Zap,
+          title: 'I. La inversión necesaria'
+        },
+        {
+          type: 'text',
+          content: 'No duele porque algo se rompe, duele porque algo no puede romperse.'
+        },
+        {
+          type: 'text',
+          content: 'Esta frase no describe una experiencia psicológica: introduce una posición filosófica. Incomoda porque subvierte la representación más extendida del dolor como pérdida, fragmentación o quiebre del orden. Tendemos a pensar el dolor como aquello que nos quita mundo, que nos empobrece, que nos separa de la vida. Sin embargo, cuando se atiende con precisión a la experiencia, se vuelve evidente que el dolor no vacía el mundo: lo llena. No introduce una falta, sino una presencia sin retirada posible.'
+        },
+        {
+          type: 'text',
+          content: 'El dolor no irrumpe como ausencia, sino como saturación. Allí donde imaginamos una ruptura, lo que se impone es una continuidad que ya no puede callarse. El cuerpo no se rompe: se vuelve imposible de ignorar. El mundo no desaparece: se vuelve demasiado cercano.'
+        },
+        {
+          type: 'highlight',
+          content: 'La pregunta decisiva no es entonces por qué el dolor duele, sino qué sostiene, en la vida ordinaria, la posibilidad de no sentir.'
+        },
+        {
+          type: 'subsection',
+          title: 'Preguntas abiertas',
+          items: [
+            '¿Qué hace posible que el cuerpo no aparezca mientras vivimos?',
+            '¿Qué estructura permite que la vida no se vuelva continuamente presente para sí misma?'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: Activity,
+          title: 'II. Antes del dolor: continuidad sin sujeto'
+        },
+        {
+          type: 'text',
+          content: 'Antes del dolor —y esto es crucial— no hay un yo anclado. Hay continuidad, funcionamiento, unidad no tematizada. El cuerpo, mientras funciona, no se vive como objeto ni como experiencia: es condición. Es aquello desde lo cual hay mundo, no algo que aparezca en el mundo.'
+        },
+        {
+          type: 'text',
+          content: 'Aquí la fenomenología es precisa. Para Maurice Merleau-Ponty, el cuerpo no es algo que tengamos, sino aquello a través de lo cual el mundo se da. Mientras cumple su función, desaparece. No porque falte, sino porque no necesita mostrarse. Es pura transitividad.'
+        },
+        {
+          type: 'text',
+          content: 'Por eso, antes del dolor, no hay metapensamiento. No hay un "yo" que se observe, porque no hay distancia. La unidad vivida no se experimenta como unidad: se es. Y mientras se es, no se piensa que se es.'
+        },
+        {
+          type: 'highlight',
+          content: 'Preguntar "¿dónde estaba el cuerpo antes de doler?" es una pregunta mal planteada. El cuerpo no estaba almacenado en ningún lugar: estaba sosteniendo.'
+        },
+        {
+          type: 'subsection',
+          title: 'Preguntas abiertas',
+          items: [
+            '¿Puede haber identidad sin distancia?',
+            '¿Existe el yo fuera del momento en que algo se interrumpe?'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: Eye,
+          title: 'III. Pensar es ya un acto de desgarro'
+        },
+        {
+          type: 'text',
+          content: 'Pensar no es un acto neutro. Pensar es cortar. Pensar es separar. Pensar es introducir una grieta en la continuidad vivida. El metapensamiento —pensarse pensando, sentirse sintiendo— no surge de la plenitud, sino de una ruptura de la transparencia.'
+        },
+        {
+          type: 'text',
+          content: 'Mientras la vida ocurre sin fisuras, no hay reflexión. El pensamiento aparece cuando algo deja de fluir sin fricción. Por eso pensar siempre llega tarde: nunca coincide con el acto de vivir, sino que se pliega sobre él desde una distancia recién abierta.'
+        },
+        {
+          type: 'text',
+          content: 'Pensar no funda la unidad; la fractura. Pero esa fractura no es todavía dolor: es condición de subjetividad. El dolor aparecerá cuando la distancia ya no pueda sostenerse.'
+        },
+        {
+          type: 'highlight',
+          content: 'Pensar es, en este sentido, un intento de salida: un gesto de separación frente a una experiencia que empieza a volverse demasiado plena.'
+        },
+        {
+          type: 'subsection',
+          title: 'Preguntas abiertas',
+          items: [
+            '¿Pensamos para comprender o para retirarnos?',
+            '¿Es el pensamiento una ganancia o una defensa?'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: Flame,
+          title: 'IV. El dolor como exceso de unidad'
+        },
+        {
+          type: 'text',
+          content: 'Aquí se produce el giro más incómodo: el dolor no es ruptura de la unidad, sino su forma más concentrada. No aparece cuando la continuidad se pierde, sino cuando no puede retirarse. El dolor no introduce distancia; la cancela. No fragmenta; impide la fragmentación.'
+        },
+        {
+          type: 'text',
+          content: 'En el dolor, el cuerpo no puede borrarse. No puede volverse medio. No puede sostener sin aparecer. Todo se vuelve cuerpo, todo se vuelve sensación, todo se vuelve presencia.'
+        },
+        {
+          type: 'text',
+          content: 'Esto es lo que el psicoanálisis, en particular Jacques Lacan, nombra como lo real: no la realidad empírica, sino aquello que no puede simbolizarse, que no puede ponerse a distancia, que insiste sin mediación. El dolor no es mensaje ni significado: es presencia sin traducción.'
+        },
+        {
+          type: 'highlight',
+          content: 'Por eso duele: no porque algo falte, sino porque nada falta.'
+        },
+        {
+          type: 'subsection',
+          title: 'Preguntas abiertas',
+          items: [
+            '¿Puede el cuerpo soportar una presencia sin distancia?',
+            '¿Es el dolor un límite o una saturación?'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: Focus,
+          title: 'V. Atención, intensidad y el error de la conciencia pura'
+        },
+        {
+          type: 'text',
+          content: 'Esto permite comprender por qué algo se intensifica cuando se le presta demasiada atención. La atención no es un reflector neutro: es un operador. Al fijarse sobre un proceso que normalmente es continuo, introduce un borde donde antes no lo había. Rompe la automatización. Interrumpe la transparencia.'
+        },
+        {
+          type: 'text',
+          content: 'No se trata de conciencia pura. La conciencia verdaderamente pura —si ese término tiene sentido— no duele, porque no discrimina. Lo que intensifica es la atención en el umbral, la atención posada sobre el pasaje, sobre el tránsito entre no-ser y ser.'
+        },
+        {
+          type: 'highlight',
+          content: 'Por eso el cosquilleo aparece tanto cuando el cuerpo se duerme como cuando despierta. El flujo es el mismo; lo que cambia es la dirección. La percepción no capta estados: capta transiciones.'
+        },
+        {
+          type: 'subsection',
+          title: 'Preguntas abiertas',
+          items: [
+            '¿Hasta qué punto es deseable intensificar la atención?',
+            '¿Puede la conciencia sostener el pasaje sin convertirlo en exceso?'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: Wind,
+          title: 'VI. Demasiada presencia y el roce con lo real'
+        },
+        {
+          type: 'text',
+          content: 'Esta lógica ilumina algo fundamental de ciertos estados de conciencia elevada, especialmente tras prácticas intensas de meditación. Al reducirse los filtros simbólicos, al aflojarse la narrativa del yo, la experiencia se vuelve más transparente, pero también más cruda.'
+        },
+        {
+          type: 'text',
+          content: 'No porque se vea "más", sino porque ya no hay amortiguación suficiente. La vida empieza a rozar lo real: aquello que está más allá de la palabra, más allá del concepto, más allá de la paradoja resoluble. Por eso estos estados, lejos de traer necesariamente paz, pueden volver la existencia inhabitable.'
+        },
+        {
+          type: 'highlight',
+          content: 'No por fragmentación, sino por exceso de unidad.'
+        },
+        {
+          type: 'subsection',
+          title: 'Preguntas abiertas',
+          items: [
+            '¿Es la lucidez siempre deseable?',
+            '¿Dónde termina la conciencia y empieza el exceso?'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: Lock,
+          title: 'VII. Psicósis: cuando el cuerpo no puede retirarse'
+        },
+        {
+          type: 'text',
+          content: 'Desde aquí, la psicósis deja de entenderse como simple exceso de sensación o déficit de realidad. En muchos casos, el problema no es que el cuerpo aparezca demasiado, sino que no puede desaparecer.'
+        },
+        {
+          type: 'text',
+          content: 'No hay distancia simbólica suficiente para que el cuerpo vuelva a ser fondo. El sujeto queda atrapado en una presencia sin fisuras, en una unidad que no admite retirada. El dolor —o la sensación excesiva— no señala ruptura, sino imposibilidad de separación.'
+        },
+        {
+          type: 'highlight',
+          content: 'La vida se vuelve inhabitable no porque esté rota, sino porque está demasiado entera.'
+        },
+        {
+          type: 'subsection',
+          title: 'Preguntas abiertas',
+          items: [
+            '¿Puede pensarse la clínica como una gestión de la presencia?',
+            '¿Qué función cumple la retirada en la salud psíquica?'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: Unlock,
+          title: 'VIII. Cierre abierto: la gracia de no sentir'
+        },
+        {
+          type: 'text',
+          content: 'Si algo sostiene la posibilidad de vivir, no es la intensidad, sino la gracia estructural de no sentir. No como negación, sino como retirada necesaria. El cuerpo necesita poder desaparecer para que el mundo exista. La conciencia necesita no tocarlo todo para poder sostenerse.'
+        },
+        {
+          type: 'text',
+          content: 'Cuando esa retirada falla —por dolor, por exceso de atención, por caída de los filtros— no aparece la verdad, sino lo real. Y lo real no ilumina: quema.'
+        },
+        {
+          type: 'reflection',
+          content: 'No duele porque algo se rompe, duele porque algo no puede romperse.'
+        }
+      ],
+      comments: [
+        {
+          author: 'Daniela Cruz',
+          date: '20 Dic 2025',
+          text: 'Esto me hizo replantear completamente cómo entiendo el dolor. No es ausencia, es presencia extrema.'
+        },
+        {
+          author: 'Sebastián Torres',
+          date: '20 Dic 2025',
+          text: 'La frase "el dolor no vacía el mundo: lo llena" es brutal. Nunca lo había pensado así.'
+        },
+        {
+          author: 'Valeria Mendoza',
+          date: '21 Dic 2025',
+          text: 'Las preguntas abiertas después de cada sección me dejan sin respuestas, pero con mucho que pensar.'
+        },
+        {
+          author: 'Marcos Delgado',
+          date: '21 Dic 2025',
+          text: 'La conexión entre dolor y psicosis como imposibilidad de retirada del cuerpo... eso cambia todo en clínica.'
+        },
+        {
+          author: 'Patricia Ruiz',
+          date: '21 Dic 2025',
+          text: 'Después de leer esto, entiendo por qué la meditación a veces no trae paz sino una crudeza insoportable.'
+        },
+        {
+          author: 'Jorge Silva',
+          date: '21 Dic 2025',
+          text: 'La gracia estructural de no sentir. Esa frase final resume todo y me deja con escalofríos.'
+        }
+      ]
+    },
+    
     // Artículo NUEVO - ¿Dónde está el cuerpo cuando todo funciona?
     'donde-esta-el-cuerpo-cuando-todo-funciona': {
       title: '¿Dónde está el cuerpo cuando todo funciona?',

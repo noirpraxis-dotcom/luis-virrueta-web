@@ -37,6 +37,29 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 30,
+      title: currentLanguage === 'en' 
+        ? 'It Doesn\'t Hurt Because Something Breaks'
+        : 'No duele porque algo se rompe, duele porque algo no puede romperse',
+      excerpt: currentLanguage === 'en'
+        ? 'Pain doesn\'t empty the world: it fills it. What does that reveal about consciousness?'
+        : 'El dolor no vacía el mundo: lo llena. ¿Qué revela eso sobre la conciencia?',
+      category: 'philosophy',
+      author: 'Luis Virrueta',
+      date: '20 Dic 2025',
+      readTime: '16 min',
+      gradient: 'from-red-500/20 to-orange-600/20',
+      borderGradient: 'from-red-500 to-orange-600',
+      tags: currentLanguage === 'en'
+        ? ['Pain', 'Merleau-Ponty', 'Lacan', 'The Real', 'Body', 'Consciousness', 'Psychoanalysis', 'Phenomenology']
+        : ['Dolor', 'Merleau-Ponty', 'Lacan', 'Lo Real', 'Cuerpo', 'Conciencia', 'Psicoanálisis', 'Fenomenología'],
+      slug: 'no-duele-porque-algo-se-rompe',
+      image: '/IMAGENES BLOG/no duele.jpg',
+      rating: 5.0,
+      commentsCount: 6,
+      featured: true
+    },
+    {
       id: 29,
       title: currentLanguage === 'en' 
         ? 'Where Is the Body When Everything Works?'
