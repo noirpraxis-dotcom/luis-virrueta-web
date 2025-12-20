@@ -5,7 +5,6 @@ import ProblemSolutionSection from '../components/ProblemSolutionSection'
 import IndividualServices from '../components/IndividualServices'
 import SEOHead from '../components/SEOHead'
 import AionSection from '../components/AionSection'
-import BrandingShowcase from '../components/BrandingShowcase'
 
 const HomePage = () => {
   return (
@@ -30,9 +29,6 @@ const HomePage = () => {
       
       {/* Problem Solution Section: Aquello que llamas problema - Con CTA al método */}
       <ProblemSolutionSection />
-      
-      {/* Branding Showcase: Muestra de trabajo */}
-      <BrandingShowcase />
       
       {/* Individual Services: Servicios psicológicos y consultoría */}
       <IndividualServices />

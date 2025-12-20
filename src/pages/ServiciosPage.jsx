@@ -3,28 +3,16 @@ import { useRef } from 'react'
 import { useLanguage } from '../context/LanguageContext'
 import SEOHead from '../components/SEOHead'
 import { 
-  Palette, 
-  Smartphone, 
-  Video, 
-  Bot, 
   Brain,
+  Heart,
+  Users,
   Check,
   ArrowRight,
   Sparkles,
   Zap,
-  Type,
-  Droplets,
-  Image as ImageIcon,
-  FileText,
   Eye,
-  Award,
-  Code,
   Briefcase,
-  Camera,
-  Megaphone,
-  Mic,
-  Layout,
-  Layers
+  Mic
 } from 'lucide-react'
 
 const ServiciosPage = () => {
@@ -35,89 +23,48 @@ const ServiciosPage = () => {
   const isIdentityInView = useInView(identityRef, { once: true, amount: 0.3 })
 
   const services = [
-    // 1. CONSULTORÍA - Punto de partida estratégico
+    // 1. CONSULTA INDIVIDUAL - Trabajo profundo psicoanalítico
     {
-      id: 'consultoria-psicoanalitica',
+      id: 'consulta-individual',
       icon: Brain,
-      key: 'consultoria',
+      key: 'individual',
       gradient: 'from-violet-500 to-violet-600'
     },
-    // 2. IDENTIDAD VISUAL - Sistema completo
+    // 2. CONSULTA DE PAREJA - Desmontaje de ilusiones
     {
-      id: 'identidad-visual',
-      icon: Sparkles,
-      key: 'identidad',
-      gradient: 'from-fuchsia-500 to-pink-600'
-    },
-    // 3. LOGO DESIGN - Elemento base
-    {
-      id: 'logo-design',
-      icon: Palette,
-      key: 'logo',
-      gradient: 'from-purple-400 to-purple-600'
-    },
-    // 4. PÁGINAS WEB - Presencia digital
-    {
-      id: 'paginas-web',
-      icon: Code,
-      key: 'web',
-      gradient: 'from-indigo-500 to-blue-600'
-    },
-    // 5. APPS MÓVILES - Experiencias digitales
-    {
-      id: 'apps-moviles',
-      icon: Smartphone,
-      key: 'apps',
-      gradient: 'from-cyan-500 to-blue-600'
-    },
-    // 6. VIDEO BRANDING - Contenido visual
-    {
-      id: 'video-branding',
-      icon: Video,
-      key: 'video',
-      gradient: 'from-violet-500 to-purple-600'
-    },
-    // 7. ANIMACIÓN - Logos en movimiento
-    {
-      id: 'animacion',
-      icon: Layers,
-      key: 'animacion',
-      gradient: 'from-indigo-400 to-violet-600'
-    },
-    // 8. FOTOGRAFÍA - Sesiones profesionales
-    {
-      id: 'fotografia',
-      icon: Camera,
-      key: 'fotografia',
+      id: 'consulta-pareja',
+      icon: Heart,
+      key: 'pareja',
       gradient: 'from-pink-500 to-rose-600'
     },
-    // 9. AUDIO BRANDING - Identidad sonora
+    // 3. CONSULTA FAMILIAR - Atravesar patrones
     {
-      id: 'audio-branding',
+      id: 'consulta-familiar',
+      icon: Users,
+      key: 'familiar',
+      gradient: 'from-cyan-500 to-blue-600'
+    },
+    // 4. CONSULTORÍA PSICOANALÍTICA - Para organizaciones
+    {
+      id: 'consultoria-psicoanalitica',
+      icon: Briefcase,
+      key: 'consultoria',
+      gradient: 'from-indigo-500 to-purple-600'
+    },
+    // 5. AUDIOS REPROGRAMABLES - Modificación estructural
+    {
+      id: 'audios-inconsciente',
       icon: Mic,
-      key: 'audio',
-      gradient: 'from-orange-500 to-amber-600'
+      key: 'audios',
+      gradient: 'from-amber-500 to-orange-600'
     },
-    // 10. AVATARES IA - Representación digital
+    // 6. LUXMANIA - Psicología aplicada a proyectos
     {
-      id: 'avatares-ia',
-      icon: Bot,
-      key: 'avatares',
-      gradient: 'from-emerald-500 to-teal-600'
-    },
-    // 11. MARKETING - Campañas efectivas
-    {
-      id: 'marketing',
-      icon: Megaphone,
-      key: 'marketing',
-      gradient: 'from-cyan-400 to-teal-600'
-    },
-    // 12. MATERIAL IMPRESO - Tangibles de lujo
-    {
-      id: 'material-impreso',
-      icon: FileText,
-      key: 'impreso',
-      gradient: 'from-fuchsia-400 to-purple-600'
+      id: 'luxmania-proyecto',
+      icon: Sparkles,
+      key: 'luxmania',
+      gradient: 'from-fuchsia-500 to-pink-600',
+      external: true
     }
   ]
 
@@ -347,21 +294,15 @@ const ServiciosPage = () => {
             </motion.div>
           </motion.div>
 
-          {/* Hexagon Grid - ORDEN POR RELEVANCIA */}
+          {/* Hexagon Grid - SERVICIOS PSICOLÓGICOS */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 lg:gap-8 mb-12">
             {[
-              { id: 'consultoria', icon: Brain, titleKey: 'consultoria', color: 'from-purple-500 to-violet-600', target: 'consultoria-psicoanalitica' },
-              { id: 'identidad-visual', icon: Sparkles, titleKey: 'identidad', color: 'from-fuchsia-500 to-pink-500', target: 'identidad-visual' },
-              { id: 'logo-design', icon: Palette, titleKey: 'logo', color: 'from-cyan-400 to-blue-500', target: 'logo-design' },
-              { id: 'paginas-web', icon: Code, titleKey: 'web', color: 'from-emerald-400 to-green-500', target: 'paginas-web' },
-              { id: 'apps-moviles', icon: Smartphone, titleKey: 'apps', color: 'from-amber-400 to-orange-500', target: 'apps-moviles' },
-              { id: 'video-branding', icon: Video, titleKey: 'video', color: 'from-rose-400 to-red-500', target: 'video-branding' },
-              { id: 'animacion', icon: Layers, titleKey: 'animacion', color: 'from-indigo-400 to-purple-500', target: 'animacion' },
-              { id: 'fotografia', icon: Camera, titleKey: 'fotografia', color: 'from-pink-400 to-fuchsia-500', target: 'fotografia' },
-              { id: 'audio-branding', icon: Mic, titleKey: 'audio', color: 'from-yellow-400 to-amber-500', target: 'audio-branding' },
-              { id: 'avatares-ia', icon: Bot, titleKey: 'avatares', color: 'from-teal-400 to-cyan-500', target: 'avatares-ia' },
-              { id: 'marketing', icon: Megaphone, titleKey: 'marketing', color: 'from-lime-400 to-green-500', target: 'marketing' },
-              { id: 'material-impreso', icon: FileText, titleKey: 'impreso', color: 'from-violet-400 to-purple-500', target: 'material-impreso' },
+              { id: 'individual', icon: Brain, titleKey: 'individual', color: 'from-violet-500 to-purple-600', target: 'consulta-individual' },
+              { id: 'pareja', icon: Heart, titleKey: 'pareja', color: 'from-pink-500 to-rose-500', target: 'consulta-pareja' },
+              { id: 'familiar', icon: Users, titleKey: 'familiar', color: 'from-cyan-400 to-blue-500', target: 'consulta-familiar' },
+              { id: 'consultoria', icon: Briefcase, titleKey: 'consultoria', color: 'from-indigo-500 to-purple-500', target: 'consultoria-psicoanalitica' },
+              { id: 'audios', icon: Mic, titleKey: 'audios', color: 'from-amber-400 to-orange-500', target: 'audios-inconsciente' },
+              { id: 'luxmania', icon: Sparkles, titleKey: 'luxmania', color: 'from-fuchsia-400 to-pink-500', target: 'luxmania-proyecto' },
             ].map((item, i) => (
               <motion.button
                 key={item.id}

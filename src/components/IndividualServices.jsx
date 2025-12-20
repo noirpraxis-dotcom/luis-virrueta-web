@@ -9,37 +9,37 @@ const IndividualServices = () => {
   const services = [
     { 
       name: currentLanguage === 'en' ? 'Individual Consultation' : 'Consulta Individual',
-      description: currentLanguage === 'en' ? 'Deep psychological work from psychoanalysis' : 'Trabajo psicológico profundo desde el psicoanálisis',
+      description: currentLanguage === 'en' ? 'Deep work from psychoanalysis to explore the unconscious structure that shapes your reality' : 'Trabajo profundo desde el psicoanálisis para explorar la estructura inconsciente que da forma a tu realidad',
       icon: Brain,
       color: "from-[#a855f7] to-[#7c3aed]"
     },
     { 
       name: currentLanguage === 'en' ? 'Couple Consultation' : 'Consulta de Pareja',
-      description: currentLanguage === 'en' ? 'Explore unconscious dynamics in your relationship' : 'Explora las dinámicas inconscientes en tu relación',
+      description: currentLanguage === 'en' ? 'Not to complete each other, but to dismantle the illusions that prevent the encounter' : 'No para completarse, sino para desmontar las ilusiones que impiden el encuentro',
       icon: Heart,
       color: "from-[#ec4899] to-[#db2777]"
     },
     { 
-      name: currentLanguage === 'en' ? 'Psychological Consulting' : 'Consultoría Psicológica',
-      description: currentLanguage === 'en' ? 'For teams, organizations and projects' : 'Para equipos, organizaciones y proyectos',
+      name: currentLanguage === 'en' ? 'Family Consultation' : 'Consulta Familiar',
+      description: currentLanguage === 'en' ? 'The patterns that repeat are not destiny, just structure not yet traversed' : 'Los patrones que se repiten no son destino, solo estructura aún no atravesada',
       icon: Users,
       color: "from-[#06b6d4] to-[#0891b2]"
     },
     { 
-      name: currentLanguage === 'en' ? 'Unconscious Reprogramming Audios' : 'Audios Reprogramables del Inconsciente',
-      description: currentLanguage === 'en' ? 'Personalized tools to transform your perception' : 'Herramientas personalizadas para transformar tu percepción',
-      icon: Mic,
+      name: currentLanguage === 'en' ? 'Psychoanalytic Consulting' : 'Consultoría Psicoanalítica',
+      description: currentLanguage === 'en' ? 'For organizations that want to understand the unconscious that governs their dynamics' : 'Para organizaciones que quieren comprender el inconsciente que gobierna sus dinámicas',
+      icon: Brain,
       color: "from-[#8b5cf6] to-[#7c3aed]"
     },
     { 
-      name: currentLanguage === 'en' ? 'Apps for Children' : 'Aplicaciones para Niños',
-      description: currentLanguage === 'en' ? 'Interactive tools for childhood development' : 'Herramientas interactivas para el desarrollo infantil',
-      icon: Baby,
-      color: "from-[#10b981] to-[#059669]"
+      name: currentLanguage === 'en' ? 'Unconscious Reprogramming Audios' : 'Audios Reprogramables del Inconsciente',
+      description: currentLanguage === 'en' ? 'Not positive thinking, but a structural modification of how you perceive' : 'No pensamiento positivo, sino modificación estructural de cómo percibes',
+      icon: Mic,
+      color: "from-[#f59e0b] to-[#d97706]"
     },
     { 
-      name: 'LUXMANIA',
-      description: currentLanguage === 'en' ? 'Premium branding and design projects' : 'Proyectos de branding y diseño premium',
+      name: currentLanguage === 'en' ? 'Psychology Applied to Projects' : 'Psicología Aplicada a Proyectos',
+      description: currentLanguage === 'en' ? 'Branding, design, and communication from the unconscious · LUXMANIA' : 'Branding, diseño y comunicación desde el inconsciente · LUXMANIA',
       icon: ExternalLink,
       color: "from-[#d946ef] to-[#c026d3]",
       link: 'https://luxmania.com'
@@ -80,9 +80,9 @@ const IndividualServices = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-5xl lg:text-7xl font-light mb-6 font-display tracking-tight"
           >
-            <span className="text-white">{currentLanguage === 'en' ? 'Services ' : 'Servicios '}</span>
+            <span className="text-white">{currentLanguage === 'en' ? 'Paths ' : 'Caminos '}</span>
             <span className="text-white italic" style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 300 }}>
-              {currentLanguage === 'en' ? 'tailored' : 'a tu medida'}
+              {currentLanguage === 'en' ? 'through the structure' : 'por la estructura'}
             </span>
           </motion.h2>
 
@@ -91,16 +91,16 @@ const IndividualServices = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-white/50 text-xl lg:text-2xl max-w-2xl mx-auto font-light"
+            className="text-white/50 text-xl lg:text-2xl max-w-3xl mx-auto font-light leading-relaxed"
           >
             {currentLanguage === 'en' 
-              ? 'Each process is designed to transform how you perceive and inhabit your reality'
-              : 'Cada proceso está diseñado para transformar cómo percibes y habitas tu realidad'}
+              ? 'Not methods to solve problems, but processes to transform the structure that produces them'
+              : 'No son métodos para resolver problemas, sino procesos para transformar la estructura que los produce'}
           </motion.p>
         </motion.div>
 
-        {/* Services Grid - Hexágonos: 3 columnas responsive */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
+        {/* Services Grid - Elegancia minimalista con espacio */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12 max-w-7xl mx-auto">
           {services.map((service, index) => {
             const Icon = service.icon
             const isExternal = service.link
@@ -109,83 +109,80 @@ const IndividualServices = () => {
             return (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ 
-                  y: -8, 
-                  scale: 1.02,
-                  transition: { duration: 0.3 }
+                transition={{ 
+                  duration: 0.6, 
+                  delay: index * 0.08,
+                  ease: [0.22, 1, 0.36, 1]
                 }}
-                className="group relative"
+                whileHover={{ 
+                  y: -10, 
+                  scale: 1.02,
+                  transition: { duration: 0.4, ease: "easeOut" }
+                }}
+                className="group relative flex"
               >
-                {/* Card container - Más grande y espacioso */}
+                {/* Card container - Rediseño elegante */}
                 <CardWrapper 
                   href={isExternal ? service.link : undefined}
                   target={isExternal ? "_blank" : undefined}
                   rel={isExternal ? "noopener noreferrer" : undefined}
-                  className="relative block h-full bg-gradient-to-br from-[#1A1A1A] to-[#0d0d0d] border border-white/10 rounded-3xl p-8 lg:p-10 hover:border-white/30 transition-all duration-500"
+                  className="relative flex flex-col w-full h-full bg-gradient-to-b from-[#1A1A1A]/80 to-[#0d0d0d]/90 border border-white/5 rounded-2xl lg:rounded-3xl p-8 lg:p-10 hover:border-white/20 hover:shadow-2xl hover:shadow-white/5 transition-all duration-500 backdrop-blur-sm min-h-[300px]"
                 >
                   
-                  {/* Animated glow on hover */}
+                  {/* Glow sutil en hover */}
                   <motion.div
-                    className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    className="absolute inset-0 rounded-2xl lg:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
                     style={{
-                      background: `radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.15), transparent 70%)`
+                      background: `radial-gradient(circle at 50% 0%, ${service.color.replace('from-', '').replace('to-', '').split(' ')[0]}, transparent 60%)`
                     }}
                   />
 
-                  {/* Icon with gradient background - Más grande */}
+                  {/* Icon más refinado */}
                   <motion.div
-                    className={`relative mb-6 p-5 rounded-2xl bg-gradient-to-br ${service.color} opacity-90 group-hover:opacity-100 transition-opacity inline-block`}
-                    whileHover={{ rotate: [0, -10, 10, -10, 0] }}
-                    transition={{ duration: 0.5 }}
+                    className={`relative mb-6 w-14 h-14 lg:w-16 lg:h-16 rounded-xl bg-gradient-to-br ${service.color} flex items-center justify-center shadow-lg`}
+                    whileHover={{ 
+                      rotate: 5, 
+                      scale: 1.1,
+                      transition: { duration: 0.3 }
+                    }}
                   >
-                    <Icon className="w-10 h-10 lg:w-12 lg:h-12 text-white" strokeWidth={1.5} />
+                    <Icon className="w-7 h-7 lg:w-8 lg:h-8 text-white" strokeWidth={1.5} />
                     
-                    {/* Shimmer effect */}
+                    {/* Brillo sutil en el icono */}
                     <motion.div
-                      className="absolute inset-0 rounded-2xl"
+                      className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                       style={{
-                        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
-                        backgroundSize: '200% 100%'
-                      }}
-                      animate={{
-                        backgroundPosition: ['-200% 0', '200% 0']
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        repeatDelay: 3,
-                        ease: "linear"
+                        background: 'linear-gradient(135deg, rgba(255,255,255,0.2), transparent)',
                       }}
                     />
                   </motion.div>
 
-                  {/* Text content - Más espacioso */}
-                  <div className="relative z-10">
-                    <h3 className="text-white text-xl lg:text-2xl font-bold mb-3 group-hover:text-[#d946ef] transition-colors">
+                  {/* Content - Mejor espaciado y jerarquía */}
+                  <div className="relative z-10 flex-1 flex flex-col justify-center">
+                    <h3 className="text-white text-xl lg:text-2xl font-semibold mb-4 leading-snug tracking-tight">
                       {service.name}
                     </h3>
-                    <p className="text-white/50 text-base lg:text-lg font-light group-hover:text-white/70 transition-colors leading-relaxed">
+                    <p className="text-white/60 text-sm lg:text-base font-light leading-relaxed tracking-wide">
                       {service.description}
                     </p>
                   </div>
                   
-                  {/* External link icon */}
+                  {/* Indicador link externo */}
                   {isExternal && (
-                    <div className="absolute top-6 right-6 text-white/30 group-hover:text-white/60 transition-colors">
-                      <ArrowRight className="w-5 h-5" />
+                    <div className="absolute top-6 right-6 text-white/20 group-hover:text-white/50 transition-all duration-300">
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" strokeWidth={1.5} />
                     </div>
                   )}
 
-                  {/* Bottom gradient line appears on hover */}
+                  {/* Línea de acento inferior */}
                   <motion.div
-                    className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${service.color} rounded-b-2xl lg:rounded-b-3xl`}
+                    className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${service.color} rounded-b-2xl lg:rounded-b-3xl`}
                     initial={{ scaleX: 0 }}
                     whileHover={{ scaleX: 1 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
                   />
                 </CardWrapper>
               </motion.div>
