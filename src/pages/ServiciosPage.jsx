@@ -44,7 +44,7 @@ const ServiciosPage = () => {
       key: 'familiar',
       gradient: 'from-cyan-500 to-blue-600'
     },
-    // 4. CONSULTORÍA PSICOANALÍTICA - Para organizaciones
+    // 4. CONSULTORÍA EMPRESARIAL PSICOANALÍTICA
     {
       id: 'consultoria-psicoanalitica',
       icon: Briefcase,
@@ -79,17 +79,17 @@ const ServiciosPage = () => {
         tags={['branding', 'diseño web', 'apps', 'motion graphics', 'avatares IA', 'identidad de marca']}
       />
       
-      {/* Hero Section */}
-      <section ref={heroRef} className="relative py-20 lg:py-40 px-6 lg:px-20 overflow-hidden">
+      {/* Hero Section - Estilo AboutPage/BlogPage */}
+      <section ref={heroRef} className="relative pt-12 lg:pt-20 pb-40 lg:pb-56 px-6 lg:px-20 overflow-hidden">
         {/* Video de fondo */}
-        <div className="absolute inset-0 -top-20 lg:-top-28 -bottom-16 overflow-hidden pointer-events-none z-0">
+        <div className="absolute inset-0 -top-16 lg:-top-24 -bottom-80 lg:-bottom-96 overflow-hidden pointer-events-none z-0">
           <video
             autoPlay
             loop
             muted
             playsInline
             preload="auto"
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-50"
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-60"
             style={{
               minWidth: '100vw',
               minHeight: '100%',
@@ -97,144 +97,103 @@ const ServiciosPage = () => {
               objectPosition: 'center'
             }}
           >
-            <source src="/hero servicios.mp4" type="video/mp4" />
-            Tu navegador no soporta video HTML5.
+            <source src="/servicios videos.mp4" type="video/mp4" />
           </video>
-          {/* Overlay oscuro uniforme */}
-          <div className="absolute inset-0 bg-black/30" />
         </div>
+        
+        {/* Gradiente inferior que se mezcla con el contenido */}
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/100 via-black/50 to-transparent z-[5] pointer-events-none" />
 
-        <div className="relative z-20 max-w-7xl mx-auto">
-          {/* Title con efecto 3D igual que Portafolio */}
+        <div className="relative max-w-6xl mx-auto z-10">
+          {/* Título Hero - SERVICIOS */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1 }}
-            className="text-6xl lg:text-9xl font-bold text-center mb-8 font-display relative"
-            style={{ 
-              letterSpacing: '0.08em',
-              fontWeight: 300,
-              textTransform: 'uppercase'
-            }}
+            className="text-center mb-12"
           >
-            {(() => {
-              const title = t('servicesPage.hero.title')
-              const firstLetter = title.charAt(0)
-              const lastLetter = title.charAt(title.length - 1)
-              const middle = title.slice(1, -1)
-              
-              return (
-                <span className="relative inline-block">
-                  {/* First letter with gradient */}
-                  <span className="relative">
-                    <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>{firstLetter}</span>
-                    <span className="relative text-white">{firstLetter}</span>
-                  </span>
-                  {/* Middle */}
-                  <span className="text-white">{middle}</span>
-                  {/* Last letter with gradient */}
-                  <span className="relative">
-                    <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>{lastLetter}</span>
-                    <span className="relative text-white">{lastLetter}</span>
-                  </span>
-                </span>
-              )
-            })()}
+            <span
+              className="text-6xl sm:text-7xl lg:text-8xl font-light text-white inline-block"
+              style={{ 
+                letterSpacing: '0.15em',
+                textShadow: '0 0 60px rgba(255, 255, 255, 0.15), 0 10px 40px rgba(168, 85, 247, 0.1)'
+              }}
+            >
+              SERVICIOS
+            </span>
           </motion.h1>
 
-          {/* Subtitle con iconos elegantes */}
+          {/* Descripción encerrada */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="flex justify-center mb-10"
+          >
+            <div className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5">
+              <span className="text-sm sm:text-base font-light text-white/70 tracking-wide">
+                Psicoanálisis · Transformación · Estructura
+              </span>
+            </div>
+          </motion.div>
+          
+          {/* Conceptos clave */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.4 }}
-            className="flex flex-col items-center gap-6 mb-12"
+            className="flex flex-wrap items-center justify-center gap-8 mb-8"
           >
-            {/* Etiqueta superior con borde */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="relative px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5"
+            {/* Inconsciente */}
+            <motion.div 
+              className="flex items-center gap-2"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
             >
-              <div className="flex items-center gap-3">
-                <Briefcase className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                <span className="text-sm lg:text-base text-white/80 font-light tracking-wider uppercase">
-                  {t('servicesPage.hero.badge')}
-                </span>
-              </div>
+              <Brain className="w-5 h-5 text-white/40" strokeWidth={1.5} />
+              <span className="text-base sm:text-lg font-light text-white tracking-wide">Inconsciente</span>
             </motion.div>
 
-            {/* Fórmula con iconos */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="flex items-center gap-3 lg:gap-4 flex-wrap justify-center"
+            {/* Separador minimalista */}
+            <div className="w-px h-6 bg-white/20" />
+
+            {/* Estructura */}
+            <motion.div 
+              className="flex items-center gap-2"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
             >
-              {/* Estrategia */}
-              <div className="flex items-center gap-2">
-                <Brain className="w-5 h-5 text-white/70" strokeWidth={1.5} />
-                <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  {t('servicesPage.hero.formula.strategy')}
-                </span>
-              </div>
-
-              <span className="text-white/40 text-xs">+</span>
-
-              {/* Creatividad */}
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-white/70" strokeWidth={1.5} />
-                <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  {t('servicesPage.hero.formula.creativity')}
-                </span>
-              </div>
-
-              <span className="text-white/40 text-xs">+</span>
-
-              {/* Ejecución */}
-              <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-white/70" strokeWidth={1.5} />
-                <span className="text-sm lg:text-base text-white/60 font-light tracking-wide">
-                  {t('servicesPage.hero.formula.execution')}
-                </span>
-              </div>
+              <Eye className="w-5 h-5 text-white/40" strokeWidth={1.5} />
+              <span className="text-base sm:text-lg font-light text-white tracking-wide">Estructura</span>
             </motion.div>
           </motion.div>
 
-          {/* Línea con efecto desde el centro expandiéndose */}
+          {/* Pregunta filosófica */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.6 }}
+            className="text-center text-base sm:text-lg lg:text-xl text-white/50 font-light italic leading-relaxed tracking-wide max-w-3xl mx-auto mb-12"
+          >
+            ¿Y si transformar no es cambiar lo que haces, sino comprender la estructura desde la que lo haces?
+          </motion.p>
+
+          {/* Línea decorativa */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={isHeroInView ? { opacity: 1 } : {}}
             transition={{ duration: 1, delay: 0.8 }}
-            className="relative h-px mx-auto w-96 overflow-hidden"
+            className="relative h-px mx-auto max-w-md overflow-hidden"
           >
             <motion.div
               initial={{ scaleX: 0 }}
               animate={isHeroInView ? { scaleX: 1 } : {}}
               transition={{ duration: 1.2, delay: 0.9, ease: [0.76, 0, 0.24, 1] }}
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent"
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
               style={{ transformOrigin: 'center' }}
-            />
-            {/* Punto luminoso que se mueve */}
-            <motion.div
-              animate={{
-                x: ['-100%', '100%'],
-                opacity: [0, 1, 1, 0]
-              }}
-              transition={{
-                duration: 2.5,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: 1.5
-              }}
-              className="absolute inset-0 w-24 h-full bg-gradient-to-r from-transparent via-white to-transparent blur-sm"
-              style={{ left: '50%' }}
             />
           </motion.div>
         </div>
-
-        {/* Degradado suave en la parte inferior para transición elegante */}
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-black pointer-events-none z-30" />
       </section>
 
       {/* Quick Navigation - Hexagon Grid PREMIUM */}
@@ -495,92 +454,125 @@ const ServiceDetail = ({ service, index }) => {
               <span className="text-base lg:text-lg font-light text-white/90 tracking-wide">{serviceData.duration}</span>
             </div>
 
-            {/* CTA Premium - WhatsApp con mensaje personalizado */}
-            <motion.a
-              href={`https://wa.me/420776711575?text=${encodeURIComponent(`${t('servicesPage.detailLabels.ctaWhatsappMessage')} ${serviceData.title}`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 10 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="group relative inline-flex items-center gap-3 overflow-hidden"
-            >
-              {/* Línea animada */}
-              <motion.div
-                className="h-px bg-white/60 transition-all duration-500 group-hover:w-24"
-                style={{ width: '48px' }}
-              />
-              
-              {/* Texto del botón */}
-              <span className="text-sm font-light text-white uppercase tracking-[0.25em] transition-all duration-300 group-hover:tracking-[0.3em]">
-                {t('servicesPage.detailLabels.ctaButton')}
-              </span>
-              
-              {/* Ícono con animación */}
-              <motion.div
-                animate={{ x: [0, 5, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            {/* CTA - Personalizado según servicio */}
+            {service.external ? (
+              <motion.a
+                href="https://lux-mania.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, y: 10 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="group relative inline-flex items-center gap-3 overflow-hidden"
               >
-                <ArrowRight className="w-4 h-4 text-white/80" strokeWidth={1.5} />
-              </motion.div>
-            </motion.a>
+                {/* Línea animada */}
+                <motion.div
+                  className="h-px bg-white/60 transition-all duration-500 group-hover:w-24"
+                  style={{ width: '48px' }}
+                />
+                
+                {/* Texto del botón */}
+                <span className="text-sm font-light text-white uppercase tracking-[0.25em] transition-all duration-300 group-hover:tracking-[0.3em]">
+                  Ir a LUXMANIA
+                </span>
+                
+                {/* Ícono con animación */}
+                <motion.div
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <ArrowRight className="w-4 h-4 text-white/80" strokeWidth={1.5} />
+                </motion.div>
+              </motion.a>
+            ) : (
+              <motion.a
+                href={`https://wa.me/420776711575?text=${encodeURIComponent(`Hola, me interesa ${serviceData.title}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, y: 10 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="group relative inline-flex items-center gap-3 overflow-hidden"
+              >
+                {/* Línea animada */}
+                <motion.div
+                  className="h-px bg-white/60 transition-all duration-500 group-hover:w-24"
+                  style={{ width: '48px' }}
+                />
+                
+                {/* Texto del botón */}
+                <span className="text-sm font-light text-white uppercase tracking-[0.25em] transition-all duration-300 group-hover:tracking-[0.3em]">
+                  {service.key === 'individual' || service.key === 'pareja' || service.key === 'familiar' ? 'Iniciar Consulta' : service.key === 'consultoria' ? 'Consultar' : 'Iniciar Proceso'}
+                </span>
+                
+                {/* Ícono con animación */}
+                <motion.div
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <ArrowRight className="w-4 h-4 text-white/80" strokeWidth={1.5} />
+                </motion.div>
+              </motion.a>
+            )}
           </div>
         </div>
 
-        {/* Right: Features + Process - Minimalista */}
-        <div className="space-y-8">
-          {/* Features */}
-          <div className="border border-white/10 rounded-2xl p-8 lg:p-10 bg-white/[0.02] backdrop-blur-sm">
-            <h3 className="text-base font-light text-white/90 mb-8 uppercase tracking-[0.2em]">
-              {t('servicesPage.detailLabels.whatIncludes')}
-            </h3>
-            <ul className="space-y-5">
-              {serviceData.features.map((feature, i) => (
-                <motion.li
-                  key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={isInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.5, delay: i * 0.05 }}
-                  className="flex items-start gap-4 group"
-                >
-                  {/* Punto minimalista que crece en hover */}
-                  <div className="relative mt-2">
-                    <div className="w-1 h-1 rounded-full bg-white/40 transition-all duration-300 group-hover:w-1.5 group-hover:h-1.5 group-hover:bg-white/70" />
-                  </div>
-                  <span className="text-sm font-light text-white/70 leading-[1.8] tracking-wide transition-colors duration-300 group-hover:text-white/90">
-                    {feature}
-                  </span>
-                </motion.li>
-              ))}
-            </ul>
-          </div>
+        {/* Right: Features + Process - Minimalista (oculto para LUXMANIA) */}
+        {!service.external && (
+          <div className="space-y-8">
+            {/* Features */}
+            <div className="border border-white/10 rounded-2xl p-8 lg:p-10 bg-white/[0.02] backdrop-blur-sm">
+              <h3 className="text-base font-light text-white/90 mb-8 uppercase tracking-[0.2em]">
+                {t('servicesPage.detailLabels.whatIncludes')}
+              </h3>
+              <ul className="space-y-5">
+                {serviceData.features.map((feature, i) => (
+                  <motion.li
+                    key={i}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={isInView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ duration: 0.5, delay: i * 0.05 }}
+                    className="flex items-start gap-4 group"
+                  >
+                    {/* Punto minimalista que crece en hover */}
+                    <div className="relative mt-2">
+                      <div className="w-1 h-1 rounded-full bg-white/40 transition-all duration-300 group-hover:w-1.5 group-hover:h-1.5 group-hover:bg-white/70" />
+                    </div>
+                    <span className="text-sm font-light text-white/70 leading-[1.8] tracking-wide transition-colors duration-300 group-hover:text-white/90">
+                      {feature}
+                    </span>
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
 
-          {/* Process */}
-          <div className="border border-white/10 rounded-2xl p-8 lg:p-10 bg-white/[0.02] backdrop-blur-sm">
-            <h3 className="text-base font-light text-white/90 mb-8 uppercase tracking-[0.2em]">
-              {t('servicesPage.detailLabels.process')}
-            </h3>
-            <ol className="space-y-5">
-              {serviceData.process.map((step, i) => (
-                <motion.li
-                  key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={isInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.5, delay: i * 0.07 }}
-                  className="flex items-start gap-5 group"
-                >
-                  {/* Número con tipografía minimalista */}
-                  <span className="text-xs font-light text-white/30 flex-shrink-0 mt-1 tracking-wider transition-colors duration-300 group-hover:text-white/50 tabular-nums">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <span className="text-sm font-light text-white/70 leading-[1.8] tracking-wide transition-colors duration-300 group-hover:text-white/90">
-                    {step}
-                  </span>
-                </motion.li>
-              ))}
-            </ol>
+            {/* Process */}
+            <div className="border border-white/10 rounded-2xl p-8 lg:p-10 bg-white/[0.02] backdrop-blur-sm">
+              <h3 className="text-base font-light text-white/90 mb-8 uppercase tracking-[0.2em]">
+                {t('servicesPage.detailLabels.process')}
+              </h3>
+              <ol className="space-y-5">
+                {serviceData.process.map((step, i) => (
+                  <motion.li
+                    key={i}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={isInView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ duration: 0.5, delay: i * 0.07 }}
+                    className="flex items-start gap-5 group"
+                  >
+                    {/* Número con tipografía minimalista */}
+                    <span className="text-xs font-light text-white/30 flex-shrink-0 mt-1 tracking-wider transition-colors duration-300 group-hover:text-white/50 tabular-nums">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span className="text-sm font-light text-white/70 leading-[1.8] tracking-wide transition-colors duration-300 group-hover:text-white/90">
+                      {step}
+                    </span>
+                  </motion.li>
+                ))}
+              </ol>
+            </div>
           </div>
-        </div>
+        )}
       </motion.div>
     </div>
   )

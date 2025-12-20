@@ -738,14 +738,15 @@
         "title": "Individual Consultation",
         "subtitle": "Psychoanalysis",
         "tagline": "Deep work from psychoanalysis to explore the unconscious structure that shapes your reality",
-        "description": "Deep analysis process where we explore the unconscious mechanisms that structure your way of perceiving, relating and living. It's not about resolving symptoms, but traversing the structure that produces them.",
+        "description": "Deep analysis process where we explore the unconscious mechanisms that structure your way of perceiving, relating and living. It's not about resolving symptoms, but traversing the structure that produces them. You can start with a single consultation to identify the strongest unconscious patterns that are moving everything, and from there decide whether to continue the process or leave it.",
         "features": [
+          "Option for a single diagnostic consultation",
           "Individual 50-minute sessions",
           "Dream and slip analysis",
           "Work with transference",
           "Exploration of symptoms and repetitions",
           "Analysis of unconscious fantasies",
-          "Long-term process",
+          "Long-term process or punctual consultations",
           "Personalized follow-up"
         ],
         "process": [
@@ -762,8 +763,9 @@
         "title": "Couple Consultation",
         "subtitle": "Authentic Bond",
         "tagline": "Not to complete each other, but to dismantle the illusions that prevent the encounter",
-        "description": "Psychoanalytic work with couples focused on dismantling the fantasies and projections that obstruct the authentic bond. We don't seek harmony, but the truth of each one's desire.",
+        "description": "Psychoanalytic work with couples focused on dismantling the fantasies and projections that obstruct the authentic bond. We don't seek harmony, but the truth of each one's desire. You can start with a single session to understand the main unconscious dynamics that structure the bond, and decide whether to continue.",
         "features": [
+          "Option for a single bonding analysis session",
           "Joint 90-minute sessions",
           "Analysis of unconscious dynamics",
           "Work with mutual projections",
@@ -786,8 +788,9 @@
         "title": "Family Consultation",
         "subtitle": "Systemic Patterns",
         "tagline": "The patterns that repeat are not destiny, just structure not yet traversed",
-        "description": "Work with family systems from psychoanalysis. We explore transgenerational repetitions, unspoken mandates and structures that are inherited unknowingly.",
+        "description": "Work with family systems from psychoanalysis. We explore transgenerational repetitions, unspoken mandates and structures that are inherited unknowingly. You can start with a single family session to identify the main transgenerational patterns and decide how to continue.",
         "features": [
+          "Option for a single family diagnostic session",
           "Sessions with variable configurations",
           "Analysis of family mandates",
           "Work with myths and secrets",
@@ -807,7 +810,7 @@
         "duration": "According to system complexity"
       },
       "consultoria": {
-        "title": "Psychoanalytic Consulting",
+        "title": "Business Psychoanalytic Consulting",
         "subtitle": "For Organizations",
         "tagline": "For organizations that want to understand the unconscious that governs their dynamics",
         "description": "Psychoanalytic analysis of organizations. We don't sell solutions, but understanding of the unconscious dynamics that structure culture, conflicts and institutional repetitions.",

@@ -833,14 +833,15 @@
         "title": "Consulta Individual",
         "subtitle": "Psicoanálisis",
         "tagline": "Trabajo profundo desde el psicoanálisis para explorar la estructura inconsciente que da forma a tu realidad",
-        "description": "Proceso de análisis profundo donde exploramos los mecanismos inconscientes que estructuran tu forma de percibir, relacionarte y vivir. No se trata de resolver síntomas, sino de atravesar la estructura que los produce.",
+        "description": "Proceso de análisis profundo donde exploramos los mecanismos inconscientes que estructuran tu forma de percibir, relacionarte y vivir. No se trata de resolver síntomas, sino de atravesar la estructura que los produce. Puedes comenzar con una sola consulta para identificar los patrones inconscientes más fuertes que están moviendo todo, y desde ahí decidir si continuar el proceso o dejarlo.",
         "features": [
+          "Opción de una sola consulta diagnóstica",
           "Sesiones individuales de 50 minutos",
           "Análisis de sueños y lapsus",
           "Trabajo con la transferencia",
           "Exploración de síntomas y repeticiones",
           "Análisis de fantasías inconscientes",
-          "Proceso a largo plazo",
+          "Proceso a largo plazo o consultas puntuales",
           "Seguimiento personalizado"
         ],
         "process": [
@@ -857,8 +858,9 @@
         "title": "Consulta de Pareja",
         "subtitle": "Vínculo Auténtico",
         "tagline": "No para completarse, sino para desmontar las ilusiones que impiden el encuentro",
-        "description": "Trabajo psicoanalítico con parejas enfocado en desmontar las fantasías y proyecciones que obstruyen el vínculo auténtico. No buscamos la armonía, sino la verdad del deseo de cada uno.",
+        "description": "Trabajo psicoanalítico con parejas enfocado en desmontar las fantasías y proyecciones que obstruyen el vínculo auténtico. No buscamos la armonía, sino la verdad del deseo de cada uno. Puedes iniciar con una sola sesión para comprender las dinámicas inconscientes principales que estructuran el vínculo, y decidir si continuar.",
         "features": [
+          "Opción de una sola sesión de análisis vincular",
           "Sesiones conjuntas de 90 minutos",
           "Análisis de dinámicas inconscientes",
           "Trabajo con proyecciones mutuas",
@@ -881,8 +883,9 @@
         "title": "Consulta Familiar",
         "subtitle": "Patrones Sistémicos",
         "tagline": "Los patrones que se repiten no son destino, solo estructura aún no atravesada",
-        "description": "Trabajo con sistemas familiares desde el psicoanálisis. Exploramos las repeticiones trans generacionales, los mandatos no dichos y las estructuras que se heredan sin saberlo.",
+        "description": "Trabajo con sistemas familiares desde el psicoanálisis. Exploramos las repeticiones trans generacionales, los mandatos no dichos y las estructuras que se heredan sin saberlo. Puedes comenzar con una sola sesión familiar para identificar los patrones transgeneracionales principales y decidir cómo continuar.",
         "features": [
+          "Opción de una sola sesión diagnóstica familiar",
           "Sesiones con configuraciones variables",
           "Análisis de mandatos familiares",
           "Trabajo con mitos y secretos",
@@ -902,7 +905,7 @@
         "duration": "Según complejidad del sistema"
       },
       "consultoria": {
-        "title": "Consultoría Psicoanalítica",
+        "title": "Consultoría Empresarial Psicoanalítica",
         "subtitle": "Para Organizaciones",
         "tagline": "Para organizaciones que quieren comprender el inconsciente que gobierna sus dinámicas",
         "description": "Análisis psicoanalítico de organizaciones. No vendemos soluciones, sino comprensión de las dinámicas inconscientes que estructuran la cultura, los conflictos y las repeticiones institucionales.",
