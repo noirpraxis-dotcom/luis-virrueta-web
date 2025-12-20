@@ -37,6 +37,29 @@ const BlogPage = () => {
 
   const blogPosts = [
     {
+      id: 33,
+      title: currentLanguage === 'en' 
+        ? 'P.U.T.A. (Panic · Usurpation · Terror · Autonomy)'
+        : 'P.U.T.A. (Pánico · Usurpación · Terror · Autonomía)',
+      excerpt: currentLanguage === 'en'
+        ? 'The word doesn\'t describe the other. It reveals the one who needs to say it to avoid feeling.'
+        : 'La palabra no describe al otro. Revela a quien necesita decirla para no sentir.',
+      category: 'philosophy',
+      author: 'Luis Virrueta',
+      date: '20 Dic 2025',
+      readTime: '17 min',
+      gradient: 'from-red-600/20 to-pink-700/20',
+      borderGradient: 'from-red-600 to-pink-700',
+      tags: currentLanguage === 'en'
+        ? ['Psychoanalysis', 'Lacan', 'Freud', 'Žižek', 'Desire', 'Jouissance', 'Repression', 'Projection']
+        : ['Psicoanálisis', 'Lacan', 'Freud', 'Žižek', 'Deseo', 'Goce', 'Represión', 'Proyección'],
+      slug: 'puta-panico-usurpacion-terror-autonomia',
+      image: '/IMAGENES BLOG/puta.jpg',
+      rating: 5.0,
+      commentsCount: 6,
+      featured: true
+    },
+    {
       id: 32,
       title: currentLanguage === 'en' 
         ? 'The Game No One Confesses to Playing'

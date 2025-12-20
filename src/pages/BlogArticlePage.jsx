@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles, Award, Check, Shield } from 'lucide-react'
+import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles, Award, Check, Shield, AlertCircle } from 'lucide-react'
 import ReadingProgressBar from '../components/ReadingProgressBar'
 import ShareButtons from '../components/ShareButtons'
 import CommentsSection from '../components/CommentsSection'
@@ -1821,11 +1821,23 @@ const BlogArticlePage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.3 }}
-            className="text-4xl lg:text-6xl font-bold text-white mb-8 leading-tight"
+            className="text-4xl lg:text-6xl font-bold text-white mb-4 leading-tight"
             style={{ letterSpacing: '0.02em', fontWeight: 300 }}
           >
             {article.title}
           </motion.h1>
+
+          {/* Subtitle */}
+          {article.subtitle && (
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 1, delay: 0.4 }}
+              className="text-lg lg:text-xl text-white/70 mb-8 leading-relaxed font-light"
+            >
+              {article.subtitle}
+            </motion.p>
+          )}
 
           {/* Meta info */}
           <motion.div
@@ -2172,6 +2184,53 @@ const ArticleSection = ({ section, index, headingNumber }) => {
                   {section.content}
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    )
+  }
+
+  // Questions - Para preguntas elegantes con items
+  if (section.type === 'questions') {
+    return (
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 30 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: index * 0.1 }}
+        className="my-12"
+      >
+        <div className="relative bg-gradient-to-br from-red-500/10 via-pink-500/10 to-rose-500/10 backdrop-blur-sm border-2 border-red-500/20 rounded-3xl p-10 overflow-hidden group hover:border-red-500/40 transition-all duration-500">
+          {/* Animated gradient orbs */}
+          <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-red-500/20 to-pink-500/20 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700" />
+          <div className="absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-tr from-rose-500/20 to-red-500/20 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700" />
+          
+          <div className="relative z-10">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500/30 to-pink-500/30 border border-red-500/30 flex items-center justify-center backdrop-blur-sm">
+                <AlertCircle className="w-7 h-7 text-red-300" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-red-300 via-pink-300 to-rose-300 bg-clip-text text-transparent">
+                {section.title}
+              </h3>
+            </div>
+            
+            <div className="space-y-5">
+              {section.items.map((question, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={isInView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 0.5, delay: index * 0.1 + i * 0.15 }}
+                  className="flex items-start gap-4 group/item"
+                >
+                  <div className="flex-shrink-0 mt-1 w-2 h-2 rounded-full bg-gradient-to-br from-red-400 to-pink-400 group-hover/item:scale-150 transition-transform duration-300" />
+                  <p className="text-lg text-white/90 leading-relaxed font-light group-hover/item:text-white transition-colors duration-300">
+                    {question}
+                  </p>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>

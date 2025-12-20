@@ -1,10 +1,214 @@
-import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle, Fish, Flame, Users, Link, Activity, Radio, Wind, Focus, Moon, Crown } from 'lucide-react'
+import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle, Fish, Flame, Users, Link, Activity, Radio, Wind, Focus, Moon, Crown, CircleAlert, UserX, Skull, Siren } from 'lucide-react'
 
 // Contenido completo de todos los artículos del blog en ES + EN
 // Este archivo centraliza el contenido para facilitar mantenimiento y traducciones
 
 const blogArticlesContent = {
   es: {
+    // Artículo NUEVO - P.U.T.A.
+    'puta-panico-usurpacion-terror-autonomia': {
+      title: 'P.U.T.A.',
+      subtitle: '(Pánico · Usurpación · Terror · Autonomía) — El deseo que acusa, el goce que se esconde y la ley que ya no alcanza',
+      author: 'Luis Virrueta',
+      date: '20 Dic 2025',
+      readTime: '17 min',
+      category: 'philosophy',
+      tags: ['Psicoanálisis', 'Lacan', 'Freud', 'Žižek', 'Deseo', 'Goce', 'Represión', 'Proyección'],
+      gradient: 'from-red-600 to-pink-700',
+      image: 'puta.jpg',
+      sections: [
+        {
+          type: 'heading',
+          icon: Eye,
+          title: 'Prólogo — Este texto no habla de ellas'
+        },
+        {
+          type: 'text',
+          content: 'Este texto no está escrito para describir a ninguna mujer. Tampoco para defenderla. Ni para acusarla.'
+        },
+        {
+          type: 'highlight',
+          content: 'Este texto está escrito para quien usa la palabra.'
+        },
+        {
+          type: 'text',
+          content: 'No como insulto ocasional, sino como recurso psíquico. Como gesto casi automático cuando algo del deseo se vuelve incómodo. Como si al decirla algo se ordenara, algo se calmara, algo quedara del lado correcto.'
+        },
+        {
+          type: 'text',
+          content: 'Porque hay palabras que no nombran cosas. Nombran posiciones.'
+        },
+        {
+          type: 'text',
+          content: '"Puta" no señala un comportamiento observable. Se activa cuando el deseo del otro deja de ser legible, cuando no entra en los márgenes donde uno sabe quién es, qué desea y desde dónde mira. No aparece frente a un cuerpo, sino frente a una experiencia interna que no encuentra cómo sostenerse sin culpa, miedo o amenaza.'
+        },
+        {
+          type: 'text',
+          content: 'Por eso este texto no pregunta qué es una puta. Pregunta algo más difícil de soportar:'
+        },
+        {
+          type: 'highlight',
+          content: '¿Qué se pone en juego en quien necesita decirlo para no sentir lo que siente?'
+        },
+        {
+          type: 'heading',
+          icon: Siren,
+          title: 'P — Pánico'
+        },
+        {
+          type: 'text',
+          content: 'La palabra aparece, casi siempre, en el mismo punto estructural: cuando el deseo del otro se presenta sin instrucciones, sin código claro, sin esa mediación simbólica que permite mirar sin sentirse implicado. No es el acto sexual lo que desorganiza, ni siquiera el cuerpo; es la cercanía de un deseo que no está suficientemente domesticado por la moral interna del que mira.'
+        },
+        {
+          type: 'text',
+          content: 'Desde el psicoanálisis —si pensamos en Sigmund Freud y, sobre todo, en Jacques Lacan— el deseo nunca es puro ni transparente. Siempre está atravesado por la prohibición. El sujeto no desea libremente: desea dentro de una arquitectura simbólica que le permite tolerar su propio goce. Cuando esa arquitectura falla, aparece la angustia.'
+        },
+        {
+          type: 'text',
+          content: 'Lacan fue preciso: la angustia no surge ante la falta, sino cuando el deseo aparece demasiado cerca, sin pantalla, sin distancia. Cuando ya no hay relato que amortigüe. En ese punto, la palabra "puta" funciona como una barrera improvisada, una forma violenta de reinstalar distancia allí donde el deseo amenaza con tocar algo demasiado íntimo.'
+        },
+        {
+          type: 'highlight',
+          content: 'No detiene el deseo. Lo encapsula. Lo mantiene a raya para poder seguir mirándolo sin derrumbarse.'
+        },
+        {
+          type: 'questions',
+          title: 'Preguntas estructurales',
+          items: [
+            '¿Qué tipo de deseo resulta tan inquietante que necesita ser nombrado para no ser sentido?',
+            '¿Qué se desarma cuando el deseo del otro ya no puede ser anticipado, clasificado, ni colocado en un lugar seguro?'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: UserX,
+          title: 'U — Usurpación'
+        },
+        {
+          type: 'text',
+          content: 'Decir "puta" no es solo juzgar; es apropiarse del deseo del otro para no tener que hacerse cargo del propio. Al nombrar así, el deseo deja de pertenecerle al otro como experiencia subjetiva y se transforma en rasgo, en esencia, en algo que "es así". La mujer ya no desea: es deseo. Se vuelve superficie donde el conflicto interno del que mira puede proyectarse sin reconocerse.'
+        },
+        {
+          type: 'text',
+          content: 'En sujetos formados bajo regímenes de fuerte represión, el deseo propio no se integra. Se vive como peligroso, sucio o ilegítimo. Entonces ocurre una operación inconsciente: lo que no puedo sostener en mí, lo coloco en el otro. Mi deseo se vuelve intolerable; el tuyo, obsceno. No porque lo sea, sino porque me confronta con algo que no puedo asumir sin que se derrumbe mi imagen de mí mismo.'
+        },
+        {
+          type: 'text',
+          content: 'La palabra "puta" aparece ahí como intento desesperado de fijar lo que desborda. Y lejos de reducir la excitación, la intensifica. Porque el deseo degradado a objeto se vuelve más manejable, sí, pero también más fetichizable. Freud ya lo había dicho con brutal claridad: lo reprimido no desaparece; retorna. Y cuando retorna, no lo hace como ternura, sino como insulto erotizado.'
+        },
+        {
+          type: 'questions',
+          title: 'Preguntas incómodas',
+          items: [
+            '¿Qué se gana al degradar el deseo del otro en lugar de reconocer el propio?',
+            '¿Por qué aquello que se condena es, tan a menudo, lo que más excita?'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: Skull,
+          title: 'T — Terror'
+        },
+        {
+          type: 'text',
+          content: 'El núcleo no es el exceso del goce, sino su independencia. El verdadero terror no es que el otro goce, sino que goce sin necesitarme. En muchas configuraciones fantasmáticas, el deseo del otro está ahí para responder, reflejar, confirmar, sostener una identidad. Cuando eso no ocurre, algo del sujeto pierde su lugar.'
+        },
+        {
+          type: 'text',
+          content: 'Aquí Slavoj Žižek es incisivo: lo insoportable no es el exceso, sino el exceso fuera del guion. La mujer que goza sin pedir permiso rompe la escena donde el sujeto ocupaba una posición privilegiada: la de quien autoriza, interpreta o concede valor al deseo. La palabra "puta" intenta reparar esa pérdida simbólica, no eliminando el goce, sino reencuadrándolo para que vuelva a ser tolerable.'
+        },
+        {
+          type: 'highlight',
+          content: 'No es odio al cuerpo. Es odio a un goce que no se deja capturar.'
+        },
+        {
+          type: 'questions',
+          title: 'Preguntas sobre el control',
+          items: [
+            '¿Qué fantasía se rompe cuando el otro no necesita mi mirada?',
+            '¿Qué parte de la identidad depende de que el deseo ajeno sea controlable, legible, domesticado?'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: Unlock,
+          title: 'A — Autonomía'
+        },
+        {
+          type: 'text',
+          content: 'El goce no es placer. No es disfrute. Es un exceso que atrae y desorganiza, algo que insiste más allá del principio de placer. No es moral ni inmoral: es real. Para que no sea devastador, necesita una inscripción simbólica. Ahí entra la función del Nombre-del-Padre en Lacan, no como autoridad represiva, sino como ley que permite que el deseo circule sin volverse destructivo.'
+        },
+        {
+          type: 'text',
+          content: 'Cuando esa función falla, el goce aparece sin mediación, el sujeto no sabe desde dónde mirarlo y el lenguaje se vuelve violento. El insulto intenta hacer de ley lo que la ley simbólica no logró sostener. Decir "puta" es un intento torpe de reinstalar un límite, pero no ordena: excita más. Porque el goce prohibido, nombrado sin verdadera simbolización, se intensifica.'
+        },
+        {
+          type: 'questions',
+          title: 'Preguntas inevitables',
+          items: [
+            '¿Qué pasaría si la palabra desapareciera?',
+            'Quizá algo inquietante: la sexualización perdería uno de sus soportes principales',
+            'Porque gran parte de la excitación no proviene del cuerpo, sino del conflicto, del tabú, de la culpa',
+            'Sin la palabra que condena, el deseo tendría que asumirse. Y eso es mucho más difícil que insultar'
+          ]
+        },
+        {
+          type: 'heading',
+          icon: CircleAlert,
+          title: 'Epílogo — La falsa inocencia'
+        },
+        {
+          type: 'text',
+          content: 'A veces, quien más sexualiza es quien se cree más inocente. No porque desee menos, sino porque no puede reconocerse deseando. El goce reprimido no desaparece; se vuelve más intenso, más torcido, más dependiente del insulto. La palabra "puta" no libera al sujeto de su deseo: lo encadena a él.'
+        },
+        {
+          type: 'highlight',
+          content: 'Y quizá por eso sigue siendo necesaria. No para describir al otro. Sino para no preguntarse por sí mismo.'
+        },
+        {
+          type: 'questions',
+          title: 'Las preguntas quedan abiertas, no como cierre, sino como resto',
+          items: [
+            '¿Qué parte de mi deseo necesita que el otro sea degradado para poder existir?',
+            '¿Qué tipo de ley podría sostener el goce sin convertirlo en amenaza?',
+            '¿Cuánta de mi excitación depende de la culpa que proyecto?'
+          ]
+        }
+      ],
+      comments: [
+        {
+          author: 'Santiago Ruiz',
+          date: '20 Dic 2025',
+          text: 'Este texto me confrontó brutalmente. Nunca había pensado que la palabra dice más de quien la usa que de quien la recibe.'
+        },
+        {
+          author: 'Victoria Campos',
+          date: '20 Dic 2025',
+          text: 'La sección de Usurpación es devastadora. "Lo que no puedo sostener en mí, lo coloco en el otro." Eso explica todo.'
+        },
+        {
+          author: 'Daniel Ortega',
+          date: '21 Dic 2025',
+          text: 'Las preguntas finales no me dejan dormir. ¿Cuánta de mi excitación depende de la culpa que proyecto? Mucha, aparentemente.'
+        },
+        {
+          author: 'Natalia Vega',
+          date: '21 Dic 2025',
+          text: 'El terror no es que el otro goce, sino que goce sin necesitarme. Esa frase lo cambia todo sobre control y deseo.'
+        },
+        {
+          author: 'Alejandro Sosa',
+          date: '21 Dic 2025',
+          text: 'Freud + Lacan + Žižek aplicados a una palabra tan común. Esto debería enseñarse en todas las universidades.'
+        },
+        {
+          author: 'Clara Morales',
+          date: '21 Dic 2025',
+          text: 'La falsa inocencia del epílogo... quien más sexualiza es quien se cree más inocente. Brutal y necesario.'
+        }
+      ]
+    },
+    
     // Artículo NUEVO - El juego que nadie confiesa estar jugando
     'el-juego-que-nadie-confiesa-estar-jugando': {
       title: 'El juego que nadie confiesa estar jugando',
