@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Palette, Brain, Zap, Eye } from 'lucide-react'
+import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Brain, Zap, Eye } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 import { useLanguage } from '../context/LanguageContext'
 import { getArticleContent } from '../data/blogArticlesContent'
@@ -15,11 +15,11 @@ const BlogPage = () => {
 
   const categories = [
     { id: 'all', label: t('blogPage.categories.all'), icon: BookOpen },
-    { id: 'design', label: t('blogPage.categories.design'), icon: Palette },
-    { id: 'branding', label: t('blogPage.categories.branding'), icon: Sparkles },
-    { id: 'psychology', label: t('blogPage.categories.psychology'), icon: Brain },
-    { id: 'trends', label: t('blogPage.categories.trends'), icon: TrendingUp },
     { id: 'philosophy', label: currentLanguage === 'en' ? 'Philosophy' : 'Filosofía', icon: Eye },
+    { id: 'psychology', label: t('blogPage.categories.psychology'), icon: Brain },
+    { id: 'psychoanalysis', label: currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis', icon: Sparkles },
+    { id: 'perception', label: currentLanguage === 'en' ? 'Perception' : 'Percepción', icon: Zap },
+    { id: 'consciousness', label: currentLanguage === 'en' ? 'Consciousness' : 'Consciencia', icon: TrendingUp },
   ]
 
   // Helper function to get translated content
@@ -296,27 +296,27 @@ const BlogPage = () => {
     : blogPosts.filter(post => post.category === activeCategory)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28">
+    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28 overflow-x-hidden">
       <SEOHead 
         title={t('blogPage.seo.title')}
         description={t('blogPage.seo.description')}
-        image="/blog-compressed/blog-1.webp"
+        image="/ajedrez video.mp4"
         url="/blog"
         type="website"
-        tags={['branding', 'psychology', 'marketing', 'design', 'neuromarketing', 'storytelling', 'trends']}
+        tags={['blog', 'psicología', 'psicoanálisis', 'filosofía', 'inconsciente', 'percepción', 'consciencia', 'transformación']}
       />
       
-      {/* Hero Section */}
-      <section ref={heroRef} className="relative py-20 lg:py-40 px-6 lg:px-20 overflow-hidden">
+      {/* Hero Section - Estilo AboutPage */}
+      <section ref={heroRef} className="relative pt-12 lg:pt-20 pb-40 lg:pb-56 px-6 lg:px-20 overflow-hidden">
         {/* Video de fondo */}
-        <div className="absolute inset-0 -top-20 lg:-top-28 -bottom-16 overflow-hidden pointer-events-none z-0">
+        <div className="absolute inset-0 -top-16 lg:-top-24 -bottom-80 lg:-bottom-96 overflow-hidden pointer-events-none z-0">
           <video
             autoPlay
             loop
             muted
             playsInline
             preload="auto"
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-50"
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-60"
             style={{
               minWidth: '100vw',
               minHeight: '100%',
@@ -324,117 +324,103 @@ const BlogPage = () => {
               objectPosition: 'center'
             }}
           >
-            <source src="/header blog.mp4" type="video/mp4" />
+            <source src="/ajedrez video.mp4" type="video/mp4" />
           </video>
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
         </div>
+        
+        {/* Gradiente inferior que se mezcla con el contenido */}
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/100 via-black/50 to-transparent z-[5] pointer-events-none" />
 
-        {/* Gradient orbs */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl" />
-        </div>
-
-        <div className="relative z-20 max-w-7xl mx-auto">
-          {/* Title con efecto 3D */}
+        <div className="relative max-w-6xl mx-auto z-10">
+          {/* Título Hero - BLOG */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1 }}
-            className="text-6xl lg:text-9xl font-bold text-center mb-8 font-display relative"
-            style={{
-              letterSpacing: '0.08em',
-              fontWeight: 300,
-              textTransform: 'uppercase'
-            }}
+            className="text-center mb-12"
           >
-            <span className="relative inline-block">
-              {/* B con degradado */}
-              <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>B</span>
-                <span className="relative text-white">B</span>
-              </span>
-              {/* lo */}
-              <span className="text-white">lo</span>
-              {/* g con degradado */}
-              <span className="relative">
-                <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>g</span>
-                <span className="relative text-white">g</span>
-              </span>
+            <span
+              className="text-6xl sm:text-7xl lg:text-8xl font-light text-white inline-block"
+              style={{ 
+                letterSpacing: '0.15em',
+                textShadow: '0 0 60px rgba(255, 255, 255, 0.15), 0 10px 40px rgba(168, 85, 247, 0.1)'
+              }}
+            >
+              BLOG
             </span>
           </motion.h1>
 
-          {/* Subtitle */}
+          {/* Descripción encerrada */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="flex justify-center mb-10"
+          >
+            <div className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5">
+              <span className="text-sm sm:text-base font-light text-white/70 tracking-wide">
+                {currentLanguage === 'en' ? 'Psychoanalysis · Philosophy · Unconscious' : 'Psicoanálisis · Filosofía · Inconsciente'}
+              </span>
+            </div>
+          </motion.div>
+          
+          {/* Conceptos clave */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.4 }}
-            className="flex flex-col items-center gap-6 mb-12"
+            className="flex flex-wrap items-center justify-center gap-8 mb-8"
           >
-            {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="inline-block px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5"
+            <motion.div 
+              className="flex items-center gap-2"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
             >
-              <span className="text-sm lg:text-base text-white/80 font-light tracking-wider uppercase">
-                {t('blogPage.hero.badge')}
+              <Brain className="w-5 h-5 text-white/40" strokeWidth={1.5} />
+              <span className="text-base sm:text-lg font-light text-white tracking-wide">
+                {currentLanguage === 'en' ? 'Psychology' : 'Psicología'}
               </span>
             </motion.div>
 
-            {/* Description */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={isHeroInView ? { opacity: 1 } : {}}
-              transition={{ duration: 1, delay: 0.6 }}
-              className="text-base lg:text-xl text-white/60 text-center max-w-2xl font-extralight italic"
-              style={{ letterSpacing: '0.08em' }}
+            <div className="w-px h-6 bg-white/20" />
+
+            <motion.div 
+              className="flex items-center gap-2"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
             >
-              {t('blogPage.hero.subtitle')}
-            </motion.p>
+              <Eye className="w-5 h-5 text-white/40" strokeWidth={1.5} />
+              <span className="text-base sm:text-lg font-light text-white tracking-wide">
+                {currentLanguage === 'en' ? 'Perception' : 'Percepción'}
+              </span>
+            </motion.div>
           </motion.div>
 
-          {/* Decorative line */}
+          {/* Pregunta filosófica */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.6 }}
+            className="text-lg sm:text-xl text-white/60 text-center font-light italic mb-8"
+          >
+            {currentLanguage === 'en' 
+              ? 'What if thinking isn\'t what you believe, but what you can\'t stop believing?' 
+              : '¿Y si pensar no es lo que crees, sino lo que no puedes dejar de creer?'}
+          </motion.p>
+
+          {/* Línea decorativa */}
           <motion.div
             initial={{ scaleX: 0 }}
             animate={isHeroInView ? { scaleX: 1 } : {}}
-            transition={{ duration: 1.2, delay: 0.8 }}
-            className="h-px bg-gradient-to-r from-transparent via-white/30 to-transparent mx-auto"
-            style={{ maxWidth: '600px' }}
-          />
-        </div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isHeroInView ? { opacity: 1 } : {}}
-          transition={{ duration: 1, delay: 1.2 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2"
+            transition={{ duration: 1.5, delay: 0.8 }}
+            className="relative h-px mx-auto w-96 overflow-hidden"
           >
             <motion.div
-              animate={{
-                opacity: [0, 1, 1, 0]
-              }}
-              transition={{
-                duration: 2.5,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: 1.5
-              }}
-              className="w-1 h-3 bg-white/50 rounded-full"
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent"
+              style={{ transformOrigin: 'center' }}
             />
           </motion.div>
-        </motion.div>
-
-        {/* Degradado suave en la parte inferior */}
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-black pointer-events-none z-30" />
+        </div>
       </section>
 
       {/* Category Filter */}
