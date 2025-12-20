@@ -239,7 +239,7 @@ const ServiciosPage = () => {
               <Brain className="w-4 h-4" strokeWidth={1.5} />
               <span>{t('servicesPage.hexGrid.helpQuestion')}</span>
               <a
-                href={`https://wa.me/420776711575?text=${encodeURIComponent(t('servicesPage.hexGrid.helpWhatsapp'))}`}
+                href={`https://wa.me/527228720520?text=${encodeURIComponent(t('servicesPage.hexGrid.helpWhatsapp'))}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative inline-flex items-center gap-2 text-white hover:text-white transition-colors"
@@ -486,7 +486,7 @@ const ServiceDetail = ({ service, index }) => {
               </motion.a>
             ) : (
               <motion.a
-                href={`https://wa.me/420776711575?text=${encodeURIComponent(`Hola, me interesa ${serviceData.title}`)}`}
+                href={`https://wa.me/527228720520?text=${encodeURIComponent(`Hola, me interesa ${serviceData.title}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 initial={{ opacity: 0, y: 10 }}

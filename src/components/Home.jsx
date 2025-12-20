@@ -224,7 +224,7 @@ const Home = () => {
 
               {/* Botón secundario - Más sutil */}
               <a
-                href={`https://wa.me/420776711575?text=${encodeURIComponent(t('home.whatsappMessage'))}`}
+                href={`https://wa.me/527228720520?text=${encodeURIComponent(t('home.whatsappMessage'))}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative px-10 py-5 md:px-12 md:py-6 text-white font-light rounded-full border border-white/30 hover:border-white/60 transition-all duration-500 hover:scale-[1.02] overflow-hidden"

@@ -200,20 +200,20 @@ const IndividualServices = () => {
         >
           <p className="text-white/60 text-base lg:text-lg mb-4">
             {currentLanguage === 'en' 
-              ? 'Each path is unique. Each process, singular.' 
-              : 'Cada camino es único. Cada proceso, singular.'}
+              ? 'Each path is unique. Each unconscious, singular.' 
+              : 'Cada camino es único. Cada inconsciente, singular.'}
           </p>
           <p className="text-white text-lg lg:text-xl mb-6">
             <span className="text-[#a855f7] font-semibold">
-              {currentLanguage === 'en' ? 'Let\'s talk' : 'Hablemos'}
+              {currentLanguage === 'en' ? 'Let\'s talk' : 'Conversemos'}
             </span> 
             {currentLanguage === 'en' 
-              ? ' and design together what you need' 
-              : ' y diseñemos juntos lo que necesitas'}
+              ? ' and explore together what you need to transform' 
+              : ' y exploremos juntos lo que necesitas transformar'}
           </p>
           
           <motion.a
-            href="https://wa.me/420776711575?text=Hola! Me gustaría explorar cómo podemos trabajar juntos"
+            href="https://wa.me/527228720520?text=Hola! Me gustaría explorar cómo podemos trabajar juntos"
             target="_blank"
             rel="noopener noreferrer"
             whileHover={{ scale: 1.05, y: -2 }}

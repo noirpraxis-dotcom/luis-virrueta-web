@@ -53,7 +53,7 @@ ${formData.message}
     `.trim()
     
     // Abrir WhatsApp con mensaje pre-formateado
-    const whatsappURL = `https://wa.me/420776711575?text=${encodeURIComponent(whatsappMessage)}`
+    const whatsappURL = `https://wa.me/527228720520?text=${encodeURIComponent(whatsappMessage)}`
     window.open(whatsappURL, '_blank')
     
     // Reset form
@@ -72,7 +72,7 @@ ${formData.message}
       icon: Phone,
       title: t('contacto.methods.whatsapp'),
       value: '+420 776 711 575',
-      link: 'https://wa.me/420776711575',
+      link: 'https://wa.me/527228720520',
       color: 'from-emerald-500 to-emerald-600',
     },
     {

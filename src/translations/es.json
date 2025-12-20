@@ -810,13 +810,13 @@
       }
     },
     "hexGrid": {
-      "badge": "Soluciones Premium",
+      "badge": "Caminos de Transformación",
       "title": "¿Qué Necesitas",
-      "titleItalic": "Crear?",
-      "description": "Selecciona el servicio que buscas y te llevaremos directo a los detalles. Cada proyecto está diseñado para conectar, convertir y trascender.",
+      "titleItalic": "Transformar?",
+      "description": "Selecciona el camino que resuena contigo y te guiaremos hacia el proceso. Cada consulta está diseñada para atravesar la estructura que sostiene lo que quieres cambiar.",
       "helpQuestion": "¿No sabes por dónde empezar?",
-      "helpAction": "Te Ayudo a Decidir",
-      "helpWhatsapp": "Hola! Necesito ayuda para elegir el servicio ideal para mi proyecto",
+      "helpAction": "Conversemos",
+      "helpWhatsapp": "Hola Luis, quiero explorar qué camino es el indicado para mí",
       "portfolioQuestion": "¿Quieres ver ejemplos de nuestro trabajo?",
       "portfolioAction": "Explora el Portafolio",
       "hexagons": {

@@ -593,7 +593,7 @@ const MetodoPage = () => {
               className="text-center"
             >
               <a
-                href={`https://wa.me/420776711575?text=${encodeURIComponent('Hola Luis, quiero conocer Aión')}`}
+                href={`https://wa.me/527228720520?text=${encodeURIComponent('Hola Luis, quiero conocer Aión')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-purple-600 via-fuchsia-600 to-purple-600 text-white rounded-full font-light text-lg overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/50"

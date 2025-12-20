@@ -347,7 +347,7 @@ const AboutPage = () => {
                 </div>
                 <div className="flex flex-wrap gap-4">
                   <a
-                    href="https://wa.me/420776711575"
+                    href="https://wa.me/527228720520"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 px-6 py-3 rounded-full border border-emerald-400/30 bg-emerald-400/5 hover:bg-emerald-400/10 hover:border-emerald-400/50 transition-all duration-300"

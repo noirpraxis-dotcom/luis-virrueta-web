@@ -715,13 +715,13 @@
       }
     },
     "hexGrid": {
-      "badge": "Premium Solutions",
+      "badge": "Paths of Transformation",
       "title": "What Do You Need",
-      "titleItalic": "to Create?",
-      "description": "Select the service you're looking for and we'll take you straight to the details. Each project is designed to connect, convert and transcend.",
+      "titleItalic": "to Transform?",
+      "description": "Select the path that resonates with you and we'll guide you through the process. Each consultation is designed to traverse the structure that sustains what you want to change.",
       "helpQuestion": "Not sure where to start?",
-      "helpAction": "Let Me Help You Decide",
-      "helpWhatsapp": "Hello! I need help choosing the ideal service for my project",
+      "helpAction": "Let's Talk",
+      "helpWhatsapp": "Hello Luis, I want to explore which path is right for me",
       "portfolioQuestion": "Want to see examples of our work?",
       "portfolioAction": "Explore the Portfolio",
       "hexagons": {
