@@ -53,9 +53,9 @@ const AppContent = () => {
     { name: t('menu.metodo'), href: '/metodo' },
     { name: t('menu.services'), href: '/servicios' },
     { name: t('menu.blog'), href: '/blog' },
-    { name: 'Tienda', href: '/tienda' },
     { name: t('menu.about'), href: '/sobre-mi' },
-    { name: t('menu.contact'), href: '/contacto' }
+    { name: t('menu.contact'), href: '/contacto' },
+    { name: 'Tienda', href: '/tienda', special: true }
   ]
 
   return (

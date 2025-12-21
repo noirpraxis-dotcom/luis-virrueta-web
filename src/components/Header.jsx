@@ -233,23 +233,48 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
                       whileHover={{ y: -2 }}
                       transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
                     >
-                      <motion.span
-                        className="text-[0.8rem] uppercase"
-                        style={{ 
-                          fontFamily: 'Space Grotesk, monospace',
-                          fontWeight: 500,
-                          letterSpacing: '0.15em',
-                          color: '#ffffff',
-                          textShadow: '0 0 20px rgba(255,255,255,0.3), 0 0 8px rgba(168,85,247,0.2)',
-                        }}
-                        whileHover={{
-                          textShadow: '0 0 30px rgba(255,255,255,0.6), 0 0 15px rgba(168,85,247,0.4)',
-                          letterSpacing: '0.2em'
-                        }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        {item.name}
-                      </motion.span>
+                      {item.special ? (
+                        <motion.span
+                          className="text-[0.8rem] uppercase flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/5"
+                          style={{ 
+                            fontFamily: 'Space Grotesk, monospace',
+                            fontWeight: 500,
+                            letterSpacing: '0.15em',
+                            color: '#ffffff',
+                            textShadow: '0 0 20px rgba(255,255,255,0.3), 0 0 8px rgba(168,85,247,0.2)',
+                          }}
+                          whileHover={{
+                            textShadow: '0 0 30px rgba(255,255,255,0.6), 0 0 15px rgba(168,85,247,0.4)',
+                            letterSpacing: '0.2em',
+                            borderColor: 'rgba(255,255,255,0.3)',
+                            backgroundColor: 'rgba(255,255,255,0.1)'
+                          }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                          </svg>
+                          {item.name}
+                        </motion.span>
+                      ) : (
+                        <motion.span
+                          className="text-[0.8rem] uppercase"
+                          style={{ 
+                            fontFamily: 'Space Grotesk, monospace',
+                            fontWeight: 500,
+                            letterSpacing: '0.15em',
+                            color: '#ffffff',
+                            textShadow: '0 0 20px rgba(255,255,255,0.3), 0 0 8px rgba(168,85,247,0.2)',
+                          }}
+                          whileHover={{
+                            textShadow: '0 0 30px rgba(255,255,255,0.6), 0 0 15px rgba(168,85,247,0.4)',
+                            letterSpacing: '0.2em'
+                          }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          {item.name}
+                        </motion.span>
+                      )}
                     </motion.div>
                   </Link>
                   

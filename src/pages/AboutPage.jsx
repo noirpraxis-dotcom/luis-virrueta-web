@@ -378,73 +378,7 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* Experiencia y Trayectoria */}
-      <section className="py-20 px-6 lg:px-20 border-t border-white/10">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="mb-16"
-          >
-            <h2 className="text-4xl lg:text-6xl font-extralight text-white tracking-wide mb-6">
-              {t('aboutPage.journey.title').split(' ')[0]} <span className="italic font-light">{t('aboutPage.journey.title').split(' ').slice(1).join(' ')}</span>
-            </h2>
-            <p className="text-white/50 text-base lg:text-lg font-extralight leading-[1.9] tracking-wide max-w-3xl">
-              {t('aboutPage.journey.subtitle')}
-            </p>
-          </motion.div>
-
-          <div className="space-y-12">
-            {[
-              {
-                year: t('aboutPage.journey.milestone1Year'),
-                title: t('aboutPage.journey.milestone1Title'),
-                description: t('aboutPage.journey.milestone1Desc')
-              },
-              {
-                year: t('aboutPage.journey.milestone2Year'),
-                title: t('aboutPage.journey.milestone2Title'),
-                description: t('aboutPage.journey.milestone2Desc')
-              },
-              {
-                year: t('aboutPage.journey.milestone3Year'),
-                title: t('aboutPage.journey.milestone3Title'),
-                description: t('aboutPage.journey.milestone3Desc')
-              },
-              {
-                year: t('aboutPage.journey.milestone4Year'),
-                title: t('aboutPage.journey.milestone4Title'),
-                description: t('aboutPage.journey.milestone4Desc')
-              }
-            ].map((milestone, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="grid lg:grid-cols-[180px_1fr] gap-8 items-start group"
-              >
-                <div className="text-white/20 text-2xl font-extralight tracking-wider lg:text-right">
-                  {milestone.year}
-                </div>
-                <div className="border-l border-white/10 pl-8 group-hover:border-white/20 transition-colors">
-                  <h3 className="text-white text-xl lg:text-2xl font-extralight tracking-wide mb-3">
-                    {milestone.title}
-                  </h3>
-                  <p className="text-white/50 font-extralight text-base leading-[1.9] tracking-wide">
-                    {milestone.description}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pillars Section - Los 3 pilares MEJORADO */}
+      {/* Pillars Section - Los 3 pilares MEJORADO - REMOVIDA la sección de Experiencia y Trayectoria */}
       <section className="relative py-20 lg:py-32 px-6 lg:px-20 border-t border-white/10">
         <div className="relative max-w-6xl mx-auto">
           <motion.div

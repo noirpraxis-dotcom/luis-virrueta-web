@@ -20,7 +20,7 @@ const StorePage = () => {
       category: 'Psicoterapia',
       price: '$1,200 MXN',
       duration: '60 min',
-      image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=1000&fit=crop',
+      image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1200&h=800&fit=crop',
       description: 'Sesión de psicoterapia individual. Trabajo profundo con el inconsciente a través del método AION©.',
       shortDesc: 'Transformación desde el inconsciente',
       benefits: [
@@ -38,7 +38,7 @@ const StorePage = () => {
       category: 'Proceso Terapéutico',
       price: '$4,320 MXN',
       duration: '4 sesiones',
-      image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&h=1000&fit=crop',
+      image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1200&h=800&fit=crop',
       description: 'Ahorra 10% con este paquete. Proceso de transformación continuo y profundo.',
       shortDesc: 'Proceso continuo con ahorro',
       benefits: [
@@ -57,7 +57,7 @@ const StorePage = () => {
       category: 'Organizacional',
       price: '$2,500 MXN',
       duration: '90 min',
-      image: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=800&h=1000&fit=crop',
+      image: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=1200&h=800&fit=crop',
       description: 'Psicología organizacional para equipos. Mejora el clima desde el inconsciente colectivo.',
       shortDesc: 'Transforma tu organización',
       benefits: [
@@ -75,7 +75,7 @@ const StorePage = () => {
       category: 'Desarrollo Personal',
       price: '$3,000 MXN',
       duration: '3 horas',
-      image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=800&h=1000&fit=crop',
+      image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=1200&h=800&fit=crop',
       description: 'Taller grupal del Método AION©. Aprende a identificar y transformar tus filtros.',
       shortDesc: 'Aprende el método completo',
       benefits: [
@@ -93,7 +93,7 @@ const StorePage = () => {
       category: 'Transformación Profunda',
       price: '$8,960 MXN',
       duration: '8 sesiones',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=1000&fit=crop',
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&h=800&fit=crop',
       description: 'Programa intensivo de transformación. Incluye sesiones semanales y acompañamiento.',
       shortDesc: 'Transformación sostenida',
       benefits: [
@@ -111,7 +111,7 @@ const StorePage = () => {
       category: 'Para Psicólogos',
       price: '$1,800 MXN',
       duration: '60 min',
-      image: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=800&h=1000&fit=crop',
+      image: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=1200&h=800&fit=crop',
       description: 'Supervisión para psicólogos. Integra el método AION© en tu práctica profesional.',
       shortDesc: 'Supervisión y mentoría',
       benefits: [
@@ -176,7 +176,7 @@ const StorePage = () => {
                 textShadow: '0 0 60px rgba(255, 255, 255, 0.15), 0 10px 40px rgba(168, 85, 247, 0.1)'
               }}
             >
-              SERVICIOS
+              TIENDA
             </span>
           </motion.h1>
 
@@ -189,7 +189,7 @@ const StorePage = () => {
           >
             <div className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5">
               <span className="text-sm sm:text-base font-light text-white/70 tracking-wide">
-                Transformación · Psicoterapia · Desarrollo Personal
+                Terapias · Talleres · Programas
               </span>
             </div>
           </motion.div>
@@ -207,21 +207,21 @@ const StorePage = () => {
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
-              <Brain className="w-5 h-5 text-white/40" strokeWidth={1.5} />
-              <span className="text-base sm:text-lg font-light text-white tracking-wide">Profesional</span>
+              <ShoppingCart className="w-5 h-5 text-white/40" strokeWidth={1.5} />
+              <span className="text-base sm:text-lg font-light text-white tracking-wide">Sesiones</span>
             </motion.div>
 
             {/* Separador */}
             <div className="w-px h-6 bg-white/20" />
 
-            {/* Transformador */}
+            {/* Programas */}
             <motion.div 
               className="flex items-center gap-2"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
-              <Eye className="w-5 h-5 text-white/40" strokeWidth={1.5} />
-              <span className="text-base sm:text-lg font-light text-white tracking-wide">Transformador</span>
+              <Sparkles className="w-5 h-5 text-white/40" strokeWidth={1.5} />
+              <span className="text-base sm:text-lg font-light text-white tracking-wide">Programas</span>
             </motion.div>
           </motion.div>
 
@@ -232,7 +232,7 @@ const StorePage = () => {
             transition={{ duration: 1, delay: 0.6 }}
             className="text-center text-base sm:text-lg lg:text-xl text-white/50 font-light italic leading-relaxed tracking-wide max-w-3xl mx-auto mb-12"
           >
-            ¿Qué servicio resuena con el proceso que necesitas atravesar ahora?
+            ¿Qué inversión en ti mismo estás listo para hacer hoy?
           </motion.p>
         </div>
       </section>
