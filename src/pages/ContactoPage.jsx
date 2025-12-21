@@ -52,14 +52,14 @@ ${formData.message}
     {
       icon: MapPin,
       label: 'Ubicación',
-      value: 'México',
+      value: 'Chequia (por videollamada)',
       link: null,
       color: 'from-violet-500 to-violet-600'
     },
     {
       icon: Calendar,
       label: 'Disponibilidad',
-      value: 'Lun - Vie, 9:00 - 19:00',
+      value: 'Lun - Sáb, 5:00 AM - 3:00 PM',
       link: null,
       color: 'from-cyan-500 to-cyan-600'
     },

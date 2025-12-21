@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Sparkles, Clock, CheckCircle2, ArrowRight } from 'lucide-react'
+import { ShoppingCart, Sparkles, Clock, CheckCircle2, ArrowRight, Brain, Eye } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 import SEOHead from '../components/SEOHead'
 
@@ -130,13 +130,13 @@ const StorePage = () => {
       <SEOHead 
         title="Tienda - Luis Virrueta | Servicios Psicológicos"
         description="Sesiones de psicoterapia, talleres del método AION©, consultoría organizacional y programas de transformación personal."
-        image="/hero servicios.mp4"
+        image="/carrito de compra.mp4"
         url="/tienda"
         type="website"
         tags={['terapia', 'psicología', 'método AION', 'transformación personal', 'consultoría']}
       />
       
-      {/* Hero Section */}
+      {/* Hero Section - Estilo ServiciosPage/BlogPage */}
       <section ref={heroRef} className="relative pt-12 lg:pt-20 pb-40 lg:pb-56 px-6 lg:px-20 overflow-hidden">
         {/* Video de fondo */}
         <div className="absolute inset-0 -top-16 lg:-top-24 -bottom-80 lg:-bottom-96 overflow-hidden pointer-events-none z-0">
@@ -146,7 +146,7 @@ const StorePage = () => {
             muted
             playsInline
             preload="auto"
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-40"
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-60"
             style={{
               minWidth: '100vw',
               minHeight: '100%',
@@ -154,7 +154,7 @@ const StorePage = () => {
               objectPosition: 'center'
             }}
           >
-            <source src="/servicios videos.mp4" type="video/mp4" />
+            <source src="/carrito de compra.mp4" type="video/mp4" />
           </video>
         </div>
         
@@ -162,7 +162,7 @@ const StorePage = () => {
         <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/100 via-black/50 to-transparent z-[5] pointer-events-none" />
 
         <div className="relative max-w-6xl mx-auto z-10">
-          {/* Título */}
+          {/* Título Hero */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
@@ -170,7 +170,7 @@ const StorePage = () => {
             className="text-center mb-12"
           >
             <span
-              className="text-6xl sm:text-7xl lg:text-9xl font-light text-white inline-block"
+              className="text-6xl sm:text-7xl lg:text-8xl font-light text-white inline-block"
               style={{ 
                 letterSpacing: '0.15em',
                 textShadow: '0 0 60px rgba(255, 255, 255, 0.15), 0 10px 40px rgba(168, 85, 247, 0.1)'
@@ -180,7 +180,7 @@ const StorePage = () => {
             </span>
           </motion.h1>
 
-          {/* Badge */}
+          {/* Badge en óvalo */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
@@ -188,22 +188,51 @@ const StorePage = () => {
             className="flex justify-center mb-10"
           >
             <div className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5">
-              <Sparkles className="w-4 h-4 text-white/60" />
               <span className="text-sm sm:text-base font-light text-white/70 tracking-wide">
-                Transformación · Psicoterapia · Desarrollo
+                Transformación · Psicoterapia · Desarrollo Personal
               </span>
             </div>
           </motion.div>
           
-          {/* Pregunta */}
-          <motion.p
+          {/* Dos palabras con íconos */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.4 }}
-            className="text-center text-lg lg:text-xl text-white/60 max-w-3xl mx-auto font-light italic"
-            style={{ letterSpacing: '0.05em' }}
+            className="flex flex-wrap items-center justify-center gap-8 mb-8"
           >
-            ¿Cuál es el servicio que resuena con tu proceso actual?
+            {/* Profesional */}
+            <motion.div 
+              className="flex items-center gap-2"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Brain className="w-5 h-5 text-white/40" strokeWidth={1.5} />
+              <span className="text-base sm:text-lg font-light text-white tracking-wide">Profesional</span>
+            </motion.div>
+
+            {/* Separador */}
+            <div className="w-px h-6 bg-white/20" />
+
+            {/* Transformador */}
+            <motion.div 
+              className="flex items-center gap-2"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Eye className="w-5 h-5 text-white/40" strokeWidth={1.5} />
+              <span className="text-base sm:text-lg font-light text-white tracking-wide">Transformador</span>
+            </motion.div>
+          </motion.div>
+
+          {/* Pregunta filosófica */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.6 }}
+            className="text-center text-base sm:text-lg lg:text-xl text-white/50 font-light italic leading-relaxed tracking-wide max-w-3xl mx-auto mb-12"
+          >
+            ¿Qué servicio resuena con el proceso que necesitas atravesar ahora?
           </motion.p>
         </div>
       </section>
