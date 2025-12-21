@@ -29,6 +29,7 @@ const BlogArticlePage = lazy(() => import('./pages/BlogArticlePage'))
 const InversionPage = lazy(() => import('./pages/InversionPage'))
 const ContactoPage = lazy(() => import('./pages/ContactoPage'))
 const StorePage = lazy(() => import('./pages/StorePage'))
+const StoreProductPage = lazy(() => import('./pages/StoreProductPage'))
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'))
 const TermsConditionsPage = lazy(() => import('./pages/TermsConditionsPage'))
 const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage'))
@@ -154,6 +155,11 @@ const AppContent = () => {
             {/* Página Tienda: Productos y servicios */}
             <Route path="/tienda" element={
               <StorePage />
+            } />
+
+            {/* Página Detalle de Producto */}
+            <Route path="/tienda/:id" element={
+              <StoreProductPage />
             } />
 
             {/* Página Contacto */}

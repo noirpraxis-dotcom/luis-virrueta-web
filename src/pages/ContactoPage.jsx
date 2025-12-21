@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
-import { Send, Mail, MessageSquare, MapPin, Phone, Instagram, Linkedin } from 'lucide-react'
+import { Send, MessageSquare, MapPin, Phone, Calendar } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 import SEOHead from '../components/SEOHead'
 
@@ -8,30 +8,15 @@ const ContactoPage = () => {
   const { t } = useLanguage()
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
+  const formRef = useRef(null)
+  const isFormInView = useInView(formRef, { once: true, amount: 0.3 })
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    service: '',
     message: '',
   })
-
-  // 12 servicios desde traducciones
-  const services = [
-    { key: 'consultoria', label: t('contacto.services.consultoria') },
-    { key: 'identidad', label: t('contacto.services.identidad') },
-    { key: 'logo', label: t('contacto.services.logo') },
-    { key: 'web', label: t('contacto.services.web') },
-    { key: 'apps', label: t('contacto.services.apps') },
-    { key: 'video', label: t('contacto.services.video') },
-    { key: 'animacion', label: t('contacto.services.animacion') },
-    { key: 'fotografia', label: t('contacto.services.fotografia') },
-    { key: 'audio', label: t('contacto.services.audio') },
-    { key: 'avatares', label: t('contacto.services.avatares') },
-    { key: 'marketing', label: t('contacto.services.marketing') },
-    { key: 'impreso', label: t('contacto.services.impreso') },
-  ]
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -40,281 +25,189 @@ const ContactoPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     
-    // Crear mensaje formateado para WhatsApp
     const whatsappMessage = `
 🎯 *NUEVA SOLICITUD DE CONTACTO*
 
 👤 *Nombre:* ${formData.name}
-📧 *Email:* ${formData.email}${formData.phone ? `\n📱 *WhatsApp:* ${formData.phone}` : ''}
-🎨 *Servicio:* ${formData.service}
+📧 *Email:* ${formData.email}${formData.phone ? `\n📱 *Teléfono:* ${formData.phone}` : ''}
 
-📝 *Sobre el Proyecto:*
+📝 *Mensaje:*
 ${formData.message}
     `.trim()
     
-    // Abrir WhatsApp con mensaje pre-formateado
     const whatsappURL = `https://wa.me/527228720520?text=${encodeURIComponent(whatsappMessage)}`
     window.open(whatsappURL, '_blank')
     
-    // Reset form
-    setFormData({ name: '', email: '', phone: '', service: '', message: '' })
+    setFormData({ name: '', email: '', phone: '', message: '' })
   }
 
-  const contactMethods = [
+  const contactInfo = [
     {
       icon: Phone,
-      title: t('contacto.methods.whatsapp'),
+      label: 'WhatsApp',
       value: '+52 722 872 0520',
       link: 'https://wa.me/527228720520',
-      color: 'from-emerald-500 to-emerald-600',
+      color: 'from-emerald-500 to-emerald-600'
     },
     {
       icon: MapPin,
-      title: t('contacto.methods.location'),
+      label: 'Ubicación',
       value: 'México',
       link: null,
-      color: 'from-fuchsia-500 to-fuchsia-600',
+      color: 'from-violet-500 to-violet-600'
+    },
+    {
+      icon: Calendar,
+      label: 'Disponibilidad',
+      value: 'Lun - Vie, 9:00 - 19:00',
+      link: null,
+      color: 'from-cyan-500 to-cyan-600'
     },
   ]
 
-  const socialLinks = [
-    { icon: Instagram, url: 'https://instagram.com/ainimation', label: 'Instagram' },
-    { icon: Linkedin, url: 'https://linkedin.com/in/luisvirrueta', label: 'LinkedIn' },
-  ]
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28">
       <SEOHead 
         title="Contacto - Luis Virrueta | Psicólogo"
-        description="Conversemos sobre tu proceso de transformación personal. Respondo en menos de 24 horas. Consulta inicial gratuita para personas que quieren cambiar su realidad."
-        image="/Hero Contacto.mp4"
+        description="¿Listo para transformar tu realidad? Agenda tu primera sesión y comienza tu proceso de transformación personal con el método AION©."
+        image="/conteacto luis.mp4"
         url="/contacto"
         type="website"
         tags={['contacto', 'psicología', 'terapia', 'luis virrueta', 'transformación personal']}
       />
       
       {/* Hero Section */}
-      <section ref={heroRef} className="relative py-20 lg:py-40 px-6 lg:px-20 overflow-hidden">
-        {/* Video de fondo cinematográfico */}
-        <div className="absolute inset-0 -top-20 lg:-top-28 -bottom-16 overflow-hidden pointer-events-none z-0">
+      <section ref={heroRef} className="relative pt-12 lg:pt-20 pb-40 lg:pb-56 px-6 lg:px-20 overflow-hidden">
+        {/* Video de fondo */}
+        <div className="absolute inset-0 -top-16 lg:-top-24 -bottom-80 lg:-bottom-96 overflow-hidden pointer-events-none z-0">
           <video
             autoPlay
             loop
             muted
             playsInline
             preload="auto"
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-50"
-            style={{ minWidth: '100vw', minHeight: '100%', objectFit: 'cover', objectPosition: 'center' }}
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-60"
+            style={{
+              minWidth: '100vw',
+              minHeight: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center'
+            }}
           >
-            <source src="/Hero Contacto.mp4" type="video/mp4" />
+            <source src="/conteacto luis.mp4" type="video/mp4" />
           </video>
-          <div className="absolute inset-0 bg-black/30" />
         </div>
+        
+        {/* Gradiente inferior */}
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/100 via-black/50 to-transparent z-[5] pointer-events-none" />
 
-        <div className="relative z-20 max-w-7xl mx-auto">
-          {/* Title con efecto 3D igual que Portafolio */}
+        <div className="relative max-w-6xl mx-auto z-10">
+          {/* Título */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="text-6xl lg:text-9xl font-bold text-center mb-12 font-display relative"
-            style={{ 
-              letterSpacing: '0.08em',
-              fontWeight: 300,
-              textTransform: 'uppercase'
-            }}
+            transition={{ duration: 1 }}
+            className="text-center mb-12"
           >
-            {(() => {
-              const title = t('contacto.hero.title')
-              const firstLetter = title.charAt(0)
-              const lastLetter = title.charAt(title.length - 1)
-              const middle = title.slice(1, -1)
-              
-              return (
-                <span className="relative inline-block">
-                  {/* First letter with gradient */}
-                  <span className="relative">
-                    <span className="absolute inset-0 bg-gradient-to-br from-purple-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>{firstLetter}</span>
-                    <span className="relative text-white">{firstLetter}</span>
-                  </span>
-                  {/* Middle */}
-                  <span className="text-white">{middle}</span>
-                  {/* Last letter with gradient */}
-                  <span className="relative">
-                    <span className="absolute inset-0 bg-gradient-to-tl from-cyan-400 via-white to-white bg-clip-text text-transparent blur-sm" style={{ transform: 'translateY(-2px)' }}>{lastLetter}</span>
-                    <span className="relative text-white">{lastLetter}</span>
-                  </span>
-                </span>
-              )
-            })()}
+            <span
+              className="text-6xl sm:text-7xl lg:text-9xl font-light text-white inline-block"
+              style={{ 
+                letterSpacing: '0.15em',
+                textShadow: '0 0 60px rgba(255, 255, 255, 0.15), 0 10px 40px rgba(168, 85, 247, 0.1)'
+              }}
+            >
+              CONTACTO
+            </span>
           </motion.h1>
 
-          {/* Subtitle con estructura elegante */}
+          {/* Badge con icono */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="flex justify-center mb-10"
+          >
+            <div className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5">
+              <MessageSquare className="w-4 h-4 text-white/60" />
+              <span className="text-sm sm:text-base font-light text-white/70 tracking-wide">
+                Inicia tu Transformación
+              </span>
+            </div>
+          </motion.div>
+          
+          {/* Pregunta provocativa */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.4 }}
-            className="flex flex-col items-center gap-6 mb-12"
+            className="text-center text-lg lg:text-xl text-white/60 max-w-3xl mx-auto font-light italic"
+            style={{ letterSpacing: '0.05em' }}
           >
-            {/* Etiqueta superior con borde */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="relative px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5"
-            >
-              <div className="flex items-center gap-3">
-                <MessageSquare className="w-4 h-4 text-white/60" strokeWidth={1.5} />
-                <span className="text-sm lg:text-base text-white/80 font-light tracking-wider uppercase">
-                  {t('contacto.hero.badge')}
-                </span>
-              </div>
-            </motion.div>
-
-            {/* Pregunta provocativa */}
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-base lg:text-lg text-white/60 text-center max-w-3xl mx-auto font-extralight italic"
-              style={{ letterSpacing: '0.08em' }}
-            >
-              {t('contacto.hero.subtitle')}
-            </motion.p>
-          </motion.div>
-
-          {/* Línea con efecto desde el centro expandiéndose */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={isHeroInView ? { opacity: 1 } : {}}
-            transition={{ duration: 1, delay: 0.8 }}
-            className="relative h-px mx-auto w-96 overflow-hidden"
-          >
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={isHeroInView ? { scaleX: 1 } : {}}
-              transition={{ duration: 1.2, delay: 0.9, ease: [0.76, 0, 0.24, 1] }}
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent"
-              style={{ transformOrigin: 'center' }}
-            />
-            {/* Punto luminoso que se mueve */}
-            <motion.div
-              animate={{
-                x: ['-100%', '100%'],
-                opacity: [0, 1, 1, 0]
-              }}
-              transition={{
-                duration: 2.5,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: 1.5
-              }}
-              className="absolute inset-0 w-24 h-full bg-gradient-to-r from-transparent via-white to-transparent blur-sm"
-              style={{ left: '50%' }}
-            />
-          </motion.div>
-        </div>
-
-        {/* Degradado suave en la parte inferior para transición elegante */}
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-black pointer-events-none z-30" />
-      </section>
-
-      {/* Contact Methods - Premium Minimal */}
-      <section className="py-20 px-6 lg:px-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-8">
-            {contactMethods.map((method, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                {method.link ? (
-                  <a
-                    href={method.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block h-full group"
-                  >
-                    <div className="h-full border border-white/10 rounded-2xl p-8 hover:border-white/20 transition-all duration-500 bg-white/[0.02]">
-                      <method.icon className="w-10 h-10 text-white/40 group-hover:text-white/70 mb-6 transition-colors duration-500" strokeWidth={1} />
-                      <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light mb-3">{method.title}</h3>
-                      <p className="text-white font-extralight text-lg tracking-wide leading-relaxed">
-                        {method.value}
-                      </p>
-                    </div>
-                  </a>
-                ) : (
-                  <div className="h-full border border-white/10 rounded-2xl p-8 bg-white/[0.02]">
-                    <method.icon className="w-10 h-10 text-white/40 mb-6 transition-colors" strokeWidth={1} />
-                    <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light mb-3">{method.title}</h3>
-                    <p className="text-white font-extralight text-lg tracking-wide leading-relaxed">
-                      {method.value}
-                    </p>
-                  </div>
-                )}
-              </motion.div>
-            ))}
-          </div>
+            ¿Qué filtros están creando tu realidad actual?
+          </motion.p>
         </div>
       </section>
 
-      {/* Main Content: Form + Info */}
-      <section className="py-20 px-6 lg:px-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-[1.1fr_1fr] gap-16">
-            {/* Form */}
+      {/* Form & Contact Info Section */}
+      <section ref={formRef} className="relative py-20 lg:py-32 px-6 lg:px-20">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+            
+            {/* Formulario */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              animate={isFormInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8 }}
               className="space-y-8"
             >
-              <h2 className="text-4xl lg:text-6xl font-extralight text-white tracking-wide leading-tight">
-                {t('contacto.form.title')} <span className="italic font-light">{t('contacto.form.titleItalic')}</span>
-              </h2>
+              <div>
+                <h2 className="text-3xl lg:text-4xl font-light text-white mb-4" style={{ letterSpacing: '0.05em' }}>
+                  Hablemos
+                </h2>
+                <p className="text-white/60 font-light leading-relaxed">
+                  Cuéntame sobre tu proceso. La primera conversación es el inicio de tu transformación.
+                </p>
+              </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Name */}
+                {/* Nombre */}
                 <div>
-                  <label htmlFor="name" className="block text-white/30 mb-3 text-[10px] uppercase tracking-[0.3em] font-light">
-                    {t('contacto.form.nameLabel')} {t('contacto.form.required')}
+                  <label htmlFor="name" className="block text-sm font-light text-white/70 mb-2 tracking-wide">
+                    Nombre *
                   </label>
                   <input
                     type="text"
                     id="name"
                     name="name"
+                    required
                     value={formData.name}
                     onChange={handleChange}
-                    required
-                    className="w-full px-0 py-4 bg-transparent border-b border-white/10 text-white font-extralight text-lg tracking-wide placeholder-white/20 focus:outline-none focus:border-white/30 transition-all"
-                    placeholder={t('contacto.form.namePlaceholder')}
+                    className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-lg text-white font-light placeholder-white/30 focus:outline-none focus:border-violet-500/50 focus:bg-white/10 transition-all"
+                    placeholder="Tu nombre completo"
                   />
                 </div>
 
                 {/* Email */}
                 <div>
-                  <label htmlFor="email" className="block text-white/30 mb-3 text-[10px] uppercase tracking-[0.3em] font-light">
-                    {t('contacto.form.emailLabel')} {t('contacto.form.required')}
+                  <label htmlFor="email" className="block text-sm font-light text-white/70 mb-2 tracking-wide">
+                    Email *
                   </label>
                   <input
                     type="email"
                     id="email"
                     name="email"
+                    required
                     value={formData.email}
                     onChange={handleChange}
-                    required
-                    className="w-full px-0 py-4 bg-transparent border-b border-white/10 text-white font-extralight text-lg tracking-wide placeholder-white/20 focus:outline-none focus:border-white/30 transition-all"
-                    placeholder={t('contacto.form.emailPlaceholder')}
+                    className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-lg text-white font-light placeholder-white/30 focus:outline-none focus:border-violet-500/50 focus:bg-white/10 transition-all"
+                    placeholder="tu@email.com"
                   />
                 </div>
 
-                {/* Phone */}
+                {/* Teléfono */}
                 <div>
-                  <label htmlFor="phone" className="block text-white/30 mb-3 text-[10px] uppercase tracking-[0.3em] font-light">
-                    {t('contacto.form.whatsappLabel')}
+                  <label htmlFor="phone" className="block text-sm font-light text-white/70 mb-2 tracking-wide">
+                    Teléfono (opcional)
                   </label>
                   <input
                     type="tel"
@@ -322,122 +215,114 @@ ${formData.message}
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-0 py-4 bg-transparent border-b border-white/10 text-white font-extralight text-lg tracking-wide placeholder-white/20 focus:outline-none focus:border-white/30 transition-all"
-                    placeholder={t('contacto.form.whatsappPlaceholder')}
+                    className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-lg text-white font-light placeholder-white/30 focus:outline-none focus:border-violet-500/50 focus:bg-white/10 transition-all"
+                    placeholder="+52 ..."
                   />
                 </div>
 
-                {/* Service - Dropdown with 12 services */}
+                {/* Mensaje */}
                 <div>
-                  <label htmlFor="service" className="block text-white/30 mb-3 text-[10px] uppercase tracking-[0.3em] font-light">
-                    {t('contacto.form.serviceLabel')} {t('contacto.form.required')}
-                  </label>
-                  <select
-                    id="service"
-                    name="service"
-                    value={formData.service}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-0 py-4 bg-transparent border-b border-white/10 text-white font-extralight text-lg tracking-wide focus:outline-none focus:border-white/30 transition-all appearance-none cursor-pointer"
-                  >
-                    <option value="" className="bg-zinc-900">{t('contacto.form.servicePlaceholder')}</option>
-                    {services.map((service, i) => (
-                      <option key={i} value={service.label} className="bg-zinc-900">{service.label}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Message */}
-                <div>
-                  <label htmlFor="message" className="block text-white/30 mb-3 text-[10px] uppercase tracking-[0.3em] font-light">
-                    {t('contacto.form.messageLabel')} {t('contacto.form.required')}
+                  <label htmlFor="message" className="block text-sm font-light text-white/70 mb-2 tracking-wide">
+                    Mensaje *
                   </label>
                   <textarea
                     id="message"
                     name="message"
+                    required
+                    rows="6"
                     value={formData.message}
                     onChange={handleChange}
-                    required
-                    rows={6}
-                    className="w-full px-0 py-4 bg-transparent border-b border-white/10 text-white font-extralight text-lg tracking-wide placeholder-white/20 focus:outline-none focus:border-white/30 transition-all resize-none leading-relaxed"
-                    placeholder={t('contacto.form.messagePlaceholder')}
+                    className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-lg text-white font-light placeholder-white/30 focus:outline-none focus:border-violet-500/50 focus:bg-white/10 transition-all resize-none"
+                    placeholder="Cuéntame qué te trae aquí..."
                   />
                 </div>
 
-                {/* Submit Button - Opens WhatsApp */}
+                {/* Botón Submit */}
                 <motion.button
                   type="submit"
-                  whileHover={{ x: 4 }}
+                  whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="group relative mt-8 flex items-center gap-3 text-white font-extralight text-sm tracking-[0.3em] uppercase overflow-hidden"
+                  className="w-full px-8 py-5 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-light rounded-lg transition-all duration-300 flex items-center justify-center gap-3 group"
                 >
-                  <span className="relative z-10">{t('contacto.form.submitButton')}</span>
-                  <motion.div
-                    className="w-12 h-px bg-white/40 group-hover:bg-white transition-colors"
-                    whileHover={{ width: 60 }}
-                  />
-                  <Send className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" strokeWidth={1} />
+                  <span className="tracking-wide">Enviar por WhatsApp</span>
+                  <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
               </form>
             </motion.div>
 
-            {/* Info Sidebar */}
+            {/* Información de Contacto */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="space-y-12 lg:pl-8"
+              animate={isFormInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="space-y-8"
             >
-              {/* Response Time */}
-              <div className="border border-white/10 rounded-2xl p-8 bg-white/[0.02]">
-                <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light mb-6">{t('contacto.sidebar.responseTitle')}</h3>
-                <p className="text-white/60 font-extralight text-base leading-[1.9] tracking-wide mb-6">
-                  {t('contacto.sidebar.responseText1')} <span className="text-white font-light">{t('contacto.sidebar.responseHighlight1')}</span> {t('contacto.sidebar.responseText2')}
-                </p>
-                <p className="text-white/60 font-extralight text-base leading-[1.9] tracking-wide">
-                  {t('contacto.sidebar.responseText3')} <span className="text-white font-light">{t('contacto.sidebar.responseHighlight2')}</span>.
-                </p>
-              </div>
-
-              {/* What Happens Next */}
-              <div className="space-y-8">
-                <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light">{t('contacto.sidebar.nextTitle')}</h3>
-                <div className="space-y-6">
-                  {t('contacto.sidebar.steps').map((step, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, x: 20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.1 }}
-                      className="flex items-start gap-6"
-                    >
-                      <span className="text-white/20 font-extralight text-2xl tracking-wider">
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                      <p className="text-white/60 font-extralight text-base leading-[1.9] tracking-wide pt-1">{step}</p>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Social Links */}
               <div>
-                <h3 className="text-white/30 uppercase tracking-[0.3em] text-[10px] font-light mb-6">{t('contacto.sidebar.socialTitle')}</h3>
-                <div className="flex gap-4">
-                  {socialLinks.map((social, i) => (
-                    <motion.a
-                      key={i}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ x: 4 }}
-                      className="w-12 h-12 flex items-center justify-center border border-white/10 rounded-full hover:border-white/30 transition-all duration-500"
-                    >
-                      <social.icon className="w-5 h-5 text-white/40" strokeWidth={1} />
-                    </motion.a>
-                  ))}
+                <h3 className="text-2xl lg:text-3xl font-light text-white mb-6" style={{ letterSpacing: '0.05em' }}>
+                  ¿Cómo trabajo?
+                </h3>
+                <div className="space-y-4 text-white/60 font-light leading-relaxed">
+                  <p>
+                    Trabajo desde el <span className="text-white font-normal">inconsciente</span>, no desde los síntomas. 
+                    Si estás listo para dejar de tapar y comenzar a <span className="text-white font-normal">transformar</span>, 
+                    este es el espacio.
+                  </p>
+                  <p>
+                    Cada sesión es única. No hay protocolos fijos. Cada proceso se adapta a lo que <span className="text-white font-normal">necesitas atravesar</span>, 
+                    no a lo que crees que deberías cambiar.
+                  </p>
                 </div>
+              </div>
+
+              {/* Cards de contacto */}
+              <div className="space-y-4">
+                {contactInfo.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isFormInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
+                  >
+                    {item.link ? (
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block p-6 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-white/20 transition-all duration-300 group"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className={`p-3 bg-gradient-to-br ${item.color} rounded-lg`}>
+                            <item.icon className="w-5 h-5 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm text-white/50 font-light mb-1">{item.label}</p>
+                            <p className="text-white font-light group-hover:text-violet-300 transition-colors">{item.value}</p>
+                          </div>
+                        </div>
+                      </a>
+                    ) : (
+                      <div className="p-6 bg-white/5 border border-white/10 rounded-lg">
+                        <div className="flex items-center gap-4">
+                          <div className={`p-3 bg-gradient-to-br ${item.color} rounded-lg`}>
+                            <item.icon className="w-5 h-5 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm text-white/50 font-light mb-1">{item.label}</p>
+                            <p className="text-white font-light">{item.value}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* CTA adicional */}
+              <div className="p-6 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/10 border border-violet-500/20 rounded-lg">
+                <p className="text-white/80 font-light leading-relaxed">
+                  <span className="text-violet-300 font-normal">Respuesta en menos de 24 horas.</span> La primera conversación 
+                  es sin compromiso. Hablamos, vemos si resuena, y decidimos juntos.
+                </p>
               </div>
             </motion.div>
           </div>
