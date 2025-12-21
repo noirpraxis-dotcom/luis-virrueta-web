@@ -71,3 +71,4 @@ Edita `tailwind.config.js` para personalizar colores y fuentes.
 - **Mobile**: < 768px (Toggle button visible)
 - **Tablet (iPad)**: 768px - 1023px (Toggle button visible)
 - **Desktop**: ≥ 1024px (Header horizontal visible)
+# Deploy trigger 12/21/2025 17:26:24
