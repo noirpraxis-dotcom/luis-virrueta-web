@@ -54,8 +54,8 @@ const TermsConditionsPage = () => {
           {/* Introduction */}
           <div className="bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-3xl p-8 border border-purple-100">
             <p className="text-gray-700 leading-relaxed text-lg">
-              Bienvenido a <span className="font-semibold bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent">LUXMANIA</span>. 
-              Al acceder o usar nuestro sitio web y servicios, aceptas estar vinculado por estos Términos y Condiciones. 
+              Bienvenido a <span className="font-semibold bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent">Luis Virrueta</span>. 
+              Al acceder o usar mi sitio web y servicios, aceptas estar vinculado por estos Términos y Condiciones. 
               Por favor, léelos cuidadosamente.
             </p>
           </div>
@@ -70,16 +70,14 @@ const TermsConditionsPage = () => {
 
           {/* Services Description */}
           <Section title="2. Servicios" icon={Palette}>
-            <p className="mb-3">LUXMANIA proporciona:</p>
+            <p className="mb-3">Luis Virrueta proporciona:</p>
             <ul className="list-disc pl-6 space-y-2 text-gray-600">
-              <li>Branding psicológico y estrategia de marca</li>
-              <li>Arquetipos de marca y storytelling</li>
-              <li>Avatares IA personalizados</li>
-              <li>Diseño UX/UI</li>
-              <li>Consultoría de identidad de marca</li>
-              <li>Sesiones de sanación (Emotion Code, Body Code, Belief Code)</li>
+              <li>Psicoterapia y consultoría psicológica profesional</li>
+              <li>Método AION© - Transformación personal y desarrollo</li>
+              <li>Sesiones individuales de terapia y coaching</li>
+              <li>Talleres y programas de desarrollo personal</li>
               <li>Contenido educativo del blog</li>
-              <li>Productos digitales y tienda online (próximamente)</li>
+              <li>Recursos y materiales de psicología aplicada</li>
             </ul>
           </Section>
 
@@ -121,42 +119,41 @@ const TermsConditionsPage = () => {
 
             <Subsection title="4.3 Reembolsos y Cancelaciones">
               <p>
-                <strong>Sesiones de Consultoría/Sanación:</strong> Las cancelaciones deben hacerse al menos 24 horas antes de la sesión programada. 
+                <strong>Sesiones de Terapia/Consultoría:</strong> Las cancelaciones deben hacerse al menos 24 horas antes de la sesión programada. 
                 No se reembolsan citas perdidas sin aviso de 24 horas.
               </p>
               <p className="mt-3">
-                <strong>Productos Digitales:</strong> Debido a la naturaleza de los productos digitales, todas las ventas son finales una vez que se otorga el acceso.
+                <strong>Programas y Talleres:</strong> Reembolsos disponibles solo si el programa no ha comenzado. Una vez iniciado, no se otorgan reembolsos.
               </p>
               <p className="mt-3">
-                <strong>Servicios de Branding/Diseño:</strong> Reembolsos disponibles solo si el proyecto no ha comenzado. Una vez iniciado el trabajo, no se otorgan reembolsos.
-              </p>
-              <p className="mt-3">
-                <strong>Tienda Online (Próximamente):</strong> Devoluciones aceptadas dentro de 14 días de entrega si los artículos no están usados y están en su condición original.
+                <strong>Materiales Digitales:</strong> Debido a la naturaleza de los productos digitales, todas las ventas son finales una vez que se otorga el acceso.
               </p>
             </Subsection>
           </Section>
 
           {/* Branding & Healing Services */}
-          <Section title="5. Servicios de Branding y Sanación" icon={Palette}>
-            <Subsection title="5.1 Naturaleza de los Servicios de Branding">
+          <Section title="5. Servicios Profesionales de Psicología" icon={Palette}>
+            <Subsection title="5.1 Naturaleza de los Servicios">
               <p>
-                Nuestros servicios de branding psicológico, arquetipos de marca y diseño UX/UI son servicios de consultoría profesional. 
-                Los resultados dependen de la implementación del cliente y factores de mercado externos. No garantizamos resultados específicos de ventas o crecimiento.
+                Mis servicios de psicoterapia y desarrollo personal son servicios profesionales regulados. 
+                Opero bajo los códigos deontológicos y éticos de la profesión de psicología. 
+                Los resultados dependen del compromiso del cliente y su proceso personal. No garantizo resultados específicos.
               </p>
             </Subsection>
 
-            <Subsection title="5.2 Sesiones de Sanación">
+            <Subsection title="5.2 Confidencialidad Profesional">
               <p>
-                Nuestros servicios de sanación son prácticas complementarias y alternativas de bienestar. No son un sustituto 
-                del consejo, diagnóstico o tratamiento médico profesional. Siempre busca el consejo de tu médico u otro proveedor de salud calificado.
-              </p>
-              <p className="mt-3">
-                Si bien nos esforzamos por proporcionar experiencias de sanación beneficiosas, los resultados varían por individuo. 
-                No hacemos garantías sobre resultados específicos.
+                Toda información compartida en las sesiones está protegida por secreto profesional según las normas 
+                del Código Ético del Psicólogo. Solo se revelará información en casos exigidos por ley o con tu consentimiento expreso.
               </p>
             </Subsection>
 
-            <Subsection title="5.3 Paquetes de Sesiones">
+            <Subsection title="5.3 Límites del Servicio">
+              <p>
+                Los servicios de terapia online no son adecuados para crisis o emergencias. Si experimentas una crisis, 
+                contacta servicios de emergencia locales inmediatamente.
+              </p>
+            </Subsection>
               <p>
                 Los paquetes de sesiones no expiran pero deben ser utilizados por el comprador original. Los paquetes no son transferibles 
                 ni reembolsables una vez completada la primera sesión.

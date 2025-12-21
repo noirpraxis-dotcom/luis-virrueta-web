@@ -1,7 +1,6 @@
 import Home from '../components/Home'
 import Hero from '../components/Hero'
 import LuisViruettaIntro from '../components/LuisViruettaIntro'
-import ProblemSolutionSection from '../components/ProblemSolutionSection'
 import IndividualServices from '../components/IndividualServices'
 import SEOHead from '../components/SEOHead'
 import AionSection from '../components/AionSection'
@@ -26,9 +25,6 @@ const HomePage = () => {
       
       {/* Luis Virrueta Intro: Compact elegant section - BEFORE Hero stats */}
       <LuisViruettaIntro />
-      
-      {/* Problem Solution Section: Aquello que llamas problema - Con CTA al método */}
-      <ProblemSolutionSection />
       
       {/* Individual Services: Servicios psicológicos y consultoría */}
       <IndividualServices />

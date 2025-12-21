@@ -59,8 +59,8 @@ const CookiePolicyPage = () => {
           {/* Introduction */}
           <div className="bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-3xl p-8 border border-purple-100">
             <p className="text-gray-700 leading-relaxed text-lg">
-              Esta Política de Cookies explica cómo <span className="font-semibold bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent">LUXMANIA</span> utiliza 
-              cookies y tecnologías similares cuando visitas nuestro sitio web. Al continuar usando nuestro sitio web, 
+              Esta Política de Cookies explica cómo <span className="font-semibold bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent">Luis Virrueta</span> utiliza 
+              cookies y tecnologías similares cuando visitas mi sitio web. Al continuar usando mi sitio web, 
               consientes el uso de cookies como se describe en esta política.
             </p>
           </div>

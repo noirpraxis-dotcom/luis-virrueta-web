@@ -54,29 +54,29 @@ const PrivacyPolicyPage = () => {
           {/* Introduction */}
           <div className="bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-3xl p-8 border border-purple-100">
             <p className="text-gray-700 leading-relaxed text-lg">
-              En <span className="font-semibold bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent">LUXMANIA</span>, 
-              tu privacidad es nuestra prioridad. Esta política explica cómo recopilamos, usamos y protegemos tu información personal cuando 
-              visitas nuestro sitio web y utilizas nuestros servicios de branding psicológico, arquetipos de marca, avatares IA, y diseño UX/UI.
+              En <span className="font-semibold bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent">Luis Virrueta</span>, 
+              tu privacidad es mi prioridad. Esta política explica cómo recopilo, uso y protejo tu información personal cuando 
+              visitas mi sitio web y utilizas mis servicios de psicología, psicotera ia, desarrollo personal y transformación a través del método AION©.
             </p>
           </div>
 
           {/* Information We Collect */}
           <Section title="1. Información que Recopilamos" icon={Database}>
             <Subsection title="1.1 Información Personal">
-              <p>Recopilamos información que nos proporcionas voluntariamente cuando:</p>
+              <p>Recopilo información que me proporcionas voluntariamente cuando:</p>
               <ul className="list-disc pl-6 space-y-2 mt-3 text-gray-600">
-                <li>Agendas una sesión de consultoría o sesión de sanación</li>
-                <li>Te suscribes a nuestro newsletter</li>
-                <li>Nos contactas vía email o formularios de contacto</li>
-                <li>Realizas una compra en nuestra tienda online</li>
-                <li>Interactúas con nuestro contenido del blog</li>
+                <li>Agendas una sesión de terapia, consultoría o transformación personal</li>
+                <li>Te suscribes a mi newsletter</li>
+                <li>Me contactas vía email, WhatsApp o formularios de contacto</li>
+                <li>Part icipas en talleres, cursos o programas online</li>
+                <li>Interactúas con el contenido del blog</li>
               </ul>
               <p className="mt-4">Esta información puede incluir:</p>
               <ul className="list-disc pl-6 space-y-2 mt-3 text-gray-600">
                 <li>Nombre completo y datos de contacto (email, teléfono, WhatsApp)</li>
-                <li>Información sobre tu marca o proyecto</li>
-                <li>Información de facturación y envío</li>
+                <li>Información sobre tus objetivos de transformación personal</li>
                 <li>Preferencias de comunicación</li>
+                <li>Notas de sesiones (con tu consentimiento expreso y bajo confidencialidad profesional)</li>
               </ul>
             </Subsection>
 
@@ -103,17 +103,16 @@ const PrivacyPolicyPage = () => {
           </Section>
 
           {/* How We Use Your Information */}
-          <Section title="2. Cómo Usamos Tu Información" icon={Eye}>
-            <p className="mb-4">Utilizamos la información recopilada para:</p>
+          <Section title="2. Cómo Uso Tu Información" icon={Eye}>
+            <p className="mb-4">Utilizo la información recopilada para:</p>
             <ul className="list-disc pl-6 space-y-2 text-gray-600">
-              <li>Proporcionar y gestionar nuestros servicios de branding, diseño, y consultoría</li>
+              <li>Proporcionar y gestionar servicios de terapia, consultoría y transformación personal</li>
               <li>Procesar tus solicitudes de sesiones y consultas</li>
-              <li>Enviarte comunicaciones sobre tus proyectos y servicios contratados</li>
-              <li>Mejorar nuestros servicios basándonos en tu feedback</li>
+              <li>Enviarte comunicaciones sobre tus sesiones y programas contratados</li>
+              <li>Mejorar mis servicios basándome en tu feedback</li>
               <li>Enviarte contenido relevante del blog y recursos educativos (solo si te suscribiste)</li>
-              <li>Procesar pagos de forma segura a través de proveedores externos</li>
-              <li>Cumplir con obligaciones legales y fiscales</li>
-              <li>Prevenir fraude y garantizar la seguridad de nuestros servicios</li>
+              <li>Cumplir con obligaciones legales y éticas profesionales</li>
+              <li>Garantizar la confidencialidad y seguridad según los códigos deontológicos de psicología</li>
             </ul>
           </Section>
 
@@ -160,9 +159,9 @@ const PrivacyPolicyPage = () => {
               <li><strong>Retirar consentimiento:</strong> En cualquier momento, sin afectar la legalidad del procesamiento previo</li>
             </ul>
             <p className="mt-4 text-gray-600">
-              Para ejercer cualquiera de estos derechos, contáctanos en:{' '}
-              <a href="mailto:contacto@luxmania.com" className="text-purple-600 hover:text-fuchsia-600 underline font-medium transition-colors">
-                contacto@luxmania.com
+              Para ejercer cualquiera de estos derechos, contáctame en WhatsApp:{' '}
+              <a href="https://wa.me/527228720520" className="text-purple-600 hover:text-fuchsia-600 underline font-medium transition-colors">
+                +52 722 872 0520
               </a>
             </p>
           </Section>
@@ -170,8 +169,8 @@ const PrivacyPolicyPage = () => {
           {/* International Transfers */}
           <Section title="6. Transferencias Internacionales" icon={Globe}>
             <p>
-              LUXMANIA opera principalmente en México. Si accedes a nuestros servicios desde otras jurisdicciones, 
-              tu información puede ser transferida y procesada en México. Al usar nuestros servicios, consientes estas transferencias.
+              Mi práctica profesional opera principalmente en México. Si accedes a mis servicios desde otras jurisdicciones, 
+              tu información puede ser transferida y procesada en México. Al usar mis servicios, consientes estas transferencias.
             </p>
           </Section>
 
@@ -212,8 +211,8 @@ const PrivacyPolicyPage = () => {
               Si tienes preguntas, inquietudes o solicitudes relacionadas con esta Política de Privacidad, contáctanos:
             </p>
             <div className="bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-2xl p-6 border border-purple-100">
-              <p className="font-semibold text-gray-900 mb-2">LUXMANIA</p>
-              <p className="text-gray-600">Email: <a href="mailto:contacto@luxmania.com" className="text-purple-600 hover:text-fuchsia-600 underline">contacto@luxmania.com</a></p>
+              <p className="font-semibold text-gray-900 mb-2">Luis Virrueta - Psicólogo</p>
+              <p className="text-gray-600">WhatsApp: <a href="https://wa.me/527228720520" className="text-purple-600 hover:text-fuchsia-600 underline">+52 722 872 0520</a></p>
               <p className="text-gray-600">Ubicación: México</p>
             </div>
           </Section>
