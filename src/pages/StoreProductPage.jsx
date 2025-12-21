@@ -16,9 +16,9 @@ const StoreProductPage = () => {
     1: {
       name: 'Sesión Individual',
       category: 'Psicoterapia',
-      price: '$1,200 MXN',
+      price: '$800 MXN',
       duration: '60 min',
-      image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1200&h=800&fit=crop',
+      image: '/individual imagen.jpg',
       description: 'Sesión de psicoterapia individual donde trabajamos desde el inconsciente, no desde los síntomas. A través del método AION© identificamos los filtros que están creando tu realidad actual y comenzamos el proceso de transformación.',
       longDescription: 'Esta no es una sesión tradicional. No venimos a tapar síntomas ni a "sentirnos mejor". Venimos a atravesar lo que te sostiene atrapado. Trabajo desde el psicoanálisis, la neurociencia y la filosofía de la conciencia. Si buscas respuestas rápidas, este no es el espacio. Si buscas transformación real, bienvenido.',
       benefits: [
@@ -41,9 +41,9 @@ const StoreProductPage = () => {
     2: {
       name: 'Paquete 4 Sesiones',
       category: 'Proceso Terapéutico',
-      price: '$4,320 MXN',
+      price: '$2,880 MXN',
       duration: '4 sesiones de 60 min',
-      image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1200&h=800&fit=crop',
+      image: '/paquete 4 sesiones imagen.jpg',
       description: 'Paquete de 4 sesiones con 10% de ahorro. Para procesos que requieren continuidad y profundidad. La transformación real no ocurre en una sola sesión.',
       longDescription: 'Este paquete te permite trabajar con continuidad. Cada sesión construye sobre la anterior. No es acumulativo: es estructural. Cada encuentro desarma una capa más profunda. Si estás listo para un proceso real, no para un parche, este es tu formato.',
       benefits: [
@@ -70,7 +70,7 @@ const StoreProductPage = () => {
       category: 'Organizacional',
       price: '$2,500 MXN',
       duration: '90 min',
-      image: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=1200&h=800&fit=crop',
+      image: '/empresa imagen.jpg',
       description: 'Psicología organizacional aplicada. Trabajamos el clima laboral desde el inconsciente colectivo. No es team building: es reestructuración de dinámicas.',
       longDescription: 'Las empresas no son máquinas. Son organismos vivos con dinámicas inconscientes. Trabajamos desde ahí: conflictos no expresados, jerarquías ocultas, comunicación rota. Si quieres un equipo que funcione de verdad, no eventos motivacionales, esto es lo que necesitas.',
       benefits: [
@@ -94,9 +94,9 @@ const StoreProductPage = () => {
     4: {
       name: 'Taller Método AION©',
       category: 'Desarrollo Personal',
-      price: '$3,000 MXN',
+      price: '$2,500 MXN',
       duration: '3 horas intensivas',
-      image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=1200&h=800&fit=crop',
+      image: '/taller aion imagen.jpg',
       description: 'Taller grupal donde aprenderás las bases completas del Método AION©. Identificarás tus filtros y aprenderás a transformarlos de forma autónoma.',
       longDescription: 'Este taller no es informativo: es experiencial. No saldrás con "conocimiento", saldrás con herramientas aplicadas. Trabajamos en vivo tus filtros, los desmontamos, y te llevas un mapa claro de tu proceso. Incluye comunidad privada para seguimiento.',
       benefits: [
@@ -117,62 +117,6 @@ const StoreProductPage = () => {
       ],
       gradient: 'from-amber-600/20 to-orange-600/20',
       borderGradient: 'from-amber-500 to-orange-500'
-    },
-    5: {
-      name: 'Programa 8 Semanas',
-      category: 'Transformación Profunda',
-      price: '$8,960 MXN',
-      duration: '8 sesiones semanales',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&h=800&fit=crop',
-      description: 'Programa intensivo de 8 semanas. Transformación sostenida con acompañamiento continuo. Para procesos profundos que requieren estructura y compromiso.',
-      longDescription: '8 semanas de trabajo continuo. No es un curso: es un proceso. Cada semana desmontamos una capa más profunda. Incluye sesiones semanales, ejercicios diarios, acceso directo vía WhatsApp y comunidad privada. Si estás listo para transformarte de raíz, este es tu programa.',
-      benefits: [
-        'Transformación estructural sostenida',
-        'Acompañamiento continuo durante 8 semanas',
-        'Ejercicios y prácticas semanales',
-        'Acceso directo por WhatsApp',
-        'Comunidad privada de apoyo',
-        'Material exclusivo cada semana',
-        'Certificado de finalización'
-      ],
-      includes: [
-        '8 sesiones de 60 minutos (1 por semana)',
-        'Ejercicios semanales personalizados',
-        'WhatsApp support 24/7',
-        'Acceso a comunidad privada',
-        'Material exclusivo descargable',
-        'Sesión de cierre y plan de continuidad',
-        'Grabación de todas las sesiones'
-      ],
-      gradient: 'from-indigo-600/20 to-purple-600/20',
-      borderGradient: 'from-indigo-500 to-purple-500'
-    },
-    6: {
-      name: 'Asesoría Profesional',
-      category: 'Para Psicólogos',
-      price: '$1,800 MXN',
-      duration: '60 min',
-      image: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=1200&h=800&fit=crop',
-      description: 'Supervisión y mentoría para psicólogos que quieren integrar el método AION© en su práctica profesional. Incluye certificación.',
-      longDescription: 'Supervisión de casos desde el enfoque del método AION©. Te enseño a trabajar desde el inconsciente, no desde protocolos. Revisamos tus casos, desmontamos tus propios filtros como terapeuta, y te llevas herramientas para integrar este enfoque en tu consulta. Certificación disponible tras 10 sesiones.',
-      benefits: [
-        'Supervisión de casos clínicos',
-        'Integración del método AION© en tu práctica',
-        'Trabajo con tus propios filtros como terapeuta',
-        'Desarrollo profesional continuo',
-        'Certificación tras completar programa',
-        'Red de contactos profesionales'
-      ],
-      includes: [
-        'Sesión de 60 minutos por videollamada',
-        'Revisión de casos específicos',
-        'Material complementario',
-        'Certificación (tras 10 sesiones)',
-        'Acceso a grupo profesional',
-        'Descuentos en formaciones futuras'
-      ],
-      gradient: 'from-emerald-600/20 to-teal-600/20',
-      borderGradient: 'from-emerald-500 to-teal-500'
     }
   }
 

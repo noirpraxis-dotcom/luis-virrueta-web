@@ -18,9 +18,9 @@ const StorePage = () => {
       id: 1,
       name: 'Sesión Individual',
       category: 'Psicoterapia',
-      price: '$1,200 MXN',
+      price: '$800 MXN',
       duration: '60 min',
-      image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1200&h=800&fit=crop',
+      image: '/individual imagen.jpg',
       description: 'Sesión de psicoterapia individual. Trabajo profundo con el inconsciente a través del método AION©.',
       shortDesc: 'Transformación desde el inconsciente',
       benefits: [
@@ -36,11 +36,11 @@ const StorePage = () => {
       id: 2,
       name: 'Paquete 4 Sesiones',
       category: 'Proceso Terapéutico',
-      price: '$4,320 MXN',
+      price: '$2,880 MXN',
       duration: '4 sesiones',
-      image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1200&h=800&fit=crop',
+      image: '/paquete 4 sesiones imagen.jpg',
       description: 'Ahorra 10% con este paquete. Proceso de transformación continuo y profundo.',
-      shortDesc: 'Proceso continuo con ahorro',
+      shortDesc: 'Proceso continuo con ahorro del 10%',
       benefits: [
         'Ahorro del 10%',
         'Seguimiento continuo',
@@ -57,7 +57,7 @@ const StorePage = () => {
       category: 'Organizacional',
       price: '$2,500 MXN',
       duration: '90 min',
-      image: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=1200&h=800&fit=crop',
+      image: '/empresa imagen.jpg',
       description: 'Psicología organizacional para equipos. Mejora el clima desde el inconsciente colectivo.',
       shortDesc: 'Transforma tu organización',
       benefits: [
@@ -73,9 +73,9 @@ const StorePage = () => {
       id: 4,
       name: 'Taller Método AION©',
       category: 'Desarrollo Personal',
-      price: '$3,000 MXN',
+      price: '$2,500 MXN',
       duration: '3 horas',
-      image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=1200&h=800&fit=crop',
+      image: '/taller aion imagen.jpg',
       description: 'Taller grupal del Método AION©. Aprende a identificar y transformar tus filtros.',
       shortDesc: 'Aprende el método completo',
       benefits: [
@@ -86,42 +86,6 @@ const StorePage = () => {
       ],
       gradient: 'from-amber-600/20 to-orange-600/20',
       borderGradient: 'from-amber-500 to-orange-500'
-    },
-    {
-      id: 5,
-      name: 'Programa 8 Semanas',
-      category: 'Transformación Profunda',
-      price: '$8,960 MXN',
-      duration: '8 sesiones',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&h=800&fit=crop',
-      description: 'Programa intensivo de transformación. Incluye sesiones semanales y acompañamiento.',
-      shortDesc: 'Transformación sostenida',
-      benefits: [
-        'Acompañamiento continuo',
-        'Ejercicios semanales',
-        'WhatsApp support',
-        'Comunidad privada'
-      ],
-      gradient: 'from-indigo-600/20 to-purple-600/20',
-      borderGradient: 'from-indigo-500 to-purple-500'
-    },
-    {
-      id: 6,
-      name: 'Asesoría Profesional',
-      category: 'Para Psicólogos',
-      price: '$1,800 MXN',
-      duration: '60 min',
-      image: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=1200&h=800&fit=crop',
-      description: 'Supervisión para psicólogos. Integra el método AION© en tu práctica profesional.',
-      shortDesc: 'Supervisión y mentoría',
-      benefits: [
-        'Supervisión de casos',
-        'Integración del método',
-        'Desarrollo profesional',
-        'Certificación disponible'
-      ],
-      gradient: 'from-emerald-600/20 to-teal-600/20',
-      borderGradient: 'from-emerald-500 to-teal-500'
     }
   ]
 
@@ -258,7 +222,7 @@ const StorePage = () => {
                 )}
 
                 {/* Imagen */}
-                <div className="relative aspect-[3/4] overflow-hidden">
+                <div className="relative aspect-[16/9] overflow-hidden">
                   <motion.img
                     src={product.image}
                     alt={product.name}
