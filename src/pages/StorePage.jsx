@@ -130,7 +130,7 @@ const StorePage = () => {
       <SEOHead 
         title="Tienda - Luis Virrueta | Servicios Psicológicos"
         description="Sesiones de psicoterapia, talleres del método AION©, consultoría organizacional y programas de transformación personal."
-        image="/carrito de compra.mp4"
+        image="/carrito-compra.mp4"
         url="/tienda"
         type="website"
         tags={['terapia', 'psicología', 'método AION', 'transformación personal', 'consultoría']}
@@ -154,7 +154,7 @@ const StorePage = () => {
               objectPosition: 'center'
             }}
           >
-            <source src="/carrito de compra.mp4" type="video/mp4" />
+            <source src="/carrito-compra.mp4" type="video/mp4" />
           </video>
         </div>
         

@@ -70,7 +70,7 @@ ${formData.message}
       <SEOHead 
         title="Contacto - Luis Virrueta | Psicólogo"
         description="¿Listo para transformar tu realidad? Agenda tu primera sesión y comienza tu proceso de transformación personal con el método AION©."
-        image="/conteacto luis.mp4"
+        image="/contacto-luis.mp4"
         url="/contacto"
         type="website"
         tags={['contacto', 'psicología', 'terapia', 'luis virrueta', 'transformación personal']}
@@ -94,7 +94,7 @@ ${formData.message}
               objectPosition: 'center'
             }}
           >
-            <source src="/conteacto luis.mp4" type="video/mp4" />
+            <source src="/contacto-luis.mp4" type="video/mp4" />
           </video>
         </div>
         
