@@ -154,6 +154,8 @@ const TermsConditionsPage = () => {
                 contacta servicios de emergencia locales inmediatamente.
               </p>
             </Subsection>
+
+            <Subsection title="5.4 Paquetes de Sesiones">
               <p>
                 Los paquetes de sesiones no expiran pero deben ser utilizados por el comprador original. Los paquetes no son transferibles 
                 ni reembolsables una vez completada la primera sesión.
