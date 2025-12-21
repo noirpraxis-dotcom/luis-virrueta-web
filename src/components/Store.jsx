@@ -14,92 +14,92 @@ const Store = () => {
   const products = [
     {
       id: 1,
-      name: 'Online Session - Single',
-      category: 'Emotion, Body & Belief Code',
+      name: 'Sesión Individual de Terapia',
+      category: 'Psicoterapia Online',
       price: '$80',
       duration: '60 min',
       image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&h=800&fit=crop',
-      description: 'Release trapped emotions, correct body imbalances, and transform limiting beliefs in a comprehensive online healing session.',
+      description: 'Sesión de psicoterapia individual enfocada en transformación personal a través del método AION©. Trabajo profundo con el inconsciente.',
       benefits: [
-        'Release emotional baggage',
-        'Balance energy systems',
-        'Transform limiting beliefs',
-        'Holistic healing approach'
+        'Trabajo con el inconsciente',
+        'Transformación de patrones limitantes',
+        'Herramientas prácticas aplicables',
+        'Enfoque integrativo'
       ]
     },
     {
       id: 2,
-      name: 'Online Session - 3 Pack',
-      category: 'Emotion, Body & Belief Code',
+      name: 'Paquete 3 Sesiones',
+      category: 'Proceso Terapéutico',
       price: '$216',
-      duration: '60 min per session',
+      duration: '60 min por sesión',
       image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=800&fit=crop',
-      description: 'Save 10% with this package of three comprehensive online healing sessions for deeper transformation.',
+      description: 'Ahorra 10% con este paquete de tres sesiones. Ideal para procesos de transformación que requieren continuidad y profundidad.',
       benefits: [
-        'Save 10% on sessions',
-        'Deeper healing journey',
-        'Consistent progress',
-        'Flexible scheduling'
+        'Ahorro del 10%',
+        'Proceso terapéutico continuo',
+        'Seguimiento personalizado',
+        'Programación flexible'
       ]
     },
     {
       id: 3,
-      name: 'Email Session - Single',
-      category: 'Remote Healing',
-      price: '$63',
-      duration: 'Asynchronous',
+      name: 'Consultoría Empresarial',
+      category: 'Psicología Organizacional',
+      price: '$120',
+      duration: '90 min',
       image: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=600&h=800&fit=crop',
-      description: 'Receive healing work via email at your convenience. Perfect for those with busy schedules or time zone differences.',
+      description: 'Aplicación de psicología organizacional para equipos y empresas. Mejora el clima laboral y la productividad desde el inconsciente colectivo.',
       benefits: [
-        'Work at your own pace',
-        'No scheduling needed',
-        'Detailed written report',
-        'Privacy and convenience'
+        'Análisis del clima organizacional',
+        'Dinámicas de grupo',
+        'Estrategias de comunicación',
+        'Plan de acción personalizado'
       ]
     },
     {
       id: 4,
-      name: 'Past Life Regression',
-      category: 'Deep Soul Work',
-      price: '$120',
-      duration: '90 min',
+      name: 'Taller Método AION©',
+      category: 'Desarrollo Personal',
+      price: '$150',
+      duration: '3 horas',
       image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=600&h=800&fit=crop',
-      description: 'Explore past lives to understand current patterns, relationships, and challenges. Gain profound insights and healing.',
+      description: 'Taller grupal donde aprenderás las bases del Método AION© para aplicarlo en tu vida diaria. Incluye material descargable.',
       benefits: [
-        'Understand life patterns',
-        'Heal deep-rooted issues',
-        'Gain spiritual insights',
-        'Release karmic patterns'
+        'Comprende tu realidad actual',
+        'Identifica filtros limitantes',
+        'Herramientas de transformación',
+        'Comunidad de práctica'
       ]
     },
     {
       id: 5,
-      name: 'Ilyari Channeled Session',
-      category: 'Light Code Transmission',
-      price: '$44',
-      duration: '20-30 min',
+      name: 'Programa de 8 Semanas',
+      category: 'Transformación Profunda',
+      price: '$560',
+      duration: '8 sesiones semanales',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=800&fit=crop',
-      description: 'Experience channeled light codes transmitted through the body for deep cellular healing and transformation.',
+      description: 'Programa intensivo de transformación personal. Incluye sesiones semanales, ejercicios prácticos y acompañamiento vía WhatsApp.',
       benefits: [
-        'Cellular level healing',
-        'Light code activation',
-        'Deep transformation',
-        'Spiritual alignment'
+        'Transformación sostenida',
+        'Acompañamiento continuo',
+        'Ejercicios semanales',
+        'Acceso a comunidad privada'
       ]
     },
     {
       id: 6,
-      name: 'Healing for Animals',
-      category: 'Pet Healing',
-      price: '$56',
-      duration: '45 min',
+      name: 'Asesoría para Psicólogos',
+      category: 'Desarrollo Profesional',
+      price: '$95',
+      duration: '60 min',
       image: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=600&h=800&fit=crop',
-      description: 'Energy healing sessions specifically designed for your beloved animal companions to support their health and well-being.',
+      description: 'Supervisión y mentoría para psicólogos que quieren integrar el método AION© en su práctica profesional.',
       benefits: [
-        'Reduce animal stress',
-        'Support physical healing',
-        'Emotional balance',
-        'Strengthen bond'
+        'Supervisión de casos',
+        'Integración del método AION©',
+        'Desarrollo profesional',
+        'Certificación disponible'
       ]
     }
   ]

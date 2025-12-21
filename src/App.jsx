@@ -28,6 +28,7 @@ const BlogPage = lazy(() => import('./pages/BlogPage'))
 const BlogArticlePage = lazy(() => import('./pages/BlogArticlePage'))
 const InversionPage = lazy(() => import('./pages/InversionPage'))
 const ContactoPage = lazy(() => import('./pages/ContactoPage'))
+const StorePage = lazy(() => import('./pages/StorePage'))
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'))
 const TermsConditionsPage = lazy(() => import('./pages/TermsConditionsPage'))
 const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage'))
@@ -51,6 +52,7 @@ const AppContent = () => {
     { name: t('menu.metodo'), href: '/metodo' },
     { name: t('menu.services'), href: '/servicios' },
     { name: t('menu.blog'), href: '/blog' },
+    { name: 'Tienda', href: '/tienda' },
     { name: t('menu.about'), href: '/sobre-mi' },
     { name: t('menu.contact'), href: '/contacto' }
   ]
@@ -147,6 +149,11 @@ const AppContent = () => {
             {/* Página Inversión: Precios premium */}
             <Route path="/inversion" element={
               <InversionPage />
+            } />
+
+            {/* Página Tienda: Productos y servicios */}
+            <Route path="/tienda" element={
+              <StorePage />
             } />
 
             {/* Página Contacto */}

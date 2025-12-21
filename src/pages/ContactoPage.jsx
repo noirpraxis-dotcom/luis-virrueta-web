@@ -62,23 +62,16 @@ ${formData.message}
 
   const contactMethods = [
     {
-      icon: Mail,
-      title: t('contacto.methods.email'),
-      value: 'luxmaniadigital@gmail.com',
-      link: 'mailto:luxmaniadigital@gmail.com',
-      color: 'from-purple-500 to-purple-600',
-    },
-    {
       icon: Phone,
       title: t('contacto.methods.whatsapp'),
-      value: '+420 776 711 575',
+      value: '+52 722 872 0520',
       link: 'https://wa.me/527228720520',
       color: 'from-emerald-500 to-emerald-600',
     },
     {
       icon: MapPin,
       title: t('contacto.methods.location'),
-      value: 'República Checa',
+      value: 'México',
       link: null,
       color: 'from-fuchsia-500 to-fuchsia-600',
     },
@@ -92,12 +85,12 @@ ${formData.message}
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28 overflow-x-hidden">
       <SEOHead 
-        title="Contacto - LUXMANIA | Branding Estratégico"
-        description="Conversemos sobre tu proyecto de branding. Respondo en menos de 24 horas. Consultoría gratuita para marcas que quieren conectar auténticamente."
+        title="Contacto - Luis Virrueta | Psicólogo"
+        description="Conversemos sobre tu proceso de transformación personal. Respondo en menos de 24 horas. Consulta inicial gratuita para personas que quieren cambiar su realidad."
         image="/Hero Contacto.mp4"
         url="/contacto"
         type="website"
-        tags={['contacto', 'consultoría branding', 'agencia diseño', 'luis virrueta']}
+        tags={['contacto', 'psicología', 'terapia', 'luis virrueta', 'transformación personal']}
       />
       
       {/* Hero Section */}
