@@ -34,6 +34,42 @@ const StorePage = () => {
     },
     {
       id: 2,
+      name: 'Sesión de Pareja',
+      category: 'Terapia de Pareja',
+      price: '$1,200 MXN',
+      duration: '90 min',
+      image: '/pareja imagen.jpg',
+      description: 'Terapia de pareja desde el psicoanálisis. Trabajamos las dinámicas inconscientes que sostienen el conflicto.',
+      shortDesc: 'Desmontaje de ilusiones en la relación',
+      benefits: [
+        'Análisis de dinámicas relacionales',
+        'Trabajo con proyecciones mutuas',
+        'Identificación de patrones repetitivos',
+        'Comunicación consciente'
+      ],
+      gradient: 'from-pink-600/20 to-rose-600/20',
+      borderGradient: 'from-pink-500 to-rose-500'
+    },
+    {
+      id: 3,
+      name: 'Sesión Familiar',
+      category: 'Terapia Familiar',
+      price: '$1,500 MXN',
+      duration: '90 min',
+      image: '/familia imagen.jpg',
+      description: 'Terapia familiar sistémica. Trabajamos los patrones transgeneracionales y las dinámicas familiares.',
+      shortDesc: 'Atravesar patrones heredados',
+      benefits: [
+        'Análisis de dinámicas familiares',
+        'Identificación de patrones transgeneracionales',
+        'Trabajo con roles familiares',
+        'Reestructuración de vínculos'
+      ],
+      gradient: 'from-cyan-600/20 to-blue-600/20',
+      borderGradient: 'from-cyan-500 to-blue-500'
+    },
+    {
+      id: 4,
       name: 'Paquete 4 Sesiones',
       category: 'Proceso Terapéutico',
       price: '$2,880 MXN',
@@ -52,7 +88,7 @@ const StorePage = () => {
       popular: true
     },
     {
-      id: 3,
+      id: 5,
       name: 'Consultoría Empresarial',
       category: 'Organizacional',
       price: '$2,500 MXN',
@@ -66,11 +102,11 @@ const StorePage = () => {
         'Plan de acción',
         'Seguimiento trimestral'
       ],
-      gradient: 'from-cyan-600/20 to-blue-600/20',
-      borderGradient: 'from-cyan-500 to-blue-500'
+      gradient: 'from-indigo-600/20 to-purple-600/20',
+      borderGradient: 'from-indigo-500 to-purple-500'
     },
     {
-      id: 4,
+      id: 6,
       name: 'Taller Método AION©',
       category: 'Desarrollo Personal',
       price: '$2,500 MXN',

@@ -39,6 +39,57 @@ const StoreProductPage = () => {
       borderGradient: 'from-violet-500 to-purple-500'
     },
     2: {
+      name: 'Sesión de Pareja',
+      category: 'Terapia de Pareja',
+      price: '$1,200 MXN',
+      duration: '90 min',
+      image: '/pareja imagen.jpg',
+      description: 'Terapia de pareja desde el psicoanálisis. No venimos a "mejorar la comunicación". Venimos a desmontar las ilusiones que sostienen el conflicto.',
+      longDescription: 'Las parejas no pelean por lo que creen que pelean. Pelean por lo que proyectan en el otro. Trabajamos desde ahí: desde el inconsciente que cada uno trae, desde los filtros heredados, desde las fantasías no dichas. Si buscan consejos o técnicas, este no es el espacio. Si están listos para atravesar lo que los sostiene atrapados, bienvenidos.',
+      benefits: [
+        'Análisis profundo de dinámicas relacionales',
+        'Identificación de proyecciones mutuas',
+        'Trabajo con patrones repetitivos de conflicto',
+        'Desarrollo de comunicación consciente',
+        'Desmontaje de fantasías idealizadas',
+        'Herramientas para sostener el vínculo desde lo real'
+      ],
+      includes: [
+        'Sesión de 90 minutos por videollamada',
+        'Ejercicios para trabajar en pareja',
+        'Material complementario',
+        'Seguimiento entre sesiones'
+      ],
+      gradient: 'from-pink-600/20 to-rose-600/20',
+      borderGradient: 'from-pink-500 to-rose-500'
+    },
+    3: {
+      name: 'Sesión Familiar',
+      category: 'Terapia Familiar',
+      price: '$1,500 MXN',
+      duration: '90 min',
+      image: '/familia imagen.jpg',
+      description: 'Terapia familiar sistémica. Trabajamos los patrones transgeneracionales que se repiten sin que nadie los nombre.',
+      longDescription: 'Las familias no son solo las personas que están. Son también las historias no dichas, los roles heredados, los mandatos silenciosos. Trabajamos desde ahí: desde lo que se transmite sin palabras, desde lo que nadie dijo pero todos sienten. No venimos a "llevarnos mejor". Venimos a atravesar lo que nos sostiene atrapados en dinámicas que no elegimos.',
+      benefits: [
+        'Análisis de dinámicas familiares inconscientes',
+        'Identificación de patrones transgeneracionales',
+        'Trabajo con roles y mandatos familiares',
+        'Reestructuración de vínculos disfuncionales',
+        'Comprensión de lealtades invisibles',
+        'Herramientas para romper ciclos repetitivos'
+      ],
+      includes: [
+        'Sesión de 90 minutos por videollamada',
+        'Genograma familiar (si es necesario)',
+        'Ejercicios para trabajar en familia',
+        'Material complementario',
+        'Seguimiento entre sesiones'
+      ],
+      gradient: 'from-cyan-600/20 to-blue-600/20',
+      borderGradient: 'from-cyan-500 to-blue-500'
+    },
+    4: {
       name: 'Paquete 4 Sesiones',
       category: 'Proceso Terapéutico',
       price: '$2,880 MXN',
@@ -65,7 +116,7 @@ const StoreProductPage = () => {
       borderGradient: 'from-fuchsia-500 to-pink-500',
       popular: true
     },
-    3: {
+    5: {
       name: 'Consultoría Empresarial',
       category: 'Organizacional',
       price: '$2,500 MXN',
@@ -88,10 +139,10 @@ const StoreProductPage = () => {
         'Informe detallado en PDF',
         'Seguimiento trimestral opcional'
       ],
-      gradient: 'from-cyan-600/20 to-blue-600/20',
-      borderGradient: 'from-cyan-500 to-blue-500'
+      gradient: 'from-indigo-600/20 to-purple-600/20',
+      borderGradient: 'from-indigo-500 to-purple-500'
     },
-    4: {
+    6: {
       name: 'Taller Método AION©',
       category: 'Desarrollo Personal',
       price: '$2,500 MXN',
