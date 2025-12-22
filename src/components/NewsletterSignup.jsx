@@ -28,7 +28,7 @@ const NewsletterSignup = () => {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.3 }}
           viewport={{ once: true }}
           className="relative bg-gradient-to-br from-purple-900/20 via-fuchsia-900/20 to-cyan-900/20 backdrop-blur-sm border border-white/10 rounded-3xl p-10 lg:p-16 overflow-hidden"
         >
@@ -64,18 +64,29 @@ const NewsletterSignup = () => {
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               whileInView={{ scale: 1, rotate: 0 }}
-              transition={{ duration: 0.6, type: "spring" }}
+              transition={{ duration: 0.4, type: "spring" }}
               viewport={{ once: true }}
               className="inline-flex w-16 h-16 rounded-full bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 border border-white/20 items-center justify-center mb-6"
             >
               <Sparkles className="w-8 h-8 text-white" />
             </motion.div>
 
+            {/* Badge Newsletter */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="inline-block px-4 py-1.5 border border-purple-500/30 rounded-full backdrop-blur-sm bg-purple-500/10 mb-4"
+            >
+              <span className="text-xs lg:text-sm text-purple-300 font-medium tracking-wider uppercase">Newsletter</span>
+            </motion.div>
+
             {/* Heading */}
             <motion.h3
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
               viewport={{ once: true }}
               className="text-3xl lg:text-4xl font-bold text-white mb-4"
             >
@@ -85,11 +96,11 @@ const NewsletterSignup = () => {
             <motion.p
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              transition={{ duration: 0.3, delay: 0.3 }}
               viewport={{ once: true }}
               className="text-lg text-white/70 mb-8 max-w-2xl mx-auto leading-relaxed"
             >
-              Únete a +5,000 personas que reciben cada semana las intersecciones entre sabiduría ancestral y ciencia contemporánea. Psicología del inconsciente, neurociencia y filosofía aplicada a tu realidad.
+              Únete a nuestra comunidad que recibe cada semana las intersecciones entre sabiduría ancestral y ciencia contemporánea. Psicología del inconsciente, neurociencia y filosofía aplicada a tu realidad.
             </motion.p>
 
             {/* Form */}
@@ -97,7 +108,7 @@ const NewsletterSignup = () => {
               onSubmit={handleSubmit}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              transition={{ duration: 0.3, delay: 0.4 }}
               viewport={{ once: true }}
               className="max-w-md mx-auto"
             >

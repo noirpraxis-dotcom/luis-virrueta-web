@@ -4,11 +4,12 @@ import { useState } from 'react'
 
 const ShareButtons = ({ title, url }) => {
   const [copied, setCopied] = useState(false)
-  const shareUrl = url || window.location.href
+  const fullUrl = url.startsWith('http') ? url : `${window.location.origin}${url}`
   const shareTitle = encodeURIComponent(title)
+  const shareUrl = encodeURIComponent(fullUrl)
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(shareUrl)
+    navigator.clipboard.writeText(fullUrl)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
@@ -18,25 +19,25 @@ const ShareButtons = ({ title, url }) => {
       name: 'WhatsApp',
       icon: MessageCircle,
       gradient: 'from-green-500 to-emerald-600',
-      url: `https://wa.me/?text=${shareTitle}%20${encodeURIComponent(shareUrl)}`,
+      url: `https://wa.me/?text=${shareTitle}%20${shareUrl}`,
     },
     {
-      name: 'Twitter',
+      name: 'X',
       icon: Twitter,
       gradient: 'from-blue-400 to-blue-600',
-      url: `https://twitter.com/intent/tweet?text=${shareTitle}&url=${encodeURIComponent(shareUrl)}`,
+      url: `https://twitter.com/intent/tweet?text=${shareTitle}&url=${shareUrl}`,
     },
     {
       name: 'LinkedIn',
       icon: Linkedin,
       gradient: 'from-blue-600 to-blue-800',
-      url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
+      url: `https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`,
     },
     {
       name: 'Facebook',
       icon: Facebook,
       gradient: 'from-blue-500 to-blue-700',
-      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+      url: `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`,
     },
   ]
 
@@ -46,7 +47,7 @@ const ShareButtons = ({ title, url }) => {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.3 }}
           viewport={{ once: true }}
           className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-3xl p-8 lg:p-12"
         >
@@ -80,7 +81,7 @@ const ShareButtons = ({ title, url }) => {
                     rel="noopener noreferrer"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: i * 0.1 }}
+                    transition={{ duration: 0.3, delay: i * 0.05 }}
                     viewport={{ once: true }}
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}

@@ -2041,53 +2041,53 @@ const CopyArticleButton = ({ article }) => {
   const [copied, setCopied] = useState(false)
 
   const copyArticleToClipboard = () => {
-    // Construir el texto formateado del artículo
-    let formattedText = `${article.title}\n`
+    // Construir el texto formateado del artículo estilo markdown
+    let formattedText = `# ${article.title}\n\n`
+    
     if (article.subtitle) {
-      formattedText += `${article.subtitle}\n`
+      formattedText += `*${article.subtitle}*\n\n`
     }
-    formattedText += `\nPor ${article.author} | ${article.date}\n`
-    formattedText += `Tiempo de lectura: ${article.readTime}\n`
-    formattedText += `\n${'='.repeat(80)}\n\n`
+    
+    formattedText += `**Por ${article.author}** | ${article.date}\n`
+    formattedText += `*Tiempo de lectura: ${article.readTime}*\n\n`
+    formattedText += `---\n\n`
 
-    // Agregar todas las secciones con formato
+    // Agregar todas las secciones con formato markdown
     article.sections.forEach((section) => {
       if (section.type === 'heading') {
-        formattedText += `\n${'━'.repeat(80)}\n`
-        formattedText += `${section.title.toUpperCase()}\n`
-        formattedText += `${'━'.repeat(80)}\n\n`
+        formattedText += `\n## ${section.title}\n\n`
       } else if (section.type === 'text' || section.type === 'intro' || section.type === 'reflection') {
         formattedText += `${section.content}\n\n`
       } else if (section.type === 'highlight') {
-        formattedText += `\n▶ ${section.content}\n\n`
+        formattedText += `\n> **${section.content}**\n\n`
       } else if (section.type === 'questions') {
-        formattedText += `\n${section.title}:\n`
+        if (section.title) {
+          formattedText += `\n**${section.title}**\n\n`
+        }
         section.items.forEach((item, i) => {
-          formattedText += `  ${i + 1}. ${item}\n`
+          formattedText += `${i + 1}. ${item}\n`
         })
         formattedText += `\n`
       } else if (section.type === 'list') {
         if (section.title) {
-          formattedText += `\n${section.title}\n`
+          formattedText += `\n**${section.title}**\n\n`
         }
-        section.items.forEach((item, i) => {
-          formattedText += `  • ${item}\n`
+        section.items.forEach((item) => {
+          formattedText += `• ${item}\n`
         })
         formattedText += `\n`
       } else if (section.type === 'subsection') {
-        formattedText += `\n  ${section.subtitle}\n`
-        formattedText += `  ${section.content}\n\n`
+        formattedText += `\n### ${section.subtitle}\n\n`
+        formattedText += `${section.content}\n\n`
       } else if (section.type === 'conclusion') {
-        formattedText += `\n${'─'.repeat(80)}\n`
-        formattedText += `CONCLUSIÓN\n`
-        formattedText += `${'─'.repeat(80)}\n\n`
+        formattedText += `\n## Conclusión\n\n`
         formattedText += `${section.content}\n\n`
       }
     })
 
-    formattedText += `\n${'='.repeat(80)}\n`
-    formattedText += `\nArtículo de: ${article.author}\n`
-    formattedText += `Publicado en: luisvirrueta.com\n`
+    formattedText += `---\n\n`
+    formattedText += `**Artículo de:** ${article.author}\n`
+    formattedText += `**Publicado en:** luisvirrueta.com\n`
 
     // Copiar al portapapeles
     navigator.clipboard.writeText(formattedText).then(() => {
