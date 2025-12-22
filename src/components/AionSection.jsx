@@ -10,11 +10,12 @@ const AionSection = () => {
   // Estados para palabras rotativas
   const [currentWordIndex, setCurrentWordIndex] = useState(0)
   const rotatingWords = [
-    { word: 'Económica', icon: TrendingUp, color: 'from-green-400 to-emerald-500' },
-    { word: 'De Salud', icon: Activity, color: 'from-red-400 to-rose-500' },
-    { word: 'Amorosa', icon: Heart, color: 'from-pink-400 to-rose-500' },
-    { word: 'Emocional', icon: Smile, color: 'from-purple-400 to-fuchsia-500' },
-    { word: 'De Vida', icon: Sparkles, color: 'from-cyan-400 to-blue-500' }
+    { word: 'económica', icon: TrendingUp, color: 'from-green-400 to-emerald-500' },
+    { word: 'de salud', icon: Activity, color: 'from-red-400 to-rose-500' },
+    { word: 'amorosa', icon: Heart, color: 'from-pink-400 to-rose-500' },
+    { word: 'emocional', icon: Smile, color: 'from-purple-400 to-fuchsia-500' },
+    { word: 'profesional', icon: Brain, color: 'from-indigo-400 to-purple-500' },
+    { word: 'de vida', icon: Sparkles, color: 'from-cyan-400 to-blue-500' }
   ]
   
   useEffect(() => {
@@ -37,7 +38,7 @@ const AionSection = () => {
     },
     {
       icon: Activity,
-      title: 'De Salud',
+      title: 'De salud',
       description: 'Comprende los síntomas desde el inconsciente',
       gradient: 'from-red-500/20 to-rose-600/20',
       borderColor: 'border-red-500/30 hover:border-red-400/60',
@@ -69,7 +70,7 @@ const AionSection = () => {
       gradient: 'from-cyan-500/20 to-blue-600/20',
       borderColor: 'border-cyan-500/30 hover:border-cyan-400/60',
       iconColor: 'text-cyan-400',
-      delay: 0.6
+      delay: 0.7
     }
   ]
 
@@ -153,8 +154,8 @@ const AionSection = () => {
             className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight"
             style={{ letterSpacing: '0.02em', fontWeight: 300 }}
           >
-            <span className="block mb-4">¿Es Posible Cambiar Rápidamente</span>
-            <span className="block mb-4">Mi Situación</span>
+            <span className="block mb-4">¿Es posible cambiar</span>
+            <span className="block mb-4">mi situación</span>
             
             {/* Palabra rotativa con animación e ícono */}
             <div className="relative inline-flex items-center gap-4 min-h-[80px]">

@@ -72,12 +72,12 @@ const Home = () => {
             className="font-display leading-tight mb-8"
             style={{ letterSpacing: '0.02em' }}
           >
-            {/* Tu Realidad Son - más pequeño */}
+            {/* Tu realidad son - más pequeño */}
             <span className="block text-white text-lg sm:text-xl md:text-2xl lg:text-4xl mb-2 sm:mb-3" style={{ fontWeight: 200, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               {t('home.weBuild')}
             </span>
             
-            {/* Tus Filtros - MUY GRANDE CON TIPOGRAFÍA BLOG */}
+            {/* Tus filtros - MUY GRANDE CON TIPOGRAFÍA BLOG */}
             <span className="block text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold" style={{ 
               letterSpacing: '0.02em',
               fontWeight: 300
