@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { Brain, Palette, Code, Gem, ArrowRight, Eye, Heart } from 'lucide-react'
+import { Brain, ArrowRight, Eye, Heart, Compass, BookOpen, Users } from 'lucide-react'
 
 const AboutCreator = () => {
   const heroRef = useRef(null)
@@ -110,7 +110,7 @@ const AboutCreator = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-white/70 text-xl lg:text-2xl font-extralight tracking-wide max-w-3xl mx-auto leading-relaxed"
             >
-              Psicólogo × Diseñador × Tecnólogo
+              Psicólogo · Psicoanalista · Explorador
             </motion.p>
           </motion.div>
         </div>
@@ -142,7 +142,7 @@ const AboutCreator = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-5xl lg:text-7xl font-light text-white mb-8 font-display tracking-wide leading-[1.1]"
             >
-              Diseño marcas que{' '}
+              Acompaño procesos que{' '}
               <motion.span
                 className="inline-block relative"
                 animate={{
@@ -158,7 +158,7 @@ const AboutCreator = () => {
                   ease: "easeInOut"
                 }}
               >
-                conectan
+                transforman
               </motion.span>
             </motion.h2>
             
@@ -168,7 +168,7 @@ const AboutCreator = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-white/60 text-xl lg:text-2xl font-light leading-relaxed"
             >
-              No por lo que dicen, sino por lo que hacen sentir.
+              No desde el consejo, sino desde el inconsciente.
             </motion.p>
           </motion.div>
 
@@ -179,7 +179,7 @@ const AboutCreator = () => {
             transition={{ duration: 1, delay: 0.6 }}
             className="grid md:grid-cols-3 gap-8 mb-24"
           >
-            {/* Card Psicología */}
+            {/* Card Psicoanálisis */}
             <motion.div
               whileHover={{ y: -8 }}
               className="relative overflow-hidden rounded-2xl p-8 lg:p-10 border border-white/10 group"
@@ -202,14 +202,14 @@ const AboutCreator = () => {
               />
               <div className="relative">
                 <Brain className="w-12 h-12 text-white/90 mb-6" strokeWidth={1.5} />
-                <h3 className="text-2xl font-light text-white mb-4 tracking-wide">Psicología</h3>
+                <h3 className="text-2xl font-light text-white mb-4 tracking-wide">Psicoanálisis</h3>
                 <p className="text-white/70 font-light leading-relaxed">
-                  Entiendo cómo funciona la mente humana. Cada decisión tiene una emoción detrás.
+                  Estudié psicología y me especialicé en psicoanálisis. Pero no me conformé con ello: sigo explorando.
                 </p>
               </div>
             </motion.div>
 
-            {/* Card Diseño */}
+            {/* Card Culturas */}
             <motion.div
               whileHover={{ y: -8 }}
               className="relative overflow-hidden rounded-2xl p-8 lg:p-10 border border-white/10 group"
@@ -232,15 +232,15 @@ const AboutCreator = () => {
                 className="absolute inset-0"
               />
               <div className="relative">
-                <Palette className="w-12 h-12 text-white/90 mb-6" strokeWidth={1.5} />
-                <h3 className="text-2xl font-light text-white mb-4 tracking-wide">Diseño</h3>
+                <Compass className="w-12 h-12 text-white/90 mb-6" strokeWidth={1.5} />
+                <h3 className="text-2xl font-light text-white mb-4 tracking-wide">Exploración</h3>
                 <p className="text-white/70 font-light leading-relaxed">
-                  Creo experiencias visuales que comunican sin palabras. El diseño es el lenguaje.
+                  Vivo en Europa explorando culturas y tradiciones. Mi vida es reflejo de mi búsqueda.
                 </p>
               </div>
             </motion.div>
 
-            {/* Card Tecnología */}
+            {/* Card Religiones */}
             <motion.div
               whileHover={{ y: -8 }}
               className="relative overflow-hidden rounded-2xl p-8 lg:p-10 border border-white/10 group"
@@ -263,10 +263,10 @@ const AboutCreator = () => {
                 className="absolute inset-0"
               />
               <div className="relative">
-                <Code className="w-12 h-12 text-white/90 mb-6" strokeWidth={1.5} />
-                <h3 className="text-2xl font-light text-white mb-4 tracking-wide">Tecnología</h3>
+                <BookOpen className="w-12 h-12 text-white/90 mb-6" strokeWidth={1.5} />
+                <h3 className="text-2xl font-light text-white mb-4 tracking-wide">Tradiciones</h3>
                 <p className="text-white/70 font-light leading-relaxed">
-                  Desarrollo soluciones digitales que funcionan. La tecnología es la herramienta.
+                  Desde pequeño exploré religiones. Todas decían ser la verdadera. Busqué lo que compartían.
                 </p>
               </div>
             </motion.div>
@@ -284,11 +284,11 @@ const AboutCreator = () => {
                 <Eye className="w-6 h-6 text-white/60 mt-1 flex-shrink-0" strokeWidth={1.5} />
                 <div>
                   <p className="text-white/90 text-lg lg:text-xl font-light leading-relaxed mb-4">
-                    Las marcas más poderosas no venden productos. Venden <span className="text-white font-normal">emociones, identidad, pertenencia</span>.
+                    Cada cultura tiene <span className="text-white font-normal">su verdad, sus símbolos, sus rituales</span>. Todas comparten algo más profundo.
                   </p>
                   <p className="text-white/70 text-base lg:text-lg font-light leading-relaxed">
-                    El <span className="text-white">95% de las decisiones de compra</span> ocurren en el inconsciente. 
-                    Tu marca debe hablar ese idioma.
+                    Crecí en el catolicismo pero exploraba otras religiones. <span className="text-white">Todas decían ser la verdadera</span>. 
+                    Busqué lo que compartían.
                   </p>
                 </div>
               </div>
@@ -297,8 +297,8 @@ const AboutCreator = () => {
                 <div className="flex items-start gap-4">
                   <Heart className="w-6 h-6 text-white/60 flex-shrink-0" strokeWidth={1.5} />
                   <p className="text-white/80 text-lg font-light leading-relaxed italic">
-                    "No diseño logos. Diseño <span className="text-white not-italic font-normal">símbolos de pertenencia</span>. 
-                    No creo campañas. Construyo <span className="text-white not-italic font-normal">narrativas emocionales</span>."
+                    "El psicoanálisis no da respuestas. Ayuda a <span className="text-white not-italic font-normal">hacer las preguntas correctas</span>. 
+                    La vida es <span className="text-white not-italic font-normal">el reflejo de tu búsqueda</span>."
                   </p>
                 </div>
               </div>
@@ -312,7 +312,11 @@ const AboutCreator = () => {
             transition={{ duration: 1, delay: 1 }}
             className="text-center"
           >
-            <a href="#contacto">
+            <a 
+              href="https://wa.me/5218115936829?text=Hola%20Luis,%20me%20gustaría%20iniciar%20un%20proceso%20de%20acompañamiento" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -336,7 +340,7 @@ const AboutCreator = () => {
                 />
                 
                 <span className="relative flex items-center gap-3 text-white/90 font-light text-lg tracking-wide">
-                  Trabajemos juntos
+                  Iniciemos tu proceso
                   <motion.div
                     animate={{ x: [0, 3, 0] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
