@@ -237,11 +237,77 @@ const AboutPage = () => {
               transition={{ duration: 1, delay: 1 }}
               className="space-y-12"
             >
+              {/* NUEVA SECCIÓN AL INICIO: Una búsqueda constante - EXPANDIDA */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.8, delay: 1.2 }}
+                className="relative bg-gradient-to-br from-purple-900/20 to-fuchsia-900/20 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-10"
+              >
+                <div className="space-y-6">
+                  <h3 className="text-white text-2xl lg:text-3xl font-light mb-6 flex items-center gap-3">
+                    <Lamp className="w-6 h-6 text-purple-400" />
+                    Una búsqueda constante
+                  </h3>
+                  
+                  {/* Formación */}
+                  <p className="text-white/80 text-lg leading-relaxed font-light">
+                    Estudié psicología y me especialicé en psicoanálisis. Pero no me conformé con ello.
+                  </p>
+                  <p className="text-white/80 text-lg leading-relaxed font-light">
+                    <span className="text-white font-semibold">Actualmente vivo en Europa</span>, explorando diferentes culturas y tradiciones. 
+                    Mi vida es el reflejo de mi búsqueda.
+                  </p>
+
+                  {/* Religiones */}
+                  <p className="text-white/80 text-lg leading-relaxed font-light">
+                    Desde pequeño crecí dentro del catolicismo, pero me exploraba a ir a otro tipo de religiones 
+                    para empezar a ver <span className="text-white font-semibold">qué era lo que compartían entre ellas</span>.
+                  </p>
+
+                  {/* Quote destacada - Todas decían ser la verdadera */}
+                  <div className="border-l-2 border-purple-400/50 pl-6 py-4 bg-black/20 rounded-r-lg">
+                    <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic">
+                      Y me daba cuenta que <span className="text-purple-400 not-italic font-semibold">todas decían que ellas eran la verdadera</span>.
+                    </p>
+                  </div>
+
+                  {/* NUEVA EXPANSIÓN: El ego y las peleas entre saberes */}
+                  <div className="space-y-4 pt-4">
+                    <p className="text-white/90 text-lg leading-relaxed font-light">
+                      Pero no solo eso: <span className="text-white font-semibold">la gente se pelea constantemente con el ego</span> tratando de demostrar quién tiene la razón, quién es mejor que el otro, quién posee EL conocimiento verdadero.
+                    </p>
+                    <p className="text-white/80 text-lg leading-relaxed font-light">
+                      Precisamente <span className="text-purple-400 font-semibold">eso es lo que lleva a peleas constantes entre distintos saberes</span>, en lugar de reconciliarlos. Psicoanálisis vs. neurociencia. Oriente vs. Occidente. Tradición vs. ciencia. Cuando en realidad, <span className="text-white font-semibold">todos están describiendo el mismo fenómeno desde ángulos distintos</span>.
+                    </p>
+                    <p className="text-white/80 text-lg leading-relaxed font-light">
+                      <span className="text-purple-400 font-semibold">Es una cuestión puramente egoica</span>. El ego necesita tener razón para existir. Necesita sentirse superior, validado, especial.
+                    </p>
+                  </div>
+
+                  {/* NUEVA EXPANSIÓN: El ego y las enfermedades */}
+                  <div className="border-t border-white/10 pt-6 mt-6 space-y-4">
+                    <p className="text-white/90 text-lg leading-relaxed font-light">
+                      Y desde ese mismo ego <span className="text-white font-semibold">aparecen las enfermedades, los problemas de pareja, los problemas económicos</span>. No por casualidad, sino porque <span className="text-purple-400 font-semibold">queremos ser parte de una realidad</span>.
+                    </p>
+                    <p className="text-white/80 text-lg leading-relaxed font-light">
+                      Aunque conscientemente digamos "quiero cambiar", <span className="text-white font-semibold">inconscientemente NO queremos dejar de formar parte de un circuito, de un contexto</span>. Sabemos que si cambiáramos, se rompería el sistema familiar, las dinámicas relacionales, la identidad que nos sostiene.
+                    </p>
+                    <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic border-l-2 border-purple-500/50 pl-6 py-4 bg-black/20 rounded-r-lg">
+                      Lejos de ser lo que más queremos, <span className="text-purple-400 not-italic font-semibold">cambiar es lo que más nos da miedo</span>. Porque se rompería el ego, y con ello la imagen que teníamos de nosotros mismos.
+                    </p>
+                    <p className="text-white/70 text-base leading-relaxed font-light">
+                      Preferimos seguir sufriendo de una forma conocida, que arriesgarnos a descubrir quiénes seríamos sin ese sufrimiento.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
               {/* Párrafo 1 - Interpretación vs Realidad */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 1.2 }}
+                transition={{ duration: 0.8, delay: 1.4 }}
                 className="relative"
               >
                 <div className="absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-purple-500/50 via-fuchsia-500/30 to-transparent rounded-full" />
@@ -254,7 +320,7 @@ const AboutPage = () => {
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.8, delay: 1.4 }}
+                transition={{ duration: 0.8, delay: 1.6 }}
                 className="relative bg-gradient-to-br from-purple-900/20 to-fuchsia-900/20 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-8"
               >
                 <div className="flex items-start gap-4 mb-4">
@@ -320,35 +386,6 @@ const AboutPage = () => {
               <p className="text-lg lg:text-xl text-white/80 leading-relaxed font-light">
                 Actualmente acompaño a personas, proyectos y equipos que sienten que algo no encaja, aunque desde fuera todo parezca funcionar. Personas que piensan mucho, sienten profundo y saben que repetir fórmulas no es la salida. A través de sesiones, contenidos y proyectos exploro cómo operan los filtros mentales, el deseo, la percepción del tiempo y la forma en que construimos sentido, entendiendo que no toda transformación es ganancia, pero sí puede ser verdad.
               </p>
-
-              {/* Exploración Personal - Europa y Religiones */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                className="relative bg-gradient-to-br from-purple-900/20 to-fuchsia-900/20 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-8"
-              >
-                <div className="space-y-4">
-                  <h3 className="text-white text-xl lg:text-2xl font-light mb-4 flex items-center gap-3">
-                    <Lamp className="w-5 h-5 text-purple-400" />
-                    Una búsqueda constante
-                  </h3>
-                  <p className="text-white/80 text-lg leading-relaxed font-light">
-                    Estudié psicología y me especialicé en psicoanálisis. Pero no me conformé con ello.
-                  </p>
-                  <p className="text-white/80 text-lg leading-relaxed font-light">
-                    <span className="text-white font-semibold">Actualmente vivo en Europa</span>, explorando diferentes culturas y tradiciones. 
-                    Mi vida es el reflejo de mi búsqueda.
-                  </p>
-                  <p className="text-white/80 text-lg leading-relaxed font-light">
-                    Desde pequeño crecí dentro del catolicismo, pero me exploraba a ir a otro tipo de religiones 
-                    para empezar a ver <span className="text-white font-semibold">qué era lo que compartían entre ellas</span>.
-                  </p>
-                  <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic border-l-2 border-purple-400/40 pl-6 py-4 mt-6">
-                    Y me daba cuenta que <span className="text-purple-400 not-italic font-semibold">todas decían que ellas eran la verdadera</span>.
-                  </p>
-                </div>
-              </motion.div>
 
               {/* Conclusión destacada */}
               <motion.div
