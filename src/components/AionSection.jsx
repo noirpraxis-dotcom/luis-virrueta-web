@@ -151,40 +151,39 @@ const AionSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight"
+            className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-tight mb-8"
             style={{ letterSpacing: '0.02em', fontWeight: 300 }}
           >
-            <span className="block mb-4">¿Es posible cambiar</span>
-            <span className="block mb-4">mi situación</span>
-            
-            {/* Palabra rotativa con animación e ícono */}
-            <div className="relative inline-flex items-center gap-4 min-h-[80px]">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentWordIndex}
-                  initial={{ opacity: 0, y: 30, scale: 0.8 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -30, scale: 0.8 }}
-                  transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
-                  className="flex items-center gap-4"
-                >
-                  <motion.div
-                    animate={{ rotate: [0, 360] }}
-                    transition={{ duration: 2, ease: "linear", repeat: Infinity }}
-                    className={`p-3 rounded-2xl bg-gradient-to-br ${rotatingWords[currentWordIndex].color} backdrop-blur-xl`}
-                  >
-                    {(() => {
-                      const Icon = rotatingWords[currentWordIndex].icon
-                      return <Icon className="w-8 h-8 text-white" strokeWidth={2} />
-                    })()}
-                  </motion.div>
-                  <span className={`bg-gradient-to-r ${rotatingWords[currentWordIndex].color} bg-clip-text text-transparent font-bold`}>
-                    {rotatingWords[currentWordIndex].word}?
-                  </span>
-                </motion.div>
-              </AnimatePresence>
-            </div>
+            ¿Es posible cambiar mi situación?
           </motion.h2>
+
+          {/* Palabra rotativa con animación e ícono - debajo del título */}
+          <div className="flex justify-center items-center min-h-[80px] mb-12">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentWordIndex}
+                initial={{ opacity: 0, y: 30, scale: 0.8 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -30, scale: 0.8 }}
+                transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
+                className="flex items-center gap-4"
+              >
+                <motion.div
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 2, ease: "linear", repeat: Infinity }}
+                  className={`p-3 rounded-2xl bg-gradient-to-br ${rotatingWords[currentWordIndex].color} backdrop-blur-xl`}
+                >
+                  {(() => {
+                    const Icon = rotatingWords[currentWordIndex].icon
+                    return <Icon className="w-8 h-8 text-white" strokeWidth={2} />
+                  })()}
+                </motion.div>
+                <span className={`text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r ${rotatingWords[currentWordIndex].color} bg-clip-text text-transparent`}>
+                  {rotatingWords[currentWordIndex].word}
+                </span>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </motion.div>
 
         {/* Grid de áreas de transformación - Tarjetas elegantes */}
@@ -209,7 +208,7 @@ const AionSection = () => {
                 y: -8,
                 transition: { duration: 0.3 }
               }}
-              className={`group relative p-8 bg-gradient-to-br ${area.gradient} backdrop-blur-xl border-2 ${area.borderColor} rounded-3xl transition-all duration-500 overflow-hidden`}
+              className={`group relative p-6 lg:p-8 bg-gradient-to-br ${area.gradient} backdrop-blur-xl border-2 ${area.borderColor} rounded-3xl transition-all duration-500 overflow-hidden aspect-square flex flex-col justify-center`}
             >
               {/* Efecto de brillo en hover */}
               <motion.div 
