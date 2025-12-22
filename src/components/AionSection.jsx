@@ -1,11 +1,28 @@
-import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Heart, Brain, Users, DollarSign, Activity, Wine } from 'lucide-react'
 
 const AionSection = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
+  
+  // Estados para palabras rotativas
+  const [currentWordIndex, setCurrentWordIndex] = useState(0)
+  const rotatingWords = [
+    'Económica',
+    'De Salud',
+    'Amorosa',
+    'Emocional',
+    'De Vida en General'
+  ]
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentWordIndex((prev) => (prev + 1) % rotatingWords.length)
+    }, 2000)
+    return () => clearInterval(interval)
+  }, [])
 
   const problems = [
     {
@@ -112,14 +129,15 @@ const AionSection = () => {
             </span>
           </motion.div>
 
-          {/* Pregunta directa */}
+          {/* Pregunta directa con tipografía hero blog */}
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-3xl sm:text-4xl lg:text-6xl font-light text-white mb-6 leading-tight"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"
+            style={{ letterSpacing: '0.02em', fontWeight: 300 }}
           >
-            ¿Te Has Preguntado Por Qué
+            ¿Es Posible Cambiar Rápidamente Mi
             <br />
             <motion.span 
               className="font-normal bg-gradient-to-r from-purple-400 via-fuchsia-400 to-purple-400 bg-clip-text text-transparent inline-block"
@@ -135,9 +153,26 @@ const AionSection = () => {
                 backgroundSize: '200% 100%'
               }}
             >
-              Nada Cambia?
+              Situación?
             </motion.span>
           </motion.h2>
+          
+          {/* Palabras rotativas */}
+          <div className="h-12 lg:h-16 flex items-center justify-center mb-6">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentWordIndex}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+                className="text-3xl lg:text-5xl font-light text-white/80"
+                style={{ letterSpacing: '0.02em' }}
+              >
+                {rotatingWords[currentWordIndex]}
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </motion.div>
 
         {/* Grid de problemas */}
@@ -186,18 +221,22 @@ const AionSection = () => {
             transition={{ duration: 1, delay: 0.7 }}
             className="text-white/60 text-lg lg:text-xl font-light mb-10 leading-relaxed max-w-2xl mx-auto"
           >
-            Todo lo que experimentas es el resultado de{' '}
-            <span className="text-white/90">filtros inconscientes</span> que puedes transformar.
+            Si todo lo que experimentas es el resultado de{' '}
+            <span className="text-white/90">filtros inconscientes</span>,{' '}
+            entonces este filtro puede ser cambiado.{' '}
+            <span className="text-white/90">Es lo que me propongo a explicarte.</span>
           </motion.p>
 
-          {/* CTA Premium - Ver el Método */}
+          {/* CTA Premium - Contáctame */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.9 }}
           >
-            <Link
-              to="/metodo"
+            <a
+              href="https://wa.me/5218115936829?text=Hola%20Luis%2C%20me%20interesa%20una%20consulta%20sobre%20psicoan%C3%A1lisis%20y%20transformaci%C3%B3n%20personal"
+              target="_blank"
+              rel="noopener noreferrer"
               className="group relative inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-purple-600 via-fuchsia-600 to-purple-600 text-white rounded-full font-light text-lg overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/50"
               style={{ backgroundSize: '200% 100%' }}
             >
@@ -215,7 +254,7 @@ const AionSection = () => {
                 style={{ width: '50%' }}
               />
               
-              <span className="relative z-10">Ver Mi Método</span>
+              <span className="relative z-10">Contáctame</span>
               <motion.svg 
                 className="relative z-10 w-5 h-5"
                 fill="none" 
@@ -227,7 +266,7 @@ const AionSection = () => {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </motion.svg>
-            </Link>
+            </a>
           </motion.div>
         </motion.div>
       </div>

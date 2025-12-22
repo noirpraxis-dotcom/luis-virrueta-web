@@ -24,7 +24,7 @@ const ShareButtons = ({ title, url }) => {
     {
       name: 'X',
       icon: Twitter,
-      gradient: 'from-blue-400 to-blue-600',
+      gradient: 'from-gray-800 to-black',
       url: `https://twitter.com/intent/tweet?text=${shareTitle}&url=${shareUrl}`,
     },
     {
