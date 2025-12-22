@@ -33,6 +33,28 @@ const BlogPage = () => {
   }
   const blogPosts = [
     {
+      id: 34,
+      title: currentLanguage === 'en' 
+        ? 'SU·DO·KU: The art of thinking by elimination'
+        : 'SU·DO·KU: El arte de pensar por descarte',
+      excerpt: currentLanguage === 'en'
+        ? 'Why life doesn\'t answer by affirming. What if the problem wasn\'t the lack of answers, but the rush to close them?'
+        : 'Por qué la vida no responde afirmando. ¿Y si el problema no fuera la falta de respuestas, sino la prisa por clausurarlas?',
+      category: currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
+      author: 'Luis Virrueta',
+      date: '22 Dic 2025',
+      readTime: '15 min',
+      gradient: 'from-purple-500/20 to-fuchsia-500/20',
+      borderGradient: 'from-purple-500 to-fuchsia-500',
+      tags: currentLanguage === 'en'
+        ? ['Thinking', 'Psychoanalysis', 'Philosophy', 'Life', 'Negative Way', 'Lacan']
+        : ['Pensamiento', 'Psicoanálisis', 'Filosofía', 'Vida', 'Vía Negativa', 'Lacan'],
+      slug: 'sudoku',
+      image: '/IMAGENES BLOG/SUDOKU HUMANO.jpg',
+      rating: 5.0,
+      featured: true
+    },
+    {
       id: 33,
       title: currentLanguage === 'en' 
         ? 'P.U.T.A. (Panic · Usurpation · Terror · Autonomy)'
