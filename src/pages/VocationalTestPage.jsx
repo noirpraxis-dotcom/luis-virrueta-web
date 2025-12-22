@@ -1,18 +1,20 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Clock, CheckCircle, ArrowRight, ArrowLeft, Brain, Heart, Sparkles, TrendingUp, Users, Code, Palette, BookOpen, Briefcase, Target } from 'lucide-react'
+import { Clock, CheckCircle, ArrowRight, ArrowLeft, Brain, Heart, Sparkles, TrendingUp, Users, Code, Palette, BookOpen, Briefcase, Target, Home, AlertCircle, BarChart3, PieChart, Activity } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 
-const VocationalTestPage = () => {
+const VocationalTestPage = ({ initialStage = 'intro' }) => {
   const navigate = useNavigate()
-  const [stage, setStage] = useState('intro') // 'intro', 'test', 'results'
+  const [stage, setStage] = useState(initialStage) // 'intro', 'test', 'results'
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [answers, setAnswers] = useState({})
-  const [timeLeft, setTimeLeft] = useState(45 * 60) // 45 minutos en segundos
+  const [timeLeft, setTimeLeft] = useState(60 * 60) // 60 minutos en segundos
   const [isLocked, setIsLocked] = useState(false) // Temporalmente desbloqueado
-  const [testStarted, setTestStarted] = useState(false)
+  const [testStarted, setTestStarted] = useState(initialStage === 'test')
   const [results, setResults] = useState(null)
+  const [insights, setInsights] = useState(null)
+  const [showExitWarning, setShowExitWarning] = useState(false)
   
   // Timer
   useEffect(() => {
@@ -31,6 +33,14 @@ const VocationalTestPage = () => {
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
     return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
+
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
+
+  const balancePercent = (left, right) => {
+    const total = left + right
+    if (total <= 0) return 50
+    return clamp(Math.round(50 + ((left - right) / total) * 50), 0, 100)
   }
   
   // Sistema de preguntas vocacionales profundas
@@ -429,6 +439,322 @@ const VocationalTestPage = () => {
         { text: 'Aplicarlo prácticamente para resolver problemas', value: 5, careers: ['tech', 'engineering', 'business'] },
         { text: 'Experimentar y explorar sus límites', value: 5, careers: ['research', 'innovation', 'science'] }
       ]
+    },
+
+    // Bloque 4: Deseo, valores y dirección (12 preguntas)
+    {
+      id: 31,
+      question: 'Si el dinero estuviera resuelto por 2 años, ¿qué elegirías construir con tu tiempo?',
+      type: 'scale',
+      dimension: 'desire',
+      options: [
+        { text: 'Un proyecto creativo (arte, diseño, contenido, marca)', value: 5, careers: ['creative', 'design', 'arts', 'media', 'writing'] },
+        { text: 'Un producto digital o sistema (software, automatización)', value: 5, careers: ['tech', 'software', 'data', 'engineering'] },
+        { text: 'Una práctica de ayuda (terapia, acompañamiento, educación)', value: 5, careers: ['psychology', 'health', 'education', 'counseling'] },
+        { text: 'Una iniciativa social/pública (comunidad, derechos, políticas)', value: 5, careers: ['social', 'law', 'politics', 'NGO'] },
+        { text: 'Una empresa o servicio (ventas, operaciones, estrategia)', value: 5, careers: ['business', 'entrepreneurship', 'management', 'operations'] }
+      ]
+    },
+    {
+      id: 32,
+      question: '¿Qué tipo de conversación te enciende por dentro?',
+      type: 'scale',
+      dimension: 'desire',
+      options: [
+        { text: 'Sobre ideas y teorías (por qué somos como somos)', value: 5, careers: ['psychology', 'humanities', 'philosophy', 'academic'] },
+        { text: 'Sobre cómo mejorar procesos y resultados', value: 5, careers: ['business', 'operations', 'finance', 'engineering'] },
+        { text: 'Sobre cómo funcionan los sistemas (código, ciencia, lógica)', value: 5, careers: ['tech', 'science', 'research', 'data'] },
+        { text: 'Sobre estética, emoción y creación', value: 5, careers: ['creative', 'design', 'arts'] },
+        { text: 'Sobre personas, vínculos y sociedad', value: 5, careers: ['social', 'education', 'health', 'psychology'] }
+      ]
+    },
+    {
+      id: 33,
+      question: '¿Qué te cuesta más tolerar en un trabajo?',
+      type: 'scale',
+      dimension: 'constraints',
+      options: [
+        { text: 'Rutina rígida y poca autonomía', value: 5, careers: ['entrepreneurship', 'creative', 'freelance'] },
+        { text: 'Conflictos humanos constantes sin propósito claro', value: 5, careers: ['tech', 'research', 'engineering'] },
+        { text: 'Ambigüedad total sin criterios ni estructura', value: 5, careers: ['admin', 'finance', 'operations'] },
+        { text: 'Presión por resultados sin ética o sentido', value: 5, careers: ['social', 'education', 'health'] },
+        { text: 'Soledad extrema sin intercambio humano', value: 5, careers: ['education', 'social', 'health', 'business'] }
+      ]
+    },
+    {
+      id: 34,
+      question: '¿Qué te mueve más: sentido, estética, poder, verdad o cuidado?',
+      type: 'scale',
+      dimension: 'values_core',
+      options: [
+        { text: 'Sentido/propósito (hacer algo significativo)', value: 5, careers: ['social', 'education', 'psychology'] },
+        { text: 'Estética/creación (hacer algo bello)', value: 5, careers: ['creative', 'design', 'arts', 'architecture'] },
+        { text: 'Poder/impacto (liderar y decidir)', value: 5, careers: ['business', 'management', 'entrepreneurship'] },
+        { text: 'Verdad/conocimiento (comprender y demostrar)', value: 5, careers: ['science', 'research', 'academic'] },
+        { text: 'Cuidado/salud (acompañar procesos y sanar)', value: 5, careers: ['health', 'psychology', 'counseling'] }
+      ]
+    },
+    {
+      id: 35,
+      question: 'Si tu trabajo ideal fuera un escenario, ¿qué rol tendrías?',
+      type: 'scale',
+      dimension: 'role_identity',
+      options: [
+        { text: 'Arquitecto de sistemas (estructura y funcionamiento)', value: 5, careers: ['tech', 'engineering', 'operations'] },
+        { text: 'Creador (forma, emoción y lenguaje)', value: 5, careers: ['creative', 'design', 'writing', 'arts'] },
+        { text: 'Guía/terapeuta (escucha, intervención, transformación)', value: 5, careers: ['psychology', 'health', 'education'] },
+        { text: 'Estratega (visión, negociación, mercado)', value: 5, careers: ['business', 'finance', 'consulting', 'sales'] },
+        { text: 'Investigador (pregunta, hipótesis, evidencia)', value: 5, careers: ['science', 'research', 'academic', 'data'] }
+      ]
+    },
+    {
+      id: 36,
+      question: '¿Qué te es más natural: persuadir, cuidar, crear, analizar o construir?',
+      type: 'scale',
+      dimension: 'natural_drive',
+      options: [
+        { text: 'Persuadir/negociar y mover decisiones', value: 5, careers: ['business', 'sales', 'management'] },
+        { text: 'Cuidar/acompañar y sostener procesos humanos', value: 5, careers: ['health', 'psychology', 'education'] },
+        { text: 'Crear/imaginar y traducirlo en forma', value: 5, careers: ['creative', 'design', 'arts'] },
+        { text: 'Analizar/entender y explicar con rigor', value: 5, careers: ['science', 'research', 'academic'] },
+        { text: 'Construir/hacer funcionar sistemas', value: 5, careers: ['tech', 'engineering', 'operations'] }
+      ]
+    },
+    {
+      id: 37,
+      question: 'En un entorno nuevo, ¿qué buscas primero?',
+      type: 'scale',
+      dimension: 'orientation',
+      options: [
+        { text: 'Personas clave y dinámica del grupo', value: 5, careers: ['social', 'education', 'business'] },
+        { text: 'Reglas, procesos y estructura', value: 5, careers: ['admin', 'operations', 'finance'] },
+        { text: 'Datos, métricas y hechos', value: 5, careers: ['science', 'data', 'research'] },
+        { text: 'Posibilidades creativas y estética', value: 5, careers: ['creative', 'design', 'arts'] },
+        { text: 'Herramientas, sistemas y cómo optimizarlos', value: 5, careers: ['tech', 'engineering'] }
+      ]
+    },
+    {
+      id: 38,
+      question: '¿Qué preferirías dominar antes: una habilidad humana o una técnica?',
+      type: 'scale',
+      dimension: 'preference_human_tech',
+      options: [
+        { text: 'Habilidad humana (escucha, liderazgo, enseñanza)', value: 5, careers: ['psychology', 'education', 'management'] },
+        { text: 'Habilidad técnica (programar, diseñar, construir)', value: 5, careers: ['tech', 'creative', 'engineering'] },
+        { text: 'Habilidad científica (método, investigación, laboratorio)', value: 5, careers: ['science', 'research', 'academic'] },
+        { text: 'Habilidad comercial (vender, negociar, escalar)', value: 5, careers: ['business', 'sales', 'entrepreneurship'] },
+        { text: 'Una mezcla equilibrada', value: 4, careers: ['business', 'tech', 'education'] }
+      ]
+    },
+    {
+      id: 39,
+      question: '¿Qué tipo de éxito te da paz (no solo emoción)?',
+      type: 'scale',
+      dimension: 'peace_success',
+      options: [
+        { text: 'Ser útil y cercano para otros', value: 5, careers: ['health', 'education', 'social', 'psychology'] },
+        { text: 'Hacer una obra/creación propia', value: 5, careers: ['creative', 'arts', 'design', 'writing'] },
+        { text: 'Ser competente y respetado por rigor', value: 5, careers: ['science', 'research', 'engineering'] },
+        { text: 'Lograr independencia y control de mis decisiones', value: 5, careers: ['business', 'entrepreneurship', 'finance'] },
+        { text: 'Resolver problemas difíciles con elegancia', value: 5, careers: ['tech', 'engineering', 'science'] }
+      ]
+    },
+    {
+      id: 40,
+      question: '¿Qué tan dispuesto estás a especializarte profundamente (años) en un campo?',
+      type: 'scale',
+      dimension: 'specialization',
+      options: [
+        { text: 'Mucho, me atrae la maestría', value: 5, careers: ['science', 'research', 'psychology', 'engineering'] },
+        { text: 'Medio, prefiero ser generalista fuerte', value: 4, careers: ['business', 'tech', 'consulting'] },
+        { text: 'Poco, prefiero variedad constante', value: 3, careers: ['creative', 'entrepreneurship', 'media'] },
+        { text: 'Depende: si hay sentido, sí', value: 4, careers: ['health', 'education', 'social'] },
+        { text: 'Me interesa más explorar que profundizar', value: 3, careers: ['entrepreneurship', 'creative', 'exploration'] }
+      ]
+    },
+    {
+      id: 41,
+      question: '¿Qué tipo de problemas evitarías si pudieras elegir?',
+      type: 'scale',
+      dimension: 'avoidance',
+      options: [
+        { text: 'Problemas humanos/emocionales intensos', value: 5, careers: ['tech', 'engineering', 'finance'] },
+        { text: 'Problemas abstractos sin aplicación práctica', value: 5, careers: ['business', 'sales', 'operations'] },
+        { text: 'Problemas técnicos que requieren concentración prolongada', value: 5, careers: ['social', 'education', 'health'] },
+        { text: 'Problemas estéticos sin criterios claros', value: 5, careers: ['science', 'engineering', 'admin'] },
+        { text: 'Problemas de negociación y conflicto por poder', value: 5, careers: ['research', 'science', 'creative'] }
+      ]
+    },
+    {
+      id: 42,
+      question: '¿Qué te da más energía en un día de trabajo?',
+      type: 'scale',
+      dimension: 'energy_source',
+      options: [
+        { text: 'Cerrar un acuerdo o mover una estrategia', value: 5, careers: ['business', 'sales', 'management'] },
+        { text: 'Tener una conversación profunda y significativa', value: 5, careers: ['psychology', 'education', 'social'] },
+        { text: 'Resolver un bug o un problema técnico complejo', value: 5, careers: ['tech', 'engineering', 'data'] },
+        { text: 'Diseñar algo bello y funcional', value: 5, careers: ['creative', 'design'] },
+        { text: 'Descubrir un patrón nuevo o una hipótesis sólida', value: 5, careers: ['science', 'research', 'academic'] }
+      ]
+    },
+
+    // Bloque 5: Decisión y mundo real (12 preguntas)
+    {
+      id: 43,
+      question: '¿Qué tanto te importa la estabilidad económica en la elección de carrera?',
+      type: 'scale',
+      dimension: 'economics',
+      options: [
+        { text: 'Muchísimo: es prioridad central', value: 5, careers: ['finance', 'business', 'admin'] },
+        { text: 'Importa, pero no define todo', value: 4, careers: ['business', 'tech', 'health'] },
+        { text: 'Me importa más el sentido que el dinero', value: 5, careers: ['social', 'education', 'psychology'] },
+        { text: 'Me importa más la libertad que la estabilidad', value: 5, careers: ['entrepreneurship', 'creative', 'freelance'] },
+        { text: 'Depende del momento de vida', value: 3, careers: ['versatile', 'general'] }
+      ]
+    },
+    {
+      id: 44,
+      question: 'Cuando piensas en “trabajo”, ¿qué imagen aparece primero?',
+      type: 'scale',
+      dimension: 'work_image',
+      options: [
+        { text: 'Un espacio de creación y expresión', value: 5, careers: ['creative', 'design', 'arts'] },
+        { text: 'Un espacio de servicio y cuidado', value: 5, careers: ['health', 'psychology', 'education'] },
+        { text: 'Un espacio de análisis y método', value: 5, careers: ['science', 'research', 'academic'] },
+        { text: 'Un espacio de estrategia y logro', value: 5, careers: ['business', 'management', 'entrepreneurship'] },
+        { text: 'Un espacio de construcción técnica', value: 5, careers: ['tech', 'engineering'] }
+      ]
+    },
+    {
+      id: 45,
+      question: '¿Qué te atrae más: profundidad, velocidad o visibilidad?',
+      type: 'scale',
+      dimension: 'tempo',
+      options: [
+        { text: 'Profundidad (entender a fondo)', value: 5, careers: ['research', 'science', 'psychology'] },
+        { text: 'Velocidad (iterar y mover rápido)', value: 5, careers: ['tech', 'entrepreneurship', 'business'] },
+        { text: 'Visibilidad (presentar y comunicar)', value: 5, careers: ['education', 'media', 'business'] },
+        { text: 'Equilibrio según proyecto', value: 4, careers: ['consulting', 'management', 'tech'] },
+        { text: 'Depende del equipo, no de mí', value: 3, careers: ['admin', 'operations'] }
+      ]
+    },
+    {
+      id: 46,
+      question: '¿Cómo te llevas con vender (ideas, servicios, productos)?',
+      type: 'scale',
+      dimension: 'selling',
+      options: [
+        { text: 'Me gusta y se me da bien', value: 5, careers: ['sales', 'business', 'entrepreneurship'] },
+        { text: 'Puedo hacerlo si es ético y útil', value: 4, careers: ['education', 'health', 'business'] },
+        { text: 'Me incomoda; prefiero que hable el trabajo', value: 4, careers: ['research', 'tech', 'creative'] },
+        { text: 'Lo evitaría si pudiera', value: 3, careers: ['science', 'engineering', 'support'] },
+        { text: 'Depende del contexto', value: 3, careers: ['versatile', 'general'] }
+      ]
+    },
+    {
+      id: 47,
+      question: '¿Qué tipo de responsabilidad prefieres cargar?',
+      type: 'scale',
+      dimension: 'responsibility',
+      options: [
+        { text: 'Responsabilidad técnica (que funcione)', value: 5, careers: ['tech', 'engineering', 'operations'] },
+        { text: 'Responsabilidad humana (que el otro esté bien)', value: 5, careers: ['health', 'psychology', 'education'] },
+        { text: 'Responsabilidad económica (resultado, presupuesto)', value: 5, careers: ['business', 'finance', 'management'] },
+        { text: 'Responsabilidad creativa (forma, narrativa, estética)', value: 5, careers: ['creative', 'design', 'media'] },
+        { text: 'Responsabilidad científica (evidencia y rigor)', value: 5, careers: ['science', 'research', 'academic'] }
+      ]
+    },
+    {
+      id: 48,
+      question: '¿Qué tipo de feedback te ayuda más?',
+      type: 'scale',
+      dimension: 'feedback',
+      options: [
+        { text: 'Métricas y datos', value: 5, careers: ['data', 'science', 'business'] },
+        { text: 'Observación cualitativa (lo que provocó en alguien)', value: 5, careers: ['psychology', 'education', 'creative'] },
+        { text: 'Revisión técnica (calidad, estándares)', value: 5, careers: ['tech', 'engineering', 'science'] },
+        { text: 'Reconocimiento público (audiencia, impacto)', value: 5, careers: ['media', 'business', 'arts'] },
+        { text: 'Un mentor con criterio', value: 4, careers: ['research', 'health', 'trades'] }
+      ]
+    },
+    {
+      id: 49,
+      question: '¿Qué te pesa más cuando eliges un camino?',
+      type: 'scale',
+      dimension: 'decision_weight',
+      options: [
+        { text: 'Seguridad y previsibilidad', value: 5, careers: ['admin', 'finance', 'operations'] },
+        { text: 'Impacto humano', value: 5, careers: ['health', 'psychology', 'social'] },
+        { text: 'Libertad y autonomía', value: 5, careers: ['entrepreneurship', 'creative', 'freelance'] },
+        { text: 'Desafío intelectual', value: 5, careers: ['science', 'research', 'tech'] },
+        { text: 'Posibilidad de liderazgo', value: 5, careers: ['business', 'management', 'entrepreneurship'] }
+      ]
+    },
+    {
+      id: 50,
+      question: '¿Con qué te identificas más?',
+      type: 'scale',
+      dimension: 'identity_axis',
+      options: [
+        { text: 'Soy constructor de soluciones', value: 5, careers: ['tech', 'engineering', 'operations'] },
+        { text: 'Soy intérprete de lo humano', value: 5, careers: ['psychology', 'humanities', 'education'] },
+        { text: 'Soy creador de formas y experiencias', value: 5, careers: ['creative', 'design', 'arts'] },
+        { text: 'Soy estratega de resultados', value: 5, careers: ['business', 'finance', 'management'] },
+        { text: 'Soy buscador de verdad', value: 5, careers: ['science', 'research', 'academic'] }
+      ]
+    },
+    {
+      id: 51,
+      question: '¿Qué tan importante es para ti trabajar con ética explícita?',
+      type: 'scale',
+      dimension: 'ethics',
+      options: [
+        { text: 'Es central; sin ética no puedo sostenerlo', value: 5, careers: ['health', 'psychology', 'social'] },
+        { text: 'Importa; busco coherencia', value: 4, careers: ['education', 'business', 'science'] },
+        { text: 'Depende del rol y del sistema', value: 3, careers: ['operations', 'admin', 'engineering'] },
+        { text: 'No lo pienso tanto, priorizo resultados', value: 3, careers: ['business', 'sales', 'entrepreneurship'] },
+        { text: 'Me guía más la evidencia y el método', value: 4, careers: ['science', 'research', 'tech'] }
+      ]
+    },
+    {
+      id: 52,
+      question: 'Si hoy tuvieras que elegir una sola dirección para 12 meses, ¿cuál sería?',
+      type: 'scale',
+      dimension: '12_month_choice',
+      options: [
+        { text: 'Estudiar/entrenarme técnicamente (código, datos, ingeniería)', value: 5, careers: ['tech', 'data', 'engineering'] },
+        { text: 'Entrenar una habilidad humana (terapia, enseñanza, liderazgo)', value: 5, careers: ['psychology', 'education', 'management'] },
+        { text: 'Construir un portafolio creativo (diseño, contenido, arte)', value: 5, careers: ['creative', 'design', 'arts', 'media'] },
+        { text: 'Escalar un proyecto de negocio (ventas, estrategia)', value: 5, careers: ['business', 'sales', 'entrepreneurship'] },
+        { text: 'Entrar en investigación/metodología (ciencia, papers)', value: 5, careers: ['science', 'research', 'academic'] }
+      ]
+    },
+    {
+      id: 53,
+      question: '¿Qué tanto disfrutas la precisión y el detalle?',
+      type: 'scale',
+      dimension: 'precision',
+      options: [
+        { text: 'Mucho, me calma y me ordena', value: 5, careers: ['engineering', 'finance', 'operations'] },
+        { text: 'Me gusta si tiene sentido práctico', value: 4, careers: ['tech', 'business', 'health'] },
+        { text: 'Me aburre; prefiero visión general', value: 3, careers: ['entrepreneurship', 'creative', 'management'] },
+        { text: 'Depende: en arte sí, en burocracia no', value: 4, careers: ['creative', 'design', 'arts'] },
+        { text: 'Prefiero exploración, no exactitud', value: 3, careers: ['exploration', 'media', 'arts'] }
+      ]
+    },
+    {
+      id: 54,
+      question: 'Cuando te imaginas creciendo, ¿qué te entusiasma más?',
+      type: 'scale',
+      dimension: 'growth_direction',
+      options: [
+        { text: 'Ser referente técnico', value: 5, careers: ['tech', 'engineering', 'data'] },
+        { text: 'Acompañar procesos humanos complejos', value: 5, careers: ['psychology', 'health', 'education'] },
+        { text: 'Crear obras, marcas o experiencias', value: 5, careers: ['creative', 'design', 'arts'] },
+        { text: 'Liderar equipos y proyectos grandes', value: 5, careers: ['business', 'management', 'entrepreneurship'] },
+        { text: 'Investigar y producir conocimiento', value: 5, careers: ['science', 'research', 'academic'] }
+      ]
     }
   ]
   
@@ -558,32 +884,171 @@ const VocationalTestPage = () => {
   }
   
   const calculateResults = () => {
-    // Sistema sofisticado de puntuación
+    const dimensionWeights = {
+      motivation: 1.2,
+      satisfaction: 1.2,
+      values: 1.15,
+      values_core: 1.25,
+      desire: 1.25,
+      constraints: 1.1,
+      work_style: 1.05,
+      problem_solving: 1.1,
+      learning: 1.05,
+      cognition: 1.05,
+      decision_making: 1.05,
+      tolerance: 1.1,
+      resilience: 1.1,
+      stress: 1.1,
+      social_interaction: 1.05
+    }
+
+    const normalizeTag = (tag) => (tag || '').toString().trim().toLowerCase()
+
+    const tagToProfileKey = (rawTag) => {
+      const tag = normalizeTag(rawTag)
+      if (!tag) return null
+
+      // Psicología / Humano
+      if (['psychology', 'psicologia', 'counseling', 'therapy', 'terapia', 'coaching'].includes(tag)) return 'psychology'
+
+      // Salud
+      if (['health', 'medicine', 'medicina', 'nutrition', 'nutricion', 'emergency', 'fitness'].includes(tag)) return 'health'
+
+      // Educación
+      if (['education', 'teaching', 'docencia', 'e-learning', 'elearning', 'pedagogy', 'pedagogia'].includes(tag)) return 'education'
+
+      // Ciencia / investigación
+      if (['science', 'research', 'academic', 'investigation', 'lab', 'data', 'ia/ml', 'ai/ml'].includes(tag)) return 'science'
+
+      // Tecnología
+      if (['tech', 'software', 'programming', 'code', 'coding', 'cybersecurity', 'devops', 'web', 'product'].includes(tag)) return 'tech'
+
+      // Ingeniería
+      if (['engineering', 'construction', 'manufacturing', 'industrial', 'civil', 'electrical', 'mechanical'].includes(tag)) return 'engineering'
+
+      // Creativo
+      if (['creative', 'design', 'arts', 'art', 'music', 'writing', 'media', 'entertainment', 'architecture', 'ux/ui', 'ux', 'ui'].includes(tag)) return 'creative'
+
+      // Negocios
+      if (['business', 'finance', 'sales', 'marketing', 'consulting', 'management', 'operations', 'admin', 'project-management', 'hr'].includes(tag)) return 'business'
+
+      // Emprendimiento
+      if (['entrepreneurship', 'startup', 'startups', 'innovation', 'freelance'].includes(tag)) return 'entrepreneurship'
+
+      // Derivaciones por proximidad (tags “sueltos”)
+      if (['humanities', 'philosophy', 'social', 'ngo', 'law', 'politics', 'journalism', 'human-rights', 'rights'].includes(tag)) return 'social'
+      if (['sports', 'hospitality', 'service'].includes(tag)) return 'business'
+
+      return null
+    }
+
+    const profileToCluster = {
+      psychology: 'Humano',
+      health: 'Cuidado',
+      education: 'Humano',
+      social: 'Humano',
+      creative: 'Creativo',
+      tech: 'Sistemas',
+      engineering: 'Sistemas',
+      science: 'Analítico',
+      business: 'Estrategia',
+      entrepreneurship: 'Estrategia'
+    }
+
+    const clusters = {
+      Humano: { label: 'Humano', icon: Users, color: 'from-purple-500 to-fuchsia-500' },
+      Cuidado: { label: 'Cuidado', icon: Heart, color: 'from-pink-500 to-rose-500' },
+      Creativo: { label: 'Creativo', icon: Palette, color: 'from-fuchsia-500 to-purple-500' },
+      Sistemas: { label: 'Sistemas', icon: Code, color: 'from-cyan-500 to-blue-500' },
+      Analítico: { label: 'Analítico', icon: Activity, color: 'from-indigo-500 to-purple-500' },
+      Estrategia: { label: 'Estrategia', icon: TrendingUp, color: 'from-amber-500 to-orange-500' }
+    }
+
     const careerScores = {}
-    
-    // Inicializar scores
-    Object.keys(careerProfiles).forEach(career => {
-      careerScores[career] = 0
-    })
-    
-    // Calcular puntos por respuesta
+    const clusterScores = {}
+    Object.keys(careerProfiles).forEach(key => { careerScores[key] = 0 })
+    Object.keys(clusters).forEach(key => { clusterScores[key] = 0 })
+
+    let mappedTagsCount = 0
+    let totalTagsCount = 0
+
+    let peopleScore = 0
+    let systemsScore = 0
+    let creativeScore = 0
+    let structureScore = 0
+    let riskScore = 0
+    let stabilityScore = 0
+
+    const answered = Object.keys(answers).length
+    if (answered === 0) return
+
     Object.entries(answers).forEach(([questionId, answer]) => {
-      answer.careers.forEach(career => {
-        if (careerScores[career] !== undefined) {
-          careerScores[career] += answer.value
+      const question = questions.find(q => q.id === Number(questionId))
+      const w = dimensionWeights[question?.dimension] ?? 1
+
+      const value = Number(answer?.value ?? 0)
+      const tags = Array.isArray(answer?.careers) ? answer.careers : []
+      totalTagsCount += tags.length
+
+      tags.forEach((tag) => {
+        const profileKey = tagToProfileKey(tag)
+        if (!profileKey) return
+        mappedTagsCount += 1
+
+        const points = value * w
+        if (careerScores[profileKey] !== undefined) {
+          careerScores[profileKey] += points
         }
+
+        const clusterKey = profileToCluster[profileKey]
+        if (clusterKey && clusterScores[clusterKey] !== undefined) {
+          clusterScores[clusterKey] += points
+        }
+
+        // Ejes simples (orientativos)
+        if (['psychology', 'health', 'education', 'social'].includes(profileKey)) peopleScore += points
+        if (['tech', 'engineering', 'science'].includes(profileKey)) systemsScore += points
+        if (['creative'].includes(profileKey)) creativeScore += points
+        if (['business', 'engineering', 'science'].includes(profileKey)) structureScore += points
+        if (['entrepreneurship', 'creative'].includes(profileKey)) riskScore += points
+        if (['admin', 'finance', 'operations'].includes(normalizeTag(tag))) stabilityScore += points
       })
     })
-    
-    // Normalizar y ordenar
-    const totalAnswers = Object.keys(answers).length
-    const normalizedScores = Object.entries(careerScores).map(([career, score]) => ({
-      career,
-      score,
-      percentage: Math.min(Math.round((score / (totalAnswers * 5)) * 100), 100),
-      profile: careerProfiles[career]
-    })).sort((a, b) => b.score - a.score)
-    
+
+    // Normalización: cada respuesta suele aportar ~3 tags (para evitar saturar a 100%)
+    const denom = answered * 5 * 1.25 * 3
+    const normalizedScores = Object.entries(careerScores)
+      .map(([career, score]) => ({
+        career,
+        score,
+        percentage: clamp(Math.round((score / denom) * 100), 0, 100),
+        profile: careerProfiles[career]
+      }))
+      .sort((a, b) => b.score - a.score)
+
+    const clusterMax = Math.max(1, ...Object.values(clusterScores))
+    const clusterSummary = Object.entries(clusterScores)
+      .map(([key, score]) => ({
+        key,
+        score,
+        percentage: clamp(Math.round((score / clusterMax) * 100), 0, 100),
+        meta: clusters[key]
+      }))
+      .sort((a, b) => b.score - a.score)
+
+    setInsights({
+      coverage: {
+        mappedTagsCount,
+        totalTagsCount
+      },
+      axes: {
+        peopleVsSystems: balancePercent(peopleScore, systemsScore),
+        creativityVsStructure: balancePercent(creativeScore, structureScore),
+        riskVsStability: balancePercent(riskScore, stabilityScore)
+      },
+      clusters: clusterSummary
+    })
+
     setResults(normalizedScores)
     setStage('results')
   }
@@ -594,8 +1059,7 @@ const VocationalTestPage = () => {
       alert('Funcionalidad de pago próximamente')
       return
     }
-    setTestStarted(true)
-    setStage('test')
+    navigate('/test-vocacional/iniciar')
   }
   
   const progress = ((currentQuestion + 1) / questions.length) * 100
@@ -623,6 +1087,11 @@ const VocationalTestPage = () => {
             </div>
             
             <div className="relative max-w-4xl mx-auto text-center">
+              {/* Timer (visible desde que aparece el botón de iniciar) */}
+              <div className="fixed top-24 right-6 z-50 flex items-center gap-2 px-3 py-2 bg-black/70 backdrop-blur-md rounded-full border border-white/10">
+                <Clock className="w-4 h-4 text-purple-400" />
+                <span className="font-mono text-sm text-white/90">{formatTime(timeLeft)}</span>
+              </div>
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -648,7 +1117,7 @@ const VocationalTestPage = () => {
                 className="text-xl text-white/70 mb-12 max-w-2xl mx-auto leading-relaxed"
               >
                 Un análisis psicológico completo que va más allá de preguntas superficiales. 
-                30 preguntas diseñadas para descubrir tu verdadera vocación desde la estructura de tu deseo.
+                54 preguntas diseñadas para aproximarte a tu dirección vocacional desde tu deseo, tus valores y tu estilo de decisión.
               </motion.p>
               
               <motion.div
@@ -659,17 +1128,17 @@ const VocationalTestPage = () => {
               >
                 <div className="p-6 bg-white/5 border border-white/10 rounded-xl">
                   <Clock className="w-8 h-8 mx-auto mb-3 text-purple-400" />
-                  <h3 className="font-bold mb-2">45 minutos</h3>
+                  <h3 className="font-bold mb-2">60 minutos</h3>
                   <p className="text-sm text-white/60">Tiempo límite para completar</p>
                 </div>
                 <div className="p-6 bg-white/5 border border-white/10 rounded-xl">
                   <CheckCircle className="w-8 h-8 mx-auto mb-3 text-fuchsia-400" />
-                  <h3 className="font-bold mb-2">30 preguntas</h3>
+                  <h3 className="font-bold mb-2">54 preguntas</h3>
                   <p className="text-sm text-white/60">Análisis multidimensional</p>
                 </div>
                 <div className="p-6 bg-white/5 border border-white/10 rounded-xl">
                   <Target className="w-8 h-8 mx-auto mb-3 text-cyan-400" />
-                  <h3 className="font-bold mb-2">10 carreras</h3>
+                  <h3 className="font-bold mb-2">10 rutas</h3>
                   <p className="text-sm text-white/60">Perfiles vocacionales evaluados</p>
                 </div>
               </motion.div>
@@ -710,13 +1179,24 @@ const VocationalTestPage = () => {
             <div className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
               <div className="max-w-4xl mx-auto px-6 py-4">
                 <div className="flex items-center justify-between mb-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowExitWarning(true)}
+                    className="flex items-center gap-2 px-3 py-2 rounded-full border border-white/10 bg-white/5 hover:border-white/30 transition-all"
+                    aria-label="Salir del test"
+                  >
+                    <Home className="w-4 h-4 text-white/80" />
+                    <span className="text-xs text-white/70 hidden sm:inline">Salir</span>
+                  </button>
+
+                  <span className="text-sm text-white/60">
+                    Pregunta {currentQuestion + 1} de {questions.length}
+                  </span>
+
                   <div className="flex items-center gap-2">
                     <Clock className="w-5 h-5 text-purple-400" />
                     <span className="font-mono text-lg">{formatTime(timeLeft)}</span>
                   </div>
-                  <span className="text-sm text-white/60">
-                    Pregunta {currentQuestion + 1} de {questions.length}
-                  </span>
                 </div>
                 <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                   <motion.div
@@ -728,6 +1208,53 @@ const VocationalTestPage = () => {
                 </div>
               </div>
             </div>
+
+            {/* Exit confirmation */}
+            <AnimatePresence>
+              {showExitWarning && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[60] flex items-center justify-center px-6 bg-black/80"
+                >
+                  <motion.div
+                    initial={{ y: 20, opacity: 0, scale: 0.98 }}
+                    animate={{ y: 0, opacity: 1, scale: 1 }}
+                    exit={{ y: 20, opacity: 0, scale: 0.98 }}
+                    className="w-full max-w-md p-6 bg-[#0A0A0A] border border-white/10 rounded-2xl"
+                  >
+                    <div className="flex items-start gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                        <AlertCircle className="w-5 h-5 text-fuchsia-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold">¿Salir del test?</h3>
+                        <p className="text-sm text-white/60">
+                          Si sales ahora, perderás tu progreso actual.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-end gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setShowExitWarning(false)}
+                        className="px-4 py-2 rounded-full border border-white/15 bg-white/5 hover:border-white/30 transition-all"
+                      >
+                        Continuar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => navigate('/')}
+                        className="px-5 py-2 rounded-full bg-gradient-to-r from-purple-500 to-fuchsia-500 font-bold"
+                      >
+                        Salir
+                      </button>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
             
             {/* Question */}
             <div className="max-w-4xl mx-auto pt-32">
@@ -882,6 +1409,90 @@ const VocationalTestPage = () => {
                   )
                 })}
               </div>
+
+              {/* Insights / charts */}
+              {insights && (
+                <div className="grid lg:grid-cols-2 gap-6 mb-12">
+                  <div className="p-6 bg-white/5 border border-white/10 rounded-2xl">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                        <BarChart3 className="w-5 h-5 text-purple-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold">Mapa de inclinaciones</h3>
+                        <p className="text-sm text-white/60">Lectura orientativa por clúster</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      {insights.clusters.slice(0, 6).map((c) => {
+                        const Icon = c.meta.icon
+                        return (
+                          <div key={c.key}>
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2 text-sm text-white/80">
+                                <Icon className="w-4 h-4 text-white/70" />
+                                <span className="font-medium">{c.meta.label}</span>
+                              </div>
+                              <span className="text-xs text-white/60">{c.percentage}%</span>
+                            </div>
+                            <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                              <div
+                                className={`h-full bg-gradient-to-r ${c.meta.color}`}
+                                style={{ width: `${c.percentage}%` }}
+                              />
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="p-6 bg-white/5 border border-white/10 rounded-2xl">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                        <PieChart className="w-5 h-5 text-fuchsia-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold">Ejes de decisión</h3>
+                        <p className="text-sm text-white/60">Lectura orientativa (no diagnóstica)</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-6">
+                      <div>
+                        <div className="flex items-center justify-between text-sm mb-2">
+                          <span className="text-white/70">Humano</span>
+                          <span className="text-white/70">Sistemas</span>
+                        </div>
+                        <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                          <div className="h-full bg-gradient-to-r from-purple-500 to-fuchsia-500" style={{ width: `${insights.axes.peopleVsSystems}%` }} />
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center justify-between text-sm mb-2">
+                          <span className="text-white/70">Creatividad</span>
+                          <span className="text-white/70">Estructura</span>
+                        </div>
+                        <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                          <div className="h-full bg-gradient-to-r from-fuchsia-500 to-purple-500" style={{ width: `${insights.axes.creativityVsStructure}%` }} />
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center justify-between text-sm mb-2">
+                          <span className="text-white/70">Riesgo</span>
+                          <span className="text-white/70">Estabilidad</span>
+                        </div>
+                        <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                          <div className="h-full bg-gradient-to-r from-amber-500 to-orange-500" style={{ width: `${insights.axes.riskVsStability}%` }} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
               
               {/* CTA para consulta */}
               <motion.div

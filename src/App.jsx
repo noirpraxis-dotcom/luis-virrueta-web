@@ -1,5 +1,5 @@
 import { useState, lazy, Suspense } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import { LanguageProvider, useLanguage } from './context/LanguageContext'
 import Header from './components/Header'
@@ -59,134 +59,142 @@ const AppContent = () => {
     { name: 'Tienda', href: '/tienda', special: true }
   ]
 
-  return (
-    <Router>
-      <ScrollToTop />
-      <SmoothScroll>
-        <div className="relative min-h-screen">
-          {/* Desktop Header - visible en pantallas md y superiores */}
+  const AppShell = () => {
+    const location = useLocation()
+    const hideGlobalHeader = location.pathname.startsWith('/test-vocacional/iniciar')
+
+    return (
+      <div className="relative min-h-screen">
+        {/* Desktop Header - visible en pantallas md y superiores */}
+        {!hideGlobalHeader && (
           <Header 
             menuItems={menuItems} 
             onMenuToggle={() => setIsMenuOpen(!isMenuOpen)}
             isMenuOpen={isMenuOpen}
           />
+        )}
 
         {/* Mobile Menu Fullscreen */}
-        <MobileMenu 
-          isOpen={isMenuOpen} 
-          onClose={() => setIsMenuOpen(false)} 
-          menuItems={menuItems} 
-        />
+        {!hideGlobalHeader && (
+          <MobileMenu 
+            isOpen={isMenuOpen} 
+            onClose={() => setIsMenuOpen(false)} 
+            menuItems={menuItems} 
+          />
+        )}
 
         {/* Contenido principal con rutas */}
         <main className="relative z-0">
           <Suspense fallback={<PageLoader />}>
             <Routes>
-            {/* Página Home: Video + Hero con "Ver más" */}
-            <Route path="/" element={
-              <HomePage />
-            } />
-            
-            {/* Página Philosophy: Manifiesto Ainimation - Psych × Design × AI */}
-            <Route path="/about" element={
-              <PhilosophyPage />
-            } />
+              {/* Página Home: Video + Hero con "Ver más" */}
+              <Route path="/" element={
+                <HomePage />
+              } />
+              
+              {/* Página Philosophy: Manifiesto Ainimation - Psych × Design × AI */}
+              <Route path="/about" element={
+                <PhilosophyPage />
+              } />
 
-            {/* Página Servicios: Overview de todos los servicios */}
-            <Route path="/servicios" element={
-              <ServiciosPage />
-            } />
+              {/* Página Servicios: Overview de todos los servicios */}
+              <Route path="/servicios" element={
+                <ServiciosPage />
+              } />
 
-            {/* Páginas individuales de servicios */}
-            <Route path="/servicios/identidad-marca" element={
-              <IdentidadMarcaPage />
-            } />
+              {/* Páginas individuales de servicios */}
+              <Route path="/servicios/identidad-marca" element={
+                <IdentidadMarcaPage />
+              } />
 
-            {/* Página Arquetipos */}
-            <Route path="/identidad-de-marca" element={
-              <ArquetiposPage />
-            } />
+              {/* Página Arquetipos */}
+              <Route path="/identidad-de-marca" element={
+                <ArquetiposPage />
+              } />
 
-            <Route path="/servicios/apps-premium" element={
-              <AppsPremiumPage />
-            } />
+              <Route path="/servicios/apps-premium" element={
+                <AppsPremiumPage />
+              } />
 
-            <Route path="/servicios/contenido-digital" element={
-              <ContenidoDigitalPage />
-            } />
+              <Route path="/servicios/contenido-digital" element={
+                <ContenidoDigitalPage />
+              } />
 
-            <Route path="/servicios/avatares-ia" element={
-              <AvataresIAPage />
-            } />
+              <Route path="/servicios/avatares-ia" element={
+                <AvataresIAPage />
+              } />
 
-            <Route path="/servicios/consultoria-psicologica" element={
-              <ConsultoriaPsicologicaPage />
-            } />
+              <Route path="/servicios/consultoria-psicologica" element={
+                <ConsultoriaPsicologicaPage />
+              } />
 
-            {/* Página Sobre Mí: Historia completa de Luis Virrueta */}
-            <Route path="/sobre-mi" element={
-              <AboutPage />
-            } />
+              {/* Página Sobre Mí: Historia completa de Luis Virrueta */}
+              <Route path="/sobre-mi" element={
+                <AboutPage />
+              } />
 
-            {/* Página El Método: Aión */}
-            <Route path="/metodo" element={
-              <MetodoPage />
-            } />
+              {/* Página El Método: Aión */}
+              <Route path="/metodo" element={
+                <MetodoPage />
+              } />
 
-            {/* Página Las Fases del Método */}
-            <Route path="/metodo/fases" element={
-              <FasesPage />
-            } />
+              {/* Página Las Fases del Método */}
+              <Route path="/metodo/fases" element={
+                <FasesPage />
+              } />
 
-            {/* Página Blog: Artículos sobre diseño */}
-            <Route path="/blog" element={
-              <BlogPage />
-            } />
+              {/* Página Blog: Artículos sobre diseño */}
+              <Route path="/blog" element={
+                <BlogPage />
+              } />
 
-            {/* Página individual de artículo del blog */}
-            <Route path="/blog/:slug" element={
-              <BlogArticlePage />
-            } />
+              {/* Página individual de artículo del blog */}
+              <Route path="/blog/:slug" element={
+                <BlogArticlePage />
+              } />
 
-            {/* Test Vocacional */}
-            <Route path="/test-vocacional" element={
-              <VocationalTestPage />
-            } />
+              {/* Test Vocacional */}
+              <Route path="/test-vocacional" element={
+                <VocationalTestPage />
+              } />
+              <Route path="/test-vocacional/iniciar" element={
+                <VocationalTestPage initialStage="test" />
+              } />
 
-            {/* Página Inversión: Precios premium */}
-            <Route path="/inversion" element={
-              <InversionPage />
-            } />
+              {/* Página Inversión: Precios premium */}
+              <Route path="/inversion" element={
+                <InversionPage />
+              } />
 
-            {/* Página Tienda: Productos y servicios */}
-            <Route path="/tienda" element={
-              <StorePage />
-            } />
+              {/* Página Tienda: Productos y servicios */}
+              <Route path="/tienda" element={
+                <StorePage />
+              } />
 
-            {/* Página Detalle de Producto */}
-            <Route path="/tienda/:id" element={
-              <StoreProductPage />
-            } />
+              {/* Página Detalle de Producto */}
+              <Route path="/tienda/:id" element={
+                <StoreProductPage />
+              } />
 
-            {/* Página Contacto */}
-            <Route path="/contacto" element={
-              <ContactoPage />
-            } />
+              {/* Página Contacto */}
+              <Route path="/contacto" element={
+                <ContactoPage />
+              } />
 
-            {/* Páginas Legales */}
-            <Route path="/politica-privacidad" element={
-              <PrivacyPolicyPage />
-            } />
+              {/* Páginas Legales */}
+              <Route path="/politica-privacidad" element={
+                <PrivacyPolicyPage />
+              } />
 
-            <Route path="/terminos-condiciones" element={
-              <TermsConditionsPage />
-            } />
+              <Route path="/terminos-condiciones" element={
+                <TermsConditionsPage />
+              } />
 
-            <Route path="/politica-cookies" element={
-              <CookiePolicyPage />
-            } />
-            
-            {/* Aquí irán más rutas/páginas */}
+              <Route path="/politica-cookies" element={
+                <CookiePolicyPage />
+              } />
+              
+              {/* Aquí irán más rutas/páginas */}
             </Routes>
           </Suspense>
         </main>
@@ -199,7 +207,15 @@ const AppContent = () => {
 
         {/* WhatsApp Button - flotante en todas las páginas */}
         <WhatsAppButton />
-        </div>
+      </div>
+    )
+  }
+
+  return (
+    <Router>
+      <ScrollToTop />
+      <SmoothScroll>
+        <AppShell />
       </SmoothScroll>
     </Router>
   )

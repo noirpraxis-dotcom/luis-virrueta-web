@@ -468,7 +468,9 @@ const BlogCard = ({ post, index }) => {
     'branding': t('blogPage.categories.branding'),
     'psychology': t('blogPage.categories.psychology'),
     'trends': t('blogPage.categories.trends'),
+    'Philosophy': currentLanguage === 'en' ? 'Philosophy' : 'Filosofía',
     'philosophy': currentLanguage === 'en' ? 'Philosophy' : 'Filosofía',
+    'Psychoanalysis': currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
     'psychoanalysis': currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
     'Psicoanálisis': currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
     'Filosofía': currentLanguage === 'en' ? 'Philosophy' : 'Filosofía',
@@ -483,9 +485,14 @@ const BlogCard = ({ post, index }) => {
     'Perception': currentLanguage === 'en' ? 'Perception' : 'Percepción',
     'Percepción': currentLanguage === 'en' ? 'Perception' : 'Percepción',
     'Consciousness': currentLanguage === 'en' ? 'Consciousness' : 'Consciencia',
+    'Conciencia': currentLanguage === 'en' ? 'Consciousness' : 'Consciencia',
     'Consciencia': currentLanguage === 'en' ? 'Consciousness' : 'Consciencia',
     'Branding × Strategy': currentLanguage === 'en' ? 'Branding × Strategy' : 'Branding × Estrategia',
-    'Branding × Estrategia': currentLanguage === 'en' ? 'Branding × Strategy' : 'Branding × Estrategia'
+    'Branding × Estrategia': currentLanguage === 'en' ? 'Branding × Strategy' : 'Branding × Estrategia',
+    'Phenomenology': currentLanguage === 'en' ? 'Phenomenology' : 'Fenomenología',
+    'Fenomenología': currentLanguage === 'en' ? 'Phenomenology' : 'Fenomenología',
+    'Love & Relationships': currentLanguage === 'en' ? 'Love & Relationships' : 'Amor y Relaciones',
+    'Amor y Relaciones': currentLanguage === 'en' ? 'Love & Relationships' : 'Amor y Relaciones'
   }
   return (
     <Link to={post.slug ? `/blog/${post.slug}` : '#'}>
@@ -531,7 +538,7 @@ const BlogCard = ({ post, index }) => {
           {/* Category badge */}
           <div className="absolute top-4 left-4 px-3 py-1.5 bg-black/60 backdrop-blur-md rounded-full border border-white/20 z-20">
             <span className="text-xs text-white/90 uppercase tracking-wider font-medium">
-              {categoryLabels[post.category]}
+              {categoryLabels[post.category] || post.category}
             </span>
           </div>
           {/* Rating - Esquina superior derecha */}
