@@ -206,7 +206,7 @@ const AionSection = () => {
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16 lg:mb-20 max-w-6xl mx-auto"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 lg:mb-20 max-w-7xl mx-auto px-4"
         >
           {transformationAreas.map((area, index) => (
             <motion.div
@@ -223,7 +223,7 @@ const AionSection = () => {
                 y: -5,
                 transition: { duration: 0.3 }
               }}
-              className={`group relative p-6 bg-gradient-to-br ${area.gradient} backdrop-blur-xl border-2 ${area.borderColor} rounded-2xl transition-all duration-500 overflow-hidden flex flex-col max-w-sm mx-auto`}
+              className={`group relative p-7 bg-gradient-to-br ${area.gradient} backdrop-blur-xl border ${area.borderColor} rounded-2xl transition-all duration-500 overflow-hidden flex flex-col h-full shadow-lg hover:shadow-2xl`}
             >
               {/* Efecto de brillo en hover */}
               <motion.div 
@@ -244,33 +244,33 @@ const AionSection = () => {
                 className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-white/20 to-transparent rounded-full blur-3xl"
               />
               
-              <div className="relative z-10">
+              <div className="relative z-10 flex flex-col h-full">
                 {/* Ícono arriba */}
                 <motion.div 
                   whileHover={{ rotate: [0, -10, 10, -10, 0] }}
                   transition={{ duration: 0.5 }}
-                  className="mb-3"
+                  className="mb-4"
                 >
-                  <div className="inline-flex p-3 bg-black/40 backdrop-blur-sm rounded-xl border border-white/10">
-                    <area.icon className={`w-6 h-6 ${area.iconColor}`} strokeWidth={2.5} />
+                  <div className="inline-flex p-3 bg-black/40 backdrop-blur-sm rounded-xl border border-white/20">
+                    <area.icon className={`w-7 h-7 ${area.iconColor}`} strokeWidth={2.5} />
                   </div>
                 </motion.div>
                 
                 {/* Título pegado al ícono */}
-                <h3 className="text-xl font-bold text-white mb-3" style={{ letterSpacing: '0.01em' }}>
+                <h3 className="text-xl font-bold text-white mb-3 tracking-tight" style={{ letterSpacing: '-0.01em' }}>
                   {area.title}
                 </h3>
                 
                 {/* Descripción */}
-                <p className="text-white/80 text-sm leading-relaxed font-light mb-4 italic">
+                <p className="text-white/80 text-sm leading-relaxed font-light mb-5 italic">
                   {area.description}
                 </p>
 
                 {/* Puntos esenciales */}
-                <ul className="space-y-2">
+                <ul className="space-y-2.5 mt-auto">
                   {area.points.map((point, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-white/60 text-xs">
-                      <span className="text-white/40 mt-0.5">•</span>
+                    <li key={idx} className="flex items-start gap-2.5 text-white/60 text-xs leading-relaxed">
+                      <span className={`${area.iconColor} mt-0.5 font-bold`}>•</span>
                       <span>{point}</span>
                     </li>
                   ))}

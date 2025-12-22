@@ -213,7 +213,7 @@ const IndividualServices = () => {
           </p>
           
           <motion.a
-            href="https://wa.me/527228720520?text=Hola! Me gustaría explorar cómo podemos trabajar juntos"
+            href="https://wa.me/5218115936829?text=Hola%20Luis%2C%20me%20interesa%20iniciar%20una%20consulta%20sobre%20transformaci%C3%B3n%20personal"
             target="_blank"
             rel="noopener noreferrer"
             whileHover={{ scale: 1.05, y: -2 }}
