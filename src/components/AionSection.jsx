@@ -306,8 +306,8 @@ const AionSection = () => {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.9 }}
           >
-            <a
-              href="#about-luis"
+            <Link
+              to="/metodo"
               className="group relative inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-purple-600 via-fuchsia-600 to-purple-600 text-white rounded-full font-light text-lg overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/50"
               style={{ backgroundSize: '200% 100%' }}
             >
@@ -337,7 +337,7 @@ const AionSection = () => {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </motion.svg>
-            </a>
+            </Link>
           </motion.div>
         </motion.div>
       </div>
