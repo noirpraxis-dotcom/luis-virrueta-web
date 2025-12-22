@@ -4,7 +4,6 @@ import { useParams, Link } from 'react-router-dom'
 import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles, Award, Check, Shield, AlertCircle } from 'lucide-react'
 import ReadingProgressBar from '../components/ReadingProgressBar'
 import ShareButtons from '../components/ShareButtons'
-import CommentsSection from '../components/CommentsSection'
 import RelatedArticles from '../components/RelatedArticles'
 import NewsletterSignup from '../components/NewsletterSignup'
 import TableOfContents from '../components/TableOfContents'
@@ -1957,9 +1956,6 @@ const BlogArticlePage = () => {
 
       {/* Newsletter Signup */}
       <NewsletterSignup />
-
-      {/* Comments Section */}
-      <CommentsSection articleTitle={article.title} articleSlug={slug} />
 
       {/* Related Articles */}
       <RelatedArticles 

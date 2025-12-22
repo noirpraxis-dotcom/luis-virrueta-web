@@ -5,14 +5,12 @@ import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen,
 import SEOHead from '../components/SEOHead'
 import { useLanguage } from '../context/LanguageContext'
 import { getArticleContent } from '../data/blogArticlesContent'
-
 // Updated: Dec 17, 2025 - New images for articles 17-20
 const BlogPage = () => {
   const { t, currentLanguage } = useLanguage()
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
   const [activeCategory, setActiveCategory] = useState('all')
-
   const categories = [
     { id: 'all', label: t('blogPage.categories.all'), icon: BookOpen },
     { id: 'philosophy', label: currentLanguage === 'en' ? 'Philosophy' : 'Filosofía', icon: Eye },
@@ -21,7 +19,6 @@ const BlogPage = () => {
     { id: 'perception', label: currentLanguage === 'en' ? 'Perception' : 'Percepción', icon: Zap },
     { id: 'consciousness', label: currentLanguage === 'en' ? 'Consciousness' : 'Consciencia', icon: TrendingUp },
   ]
-
   // Helper function to get translated content
   const getPostContent = (slug) => {
     const content = getArticleContent(slug, currentLanguage)
@@ -34,7 +31,6 @@ const BlogPage = () => {
     }
     return { title: '', excerpt: '' }
   }
-
   const blogPosts = [
     {
       id: 33,
@@ -56,7 +52,6 @@ const BlogPage = () => {
       slug: 'puta-panico-usurpacion-terror-autonomia',
       image: '/IMAGENES BLOG/puta.jpg',
       rating: 5.0,
-      commentsCount: 6,
       featured: true
     },
     {
@@ -79,7 +74,6 @@ const BlogPage = () => {
       slug: 'el-juego-que-nadie-confiesa-estar-jugando',
       image: '/IMAGENES BLOG/ajedrez.jpg',
       rating: 5.0,
-      commentsCount: 6,
       featured: true
     },
     {
@@ -102,7 +96,6 @@ const BlogPage = () => {
       slug: 'la-ruptura-de-la-ruptura',
       image: '/IMAGENES BLOG/ruptura.jpg',
       rating: 5.0,
-      commentsCount: 6,
       featured: true
     },
     {
@@ -125,7 +118,6 @@ const BlogPage = () => {
       slug: 'no-duele-porque-algo-se-rompe',
       image: '/IMAGENES BLOG/no duele.jpg',
       rating: 5.0,
-      commentsCount: 6,
       featured: true
     },
     {
@@ -148,7 +140,6 @@ const BlogPage = () => {
       slug: 'donde-esta-el-cuerpo-cuando-todo-funciona',
       image: '/IMAGENES BLOG/gas.jpg',
       rating: 5.0,
-      commentsCount: 6,
       featured: true
     },
     {
@@ -171,7 +162,6 @@ const BlogPage = () => {
       slug: 'el-desgarro-de-la-unidad',
       image: '/IMAGENES BLOG/desgarro.jpg',
       rating: 5.0,
-      commentsCount: 6,
       featured: true
     },
     {
@@ -194,7 +184,6 @@ const BlogPage = () => {
       slug: 'el-pez-que-no-se-come',
       image: '/IMAGENES BLOG/gaviota.jpg',
       rating: 5.0,
-      commentsCount: 6,
       featured: true
     },
     {
@@ -217,7 +206,6 @@ const BlogPage = () => {
       slug: 'amar-desde-la-herida',
       image: '/IMAGENES BLOG/herida.jpg',
       rating: 5.0,
-      commentsCount: 6,
       featured: true
     },
     {
@@ -240,7 +228,6 @@ const BlogPage = () => {
       slug: 'ser-libre-no-es-elegir-es-no-poder-dejar-de-repetir',
       image: '/IMAGENES BLOG/ser libres.jpg',
       rating: 5.0,
-      commentsCount: 6,
       featured: true
     },
     {
@@ -263,7 +250,6 @@ const BlogPage = () => {
       slug: 'antes-era-feliz-el-punto-cero',
       image: '/IMAGENES BLOG/ANTES ERA 0.png',
       rating: 5.0,
-      commentsCount: 6,
       featured: true
     },
     {
@@ -286,15 +272,12 @@ const BlogPage = () => {
       slug: 'del-perro-que-me-ama-al-vacio-que-me-habita',
       image: '/IMAGENES BLOG/PERRO.jpg',
       rating: 5.0,
-      commentsCount: 8,
       featured: true
     }
   ]
-
   const filteredPosts = activeCategory === 'all'
     ? blogPosts
     : blogPosts.filter(post => post.category === activeCategory)
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28 overflow-x-hidden">
       <SEOHead 
@@ -305,7 +288,6 @@ const BlogPage = () => {
         type="website"
         tags={['blog', 'psicología', 'psicoanálisis', 'filosofía', 'inconsciente', 'percepción', 'consciencia', 'transformación']}
       />
-      
       {/* Hero Section - Estilo AboutPage */}
       <section ref={heroRef} className="relative pt-12 lg:pt-20 pb-40 lg:pb-56 px-6 lg:px-20 overflow-hidden">
         {/* Video de fondo */}
@@ -327,10 +309,8 @@ const BlogPage = () => {
             <source src="/ajedrez video.mp4" type="video/mp4" />
           </video>
         </div>
-        
         {/* Gradiente inferior que se mezcla con el contenido */}
         <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/100 via-black/50 to-transparent z-[5] pointer-events-none" />
-
         <div className="relative max-w-6xl mx-auto z-10">
           {/* Título Hero - BLOG */}
           <motion.h1
@@ -349,7 +329,6 @@ const BlogPage = () => {
               BLOG
             </span>
           </motion.h1>
-
           {/* Descripción encerrada */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -363,7 +342,6 @@ const BlogPage = () => {
               </span>
             </div>
           </motion.div>
-          
           {/* Conceptos clave */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -381,9 +359,7 @@ const BlogPage = () => {
                 {currentLanguage === 'en' ? 'Psychology' : 'Psicología'}
               </span>
             </motion.div>
-
             <div className="w-px h-6 bg-white/20" />
-
             <motion.div 
               className="flex items-center gap-2"
               whileHover={{ scale: 1.05 }}
@@ -395,7 +371,6 @@ const BlogPage = () => {
               </span>
             </motion.div>
           </motion.div>
-
           {/* Pregunta filosófica */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -407,7 +382,6 @@ const BlogPage = () => {
               ? 'What if thinking isn\'t what you believe, but what you can\'t stop believing?' 
               : '¿Y si pensar no es lo que crees, sino lo que no puedes dejar de creer?'}
           </motion.p>
-
           {/* Línea decorativa */}
           <motion.div
             initial={{ scaleX: 0 }}
@@ -422,7 +396,6 @@ const BlogPage = () => {
           </motion.div>
         </div>
       </section>
-
       {/* Category Filter */}
       <section className="relative py-8 px-6 lg:px-20 border-b border-white/5">
         <div className="max-w-7xl mx-auto">
@@ -449,7 +422,6 @@ const BlogPage = () => {
           </div>
         </div>
       </section>
-
       {/* Blog Posts Grid */}
       <section className="relative py-20 px-6 lg:px-20">
         <div className="max-w-7xl mx-auto">
@@ -463,12 +435,10 @@ const BlogPage = () => {
     </div>
   )
 }
-
 const BlogCard = ({ post, index }) => {
   const { t, currentLanguage } = useLanguage()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
-
   // Mapeo de categorías con traducciones
   const categoryLabels = {
     'all': t('blogPage.categories.all'),
@@ -478,7 +448,6 @@ const BlogCard = ({ post, index }) => {
     'trends': t('blogPage.categories.trends'),
     'philosophy': currentLanguage === 'en' ? 'Philosophy' : 'Filosofía'
   }
-
   return (
     <Link to={post.slug ? `/blog/${post.slug}` : '#'}>
       <motion.article
@@ -506,10 +475,8 @@ const BlogCard = ({ post, index }) => {
               <BookOpen className="w-16 h-16 text-white/20" strokeWidth={1} />
             </div>
           )}
-          
           {/* Overlay oscuro cinematic permanente */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
-          
           {/* Overlay hover interactivo */}
           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
             <motion.div
@@ -522,15 +489,13 @@ const BlogCard = ({ post, index }) => {
               <ArrowRight className="w-5 h-5" />
             </motion.div>
           </div>
-
           {/* Category badge */}
           <div className="absolute top-4 left-4 px-3 py-1.5 bg-black/60 backdrop-blur-md rounded-full border border-white/20 z-20">
             <span className="text-xs text-white/90 uppercase tracking-wider font-medium">
               {categoryLabels[post.category]}
             </span>
           </div>
-
-          {/* Rating y Comments Count - Esquina superior derecha */}
+          {/* Rating - Esquina superior derecha */}
           <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
             {/* Rating con estrellas */}
             <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-black/70 backdrop-blur-md rounded-full border border-yellow-500/30">
@@ -539,17 +504,8 @@ const BlogCard = ({ post, index }) => {
               </svg>
               <span className="text-xs font-bold text-white">{post.rating}</span>
             </div>
-            
-            {/* Comments count */}
-            <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-black/70 backdrop-blur-md rounded-full border border-white/20">
-              <svg className="w-3.5 h-3.5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
-              <span className="text-xs font-medium text-white/90">{post.commentsCount}</span>
-            </div>
           </div>
         </div>
-
         {/* Content */}
         <div className="p-6 flex flex-col flex-grow">
           {/* Meta info */}
@@ -563,17 +519,14 @@ const BlogCard = ({ post, index }) => {
               <span>{post.readTime}</span>
             </div>
           </div>
-
           {/* Title */}
           <h3 className="text-xl lg:text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-cyan-400 group-hover:to-purple-400 transition-all leading-tight">
             {post.title}
           </h3>
-
           {/* Excerpt */}
           <p className="text-white/70 text-sm leading-relaxed mb-4 flex-grow">
             {post.excerpt}
           </p>
-
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-4">
             {post.tags.slice(0, 2).map((tag, i) => (
@@ -586,7 +539,6 @@ const BlogCard = ({ post, index }) => {
               </span>
             ))}
           </div>
-
           {/* Author & CTA */}
           <div className="pt-4 border-t border-white/10 flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -595,7 +547,6 @@ const BlogCard = ({ post, index }) => {
               </div>
               <span className="text-xs text-white/60">{post.author}</span>
             </div>
-
             <motion.div
               whileHover={{ x: 5 }}
               className="flex items-center gap-1 text-white/80 group-hover:text-white"
@@ -605,7 +556,6 @@ const BlogCard = ({ post, index }) => {
             </motion.div>
           </div>
         </div>
-
         {/* Gradient line on hover */}
         <motion.div
           initial={{ scaleX: 0 }}
@@ -617,5 +567,4 @@ const BlogCard = ({ post, index }) => {
     </Link>
   )
 }
-
 export default BlogPage
