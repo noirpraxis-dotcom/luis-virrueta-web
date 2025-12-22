@@ -40,18 +40,18 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
           <Link to="/">
             <motion.div
               whileTap={{ scale: 0.95 }}
-              className="cursor-pointer text-center"
+              className="cursor-pointer text-left"
               style={{ fontFamily: 'Gotham, sans-serif' }}
             >
-              <div className="text-white font-bold text-lg md:text-xl leading-tight"
-                style={{ letterSpacing: '0.05em' }}
+              <div className="text-white font-light text-lg md:text-xl leading-tight tracking-wide"
+                style={{ letterSpacing: '0.08em' }}
               >
                 Luis Virrueta
               </div>
-              <div className="text-white/50 text-[0.45rem] md:text-[0.5rem] font-medium uppercase mt-0.5"
-                style={{ letterSpacing: '0.3em' }}
+              <div className="text-white/50 text-[0.5rem] md:text-[0.55rem] font-light uppercase mt-1"
+                style={{ letterSpacing: '0.25em' }}
               >
-                Psicólogo · Psicoanalista
+                Psicólogo
               </div>
             </motion.div>
           </Link>

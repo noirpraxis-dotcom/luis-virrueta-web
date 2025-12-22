@@ -78,7 +78,7 @@ const Home = () => {
             </span>
             
             {/* Tus filtros - MUY GRANDE CON TIPOGRAFÍA BLOG */}
-            <span className="block text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold" style={{ 
+            <span className="block text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold" style={{ 
               letterSpacing: '0.02em',
               fontWeight: 300
             }}>

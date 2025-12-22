@@ -74,8 +74,8 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
             <div className="relative w-full h-full bg-black/98 backdrop-blur-xl flex flex-col items-center justify-center p-8">
               {/* Efectos decorativos mejorados */}
               <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#8dc1ab]/20 rounded-full blur-[100px] animate-pulse" />
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#8dc1ab]/15 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] animate-pulse" />
+                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-fuchsia-600/15 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
               </div>
 
               {/* Botón Cerrar - Top Left con flecha elegante */}
@@ -158,9 +158,9 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                           >
                             {isStore ? (
                               <motion.div
-                                whileHover={{ scale: 1.03, boxShadow: '0 0 30px rgba(141, 193, 171, 0.5)' }}
+                                whileHover={{ scale: 1.03, boxShadow: '0 0 30px rgba(168, 85, 247, 0.5)' }}
                                 whileTap={{ scale: 0.97 }}
-                                className="flex items-center justify-center gap-3 bg-gradient-to-r from-[#8dc1ab] to-[#7ab09a] text-black px-10 py-5 rounded-full text-base font-medium tracking-[0.25em] transition-all duration-300 uppercase shadow-lg shadow-[#8dc1ab]/20 border-2 border-[#8dc1ab] hover:border-white/30 my-6"
+                                className="flex items-center justify-center gap-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-10 py-5 rounded-full text-base font-medium tracking-[0.25em] transition-all duration-300 uppercase shadow-lg shadow-violet-500/30 border-2 border-violet-500 hover:border-white/30 my-6"
                                 style={{ fontFamily: 'Gotham, sans-serif' }}
                               >
                                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -204,10 +204,10 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                                   >
                                     <motion.div
                                       whileHover={{ x: 4, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
-                                      className="block text-white/60 hover:text-[#8dc1ab] text-sm py-3 px-3 transition-all duration-200 font-light tracking-wider rounded-md"
+                                      className="block text-white/60 hover:text-violet-400 text-sm py-3 px-3 transition-all duration-200 font-light tracking-wider rounded-md"
                                       style={{ fontFamily: 'Gotham, sans-serif' }}
                                     >
-                                      <span className="text-[#8dc1ab]/50 mr-2">•</span>
+                                      <span className="text-violet-400/50 mr-2">•</span>
                                       {subItem.name}
                                     </motion.div>
                                   </Link>
