@@ -458,6 +458,124 @@ const AboutPage = () => {
         </div>
       </section>
 
+      {/* Trayectoria - Sección nueva con explicación profunda */}
+      <section className="relative py-20 lg:py-32 px-6 lg:px-20 border-t border-white/10">
+        <div className="relative max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="mb-20"
+          >
+            <h2 className="text-4xl lg:text-6xl font-extralight text-white tracking-wide mb-16">
+              Trayectoria
+            </h2>
+
+            <div className="space-y-12">
+              {/* La relación entre lo antiguo y lo nuevo */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="relative"
+              >
+                <div className="absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-purple-500/50 via-fuchsia-500/30 to-transparent rounded-full" />
+                <div className="pl-8 space-y-6">
+                  <h3 className="text-2xl lg:text-3xl text-white/90 font-light mb-4">
+                    Lo antiguo y lo nuevo convergen
+                  </h3>
+                  <p className="text-lg lg:text-xl text-white/80 leading-relaxed font-light">
+                    A lo largo de mi formación descubrí algo fascinante: <span className="text-white font-semibold">lo que hoy descubre la neurociencia contemporánea ya lo intuían las tradiciones ancestrales</span>. La epigenética de Bruce Lipton se parece al concepto chino de Shen-Qi de hace 3,000 años. Los sesgos cognitivos de Daniel Kahneman eran conocidos como Vipallasa en el budismo hace 2,500 años. Einstein habló del tiempo como ilusión; los griegos lo llamaban AIÓN, el tiempo eterno donde todo coexiste.
+                  </p>
+                  <p className="text-lg lg:text-xl text-white/80 leading-relaxed font-light">
+                    No estamos descubriendo nada nuevo. <span className="text-purple-400 font-semibold">Estamos recordando</span>.
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* El problema de las religiones y la verdad */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-10"
+              >
+                <h3 className="text-2xl lg:text-3xl text-white/90 font-light mb-6">
+                  Todas dicen tener LA verdad
+                </h3>
+                <p className="text-lg lg:text-xl text-white/80 leading-relaxed font-light mb-6">
+                  Desde pequeño me exploraba a ir a diferentes religiones. Y me daba cuenta de algo inquietante: <span className="text-white font-semibold">todas decían que ellas eran la verdadera, y descartaban a las otras</span>. Catolicismo, budismo, islam, judaísmo... cada una afirmaba poseer la verdad absoluta.
+                </p>
+                <p className="text-lg lg:text-xl text-white/80 leading-relaxed font-light mb-6">
+                  Pero cuando empecé a estudiar psicoanálisis, entendí algo: <span className="text-purple-400 font-semibold">el problema no era cuál tenía razón. El problema era el ego</span>.
+                </p>
+                <div className="border-l-2 border-purple-500/50 pl-6 py-4">
+                  <p className="text-xl lg:text-2xl text-white/90 italic font-light">
+                    El ego necesita tener la razón. Necesita que su verdad sea LA verdad. Y desde ahí, desde esa necesidad de validación, se sostiene toda una realidad.
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* El ego como origen de los problemas */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="relative"
+              >
+                <div className="absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-fuchsia-500/50 via-purple-500/30 to-transparent rounded-full" />
+                <div className="pl-8 space-y-6">
+                  <h3 className="text-2xl lg:text-3xl text-white/90 font-light mb-4">
+                    El ego crea tu realidad (y tus problemas)
+                  </h3>
+                  <p className="text-lg lg:text-xl text-white/80 leading-relaxed font-light">
+                    <span className="text-white font-semibold">Desde el ego se crean problemas de salud, problemas económicos, problemas de pareja</span>. No porque sean inevitables, sino porque sostienen una estructura psíquica específica. Tu dolor tiene una función: mantener una identidad, pertenecer a un sistema familiar, evitar el vacío de la incertidumbre.
+                  </p>
+                  <p className="text-lg lg:text-xl text-white/80 leading-relaxed font-light">
+                    Por eso la persona sigue eligiendo lo que le duele. Por eso repite el mismo patrón. <span className="text-purple-400 font-semibold">Porque cambiar implicaría dejar de ser quien cree que es</span>.
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* La paradoja: no queremos cambiar */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="relative bg-gradient-to-br from-purple-900/30 to-fuchsia-900/30 backdrop-blur-xl border border-purple-500/40 rounded-2xl p-10"
+              >
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="p-3 rounded-lg bg-purple-500/20 border border-purple-500/30">
+                    <Heart className="w-6 h-6 text-purple-400" />
+                  </div>
+                  <h3 className="text-2xl lg:text-3xl text-white/90 font-light">
+                    La paradoja del cambio
+                  </h3>
+                </div>
+                <p className="text-lg lg:text-xl text-white/80 leading-relaxed font-light mb-6">
+                  Aquí está la verdad más incómoda: <span className="text-white font-semibold">en última instancia, lo que más queremos no es cambiar, sino NO cambiar</span>.
+                </p>
+                <p className="text-lg lg:text-xl text-white/80 leading-relaxed font-light mb-6">
+                  Porque cambiar significa dejar de pertenecer. Significa traicionar el mandato familiar. Significa perder la identidad que te costó tanto construir. <span className="text-purple-400 font-semibold">Preferimos el dolor conocido a la incertidumbre de lo nuevo</span>.
+                </p>
+                <div className="border-l-2 border-purple-400/50 pl-6 py-4 bg-black/20 rounded-r-lg">
+                  <p className="text-xl lg:text-2xl text-white/90 italic font-light mb-4">
+                    "Lo que más queremos es ser parte del contexto familiar, aunque eso siempre duela."
+                  </p>
+                  <p className="text-white/60 text-base font-light">
+                    Y ahí radica el trabajo psicoanalítico: no en motivarte a cambiar, sino en hacer consciente esa resistencia. En descubrir qué función cumple tu síntoma. En entender qué perderías si dejaras de sufrir.
+                  </p>
+                </div>
+                <p className="text-lg lg:text-xl text-white/80 leading-relaxed font-light mt-6">
+                  Solo cuando eso se hace visible, cuando la persona puede <span className="text-white font-semibold">sostener la pérdida</span>, puede comenzar algo diferente. No antes.
+                </p>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* CTA Final minimalista premium */}
       <section className="relative py-20 lg:py-32 px-6 lg:px-20 border-t border-white/10">
         <div className="relative max-w-5xl mx-auto">
