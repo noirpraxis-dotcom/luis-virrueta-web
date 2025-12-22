@@ -30,7 +30,8 @@ const AionSection = () => {
     {
       icon: TrendingUp,
       title: 'Económica',
-      description: 'Al cambiar tu filtro, la abundancia fluye sin esfuerzo',
+      description: 'Cuando el filtro cambia, el dinero deja de ser escasez',
+      points: ['Relación inconsciente con la abundancia', 'Mandatos familiares sobre el dinero', 'Goce en la privación'],
       gradient: 'from-green-500/20 to-emerald-600/20',
       borderColor: 'border-green-500/30 hover:border-green-400/60',
       iconColor: 'text-green-400',
@@ -39,7 +40,8 @@ const AionSection = () => {
     {
       icon: Activity,
       title: 'De salud',
-      description: 'Tu cuerpo responde al nuevo sentido que le das',
+      description: 'El cuerpo habla lo que la palabra no puede decir',
+      points: ['Síntoma como mensaje del inconsciente', 'Ganancia secundaria de la enfermedad', 'Conversión somática del conflicto'],
       gradient: 'from-red-500/20 to-rose-600/20',
       borderColor: 'border-red-500/30 hover:border-red-400/60',
       iconColor: 'text-red-400',
@@ -48,7 +50,8 @@ const AionSection = () => {
     {
       icon: Heart,
       title: 'Amorosa',
-      description: 'Atraes relaciones alineadas con tu nuevo ser',
+      description: 'Repites porque algo no ha sido simbolizado',
+      points: ['Elección de objeto inconsciente', 'Repetición del fantasma primordial', 'Transferencia en vínculo amoroso'],
       gradient: 'from-pink-500/20 to-rose-600/20',
       borderColor: 'border-pink-500/30 hover:border-pink-400/60',
       iconColor: 'text-pink-400',
@@ -57,7 +60,8 @@ const AionSection = () => {
     {
       icon: Smile,
       title: 'Emocional',
-      description: 'Liberas el peso que cargabas sin saberlo',
+      description: 'Lo que cargas no es tuyo, es de quien no pudo procesarlo',
+      points: ['Trauma transgeneracional', 'Identificación inconsciente con el síntoma', 'Duelo no elaborado'],
       gradient: 'from-purple-500/20 to-fuchsia-600/20',
       borderColor: 'border-purple-500/30 hover:border-purple-400/60',
       iconColor: 'text-purple-400',
@@ -66,7 +70,8 @@ const AionSection = () => {
     {
       icon: Brain,
       title: 'Profesional',
-      description: 'Tu potencial emerge cuando el bloqueo se disuelve',
+      description: 'Tu bloqueo protege algo que ya no necesita protección',
+      points: ['Inhibición del deseo de saber', 'Sabotaje inconsciente del éxito', 'Identificación con el fracaso'],
       gradient: 'from-indigo-500/20 to-purple-600/20',
       borderColor: 'border-indigo-500/30 hover:border-indigo-400/60',
       iconColor: 'text-indigo-400',
@@ -75,7 +80,8 @@ const AionSection = () => {
     {
       icon: Sparkles,
       title: 'De vida',
-      description: 'Todo se transforma cuando tu filtro cambia',
+      description: 'La transformación no es cambiar, es dejar de sostener lo falso',
+      points: ['Desidentificación del síntoma', 'Atravesamiento del fantasma', 'Apropiación del deseo'],
       gradient: 'from-cyan-500/20 to-blue-600/20',
       borderColor: 'border-cyan-500/30 hover:border-cyan-400/60',
       iconColor: 'text-cyan-400',
@@ -213,11 +219,11 @@ const AionSection = () => {
                 ease: [0.76, 0, 0.24, 1]
               }}
               whileHover={{ 
-                scale: 1.05, 
-                y: -8,
+                scale: 1.02, 
+                y: -5,
                 transition: { duration: 0.3 }
               }}
-              className={`group relative p-5 bg-gradient-to-br ${area.gradient} backdrop-blur-xl border-2 ${area.borderColor} rounded-3xl transition-all duration-500 overflow-hidden aspect-square flex flex-col justify-center items-center max-w-[280px] mx-auto`}
+              className={`group relative p-6 bg-gradient-to-br ${area.gradient} backdrop-blur-xl border-2 ${area.borderColor} rounded-2xl transition-all duration-500 overflow-hidden flex flex-col max-w-sm mx-auto`}
             >
               {/* Efecto de brillo en hover */}
               <motion.div 
@@ -238,27 +244,37 @@ const AionSection = () => {
                 className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-white/20 to-transparent rounded-full blur-3xl"
               />
               
-              <div className="relative z-10 text-center">
-                {/* Ícono */}
+              <div className="relative z-10">
+                {/* Ícono arriba */}
                 <motion.div 
                   whileHover={{ rotate: [0, -10, 10, -10, 0] }}
                   transition={{ duration: 0.5 }}
-                  className="mb-3 flex justify-center"
+                  className="mb-3"
                 >
-                  <div className="inline-flex p-3 bg-black/30 backdrop-blur-sm rounded-2xl border border-white/10">
-                    <area.icon className={`w-7 h-7 ${area.iconColor}`} strokeWidth={2} />
+                  <div className="inline-flex p-3 bg-black/40 backdrop-blur-sm rounded-xl border border-white/10">
+                    <area.icon className={`w-6 h-6 ${area.iconColor}`} strokeWidth={2.5} />
                   </div>
                 </motion.div>
                 
-                {/* Título */}
-                <h3 className="text-lg font-bold text-white mb-2" style={{ letterSpacing: '0.01em' }}>
+                {/* Título pegado al ícono */}
+                <h3 className="text-xl font-bold text-white mb-3" style={{ letterSpacing: '0.01em' }}>
                   {area.title}
                 </h3>
                 
                 {/* Descripción */}
-                <p className="text-white/70 text-xs leading-relaxed font-light px-2">
+                <p className="text-white/80 text-sm leading-relaxed font-light mb-4 italic">
                   {area.description}
                 </p>
+
+                {/* Puntos esenciales */}
+                <ul className="space-y-2">
+                  {area.points.map((point, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-white/60 text-xs">
+                      <span className="text-white/40 mt-0.5">•</span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </motion.div>
           ))}

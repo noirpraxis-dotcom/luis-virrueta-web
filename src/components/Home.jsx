@@ -73,7 +73,7 @@ const Home = () => {
             style={{ letterSpacing: '0.02em' }}
           >
             {/* Tu realidad son - más pequeño */}
-            <span className="block text-white text-lg sm:text-xl md:text-2xl lg:text-4xl mb-2 sm:mb-3" style={{ fontWeight: 200, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+            <span className="block text-white text-lg sm:text-xl md:text-2xl lg:text-4xl mb-2 sm:mb-3" style={{ fontWeight: 200, letterSpacing: '0.08em' }}>
               {t('home.weBuild')}
             </span>
             
