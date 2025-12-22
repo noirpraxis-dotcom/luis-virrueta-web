@@ -1,5 +1,5 @@
 import { motion, useInView } from 'framer-motion'
-import { Brain, Code, Palette, Heart, Sparkles, Zap, Instagram, Linkedin, Lamp } from 'lucide-react'
+import { Brain, Compass, BookOpen, Heart, Sparkles, Zap, Instagram, Linkedin, Lamp } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useRef } from 'react'
 import SEOHead from '../components/SEOHead'
@@ -13,21 +13,21 @@ const AboutPage = () => {
   const pillars = [
     {
       icon: Brain,
-      title: t('aboutPage.approach.pillar1Title'),
-      subtitle: t('aboutPage.approach.pillar1Label'),
-      description: t('aboutPage.approach.pillar1Desc')
+      title: 'Psicoanálisis',
+      subtitle: 'Profunda',
+      description: 'Estudié psicología y me especialicé en psicoanálisis. Trabajo desde el inconsciente, no desde el consejo. Entiendo los mecanismos que sostienen tu realidad.'
     },
     {
-      icon: Palette,
-      title: t('aboutPage.approach.pillar2Title'),
-      subtitle: t('aboutPage.approach.pillar2Label'),
-      description: t('aboutPage.approach.pillar2Desc')
+      icon: Compass,
+      title: 'Exploración',
+      subtitle: 'Constante',
+      description: 'Vivo en Europa explorando culturas y tradiciones. Desde pequeño investigué diferentes religiones para encontrar qué compartían, más allá de quién tenía la verdad.'
     },
     {
-      icon: Code,
-      title: t('aboutPage.approach.pillar3Title'),
-      subtitle: t('aboutPage.approach.pillar3Label'),
-      description: t('aboutPage.approach.pillar3Desc')
+      icon: BookOpen,
+      title: 'Conexión',
+      subtitle: 'Integradora',
+      description: 'Descubrí que lo antiguo y lo nuevo convergen: lo que hoy descubre la neurociencia, ya lo intuían las tradiciones ancestrales. El problema nunca fue el conocimiento, sino el ego.'
     }
   ]
 
@@ -418,7 +418,7 @@ const AboutPage = () => {
             className="mb-16"
           >
             <h2 className="text-4xl lg:text-6xl font-extralight text-white tracking-wide">
-              {t('aboutPage.approach.title').split(' ')[0]} <span className="italic font-light">{t('aboutPage.approach.title').split(' ').slice(1).join(' ')}</span>
+              Mi <span className="italic font-light">Enfoque</span>
             </h2>
           </motion.div>
 
