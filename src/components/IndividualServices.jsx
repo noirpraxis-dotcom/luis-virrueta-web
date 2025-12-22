@@ -78,7 +78,7 @@ const IndividualServices = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-5xl lg:text-7xl font-light mb-6 font-display tracking-tight"
+            className="text-4xl lg:text-7xl font-light mb-6 font-display tracking-tight text-center"
           >
             <span className="text-white">{currentLanguage === 'en' ? 'Paths ' : 'Caminos '}</span>
             <span className="text-white italic" style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 300 }}>

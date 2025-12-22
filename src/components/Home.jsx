@@ -198,7 +198,7 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-5">
               {/* Botón principal - Más elegante */}
               <Link
-                to="/servicios"
+                to="/metodo"
                 className="group relative px-10 py-5 md:px-12 md:py-6 bg-white text-black font-light rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_20px_80px_rgba(255,255,255,0.3)]"
               >
                 {/* Efecto shine continuo */}
