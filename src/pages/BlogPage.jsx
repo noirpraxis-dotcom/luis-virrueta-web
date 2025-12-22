@@ -40,10 +40,10 @@ const BlogPage = () => {
       excerpt: currentLanguage === 'en'
         ? 'The word doesn\'t describe the other. It reveals the one who needs to say it to avoid feeling.'
         : 'La palabra no describe al otro. Revela a quien necesita decirla para no sentir.',
-      category: 'philosophy',
+      category: currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
       author: 'Luis Virrueta',
-      date: '20 Dic 2025',
-      readTime: '17 min',
+      date: '22 Dic 2025',
+      readTime: '19 min',
       gradient: 'from-red-600/20 to-pink-700/20',
       borderGradient: 'from-red-600 to-pink-700',
       tags: currentLanguage === 'en'
@@ -51,7 +51,7 @@ const BlogPage = () => {
         : ['Psicoanálisis', 'Lacan', 'Freud', 'Žižek', 'Deseo', 'Goce', 'Represión', 'Proyección'],
       slug: 'puta-panico-usurpacion-terror-autonomia',
       image: '/IMAGENES BLOG/puta.jpg',
-      rating: 5.0,
+      rating: 4.9,
       featured: true
     },
     {
@@ -62,10 +62,10 @@ const BlogPage = () => {
       excerpt: currentLanguage === 'en'
         ? 'Calling something "corruption" is sometimes just a way to avoid seeing yourself in the game.'
         : 'Llamar "corrupción" a algo es a veces solo una forma de no verte jugando.',
-      category: 'philosophy',
+      category: currentLanguage === 'en' ? 'Ethics' : 'Ética',
       author: 'Luis Virrueta',
-      date: '20 Dic 2025',
-      readTime: '15 min',
+      date: '18 Dic 2025',
+      readTime: '16 min',
       gradient: 'from-slate-600/20 to-zinc-700/20',
       borderGradient: 'from-slate-600 to-zinc-700',
       tags: currentLanguage === 'en'
@@ -73,7 +73,7 @@ const BlogPage = () => {
         : ['Moral', 'Ética', 'Lacan', 'Žižek', 'Lenguaje', 'Juego Simbólico', 'Responsabilidad', 'Espiritualidad'],
       slug: 'el-juego-que-nadie-confiesa-estar-jugando',
       image: '/IMAGENES BLOG/ajedrez.jpg',
-      rating: 5.0,
+      rating: 4.8,
       featured: true
     },
     {
@@ -84,10 +84,10 @@ const BlogPage = () => {
       excerpt: currentLanguage === 'en'
         ? 'Why what relieves you at first stops working later. The dark night of the soul explained.'
         : '¿Por qué lo que alivia primero, después deja de hacerlo? La noche oscura del alma explicada.',
-      category: 'philosophy',
+      category: currentLanguage === 'en' ? 'Spirituality' : 'Espiritualidad',
       author: 'Luis Virrueta',
-      date: '20 Dic 2025',
-      readTime: '14 min',
+      date: '10 Dic 2025',
+      readTime: '15 min',
       gradient: 'from-indigo-500/20 to-purple-600/20',
       borderGradient: 'from-indigo-500 to-purple-600',
       tags: currentLanguage === 'en'
@@ -95,7 +95,7 @@ const BlogPage = () => {
         : ['Meditación', 'Noche Oscura', 'Iluminación', 'Unidad', 'Presencia', 'Conciencia', 'Espiritualidad'],
       slug: 'la-ruptura-de-la-ruptura',
       image: '/IMAGENES BLOG/ruptura.jpg',
-      rating: 5.0,
+      rating: 4.9,
       featured: true
     },
     {
@@ -106,10 +106,10 @@ const BlogPage = () => {
       excerpt: currentLanguage === 'en'
         ? 'Pain doesn\'t empty the world: it fills it. What does that reveal about consciousness?'
         : 'El dolor no vacía el mundo: lo llena. ¿Qué revela eso sobre la conciencia?',
-      category: 'philosophy',
+      category: currentLanguage === 'en' ? 'Phenomenology' : 'Fenomenología',
       author: 'Luis Virrueta',
-      date: '20 Dic 2025',
-      readTime: '16 min',
+      date: '28 Nov 2025',
+      readTime: '17 min',
       gradient: 'from-red-500/20 to-orange-600/20',
       borderGradient: 'from-red-500 to-orange-600',
       tags: currentLanguage === 'en'
@@ -117,7 +117,7 @@ const BlogPage = () => {
         : ['Dolor', 'Merleau-Ponty', 'Lacan', 'Lo Real', 'Cuerpo', 'Conciencia', 'Psicoanálisis', 'Fenomenología'],
       slug: 'no-duele-porque-algo-se-rompe',
       image: '/IMAGENES BLOG/no duele.jpg',
-      rating: 5.0,
+      rating: 4.7,
       featured: true
     },
     {
@@ -128,10 +128,10 @@ const BlogPage = () => {
       excerpt: currentLanguage === 'en'
         ? 'Your arm falls asleep and suddenly you feel what was always there. What does that reveal?'
         : 'Tu brazo se duerme y de pronto sientes lo que siempre estuvo ahí. ¿Qué revela eso?',
-      category: 'philosophy',
+      category: currentLanguage === 'en' ? 'Consciousness' : 'Conciencia',
       author: 'Luis Virrueta',
-      date: '20 Dic 2025',
-      readTime: '13 min',
+      date: '15 Nov 2025',
+      readTime: '14 min',
       gradient: 'from-purple-500/20 to-violet-600/20',
       borderGradient: 'from-purple-500 to-violet-600',
       tags: currentLanguage === 'en'
@@ -139,7 +139,7 @@ const BlogPage = () => {
         : ['Cuerpo', 'Percepción', 'Merleau-Ponty', 'Lacan', 'Kybalion', 'Conciencia', 'Psicoanálisis'],
       slug: 'donde-esta-el-cuerpo-cuando-todo-funciona',
       image: '/IMAGENES BLOG/gas.jpg',
-      rating: 5.0,
+      rating: 4.8,
       featured: true
     },
     {
@@ -150,10 +150,10 @@ const BlogPage = () => {
       excerpt: currentLanguage === 'en'
         ? 'What if love isn\'t born from uniting two pieces, but from tearing a single one?'
         : '¿Y si el amor no nace de unir dos piezas, sino de desgarrar una sola?',
-      category: 'philosophy',
+      category: currentLanguage === 'en' ? 'Love & Relationships' : 'Amor y Relaciones',
       author: 'Luis Virrueta',
-      date: '19 Dic 2025',
-      readTime: '14 min',
+      date: '2 Nov 2025',
+      readTime: '15 min',
       gradient: 'from-amber-500/20 to-rose-600/20',
       borderGradient: 'from-amber-500 to-rose-600',
       tags: currentLanguage === 'en'
@@ -161,7 +161,7 @@ const BlogPage = () => {
         : ['Amor', 'Unidad', 'Enamoramiento', 'Falta', 'Psicoanálisis', 'Ontología', 'Relación'],
       slug: 'el-desgarro-de-la-unidad',
       image: '/IMAGENES BLOG/desgarro.jpg',
-      rating: 5.0,
+      rating: 4.9,
       featured: true
     },
     {
@@ -172,10 +172,10 @@ const BlogPage = () => {
       excerpt: currentLanguage === 'en'
         ? 'Seagulls pass a fish between them without eating it. What does that say about relationships?'
         : 'Las gaviotas se pasan un pez sin comerlo. ¿Qué dice eso sobre las relaciones?',
-      category: 'philosophy',
+      category: currentLanguage === 'en' ? 'Love & Relationships' : 'Amor y Relaciones',
       author: 'Luis Virrueta',
-      date: '18 Dic 2025',
-      readTime: '12 min',
+      date: '20 Oct 2025',
+      readTime: '13 min',
       gradient: 'from-cyan-500/20 to-blue-600/20',
       borderGradient: 'from-cyan-500 to-blue-600',
       tags: currentLanguage === 'en'
@@ -183,7 +183,7 @@ const BlogPage = () => {
         : ['Žižek', 'Lacan', 'Vínculo', 'Escucha', 'Relaciones', 'Deseo del Otro', 'Psicoanálisis'],
       slug: 'el-pez-que-no-se-come',
       image: '/IMAGENES BLOG/gaviota.jpg',
-      rating: 5.0,
+      rating: 4.8,
       featured: true
     },
     {
@@ -194,10 +194,10 @@ const BlogPage = () => {
       excerpt: currentLanguage === 'en'
         ? 'If love requires a wound, what happens when you stop asking the other to heal it?'
         : 'Si el amor requiere una herida, ¿qué pasa cuando dejas de pedirle al otro que la cure?',
-      category: 'philosophy',
+      category: currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
       author: 'Luis Virrueta',
-      date: '18 Dic 2025',
-      readTime: '14 min',
+      date: '8 Oct 2025',
+      readTime: '15 min',
       gradient: 'from-rose-500/20 to-red-600/20',
       borderGradient: 'from-rose-500 to-red-600',
       tags: currentLanguage === 'en'
@@ -205,7 +205,7 @@ const BlogPage = () => {
         : ['Amor', 'Lacan', 'Falta', 'Deseo', 'Vínculo', 'Herida constitutiva', 'Psicoanálisis'],
       slug: 'amar-desde-la-herida',
       image: '/IMAGENES BLOG/herida.jpg',
-      rating: 5.0,
+      rating: 4.9,
       featured: true
     },
     {
@@ -216,10 +216,10 @@ const BlogPage = () => {
       excerpt: currentLanguage === 'en'
         ? 'You change masks, but always fail in the same place. What if that\'s your only freedom?'
         : 'Cambias de máscara, pero siempre fallas en el mismo lugar. ¿Y si esa es tu única libertad?',
-      category: 'philosophy',
+      category: currentLanguage === 'en' ? 'Philosophy' : 'Filosofía',
       author: 'Luis Virrueta',
-      date: '18 Dic 2025',
-      readTime: '15 min',
+      date: '25 Sep 2025',
+      readTime: '16 min',
       gradient: 'from-sky-500/20 to-indigo-600/20',
       borderGradient: 'from-sky-500 to-indigo-600',
       tags: currentLanguage === 'en'
@@ -227,7 +227,7 @@ const BlogPage = () => {
         : ['Libertad', 'Hegel', 'Lacan', 'Žižek', 'Síntoma', 'Repetición', 'Acto subjetivo', 'Psicoanálisis'],
       slug: 'ser-libre-no-es-elegir-es-no-poder-dejar-de-repetir',
       image: '/IMAGENES BLOG/ser libres.jpg',
-      rating: 5.0,
+      rating: 4.7,
       featured: true
     },
     {
@@ -238,10 +238,10 @@ const BlogPage = () => {
       excerpt: currentLanguage === 'en'
         ? 'The place you want to return to never existed. Then what is it that you\'re really looking for?'
         : 'El lugar al que quieres volver nunca existió. Entonces, ¿qué es lo que buscas realmente?',
-      category: 'philosophy',
+      category: currentLanguage === 'en' ? 'Identity' : 'Identidad',
       author: 'Luis Virrueta',
-      date: '17 Dic 2025',
-      readTime: '16 min',
+      date: '12 Sep 2025',
+      readTime: '17 min',
       gradient: 'from-violet-500/20 to-purple-600/20',
       borderGradient: 'from-violet-500 to-purple-600',
       tags: currentLanguage === 'en'
@@ -249,7 +249,7 @@ const BlogPage = () => {
         : ['Psicoanálisis', 'Lacan', 'Nostalgia', 'Identidad', 'Herida constitutiva', 'Punto cero', 'Subjetividad'],
       slug: 'antes-era-feliz-el-punto-cero',
       image: '/IMAGENES BLOG/ANTES ERA 0.png',
-      rating: 5.0,
+      rating: 4.9,
       featured: true
     },
     {
@@ -260,10 +260,10 @@ const BlogPage = () => {
       excerpt: currentLanguage === 'en'
         ? 'Your dog loves without asking. You love and demand. Who actually knows how to love?'
         : 'Tu perro ama sin pedir. Tú amas y exiges. ¿Quién sabe realmente amar?',
-      category: 'philosophy',
+      category: currentLanguage === 'en' ? 'Existentialism' : 'Existencialismo',
       author: 'Luis Virrueta',
-      date: '16 Dic 2025',
-      readTime: '18 min',
+      date: '30 Ago 2025',
+      readTime: '20 min',
       gradient: 'from-purple-500/20 to-fuchsia-600/20',
       borderGradient: 'from-purple-500 to-fuchsia-600',
       tags: currentLanguage === 'en'
@@ -271,7 +271,7 @@ const BlogPage = () => {
         : ['Lacan', 'Nisargadatta Maharaj', 'Simone Weil', 'Nietzsche', 'Vacío Existencial', 'Psicoanálisis', 'No-dualidad'],
       slug: 'del-perro-que-me-ama-al-vacio-que-me-habita',
       image: '/IMAGENES BLOG/PERRO.jpg',
-      rating: 5.0,
+      rating: 4.8,
       featured: true
     }
   ]

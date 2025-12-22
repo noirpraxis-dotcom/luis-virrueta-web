@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles, Award, Check, Shield, AlertCircle } from 'lucide-react'
+import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles, Award, Check, Shield, AlertCircle, Copy } from 'lucide-react'
 import ReadingProgressBar from '../components/ReadingProgressBar'
 import ShareButtons from '../components/ShareButtons'
 import RelatedArticles from '../components/RelatedArticles'
@@ -1604,7 +1604,7 @@ const BlogArticlePage = () => {
   const { slug } = useParams()
   const { currentLanguage, t } = useLanguage()
   const heroRef = useRef(null)
-  const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
+  const isHeroInView = useInView(heroRef, { once: true, amount: 0.1 })
 
   // Intentar obtener artículo traducido, si no existe usar el código original
   const translatedArticle = getArticleContent(slug, currentLanguage)
@@ -1788,26 +1788,29 @@ const BlogArticlePage = () => {
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto">
-          {/* Back button */}
+          {/* Back button y Copy button */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
+            className="flex items-center justify-between mb-8"
           >
             <Link
               to="/blog"
-              className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors mb-8 group"
+              className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span className="text-sm">{t('blogArticles.common.backToBlog')}</span>
             </Link>
+            
+            <CopyArticleButton article={article} />
           </motion.div>
 
           {/* Category badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
             className="inline-block px-4 py-2 border border-white/20 rounded-full backdrop-blur-sm bg-white/5 mb-6"
           >
             <span className="text-xs lg:text-sm text-white/80 font-light tracking-wider uppercase">
@@ -1926,7 +1929,7 @@ const BlogArticlePage = () => {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.4 }}
             viewport={{ once: true }}
             className="relative bg-gradient-to-br from-pink-500/10 to-rose-500/10 backdrop-blur-sm border border-white/10 rounded-3xl p-12 text-center overflow-hidden"
           >
@@ -2033,9 +2036,95 @@ const BlogArticlePage = () => {
   )
 }
 
+// Componente para copiar artículo completo con formato
+const CopyArticleButton = ({ article }) => {
+  const [copied, setCopied] = useState(false)
+
+  const copyArticleToClipboard = () => {
+    // Construir el texto formateado del artículo
+    let formattedText = `${article.title}\n`
+    if (article.subtitle) {
+      formattedText += `${article.subtitle}\n`
+    }
+    formattedText += `\nPor ${article.author} | ${article.date}\n`
+    formattedText += `Tiempo de lectura: ${article.readTime}\n`
+    formattedText += `\n${'='.repeat(80)}\n\n`
+
+    // Agregar todas las secciones con formato
+    article.sections.forEach((section) => {
+      if (section.type === 'heading') {
+        formattedText += `\n${'━'.repeat(80)}\n`
+        formattedText += `${section.title.toUpperCase()}\n`
+        formattedText += `${'━'.repeat(80)}\n\n`
+      } else if (section.type === 'text' || section.type === 'intro' || section.type === 'reflection') {
+        formattedText += `${section.content}\n\n`
+      } else if (section.type === 'highlight') {
+        formattedText += `\n▶ ${section.content}\n\n`
+      } else if (section.type === 'questions') {
+        formattedText += `\n${section.title}:\n`
+        section.items.forEach((item, i) => {
+          formattedText += `  ${i + 1}. ${item}\n`
+        })
+        formattedText += `\n`
+      } else if (section.type === 'list') {
+        if (section.title) {
+          formattedText += `\n${section.title}\n`
+        }
+        section.items.forEach((item, i) => {
+          formattedText += `  • ${item}\n`
+        })
+        formattedText += `\n`
+      } else if (section.type === 'subsection') {
+        formattedText += `\n  ${section.subtitle}\n`
+        formattedText += `  ${section.content}\n\n`
+      } else if (section.type === 'conclusion') {
+        formattedText += `\n${'─'.repeat(80)}\n`
+        formattedText += `CONCLUSIÓN\n`
+        formattedText += `${'─'.repeat(80)}\n\n`
+        formattedText += `${section.content}\n\n`
+      }
+    })
+
+    formattedText += `\n${'='.repeat(80)}\n`
+    formattedText += `\nArtículo de: ${article.author}\n`
+    formattedText += `Publicado en: luisvirrueta.com\n`
+
+    // Copiar al portapapeles
+    navigator.clipboard.writeText(formattedText).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 3000)
+    })
+  }
+
+  return (
+    <motion.button
+      onClick={copyArticleToClipboard}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className={`inline-flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${
+        copied
+          ? 'bg-green-500/20 border-green-500/50 text-green-400'
+          : 'bg-white/5 border-white/20 text-white/60 hover:text-white hover:bg-white/10'
+      } border backdrop-blur-sm`}
+    >
+      {copied ? (
+        <>
+          <Check className="w-4 h-4" />
+          <span className="text-sm">¡Copiado!</span>
+        </>
+      ) : (
+        <>
+          <Copy className="w-4 h-4" />
+          <span className="text-sm">Copiar artículo</span>
+        </>
+      )}
+    </motion.button>
+  )
+}
+
 const ArticleSection = ({ section, index, headingNumber }) => {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.3 })
+  const isInView = useInView(ref, { once: true, amount: 0.1 })
 
   if (section.type === 'intro') {
     return (
@@ -2043,7 +2132,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         ref={ref}
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="mb-12"
       >
         <p className="text-xl lg:text-2xl text-white/80 leading-relaxed font-light italic">
@@ -2059,7 +2148,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         ref={ref}
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="mb-16"
       >
         <div className="relative">
@@ -2085,7 +2174,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         ref={ref}
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="mb-12 mt-16"
         id={`section-${index}`}
       >
@@ -2115,7 +2204,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         ref={ref}
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="mb-8"
       >
         <p className="text-lg text-white/70 leading-relaxed">
@@ -2131,7 +2220,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         ref={ref}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={isInView ? { opacity: 1, scale: 1 } : {}}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="my-16 relative"
       >
         <div className="relative bg-gradient-to-br from-purple-900/30 via-fuchsia-900/20 to-purple-900/30 backdrop-blur-xl border-2 border-purple-500/30 rounded-3xl p-10 lg:p-12 overflow-hidden">
@@ -2160,7 +2249,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         ref={ref}
         initial={{ opacity: 0, x: -30 }}
         animate={isInView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="mb-8"
       >
         <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden group hover:border-white/30 transition-all">
@@ -2194,7 +2283,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         ref={ref}
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="my-12"
       >
         <div className="relative bg-gradient-to-br from-red-500/10 via-pink-500/10 to-rose-500/10 backdrop-blur-sm border-2 border-red-500/20 rounded-3xl p-10 overflow-hidden group hover:border-red-500/40 transition-all duration-500">
@@ -2218,7 +2307,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
                   key={i}
                   initial={{ opacity: 0, x: -20 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.5, delay: index * 0.1 + i * 0.15 }}
+                  transition={{ duration: 0.5, delay: index * 0.05 + i * 0.15 }}
                   className="flex items-start gap-4 group/item"
                 >
                   <div className="flex-shrink-0 mt-1 w-2 h-2 rounded-full bg-gradient-to-br from-red-400 to-pink-400 group-hover/item:scale-150 transition-transform duration-300" />
@@ -2240,7 +2329,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         ref={ref}
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="my-12"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -2249,7 +2338,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
               key={i}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1 + i * 0.1 }}
+              transition={{ duration: 0.6, delay: index * 0.05 + i * 0.1 }}
               className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden group hover:border-white/30 transition-all"
             >
               <div className="flex items-center gap-4 mb-4">
@@ -2281,7 +2370,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         ref={ref}
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="my-12 space-y-6"
       >
         {section.items.map((item, i) => (
@@ -2289,7 +2378,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
             key={i}
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: index * 0.1 + i * 0.1 }}
+            transition={{ duration: 0.6, delay: index * 0.05 + i * 0.1 }}
             className="flex gap-4"
           >
             <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-pink-500/20 to-rose-500/20 border border-white/20 flex items-center justify-center">
@@ -2311,7 +2400,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         ref={ref}
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="mt-16 mb-12"
       >
         <div className="relative bg-gradient-to-br from-pink-500/5 to-rose-500/5 backdrop-blur-sm border border-white/10 rounded-2xl p-10">
@@ -2331,7 +2420,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         ref={ref}
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="my-12"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -2340,7 +2429,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
               key={i}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1 + i * 0.1 }}
+              transition={{ duration: 0.6, delay: index * 0.05 + i * 0.1 }}
               className="relative bg-gradient-to-br from-indigo-500/10 to-purple-600/10 backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden group hover:border-indigo-500/30 transition-all"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500/20 to-purple-600/20 rounded-full blur-3xl" />
@@ -2365,7 +2454,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         ref={ref}
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="my-12"
       >
         <h3 className="text-2xl font-bold text-white mb-6">{section.title}</h3>
@@ -2375,7 +2464,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
               key={i}
               initial={{ opacity: 0, x: -20 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1 + i * 0.1 }}
+              transition={{ duration: 0.6, delay: index * 0.05 + i * 0.1 }}
               className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 overflow-hidden group hover:border-white/20 transition-all"
             >
               <div className="flex items-center justify-between mb-3">
@@ -2391,7 +2480,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
                 <motion.div
                   initial={{ width: 0 }}
                   animate={isInView ? { width: `${item.score}%` } : {}}
-                  transition={{ duration: 1, delay: index * 0.1 + i * 0.2 }}
+                  transition={{ duration: 1, delay: index * 0.05 + i * 0.2 }}
                   className="absolute inset-y-0 left-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full"
                 />
               </div>
@@ -2410,7 +2499,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         ref={ref}
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="my-12 space-y-8"
       >
         {section.analyses?.map((analysis, i) => (
@@ -2418,7 +2507,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
             key={i}
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: index * 0.1 + i * 0.15 }}
+            transition={{ duration: 0.6, delay: index * 0.05 + i * 0.15 }}
             className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden"
           >
             <div className="absolute top-0 right-0 text-9xl font-bold text-white/5 -mr-8 -mt-8">
@@ -2452,7 +2541,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         ref={ref}
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="my-12 space-y-6"
       >
         {section.factors.map((factor, i) => (
@@ -2460,7 +2549,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
             key={i}
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: index * 0.1 + i * 0.1 }}
+            transition={{ duration: 0.6, delay: index * 0.05 + i * 0.1 }}
             className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:border-white/20 transition-all"
           >
             <div className="flex items-start justify-between mb-3">
@@ -2483,7 +2572,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         ref={ref}
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="my-12"
       >
         <div className="relative space-y-8">
@@ -2492,7 +2581,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
               key={i}
               initial={{ opacity: 0, x: -30 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1 + i * 0.15 }}
+              transition={{ duration: 0.6, delay: index * 0.05 + i * 0.15 }}
               className="relative pl-12"
             >
               <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 border-4 border-black flex items-center justify-center">
@@ -2518,30 +2607,34 @@ const ArticleSection = ({ section, index, headingNumber }) => {
     )
   }
 
-  // Call to Action - Para CTAs especiales
-  if (section.type === 'callToAction') {
+  // Call to Action - Para CTAs especiales (ambos tipos: 'cta' y 'callToAction')
+  if (section.type === 'callToAction' || section.type === 'cta') {
     return (
       <motion.div
         ref={ref}
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: index * 0.1 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="my-16"
       >
-        <div className="relative bg-gradient-to-br from-indigo-500/10 to-purple-600/10 backdrop-blur-sm border border-white/20 rounded-2xl p-10 overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-indigo-500/20 to-purple-600/20 rounded-full blur-3xl" />
+        <div className="relative bg-gradient-to-br from-fuchsia-500/10 to-purple-600/10 backdrop-blur-sm border border-white/20 rounded-2xl p-10 overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-fuchsia-500/20 to-purple-600/20 rounded-full blur-3xl" />
           <div className="relative text-center">
             <h3 className="text-3xl font-bold text-white mb-4">{section.title}</h3>
             <p className="text-lg text-white/70 mb-8 max-w-2xl mx-auto">{section.content}</p>
-            <Link to={section.buttonLink}>
+            <a 
+              href={section.buttonLink.startsWith('http') ? section.buttonLink : `https://wa.me/5218115936829?text=${encodeURIComponent('Hola Luis, me interesa una consulta sobre psicoanálisis y transformación personal')}`}
+              target={section.buttonLink.startsWith('http') ? '_blank' : '_self'}
+              rel={section.buttonLink.startsWith('http') ? 'noopener noreferrer' : undefined}
+            >
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-indigo-500/50 transition-all"
+                className="px-8 py-4 bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-fuchsia-500/50 transition-all"
               >
                 {section.buttonText}
               </motion.button>
-            </Link>
+            </a>
           </div>
         </div>
       </motion.div>
