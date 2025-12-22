@@ -208,7 +208,7 @@ const AionSection = () => {
                 y: -8,
                 transition: { duration: 0.3 }
               }}
-              className={`group relative p-6 lg:p-8 bg-gradient-to-br ${area.gradient} backdrop-blur-xl border-2 ${area.borderColor} rounded-3xl transition-all duration-500 overflow-hidden aspect-square flex flex-col justify-center`}
+              className={`group relative p-6 bg-gradient-to-br ${area.gradient} backdrop-blur-xl border-2 ${area.borderColor} rounded-3xl transition-all duration-500 overflow-hidden aspect-square flex flex-col justify-center items-center max-w-xs mx-auto`}
             >
               {/* Efecto de brillo en hover */}
               <motion.div 
@@ -229,12 +229,12 @@ const AionSection = () => {
                 className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-white/20 to-transparent rounded-full blur-3xl"
               />
               
-              <div className="relative z-10">
+              <div className="relative z-10 text-center">
                 {/* Ícono */}
                 <motion.div 
                   whileHover={{ rotate: [0, -10, 10, -10, 0] }}
                   transition={{ duration: 0.5 }}
-                  className="mb-6"
+                  className="mb-4 flex justify-center"
                 >
                   <div className="inline-flex p-4 bg-black/30 backdrop-blur-sm rounded-2xl border border-white/10">
                     <area.icon className={`w-8 h-8 ${area.iconColor}`} strokeWidth={2} />
@@ -242,12 +242,12 @@ const AionSection = () => {
                 </motion.div>
                 
                 {/* Título */}
-                <h3 className="text-2xl font-bold text-white mb-3" style={{ letterSpacing: '0.01em' }}>
+                <h3 className="text-xl font-bold text-white mb-3" style={{ letterSpacing: '0.01em' }}>
                   {area.title}
                 </h3>
                 
                 {/* Descripción */}
-                <p className="text-white/70 text-base leading-relaxed font-light">
+                <p className="text-white/70 text-sm leading-relaxed font-light">
                   {area.description}
                 </p>
               </div>
