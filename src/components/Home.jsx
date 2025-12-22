@@ -240,17 +240,18 @@ const Home = () => {
             </div>
 
             {/* Texto aclaratorio debajo de botones - Clickeable */}
-            <motion.a
-              href={`https://wa.me/420776711575?text=${encodeURIComponent(t('home.whatsappMessage'))}`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <motion.div
               initial={{ opacity: 0 }}
               animate={isHeroInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.8, delay: 0.8 }}
-              className="text-white/40 text-xs md:text-sm font-extralight tracking-wider text-center max-w-md mb-8 lg:mb-0 hover:text-white/70 transition-colors duration-300 cursor-pointer underline decoration-white/20 hover:decoration-white/50"
             >
-              {t('home.ctaSubtitle')}
-            </motion.a>
+              <Link
+                to="/contacto"
+                className="text-white/40 text-xs md:text-sm font-extralight tracking-wider text-center max-w-md mb-8 lg:mb-0 hover:text-white/70 transition-colors duration-300 cursor-pointer underline decoration-white/20 hover:decoration-white/50 block"
+              >
+                {t('home.ctaSubtitle')}
+              </Link>
+            </motion.div>
           </motion.div>
         </motion.div>
       </div>

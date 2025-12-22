@@ -14,92 +14,95 @@ const Store = () => {
   const products = [
     {
       id: 1,
-      name: 'Sesión Individual de Terapia',
-      category: 'Psicoterapia Online',
-      price: '$80',
+      name: 'Sesión Individual',
+      category: 'Terapia Individual',
+      price: '$750',
       duration: '60 min',
       image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&h=800&fit=crop',
-      description: 'Sesión de psicoterapia individual enfocada en transformación personal a través del método AION©. Trabajo profundo con el inconsciente.',
+      description: 'Sesión de psicoterapia individual enfocada en transformación personal. Trabajo profundo con el inconsciente.',
       benefits: [
         'Trabajo con el inconsciente',
-        'Transformación de patrones limitantes',
-        'Herramientas prácticas aplicables',
-        'Enfoque integrativo'
+        'Transformación de patrones',
+        'Herramientas prácticas',
+        'Enfoque psicoanalítico'
       ]
     },
     {
       id: 2,
-      name: 'Paquete 3 Sesiones',
-      category: 'Proceso Terapéutico',
-      price: '$216',
-      duration: '60 min por sesión',
+      name: 'Sesión de Pareja',
+      category: 'Terapia de Pareja',
+      price: '$1,500',
+      duration: '90 min',
       image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=800&fit=crop',
-      description: 'Ahorra 10% con este paquete de tres sesiones. Ideal para procesos de transformación que requieren continuidad y profundidad.',
+      description: 'Sesión terapéutica para parejas. Trabajamos los vínculos inconscientes y patrones repetitivos en la relación.',
       benefits: [
-        'Ahorro del 10%',
-        'Proceso terapéutico continuo',
+        'Comprensión de dinámicas',
+        'Patrones relacionales',
+        'Comunicación profunda',
+        'Trabajo con transferencia'
+      ]
+    },
+    {
+      id: 3,
+      name: 'Sesión Familiar',
+      category: 'Terapia Familiar',
+      price: '$1,700',
+      duration: '90 min',
+      image: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=600&h=800&fit=crop',
+      description: 'Sesión familiar donde trabajamos las dinámicas transgeneracionales y los mandatos inconscientes.',
+      benefits: [
+        'Análisis transgeneracional',
+        'Dinámicas familiares',
+        'Mandatos inconscientes',
+        'Transformación grupal'
+      ]
+    },
+    {
+      id: 4,
+      name: 'Paquete 4 Sesiones Individuales',
+      category: 'Ahorra 20%',
+      price: '$2,400',
+      originalPrice: '$3,000',
+      duration: '4 sesiones de 60 min',
+      image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=600&h=800&fit=crop',
+      description: 'Paquete de 4 sesiones individuales con 20% de descuento. Ideal para procesos de transformación que requieren continuidad.',
+      benefits: [
+        'Ahorro de $600',
+        'Proceso continuo',
         'Seguimiento personalizado',
         'Programación flexible'
       ]
     },
     {
-      id: 3,
-      name: 'Consultoría Empresarial',
-      category: 'Psicología Organizacional',
-      price: '$120',
-      duration: '90 min',
-      image: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=600&h=800&fit=crop',
-      description: 'Aplicación de psicología organizacional para equipos y empresas. Mejora el clima laboral y la productividad desde el inconsciente colectivo.',
-      benefits: [
-        'Análisis del clima organizacional',
-        'Dinámicas de grupo',
-        'Estrategias de comunicación',
-        'Plan de acción personalizado'
-      ]
-    },
-    {
-      id: 4,
-      name: 'Taller Método AION©',
-      category: 'Desarrollo Personal',
-      price: '$150',
-      duration: '3 horas',
-      image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=600&h=800&fit=crop',
-      description: 'Taller grupal donde aprenderás las bases del Método AION© para aplicarlo en tu vida diaria. Incluye material descargable.',
-      benefits: [
-        'Comprende tu realidad actual',
-        'Identifica filtros limitantes',
-        'Herramientas de transformación',
-        'Comunidad de práctica'
-      ]
-    },
-    {
       id: 5,
-      name: 'Programa de 8 Semanas',
-      category: 'Transformación Profunda',
-      price: '$560',
-      duration: '8 sesiones semanales',
+      name: 'Paquete 4 Sesiones de Pareja',
+      category: 'Ahorra 20%',
+      price: '$4,800',
+      originalPrice: '$6,000',
+      duration: '4 sesiones de 90 min',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=800&fit=crop',
-      description: 'Programa intensivo de transformación personal. Incluye sesiones semanales, ejercicios prácticos y acompañamiento vía WhatsApp.',
+      description: 'Paquete de 4 sesiones de pareja con 20% de descuento. Trabajo profundo en las dinámicas relacionales.',
       benefits: [
+        'Ahorro de $1,200',
         'Transformación sostenida',
-        'Acompañamiento continuo',
-        'Ejercicios semanales',
-        'Acceso a comunidad privada'
+        'Acompañamiento profundo',
+        'Flexibilidad de horarios'
       ]
     },
     {
       id: 6,
-      name: 'Asesoría para Psicólogos',
-      category: 'Desarrollo Profesional',
-      price: '$95',
-      duration: '60 min',
+      name: 'Paquete 4 Sesiones Familiares',
+      category: 'Ahorra 20%',
+      price: '$5,440',
+      originalPrice: '$6,800',
+      duration: '4 sesiones de 90 min',
       image: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=600&h=800&fit=crop',
-      description: 'Supervisión y mentoría para psicólogos que quieren integrar el método AION© en su práctica profesional.',
+      description: 'Paquete de 4 sesiones familiares con 20% de descuento. Trabajo transgeneracional profundo.',
       benefits: [
-        'Supervisión de casos',
-        'Integración del método AION©',
-        'Desarrollo profesional',
-        'Certificación disponible'
+        'Ahorro de $1,360',
+        'Proceso familiar continuo',
+        'Análisis profundo',
+        'Transformación grupal'
       ]
     }
   ]
@@ -187,9 +190,16 @@ const Store = () => {
                 </p>
 
                 <div className="flex items-center justify-between pt-4 border-t border-stone-200">
-                  <span className="text-amber-700 text-2xl font-light" style={{ fontFamily: 'Gotham, sans-serif' }}>
-                    {product.price}
-                  </span>
+                  <div className="flex flex-col">
+                    {product.originalPrice && (
+                      <span className="text-stone-400 text-sm line-through font-light" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                        {product.originalPrice}
+                      </span>
+                    )}
+                    <span className="text-amber-700 text-2xl font-light" style={{ fontFamily: 'Gotham, sans-serif' }}>
+                      {product.price}
+                    </span>
+                  </div>
                   <motion.button
                     whileHover={{ scale: 1.05, x: 5 }}
                     className="text-stone-700 hover:text-amber-700 text-sm tracking-wider uppercase font-light flex items-center gap-2 transition-colors"

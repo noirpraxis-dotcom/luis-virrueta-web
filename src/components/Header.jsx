@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { useState, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import LanguageSelector from './LanguageSelector'
+import ToolsMenu from './ToolsMenu'
 
 const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
   const [hoveredItem, setHoveredItem] = useState(null)
@@ -56,9 +56,9 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
             </motion.div>
           </Link>
           
-          {/* Contenedor derecho: Language + Hamburguesa */}
+          {/* Contenedor derecho: Tools + Hamburguesa */}
           <div className="flex items-center gap-3">
-            <LanguageSelector />
+            <ToolsMenu />
             
             {/* Botón Hamburguesa Elegante */}
             <motion.button
@@ -330,8 +330,8 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
               ))}
               </ul>
               
-              {/* Language Selector */}
-              <LanguageSelector />
+              {/* Tools Menu */}
+              <ToolsMenu />
             </div>
           </div>
         </div>
