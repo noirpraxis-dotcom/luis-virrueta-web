@@ -300,16 +300,14 @@ const AionSection = () => {
             <span className="text-white/90">Es lo que me propongo a explicarte.</span>
           </motion.p>
 
-          {/* CTA Premium - Contáctame */}
+          {/* CTA Premium - Ver el método */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.9 }}
           >
             <a
-              href="https://wa.me/5218115936829?text=Hola%20Luis%2C%20me%20interesa%20una%20consulta%20sobre%20psicoan%C3%A1lisis%20y%20transformaci%C3%B3n%20personal"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#about-luis"
               className="group relative inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-purple-600 via-fuchsia-600 to-purple-600 text-white rounded-full font-light text-lg overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/50"
               style={{ backgroundSize: '200% 100%' }}
             >
@@ -327,7 +325,7 @@ const AionSection = () => {
                 style={{ width: '50%' }}
               />
               
-              <span className="relative z-10">Contáctame</span>
+              <span className="relative z-10">Ver el método</span>
               <motion.svg 
                 className="relative z-10 w-5 h-5"
                 fill="none" 

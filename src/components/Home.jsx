@@ -78,9 +78,10 @@ const Home = () => {
             </span>
             
             {/* Tus filtros - MUY GRANDE CON TIPOGRAFÍA BLOG */}
-            <span className="block text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold" style={{ 
-              letterSpacing: '0.02em',
-              fontWeight: 300
+            <span className="block text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-light" style={{ 
+              letterSpacing: '0.15em',
+              fontWeight: 300,
+              textShadow: '0 0 60px rgba(255, 255, 255, 0.15), 0 10px 40px rgba(168, 85, 247, 0.1)'
             }}>
               {(() => {
                 const brandText = t('home.yourBrand')
