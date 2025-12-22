@@ -30,7 +30,7 @@ const AionSection = () => {
     {
       icon: TrendingUp,
       title: 'Económica',
-      description: 'Transforma tu relación con el dinero y la abundancia',
+      description: 'Al cambiar tu filtro, la abundancia fluye sin esfuerzo',
       gradient: 'from-green-500/20 to-emerald-600/20',
       borderColor: 'border-green-500/30 hover:border-green-400/60',
       iconColor: 'text-green-400',
@@ -39,7 +39,7 @@ const AionSection = () => {
     {
       icon: Activity,
       title: 'De salud',
-      description: 'Comprende los síntomas desde el inconsciente',
+      description: 'Tu cuerpo responde al nuevo sentido que le das',
       gradient: 'from-red-500/20 to-rose-600/20',
       borderColor: 'border-red-500/30 hover:border-red-400/60',
       iconColor: 'text-red-400',
@@ -48,7 +48,7 @@ const AionSection = () => {
     {
       icon: Heart,
       title: 'Amorosa',
-      description: 'Cambia los patrones repetitivos en tus relaciones',
+      description: 'Atraes relaciones alineadas con tu nuevo ser',
       gradient: 'from-pink-500/20 to-rose-600/20',
       borderColor: 'border-pink-500/30 hover:border-pink-400/60',
       iconColor: 'text-pink-400',
@@ -57,16 +57,25 @@ const AionSection = () => {
     {
       icon: Smile,
       title: 'Emocional',
-      description: 'Accede y transforma tus estados emocionales profundos',
+      description: 'Liberas el peso que cargabas sin saberlo',
       gradient: 'from-purple-500/20 to-fuchsia-600/20',
       borderColor: 'border-purple-500/30 hover:border-purple-400/60',
       iconColor: 'text-purple-400',
       delay: 0.5
     },
     {
+      icon: Brain,
+      title: 'Profesional',
+      description: 'Tu potencial emerge cuando el bloqueo se disuelve',
+      gradient: 'from-indigo-500/20 to-purple-600/20',
+      borderColor: 'border-indigo-500/30 hover:border-indigo-400/60',
+      iconColor: 'text-indigo-400',
+      delay: 0.6
+    },
+    {
       icon: Sparkles,
-      title: 'De Vida',
-      description: 'Redefine tu experiencia completa de existencia',
+      title: 'De vida',
+      description: 'Todo se transforma cuando tu filtro cambia',
       gradient: 'from-cyan-500/20 to-blue-600/20',
       borderColor: 'border-cyan-500/30 hover:border-cyan-400/60',
       iconColor: 'text-cyan-400',
@@ -208,7 +217,7 @@ const AionSection = () => {
                 y: -8,
                 transition: { duration: 0.3 }
               }}
-              className={`group relative p-6 bg-gradient-to-br ${area.gradient} backdrop-blur-xl border-2 ${area.borderColor} rounded-3xl transition-all duration-500 overflow-hidden aspect-square flex flex-col justify-center items-center max-w-xs mx-auto`}
+              className={`group relative p-5 bg-gradient-to-br ${area.gradient} backdrop-blur-xl border-2 ${area.borderColor} rounded-3xl transition-all duration-500 overflow-hidden aspect-square flex flex-col justify-center items-center max-w-[280px] mx-auto`}
             >
               {/* Efecto de brillo en hover */}
               <motion.div 
@@ -234,20 +243,20 @@ const AionSection = () => {
                 <motion.div 
                   whileHover={{ rotate: [0, -10, 10, -10, 0] }}
                   transition={{ duration: 0.5 }}
-                  className="mb-4 flex justify-center"
+                  className="mb-3 flex justify-center"
                 >
-                  <div className="inline-flex p-4 bg-black/30 backdrop-blur-sm rounded-2xl border border-white/10">
-                    <area.icon className={`w-8 h-8 ${area.iconColor}`} strokeWidth={2} />
+                  <div className="inline-flex p-3 bg-black/30 backdrop-blur-sm rounded-2xl border border-white/10">
+                    <area.icon className={`w-7 h-7 ${area.iconColor}`} strokeWidth={2} />
                   </div>
                 </motion.div>
                 
                 {/* Título */}
-                <h3 className="text-xl font-bold text-white mb-3" style={{ letterSpacing: '0.01em' }}>
+                <h3 className="text-lg font-bold text-white mb-2" style={{ letterSpacing: '0.01em' }}>
                   {area.title}
                 </h3>
                 
                 {/* Descripción */}
-                <p className="text-white/70 text-sm leading-relaxed font-light">
+                <p className="text-white/70 text-xs leading-relaxed font-light px-2">
                   {area.description}
                 </p>
               </div>
