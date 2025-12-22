@@ -468,7 +468,24 @@ const BlogCard = ({ post, index }) => {
     'branding': t('blogPage.categories.branding'),
     'psychology': t('blogPage.categories.psychology'),
     'trends': t('blogPage.categories.trends'),
-    'philosophy': currentLanguage === 'en' ? 'Philosophy' : 'Filosofía'
+    'philosophy': currentLanguage === 'en' ? 'Philosophy' : 'Filosofía',
+    'psychoanalysis': currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
+    'Psicoanálisis': currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
+    'Filosofía': currentLanguage === 'en' ? 'Philosophy' : 'Filosofía',
+    'Ethics': currentLanguage === 'en' ? 'Ethics' : 'Ética',
+    'Ética': currentLanguage === 'en' ? 'Ethics' : 'Ética',
+    'Spirituality': currentLanguage === 'en' ? 'Spirituality' : 'Espiritualidad',
+    'Espiritualidad': currentLanguage === 'en' ? 'Spirituality' : 'Espiritualidad',
+    'Identity': currentLanguage === 'en' ? 'Identity' : 'Identidad',
+    'Identidad': currentLanguage === 'en' ? 'Identity' : 'Identidad',
+    'Existentialism': currentLanguage === 'en' ? 'Existentialism' : 'Existencialismo',
+    'Existencialismo': currentLanguage === 'en' ? 'Existentialism' : 'Existencialismo',
+    'Perception': currentLanguage === 'en' ? 'Perception' : 'Percepción',
+    'Percepción': currentLanguage === 'en' ? 'Perception' : 'Percepción',
+    'Consciousness': currentLanguage === 'en' ? 'Consciousness' : 'Consciencia',
+    'Consciencia': currentLanguage === 'en' ? 'Consciousness' : 'Consciencia',
+    'Branding × Strategy': currentLanguage === 'en' ? 'Branding × Strategy' : 'Branding × Estrategia',
+    'Branding × Estrategia': currentLanguage === 'en' ? 'Branding × Strategy' : 'Branding × Estrategia'
   }
   return (
     <Link to={post.slug ? `/blog/${post.slug}` : '#'}>

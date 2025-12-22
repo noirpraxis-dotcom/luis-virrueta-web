@@ -33,6 +33,7 @@ const StoreProductPage = lazy(() => import('./pages/StoreProductPage'))
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'))
 const TermsConditionsPage = lazy(() => import('./pages/TermsConditionsPage'))
 const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage'))
+const VocationalTestPage = lazy(() => import('./pages/VocationalTestPage'))
 
 // Loading component
 const PageLoader = () => (
@@ -145,6 +146,11 @@ const AppContent = () => {
             {/* Página individual de artículo del blog */}
             <Route path="/blog/:slug" element={
               <BlogArticlePage />
+            } />
+
+            {/* Test Vocacional */}
+            <Route path="/test-vocacional" element={
+              <VocationalTestPage />
             } />
 
             {/* Página Inversión: Precios premium */}

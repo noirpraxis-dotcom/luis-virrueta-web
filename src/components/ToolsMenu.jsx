@@ -1,12 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react'
-import { Wrench, Calendar, Brain, Heart, Coffee } from 'lucide-react'
+import { Wrench, Calendar, Brain, Heart, Coffee, Target } from 'lucide-react'
 
 const ToolsMenu = () => {
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef(null)
 
   const tools = [
+    { name: 'Test Vocacional', icon: Target, href: '/test-vocacional', highlight: true },
     { name: 'Dinámica del día', icon: Calendar, href: '/dinamica-del-dia' },
     { name: 'Meditaciones', icon: Brain, href: '/meditaciones' },
     { name: 'Ejercicios', icon: Heart, href: '/ejercicios' },
@@ -53,11 +54,22 @@ const ToolsMenu = () => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-200 border-b border-white/5 last:border-0"
+                  className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 border-b border-white/5 last:border-0 ${
+                    tool.highlight 
+                      ? 'bg-gradient-to-r from-purple-500/20 to-fuchsia-500/20 text-white hover:from-purple-500/30 hover:to-fuchsia-500/30' 
+                      : 'text-white/70 hover:text-white hover:bg-white/5'
+                  }`}
                   onClick={() => setIsOpen(false)}
                 >
                   <Icon className="w-4 h-4" strokeWidth={1.5} />
-                  <span className="text-sm font-light">{tool.name}</span>
+                  <span className={`text-sm ${tool.highlight ? 'font-medium' : 'font-light'}`}>
+                    {tool.name}
+                  </span>
+                  {tool.highlight && (
+                    <span className="ml-auto text-xs px-2 py-0.5 bg-purple-500/30 rounded-full">
+                      Nuevo
+                    </span>
+                  )}
                 </motion.a>
               )
             })}
