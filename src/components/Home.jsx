@@ -64,23 +64,23 @@ const Home = () => {
             </span>
           </motion.div>
 
-          {/* Título principal con efecto 3D - Estilo Portafolio */}
+          {/* Título principal con efecto 3D - Tipografía Hero Blog */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.2 }}
             className="font-display leading-tight mb-8"
+            style={{ letterSpacing: '0.02em' }}
           >
-            {/* Construimos - más pequeño */}
-            <span className="block text-white/70 text-lg sm:text-xl md:text-2xl lg:text-4xl mb-2 sm:mb-3" style={{ fontWeight: 200, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+            {/* Tu Realidad Son - más pequeño */}
+            <span className="block text-white text-lg sm:text-xl md:text-2xl lg:text-4xl mb-2 sm:mb-3" style={{ fontWeight: 200, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               {t('home.weBuild')}
             </span>
             
-            {/* Tu Marca / Your Brand - MUY GRANDE EN MÓVIL */}
-            <span className="block text-6xl sm:text-7xl md:text-8xl lg:text-9xl" style={{ 
-              letterSpacing: '0.04em',
-              fontWeight: 300,
-              textTransform: 'uppercase'
+            {/* Tus Filtros - MUY GRANDE CON TIPOGRAFÍA BLOG */}
+            <span className="block text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold" style={{ 
+              letterSpacing: '0.02em',
+              fontWeight: 300
             }}>
               {(() => {
                 const brandText = t('home.yourBrand')

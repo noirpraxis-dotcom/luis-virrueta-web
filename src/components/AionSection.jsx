@@ -1,7 +1,7 @@
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Heart, Brain, Users, DollarSign, Activity, Wine } from 'lucide-react'
+import { Heart, TrendingUp, Activity, Smile, Sparkles, Brain } from 'lucide-react'
 
 const AionSection = () => {
   const ref = useRef(null)
@@ -10,50 +10,66 @@ const AionSection = () => {
   // Estados para palabras rotativas
   const [currentWordIndex, setCurrentWordIndex] = useState(0)
   const rotatingWords = [
-    'Económica',
-    'De Salud',
-    'Amorosa',
-    'Emocional',
-    'De Vida en General'
+    { word: 'Económica', icon: TrendingUp, color: 'from-green-400 to-emerald-500' },
+    { word: 'De Salud', icon: Activity, color: 'from-red-400 to-rose-500' },
+    { word: 'Amorosa', icon: Heart, color: 'from-pink-400 to-rose-500' },
+    { word: 'Emocional', icon: Smile, color: 'from-purple-400 to-fuchsia-500' },
+    { word: 'De Vida', icon: Sparkles, color: 'from-cyan-400 to-blue-500' }
   ]
   
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentWordIndex((prev) => (prev + 1) % rotatingWords.length)
-    }, 2000)
+    }, 2500)
     return () => clearInterval(interval)
   }, [])
 
-  const problems = [
+  // Tarjetas elegantes de áreas de transformación
+  const transformationAreas = [
     {
-      icon: Heart,
-      text: 'Las mismas relaciones, diferentes personas',
+      icon: TrendingUp,
+      title: 'Económica',
+      description: 'Transforma tu relación con el dinero y la abundancia',
+      gradient: 'from-green-500/20 to-emerald-600/20',
+      borderColor: 'border-green-500/30 hover:border-green-400/60',
+      iconColor: 'text-green-400',
       delay: 0.2
     },
     {
-      icon: Brain,
-      text: 'Ansiedad y depresión que no ceden',
+      icon: Activity,
+      title: 'De Salud',
+      description: 'Comprende los síntomas desde el inconsciente',
+      gradient: 'from-red-500/20 to-rose-600/20',
+      borderColor: 'border-red-500/30 hover:border-red-400/60',
+      iconColor: 'text-red-400',
       delay: 0.3
     },
     {
-      icon: Users,
-      text: 'Conflictos que nunca se resuelven',
+      icon: Heart,
+      title: 'Amorosa',
+      description: 'Cambia los patrones repetitivos en tus relaciones',
+      gradient: 'from-pink-500/20 to-rose-600/20',
+      borderColor: 'border-pink-500/30 hover:border-pink-400/60',
+      iconColor: 'text-pink-400',
       delay: 0.4
     },
     {
-      icon: DollarSign,
-      text: 'Dinero que llega y se va sin control',
+      icon: Smile,
+      title: 'Emocional',
+      description: 'Accede y transforma tus estados emocionales profundos',
+      gradient: 'from-purple-500/20 to-fuchsia-600/20',
+      borderColor: 'border-purple-500/30 hover:border-purple-400/60',
+      iconColor: 'text-purple-400',
       delay: 0.5
     },
     {
-      icon: Activity,
-      text: 'Síntomas físicos sin causa aparente',
+      icon: Sparkles,
+      title: 'De Vida',
+      description: 'Redefine tu experiencia completa de existencia',
+      gradient: 'from-cyan-500/20 to-blue-600/20',
+      borderColor: 'border-cyan-500/30 hover:border-cyan-400/60',
+      iconColor: 'text-cyan-400',
       delay: 0.6
-    },
-    {
-      icon: Wine,
-      text: 'Adicciones que prometes superar',
-      delay: 0.7
     }
   ]
 
@@ -129,78 +145,110 @@ const AionSection = () => {
             </span>
           </motion.div>
 
-          {/* Pregunta directa con tipografía hero blog */}
+          {/* Título con palabras rotativas integradas - Tipografía Blog */}
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight"
             style={{ letterSpacing: '0.02em', fontWeight: 300 }}
           >
-            ¿Es Posible Cambiar Rápidamente Mi
-            <br />
-            <motion.span 
-              className="font-normal bg-gradient-to-r from-purple-400 via-fuchsia-400 to-purple-400 bg-clip-text text-transparent inline-block"
-              animate={{
-                backgroundPosition: ['0%', '100%', '0%']
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-              style={{
-                backgroundSize: '200% 100%'
-              }}
-            >
-              Situación?
-            </motion.span>
+            <span className="block mb-4">¿Es Posible Cambiar Rápidamente</span>
+            <span className="block mb-4">Mi Situación</span>
+            
+            {/* Palabra rotativa con animación e ícono */}
+            <div className="relative inline-flex items-center gap-4 min-h-[80px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentWordIndex}
+                  initial={{ opacity: 0, y: 30, scale: 0.8 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -30, scale: 0.8 }}
+                  transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
+                  className="flex items-center gap-4"
+                >
+                  <motion.div
+                    animate={{ rotate: [0, 360] }}
+                    transition={{ duration: 2, ease: "linear", repeat: Infinity }}
+                    className={`p-3 rounded-2xl bg-gradient-to-br ${rotatingWords[currentWordIndex].color} backdrop-blur-xl`}
+                  >
+                    {(() => {
+                      const Icon = rotatingWords[currentWordIndex].icon
+                      return <Icon className="w-8 h-8 text-white" strokeWidth={2} />
+                    })()}
+                  </motion.div>
+                  <span className={`bg-gradient-to-r ${rotatingWords[currentWordIndex].color} bg-clip-text text-transparent font-bold`}>
+                    {rotatingWords[currentWordIndex].word}?
+                  </span>
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </motion.h2>
-          
-          {/* Palabras rotativas */}
-          <div className="h-12 lg:h-16 flex items-center justify-center mb-6">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentWordIndex}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
-                className="text-3xl lg:text-5xl font-light text-white/80"
-                style={{ letterSpacing: '0.02em' }}
-              >
-                {rotatingWords[currentWordIndex]}
-              </motion.div>
-            </AnimatePresence>
-          </div>
         </motion.div>
 
-        {/* Grid de problemas */}
+        {/* Grid de áreas de transformación - Tarjetas elegantes */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-16 lg:mb-20"
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16 lg:mb-20 max-w-6xl mx-auto"
         >
-          {problems.map((problem, index) => (
+          {transformationAreas.map((area, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: problem.delay }}
-              whileHover={{ scale: 1.02, y: -5 }}
-              className="group relative p-6 lg:p-7 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl hover:border-purple-500/60 hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-500"
+              transition={{ 
+                duration: 0.8, 
+                delay: area.delay,
+                ease: [0.76, 0, 0.24, 1]
+              }}
+              whileHover={{ 
+                scale: 1.05, 
+                y: -8,
+                transition: { duration: 0.3 }
+              }}
+              className={`group relative p-8 bg-gradient-to-br ${area.gradient} backdrop-blur-xl border-2 ${area.borderColor} rounded-3xl transition-all duration-500 overflow-hidden`}
             >
+              {/* Efecto de brillo en hover */}
               <motion.div 
-                className="absolute inset-0 bg-gradient-to-br from-purple-500/0 to-fuchsia-500/0 group-hover:from-purple-500/10 group-hover:to-fuchsia-500/10 rounded-3xl transition-all duration-500"
+                className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/0 group-hover:from-white/5 group-hover:to-white/10 transition-all duration-500"
               />
               
-              <div className="relative flex items-start gap-4">
-                <div className="flex-shrink-0 p-2.5 bg-purple-500/10 rounded-xl group-hover:bg-purple-500/20 transition-colors duration-300">
-                  <problem.icon className="w-5 h-5 text-purple-300 group-hover:text-fuchsia-300 transition-colors duration-300" strokeWidth={1.5} />
-                </div>
-                <p className="text-white/70 text-base lg:text-[17px] font-light leading-relaxed group-hover:text-white/95 transition-colors duration-300">
-                  {problem.text}
+              {/* Orb decorativo */}
+              <motion.div
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.3, 0.5, 0.3]
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  delay: index * 0.5
+                }}
+                className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-white/20 to-transparent rounded-full blur-3xl"
+              />
+              
+              <div className="relative z-10">
+                {/* Ícono */}
+                <motion.div 
+                  whileHover={{ rotate: [0, -10, 10, -10, 0] }}
+                  transition={{ duration: 0.5 }}
+                  className="mb-6"
+                >
+                  <div className="inline-flex p-4 bg-black/30 backdrop-blur-sm rounded-2xl border border-white/10">
+                    <area.icon className={`w-8 h-8 ${area.iconColor}`} strokeWidth={2} />
+                  </div>
+                </motion.div>
+                
+                {/* Título */}
+                <h3 className="text-2xl font-bold text-white mb-3" style={{ letterSpacing: '0.01em' }}>
+                  {area.title}
+                </h3>
+                
+                {/* Descripción */}
+                <p className="text-white/70 text-base leading-relaxed font-light">
+                  {area.description}
                 </p>
               </div>
             </motion.div>
