@@ -16,7 +16,7 @@ const StoreProductPage = () => {
     1: {
       name: 'Sesión Individual',
       category: 'Psicoterapia',
-      price: '$800 MXN',
+      price: '$750 MXN',
       duration: '60 min',
       image: '/individual imagen.jpg',
       description: 'Sesión de psicoterapia individual donde trabajamos desde el inconsciente, no desde los síntomas. A través del método AION© identificamos los filtros que están creando tu realidad actual y comenzamos el proceso de transformación.',
@@ -41,7 +41,7 @@ const StoreProductPage = () => {
     2: {
       name: 'Sesión de Pareja',
       category: 'Terapia de Pareja',
-      price: '$1,200 MXN',
+      price: '$1,500 MXN',
       duration: '90 min',
       image: '/pareja imagen.jpg',
       description: 'Terapia de pareja desde el psicoanálisis. No venimos a "mejorar la comunicación". Venimos a desmontar las ilusiones que sostienen el conflicto.',
@@ -66,7 +66,7 @@ const StoreProductPage = () => {
     3: {
       name: 'Sesión Familiar',
       category: 'Terapia Familiar',
-      price: '$1,500 MXN',
+      price: '$1,750 MXN',
       duration: '90 min',
       image: '/familia imagen.jpg',
       description: 'Terapia familiar sistémica. Trabajamos los patrones transgeneracionales que se repiten sin que nadie los nombre.',
@@ -92,13 +92,43 @@ const StoreProductPage = () => {
     4: {
       name: 'Paquete 4 Sesiones',
       category: 'Proceso Terapéutico',
-      price: '$2,880 MXN',
-      duration: '4 sesiones de 60 min',
+      price: 'Elige tu modalidad',
+      duration: '4 sesiones',
       image: '/paquete 4 sesiones imagen.jpg',
-      description: 'Paquete de 4 sesiones con 10% de ahorro. Para procesos que requieren continuidad y profundidad. La transformación real no ocurre en una sola sesión.',
-      longDescription: 'Este paquete te permite trabajar con continuidad. Cada sesión construye sobre la anterior. No es acumulativo: es estructural. Cada encuentro desarma una capa más profunda. Si estás listo para un proceso real, no para un parche, este es tu formato.',
+      description: 'Paquete de 4 sesiones con 20% de descuento. Elige entre Individual, Pareja, Familiar o Empresarial. La transformación real requiere continuidad.',
+      longDescription: 'Este paquete te permite trabajar con continuidad en la modalidad que necesites. Cada sesión construye sobre la anterior. No es acumulativo: es estructural. Cada encuentro desarma una capa más profunda. Con 20% de ahorro, inviertes en un proceso real, no en un parche.',
+      packageOptions: [
+        {
+          type: 'Individual',
+          originalPrice: '$3,000 MXN',
+          discountedPrice: '$2,400 MXN',
+          duration: '4 × 60 min',
+          description: 'Proceso individual continuo. 20% de descuento.'
+        },
+        {
+          type: 'Pareja',
+          originalPrice: '$6,000 MXN',
+          discountedPrice: '$4,800 MXN',
+          duration: '4 × 90 min',
+          description: 'Proceso de pareja profundo. 20% de descuento.'
+        },
+        {
+          type: 'Familiar',
+          originalPrice: '$7,000 MXN',
+          discountedPrice: '$5,600 MXN',
+          duration: '4 × 90 min',
+          description: 'Proceso familiar sistémico. 20% de descuento.'
+        },
+        {
+          type: 'Empresarial',
+          originalPrice: '$10,000 MXN',
+          discountedPrice: '$8,000 MXN',
+          duration: '4 × 90 min',
+          description: 'Proceso organizacional continuo. 20% de descuento.'
+        }
+      ],
       benefits: [
-        'Ahorro del 10% vs sesiones individuales',
+        'Ahorro del 20% en todas las modalidades',
         'Proceso terapéutico continuo y estructurado',
         'Transformación sostenida en el tiempo',
         'Programación flexible según tu disponibilidad',
@@ -106,15 +136,16 @@ const StoreProductPage = () => {
         'Acompañamiento entre sesiones'
       ],
       includes: [
-        '4 sesiones de 60 minutos cada una',
-        'Ejercicios semanales personalizados',
+        '4 sesiones en la modalidad elegida',
+        'Ejercicios personalizados entre sesiones',
         'Material descargable exclusivo',
-        'WhatsApp support entre sesiones',
-        'Válido por 2 meses'
+        'WhatsApp support',
+        'Válido por 3 meses'
       ],
       gradient: 'from-fuchsia-600/20 to-pink-600/20',
       borderGradient: 'from-fuchsia-500 to-pink-500',
-      popular: true
+      popular: true,
+      isPackage: true
     },
     5: {
       name: 'Consultoría Empresarial',
@@ -145,7 +176,7 @@ const StoreProductPage = () => {
     6: {
       name: 'Taller Método AION©',
       category: 'Desarrollo Personal',
-      price: '$2,500 MXN',
+      price: '$2,650 MXN',
       duration: '3 horas intensivas',
       image: '/taller aion imagen.jpg',
       description: 'Taller grupal donde aprenderás las bases completas del Método AION©. Identificarás tus filtros y aprenderás a transformarlos de forma autónoma.',
@@ -272,6 +303,37 @@ const StoreProductPage = () => {
               <p className="text-lg text-white/60 font-light leading-relaxed">
                 {product.description}
               </p>
+
+              {/* Package Options - Solo para producto 4 */}
+              {product.isPackage && product.packageOptions && (
+                <div className="space-y-4">
+                  <h3 className="text-xl font-light text-white">Elige tu modalidad:</h3>
+                  <div className="grid grid-cols-1 gap-4">
+                    {product.packageOptions.map((option, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+                        transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+                        className="p-4 bg-zinc-900/50 border border-white/10 rounded-xl hover:border-violet-500/50 transition-all"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="text-white font-light text-lg">{option.type}</h4>
+                          <div className="flex items-center gap-2">
+                            <span className="text-white/40 text-sm line-through">{option.originalPrice}</span>
+                            <span className="text-violet-400 font-light text-xl">{option.discountedPrice}</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-white/50">{option.duration}</span>
+                          <span className="text-green-400 font-light">20% off</span>
+                        </div>
+                        <p className="text-white/60 text-sm font-light mt-2">{option.description}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* CTA Button */}
               <motion.button
