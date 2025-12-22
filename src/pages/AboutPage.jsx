@@ -321,6 +321,35 @@ const AboutPage = () => {
                 Actualmente acompaño a personas, proyectos y equipos que sienten que algo no encaja, aunque desde fuera todo parezca funcionar. Personas que piensan mucho, sienten profundo y saben que repetir fórmulas no es la salida. A través de sesiones, contenidos y proyectos exploro cómo operan los filtros mentales, el deseo, la percepción del tiempo y la forma en que construimos sentido, entendiendo que no toda transformación es ganancia, pero sí puede ser verdad.
               </p>
 
+              {/* Exploración Personal - Europa y Religiones */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="relative bg-gradient-to-br from-purple-900/20 to-fuchsia-900/20 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-8"
+              >
+                <div className="space-y-4">
+                  <h3 className="text-white text-xl lg:text-2xl font-light mb-4 flex items-center gap-3">
+                    <Lamp className="w-5 h-5 text-purple-400" />
+                    Una búsqueda constante
+                  </h3>
+                  <p className="text-white/80 text-lg leading-relaxed font-light">
+                    Estudié psicología y me especialicé en psicoanálisis. Pero no me conformé con ello.
+                  </p>
+                  <p className="text-white/80 text-lg leading-relaxed font-light">
+                    <span className="text-white font-semibold">Actualmente vivo en Europa</span>, explorando diferentes culturas y tradiciones. 
+                    Mi vida es el reflejo de mi búsqueda.
+                  </p>
+                  <p className="text-white/80 text-lg leading-relaxed font-light">
+                    Desde pequeño crecí dentro del catolicismo, pero me exploraba a ir a otro tipo de religiones 
+                    para empezar a ver <span className="text-white font-semibold">qué era lo que compartían entre ellas</span>.
+                  </p>
+                  <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic border-l-2 border-purple-400/40 pl-6 py-4 mt-6">
+                    Y me daba cuenta que <span className="text-purple-400 not-italic font-semibold">todas decían que ellas eran la verdadera</span>.
+                  </p>
+                </div>
+              </motion.div>
+
               {/* Conclusión destacada */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -440,25 +469,32 @@ const AboutPage = () => {
             className="space-y-12"
           >
             <div className="space-y-6">
-              <h2 className="text-4xl lg:text-6xl font-extralight text-white tracking-wide leading-tight" dangerouslySetInnerHTML={{ __html: t('aboutPage.cta.title') }} />
+              <h2 className="text-4xl lg:text-6xl font-extralight text-white tracking-wide leading-tight">
+                ¿Listo para iniciar <span className="italic font-light">tu proceso de transformación</span>?
+              </h2>
               <p className="text-white/50 text-base lg:text-lg font-extralight leading-[1.9] tracking-wide max-w-3xl">
-                {t('aboutPage.cta.subtitle')}
+                No desde el consejo, sino desde el inconsciente. Un acompañamiento profundo para cambiar tu realidad.
               </p>
             </div>
             
-            <Link to="/contacto" className="inline-block group">
+            <a 
+              href="https://wa.me/5218115936829?text=Hola%20Luis,%20me%20gustaría%20iniciar%20un%20proceso%20de%20acompañamiento"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block group"
+            >
               <motion.div
                 whileHover={{ x: 4 }}
                 className="flex items-center gap-4 text-white font-extralight text-sm tracking-[0.3em] uppercase"
               >
-                <span>{t('aboutPage.cta.button')}</span>
+                <span>Iniciemos tu proceso</span>
                 <motion.div
                   className="w-16 h-px bg-white/40 group-hover:bg-white transition-colors"
                   whileHover={{ width: 80 }}
                 />
                 <Sparkles className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" strokeWidth={1} />
               </motion.div>
-            </Link>
+            </a>
           </motion.div>
         </div>
       </section>

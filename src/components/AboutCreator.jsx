@@ -110,9 +110,9 @@ const AboutCreator = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 font-display"
           >
-            El diseñador que entiende{' '}
+            Psicólogo ·{' '}
             <span className="bg-gradient-to-r from-[#a855f7] to-[#d946ef] bg-clip-text text-transparent">
-              tu mente
+              Filósofo · Investigador
             </span>
           </motion.h2>
           <motion.p
@@ -121,7 +121,7 @@ const AboutCreator = () => {
             transition={{ duration: 0.8, delay: 0.5 }}
             className="text-white/50 text-sm"
           >
-            (y la de tus clientes)
+            La mayoría de las personas no vive la realidad. Vive la interpretación que hace de ella.
           </motion.p>
         </motion.div>
 
@@ -207,6 +207,48 @@ const AboutCreator = () => {
             </p>
           </motion.div>
         </div>
+
+        {/* Personal Journey - Exploration */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 1.3 }}
+          className="max-w-5xl mx-auto mb-24 bg-white/[0.02] border border-white/10 rounded-3xl p-12 lg:p-16"
+        >
+          <div className="mb-10 text-center">
+            <Brain className="w-12 h-12 text-[#a855f7] mx-auto mb-6" strokeWidth={1.5} />
+            <h4 className="text-2xl lg:text-3xl font-light text-white mb-4 font-display tracking-wide">
+              Mi trabajo gira alrededor de una pregunta central:
+            </h4>
+            <p className="text-[#d946ef] text-xl lg:text-2xl italic">
+              ¿Cómo se construye la experiencia que llamamos realidad?
+            </p>
+          </div>
+
+          <div className="space-y-6 text-white/70 text-base lg:text-lg leading-relaxed">
+            <p>
+              <span className="text-white font-semibold">Estudié psicología</span> y me especialicé en psicoanálisis. 
+              Pero no me conformé con ello.
+            </p>
+            <p>
+              <span className="text-white font-semibold">Actualmente vivo en Europa</span>, explorando diferentes culturas y tradiciones. 
+              Mi vida es el reflejo de mi búsqueda.
+            </p>
+            <p>
+              Desde pequeño crecí dentro del catolicismo, pero me exploraba a ir a otro tipo de religiones 
+              para empezar a ver <span className="text-white font-semibold">qué era lo que compartían entre ellas</span>.
+            </p>
+            <p className="text-white/90 text-lg lg:text-xl italic border-l-2 border-[#a855f7]/40 pl-6 py-4 mt-8">
+              Y me daba cuenta que <span className="text-[#a855f7] not-italic font-semibold">todas decían que ellas eran la verdadera</span>.
+            </p>
+            <p>
+              No como una teoría abstracta ni como una promesa de cambio rápido, sino como un fenómeno vivo 
+              que ocurre en el tiempo. Porque lo que hoy comenzamos a descubrir, en muchos sentidos, 
+              <span className="text-white font-semibold"> ya había sido intuido</span>: la idea de que el inicio y el final 
+              no están separados, sino que conviven en el presente.
+            </p>
+          </div>
+        </motion.div>
 
         {/* Skills Grid - Expanded */}
         <motion.div
@@ -370,18 +412,20 @@ const AboutCreator = () => {
           className="text-center bg-gradient-to-br from-[#a855f7]/10 via-[#1A1A1A] to-[#d946ef]/10 border border-white/10 rounded-3xl p-12 lg:p-16"
         >
           <h4 className="text-3xl lg:text-4xl font-light text-white mb-6 font-display">
-            ¿Listo para crear una marca que <span className="text-[#a855f7] font-semibold">realmente conecte</span>?
+            ¿Listo para iniciar <span className="text-[#a855f7] font-semibold">tu proceso de transformación</span>?
           </h4>
           <p className="text-white/70 text-lg mb-8 max-w-2xl mx-auto">
-            Agenda una sesión estratégica gratuita y descubre cómo la psicología puede transformar tu branding
+            No desde el consejo, sino desde el inconsciente. Un acompañamiento profundo para cambiar tu realidad.
           </p>
           <motion.a
-            href="#contacto"
+            href="https://wa.me/5218115936829?text=Hola%20Luis,%20me%20gustaría%20iniciar%20un%20proceso%20de%20acompañamiento"
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="inline-block bg-gradient-to-r from-[#a855f7] to-[#d946ef] px-12 py-5 rounded-full text-white font-semibold text-lg shadow-2xl"
           >
-            Agenda tu sesión gratuita
+            Iniciemos tu proceso
           </motion.a>
         </motion.div>
       </div>
