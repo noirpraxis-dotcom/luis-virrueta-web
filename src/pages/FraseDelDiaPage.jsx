@@ -1,5 +1,5 @@
 import { motion, useInView } from 'framer-motion'
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState, useEffect } from 'react'
 import { Share2, Copy, CheckCircle, ChevronDown, Quote, ArrowLeft, Home, Lightbulb, HelpCircle, Coffee, MessageCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
@@ -7,6 +7,12 @@ const MEXICO_TZ = 'America/Mexico_City'
 const CHANGE_HOUR_MX = 0 // Cambio a medianoche
 
 const pad2 = (n) => String(n).padStart(2, '0')
+
+const SOCIAL_PLATFORMS = [
+  { id: 'whatsapp', name: 'WhatsApp', icon: MessageCircle },
+  { id: 'facebook', name: 'Facebook', icon: Share2 },
+  { id: 'linkedin', name: 'LinkedIn', icon: Share2 }
+]
 
 const getMexicoParts = (date = new Date()) => {
   const parts = new Intl.DateTimeFormat('en-CA', {
@@ -1838,6 +1844,19 @@ const FraseDelDiaPage = () => {
   const [lastAction, setLastAction] = useState(null)
   const [actionOk, setActionOk] = useState(false)
   const [customAmount, setCustomAmount] = useState('')
+  const [shareOpen, setShareOpen] = useState(false)
+
+  // Cerrar desplegable al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (shareOpen && !event.target.closest('.share-dropdown-container')) {
+        setShareOpen(false)
+      }
+    }
+    
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [shareOpen])
 
   const dateKey = useMemo(() => {
     const params = new URLSearchParams(window.location.search)
@@ -1892,6 +1911,33 @@ const FraseDelDiaPage = () => {
     } catch {
       // ignore
     }
+  }
+
+  const handleShareTo = (platform) => {
+    const title = '1 frase x día'
+    const shareText = `"${phrase.quote}" — ${phrase.author}\n\n¿Quieres saber qué significa? Entra a este enlace:`
+    const encodedText = encodeURIComponent(shareText)
+    const encodedUrl = encodeURIComponent(shareUrl)
+    
+    let url = ''
+    
+    switch (platform) {
+      case 'whatsapp':
+        url = `https://wa.me/?text=${encodedText}%20${encodedUrl}`
+        break
+      case 'facebook':
+        url = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`
+        break
+      case 'linkedin':
+        url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`
+        break
+      default:
+        return
+    }
+    
+    window.open(url, '_blank', 'noopener,noreferrer')
+    setShareOpen(false)
+    notifyOk('share')
   }
 
   const handleCopyLink = async () => {
@@ -2198,7 +2244,7 @@ const FraseDelDiaPage = () => {
                 ))}
               </div>
 
-              {/* Acciones: compartir + copiar (alineados) */}
+              {/* Acciones: compartir con desplegable + invítame un café */}
               <motion.div
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
@@ -2206,42 +2252,61 @@ const FraseDelDiaPage = () => {
                 transition={{ duration: 0.8, delay: 1 }}
                 className="mt-16 flex flex-col items-start gap-4"
               >
-            <div className="flex items-center justify-start gap-4">
-              <button
-                type="button"
-                onClick={handleShare}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs text-white/70 hover:text-white/90 transition-all"
-              >
-                {actionOk && lastAction === 'share' ? (
-                  <>
-                    <CheckCircle className="w-4 h-4" strokeWidth={1.5} />
-                    <span>Compartido</span>
-                  </>
-                ) : (
-                  <>
-                    <Share2 className="w-4 h-4" strokeWidth={1.5} />
-                    <span>Compartir</span>
-                  </>
-                )}
-              </button>
+            <div className="flex items-center justify-start gap-4 flex-wrap">
+              {/* Botón compartir con desplegable */}
+              <div className="relative share-dropdown-container">
+                <button
+                  type="button"
+                  onClick={() => setShareOpen(!shareOpen)}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs text-white/70 hover:text-white/90 transition-all"
+                >
+                  {actionOk && lastAction === 'share' ? (
+                    <>
+                      <CheckCircle className="w-4 h-4" strokeWidth={1.5} />
+                      <span>Compartido</span>
+                    </>
+                  ) : (
+                    <>
+                      <Share2 className="w-4 h-4" strokeWidth={1.5} />
+                      <span>Compartir</span>
+                      <ChevronDown className={`w-3 h-3 transition-transform ${shareOpen ? 'rotate-180' : ''}`} strokeWidth={1.5} />
+                    </>
+                  )}
+                </button>
 
-              <button
-                type="button"
-                onClick={handleCopyLink}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs text-white/70 hover:text-white/90 transition-all"
-              >
-                {actionOk && lastAction === 'copy' ? (
-                  <>
-                    <CheckCircle className="w-4 h-4" strokeWidth={1.5} />
-                    <span>Enlace copiado</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4" strokeWidth={1.5} />
-                    <span>Copiar enlace</span>
-                  </>
+                {/* Desplegable de redes sociales */}
+                {shareOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute top-full mt-2 left-0 w-48 rounded-xl border border-white/10 bg-black/90 backdrop-blur-md shadow-xl z-50 overflow-hidden"
+                  >
+                    {SOCIAL_PLATFORMS.map((platform) => {
+                      const Icon = platform.icon
+                      return (
+                        <button
+                          key={platform.id}
+                          type="button"
+                          onClick={() => handleShareTo(platform.id)}
+                          className="w-full flex items-center gap-3 px-4 py-3 text-xs text-white/70 hover:text-white/90 hover:bg-white/10 transition-all"
+                        >
+                          <Icon className="w-4 h-4" strokeWidth={1.5} />
+                          <span>{platform.name}</span>
+                        </button>
+                      )
+                    })}
+                    <button
+                      type="button"
+                      onClick={handleCopyLink}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-xs text-white/70 hover:text-white/90 hover:bg-white/10 transition-all border-t border-white/5"
+                    >
+                      <Copy className="w-4 h-4" strokeWidth={1.5} />
+                      <span>Copiar enlace</span>
+                    </button>
+                  </motion.div>
                 )}
-              </button>
+              </div>
 
               <button
                 type="button"
@@ -2279,38 +2344,38 @@ const FraseDelDiaPage = () => {
                 </p>
               </div>
 
-              <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 max-w-3xl mx-auto">
+              <div className="mt-7 grid grid-cols-3 gap-3 sm:gap-5 max-w-3xl mx-auto">
                 <button
                   type="button"
                   onClick={() => handleDonate(20)}
-                  className="group relative aspect-square sm:aspect-auto sm:h-40 flex flex-col items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                  className="group relative h-32 sm:h-40 flex flex-col items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
                 >
-                  <div className="text-xs uppercase tracking-widest text-white/40 group-hover:text-white/60 transition-colors">Aporte</div>
-                  <div className="mt-2 text-3xl sm:text-4xl text-white/90 font-light group-hover:text-white transition-colors">$20</div>
-                  <div className="mt-1 text-xs text-white/50 group-hover:text-white/70 transition-colors">MXN</div>
+                  <div className="text-[9px] sm:text-xs uppercase tracking-widest text-white/40 group-hover:text-white/60 transition-colors">Aporte</div>
+                  <div className="mt-1 sm:mt-2 text-2xl sm:text-4xl text-white/90 font-light group-hover:text-white transition-colors">$20</div>
+                  <div className="mt-0.5 sm:mt-1 text-[9px] sm:text-xs text-white/50 group-hover:text-white/70 transition-colors">MXN</div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleDonate(50)}
-                  className="group relative aspect-square sm:aspect-auto sm:h-40 flex flex-col items-center justify-center rounded-xl border-2 border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/15 hover:border-emerald-500/60 transition-all duration-300 sm:scale-105"
+                  className="group relative h-32 sm:h-40 flex flex-col items-center justify-center rounded-xl border-2 border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/15 hover:border-emerald-500/60 transition-all duration-300 sm:scale-105"
                 >
-                  <div className="absolute top-2 right-2 text-[9px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-200/90">
+                  <div className="absolute top-1 right-1 sm:top-2 sm:right-2 text-[7px] sm:text-[9px] uppercase tracking-widest px-1.5 sm:px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-200/90">
                     Popular
                   </div>
-                  <div className="text-xs uppercase tracking-widest text-emerald-200/60 group-hover:text-emerald-200/80 transition-colors">Aporte</div>
-                  <div className="mt-2 text-4xl sm:text-5xl text-white/95 font-light group-hover:text-white transition-colors">$50</div>
-                  <div className="mt-1 text-xs text-emerald-200/60 group-hover:text-emerald-200/80 transition-colors">MXN</div>
+                  <div className="text-[9px] sm:text-xs uppercase tracking-widest text-emerald-200/60 group-hover:text-emerald-200/80 transition-colors">Aporte</div>
+                  <div className="mt-1 sm:mt-2 text-2xl sm:text-5xl text-white/95 font-light group-hover:text-white transition-colors">$50</div>
+                  <div className="mt-0.5 sm:mt-1 text-[9px] sm:text-xs text-emerald-200/60 group-hover:text-emerald-200/80 transition-colors">MXN</div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleDonate(100)}
-                  className="group relative aspect-square sm:aspect-auto sm:h-40 flex flex-col items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                  className="group relative h-32 sm:h-40 flex flex-col items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
                 >
-                  <div className="text-xs uppercase tracking-widest text-white/40 group-hover:text-white/60 transition-colors">Aporte</div>
-                  <div className="mt-2 text-3xl sm:text-4xl text-white/90 font-light group-hover:text-white transition-colors">$100</div>
-                  <div className="mt-1 text-xs text-white/50 group-hover:text-white/70 transition-colors">MXN</div>
+                  <div className="text-[9px] sm:text-xs uppercase tracking-widest text-white/40 group-hover:text-white/60 transition-colors">Aporte</div>
+                  <div className="mt-1 sm:mt-2 text-2xl sm:text-4xl text-white/90 font-light group-hover:text-white transition-colors">$100</div>
+                  <div className="mt-0.5 sm:mt-1 text-[9px] sm:text-xs text-white/50 group-hover:text-white/70 transition-colors">MXN</div>
                 </button>
               </div>
 
