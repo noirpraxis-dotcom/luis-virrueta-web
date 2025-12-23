@@ -34,6 +34,8 @@ const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'))
 const TermsConditionsPage = lazy(() => import('./pages/TermsConditionsPage'))
 const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage'))
 const VocationalTestPage = lazy(() => import('./pages/VocationalTestPage'))
+const FraseDelDiaPage = lazy(() => import('./pages/FraseDelDiaPage'))
+const AtlasHumanidadPage = lazy(() => import('./pages/AtlasHumanidadPage'))
 
 // Loading component
 const PageLoader = () => (
@@ -61,7 +63,7 @@ const AppContent = () => {
 
   const AppShell = () => {
     const location = useLocation()
-    const hideGlobalHeader = location.pathname.startsWith('/test-vocacional/iniciar')
+    const hideGlobalHeader = location.pathname.startsWith('/test-vocacional/iniciar') || location.pathname === '/frase-del-dia' || location.pathname === '/atlas-humanidad'
 
     return (
       <div className="relative min-h-screen">
@@ -155,10 +157,19 @@ const AppContent = () => {
 
               {/* Test Vocacional */}
               <Route path="/test-vocacional" element={
-                <VocationalTestPage />
+                <VocationalTestPage key="vocational-landing" />
               } />
               <Route path="/test-vocacional/iniciar" element={
-                <VocationalTestPage initialStage="test" />
+                <VocationalTestPage key="vocational-start" initialStage="test" />
+              } />
+
+              {/* Herramientas */}
+              <Route path="/frase-del-dia" element={
+                <FraseDelDiaPage />
+              } />
+
+              <Route path="/atlas-humanidad" element={
+                <AtlasHumanidadPage />
               } />
 
               {/* Página Inversión: Precios premium */}
