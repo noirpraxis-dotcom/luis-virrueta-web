@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useMemo, useRef, useState } from 'react'
-import { Share2, Copy, CheckCircle, ChevronDown, Quote, ArrowLeft, Home, Lightbulb, HelpCircle } from 'lucide-react'
+import { Share2, Copy, CheckCircle, ChevronDown, Quote, ArrowLeft, Home, Lightbulb, HelpCircle, Coffee } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 const MEXICO_TZ = 'America/Mexico_City'
@@ -52,6 +52,16 @@ const getEffectiveMexicoDateKey = () => {
 const parseDateKeyToParts = (key) => {
   const [yy, mm, dd] = String(key).split('-').map((x) => Number(x))
   return { y: yy, m: mm, d: dd }
+}
+
+const START_DATE_KEY = '2025-12-23'
+
+const mod = (n, m) => ((n % m) + m) % m
+
+const daysBetweenUtcDates = (a, b) => {
+  const aUtc = Date.UTC(a.y, a.m - 1, a.d)
+  const bUtc = Date.UTC(b.y, b.m - 1, b.d)
+  return Math.floor((aUtc - bUtc) / 86400000)
 }
 
 const PHRASES = [
@@ -232,10 +242,10 @@ const PHRASES = [
   },
   {
     id: '026',
-    quote: 'El sufrimiento es opcional, el dolor es inevitable.',
+    quote: 'La paz no llega cuando desaparece el dolor, sino cuando dejas de añadirle historia.',
     author: 'Buda',
-    meaning: 'El dolor viene solo; el sufrimiento lo añades tú con tu resistencia. Aceptar el dolor no es masoquismo: es dejar de pelear contra lo que ya es.',
-    questions: ['¿Dónde estás resistiendo algo inevitable?', '¿Qué pasaría si aceptaras en lugar de luchar?']
+    meaning: 'El dolor es una sensación; el sufrimiento es la narrativa que construyes encima. Cuando dejas de pelear con lo inevitable y sueltas la historia de “esto no debería estar pasando”, aparece espacio interno. No es resignación: es claridad.',
+    questions: ['¿Qué historia estás contando sobre tu dolor?', '¿Qué cambia si solo observas lo que sientes sin discutir con ello?']
   },
   {
     id: '027',
@@ -246,10 +256,10 @@ const PHRASES = [
   },
   {
     id: '028',
-    quote: 'La única forma de dar sentido a la libertad es ejercerla.',
+    quote: 'La existencia precede a la esencia.',
     author: 'Jean-Paul Sartre',
-    meaning: 'Libertad no es concepto: es acto. No eres libre porque puedas elegir; eres libre cuando eliges. Y cada elección te define.',
-    questions: ['¿Dónde finges no tener opciones?', '¿Qué elegirías si te sintieras libre de verdad?']
+    meaning: 'No vienes “terminado”. Primero existes, luego te construyes con tus decisiones. La identidad no es una etiqueta fija: es una obra en proceso. Evitar elegir también es elegir, y te convierte en alguien por defecto.',
+    questions: ['¿Qué parte de ti estás esperando “descubrir” en lugar de crear?', '¿Qué decisión concreta definiría quién quieres ser?']
   },
   {
     id: '029',
@@ -946,10 +956,10 @@ const PHRASES = [
   },
   {
     id: '128',
-    quote: 'El problema no es el problema. El problema es tu actitud sobre el problema.',
+    quote: 'Si eliges el miedo, el mar se vuelve prisión; si eliges el rumbo, se vuelve camino.',
     author: 'Jack Sparrow',
-    meaning: 'Los hechos son neutrales. Tu interpretación los carga. El problema real no está afuera: está en cómo lo miras.',
-    questions: ['¿Qué problema se volvería menor si cambiaras tu actitud?', '¿Puedes verlo desde otra perspectiva?']
+    meaning: 'La realidad es la misma, pero tu postura cambia el mapa. Cuando reaccionas desde el miedo, todo se siente amenaza; cuando eliges dirección, incluso el caos se vuelve navegación. No controlas las olas, pero sí el timón.',
+    questions: ['¿Qué emoción está sosteniendo tu “problema” hoy: miedo o rumbo?', '¿Cuál es el siguiente paso pequeño que te devuelve el timón?']
   },
   {
     id: '129',
@@ -1104,16 +1114,717 @@ const PHRASES = [
     author: 'Dalai Lama',
     meaning: 'No esperes que te llegue. La felicidad se construye con actos diarios. Cada decisión es un ladrillo de felicidad o sufrimiento.',
     questions: ['¿Qué acciones diarias te hacen feliz?', '¿Estás construyendo felicidad o destruyéndola?']
+  },
+  {
+    id: '151',
+    quote: 'La disciplina es una forma amable de no traicionarte.',
+    author: 'Tradición estoica',
+    meaning: 'La disciplina no es castigo: es cuidado. Cuando sostienes un hábito, te pruebas que tu palabra interna vale. Eso reduce la ansiedad porque te vuelves confiable para ti.',
+    questions: ['¿En qué te prometes cosas y luego te abandonas?', '¿Qué hábito pequeño te devolvería confianza?']
+  },
+  {
+    id: '152',
+    quote: 'Lo que llamas pereza a veces es miedo sin nombre.',
+    author: 'Psicología profunda',
+    meaning: 'La inercia suele protegerte de una pérdida: fracaso, crítica, exposición o éxito. Cuando nombras el miedo real, la energía regresa. Sin nombre, se vuelve niebla.',
+    questions: ['¿Qué miedo podría estar escondido detrás de tu postergación?', '¿Qué pasaría si lo nombraras en voz alta?']
+  },
+  {
+    id: '153',
+    quote: 'El silencio no es vacío: es espacio para que aparezca lo real.',
+    author: 'Tradición zen',
+    meaning: 'Cuando bajas el ruido interno, la vida deja de ser teoría y vuelve a ser presencia. En el silencio, lo esencial se escucha sin esfuerzo. No se fabrica: se revela.',
+    questions: ['¿Qué ruido usas para no sentir?', '¿Qué verdad aparece cuando te quedas quieto?']
+  },
+  {
+    id: '154',
+    quote: 'Eres responsable de tu vida incluso cuando no la elegiste así.',
+    author: 'Filosofía existencial',
+    meaning: 'No elegiste muchas condiciones, pero sí decides qué haces con ellas. La responsabilidad no es culpa: es poder. Recuperas agencia cuando dejas de esperar permiso.',
+    questions: ['¿Qué parte de tu vida atribuyes solo a la suerte?', '¿Qué decisión concreta te devolvería poder hoy?']
+  },
+  {
+    id: '155',
+    quote: 'No es la emoción la que te rompe, es tu historia sobre ella.',
+    author: 'Terapia cognitiva',
+    meaning: 'Sentir es inevitable; interpretar es opcional. Cuando crees que la emoción significa peligro, la amplificas. Cuando la observas como señal, se regula.',
+    questions: ['¿Qué emoción te asusta más?', '¿Qué historia le estás pegando encima?']
+  },
+  {
+    id: '156',
+    quote: 'Tu cerebro repite lo conocido, no lo sano.',
+    author: 'Neurociencia',
+    meaning: 'Lo familiar se siente seguro aunque duela. Por eso vuelves a patrones viejos: el sistema nervioso prefiere previsibilidad. La sanación requiere tolerar lo nuevo.',
+    questions: ['¿Qué patrón repites por ser familiar?', '¿Qué novedad te incomoda pero te haría bien?']
+  },
+  {
+    id: '157',
+    quote: 'El amor crece donde el control se suelta.',
+    author: 'Mística sufí',
+    meaning: 'El control nace del miedo. Cuando sueltas el control, dejas espacio para confiar, escuchar y relacionarte con lo vivo. Amar es abrir la mano, no cerrar el puño.',
+    questions: ['¿Dónde intentas controlar para no sufrir?', '¿Qué relación mejoraría si soltaras un poco?']
+  },
+  {
+    id: '158',
+    quote: 'Cuando fuerzas, pierdes; cuando fluyes, sostienes.',
+    author: 'Taoísmo',
+    meaning: 'Forzar consume y rompe. Fluir no es pasividad: es inteligencia que se adapta. La fuerza verdadera es la que no se exhibe; se administra.',
+    questions: ['¿Qué estás forzando en tu vida?', '¿Cómo se vería un paso más suave pero constante?']
+  },
+  {
+    id: '159',
+    quote: 'La claridad no llega primero; llega después de actuar con honestidad.',
+    author: 'Anónimo',
+    meaning: 'Esperar claridad total suele ser una forma elegante de evitar. Cuando actúas alineado, el camino se ordena. La claridad es resultado, no requisito.',
+    questions: ['¿Qué estás esperando entender para moverte?', '¿Qué acción honesta podrías hacer sin garantías?']
+  },
+  {
+    id: '160',
+    quote: 'La autoestima se construye con actos que te respetan.',
+    author: 'Psicología humanista',
+    meaning: 'No se trata de repetirte frases: se trata de tratarte bien en lo cotidiano. Tu mente cree lo que tu conducta demuestra. El respeto propio es práctica, no discurso.',
+    questions: ['¿Qué conducta tuya te falta al respeto?', '¿Qué acto pequeño te honraría hoy?']
+  },
+  {
+    id: '161',
+    quote: 'La libertad es elegir tu respuesta, no controlar el resultado.',
+    author: 'Tradición estoica',
+    meaning: 'La paz aparece cuando inviertes energía en lo que sí depende de ti. Controlar el resultado es ansiedad; elegir tu respuesta es dignidad. Ahí vive tu fuerza.',
+    questions: ['¿Qué resultado intentas controlar obsesivamente?', '¿Qué respuesta depende solo de ti?']
+  },
+  {
+    id: '162',
+    quote: 'La sombra no desaparece; se integra o se proyecta.',
+    author: 'Psicología profunda',
+    meaning: 'Lo que niegas busca salida por otro lado: juicio, envidia, superioridad o desprecio. Integrar no es justificar, es reconocer para dejar de actuar a ciegas.',
+    questions: ['¿Qué parte tuya te cuesta admitir?', '¿En quién la proyectas más?']
+  },
+  {
+    id: '163',
+    quote: 'Si puedes estar presente con el dolor, el dolor se vuelve maestro.',
+    author: 'Tradición zen',
+    meaning: 'El dolor pide atención, no pelea. Cuando lo acompañas sin huir, deja de ser enemigo y se vuelve información. La presencia transforma la experiencia.',
+    questions: ['¿Qué dolor estás evitando sentir?', '¿Cómo sería quedarte con él un minuto sin historia?']
+  },
+  {
+    id: '164',
+    quote: 'No elegir también es una elección con consecuencias.',
+    author: 'Filosofía existencial',
+    meaning: 'La indecisión no te deja neutral: te deja dirigido por la inercia. Cuando no eliges, alguien o algo elige por ti. Elegir es asumir el costo de vivir.',
+    questions: ['¿Qué decisión llevas posponiendo?', '¿Qué costo oculto estás pagando por no elegir?']
+  },
+  {
+    id: '165',
+    quote: 'Tu mente busca pruebas; tu vida necesita dirección.',
+    author: 'Terapia cognitiva',
+    meaning: 'Puedes pasar años buscando certeza para moverte. Pero la dirección se define por valores, no por pruebas perfectas. Actuar con valores reduce la rumiación.',
+    questions: ['¿Qué certeza estás exigiendo para avanzar?', '¿Qué valor podría guiarte hoy sin certeza?']
+  },
+  {
+    id: '166',
+    quote: 'Tu sistema nervioso confunde calma con peligro si solo conoció caos.',
+    author: 'Neurociencia',
+    meaning: 'La calma puede sentirse extraña cuando has vivido en alerta. Por eso buscas drama sin querer. Reentrenar el cuerpo para la calma es parte de sanar.',
+    questions: ['¿Dónde te incomoda la calma?', '¿Qué práctica te ayudaría a tolerar tranquilidad?']
+  },
+  {
+    id: '167',
+    quote: 'Quien se ama no se abandona para ser aceptado.',
+    author: 'Mística sufí',
+    meaning: 'La pertenencia verdadera no exige traición interna. Si te abandonas para encajar, pagas con vacío. Amar es permanecer contigo incluso cuando tiemblas.',
+    questions: ['¿Dónde te traicionas para encajar?', '¿Qué dirías si te eligieras primero?']
+  },
+  {
+    id: '168',
+    quote: 'Lo blando vence porque dura.',
+    author: 'Taoísmo',
+    meaning: 'Lo rígido se quiebra; lo flexible se adapta. La suavidad no es debilidad: es estrategia de supervivencia. La constancia suave cambia más que el golpe fuerte.',
+    questions: ['¿Dónde estás siendo demasiado rígido?', '¿Qué flexibilidad te daría más paz y eficacia?']
+  },
+  {
+    id: '169',
+    quote: 'La paz no se encuentra: se practica.',
+    author: 'Anónimo',
+    meaning: 'La paz no es un evento futuro, es una forma de relacionarte con lo que pasa. Practicar paz es elegir respiración, límites y presencia cuando el caos te llama.',
+    questions: ['¿Qué hábito te roba paz todos los días?', '¿Qué práctica mínima la recuperaría?']
+  },
+  {
+    id: '170',
+    quote: 'Tu valor no sube cuando logras; se revela cuando te cuidas.',
+    author: 'Psicología humanista',
+    meaning: 'No te vuelves digno por producir. Tu dignidad ya está; se vuelve visible cuando te tratas con respeto. Cuidarte es recordarte que importas.',
+    questions: ['¿Qué crees que debes lograr para merecer amor?', '¿Cómo sería tratarte como alguien valioso hoy?']
+  },
+  {
+    id: '171',
+    quote: 'El hábito correcto hoy le quita poder al arrepentimiento mañana.',
+    author: 'Tradición estoica',
+    meaning: 'El arrepentimiento suele nacer de pequeñas omisiones repetidas. Hacer lo correcto en lo pequeño construye carácter. El carácter te sostiene cuando el ánimo falla.',
+    questions: ['¿Qué pequeña omisión se está acumulando?', '¿Qué hábito simple corregiría el rumbo?']
+  },
+  {
+    id: '172',
+    quote: 'La compulsión intenta darte control donde hubo impotencia.',
+    author: 'Psicología profunda',
+    meaning: 'Cuando una herida deja sensación de impotencia, la mente busca rituales para sentir control. El problema es que el ritual se vuelve cárcel. Sanar es recuperar seguridad interna.',
+    questions: ['¿Qué conducta repetitiva te calma por un momento?', '¿Qué herida de impotencia podría estar detrás?']
+  },
+  {
+    id: '173',
+    quote: 'Respira: la vida ocurre a esta velocidad.',
+    author: 'Tradición zen',
+    meaning: 'El cuerpo siempre vive en presente. La mente se adelanta o se atrasa. Volver a la respiración es volver a lo real, donde sí puedes actuar.',
+    questions: ['¿Dónde se fue tu mente ahora mismo?', '¿Qué cambia si vuelves a tu respiración por 10 segundos?']
+  },
+  {
+    id: '174',
+    quote: 'Tu identidad no es un destino; es una responsabilidad en construcción.',
+    author: 'Filosofía existencial',
+    meaning: 'No eres una etiqueta fija. Eres un conjunto de elecciones sostenidas. Puedes reinventarte sin negar tu historia: cambiando lo que alimentas cada día.',
+    questions: ['¿Qué etiqueta te limita?', '¿Qué elección diaria podría reescribirla?']
+  },
+  {
+    id: '175',
+    quote: 'No todo pensamiento merece tu atención completa.',
+    author: 'Terapia cognitiva',
+    meaning: 'Tu mente produce contenido constantemente, como una radio. Aprender a no creerle todo es higiene mental. La atención es tu recurso más caro.',
+    questions: ['¿Qué pensamiento te roba más atención?', '¿Qué pasaría si lo dejaras pasar sin discutir con él?']
+  },
+  {
+    id: '176',
+    quote: 'La ansiedad es un cuerpo pidiendo seguridad, no una mente pidiendo más información.',
+    author: 'Neurociencia',
+    meaning: 'Investigar y pensar más no siempre calma. A veces lo que falta es regulación: sueño, comida, movimiento, respiración y vínculo. Calmar el cuerpo aclara la mente.',
+    questions: ['¿Qué necesita tu cuerpo hoy para sentirse seguro?', '¿Qué hábito básico has descuidado?']
+  },
+  {
+    id: '177',
+    quote: 'La gratitud es humildad ante lo que ya sostiene tu vida.',
+    author: 'Mística sufí',
+    meaning: 'Agradecer no es negar el dolor. Es reconocer el soporte que ya existe: aire, cuerpo, alguien, un momento. Esa humildad ablanda el corazón y te devuelve suelo.',
+    questions: ['¿Qué te sostiene que ya no miras?', '¿Qué cambia si lo agradeces hoy?']
+  },
+  {
+    id: '178',
+    quote: 'Si te adaptas sin darte cuenta, te pierdes sin ruido.',
+    author: 'Taoísmo',
+    meaning: 'Adaptarte es útil; adaptarte traicionándote es peligroso. Sin conciencia, la vida te moldea hasta que ya no sabes qué querías. La atención es tu ancla.',
+    questions: ['¿En qué te adaptaste perdiéndote?', '¿Qué parte tuya necesitas recuperar?']
+  },
+  {
+    id: '179',
+    quote: 'No necesitas más tiempo; necesitas menos fuga.',
+    author: 'Anónimo',
+    meaning: 'La vida se va en escapes: scroll, preocupación, perfeccionismo, comparación. Recuperar tiempo es recuperar presencia. Menos fuga, más vida.',
+    questions: ['¿Cuál es tu fuga favorita?', '¿Qué harías si recuperaras una hora diaria de presencia?']
+  },
+  {
+    id: '180',
+    quote: 'La ternura contigo es una decisión valiente.',
+    author: 'Psicología humanista',
+    meaning: 'Ser duro contigo parece disciplina, pero a menudo es miedo. La ternura no te vuelve débil: te vuelve sostenible. Nadie florece bajo insultos constantes.',
+    questions: ['¿Cómo te hablas cuando fallas?', '¿Qué cambiaría si te hablaras como a alguien que amas?']
+  },
+  {
+    id: '181',
+    quote: 'No pidas paz a un día que construyes con prisa.',
+    author: 'Tradición estoica',
+    meaning: 'La paz es consecuencia de ritmo y prioridad. Si vives apurado por demostrar, la mente no descansa. Elegir ritmo es elegir vida.',
+    questions: ['¿Qué te empuja a vivir con prisa?', '¿Qué una sola cosa podrías hacer más lento hoy?']
+  },
+  {
+    id: '182',
+    quote: 'La herida busca escenario; la conciencia busca salida.',
+    author: 'Psicología profunda',
+    meaning: 'Sin conciencia, repites la herida en nuevas personas y situaciones. Con conciencia, puedes interrumpir el guion. No se trata de culpar, sino de despertar.',
+    questions: ['¿Qué guion repites en tus relaciones?', '¿Qué señal temprana podrías observar para detenerlo?']
+  },
+  {
+    id: '183',
+    quote: 'Lo simple se vuelve profundo cuando lo haces completo.',
+    author: 'Tradición zen',
+    meaning: 'Hacer una cosa completa es meditación. Comer, caminar, escuchar: si estás ahí, se vuelve profundo. La profundidad no está en lo raro, sino en la presencia.',
+    questions: ['¿Qué haces a medias casi siempre?', '¿Cómo sería hacerlo completo una sola vez hoy?']
+  },
+  {
+    id: '184',
+    quote: 'Tus valores aparecen cuando nadie te obliga.',
+    author: 'Filosofía existencial',
+    meaning: 'Los valores no son declaraciones: son patrones. Se ven en lo que haces cuando podrías no hacerlo. Ahí se revela quién eres y qué sostienes.',
+    questions: ['¿Qué haces cuando nadie te mira?', '¿Qué valor real se revela en tus actos?']
+  },
+  {
+    id: '185',
+    quote: 'La mente catastrófica habla en futuro; la realidad vive en ahora.',
+    author: 'Terapia cognitiva',
+    meaning: 'La catástrofe es imaginación con urgencia. Volver al ahora corta el combustible del miedo. Pregúntate: ¿qué es cierto aquí, hoy?',
+    questions: ['¿Qué historia futura te está asustando?', '¿Qué evidencia tienes en el presente?']
+  },
+  {
+    id: '186',
+    quote: 'Regulación no es calma perfecta; es volver más rápido.',
+    author: 'Neurociencia',
+    meaning: 'No se trata de no caer en estrés, sino de recuperar equilibrio. Cada vez que vuelves, entrenas tu sistema. Volver es progreso.',
+    questions: ['¿Qué te ayuda a volver cuando te desbordas?', '¿Qué práctica podrías repetir a diario para entrenarlo?']
+  },
+  {
+    id: '187',
+    quote: 'La devoción es atención sostenida a lo que amas.',
+    author: 'Mística sufí',
+    meaning: 'Amar no es sentir bonito; es cuidar lo importante con constancia. La devoción ordena tu vida porque decide dónde va tu energía. Lo amado se vuelve centro.',
+    questions: ['¿Qué dices que amas pero no cuidas?', '¿Cómo se vería dedicarle atención real esta semana?']
+  },
+  {
+    id: '188',
+    quote: 'Cuando te alineas, el esfuerzo se vuelve dirección.',
+    author: 'Taoísmo',
+    meaning: 'No todo esfuerzo es avance. Alinearte con lo esencial hace que el mismo esfuerzo rinda más. La vida se simplifica cuando dejas de empujar contra ti.',
+    questions: ['¿En qué estás empujando contra ti mismo?', '¿Qué decisión te alinearía con lo esencial?']
+  },
+  {
+    id: '189',
+    quote: 'No es tarde: es ahora.',
+    author: 'Anónimo',
+    meaning: 'El pensamiento de tarde suele ser vergüenza. El ahora es acción. La vida no se arregla en un salto; se reencamina con una decisión honesta repetida.',
+    questions: ['¿Qué te dices que ya es tarde para hacer?', '¿Qué primer paso pequeño aún es posible hoy?']
+  },
+  {
+    id: '190',
+    quote: 'Ser fuerte también es pedir ayuda a tiempo.',
+    author: 'Psicología humanista',
+    meaning: 'La autosuficiencia extrema a veces es defensa. Pedir ayuda no te quita valor: te devuelve vínculo. El apoyo correcto reduce sufrimiento innecesario.',
+    questions: ['¿Qué estás cargando solo por orgullo o miedo?', '¿A quién podrías pedir ayuda hoy?']
+  },
+  {
+    id: '191',
+    quote: 'Lo que depende de ti merece tu energía; lo demás, tu serenidad.',
+    author: 'Tradición estoica',
+    meaning: 'La serenidad no es indiferencia: es enfoque. Cuando distingues control de no control, dejas de desperdiciar vida. Esa distinción es libertad práctica.',
+    questions: ['¿Qué no depende de ti y aun así te consume?', '¿Qué sí depende de ti y has descuidado?']
+  },
+  {
+    id: '192',
+    quote: 'La vergüenza te dice que eres malo; la culpa sana te dice que puedes mejorar.',
+    author: 'Psicología profunda',
+    meaning: 'La vergüenza paraliza porque ataca identidad. La culpa funcional guía conducta. Diferenciar ambas te permite reparar sin destruirte.',
+    questions: ['¿Qué error estás convirtiendo en identidad?', '¿Qué reparación concreta sí está en tus manos?']
+  },
+  {
+    id: '193',
+    quote: 'Una respiración consciente puede salvar un día entero.',
+    author: 'Tradición zen',
+    meaning: 'No es magia: es fisiología y presencia. Una respiración cambia tu química y tu perspectiva. Cuando vuelves al cuerpo, el drama pierde volumen.',
+    questions: ['¿Qué momento del día necesitas pausar?', '¿Puedes tomar tres respiraciones conscientes ahora mismo?']
+  },
+  {
+    id: '194',
+    quote: 'Si no eliges tu sentido, otro te lo asigna.',
+    author: 'Filosofía existencial',
+    meaning: 'La cultura, la familia o el miedo pueden elegir por ti. Elegir sentido es acto de madurez. No se trata de encontrar, sino de comprometerte.',
+    questions: ['¿Quién está eligiendo tu sentido hoy?', '¿Qué sentido elegirías si nadie opinara?']
+  },
+  {
+    id: '195',
+    quote: 'Tu pensamiento favorito puede ser tu trampa favorita.',
+    author: 'Terapia cognitiva',
+    meaning: 'Hay ideas que te dan identidad y control, pero también te encierran. Cuestionarlas da miedo porque pierdes suelo. Pero a veces ese suelo era jaula.',
+    questions: ['¿Qué idea sobre ti repites sin revisar?', '¿Qué posibilidad aparece si la sueltas?']
+  },
+  {
+    id: '196',
+    quote: 'El cuerpo aprende por repetición, no por intención.',
+    author: 'Neurociencia',
+    meaning: 'Querer no basta: entrenar sí. La repetición crea rutas nuevas y las vuelve automáticas. La constancia es una forma de neuroplasticidad aplicada.',
+    questions: ['¿Qué quieres cambiar solo con intención?', '¿Qué repetición diaria lo entrenaría?']
+  },
+  {
+    id: '197',
+    quote: 'La belleza aparece cuando dejas de pedirle a la vida que sea otra.',
+    author: 'Mística sufí',
+    meaning: 'La belleza no siempre es cómoda. A veces es aceptación. Cuando te rindes a lo real, aparece una paz extraña y luminosa: la de no pelear más.',
+    questions: ['¿Qué realidad sigues rechazando?', '¿Qué belleza podría haber si la aceptaras?']
+  },
+  {
+    id: '198',
+    quote: 'El río no discute con la roca: aprende la forma de pasar.',
+    author: 'Taoísmo',
+    meaning: 'Hay obstáculos que no se vencen con choque, sino con camino. La inteligencia flexible encuentra ruta sin perder esencia. Persistir no siempre es empujar.',
+    questions: ['¿Qué roca estás intentando vencer a golpes?', '¿Qué ruta alternativa existe si te vuelves agua?']
+  },
+  {
+    id: '199',
+    quote: 'El descanso también es productividad cuando te devuelve presencia.',
+    author: 'Anónimo',
+    meaning: 'Descansar no es perder el tiempo: es recuperar capacidad. Sin descanso, el esfuerzo se vuelve torpe y reactivo. Descansar bien es pensar mejor.',
+    questions: ['¿Qué parte de ti está agotada?', '¿Qué descanso real necesitas (no solo distracción)?']
+  },
+  {
+    id: '200',
+    quote: 'Tu vida interior merece el mismo cuidado que tu imagen.',
+    author: 'Psicología humanista',
+    meaning: 'Cuidar tu imagen sin cuidar tu interior crea disonancia y ansiedad. Cuando alineas interior y exterior, la vida se simplifica. Lo interno se siente en todo.',
+    questions: ['¿Qué cuidas mucho hacia afuera?', '¿Qué necesitas cuidar por dentro con la misma dedicación?']
+  },
+  {
+    id: '201',
+    quote: 'Tu carácter se ve en lo que haces cuando no tienes ganas.',
+    author: 'Tradición estoica',
+    meaning: 'La emoción cambia; el carácter permanece. Elegir lo correcto sin ganas es músculo moral. No se trata de dureza, sino de coherencia.',
+    questions: ['¿Qué hábito sueltas cuando baja la motivación?', '¿Qué mínimo sostendrías para ser coherente?']
+  },
+  {
+    id: '202',
+    quote: 'La idealización es una forma de no ver.',
+    author: 'Psicología profunda',
+    meaning: 'Idealizar te protege del dolor de lo real, pero también te impide amar de verdad. Ver es perder fantasía y ganar relación. La madurez empieza al mirar completo.',
+    questions: ['¿A quién o qué idealizas hoy?', '¿Qué parte real estás evitando ver?']
+  },
+  {
+    id: '203',
+    quote: 'La mente se calma cuando el cuerpo se siente a salvo.',
+    author: 'Tradición zen',
+    meaning: 'El cuerpo es tu primer hogar. Si el hogar está en alerta, la mente no descansa. Presencia es enviarle al cuerpo el mensaje: aquí, ahora, estamos bien.',
+    questions: ['¿Qué señal de seguridad necesita tu cuerpo hoy?', '¿Qué gesto simple podrías hacer para dársela?']
+  },
+  {
+    id: '204',
+    quote: 'Tu vida es tu argumento más honesto.',
+    author: 'Filosofía existencial',
+    meaning: 'Lo que haces habla más que lo que dices creer. La vida revela tus prioridades reales. Si quieres cambiar tu argumento, cambia tu práctica.',
+    questions: ['¿Qué argumenta tu vida hoy sobre tus prioridades?', '¿Qué práctica cambiarías si quisieras otra vida?']
+  },
+  {
+    id: '205',
+    quote: 'Una creencia puede ser solo un hábito de atención.',
+    author: 'Terapia cognitiva',
+    meaning: 'A veces no es que la creencia sea verdadera, es que siempre miras el mismo ángulo. Cambiar atención cambia evidencia. Y cambiar evidencia cambia creencia.',
+    questions: ['¿Qué evidencia buscas siempre?', '¿Qué evidencia alternativa podrías mirar por una semana?']
+  },
+  {
+    id: '206',
+    quote: 'Lo que no nombras se queda en el cuerpo.',
+    author: 'Neurociencia',
+    meaning: 'Nombrar una emoción reduce su intensidad. Poner palabras integra experiencia. Callar lo importante mantiene al cuerpo en carga y alerta.',
+    questions: ['¿Qué emoción estás guardando sin nombrar?', '¿Cómo la nombrarías con una sola frase?']
+  },
+  {
+    id: '207',
+    quote: 'La compasión no excusa: comprende y abre camino.',
+    author: 'Mística sufí',
+    meaning: 'Comprender no es permitirlo todo; es ver el dolor detrás del acto. La compasión te da claridad sin odio. Y desde la claridad, eliges mejor.',
+    questions: ['¿A quién te cuesta tener compasión?', '¿Qué sufrimiento podría estar detrás de su conducta?']
+  },
+  {
+    id: '208',
+    quote: 'Lo natural no es siempre fácil, pero sí es más sostenible.',
+    author: 'Taoísmo',
+    meaning: 'Lo sostenido respeta ritmo, descanso y límites. La vida sostenible parece lenta al ego, pero es profunda y real. Lo artificial quema; lo natural madura.',
+    questions: ['¿Qué estás haciendo de forma poco sostenible?', '¿Qué ajuste haría tu vida más natural?']
+  },
+  {
+    id: '209',
+    quote: 'Tus límites enseñan a los demás cómo tratarte.',
+    author: 'Anónimo',
+    meaning: 'Los límites no son paredes: son instrucciones claras. Donde no hay límite, hay resentimiento. Un límite a tiempo evita una explosión después.',
+    questions: ['¿Qué límite estás evitando poner?', '¿Qué resentimiento está creciendo por eso?']
+  },
+  {
+    id: '210',
+    quote: 'Sanar no es olvidar; es dejar de vivir desde esa herida.',
+    author: 'Psicología humanista',
+    meaning: 'La memoria puede quedar, pero el mando cambia de manos. Sanar es que la herida ya no tome el volante. Sigues recordando, pero ya no obedeces.',
+    questions: ['¿Qué herida toma el volante en tu vida?', '¿Qué señal te avisa que estás reaccionando desde ella?']
+  },
+  {
+    id: '211',
+    quote: 'Acepta el clima, entrena tu timón.',
+    author: 'Tradición estoica',
+    meaning: 'No controlas el mar, pero sí tu dirección. La aceptación reduce pelea; el timón reduce deriva. Juntas, te dan dignidad ante lo inevitable.',
+    questions: ['¿Qué clima estás peleando en lugar de aceptar?', '¿Qué decisión sería timón hoy?']
+  },
+  {
+    id: '212',
+    quote: 'La repetición no es mala suerte; es información no escuchada.',
+    author: 'Psicología profunda',
+    meaning: 'El patrón insiste hasta que aprendes. Si no escuchas, se repite con más volumen. La vida te enseña por insistencia cuando no aprende por atención.',
+    questions: ['¿Qué patrón se repite en tu vida?', '¿Qué te está intentando enseñar?']
+  },
+  {
+    id: '213',
+    quote: 'Mira una cosa. Respira. Ya estás aquí.',
+    author: 'Tradición zen',
+    meaning: 'La mente corre para no sentir. Volver a una cosa simple te aterriza. Estar aquí no resuelve todo, pero te devuelve presencia para actuar mejor.',
+    questions: ['¿Qué estás evitando sentir?', '¿Qué objeto puedes mirar ahora por 10 segundos en silencio?']
+  },
+  {
+    id: '214',
+    quote: 'Tu vida cambia cuando cambias lo que toleras.',
+    author: 'Filosofía existencial',
+    meaning: 'Tolerar es firmar contrato sin leer. Lo que toleras se vuelve norma. Cambiar tu vida empieza por no normalizar lo que te apaga.',
+    questions: ['¿Qué toleras que te apaga?', '¿Qué límite o cambio sería coherente con tu dignidad?']
+  },
+  {
+    id: '215',
+    quote: 'No discutas con tu mente cansada.',
+    author: 'Terapia cognitiva',
+    meaning: 'Cuando estás agotado, la mente se vuelve extrema y oscura. No es el momento de decidir tu vida. Descansa, regula y luego piensa: cambia el resultado.',
+    questions: ['¿Qué pensamiento oscuro aparece cuando estás cansado?', '¿Qué necesidad física te falta atender hoy?']
+  },
+  {
+    id: '216',
+    quote: 'Tu atención es tu vida en forma de horas.',
+    author: 'Neurociencia',
+    meaning: 'Donde pones atención, pones existencia. La atención construye identidad y destino por acumulación. Si cambias tu atención, cambias tu vida.',
+    questions: ['¿En qué se va tu atención cada día?', '¿Qué merecería más de tu atención?']
+  },
+  {
+    id: '217',
+    quote: 'Suelta el juicio y verás más mundo.',
+    author: 'Mística sufí',
+    meaning: 'El juicio estrecha la mirada. Cuando sueltas juicio, aparece complejidad y humanidad. Ver más mundo te vuelve menos reactivo y más libre.',
+    questions: ['¿Qué juicio repites con facilidad?', '¿Qué historia alternativa podría ser cierta?']
+  },
+  {
+    id: '218',
+    quote: 'El camino recto no siempre es el camino vivo.',
+    author: 'Taoísmo',
+    meaning: 'La vida no es línea: es curva. A veces el rodeo es la ruta correcta. Lo vivo se adapta; lo rígido se rompe por querer ir solo en línea recta.',
+    questions: ['¿Qué rodeo estás rechazando por orgullo?', '¿Qué aprenderías si aceptaras el proceso?']
+  },
+  {
+    id: '219',
+    quote: 'La honestidad contigo mismo es el inicio de todo cambio.',
+    author: 'Anónimo',
+    meaning: 'Puedes decorar tu vida, pero no puedes engañar tu cuerpo y tu conciencia por mucho tiempo. La honestidad duele al inicio y libera después. Es el precio de la paz.',
+    questions: ['¿Qué verdad evitas admitir?', '¿Qué cambiaría si la aceptaras hoy?']
+  },
+  {
+    id: '220',
+    quote: 'Ser vulnerable es dejar de actuar el personaje que te protege.',
+    author: 'Psicología humanista',
+    meaning: 'El personaje protege, pero también aísla. La vulnerabilidad abre vínculo y creatividad. No es exponerte sin cuidado: es mostrarte con verdad.',
+    questions: ['¿Qué personaje interpretas para sentirte seguro?', '¿Con quién podrías bajar esa armadura?']
+  },
+  {
+    id: '221',
+    quote: 'Perder el control es a veces recuperar la vida.',
+    author: 'Tradición estoica',
+    meaning: 'Controlar todo te quita espontaneidad y descanso. Soltar lo imposible devuelve energía a lo posible. La serenidad crece donde sueltas la obsesión.',
+    questions: ['¿Qué control te está costando paz?', '¿Qué podrías soltar hoy sin que el mundo se caiga?']
+  },
+  {
+    id: '222',
+    quote: 'Si no escuchas tu tristeza, la vida te la grita.',
+    author: 'Psicología profunda',
+    meaning: 'La tristeza ignorada se vuelve irritabilidad, apatía o vacío. Escucharla es permitir duelo y reajuste. La emoción no es enemiga: es guía.',
+    questions: ['¿Qué tristeza has estado tapando?', '¿Qué duelo necesitas permitirte?']
+  },
+  {
+    id: '223',
+    quote: 'La mente no descansa en respuestas; descansa en presencia.',
+    author: 'Tradición zen',
+    meaning: 'Puedes tener mil respuestas y seguir inquieto. La inquietud baja cuando el cuerpo y la atención vuelven al momento. La presencia es descanso verdadero.',
+    questions: ['¿Qué pregunta te obsesiona?', '¿Qué cambia si vuelves al cuerpo en lugar de buscar respuesta?']
+  },
+  {
+    id: '224',
+    quote: 'Si vives para agradar, vivirás para esconder.',
+    author: 'Filosofía existencial',
+    meaning: 'Agradar como prioridad te obliga a mentirte y a mentir. La libertad llega cuando eliges coherencia sobre aprobación. Ser auténtico cuesta, pero libera.',
+    questions: ['¿A quién intentas agradar para sentir valor?', '¿Qué parte tuya escondes por miedo?']
+  },
+  {
+    id: '225',
+    quote: 'La mente ansiosa quiere resolver; el corazón necesita sentir.',
+    author: 'Terapia cognitiva',
+    meaning: 'Resolver no siempre sana. A veces lo que cura es permitir emoción sin explicación perfecta. Sentir completa la experiencia; controlar la fragmenta.',
+    questions: ['¿Qué emoción intentas resolver en lugar de sentir?', '¿Cómo sería permitirla 30 segundos sin arreglarla?']
+  },
+  {
+    id: '226',
+    quote: 'Tu cuerpo es el primer lugar donde se ve la verdad.',
+    author: 'Neurociencia',
+    meaning: 'El cuerpo registra coherencia o contradicción antes que tu discurso. Tensión, nudo, cansancio: son datos. Escuchar al cuerpo evita decisiones contra ti.',
+    questions: ['¿Qué te está diciendo tu cuerpo últimamente?', '¿Qué decisión estás tomando contra esa señal?']
+  },
+  {
+    id: '227',
+    quote: 'La paciencia es confianza aplicada al tiempo.',
+    author: 'Mística sufí',
+    meaning: 'La paciencia no es aguantar: es confiar sin cerrar el corazón. Cuando hay paciencia, hay profundidad. Cuando no, hay prisa y miedo disfrazado.',
+    questions: ['¿Dónde te falta paciencia?', '¿Qué miedo se esconde detrás de tu prisa?']
+  },
+  {
+    id: '228',
+    quote: 'El equilibrio no se conquista una vez: se ajusta cada día.',
+    author: 'Taoísmo',
+    meaning: 'Equilibrio es práctica, no estado permanente. Ajustas como quien afina un instrumento. La vida cambia; tu ajuste también.',
+    questions: ['¿Qué parte de tu vida está desbalanceada?', '¿Qué ajuste pequeño podrías hacer hoy?']
+  },
+  {
+    id: '229',
+    quote: 'Lo que haces en secreto construye tu destino en público.',
+    author: 'Anónimo',
+    meaning: 'Lo invisible se acumula y se vuelve visible. Tus hábitos secretos construyen tu energía, tu carácter y tu vida. El destino es la suma de lo cotidiano.',
+    questions: ['¿Qué hábito secreto te está construyendo o destruyendo?', '¿Qué cambiarías si nadie pudiera verte?']
+  },
+  {
+    id: '230',
+    quote: 'La dignidad es tratarte como alguien que merece cuidado.',
+    author: 'Psicología humanista',
+    meaning: 'No es soberbia: es humanidad. La dignidad se ve en límites, descanso y respeto propio. Cuando te cuidas, el mundo aprende a cuidarte también.',
+    questions: ['¿Dónde te tratas sin dignidad?', '¿Qué cuidado básico te estás negando?']
+  },
+  {
+    id: '231',
+    quote: 'El coraje cotidiano es hacer lo correcto sin aplausos.',
+    author: 'Tradición estoica',
+    meaning: 'La virtud real rara vez es espectacular. Es sobria y constante. Hacer lo correcto sin público construye una paz que ningún aplauso compra.',
+    questions: ['¿Qué acto correcto haces sin reconocimiento?', '¿Qué paz te da esa coherencia?']
+  },
+  {
+    id: '232',
+    quote: 'Tu herida quiere justicia; tu alma quiere paz.',
+    author: 'Psicología profunda',
+    meaning: 'La herida busca compensación y control. El alma busca integración. No siempre obtendrás justicia perfecta; sí puedes elegir paz suficiente para vivir.',
+    questions: ['¿Qué justicia sigues esperando para poder soltar?', '¿Qué paz podrías elegir aunque falte justicia?']
+  },
+  {
+    id: '233',
+    quote: 'La atención plena no elimina problemas; elimina ruido.',
+    author: 'Tradición zen',
+    meaning: 'Con ruido, todo parece enorme. Con atención, distingues lo esencial de lo accesorio. La vida no se vuelve perfecta: se vuelve clara.',
+    questions: ['¿Qué ruido mental te cansa más?', '¿Qué pasa si lo observas sin seguirlo?']
+  },
+  {
+    id: '234',
+    quote: 'Vivir sin elegir es vivir prestado.',
+    author: 'Filosofía existencial',
+    meaning: 'Cuando no eliges, vives según guiones ajenos. Puede verse correcto por fuera y vacío por dentro. Elegir te devuelve autoría sobre tu vida.',
+    questions: ['¿Qué guion ajeno estás viviendo?', '¿Qué elegirías si tu vida fuera tuya de verdad?']
+  },
+  {
+    id: '235',
+    quote: 'El pensamiento es útil, pero no es un hogar.',
+    author: 'Terapia cognitiva',
+    meaning: 'Pensar ayuda a planear, pero vivir solo en la cabeza te desconecta. Tu hogar es el cuerpo y el presente. Vuelve cuando te pierdas.',
+    questions: ['¿Cuándo vives demasiado en tu cabeza?', '¿Qué te ayuda a volver al cuerpo?']
+  },
+  {
+    id: '236',
+    quote: 'Tu cerebro aprende seguridad en relación, no en soledad absoluta.',
+    author: 'Neurociencia',
+    meaning: 'El vínculo regula. Una mirada segura, una voz calmada, una presencia confiable: eso entrena tu sistema. No todo se sana solo; algunas cosas se sanan acompañadas.',
+    questions: ['¿Con quién te sientes verdaderamente seguro?', '¿Qué vínculo necesitas fortalecer?']
+  },
+  {
+    id: '237',
+    quote: 'Donde hay entrega, el miedo pierde autoridad.',
+    author: 'Mística sufí',
+    meaning: 'Entregarte no es rendirte a lo malo; es rendirte a lo real. Cuando sueltas resistencia inútil, el miedo baja. La entrega te devuelve respiración y amplitud.',
+    questions: ['¿Qué miedo gobierna una decisión tuya?', '¿Qué pasaría si te entregaras al proceso sin controlar todo?']
+  },
+  {
+    id: '238',
+    quote: 'La vida te enseña por contraste: escucha lo que te drena.',
+    author: 'Taoísmo',
+    meaning: 'Lo que te drena señala desalineación. No todo drenaje es malo, pero el crónico es mensaje. Escuchar tu energía es escuchar tu verdad.',
+    questions: ['¿Qué te drena de forma constante?', '¿Qué ajuste haría tu vida más alineada?']
+  },
+  {
+    id: '239',
+    quote: 'Tu futuro se decide en lo que haces cuando nadie te empuja.',
+    author: 'Anónimo',
+    meaning: 'Cuando no hay presión externa, aparece tu dirección real. Ahí se construye el futuro: en hábitos elegidos, no en impulsos obligados.',
+    questions: ['¿Qué haces cuando nadie te exige nada?', '¿Qué futuro está construyendo esa conducta?']
+  },
+  {
+    id: '240',
+    quote: 'El amor sano no se negocia con miedo.',
+    author: 'Psicología humanista',
+    meaning: 'El miedo negocia tu dignidad: cede, calla, aguanta. El amor sano cuida y respeta. Si para amar te pierdes, no es amor: es supervivencia.',
+    questions: ['¿Qué aceptas por miedo a perder?', '¿Qué sería amor sano para ti hoy?']
+  },
+  {
+    id: '241',
+    quote: 'La serenidad es valentía sostenida.',
+    author: 'Tradición estoica',
+    meaning: 'Sereno no es anestesiado: es firme. La serenidad sostiene el peso sin dramatizarlo. Es valentía silenciosa.',
+    questions: ['¿En qué situación podrías practicar serenidad hoy?', '¿Qué respuesta valiente pero tranquila sería posible?']
+  },
+  {
+    id: '242',
+    quote: 'Si no te hablas con verdad, tu vida se llena de síntomas.',
+    author: 'Psicología profunda',
+    meaning: 'El síntoma aparece cuando la verdad no encuentra palabras. El cuerpo y la conducta hablan por ti. Poner verdad en palabras reduce la necesidad de síntoma.',
+    questions: ['¿Qué verdad estás evitando decirte?', '¿Qué síntoma o conducta podría estar hablando por ti?']
+  },
+  {
+    id: '243',
+    quote: 'El presente es suficiente para empezar.',
+    author: 'Tradición zen',
+    meaning: 'No necesitas tener todo resuelto para dar el primer paso. Necesitas estar aquí. El presente te da lo mínimo necesario: respiración, intención y un acto.',
+    questions: ['¿Qué te falta para empezar, según tu mente?', '¿Qué sí tienes ahora mismo para dar el primer paso?']
+  },
+  {
+    id: '244',
+    quote: 'Ser libre es dejar de vivir como si tuvieras que justificar tu existencia.',
+    author: 'Filosofía existencial',
+    meaning: 'Justificarte todo el tiempo es vivir en juicio. La libertad aparece cuando eliges vivir desde valores, no desde defensa. Existir no requiere permiso.',
+    questions: ['¿Dónde te sientes obligado a justificarte?', '¿Qué harías si no tuvieras que probar tu valor?']
+  },
+  {
+    id: '245',
+    quote: 'Cuestionar un pensamiento no lo destruye: te devuelve elección.',
+    author: 'Terapia cognitiva',
+    meaning: 'Cuestionar no es pelear contigo: es abrir opciones. Cuando tienes opciones, baja la ansiedad. La elección nace cuando deja de ser todo o nada.',
+    questions: ['¿Qué pensamiento te atrapa en todo o nada?', '¿Qué alternativa más equilibrada podría ser cierta?']
+  },
+  {
+    id: '246',
+    quote: 'Tu cerebro premia lo inmediato, aunque te cueste lo importante.',
+    author: 'Neurociencia',
+    meaning: 'La recompensa inmediata tiene química fuerte. Por eso cuesta sostener lo valioso. Diseñar tu entorno reduce fricción y protege tu intención.',
+    questions: ['¿Qué placer inmediato te está costando lo importante?', '¿Qué ajuste de entorno haría lo valioso más fácil?']
+  },
+  {
+    id: '247',
+    quote: 'La humildad abre puertas internas que el orgullo mantiene cerradas.',
+    author: 'Mística sufí',
+    meaning: 'La humildad no es rebajarte: es dejar de fingir. Cuando no necesitas tener razón todo el tiempo, puedes aprender y sanar. La humildad es libertad del ego.',
+    questions: ['¿Dónde te aferras a tener razón?', '¿Qué podrías aprender si soltaras esa defensa?']
+  },
+  {
+    id: '248',
+    quote: 'El ritmo correcto te hace constante; el ritmo incorrecto te hace brillante y breve.',
+    author: 'Taoísmo',
+    meaning: 'Brillar sin sostener quema. El ritmo correcto se siente humilde, pero dura. La vida se construye con constancia, no con explosiones.',
+    questions: ['¿En qué vas demasiado rápido?', '¿Qué ritmo te permitiría sostenerlo por meses?']
+  },
+  {
+    id: '249',
+    quote: 'Una vida alineada se siente simple, aunque no sea fácil.',
+    author: 'Anónimo',
+    meaning: 'Cuando hay alineación, hay menos negociación interna. Sigues enfrentando retos, pero con menos ruido y más dirección. La simplicidad es señal de coherencia.',
+    questions: ['¿Dónde sientes negociación interna constante?', '¿Qué decisión simplificaría tu vida por alineación?']
+  },
+  {
+    id: '250',
+    quote: 'Tu crecimiento no necesita prisa; necesita verdad y constancia.',
+    author: 'Psicología humanista',
+    meaning: 'La prisa suele venir de comparación. La constancia viene de amor propio. Crecer es proceso: verdad para ver y constancia para sostener.',
+    questions: ['¿Con quién te comparas que te mete prisa?', '¿Qué constancia amorosa podrías practicar sin comparación?']
   }
 ]
 
 const pickPhraseByDateKey = (dateKey) => {
   const { y, m, d } = parseDateKeyToParts(dateKey)
   const doy = clamp(dayOfYear(y, m, d), 1, 366)
-  // Offset para que el día 358 (23 dic 2025) sea la frase #1 (índice 0)
-  // (358 - 358) % 150 = 0
-  const baseOffset = 357
-  const idx = (doy - 1 - baseOffset + PHRASES.length * 10) % PHRASES.length
+  // Mapea fechas a frases usando un inicio fijo:
+  // 2025-12-23 => frase #001 (índice 0)
+  const start = parseDateKeyToParts(START_DATE_KEY)
+  const deltaDays = daysBetweenUtcDates({ y, m, d }, start)
+  const idx = mod(deltaDays, PHRASES.length)
   return { phrase: PHRASES[idx], dayOfYear: doy }
 }
 
@@ -1123,7 +1834,9 @@ const FraseDelDiaPage = () => {
   const meaningRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
 
-  const [copied, setCopied] = useState(false)
+  const [lastAction, setLastAction] = useState(null)
+  const [actionOk, setActionOk] = useState(false)
+  const [customAmount, setCustomAmount] = useState('')
 
   const dateKey = useMemo(() => {
     const params = new URLSearchParams(window.location.search)
@@ -1139,6 +1852,25 @@ const FraseDelDiaPage = () => {
     return `${window.location.origin}${window.location.pathname}?date=${encodeURIComponent(dateKey)}`
   }, [dateKey])
 
+  const donationLinks = useMemo(
+    () => ({
+      20: import.meta.env.VITE_STRIPE_DONATE_20_URL,
+      50: import.meta.env.VITE_STRIPE_DONATE_50_URL,
+      100: import.meta.env.VITE_STRIPE_DONATE_100_URL,
+      custom: import.meta.env.VITE_STRIPE_DONATE_CUSTOM_URL
+    }),
+    [],
+  )
+
+  const notifyOk = (action) => {
+    setLastAction(action)
+    setActionOk(true)
+    window.setTimeout(() => {
+      setActionOk(false)
+      setLastAction(null)
+    }, 1800)
+  }
+
   const handleShare = async () => {
     const title = '1 frase x día'
     const shareText = `"${phrase.quote}" — ${phrase.author}\n\n¿Quieres saber qué significa? Presiona este link: ${shareUrl}`
@@ -1146,6 +1878,7 @@ const FraseDelDiaPage = () => {
     try {
       if (navigator?.share) {
         await navigator.share({ title, text: shareText, url: shareUrl })
+        notifyOk('share')
         return
       }
     } catch {
@@ -1153,23 +1886,40 @@ const FraseDelDiaPage = () => {
     }
 
     try {
-      await navigator.clipboard.writeText(shareText)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1800)
+      await navigator.clipboard.writeText(shareUrl)
+      notifyOk('copy')
     } catch {
       // ignore
     }
   }
 
   const handleCopyLink = async () => {
-    const shareText = `"${phrase.quote}" — ${phrase.author}\n\n¿Quieres saber qué significa? Presiona este link: ${shareUrl}`
     try {
-      await navigator.clipboard.writeText(shareText)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1800)
+      await navigator.clipboard.writeText(shareUrl)
+      notifyOk('copy')
     } catch {
       // ignore
     }
+  }
+
+  const handleDonate = (amount) => {
+    let url
+    if (amount === 'custom') {
+      const n = Number(customAmount)
+      if (!Number.isFinite(n) || n <= 0) return
+      url = donationLinks.custom
+      if (typeof url === 'string' && url.includes('{amount}')) {
+        url = url.replace('{amount}', encodeURIComponent(String(Math.round(n))))
+      }
+    } else {
+      url = donationLinks[amount]
+    }
+
+    if (!url) {
+      window.alert('Falta configurar el link de donación (Stripe).')
+      return
+    }
+    window.open(url, '_blank', 'noopener,noreferrer')
   }
 
   const scrollToMeaning = () => {
@@ -1242,6 +1992,9 @@ const FraseDelDiaPage = () => {
               </motion.span>
               <span className="font-semibold">día</span>
             </h1>
+            <p className="mt-3 text-xs sm:text-sm text-white/50 font-light">
+              Se actualiza todos los días a las 00:00 (hora de México). Regresa mañana para una nueva.
+            </p>
           </motion.div>
 
           <motion.div
@@ -1297,18 +2050,6 @@ const FraseDelDiaPage = () => {
                 </motion.div>
               </div>
             </div>
-
-            {/* Botón de compartir discreto */}
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={isHeroInView ? { opacity: 1 } : {}}
-              transition={{ duration: 0.8, delay: 1.2 }}
-              onClick={handleShare}
-              className="inline-flex items-center gap-2 px-4 py-2 text-xs text-white/50 hover:text-white/80 transition-colors"
-            >
-              <Share2 className="w-4 h-4" strokeWidth={1.5} />
-              <span>Compartir</span>
-            </motion.button>
 
             {/* Botón para ir a significado - elegante y animado */}
             <motion.div
@@ -1447,31 +2188,127 @@ const FraseDelDiaPage = () => {
             </motion.div>
           </div>
 
-          {/* Botón copiar enlace - discreto */}
+          {/* Acciones: compartir + copiar (alineados) */}
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 1 }}
-            className="mt-20 text-center"
+            className="mt-16 flex flex-col items-center gap-3"
           >
-            <button
-              type="button"
-              onClick={handleCopyLink}
-              className="inline-flex items-center gap-2 text-xs text-white/40 hover:text-white/70 transition-colors"
-            >
-              {copied ? (
-                <>
-                  <CheckCircle className="w-4 h-4" strokeWidth={1.5} />
-                  <span>Texto copiado</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-4 h-4" strokeWidth={1.5} />
-                  <span>Copiar enlace de esta frase</span>
-                </>
-              )}
-            </button>
+            <div className="flex items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={handleShare}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs text-white/70 hover:text-white/90 transition-all"
+              >
+                {actionOk && lastAction === 'share' ? (
+                  <>
+                    <CheckCircle className="w-4 h-4" strokeWidth={1.5} />
+                    <span>Compartido</span>
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="w-4 h-4" strokeWidth={1.5} />
+                    <span>Compartir</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCopyLink}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs text-white/70 hover:text-white/90 transition-all"
+              >
+                {actionOk && lastAction === 'copy' ? (
+                  <>
+                    <CheckCircle className="w-4 h-4" strokeWidth={1.5} />
+                    <span>Enlace copiado</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4" strokeWidth={1.5} />
+                    <span>Copiar enlace</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="text-[11px] text-white/35 font-light">
+              Comparte esta frase o guarda el enlace para volver después.
+            </div>
+          </motion.div>
+
+          {/* Invítame un café */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, delay: 1.1 }}
+            className="mt-10"
+          >
+            <div className="max-w-3xl mx-auto rounded-3xl border border-white/10 bg-black/20 backdrop-blur-md p-6 sm:p-8">
+              <div className="flex items-start justify-between gap-6">
+                <div className="space-y-2">
+                  <h3 className="text-sm uppercase tracking-widest text-white/40 font-light">Invítame un café</h3>
+                  <p className="text-white/75 font-light leading-relaxed">
+                    Si esto te sirve, puedes apoyar para que siga siendo un espacio gratuito. Funciona sin fines de lucro: tu aporte ayuda a mantenerlo vivo.
+                  </p>
+                </div>
+                <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-white/5">
+                  <Coffee className="w-5 h-5 text-white/60" strokeWidth={1.5} />
+                </div>
+              </div>
+
+              <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleDonate(20)}
+                    className="px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs text-white/75 transition-all"
+                  >
+                    $20
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDonate(50)}
+                    className="px-4 py-2 rounded-full border border-white/20 bg-white/10 hover:bg-white/15 text-xs text-white/90 transition-all"
+                  >
+                    $50 · más elegido
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDonate(100)}
+                    className="px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs text-white/75 transition-all"
+                  >
+                    $100
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    value={customAmount}
+                    onChange={(e) => setCustomAmount(e.target.value.replace(/[^0-9]/g, ''))}
+                    inputMode="numeric"
+                    placeholder="Otra cantidad"
+                    className="w-36 px-4 py-2 rounded-full border border-white/10 bg-black/30 text-xs text-white/80 placeholder:text-white/30 outline-none focus:border-white/20"
+                    aria-label="Otra cantidad"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleDonate('custom')}
+                    disabled={!customAmount}
+                    className="px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs text-white/75 transition-all disabled:opacity-40 disabled:hover:bg-white/5"
+                  >
+                    Aportar
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-4 text-[11px] text-white/35 font-light">
+                Pagos seguros con tarjeta mediante Stripe (se abre en una nueva pestaña).
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
