@@ -206,24 +206,23 @@ const AionSection = () => {
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 lg:mb-20 max-w-7xl mx-auto px-4"
+          className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mb-16 lg:mb-20 max-w-7xl mx-auto px-2 md:px-4"
         >
           {transformationAreas.map((area, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ 
-                duration: 0.8, 
+                duration: 0.6, 
                 delay: area.delay,
-                ease: [0.76, 0, 0.24, 1]
+                ease: "easeOut"
               }}
               whileHover={{ 
-                scale: 1.02, 
-                y: -5,
-                transition: { duration: 0.3 }
+                scale: 1.02,
+                transition: { duration: 0.2 }
               }}
-              className={`group relative p-7 bg-gradient-to-br ${area.gradient} backdrop-blur-xl border ${area.borderColor} rounded-2xl transition-all duration-500 overflow-hidden flex flex-col h-full shadow-lg hover:shadow-2xl`}
+              className={`group relative p-4 md:p-7 bg-gradient-to-br ${area.gradient} backdrop-blur-xl border ${area.borderColor} rounded-xl md:rounded-2xl transition-all duration-500 overflow-hidden flex flex-col h-full shadow-lg hover:shadow-2xl`}
             >
               {/* Efecto de brillo en hover */}
               <motion.div 
