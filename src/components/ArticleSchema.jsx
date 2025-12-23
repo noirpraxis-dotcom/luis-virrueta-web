@@ -10,9 +10,9 @@ const ArticleSchema = ({
   tags = [],
   url
 }) => {
-  const siteUrl = 'https://lux-mania.com'
+  const siteUrl = 'https://luisvirrueta.com'
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl
-  const fullImage = image ? `${siteUrl}${image}` : `${siteUrl}/og-default.jpg`
+  const fullImage = image ? (image.startsWith('http') ? image : `${siteUrl}${image}`) : `${siteUrl}/portada.webp`
 
   const schema = {
     "@context": "https://schema.org",
@@ -88,12 +88,38 @@ const ArticleSchema = ({
 
   return (
     <Helmet>
+      {/* Schema.org JSON-LD */}
       <script type="application/ld+json">
         {JSON.stringify(schema)}
       </script>
       <script type="application/ld+json">
         {JSON.stringify(breadcrumbSchema)}
       </script>
+      
+      {/* Open Graph Meta Tags para redes sociales */}
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="og:type" content="article" />
+      <meta property="og:url" content={fullUrl} />
+      <meta property="og:image" content={fullImage} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:site_name" content="Luis Virrueta" />
+      <meta property="article:author" content={author} />
+      <meta property="article:published_time" content={publishedTime} />
+      <meta property="article:modified_time" content={modifiedTime || publishedTime} />
+      {tags.map(tag => (
+        <meta key={tag} property="article:tag" content={tag} />
+      ))}
+      
+      {/* Twitter Card Meta Tags */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={fullImage} />
+      
+      {/* WhatsApp específico */}
+      <meta property="og:image:alt" content={title} />
     </Helmet>
   )
 }

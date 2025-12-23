@@ -23,6 +23,7 @@ const getArticleBySlug = (slug) => {
       category: 'Psicología',
       tags: ['Neuroscience', 'Logo Design', 'Brand Recognition', 'Psychology'],
       gradient: 'from-pink-500 to-rose-500',
+      heroImage: '/IMAGENES BLOG/cerebro decide antes de que tu.webp',
       sections: [
         {
           type: 'intro',
@@ -126,6 +127,7 @@ const getArticleBySlug = (slug) => {
       category: 'Tecnología × Diseño',
       tags: ['AI', 'Generative Design', 'Emotional Design', 'Psychology'],
       gradient: 'from-purple-500 to-fuchsia-500',
+      heroImage: '/IMAGENES BLOG/branding con ia.webp',
       sections: [
         {
           type: 'intro',
@@ -201,6 +203,7 @@ const getArticleBySlug = (slug) => {
       category: 'Branding',
       tags: ['StoryBrand', 'Storytelling', 'Brand Strategy', 'Marketing'],
       gradient: 'from-amber-500 to-orange-500',
+      heroImage: '/IMAGENES BLOG/cliente es heroe.webp',
       sections: [
         {
           type: 'intro',
@@ -362,6 +365,7 @@ const getArticleBySlug = (slug) => {
       category: 'Branding × Psicología',
       tags: ['Pre-Suasion', 'Persuasion', 'Brand Strategy', 'Neuromarketing'],
       gradient: 'from-indigo-500 to-purple-500',
+      heroImage: '/IMAGENES BLOG/presuacion.webp',
       sections: [
         {
           type: 'intro',
@@ -517,6 +521,7 @@ const getArticleBySlug = (slug) => {
       category: 'Branding × Psicología',
       tags: ['Influence', 'Persuasion', 'Psychology', 'Brand Strategy'],
       gradient: 'from-rose-500 to-pink-500',
+      heroImage: '/IMAGENES BLOG/persuación.webp',
       sections: [
         {
           type: 'intro',
@@ -817,6 +822,7 @@ const getArticleBySlug = (slug) => {
       category: 'Branding × Psicología',
       tags: ['Choice Paradox', 'Psychology', 'Conversion', 'Strategy'],
       gradient: 'from-sky-500 to-blue-500',
+      heroImage: '/IMAGENES BLOG/paralisis de elección.webp',
       sections: [
         {
           type: 'intro',
@@ -1771,6 +1777,35 @@ const BlogArticlePage = () => {
   // Calcular tiempo de lectura dinámicamente
   const dynamicReadTime = calculateReadTime(article.sections)
 
+  // Función para compartir el artículo
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/blog/${slug}`
+    const shareTitle = article.title
+    const shareImage = article.heroImage || '/IMAGENES BLOG/1.jpg'
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: article.sections[0]?.content?.substring(0, 160) || article.title,
+          url: shareUrl
+        })
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          console.error('Error compartiendo:', err)
+        }
+      }
+    } else {
+      // Fallback: copiar al portapapeles
+      try {
+        await navigator.clipboard.writeText(shareUrl)
+        alert('Enlace copiado al portapapeles')
+      } catch (err) {
+        console.error('Error copiando:', err)
+      }
+    }
+  }
+
   const article_old = {
     title: 'Neurociencia del Diseño: Por Qué Algunos Logos Son Inolvidables',
     author: 'Luis Virrueta',
@@ -2031,7 +2066,10 @@ const BlogArticlePage = () => {
             transition={{ duration: 1, delay: 0.7 }}
             className="flex gap-3"
           >
-            <button className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-white text-sm flex items-center gap-2 transition-all">
+            <button 
+              onClick={handleShare}
+              className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-white text-sm flex items-center gap-2 transition-all"
+            >
               <Share2 className="w-4 h-4" />
               {t('blogArticles.common.share')}
             </button>
