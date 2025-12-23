@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react'
-import { Wrench, Calendar, Brain, Heart, Coffee, Target, Quote } from 'lucide-react'
+import { Wrench, Calendar, Brain, Heart, Coffee, Target, Quote, Map } from 'lucide-react'
 
 const ToolsMenu = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -9,6 +9,7 @@ const ToolsMenu = () => {
   const tools = [
     { name: 'Test Vocacional', icon: Target, href: '/test-vocacional', highlight: true },
     { name: 'Frase del día', icon: Quote, href: '/frase-del-dia' },
+    { name: 'Atlas de la Humanidad', icon: Map, href: '/atlas-humanidad' },
     { name: 'Dinámica del día', icon: Calendar, href: '/dinamica-del-dia' },
     { name: 'Meditaciones', icon: Brain, href: '/meditaciones' },
     { name: 'Ejercicios', icon: Heart, href: '/ejercicios' },
