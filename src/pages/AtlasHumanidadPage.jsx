@@ -175,63 +175,69 @@ const AtlasHumanidadPage = () => {
             <div className="relative bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm rounded-3xl overflow-hidden border border-white/5 shadow-2xl">
               
               {/* Título arriba con ícono elegante */}
-              <div className="relative p-8 md:p-12 pb-6 md:pb-8">
+              <div className="relative p-4 md:p-12 pb-4 md:pb-8">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="flex items-center justify-center gap-4"
+                  className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4"
                 >
-                  {/* Ícono izquierdo */}
-                  <motion.div
-                    animate={{ 
-                      rotate: [0, 360],
-                      scale: [1, 1.1, 1]
-                    }}
-                    transition={{ 
-                      rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-                      scale: { duration: 3, repeat: Infinity, ease: "easeInOut" }
-                    }}
-                    className="relative"
-                  >
-                    {currentImage.icon && (
-                      <currentImage.icon 
-                        className="w-8 h-8 md:w-10 md:h-10 text-gray-400/60" 
-                        strokeWidth={1.2}
-                      />
-                    )}
-                  </motion.div>
-
-                  {/* Línea decorativa izquierda */}
-                  <div className="h-px w-12 md:w-20 bg-gradient-to-r from-transparent via-gray-600 to-gray-700"></div>
-
-                  {/* Título */}
-                  <h2 className="text-3xl md:text-5xl font-bold text-center bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent tracking-tight">
+                  {/* Móvil: título primero en una línea */}
+                  <h2 className="text-2xl md:text-5xl font-bold text-center bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent tracking-tight order-1 md:order-none whitespace-nowrap">
                     {currentImage.title}
                   </h2>
 
-                  {/* Línea decorativa derecha */}
-                  <div className="h-px w-12 md:w-20 bg-gradient-to-l from-transparent via-gray-600 to-gray-700"></div>
+                  {/* Desktop: íconos y líneas decorativas */}
+                  <div className="hidden md:flex items-center gap-4">
+                    {/* Ícono izquierdo */}
+                    <motion.div
+                      animate={{ 
+                        rotate: [0, 360],
+                        scale: [1, 1.1, 1]
+                      }}
+                      transition={{ 
+                        rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+                        scale: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                      }}
+                      className="relative"
+                    >
+                      {currentImage.icon && (
+                        <currentImage.icon 
+                          className="w-10 h-10 text-gray-400/60" 
+                          strokeWidth={1.2}
+                        />
+                      )}
+                    </motion.div>
 
-                  {/* Ícono derecho */}
-                  <motion.div
-                    animate={{ 
-                      rotate: [0, -360],
-                      scale: [1, 1.1, 1]
-                    }}
-                    transition={{ 
-                      rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-                      scale: { duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.5 }
-                    }}
-                    className="relative"
-                  >
-                    {currentImage.icon && (
-                      <currentImage.icon 
-                        className="w-8 h-8 md:w-10 md:h-10 text-gray-400/60" 
-                        strokeWidth={1.2}
-                      />
-                    )}
-                  </motion.div>
+                    {/* Línea decorativa izquierda */}
+                    <div className="h-px w-20 bg-gradient-to-r from-transparent via-gray-600 to-gray-700"></div>
+                  </div>
+
+                  {/* Desktop: Línea y ícono derecho */}
+                  <div className="hidden md:flex items-center gap-4">
+                    {/* Línea decorativa derecha */}
+                    <div className="h-px w-20 bg-gradient-to-l from-transparent via-gray-600 to-gray-700"></div>
+
+                    {/* Ícono derecho */}
+                    <motion.div
+                      animate={{ 
+                        rotate: [0, -360],
+                        scale: [1, 1.1, 1]
+                      }}
+                      transition={{ 
+                        rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+                        scale: { duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.5 }
+                      }}
+                      className="relative"
+                    >
+                      {currentImage.icon && (
+                        <currentImage.icon 
+                          className="w-10 h-10 text-gray-400/60" 
+                          strokeWidth={1.2}
+                        />
+                      )}
+                    </motion.div>
+                  </div>
                 </motion.div>
 
                 {/* Número de imagen con estilo premium */}
@@ -249,8 +255,8 @@ const AtlasHumanidadPage = () => {
                 )}
               </div>
 
-              {/* Imagen Principal */}
-              <div className="relative aspect-[16/10] overflow-hidden bg-black mx-8 md:mx-12 rounded-2xl border border-white/5">
+              {/* Imagen Principal - sin padding en móvil, con padding en desktop */}
+              <div className="relative aspect-[16/10] overflow-hidden bg-black mx-0 md:mx-12 rounded-none md:rounded-2xl border-y md:border border-white/5">
                 <motion.img
                   key={currentImage.id}
                   src={currentImage.image}
@@ -268,22 +274,22 @@ const AtlasHumanidadPage = () => {
                   <>
                     <button
                       onClick={handlePrevious}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 md:w-14 md:h-14 rounded-full bg-black/70 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/90 hover:border-white/40 hover:scale-110 transition-all group shadow-xl"
+                      className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-14 md:h-14 rounded-full bg-black/70 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/90 hover:border-white/40 hover:scale-110 transition-all group shadow-xl"
                     >
-                      <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" strokeWidth={1.5} />
+                      <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 group-hover:-translate-x-0.5 transition-transform" strokeWidth={1.5} />
                     </button>
                     <button
                       onClick={handleNext}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 md:w-14 md:h-14 rounded-full bg-black/70 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/90 hover:border-white/40 hover:scale-110 transition-all group shadow-xl"
+                      className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-14 md:h-14 rounded-full bg-black/70 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/90 hover:border-white/40 hover:scale-110 transition-all group shadow-xl"
                     >
-                      <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" strokeWidth={1.5} />
+                      <ChevronRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-0.5 transition-transform" strokeWidth={1.5} />
                     </button>
                   </>
                 )}
               </div>
 
               {/* Descripción abajo con diseño premium */}
-              <div className="p-8 md:p-12 pt-8 md:pt-10">
+              <div className="p-4 md:p-12 pt-6 md:pt-10">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -291,21 +297,21 @@ const AtlasHumanidadPage = () => {
                   className="relative"
                 >
                   {/* Línea decorativa superior */}
-                  <div className="flex items-center justify-center mb-8">
+                  <div className="flex items-center justify-center mb-6 md:mb-8">
                     <div className="h-px w-full max-w-2xl bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
                   </div>
 
                   {/* Descripción con comillas elegantes */}
                   <div className="relative max-w-5xl mx-auto">
-                    <div className="absolute -left-6 md:-left-8 -top-4 text-5xl md:text-7xl text-gray-700/20 font-serif leading-none">"</div>
-                    <p className="text-gray-300 text-base md:text-lg leading-relaxed font-light text-justify px-4 md:px-8 relative z-10">
+                    <div className="absolute -left-2 md:-left-8 -top-2 md:-top-4 text-4xl md:text-7xl text-gray-700/20 font-serif leading-none">"</div>
+                    <p className="text-gray-300 text-sm md:text-lg leading-relaxed font-light text-justify px-2 md:px-8 relative z-10">
                       {currentImage.description}
                     </p>
-                    <div className="absolute -right-6 md:-right-8 -bottom-4 text-5xl md:text-7xl text-gray-700/20 font-serif leading-none">"</div>
+                    <div className="absolute -right-2 md:-right-8 -bottom-2 md:-bottom-4 text-4xl md:text-7xl text-gray-700/20 font-serif leading-none">"</div>
                   </div>
 
                   {/* Línea decorativa inferior */}
-                  <div className="flex items-center justify-center mt-8">
+                  <div className="flex items-center justify-center mt-6 md:mt-8">
                     <div className="h-px w-full max-w-2xl bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
                   </div>
                 </motion.div>

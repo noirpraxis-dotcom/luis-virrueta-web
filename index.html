@@ -7,36 +7,42 @@
     <meta name="description" content="Luis Virrueta - Psicólogo especializado en branding estratégico, diseño e IA. Identidades visuales que conectan con el inconsciente." />
     <title>Luis Virrueta | Psicólogo</title>
     
-    <!-- Preconnect to external resources -->
-    <link rel="preconnect" href="https://www.googletagmanager.com" />
-    <link rel="preconnect" href="https://region1.google-analytics.com" />
+    <!-- Preconnect to critical external resources (reduced from 4+) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- DNS Prefetch for less critical resources -->
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://region1.google-analytics.com" />
     
     <!-- Preload critical resources -->
     <link rel="preload" href="/src/main.jsx" as="script" crossorigin />
     
-    <!-- Google Analytics 4 -->
-    <script defer src="https://www.googletagmanager.com/gtag/js?id=G-ZLCG8CBQFJ"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-ZLCG8CBQFJ', {
-        page_path: window.location.pathname,
-        send_page_view: true
-      });
-    </script>
-    
-    <!-- Google Fonts - Optimized with Preload -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Preload critical font files -->
+    <!-- Google Fonts - Self-hosted or optimized load -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Outfit:wght@300;400;600&family=Space+Grotesk:wght@400;600&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Outfit:wght@300;400;600&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript>
       <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Outfit:wght@300;400;600&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
     </noscript>
+    
+    <!-- Google Analytics 4 - Deferred for better FCP/LCP -->
+    <script>
+      // Defer Google Analytics until after page load
+      window.addEventListener('load', function() {
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-ZLCG8CBQFJ';
+        document.head.appendChild(script);
+        
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-ZLCG8CBQFJ', {
+          page_path: window.location.pathname,
+          send_page_view: true
+        });
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>

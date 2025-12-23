@@ -71,8 +71,8 @@ const Footer = () => {
             </span>
           </div>
 
-          {/* Copyright - Más compacto en móvil */}
-          <div className="text-white/40 text-[10px] sm:text-xs tracking-wide font-mono text-center px-4">
+          {/* Copyright - Más compacto en móvil - Contrast mejorado */}
+          <div className="text-white/70 text-[10px] sm:text-xs tracking-wide font-mono text-center px-4">
             © {currentYear} Luis Virrueta. {t('footer.rights')}.
           </div>
         </div>

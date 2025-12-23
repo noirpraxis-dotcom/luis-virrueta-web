@@ -23,7 +23,8 @@ export default defineConfig({
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'framer-motion': ['framer-motion']
+          'framer-motion': ['framer-motion'],
+          'lucide': ['lucide-react']
         },
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
@@ -32,10 +33,18 @@ export default defineConfig({
     },
     chunkSizeWarningLimit: 500,
     cssCodeSplit: true,
-    sourcemap: false
+    sourcemap: false,
+    // Optimizaciones adicionales para LCP y FCP
+    reportCompressedSize: false,
+    cssMinify: true
   },
   server: {
     host: true,
     port: 3000
+  },
+  // Optimizaciones para reducir el tamaño del bundle
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', 'framer-motion'],
+    exclude: []
   }
 })
