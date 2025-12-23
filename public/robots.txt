@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 
 Sitemap: https://luisvirrueta.com/sitemap.xml
+
+# Last updated: 2025-12-23
