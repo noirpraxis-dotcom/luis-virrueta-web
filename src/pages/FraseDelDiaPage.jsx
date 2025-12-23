@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useMemo, useRef, useState } from 'react'
-import { Share2, Copy, CheckCircle, ChevronDown, Quote, ArrowLeft, Home, Lightbulb, HelpCircle, Coffee } from 'lucide-react'
+import { Share2, Copy, CheckCircle, ChevronDown, Quote, ArrowLeft, Home, Lightbulb, HelpCircle, Coffee, MessageCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 const MEXICO_TZ = 'America/Mexico_City'
@@ -1832,6 +1832,7 @@ const FraseDelDiaPage = () => {
   const navigate = useNavigate()
   const heroRef = useRef(null)
   const meaningRef = useRef(null)
+  const donateRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
 
   const [lastAction, setLastAction] = useState(null)
@@ -1924,6 +1925,17 @@ const FraseDelDiaPage = () => {
 
   const scrollToMeaning = () => {
     meaningRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const scrollToDonate = () => {
+    donateRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const handleWhatsAppDonate = () => {
+    const message =
+      'Hola Luis, quiero apoyar “1 frase × día” con una donación (la cantidad que yo quiera). ¿Me compartes la forma de pago?'
+    const whatsappURL = `https://wa.me/527228720520?text=${encodeURIComponent(message)}`
+    window.open(whatsappURL, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -2232,6 +2244,15 @@ const FraseDelDiaPage = () => {
                   </>
                 )}
               </button>
+
+              <button
+                type="button"
+                onClick={scrollToDonate}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/15 text-xs text-emerald-200/90 transition-all"
+              >
+                <Coffee className="w-4 h-4" strokeWidth={1.5} />
+                <span>Invítame un café</span>
+              </button>
             </div>
 
             <div className="text-[11px] text-white/35 font-light">
@@ -2247,62 +2268,76 @@ const FraseDelDiaPage = () => {
             transition={{ duration: 0.9, delay: 1.1 }}
             className="mt-10"
           >
-            <div className="max-w-3xl mx-auto rounded-3xl border border-white/10 bg-black/25 backdrop-blur-md p-7 sm:p-10">
+            <div ref={donateRef} className="max-w-4xl mx-auto rounded-3xl border border-white/10 bg-black/25 backdrop-blur-md p-7 sm:p-10">
               <div className="text-center">
                 <div className="mx-auto w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center">
                   <Coffee className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 </div>
-                <h3 className="mt-4 text-lg sm:text-xl font-light text-white/90 tracking-wide">Invítame un café</h3>
+                <h3 className="mt-4 text-2xl sm:text-3xl font-light text-white/95 tracking-wide">Invítame un café</h3>
                 <p className="mt-2 text-sm sm:text-base text-white/65 font-light leading-relaxed">
                   Si esto te sirve, puedes apoyar para que siga siendo un espacio gratuito. Funciona sin fines de lucro.
                 </p>
               </div>
 
-              <div className="mt-7 grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 items-stretch">
                 <button
                   type="button"
-                  onClick={() => handleDonate(50)}
-                  className="col-span-2 sm:col-span-1 sm:col-start-2 px-6 py-4 rounded-2xl border border-white/20 bg-white/10 hover:bg-white/15 transition-all text-left"
+                  onClick={() => handleDonate(20)}
+                  className="w-full px-6 py-5 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all text-left"
                 >
-                  <div className="text-xs uppercase tracking-widest text-white/40">Más elegido</div>
-                  <div className="mt-1 text-2xl text-white/90 font-light">$50</div>
+                  <div className="text-xs uppercase tracking-widest text-white/40">Aporte</div>
+                  <div className="mt-1 text-2xl text-white/85 font-light">$20</div>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => handleDonate(20)}
-                  className="px-6 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all text-left"
+                  onClick={() => handleDonate(50)}
+                  className="relative w-full px-6 py-5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/15 transition-all text-left sm:scale-[1.03]"
                 >
-                  <div className="text-xs uppercase tracking-widest text-white/40">Aporte</div>
-                  <div className="mt-1 text-xl text-white/80 font-light">$20</div>
+                  <div className="absolute top-3 right-3 text-[10px] uppercase tracking-widest px-2 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-200/90">
+                    Más elegido
+                  </div>
+                  <div className="text-xs uppercase tracking-widest text-emerald-200/60">Aporte</div>
+                  <div className="mt-1 text-3xl text-white/95 font-light">$50</div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleDonate(100)}
-                  className="px-6 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all text-left"
+                  className="w-full px-6 py-5 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all text-left"
                 >
                   <div className="text-xs uppercase tracking-widest text-white/40">Aporte</div>
-                  <div className="mt-1 text-xl text-white/80 font-light">$100</div>
+                  <div className="mt-1 text-2xl text-white/85 font-light">$100</div>
                 </button>
               </div>
 
-              <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2">
-                <input
-                  value={customAmount}
-                  onChange={(e) => setCustomAmount(e.target.value.replace(/[^0-9]/g, ''))}
-                  inputMode="numeric"
-                  placeholder="Otra cantidad"
-                  className="w-full sm:w-44 px-5 py-3 rounded-full border border-white/10 bg-black/30 text-sm text-white/80 placeholder:text-white/30 outline-none focus:border-white/20"
-                  aria-label="Otra cantidad"
-                />
+              <div className="mt-5 flex flex-col items-center gap-3">
+                <div className="w-full max-w-md flex items-stretch gap-2">
+                  <input
+                    value={customAmount}
+                    onChange={(e) => setCustomAmount(e.target.value.replace(/[^0-9]/g, ''))}
+                    inputMode="numeric"
+                    placeholder="Otra cantidad"
+                    className="flex-1 px-5 py-3 rounded-full border border-white/10 bg-black/30 text-sm text-white/85 placeholder:text-white/30 outline-none focus:border-white/20"
+                    aria-label="Otra cantidad"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleDonate('custom')}
+                    disabled={!customAmount}
+                    className="px-6 py-3 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-sm text-white/85 transition-all disabled:opacity-40 disabled:hover:bg-white/5"
+                  >
+                    Aportar
+                  </button>
+                </div>
+
                 <button
                   type="button"
-                  onClick={() => handleDonate('custom')}
-                  disabled={!customAmount}
-                  className="px-6 py-3 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-sm text-white/80 transition-all disabled:opacity-40 disabled:hover:bg-white/5"
+                  onClick={handleWhatsAppDonate}
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-sm text-white/80 transition-all"
                 >
-                  Aportar
+                  <MessageCircle className="w-4 h-4" strokeWidth={1.5} />
+                  <span>Contáctame por WhatsApp para donar la cantidad que quieras</span>
                 </button>
               </div>
 
