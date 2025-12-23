@@ -1,7 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Wrench } from 'lucide-react'
 import LanguageSelector from './LanguageSelector'
+import ToolsMenu from './ToolsMenu'
 
 const MobileMenu = ({ isOpen, onClose, menuItems }) => {
   const [expandedItem, setExpandedItem] = useState(null)
@@ -232,6 +234,15 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                 })}
               </motion.ul>
 
+              {/* Herramientas - Solo visible en móvil */}
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="mt-6 z-10"
+              >
+                <ToolsMenu isMobile={true} />
+              </motion.div>
 
             </div>
           </motion.nav>

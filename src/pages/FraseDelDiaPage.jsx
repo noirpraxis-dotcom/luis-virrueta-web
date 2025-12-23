@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useMemo, useRef, useState, useEffect } from 'react'
-import { Share2, Copy, CheckCircle, ChevronDown, Quote, ArrowLeft, Home, Lightbulb, HelpCircle, Coffee, MessageCircle } from 'lucide-react'
+import { Share2, Copy, CheckCircle, ChevronDown, Quote, ArrowLeft, Home, Lightbulb, HelpCircle, Coffee, MessageCircle, User, Compass, BookOpen, Map } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 const MEXICO_TZ = 'America/Mexico_City'
@@ -2393,6 +2393,58 @@ const FraseDelDiaPage = () => {
               <div className="mt-4 text-center text-[11px] text-white/35 font-light">
                 Pagos seguros con tarjeta mediante Stripe (se abre en una nueva pestaña).
               </div>
+            </div>
+          </motion.div>
+
+          {/* Sección de Enlaces Estratégicos */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, delay: 1.2 }}
+            className="mt-12 max-w-4xl mx-auto"
+          >
+            <div className="text-center mb-8">
+              <h3 className="text-xl sm:text-2xl font-light text-white/90 tracking-wide">Explora más</h3>
+              <p className="mt-2 text-sm text-white/50 font-light">Sigue circulando por el sitio</p>
+            </div>
+
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <button
+                type="button"
+                onClick={() => navigate('/sobre-mi')}
+                className="group relative aspect-square flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-4"
+              >
+                <User className="w-8 h-8 sm:w-10 sm:h-10 text-white/70 group-hover:text-white transition-colors mb-3" strokeWidth={1.5} />
+                <span className="text-xs sm:text-sm text-white/70 group-hover:text-white transition-colors font-light tracking-wide">Sobre mí</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigate('/metodo')}
+                className="group relative aspect-square flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-4"
+              >
+                <Compass className="w-8 h-8 sm:w-10 sm:h-10 text-white/70 group-hover:text-white transition-colors mb-3" strokeWidth={1.5} />
+                <span className="text-xs sm:text-sm text-white/70 group-hover:text-white transition-colors font-light tracking-wide">Mi método</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigate('/blog')}
+                className="group relative aspect-square flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-4"
+              >
+                <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-white/70 group-hover:text-white transition-colors mb-3" strokeWidth={1.5} />
+                <span className="text-xs sm:text-sm text-white/70 group-hover:text-white transition-colors font-light tracking-wide">Blog</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigate('/atlas-humanidad')}
+                className="group relative aspect-square flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-4"
+              >
+                <Map className="w-8 h-8 sm:w-10 sm:h-10 text-white/70 group-hover:text-white transition-colors mb-3" strokeWidth={1.5} />
+                <span className="text-xs sm:text-sm text-white/70 group-hover:text-white transition-colors font-light tracking-wide">Atlas</span>
+              </button>
             </div>
           </motion.div>
         </div>
