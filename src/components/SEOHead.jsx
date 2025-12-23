@@ -10,14 +10,14 @@ const SEOHead = ({
   author = 'Luis Virrueta',
   tags = []
 }) => {
-  const siteUrl = 'https://lux-mania.com'
+  const siteUrl = 'https://luisvirrueta.com'
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl
   const fullImage = image ? `${siteUrl}${image}` : `${siteUrl}/og-default.jpg`
 
   return (
     <Helmet>
       {/* Basic Meta Tags */}
-      <title>{title} | LUXMANIA</title>
+      <title>{title}</title>
       <meta name="description" content={description} />
       <meta name="author" content={author} />
       {tags.length > 0 && <meta name="keywords" content={tags.join(', ')} />}

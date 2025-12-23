@@ -9,12 +9,12 @@ const HomePage = () => {
   return (
     <>
       <SEOHead 
-        title="Luis Virrueta | Psicólogo · Psicoanalista"
-        description="Psicólogo especializado en branding estratégico con enfoque en el inconsciente. Fusiono psicología, diseño e IA para crear identidades de marca que conectan emocionalmente."
+        title="Luis Virrueta | Psicoanalista y Filósofo"
+        description="Exploro cómo interpretamos la realidad y por qué seguimos atrapados en patrones que no elegimos. Psicoanálisis, filosofía y transformación del inconsciente."
         image="/og-home.jpg"
         url="/"
         type="website"
-        tags={['psicología', 'branding', 'inconsciente', 'diseño', 'arquetipos', 'psicoanálisis']}
+        tags={['psicoanálisis', 'filosofía', 'inconsciente', 'percepción', 'transformación', 'ego']}
       />
       
       {/* Video limpio de fondo */}
