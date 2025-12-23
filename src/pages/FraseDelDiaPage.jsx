@@ -2190,7 +2190,7 @@ const FraseDelDiaPage = () => {
                     animate={{ y: [0, 4, 0] }}
                     transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                   >
-                    <ChevronDown className="w-4 h-4 text-white/40 group-hover:text-white/60 transition-colors" strokeWidth={1.5} />
+                    <ChevronDown className="w-4 h-4 text-white/50 group-hover:text-white/70 transition-colors" strokeWidth={1.5} />
                   </motion.div>
                 </div>
               </motion.button>

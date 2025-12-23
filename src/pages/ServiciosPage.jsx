@@ -350,7 +350,7 @@ const ServiciosPage = () => {
                   <h3 className="text-white/90 group-hover:text-white text-sm lg:text-base font-light tracking-[0.1em] mb-1.5 transition-colors duration-300">
                     {t(`servicesPage.hexGrid.hexagons.${item.titleKey}.title`)}
                   </h3>
-                  <p className="text-white/30 group-hover:text-white/50 text-[10px] lg:text-xs font-extralight tracking-[0.15em] transition-colors duration-300">
+                  <p className="text-white/50 group-hover:text-white/70 text-[10px] lg:text-xs font-extralight tracking-[0.15em] transition-colors duration-300">
                     {t(`servicesPage.hexGrid.hexagons.${item.titleKey}.subtitle`)}
                   </p>
                 </div>

@@ -34,6 +34,7 @@ const ToolsMenu = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         className="relative flex items-center justify-center w-10 h-10 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm hover:border-white/40 hover:bg-white/10 transition-all duration-300"
+        aria-label="Abrir menú de herramientas"
       >
         <Wrench className="w-4 h-4 text-white/80" strokeWidth={1.5} />
       </motion.button>
