@@ -223,7 +223,7 @@ const AboutPage = () => {
 
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10">
                 <img 
-                  src="/luxmania perfil.png" 
+                  src="/Luis.png" 
                   alt="Luis Virrueta - Psicólogo"
                   className="w-full aspect-square object-cover"
                 />

@@ -2250,7 +2250,7 @@ const blogArticlesContent = {
           type: 'subsection',
           number: '01',
           title: 'La Retina Ya Predice: Tu Ojo Descarta lo Obvio',
-          content: 'Clark cita estudios de la retina que demuestran algo increíble: "Ganglion cells signal not the raw visual image but the departures from the predictable structure." Tu retina no envía al cerebro lo que ves. Envía solo lo inesperado, lo que no encaja con el patrón. El 90% de lo que miras es descartado porque es predecible. Para tu marca: si eres 100% predecible, literalmente no llegas al cerebro consciente. Si eres 100% inesperado, el cerebro te rechaza por costoso de procesar. LUXMANIA diseña en la zona intermedia: patrones familiares con quiebres estratégicos.',
+          content: 'Clark cita estudios de la retina que demuestran algo increíble: "Ganglion cells signal not the raw visual image but the departures from the predictable structure." Tu retina no envía al cerebro lo que ves. Envía solo lo inesperado, lo que no encaja con el patrón. El 90% de lo que miras es descartado porque es predecible. Para tu marca: si eres 100% predecible, literalmente no llegas al cerebro consciente. Si eres 100% inesperado, el cerebro te rechaza por costoso de procesar. Diseñamos en la zona intermedia: patrones familiares con quiebres estratégicos.',
           gradient: 'from-violet-500 to-purple-600'
         },
         {
@@ -2356,7 +2356,7 @@ const blogArticlesContent = {
               reasoning: 'Tasa de conversión típica. La mayoría del esfuerzo se pierde porque llega tarde al proceso predictivo. El cliente ya decidió antes de ver el anuncio.'
             },
             {
-              company: 'LUXMANIA: MARCA PREDICTIVA',
+              company: 'Luis Virrueta: MARCA PREDICTIVA',
               philosophy: 'Modelo de Inserción: Predicción → Marca → Confirmación',
               approach: 'No transmitimos mensajes. Nos convertimos en la predicción más probable del cerebro del cliente. Diseñamos identidades que minimizan sorpresa óptima (15-25%): suficiente novedad para activar dopamina, suficiente familiaridad para ser procesadas sin esfuerzo. Operamos PRE-decisión: antes de que el cliente "elija", ya somos parte de su modelo generativo. Nuestras marcas no compiten por atención. Compiten por ser la hipótesis ganadora en la jerarquía predictiva del cerebro. Medimos integración en el modelo mental, no impresiones.',
               probability: '67-89%',
@@ -2403,7 +2403,7 @@ const blogArticlesContent = {
         {
           type: 'timeline',
           title: 'Cómo Construir una Marca Bayesiana en 4 Fases',
-          description: 'Proceso LUXMANIA de inserción predictiva',
+          description: 'Proceso Luis Virrueta de inserción predictiva',
           events: [
             {
               year: 'FASE 1',
@@ -2455,19 +2455,19 @@ const blogArticlesContent = {
         },
         {
           type: 'highlight',
-          content: '"Las marcas que entienden predicción y sorpresa mínima deciden por el cliente antes de que el cliente decida conscientemente." — LUXMANIA',
+          content: '"Las marcas que entienden predicción y sorpresa mínima deciden por el cliente antes de que el cliente decida conscientemente." — Luis Virrueta',
           author: 'Branding Predictivo (2025)'
         },
         {
           type: 'callToAction',
           title: '¿Tu Marca Opera en la Capa Predictiva o en la Capa Reactiva?',
-          description: 'LUXMANIA diseña marcas que se insertan en el modelo generativo del cliente antes de la decisión consciente. No competimos por atención. Competimos por ser la predicción más probable de tu cerebro.',
+          description: 'Diseñamos marcas que se insertan en el modelo generativo del cliente antes de la decisión consciente. No competimos por atención. Competimos por ser la predicción más probable de tu cerebro.',
           buttonText: 'Auditoría Predictiva',
           buttonLink: '/contacto'
         },
         {
           type: 'conclusion',
-          content: 'El cerebro no busca información. Busca sorpresa mínima. Tu marca puede ser ruido que el cerebro descarta, o puede ser la hipótesis que el cerebro prefiere porque minimiza energía libre. Andy Clark nos dio la ciencia. LUXMANIA la aplicó al branding. Ahora te toca decidir: ¿sigues diseñando mensajes que nadie pidió, o empiezas a diseñar predicciones que el cerebro ya esperaba?'
+          content: 'El cerebro no busca información. Busca sorpresa mínima. Tu marca puede ser ruido que el cerebro descarta, o puede ser la hipótesis que el cerebro prefiere porque minimiza energía libre. Andy Clark nos dio la ciencia. Luis Virrueta la aplicó al branding. Ahora te toca decidir: ¿sigues diseñando mensajes que nadie pidió, o empiezas a diseñar predicciones que el cerebro ya esperaba?'
         },
       ]
     },
@@ -2596,7 +2596,7 @@ const blogArticlesContent = {
             { metric: '68%', label: 'De rebrandings completos no generan ROI positivo en los primeros 2 años', source: 'Brand Finance Rebranding Study 2024' },
             { metric: '$2.1M', label: 'Costo promedio de rebranding completo para marca establecida (Fortune 500)', source: 'Interbrand, 2025' },
             { metric: '41%', label: 'De consumidores rechazan nueva identidad de marca familiar (si cambio es radical)', source: 'Nielsen Consumer Trust Report 2024' },
-            { metric: '3-5x', label: 'Multiplicador de costo: rebranding completo vs refresh estratégico para mismo resultado', source: 'LUXMANIA Client Data 2024-2025' }
+            { metric: '3-5x', label: 'Multiplicador de costo: rebranding completo vs refresh estratégico para mismo resultado', source: 'Luis Virrueta Client Data 2024-2025' }
           ]
         },
         {
@@ -2938,7 +2938,7 @@ const blogArticlesContent = {
         {
           type: 'cta',
           title: '¿Necesitas Rebranding o Solo Refresh? Hagamos el Diagnóstico',
-          content: 'En LUXMANIA aplicamos el framework de decisión completo: auditoría de equity, análisis competitivo, testing con audiencia, y recomendación basada en data (no en opinión). Si necesitas refresh, lo ejecutamos en 4 semanas. Si necesitas rebranding, lo hacemos en 8-12 semanas con proceso completo. Consultoría de diagnóstico gratuita (60 min) para determinar qué necesita tu marca.',
+          content: 'En Luis Virrueta aplicamos el framework de decisión completo: auditoría de equity, análisis competitivo, testing con audiencia, y recomendación basada en data (no en opinión). Si necesitas refresh, lo ejecutamos en 4 semanas. Si necesitas rebranding, lo hacemos en 8-12 semanas con proceso completo. Consultoría de diagnóstico gratuita (60 min) para determinar qué necesita tu marca.',
           buttonText: 'Solicitar Diagnóstico Gratuito',
           buttonLink: '/contacto'
         }
@@ -2964,7 +2964,7 @@ const blogArticlesContent = {
           stats: [
             { metric: '83%', label: 'De marcas creadas con IA lucen genéricas y sin estrategia (problema de prompt, no de herramienta)', source: 'Design Systems Research 2025' },
             { metric: '$47B', label: 'Inversión global en herramientas de IA creativa en 2024 (vs $12B en 2022)', source: 'CB Insights, Tech Investment Report' },
-            { metric: '6-8h', label: 'Tiempo promedio para crear identidad de marca completa con IA (vs 3-6 semanas tradicional)', source: 'LUXMANIA Internal Data 2025' },
+            { metric: '6-8h', label: 'Tiempo promedio para crear identidad de marca completa con IA (vs 3-6 semanas tradicional)', source: 'Luis Virrueta Internal Data 2025' },
             { metric: '340%', label: 'Crecimiento en demanda de "AI brand designer" como skill en LinkedIn (2023-2025)', source: 'LinkedIn Workforce Report 2025' }
           ]
         },
@@ -3097,7 +3097,7 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'Framework LUXMANIA: Human + AI Branding System',
+          title: 'Framework Luis Virrueta: Human + AI Branding System',
           icon: Award
         },
         {
@@ -3204,7 +3204,7 @@ const blogArticlesContent = {
         {
           type: 'cta',
           title: '¿Quieres Crear Tu Marca Con IA Pero Sin Perder Estrategia?',
-          content: 'En LUXMANIA combinamos estrategia humana de branding (arquetipos, psicología, diferenciación) con ejecución IA de clase mundial (Midjourney, Claude, Runway). Resultado: identidades de marca con alma + velocidad industrial. Consultoría gratuita de 30 min para evaluar si IA es adecuada para tu proyecto.',
+          content: 'En Luis Virrueta combinamos estrategia humana de branding (arquetipos, psicología, diferenciación) con ejecución IA de clase mundial (Midjourney, Claude, Runway). Resultado: identidades de marca con alma + velocidad industrial. Consultoría gratuita de 30 min para evaluar si IA es adecuada para tu proyecto.',
           buttonText: 'Agendar Consultoría Gratuita',
           buttonLink: '/contacto'
         }
@@ -3697,7 +3697,7 @@ const blogArticlesContent = {
         {
           type: 'cta',
           title: '¿Tu Logo Está Fallando En Alguno de Estos 7 Errores?',
-          content: 'En LUXMANIA aplicamos neurociencia del diseño + psicología de marca + estética visual para crear logos que no solo se ven bien, sino que FUNCIONAN a nivel cerebral. Ofrecemos auditoría gratuita de logo con análisis de los 7 errores + recomendaciones específicas.',
+          content: 'En Luis Virrueta aplicamos neurociencia del diseño + psicología de marca + estética visual para crear logos que no solo se ven bien, sino que FUNCIONAN a nivel cerebral. Ofrecemos auditoría gratuita de logo con análisis de los 7 errores + recomendaciones específicas.',
           buttonText: 'Solicitar Auditoría Gratuita de Logo',
           buttonLink: '/contacto'
         }
@@ -4009,12 +4009,12 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'Framework LUXMANIA: Implementación Práctica del Arquetipo en Tu Sistema Visual',
+          title: 'Framework Luis Virrueta: Implementación Práctica del Arquetipo en Tu Sistema Visual',
           icon: Zap
         },
         {
           type: 'text',
-          content: 'Conocer tu arquetipo es solo el inicio. Ahora viene la parte crítica: implementarlo consistentemente en cada punto de contacto con tu audiencia. Este es el framework LUXMANIA que combina Diseño + Psicología + Estrategia para traducir arquetipo en sistema visual coherente.'
+          content: 'Conocer tu arquetipo es solo el inicio. Ahora viene la parte crítica: implementarlo consistentemente en cada punto de contacto con tu audiencia. Este es el framework Luis Virrueta que combina Diseño + Psicología + Estrategia para traducir arquetipo en sistema visual coherente.'
         },
         {
           type: 'subsection',
@@ -4132,8 +4132,8 @@ const blogArticlesContent = {
         {
           type: 'cta',
           title: '¿Listo Para Descubrir y Diseñar Tu Arquetipo de Marca?',
-          content: 'En LUXMANIA no adivinamos. Aplicamos Psicología + Diseño + Estrategia para identificar tu arquetipo correcto y traducirlo en sistema visual coherente que resuena con tu audiencia ideal.',
-          buttonText: 'Consultoría de Arquetipos LUXMANIA',
+          content: 'En Luis Virrueta no adivinamos. Aplicamos Psicología + Diseño + Estrategia para identificar tu arquetipo correcto y traducirlo en sistema visual coherente que resuena con tu audiencia ideal.',
+          buttonText: 'Consultoría de Arquetipos Luis Virrueta',
           buttonLink: '/contacto'
         }
       ]
@@ -4435,7 +4435,7 @@ const blogArticlesContent = {
         {
           type: 'callToAction',
           title: '¿Necesitas Ayuda Para Implementar IA en Tu Negocio?',
-          content: 'En LUXMANIA no solo entendemos la tecnología. Entendemos cómo aplicarla a tu caso específico sin que te sientas abrumado. Desde automatizar tu marketing hasta integrar IA en tu servicio al cliente, te ayudamos a elegir e implementar el stack correcto que realmente genere resultados medibles.',
+          content: 'En Luis Virrueta no solo entendemos la tecnología. Entendemos cómo aplicarla a tu caso específico sin que te sientas abrumado. Desde automatizar tu marketing hasta integrar IA en tu servicio al cliente, te ayudamos a elegir e implementar el stack correcto que realmente genere resultados medibles.',
           buttonText: 'Consultoría de IA Para Tu Negocio',
           buttonLink: '/contacto'
         }
@@ -4584,7 +4584,7 @@ const blogArticlesContent = {
         {
           type: 'highlight',
           content: 'ChatGPT es la opción ideal si tu prioridad es generar contenido de marketing de alta calidad, mantener conversaciones complejas o necesitas una IA que entienda matices creativos. No es la mejor para datos en tiempo real o análisis técnico profundo.',
-          author: 'Recomendación LUXMANIA'
+          author: 'Recomendación Luis Virrueta'
         },
         {
           type: 'heading',
@@ -4645,7 +4645,7 @@ const blogArticlesContent = {
         {
           type: 'highlight',
           content: 'Gemini es tu mejor opción si necesitas datos actualizados constantemente, trabajas mucho con herramientas de Google o priorizas información verificable con fuentes. No es ideal para escritura creativa de marketing o copywriting persuasivo.',
-          author: 'Recomendación LUXMANIA'
+          author: 'Recomendación Luis Virrueta'
         },
         {
           type: 'heading',
@@ -4706,7 +4706,7 @@ const blogArticlesContent = {
         {
           type: 'highlight',
           content: 'Grok es perfecto si tu estrategia de negocio depende de Twitter/X, necesitas analizar tendencias sociales en tiempo real o valoras respuestas sin filtros corporativos. No es la mejor opción para uso empresarial general o si no usas Twitter/X activamente.',
-          author: 'Recomendación LUXMANIA'
+          author: 'Recomendación Luis Virrueta'
         },
         {
           type: 'heading',
@@ -4917,7 +4917,7 @@ const blogArticlesContent = {
         {
           type: 'callToAction',
           title: '¿Tu Negocio Necesita Implementar IA Estratégicamente?',
-          content: 'En LUXMANIA no solo entendemos la tecnología—entendemos cómo aplicarla a tu caso específico de negocio. Desde automatizar marketing hasta integrar IA en tu servicio al cliente, te ayudamos a elegir e implementar la herramienta correcta que realmente genere resultados.',
+          content: 'En Luis Virrueta no solo entendemos la tecnología—entendemos cómo aplicarla a tu caso específico de negocio. Desde automatizar marketing hasta integrar IA en tu servicio al cliente, te ayudamos a elegir e implementar la herramienta correcta que realmente genere resultados.',
           buttonText: 'Consultoría de IA Para Tu Negocio',
           buttonLink: '/contacto'
         },
@@ -5058,7 +5058,7 @@ const blogArticlesContent = {
               reasoning: 'Llegan tarde. La decisión inconsciente ya ocurrió. Tu consciencia solo busca justificar lo que ya elegiste.'
             },
             {
-              company: 'Marca Irracional (LUXMANIA Method)',
+              company: 'Marca Irracional (Luis Virrueta Method)',
               philosophy: 'Preparación Pre-Consciente',
               approach: 'Diseñan contextos sensoriales, emocionales y estéticos que activan tu cerebro ANTES de que pienses. Color, forma, ritmo, historia, identidad: elementos que tu sistema 1 procesa en milisegundos.',
               probability: 'Inevitable',
@@ -5110,7 +5110,7 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'En LUXMANIA No Diseñamos Marcas. Diseñamos Decisiones.',
+          title: 'En Luis Virrueta No Diseñamos Marcas. Diseñamos Decisiones.',
           icon: Eye
         },
         {
@@ -5119,17 +5119,17 @@ const blogArticlesContent = {
         },
         {
           type: 'colorGrid',
-          title: 'Dónde Opera LUXMANIA vs Otras Agencias:',
+          title: 'Dónde Opera Luis Virrueta vs Otras Agencias:',
           colors: [
             {
               name: 'Nivel 1: Pre-Consciente',
               hex: '#FF6B6B',
-              psychology: 'LUXMANIA: Diseñamos estímulos que activan decisión inconsciente en los primeros 300ms. Color, forma, ritmo, contexto.'
+              psychology: 'Luis Virrueta: Diseñamos estímulos que activan decisión inconsciente en los primeros 300ms. Color, forma, ritmo, contexto.'
             },
             {
               name: 'Nivel 2: Emocional',
               hex: '#4ECDC4',
-              psychology: 'LUXMANIA: Creamos narrativas que conectan con identidad y pertenencia. El cerebro elige tribu antes que producto.'
+              psychology: 'Luis Virrueta: Creamos narrativas que conectan con identidad y pertenencia. El cerebro elige tribu antes que producto.'
             },
             {
               name: 'Nivel 3: Racional',
@@ -5174,12 +5174,12 @@ const blogArticlesContent = {
         },
         {
           type: 'conclusion',
-          content: 'Las marcas no influyen cuando ya piensas algo. Influyen en el sistema que decide antes de que pienses. Tu consciencia no inicia la acción, solo la interpreta. En LUXMANIA diseñamos para ese lugar invisible donde el cerebro elige antes de que tú lo sepas. No diseñamos marcas. Diseñamos decisiones.'
+          content: 'Las marcas no influyen cuando ya piensas algo. Influyen en el sistema que decide antes de que pienses. Tu consciencia no inicia la acción, solo la interpreta. En Diseñamosmos para ese lugar invisible donde el cerebro elige antes de que tú lo sepas. No diseñamos marcas. Diseñamos decisiones.'
         },
         {
           type: 'callToAction',
           title: '¿Tu Marca Opera Antes o Después de la Decisión?',
-          content: 'Si tu estrategia de marca se basa en argumentos racionales, estás llegando tarde. La decisión ya ocurrió 300ms antes. En LUXMANIA aplicamos neurociencia, psicología pre-consciente y diseño estratégico para que tu marca no solo se vea: se elija automáticamente. Conversemos sobre cómo rediseñar tu marca para el cerebro que realmente decide.',
+          content: 'Si tu estrategia de marca se basa en argumentos racionales, estás llegando tarde. La decisión ya ocurrió 300ms antes. En Luis Virrueta aplicamos neurociencia, psicología pre-consciente y diseño estratégico para que tu marca no solo se vea: se elija automáticamente. Conversemos sobre cómo rediseñar tu marca para el cerebro que realmente decide.',
           buttonText: 'Diseña Decisiones Inconscientes',
           buttonLink: '/contacto'
         },
@@ -5300,7 +5300,7 @@ const blogArticlesContent = {
         {
           type: 'highlight',
           content: 'En psicología y en branding, la saturación nunca es crecimiento. La reestructuración sí.',
-          author: 'LUXMANIA Method'
+          author: 'Luis Virrueta Method'
         },
         {
           type: 'heading',
@@ -5394,12 +5394,12 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'El Método LUXMANIA: Diseñar la Arquitectura del Impacto',
+          title: 'El Método Luis Virrueta: Diseñar la Arquitectura del Impacto',
           icon: Eye
         },
         {
           type: 'text',
-          content: 'LUXMANIA nació de una idea simple y radical: no diseñamos para el ojo, sino para la mente. Aplicamos psicología cognitiva, neurociencia perceptual e inteligencia artificial para crear marcas que reorganizan, no acumulan.'
+          content: 'Luis Virrueta nació de una idea simple y radical: no diseñamos para el ojo, sino para la mente. Aplicamos psicología cognitiva, neurociencia perceptual e inteligencia artificial para crear marcas que reorganizan, no acumulan.'
         },
         {
           type: 'philosophicalAnalysis',
@@ -5412,7 +5412,7 @@ const blogArticlesContent = {
               reasoning: 'Sin reorganización consciente, el cerebro no puede crear conexiones fuertes. La marca se diluye.'
             },
             {
-              company: 'LUXMANIA',
+              company: 'Luis Virrueta',
               philosophy: 'Reorganización Estratégica',
               approach: 'Cada elemento visual, cada mensaje, cada experiencia está diseñado para fortalecer conexiones específicas en la mente del usuario. No sumamos: optimizamos.',
               probability: 'Memorable',
@@ -5422,7 +5422,7 @@ const blogArticlesContent = {
         },
         {
           type: 'list',
-          title: 'Cómo LUXMANIA Reorganiza (No Acumula):',
+          title: 'Cómo Luis Virrueta Reorganiza (No Acumula):',
           items: [
             {
               title: 'Reorganizamos la atención',
@@ -5488,7 +5488,7 @@ const blogArticlesContent = {
         {
           type: 'highlight',
           content: 'Cada red neuronal, cada marca, cada experiencia humana se convierte en extraordinaria cuando deja de sumar y empieza a reorganizarse.',
-          author: 'Esa es la esencia de LUXMANIA'
+          author: 'Esa es la esencia de Luis Virrueta'
         },
         {
           type: 'heading',
@@ -5526,12 +5526,12 @@ const blogArticlesContent = {
         },
         {
           type: 'conclusion',
-          content: 'El éxito de una marca no depende de cuánto tiene, sino de cómo conecta sus elementos. La inteligencia —humana, artificial o de marca— es un sistema en movimiento que evoluciona no por saturación, sino por reestructuración. Esa es la esencia de la neurociencia. Esa es la esencia del diseño transformador. Esa es la esencia de LUXMANIA.'
+          content: 'El éxito de una marca no depende de cuánto tiene, sino de cómo conecta sus elementos. La inteligencia —humana, artificial o de marca— es un sistema en movimiento que evoluciona no por saturación, sino por reestructuración. Esa es la esencia de la neurociencia. Esa es la esencia del diseño transformador. Esa es la esencia de Luis Virrueta.'
         },
         {
           type: 'callToAction',
           title: '¿Tu Marca Está Acumulando o Reorganizando?',
-          content: 'En LUXMANIA no agregamos más ruido a tu estrategia. Reorganizamos la arquitectura completa de cómo tu marca existe en la mente de tu audiencia. Psicología cognitiva + diseño estratégico + inteligencia artificial aplicada. Si quieres una marca que no solo se ve, sino que se recuerda y transforma, conversemos.',
+          content: 'En Luis Virrueta no agregamos más ruido a tu estrategia. Reorganizamos la arquitectura completa de cómo tu marca existe en la mente de tu audiencia. Psicología cognitiva + diseño estratégico + inteligencia artificial aplicada. Si quieres una marca que no solo se ve, sino que se recuerda y transforma, conversemos.',
           buttonText: 'Reorganiza Tu Marca Con Neurociencia',
           buttonLink: '/contacto'
         },
@@ -5778,8 +5778,8 @@ const blogArticlesContent = {
       },
       {
         type: 'cta',
-        title: 'LUXMANIA: Donde Trends y Keywords se Vuelven Estrategia',
-        description: 'En LUXMANIA no hacemos content marketing genérico. Construimos sistemas de contenido híbridos que capturan intención HOY y crean autoridad para MAÑANA. Si quieres dominar tu nicho con una estrategia de contenido que combina psicología, SEO y visión de marca, hablemos.',
+        title: 'Luis Virrueta: Donde Trends y Keywords se Vuelven Estrategia',
+        description: 'En Luis Virrueta no hacemos content marketing genérico. Construimos sistemas de contenido híbridos que capturan intención HOY y crean autoridad para MAÑANA. Si quieres dominar tu nicho con una estrategia de contenido que combina psicología, SEO y visión de marca, hablemos.',
         buttonText: 'Estrategia de Contenido Personalizada',
         buttonLink: '/contacto'
       },
@@ -6076,7 +6076,7 @@ const blogArticlesContent = {
             { metric: '68%', label: 'Of complete rebrandings don\'t generate positive ROI in first 2 years', source: 'Brand Finance Rebranding Study 2024' },
             { metric: '$2.1M', label: 'Average cost of complete rebranding for established brand (Fortune 500)', source: 'Interbrand, 2025' },
             { metric: '41%', label: 'Of consumers reject new identity of familiar brand (if change is radical)', source: 'Nielsen Consumer Trust Report 2024' },
-            { metric: '3-5x', label: 'Cost multiplier: complete rebranding vs strategic refresh for same result', source: 'LUXMANIA Client Data 2024-2025' }
+            { metric: '3-5x', label: 'Cost multiplier: complete rebranding vs strategic refresh for same result', source: 'Luis Virrueta Client Data 2024-2025' }
           ]
         },
         {
@@ -6282,7 +6282,7 @@ const blogArticlesContent = {
         {
           type: 'cta',
           title: 'Need Rebranding or Just Refresh? Let\'s Do the Diagnosis',
-          content: 'At LUXMANIA we apply the complete decision framework: equity audit, competitive analysis, audience testing, and data-based recommendation (not opinion). If you need refresh, we execute in 4 weeks. If you need rebranding, we do it in 8-12 weeks with complete process. Free diagnostic consultation (60 min) to determine what your brand needs.',
+          content: 'At Luis Virrueta we apply the complete decision framework: equity audit, competitive analysis, audience testing, and data-based recommendation (not opinion). If you need refresh, we execute in 4 weeks. If you need rebranding, we do it in 8-12 weeks with complete process. Free diagnostic consultation (60 min) to determine what your brand needs.',
           buttonText: 'Request Free Diagnosis',
           buttonLink: '/contacto'
         }
@@ -6308,7 +6308,7 @@ const blogArticlesContent = {
           stats: [
             { metric: '83%', label: 'Of brands created with AI look generic and without strategy (prompt problem, not tool problem)', source: 'Design Systems Research 2025' },
             { metric: '$47B', label: 'Global investment in creative AI tools in 2024 (vs $12B in 2022)', source: 'CB Insights, Tech Investment Report' },
-            { metric: '6-8h', label: 'Average time to create complete brand identity with AI (vs 3-6 weeks traditional)', source: 'LUXMANIA Internal Data 2025' },
+            { metric: '6-8h', label: 'Average time to create complete brand identity with AI (vs 3-6 weeks traditional)', source: 'Luis Virrueta Internal Data 2025' },
             { metric: '340%', label: 'Growth in demand for "AI brand designer" as skill on LinkedIn (2023-2025)', source: 'LinkedIn Workforce Report 2025' }
           ]
         },
@@ -6441,7 +6441,7 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'LUXMANIA Framework: Human + AI Branding System',
+          title: 'Luis Virrueta Framework: Human + AI Branding System',
           icon: Award
         },
         {
@@ -6548,7 +6548,7 @@ const blogArticlesContent = {
         {
           type: 'cta',
           title: 'Want to Create Your Brand With AI But Without Losing Strategy?',
-          content: 'At LUXMANIA we combine human branding strategy (archetypes, psychology, differentiation) with world-class AI execution (Midjourney, Claude, Runway). Result: brand identities with soul + industrial speed. Free 30-min consultation to evaluate if AI is right for your project.',
+          content: 'At Luis Virrueta we combine human branding strategy (archetypes, psychology, differentiation) with world-class AI execution (Midjourney, Claude, Runway). Result: brand identities with soul + industrial speed. Free 30-min consultation to evaluate if AI is right for your project.',
           buttonText: 'Schedule Free Consultation',
           buttonLink: '/contacto'
         }
@@ -7041,7 +7041,7 @@ const blogArticlesContent = {
         {
           type: 'cta',
           title: 'Is Your Logo Failing In Any of These 7 Errors?',
-          content: 'At LUXMANIA we apply design neuroscience + brand psychology + visual aesthetics to create logos that don\'t just look good, but WORK at a brain level. We offer free logo audit with analysis of the 7 errors + specific recommendations.',
+          content: 'At Luis Virrueta we apply design neuroscience + brand psychology + visual aesthetics to create logos that don\'t just look good, but WORK at a brain level. We offer free logo audit with analysis of the 7 errors + specific recommendations.',
           buttonText: 'Request Free Logo Audit',
           buttonLink: '/contacto'
         }
@@ -7188,11 +7188,11 @@ const blogArticlesContent = {
         },
         {
           type: 'conclusion',
-          content: 'At LUXMANIA we believe design isn\'t just aesthetics. It\'s psychology. It\'s experience. It\'s emotion. That\'s why we implement technologies like Cloudflare that elevate not just the visual aspect, but the complete feeling of navigating your brand.'
+          content: 'At Luis Virrueta we believe design isn\'t just aesthetics. It\'s psychology. It\'s experience. It\'s emotion. That\'s why we implement technologies like Cloudflare that elevate not just the visual aspect, but the complete feeling of navigating your brand.'
         },
         {
           type: 'callToAction',
-          title: 'LUXMANIA + Cloudflare: A Perfect Combination',
+          title: 'Luis Virrueta + Cloudflare: A Perfect Combination',
           description: 'Let\'s talk about your project and how we can transform your digital infrastructure into a premium experience.',
           buttonText: 'Contact Us',
           buttonLink: '/contacto'
@@ -7275,7 +7275,7 @@ const blogArticlesContent = {
           type: 'subsection',
           number: '01',
           title: 'The Retina Already Predicts: Your Eye Discards The Obvious',
-          content: 'Clark cites retinal studies demonstrating something incredible: "Ganglion cells signal not the raw visual image but the departures from the predictable structure." Your retina doesn\'t send the brain what you see. It sends only the unexpected, what doesn\'t fit the pattern. 90% of what you look at is discarded because it\'s predictable. For your brand: if you\'re 100% predictable, you literally don\'t reach conscious awareness. If you\'re 100% unexpected, the brain rejects you as costly to process. LUXMANIA designs in the middle zone: familiar patterns with strategic breaks.',
+          content: 'Clark cites retinal studies demonstrating something incredible: "Ganglion cells signal not the raw visual image but the departures from the predictable structure." Your retina doesn\'t send the brain what you see. It sends only the unexpected, what doesn\'t fit the pattern. 90% of what you look at is discarded because it\'s predictable. For your brand: if you\'re 100% predictable, you literally don\'t reach conscious awareness. If you\'re 100% unexpected, the brain rejects you as costly to process. Luis Virrueta designs in the middle zone: familiar patterns with strategic breaks.',
           gradient: 'from-violet-500 to-purple-600'
         },
         {
@@ -7325,19 +7325,19 @@ const blogArticlesContent = {
         },
         {
           type: 'highlight',
-          content: '"Brands that understand prediction and minimal surprise decide for the customer before the customer consciously decides." — LUXMANIA',
+          content: '"Brands that understand prediction and minimal surprise decide for the customer before the customer consciously decides." — Luis Virrueta',
           author: 'Predictive Branding (2025)'
         },
         {
           type: 'callToAction',
           title: 'Does Your Brand Operate In The Predictive Layer or The Reactive Layer?',
-          description: 'LUXMANIA designs brands that insert themselves into the customer\'s generative model before conscious decision. We don\'t compete for attention. We compete to be your brain\'s most likely prediction.',
+          description: 'Luis Virrueta designs brands that insert themselves into the customer\'s generative model before conscious decision. We don\'t compete for attention. We compete to be your brain\'s most likely prediction.',
           buttonText: 'Predictive Audit',
           buttonLink: '/contacto'
         },
         {
           type: 'conclusion',
-          content: 'The brain doesn\'t seek information. It seeks minimal surprise. Your brand can be noise the brain discards, or it can be the hypothesis the brain prefers because it minimizes free energy. Andy Clark gave us the science. LUXMANIA applied it to branding. Now it\'s your turn to decide: do you keep designing messages nobody asked for, or do you start designing predictions the brain already expected?'
+          content: 'The brain doesn\'t seek information. It seeks minimal surprise. Your brand can be noise the brain discards, or it can be the hypothesis the brain prefers because it minimizes free energy. Andy Clark gave us the science. Luis Virrueta applied it to branding. Now it\'s your turn to decide: do you keep designing messages nobody asked for, or do you start designing predictions the brain already expected?'
         }
       ]
     },
@@ -7476,7 +7476,7 @@ const blogArticlesContent = {
               reasoning: 'They arrive late. The unconscious decision already occurred. Your consciousness only seeks to justify what you already chose.'
             },
             {
-              company: 'Irrational Brand (LUXMANIA Method)',
+              company: 'Irrational Brand (Luis Virrueta Method)',
               philosophy: 'Pre-Conscious Preparation',
               approach: 'They design sensory, emotional, and aesthetic contexts that activate your brain BEFORE you think. Color, shape, rhythm, story, identity: elements your System 1 processes in milliseconds.',
               probability: 'Inevitable',
@@ -7528,7 +7528,7 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'At LUXMANIA We Don\'t Design Brands. We Design Decisions.',
+          title: 'At Luis Virrueta We Don\'t Design Brands. We Design Decisions.',
           icon: Eye
         },
         {
@@ -7537,17 +7537,17 @@ const blogArticlesContent = {
         },
         {
           type: 'colorGrid',
-          title: 'Where LUXMANIA Operates vs Other Agencies:',
+          title: 'Where Luis Virrueta Operates vs Other Agencies:',
           colors: [
             {
               name: 'Level 1: Pre-Conscious',
               hex: '#FF6B6B',
-              psychology: 'LUXMANIA: We design stimuli that activate unconscious decision in the first 300ms. Color, shape, rhythm, context.'
+              psychology: 'Luis Virrueta: We design stimuli that activate unconscious decision in the first 300ms. Color, shape, rhythm, context.'
             },
             {
               name: 'Level 2: Emotional',
               hex: '#4ECDC4',
-              psychology: 'LUXMANIA: We create narratives that connect with identity and belonging. The brain chooses tribe before product.'
+              psychology: 'Luis Virrueta: We create narratives that connect with identity and belonging. The brain chooses tribe before product.'
             },
             {
               name: 'Level 3: Rational',
@@ -7563,12 +7563,12 @@ const blogArticlesContent = {
         },
         {
           type: 'conclusion',
-          content: 'Brands don\'t influence when you already think something. They influence the system that decides before you think. Your consciousness doesn\'t initiate action, it only interprets it. At LUXMANIA we design for that invisible place where the brain chooses before you know it. We don\'t design brands. We design decisions.'
+          content: 'Brands don\'t influence when you already think something. They influence the system that decides before you think. Your consciousness doesn\'t initiate action, it only interprets it. At Luis Virrueta we design for that invisible place where the brain chooses before you know it. We don\'t design brands. We design decisions.'
         },
         {
           type: 'callToAction',
           title: 'Does Your Brand Operate Before or After The Decision?',
-          content: 'If your brand strategy is based on rational arguments, you\'re arriving late. The decision already occurred 300ms earlier. At LUXMANIA we apply neuroscience, pre-conscious psychology, and strategic design so your brand doesn\'t just look good: it gets chosen automatically. Let\'s talk about how to redesign your brand for the brain that really decides.',
+          content: 'If your brand strategy is based on rational arguments, you\'re arriving late. The decision already occurred 300ms earlier. At Luis Virrueta we apply neuroscience, pre-conscious psychology, and strategic design so your brand doesn\'t just look good: it gets chosen automatically. Let\'s talk about how to redesign your brand for the brain that really decides.',
           buttonText: 'Design Unconscious Decisions',
           buttonLink: '/contacto'
         }
@@ -7689,7 +7689,7 @@ const blogArticlesContent = {
         {
           type: 'highlight',
           content: 'In psychology and branding, saturation is never growth. Restructuring is.',
-          author: 'LUXMANIA Method'
+          author: 'Luis Virrueta Method'
         },
         {
           type: 'heading',
@@ -7761,7 +7761,7 @@ const blogArticlesContent = {
         },
         {
           type: 'list',
-          title: 'How LUXMANIA Reorganizes (Not Accumulates):',
+          title: 'How Luis Virrueta Reorganizes (Not Accumulates):',
           items: [
             {
               title: 'We reorganize attention',
@@ -7787,12 +7787,12 @@ const blogArticlesContent = {
         },
         {
           type: 'conclusion',
-          content: 'A brand\'s success doesn\'t depend on how much it has, but on how it connects its elements. Intelligence—human, artificial, or brand—is a moving system that evolves not by saturation, but by restructuring. That\'s the essence of neuroscience. That\'s the essence of transformative design. That\'s the essence of LUXMANIA.'
+          content: 'A brand\'s success doesn\'t depend on how much it has, but on how it connects its elements. Intelligence—human, artificial, or brand—is a moving system that evolves not by saturation, but by restructuring. That\'s the essence of neuroscience. That\'s the essence of transformative design. That\'s the essence of Luis Virrueta.'
         },
         {
           type: 'callToAction',
           title: 'Is Your Brand Accumulating or Reorganizing?',
-          content: 'At LUXMANIA we don\'t add more noise to your strategy. We reorganize the complete architecture of how your brand exists in your audience\'s mind. Cognitive psychology + strategic design + applied artificial intelligence. If you want a brand that\'s not just seen, but remembered and transforms, let\'s talk.',
+          content: 'At Luis Virrueta we don\'t add more noise to your strategy. We reorganize the complete architecture of how your brand exists in your audience\'s mind. Cognitive psychology + strategic design + applied artificial intelligence. If you want a brand that\'s not just seen, but remembered and transforms, let\'s talk.',
           buttonText: 'Reorganize Your Brand With Neuroscience',
           buttonLink: '/contacto'
         }
@@ -8020,7 +8020,7 @@ const blogArticlesContent = {
         {
           type: 'callToAction',
           title: 'Does Your Business Need To Implement AI Strategically?',
-          content: 'At LUXMANIA we don\'t just understand technology—we understand how to apply it to your specific business case. From automating marketing to integrating AI into your customer service, we help you choose and implement the right tool that actually generates results.',
+          content: 'At Luis Virrueta we don\'t just understand technology—we understand how to apply it to your specific business case. From automating marketing to integrating AI into your customer service, we help you choose and implement the right tool that actually generates results.',
           buttonText: 'AI Consulting For Your Business',
           buttonLink: '/contacto'
         }
@@ -8332,12 +8332,12 @@ const blogArticlesContent = {
         },
         {
           type: 'heading',
-          title: 'LUXMANIA Framework: Practical Implementation of Archetype in Your Visual System',
+          title: 'Luis Virrueta Framework: Practical Implementation of Archetype in Your Visual System',
           icon: Zap
         },
         {
           type: 'text',
-          content: 'Knowing your archetype is just the beginning. Now comes the critical part: implementing it consistently at every touchpoint with your audience. This is the LUXMANIA framework that combines Design + Psychology + Strategy to translate archetype into coherent visual system.'
+          content: 'Knowing your archetype is just the beginning. Now comes the critical part: implementing it consistently at every touchpoint with your audience. This is the Luis Virrueta framework that combines Design + Psychology + Strategy to translate archetype into coherent visual system.'
         },
         {
           type: 'subsection',
@@ -8448,8 +8448,8 @@ const blogArticlesContent = {
         {
           type: 'cta',
           title: 'Ready To Discover and Design Your Brand Archetype?',
-          content: 'At LUXMANIA we don\'t guess. We apply Psychology + Design + Strategy to identify your correct archetype and translate it into a coherent visual system that resonates with your ideal audience.',
-          buttonText: 'LUXMANIA Archetype Consultation',
+          content: 'At Luis Virrueta we don\'t guess. We apply Psychology + Design + Strategy to identify your correct archetype and translate it into a coherent visual system that resonates with your ideal audience.',
+          buttonText: 'Luis Virrueta Archetype Consultation',
           buttonLink: '/contacto'
         }
       ]
@@ -8658,7 +8658,7 @@ const blogArticlesContent = {
         {
           type: 'callToAction',
           title: 'Need Help Implementing AI in Your Business?',
-          content: 'At LUXMANIA we don\'t just understand technology. We understand how to apply it to your specific case without overwhelming you. From automating your marketing to integrating AI into your customer service, we help you choose and implement the right stack that actually generates measurable results.',
+          content: 'At Luis Virrueta we don\'t just understand technology. We understand how to apply it to your specific case without overwhelming you. From automating your marketing to integrating AI into your customer service, we help you choose and implement the right stack that actually generates measurable results.',
           buttonText: 'AI Consulting For Your Business',
           buttonLink: '/contacto'
         }
@@ -8891,7 +8891,7 @@ const blogArticlesContent = {
           items: [
             {
               title: 'Contenido Gratis de Alto Valor',
-              description: 'No des "muestras gratis", da regalos que resuelven problemas reales. Ejemplo: LUXMANIA podría ofrecer un "Mini Análisis de Arquetipo de Marca" gratuito. El cliente recibe valor real, siente reciprocidad, y cuando necesite branding completo, la deuda psicológica ya existe.'
+              description: 'No des "muestras gratis", da regalos que resuelven problemas reales. Ejemplo: Luis Virrueta podría ofrecer un "Mini Análisis de Arquetipo de Marca" gratuito. El cliente recibe valor real, siente reciprocidad, y cuando necesite branding completo, la deuda psicológica ya existe.'
             },
             {
               title: 'Sorprende con lo Inesperado',
@@ -8995,7 +8995,7 @@ const blogArticlesContent = {
           items: [
             {
               title: 'Humaniza Tu Marca',
-              description: 'Muestra al equipo detrás de la marca. "Sobre Nosotros" con fotos, detrás de cámaras, historias personales. La gente compra a personas, no a logos anónimos. Ejemplo: LUXMANIA muestra a Luis Virrueta, su filosofía, su enfoque. Eso genera simpatía.'
+              description: 'Muestra al equipo detrás de la marca. "Sobre Nosotros" con fotos, detrás de cámaras, historias personales. La gente compra a personas, no a logos anónimos. Ejemplo: Luis Virrueta muestra a Luis Virrueta, su filosofía, su enfoque. Eso genera simpatía.'
             },
             {
               title: 'Encuentra Puntos en Común',
@@ -9848,8 +9848,8 @@ const blogArticlesContent = {
         },
         {
           type: 'cta',
-          title: 'LUXMANIA: Where Trends and Keywords Become Strategy',
-          description: 'At LUXMANIA we don\'t do generic content marketing. We build hybrid content systems that capture intention TODAY and create authority for TOMORROW. If you want to dominate your niche with a content strategy combining psychology, SEO and brand vision, let\'s talk.',
+          title: 'Luis Virrueta: Where Trends and Keywords Become Strategy',
+          description: 'At Luis Virrueta we don\'t do generic content marketing. We build hybrid content systems that capture intention TODAY and create authority for TOMORROW. If you want to dominate your niche with a content strategy combining psychology, SEO and brand vision, let\'s talk.',
           buttonText: 'Personalized Content Strategy',
           buttonLink: '/contacto'
         },
@@ -9976,3 +9976,4 @@ export const getArticleContent = (slug, language = 'es') => {
 }
 
 export default blogArticlesContent
+

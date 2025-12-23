@@ -11,6 +11,7 @@ import Footer from './components/Footer'
 import WhatsAppButton from './components/WhatsAppButton'
 import SmoothScroll from './components/SmoothScroll'
 import ScrollToTop from './components/ScrollToTop'
+import GoogleAnalytics from './components/GoogleAnalytics'
 
 // Lazy load pages
 const PhilosophyPage = lazy(() => import('./pages/PhilosophyPage'))
@@ -236,6 +237,7 @@ function App() {
   return (
     <HelmetProvider>
       <LanguageProvider>
+        <GoogleAnalytics />
         <AppContent />
       </LanguageProvider>
     </HelmetProvider>

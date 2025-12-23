@@ -126,7 +126,7 @@ const ArquetiposPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28">
       <SEOHead 
-        title="Arquetipos de Marca - 12 Arquetipos de Carl Jung | LUXMANIA"
+        title="Arquetipos de Marca - 12 Arquetipos de Carl Jung | Luis Virrueta"
         description="Descubre cómo los 12 arquetipos de Carl Jung transforman tu marca. Gobernante, Creador, Sabio, Inocente, Explorador y más. Psicología profunda aplicada al branding."
         image="/ARQUETIPOS CEREBRO.mp4"
         url="/arquetipos"

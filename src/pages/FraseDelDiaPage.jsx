@@ -2,6 +2,7 @@ import { motion, useInView } from 'framer-motion'
 import { useMemo, useRef, useState, useEffect } from 'react'
 import { Share2, Copy, CheckCircle, ChevronDown, Quote, ArrowLeft, Home, Lightbulb, HelpCircle, Coffee, MessageCircle, User, Compass, BookOpen, Map } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 
 const MEXICO_TZ = 'America/Mexico_City'
 const CHANGE_HOUR_MX = 0 // Cambio a medianoche
@@ -1985,7 +1986,51 @@ const FraseDelDiaPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black text-white overflow-x-hidden">
+    <>
+      <Helmet>
+        <title>1 Frase × Día - Filosofía y Psicología Diaria | Luis Virrueta</title>
+        <meta name="description" content={`"${phrase.quote}" — ${phrase.author}. Una frase diaria de filosofía y psicología profunda con su significado y preguntas para reflexionar. Actualización diaria a medianoche hora de México.`} />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content={`1 Frase × Día - ${phrase.author}`} />
+        <meta property="og:description" content={phrase.quote} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={shareUrl} />
+        <meta property="og:image" content="https://luisvirrueta.com/portada.jpg" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`1 Frase × Día - ${phrase.author}`} />
+        <meta name="twitter:description" content={phrase.quote} />
+        <meta name="twitter:image" content="https://luisvirrueta.com/portada.jpg" />
+        
+        {/* SEO */}
+        <meta name="keywords" content="frase del día, filosofía, psicología, reflexión, Carl Jung, crecimiento personal, desarrollo personal, coaching" />
+        <link rel="canonical" href={shareUrl} />
+        
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": "1 Frase × Día",
+            "description": phrase.quote,
+            "author": {
+              "@type": "Person",
+              "name": phrase.author
+            },
+            "publisher": {
+              "@type": "Person",
+              "name": "Luis Virrueta",
+              "url": "https://luisvirrueta.com"
+            },
+            "datePublished": dateKey,
+            "dateModified": dateKey
+          })}
+        </script>
+      </Helmet>
+      
+      <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black text-white overflow-x-hidden">
       {/* Botón flotante discreto */}
       <button
         type="button"
@@ -2450,6 +2495,7 @@ const FraseDelDiaPage = () => {
         </div>
       </section>
     </div>
+    </>
   )
 }
 
