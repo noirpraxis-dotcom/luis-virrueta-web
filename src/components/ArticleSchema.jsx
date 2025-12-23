@@ -43,7 +43,7 @@ const ArticleSchema = ({
       "@id": fullUrl
     },
     "keywords": tags.join(', '),
-    "articleSection": tags[0] || "Diseño",
+    "articleSection": tags[0] || "Psicoanálisis",
     "inLanguage": "es-MX",
     "isAccessibleForFree": "True",
     "isPartOf": {

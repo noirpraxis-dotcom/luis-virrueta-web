@@ -35,11 +35,11 @@ const AboutPage = () => {
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28 overflow-x-hidden">
       <SEOHead 
         title="Sobre Luis Virrueta - Psicoanalista y Filósofo"
-        description="Psicoanalista y filósofo. Trabajo en la intersección entre psicoanálisis, filosofía y diseño para crear experiencias que conectan con el inconsciente."
+        description="Psicoanalista y filósofo. Exploro cómo interpretamos la realidad desde el inconsciente y por qué seguimos atrapados en patrones que no elegimos."
         image="/yo mero.webp"
         url="/sobre-mi"
         type="profile"
-        tags={['Luis Virrueta', 'psicología', 'branding', 'diseñador', 'developer', 'arquetipos']}
+        tags={['Luis Virrueta', 'psicoanálisis', 'filosofía', 'inconsciente', 'percepción', 'transformación']}
       />
       
       {/* Hero Section */}
