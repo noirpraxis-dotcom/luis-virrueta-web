@@ -1993,7 +1993,7 @@ const FraseDelDiaPage = () => {
               <span className="font-semibold">día</span>
             </h1>
             <p className="mt-3 text-xs sm:text-sm text-white/50 font-light">
-              Se actualiza todos los días a las 00:00 (hora de México). Regresa mañana para una nueva.
+              Se actualiza todos los días a las 00:00 (hora de México). Regresa mañana por una nueva.
             </p>
           </motion.div>
 
@@ -2235,7 +2235,7 @@ const FraseDelDiaPage = () => {
             </div>
 
             <div className="text-[11px] text-white/35 font-light">
-              Comparte esta frase o guarda el enlace para volver después.
+              Compartir también es una forma de integrarlo.
             </div>
           </motion.div>
 
@@ -2247,65 +2247,66 @@ const FraseDelDiaPage = () => {
             transition={{ duration: 0.9, delay: 1.1 }}
             className="mt-10"
           >
-            <div className="max-w-3xl mx-auto rounded-3xl border border-white/10 bg-black/20 backdrop-blur-md p-6 sm:p-8">
-              <div className="flex items-start justify-between gap-6">
-                <div className="space-y-2">
-                  <h3 className="text-sm uppercase tracking-widest text-white/40 font-light">Invítame un café</h3>
-                  <p className="text-white/75 font-light leading-relaxed">
-                    Si esto te sirve, puedes apoyar para que siga siendo un espacio gratuito. Funciona sin fines de lucro: tu aporte ayuda a mantenerlo vivo.
-                  </p>
+            <div className="max-w-3xl mx-auto rounded-3xl border border-white/10 bg-black/25 backdrop-blur-md p-7 sm:p-10">
+              <div className="text-center">
+                <div className="mx-auto w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center">
+                  <Coffee className="w-5 h-5 text-white/70" strokeWidth={1.5} />
                 </div>
-                <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-white/5">
-                  <Coffee className="w-5 h-5 text-white/60" strokeWidth={1.5} />
-                </div>
+                <h3 className="mt-4 text-lg sm:text-xl font-light text-white/90 tracking-wide">Invítame un café</h3>
+                <p className="mt-2 text-sm sm:text-base text-white/65 font-light leading-relaxed">
+                  Si esto te sirve, puedes apoyar para que siga siendo un espacio gratuito. Funciona sin fines de lucro.
+                </p>
               </div>
 
-              <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleDonate(20)}
-                    className="px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs text-white/75 transition-all"
-                  >
-                    $20
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDonate(50)}
-                    className="px-4 py-2 rounded-full border border-white/20 bg-white/10 hover:bg-white/15 text-xs text-white/90 transition-all"
-                  >
-                    $50 · más elegido
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDonate(100)}
-                    className="px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs text-white/75 transition-all"
-                  >
-                    $100
-                  </button>
-                </div>
+              <div className="mt-7 grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <button
+                  type="button"
+                  onClick={() => handleDonate(50)}
+                  className="col-span-2 sm:col-span-1 sm:col-start-2 px-6 py-4 rounded-2xl border border-white/20 bg-white/10 hover:bg-white/15 transition-all text-left"
+                >
+                  <div className="text-xs uppercase tracking-widest text-white/40">Más elegido</div>
+                  <div className="mt-1 text-2xl text-white/90 font-light">$50</div>
+                </button>
 
-                <div className="flex items-center gap-2">
-                  <input
-                    value={customAmount}
-                    onChange={(e) => setCustomAmount(e.target.value.replace(/[^0-9]/g, ''))}
-                    inputMode="numeric"
-                    placeholder="Otra cantidad"
-                    className="w-36 px-4 py-2 rounded-full border border-white/10 bg-black/30 text-xs text-white/80 placeholder:text-white/30 outline-none focus:border-white/20"
-                    aria-label="Otra cantidad"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleDonate('custom')}
-                    disabled={!customAmount}
-                    className="px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs text-white/75 transition-all disabled:opacity-40 disabled:hover:bg-white/5"
-                  >
-                    Aportar
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => handleDonate(20)}
+                  className="px-6 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all text-left"
+                >
+                  <div className="text-xs uppercase tracking-widest text-white/40">Aporte</div>
+                  <div className="mt-1 text-xl text-white/80 font-light">$20</div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleDonate(100)}
+                  className="px-6 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all text-left"
+                >
+                  <div className="text-xs uppercase tracking-widest text-white/40">Aporte</div>
+                  <div className="mt-1 text-xl text-white/80 font-light">$100</div>
+                </button>
               </div>
 
-              <div className="mt-4 text-[11px] text-white/35 font-light">
+              <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2">
+                <input
+                  value={customAmount}
+                  onChange={(e) => setCustomAmount(e.target.value.replace(/[^0-9]/g, ''))}
+                  inputMode="numeric"
+                  placeholder="Otra cantidad"
+                  className="w-full sm:w-44 px-5 py-3 rounded-full border border-white/10 bg-black/30 text-sm text-white/80 placeholder:text-white/30 outline-none focus:border-white/20"
+                  aria-label="Otra cantidad"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleDonate('custom')}
+                  disabled={!customAmount}
+                  className="px-6 py-3 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-sm text-white/80 transition-all disabled:opacity-40 disabled:hover:bg-white/5"
+                >
+                  Aportar
+                </button>
+              </div>
+
+              <div className="mt-4 text-center text-[11px] text-white/35 font-light">
                 Pagos seguros con tarjeta mediante Stripe (se abre en una nueva pestaña).
               </div>
             </div>
