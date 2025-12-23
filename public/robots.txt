@@ -1,10 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /private/
 
-# Sitemap
-Sitemap: https://lux-mania.com/sitemap.xml
-
-# Crawl-delay (opcional, para no sobrecargar servidor)
-Crawl-delay: 1
+Sitemap: https://luisvirrueta.com/sitemap.xml
