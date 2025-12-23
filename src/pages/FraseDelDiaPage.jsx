@@ -2005,7 +2005,7 @@ const FraseDelDiaPage = () => {
               <span className="font-semibold">día</span>
             </h1>
             <p className="mt-3 text-xs sm:text-sm text-white/50 font-light">
-              Se actualiza todos los días a las 00:00 (hora de México). Regresa mañana por una nueva.
+              Se actualiza todos los días a las 00:00. Regresa mañana por una nueva.
             </p>
           </motion.div>
 
@@ -2197,18 +2197,16 @@ const FraseDelDiaPage = () => {
                   </motion.div>
                 ))}
               </div>
-            </motion.div>
-          </div>
 
-          {/* Acciones: compartir + copiar (alineados) */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 1 }}
-            className="mt-16 flex flex-col items-center gap-3"
-          >
-            <div className="flex items-center justify-center gap-4">
+              {/* Acciones: compartir + copiar (alineados) */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 1 }}
+                className="mt-16 flex flex-col items-start gap-4"
+              >
+            <div className="flex items-center justify-start gap-4">
               <button
                 type="button"
                 onClick={handleShare}
@@ -2259,6 +2257,8 @@ const FraseDelDiaPage = () => {
               Compartir también es una forma de integrarlo.
             </div>
           </motion.div>
+            </motion.div>
+          </div>
 
           {/* Invítame un café */}
           <motion.div
@@ -2279,65 +2279,49 @@ const FraseDelDiaPage = () => {
                 </p>
               </div>
 
-              <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 items-stretch">
+              <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 max-w-3xl mx-auto">
                 <button
                   type="button"
                   onClick={() => handleDonate(20)}
-                  className="w-full px-6 py-5 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all text-left"
+                  className="group relative aspect-square sm:aspect-auto sm:h-40 flex flex-col items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
                 >
-                  <div className="text-xs uppercase tracking-widest text-white/40">Aporte</div>
-                  <div className="mt-1 text-2xl text-white/85 font-light">$20</div>
+                  <div className="text-xs uppercase tracking-widest text-white/40 group-hover:text-white/60 transition-colors">Aporte</div>
+                  <div className="mt-2 text-3xl sm:text-4xl text-white/90 font-light group-hover:text-white transition-colors">$20</div>
+                  <div className="mt-1 text-xs text-white/50 group-hover:text-white/70 transition-colors">MXN</div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleDonate(50)}
-                  className="relative w-full px-6 py-5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/15 transition-all text-left sm:scale-[1.03]"
+                  className="group relative aspect-square sm:aspect-auto sm:h-40 flex flex-col items-center justify-center rounded-xl border-2 border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/15 hover:border-emerald-500/60 transition-all duration-300 sm:scale-105"
                 >
-                  <div className="absolute top-3 right-3 text-[10px] uppercase tracking-widest px-2 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-200/90">
-                    Más elegido
+                  <div className="absolute top-2 right-2 text-[9px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-200/90">
+                    Popular
                   </div>
-                  <div className="text-xs uppercase tracking-widest text-emerald-200/60">Aporte</div>
-                  <div className="mt-1 text-3xl text-white/95 font-light">$50</div>
+                  <div className="text-xs uppercase tracking-widest text-emerald-200/60 group-hover:text-emerald-200/80 transition-colors">Aporte</div>
+                  <div className="mt-2 text-4xl sm:text-5xl text-white/95 font-light group-hover:text-white transition-colors">$50</div>
+                  <div className="mt-1 text-xs text-emerald-200/60 group-hover:text-emerald-200/80 transition-colors">MXN</div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleDonate(100)}
-                  className="w-full px-6 py-5 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all text-left"
+                  className="group relative aspect-square sm:aspect-auto sm:h-40 flex flex-col items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
                 >
-                  <div className="text-xs uppercase tracking-widest text-white/40">Aporte</div>
-                  <div className="mt-1 text-2xl text-white/85 font-light">$100</div>
+                  <div className="text-xs uppercase tracking-widest text-white/40 group-hover:text-white/60 transition-colors">Aporte</div>
+                  <div className="mt-2 text-3xl sm:text-4xl text-white/90 font-light group-hover:text-white transition-colors">$100</div>
+                  <div className="mt-1 text-xs text-white/50 group-hover:text-white/70 transition-colors">MXN</div>
                 </button>
               </div>
 
-              <div className="mt-5 flex flex-col items-center gap-3">
-                <div className="w-full max-w-md flex items-stretch gap-2">
-                  <input
-                    value={customAmount}
-                    onChange={(e) => setCustomAmount(e.target.value.replace(/[^0-9]/g, ''))}
-                    inputMode="numeric"
-                    placeholder="Otra cantidad"
-                    className="flex-1 px-5 py-3 rounded-full border border-white/10 bg-black/30 text-sm text-white/85 placeholder:text-white/30 outline-none focus:border-white/20"
-                    aria-label="Otra cantidad"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleDonate('custom')}
-                    disabled={!customAmount}
-                    className="px-6 py-3 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-sm text-white/85 transition-all disabled:opacity-40 disabled:hover:bg-white/5"
-                  >
-                    Aportar
-                  </button>
-                </div>
-
+              <div className="mt-6 flex flex-col items-center gap-3">
                 <button
                   type="button"
                   onClick={handleWhatsAppDonate}
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-sm text-white/80 transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 text-sm text-white/80 hover:text-white/95 transition-all duration-300"
                 >
                   <MessageCircle className="w-4 h-4" strokeWidth={1.5} />
-                  <span>Contáctame por WhatsApp para donar la cantidad que quieras</span>
+                  <span>Otra cantidad por WhatsApp</span>
                 </button>
               </div>
 
