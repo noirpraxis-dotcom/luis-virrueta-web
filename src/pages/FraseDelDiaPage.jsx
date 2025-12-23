@@ -1,6 +1,7 @@
 import { motion, useInView } from 'framer-motion'
-import { useMemo, useRef, useState } from 'react'
-import { Share2, Copy, CheckCircle } from 'lucide-react'
+import { useMemo, useRef, useState, useEffect } from 'react'
+import { Share2, Copy, CheckCircle, ChevronDown, Quote } from 'lucide-react'
+import Header from '../components/Header'
 
 const MEXICO_TZ = 'America/Mexico_City'
 const CHANGE_HOUR_MX = 6
@@ -111,6 +112,12 @@ const FraseDelDiaPage = () => {
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
 
   const [copied, setCopied] = useState(false)
+  const [hideHeader, setHideHeader] = useState(true)
+
+  useEffect(() => {
+    setHideHeader(true)
+    return () => setHideHeader(false)
+  }, [])
 
   const dateKey = useMemo(() => {
     const params = new URLSearchParams(window.location.search)
@@ -127,12 +134,12 @@ const FraseDelDiaPage = () => {
   }, [dateKey])
 
   const handleShare = async () => {
-    const title = 'Frase del día'
-    const text = `${phrase.quote} — ${phrase.author}`
+    const title = '1 frase x día'
+    const shareText = `"${phrase.quote}" — ${phrase.author}\n\n¿Quieres saber qué significa? Presiona este link: ${shareUrl}`
 
     try {
       if (navigator?.share) {
-        await navigator.share({ title, text, url: shareUrl })
+        await navigator.share({ title, text: shareText, url: shareUrl })
         return
       }
     } catch {
@@ -140,7 +147,18 @@ const FraseDelDiaPage = () => {
     }
 
     try {
-      await navigator.clipboard.writeText(shareUrl)
+      await navigator.clipboard.writeText(shareText)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1800)
+    } catch {
+      // ignore
+    }
+  }
+
+  const handleCopyLink = async () => {
+    const shareText = `"${phrase.quote}" — ${phrase.author}\n\n¿Quieres saber qué significa? Presiona este link: ${shareUrl}`
+    try {
+      await navigator.clipboard.writeText(shareText)
       setCopied(true)
       setTimeout(() => setCopied(false), 1800)
     } catch {
@@ -150,6 +168,9 @@ const FraseDelDiaPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black text-white overflow-x-hidden">
+      {/* Header oculto en esta página */}
+      {!hideHeader && <Header />}
+      
       {/* Hero Section - Cinematográfico con video full */}
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
         {/* Video Background */}
@@ -170,11 +191,31 @@ const FraseDelDiaPage = () => {
 
         {/* Contenido central */}
         <div className="relative z-10 w-full max-w-6xl mx-auto">
+          {/* Título arriba del círculo */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-center mb-8"
+          >
+            <h1 
+              className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight"
+              style={{
+                background: 'linear-gradient(135deg, #a855f7 0%, #ec4899 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}
+            >
+              1 frase x día
+            </h1>
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-            className="text-center space-y-12"
+            className="text-center space-y-6"
           >
             {/* Círculo con la frase - Diseño Google-like */}
             <div className="relative mx-auto" style={{ maxWidth: '700px' }}>
@@ -189,17 +230,17 @@ const FraseDelDiaPage = () => {
                 }}
               />
               
-              {/* Contenedor principal */}
-              <div className="relative bg-black/60 backdrop-blur-xl rounded-full border border-white/10 p-12 sm:p-16 lg:p-20">
-                {/* Día del año - arriba */}
+              {/* Contenedor principal - más transparente */}
+              <div className="relative bg-black/20 backdrop-blur-md rounded-full border border-white/10 p-12 sm:p-16 lg:p-20">
+                {/* Ícono de comillas decorativo */}
                 <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={isHeroInView ? { opacity: 1, scale: 1 } : {}}
                   transition={{ duration: 0.8, delay: 0.3 }}
-                  className="absolute top-8 left-1/2 -translate-x-1/2"
+                  className="absolute top-6 right-6 sm:top-8 sm:right-8"
                 >
-                  <div className="text-white/40 text-xs font-mono tracking-wider">
-                    DÍA {String(doy).padStart(3, '0')} · {dateKey}
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center">
+                    <Quote className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" strokeWidth={1.5} />
                   </div>
                 </motion.div>
 
@@ -221,22 +262,6 @@ const FraseDelDiaPage = () => {
                     {phrase.author}
                   </p>
                 </motion.div>
-
-                {/* Indicador de scroll abajo */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={isHeroInView ? { opacity: 1 } : {}}
-                  transition={{ duration: 0.8, delay: 1 }}
-                  className="absolute bottom-6 left-1/2 -translate-x-1/2"
-                >
-                  <motion.div
-                    animate={{ y: [0, 8, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    className="text-white/30 text-xs tracking-widest"
-                  >
-                    DESLIZA
-                  </motion.div>
-                </motion.div>
               </div>
             </div>
 
@@ -251,84 +276,116 @@ const FraseDelDiaPage = () => {
               <Share2 className="w-4 h-4" strokeWidth={1.5} />
               <span>Compartir</span>
             </motion.button>
+
+            {/* Indicador de scroll - debajo de compartir */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={isHeroInView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.8, delay: 1.3 }}
+              className="flex flex-col items-center gap-2 mt-4"
+            >
+              <motion.div
+                animate={{ y: [0, 8, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="flex flex-col items-center gap-1"
+              >
+                <ChevronDown className="w-5 h-5 text-white/30" strokeWidth={1.5} />
+                <span className="text-white/30 text-xs tracking-widest">DESLIZA</span>
+              </motion.div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Sección de Significado - Cinematográfica */}
+      {/* Sección de Significado - Cinematográfica con layout en PC */}
       <section className="relative py-24 lg:py-32 px-6 lg:px-20">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           
-          {/* Significado */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="mb-20"
-          >
-            <motion.h2
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-sm uppercase tracking-widest text-white/40 font-light mb-8 text-center"
-            >
-              Significado
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-xl lg:text-2xl font-light text-white/80 leading-relaxed text-center max-w-3xl mx-auto"
-            >
-              {phrase.meaning}
-            </motion.p>
-          </motion.div>
-
-          {/* Divisor */}
-          <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-20" />
-
-          {/* Preguntas */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-          >
-            <motion.h2
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-sm uppercase tracking-widest text-white/40 font-light mb-12 text-center"
-            >
-              Preguntas para reflexionar
-            </motion.h2>
+          {/* Layout responsive: columnas en desktop, stack en mobile */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
             
-            <div className="space-y-8">
-              {phrase.questions.map((q, idx) => (
-                <motion.div
-                  key={q}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.3 + idx * 0.15 }}
-                  className="relative pl-12"
-                >
-                  {/* Número */}
-                  <div className="absolute left-0 top-1 w-8 h-8 rounded-full border border-white/20 flex items-center justify-center">
-                    <span className="text-sm text-white/50 font-light">{idx + 1}</span>
-                  </div>
-                  {/* Pregunta */}
-                  <p className="text-lg lg:text-xl text-white/70 font-light leading-relaxed">
-                    {q}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+            {/* Significado - Izquierda en PC */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1 }}
+              className="space-y-8"
+            >
+              <motion.h2
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="text-sm uppercase tracking-widest text-white/40 font-light mb-8"
+              >
+                Significado
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="text-xl lg:text-2xl font-light text-white/80 leading-relaxed"
+              >
+                {phrase.meaning}
+              </motion.p>
+              
+              {/* Metadata del día - más arriba */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="pt-4 border-t border-white/10"
+              >
+                <div className="text-white/40 text-xs font-mono tracking-wider">
+                  DÍA {String(doy).padStart(3, '0')} · {dateKey}
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* Preguntas - Derecha en PC */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1 }}
+              className="space-y-8"
+            >
+              <motion.h2
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="text-sm uppercase tracking-widest text-white/40 font-light mb-8"
+              >
+                Preguntas para reflexionar
+              </motion.h2>
+              
+              <div className="space-y-8">
+                {phrase.questions.map((q, idx) => (
+                  <motion.div
+                    key={q}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.3 + idx * 0.15 }}
+                    className="relative pl-12"
+                  >
+                    {/* Número */}
+                    <div className="absolute left-0 top-1 w-8 h-8 rounded-full border border-white/20 flex items-center justify-center">
+                      <span className="text-sm text-white/50 font-light">{idx + 1}</span>
+                    </div>
+                    {/* Pregunta */}
+                    <p className="text-lg lg:text-xl text-white/70 font-light leading-relaxed">
+                      {q}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
 
           {/* Botón copiar enlace - discreto */}
           <motion.div
@@ -340,21 +397,13 @@ const FraseDelDiaPage = () => {
           >
             <button
               type="button"
-              onClick={async () => {
-                try {
-                  await navigator.clipboard.writeText(shareUrl)
-                  setCopied(true)
-                  setTimeout(() => setCopied(false), 1800)
-                } catch {
-                  // ignore
-                }
-              }}
+              onClick={handleCopyLink}
               className="inline-flex items-center gap-2 text-xs text-white/40 hover:text-white/70 transition-colors"
             >
               {copied ? (
                 <>
                   <CheckCircle className="w-4 h-4" strokeWidth={1.5} />
-                  <span>Enlace copiado</span>
+                  <span>Texto copiado</span>
                 </>
               ) : (
                 <>
