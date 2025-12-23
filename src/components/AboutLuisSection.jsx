@@ -58,7 +58,7 @@ const AboutLuisSection = () => {
               {/* Photo */}
               <div className="relative w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 rounded-full overflow-hidden border-2 border-white/20 backdrop-blur-sm">
                 <img 
-                  src="/luxmania perfil.png" 
+                  src="/luxmania perfil.webp" loading="lazy" 
                   alt="Luis Virrueta" 
                   className="w-full h-full object-cover"
                 />

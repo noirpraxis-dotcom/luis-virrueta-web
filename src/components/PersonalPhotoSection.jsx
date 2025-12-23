@@ -58,7 +58,7 @@ const PersonalPhotoSection = () => {
               {/* Imagen circular */}
               <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-amber-600/30 shadow-2xl">
                 <img 
-                  src="/portada 2.jpg" 
+                  src="/portada 2.jpg" loading="lazy" 
                   alt="Zuzana Erdösová - Healing Work" 
                   className="w-full h-full object-cover"
                 />

@@ -68,7 +68,7 @@ const About = () => {
             <div className="relative aspect-[3/4] overflow-hidden rounded-3xl shadow-2xl border border-amber-600/30">
               {/* Foto de Luis */}
               <img 
-                src="/luxmania perfil.png" 
+                src="/luxmania perfil.webp" loading="lazy" 
                 alt="Luis Virrueta" 
                 className="w-full h-full object-cover"
               />

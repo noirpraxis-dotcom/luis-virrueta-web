@@ -36,7 +36,7 @@ const AboutPage = () => {
       <SEOHead 
         title="Sobre Luis Virrueta - Psicólogo, Diseñador y Developer"
         description="Psicólogo especializado en branding estratégico. Combino psicología del inconsciente, diseño premium e inteligencia artificial para crear marcas que conectan emocionalmente."
-        image="/yo mero.png"
+        image="/yo mero.webp"
         url="/sobre-mi"
         type="profile"
         tags={['Luis Virrueta', 'psicología', 'branding', 'diseñador', 'developer', 'arquetipos']}
@@ -223,7 +223,7 @@ const AboutPage = () => {
 
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10">
                 <img 
-                  src="/luxmania perfil.png" 
+                  src="/luxmania perfil.webp" loading="lazy" 
                   alt="Luis Virrueta - Psicólogo"
                   className="w-full aspect-square object-cover"
                 />

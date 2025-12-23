@@ -1996,13 +1996,13 @@ const FraseDelDiaPage = () => {
         <meta property="og:description" content={phrase.quote} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={shareUrl} />
-        <meta property="og:image" content="https://luisvirrueta.com/portada.jpg" />
+        <meta property="og:image" content="https://luisvirrueta.com/portada.webp" />
         
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`1 Frase × Día - ${phrase.author}`} />
         <meta name="twitter:description" content={phrase.quote} />
-        <meta name="twitter:image" content="https://luisvirrueta.com/portada.jpg" />
+        <meta name="twitter:image" content="https://luisvirrueta.com/portada.webp" />
         
         {/* SEO */}
         <meta name="keywords" content="frase del día, filosofía, psicología, reflexión, Carl Jung, crecimiento personal, desarrollo personal, coaching" />
