@@ -76,9 +76,9 @@ const detectLanguage = () => {
     return 'es'
   }
   
-  // Por defecto inglés (para resto del mundo)
-  console.log('✅ Default → Inglés')
-  return 'en'
+  // Por defecto ESPAÑOL (idioma principal del sitio)
+  console.log('✅ Default → Español')
+  return 'es'
 }
 
 export const LanguageProvider = ({ children }) => {

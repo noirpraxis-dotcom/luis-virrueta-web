@@ -225,6 +225,7 @@ const AppContent = () => {
 
   return (
     <Router>
+      <GoogleAnalytics />
       <ScrollToTop />
       <SmoothScroll>
         <AppShell />
@@ -237,7 +238,6 @@ function App() {
   return (
     <HelmetProvider>
       <LanguageProvider>
-        <GoogleAnalytics />
         <AppContent />
       </LanguageProvider>
     </HelmetProvider>
