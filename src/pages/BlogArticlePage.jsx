@@ -1119,6 +1119,7 @@ const getArticleBySlug = (slug) => {
       category: 'UX × Tecnología',
       tags: ['Machine Learning', 'UX Design', 'User Psychology', 'Technology'],
       gradient: 'from-cyan-500 to-blue-500',
+      heroImage: '/IMAGENES BLOG/cerebro decide antes de que tu.webp',
       sections: [
         {
           type: 'intro',
@@ -1215,6 +1216,7 @@ const getArticleBySlug = (slug) => {
       category: 'Psicología × Branding',
       tags: ['Color Theory', 'Luxury Branding', 'Psychology', 'Visual Identity'],
       gradient: 'from-emerald-500 to-teal-500',
+      heroImage: '/IMAGENES BLOG/12 arquitipos.webp',
       sections: [
         {
           type: 'intro',
@@ -1326,6 +1328,7 @@ const getArticleBySlug = (slug) => {
       category: 'Tendencias × Diseño',
       tags: ['Trends 2025', 'Minimalism', 'Visual Design', 'Innovation'],
       gradient: 'from-violet-500 to-purple-500',
+      heroImage: '/IMAGENES BLOG/trend y key.webp',
       sections: [
         {
           type: 'intro',
@@ -1452,6 +1455,7 @@ const getArticleBySlug = (slug) => {
       category: 'Branding × Estrategia',
       tags: ['Brand Identity', 'Strategy', 'Visual Systems', 'Psychology'],
       gradient: 'from-amber-500 to-orange-500',
+      heroImage: '/IMAGENES BLOG/tu logo no funciona.webp',
       sections: [
         {
           type: 'intro',
@@ -1921,7 +1925,7 @@ const BlogArticlePage = () => {
         author={article.author}
         publishedTime={toISODate(article.date)}
         tags={article.tags}
-        url={`https://lux-mania.com/blog/${slug}`}
+        url={`/blog/${slug}`}
       />
       
       {/* Reading Progress Bar */}
