@@ -34,6 +34,7 @@ const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'))
 const TermsConditionsPage = lazy(() => import('./pages/TermsConditionsPage'))
 const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage'))
 const VocationalTestPage = lazy(() => import('./pages/VocationalTestPage'))
+const FraseDelDiaPage = lazy(() => import('./pages/FraseDelDiaPage'))
 
 // Loading component
 const PageLoader = () => (
@@ -155,10 +156,15 @@ const AppContent = () => {
 
               {/* Test Vocacional */}
               <Route path="/test-vocacional" element={
-                <VocationalTestPage />
+                <VocationalTestPage key="vocational-landing" />
               } />
               <Route path="/test-vocacional/iniciar" element={
-                <VocationalTestPage initialStage="test" />
+                <VocationalTestPage key="vocational-start" initialStage="test" />
+              } />
+
+              {/* Herramientas */}
+              <Route path="/frase-del-dia" element={
+                <FraseDelDiaPage />
               } />
 
               {/* Página Inversión: Precios premium */}
