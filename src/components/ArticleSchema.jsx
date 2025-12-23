@@ -26,8 +26,8 @@ const ArticleSchema = ({
       "@type": "Person",
       "name": author,
       "url": `${siteUrl}/sobre-mi`,
-      "jobTitle": "Psicólogo, Diseñador & Developer",
-      "description": "Especialista en Psych × Design × Tech"
+      "jobTitle": "Psicoanalista y Filósofo",
+      "description": "Especialista en Psicoanálisis y Filosofía"
     },
     "publisher": {
       "@type": "Organization",

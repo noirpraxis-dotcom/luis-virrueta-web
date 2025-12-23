@@ -34,8 +34,8 @@ const AboutPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28 overflow-x-hidden">
       <SEOHead 
-        title="Sobre Luis Virrueta - Psicólogo, Diseñador y Developer"
-        description="Psicólogo especializado en branding estratégico. Combino psicología del inconsciente, diseño premium e inteligencia artificial para crear marcas que conectan emocionalmente."
+        title="Sobre Luis Virrueta - Psicoanalista y Filósofo"
+        description="Psicoanalista y filósofo. Trabajo en la intersección entre psicoanálisis, filosofía y diseño para crear experiencias que conectan con el inconsciente."
         image="/yo mero.webp"
         url="/sobre-mi"
         type="profile"
