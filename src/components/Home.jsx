@@ -21,6 +21,7 @@ const Home = () => {
         loop
         muted
         playsInline
+        preload="metadata"
         className="absolute inset-0 w-full h-full object-cover object-center"
         style={{
           filter: 'contrast(1.1) saturate(1.2) brightness(1.05)',
