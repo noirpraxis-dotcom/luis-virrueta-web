@@ -37,6 +37,14 @@ export const ATLAS_IMAGES = [
     image: '/atlas de la humanidad/como no electrocutarse.jpg',
     color: '#7C3AED', // púrpura eléctrico
     icon: Sparkles
+  },
+  {
+    id: '003',
+    title: 'Sudoku humano',
+    description: 'La vida no se construye como una certeza, sino como un proceso de descarte. No somos aquello que decidimos afirmativamente, sino aquello que aprendemos a no poder ser. Funcionamos más como un Sudoku que como un proyecto claro: avanzamos no porque sepamos con precisión qué va en cada lugar, sino porque intuimos, con creciente claridad, lo que no puede ir ahí. Nuestros vínculos, nuestras decisiones, nuestros miedos y deseos no aparecen como un gesto libre y luminoso, sino como una forma que se va recortando entre límites, imposibilidades, heridas y repeticiones. Por eso la ansiedad no surge tanto de no tener todas las respuestas, sino de comprender que tenemos que seguir respondiendo aun sin poseerlas. Cada "no" que la vida nos impone —no era por ahí, no funcionó así, no era esa persona, no era ese lugar— no se vive como fracaso únicamente, sino como pieza que empieza a delimitar un contorno posible. La identidad no se afirma en positivo; se va tallando mediante renuncias, pérdidas, negaciones, límites que nos obligan a seguir configurándonos.',
+    image: '/atlas de la humanidad/sudoku humano.jpg',
+    color: '#1E293B', // azul oscuro - límites e incertidumbre
+    icon: Brain
   }
   
   // 📝 TEMPLATE PARA NUEVA ENTRADA:
