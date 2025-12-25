@@ -68,8 +68,8 @@ const AppContent = () => {
 
     return (
       <div className="relative min-h-screen">
-        {/* Desktop Header - visible en pantallas md y superiores */}
-        {!hideGlobalHeader && (
+        {/* Desktop Header - visible en pantallas md y superiores, oculto cuando menu mobile está abierto */}
+        {!hideGlobalHeader && !isMenuOpen && (
           <Header 
             menuItems={menuItems} 
             onMenuToggle={() => setIsMenuOpen(!isMenuOpen)}

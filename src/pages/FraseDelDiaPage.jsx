@@ -1979,7 +1979,7 @@ const FraseDelDiaPage = () => {
 💭 "${phrase.quote}"
 — _${phrase.author}_
 
-✨ *¿Quieres saber más?*
+✨ *Te explico la frase:*
 👉 ${shareUrl}`
 
     try {
@@ -2007,7 +2007,7 @@ const FraseDelDiaPage = () => {
 💭 "${phrase.quote}"
 — _${phrase.author}_
 
-✨ *¿Quieres saber más?*
+✨ *Te explico la frase:*
 👉 ${shareUrl}`
     const encodedText = encodeURIComponent(shareText)
     const encodedUrl = encodeURIComponent(shareUrl)
@@ -2039,7 +2039,7 @@ const FraseDelDiaPage = () => {
 💭 "${phrase.quote}"
 — _${phrase.author}_
 
-✨ *¿Quieres saber más?*
+✨ *Te explico la frase:*
 👉 ${shareUrl}`
     try {
       await navigator.clipboard.writeText(shareText)

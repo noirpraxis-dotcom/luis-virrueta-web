@@ -234,14 +234,24 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                 })}
               </motion.ul>
 
-              {/* Herramientas - Solo visible en móvil */}
+              {/* Herramientas - Solo visible en móvil con estilo mejorado */}
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="mt-6 z-10"
+                className="mt-8 z-10 w-full max-w-md"
               >
-                <ToolsMenu isMobile={true} />
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="flex items-center justify-center gap-3 bg-gradient-to-r from-amber-600/20 to-orange-600/20 border border-amber-500/30 hover:border-amber-500/50 text-white/80 hover:text-white px-8 py-4 rounded-full text-base font-medium tracking-[0.2em] transition-all duration-300 uppercase shadow-lg shadow-amber-500/10"
+                  style={{ fontFamily: 'Gotham, sans-serif' }}
+                >
+                  <Wrench className="w-5 h-5" strokeWidth={2} />
+                  <span>Herramientas</span>
+                </motion.div>
+                <div className="mt-2">
+                  <ToolsMenu isMobile={true} />
+                </div>
               </motion.div>
 
             </div>
