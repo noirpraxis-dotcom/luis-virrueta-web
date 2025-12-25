@@ -1,27 +1,8 @@
 import { motion, useInView } from 'framer-motion'
 import { useMemo, useRef, useState } from 'react'
-import { Share2, Copy, CheckCircle, ArrowLeft, Home, Eye, Map, ChevronLeft, ChevronRight, Sparkles, Compass } from 'lucide-react'
+import { Share2, Copy, CheckCircle, ArrowLeft, Home, Eye, Map, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-
-// Catálogo de imágenes del Atlas de la Humanidad
-const ATLAS_IMAGES = [
-  {
-    id: '001',
-    title: 'Partida sin ensayo',
-    description: 'Como en el ajedrez, la vida parece regirse por reglas: estudiar, elegir, avanzar, ganar o perder. Sin embargo, el sujeto no ve el tablero completo. La venda representa lo real: ese punto donde el sentido falla y no hay garantía. Milan Kundera lo intuía al decir que la vida es un ensayo para una obra que nunca ocurre. Aquí, cada decisión es definitiva precisamente porque no puede probarse antes. El error no es elegir mal, sino creer que alguna vez se elige con certeza.',
-    image: '/atlas de la humanidad/partida sin ensayo.png',
-    color: '#4A5568', // gris azulado
-    icon: Compass
-  },
-  {
-    id: '002',
-    title: 'Cómo no electrocutarse',
-    description: 'En la imagen se observa a alguien en un estado de extrema cautela: el cuerpo inmóvil, la respiración contenida, la atención puesta en no cometer un solo error. No porque algo esté ocurriendo, sino porque podría ocurrir. Psíquicamente, esta escena representa a quienes viven en relaciones donde saben que el otro puede estallar en cualquier momento. Cada palabra, cada gesto, cada silencio se mide para no "activar" algo. El vínculo deja de ser encuentro y se convierte en supervivencia emocional.',
-    image: '/atlas de la humanidad/como no electrocutarse.jpg',
-    color: '#7C3AED', // púrpura eléctrico
-    icon: Sparkles
-  }
-]
+import ATLAS_IMAGES from '../data/atlasData'
 
 const AtlasHumanidadPage = () => {
   const navigate = useNavigate()
