@@ -1,8 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react'
-import { Wrench, Calendar, Brain, Heart, Coffee, Target, Quote, Map } from 'lucide-react'
+import { Wrench, Calendar, Target, Quote, Map, X } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
-const ToolsMenu = () => {
+const ToolsMenu = ({ isMobile = false }) => {
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef(null)
 
@@ -10,23 +11,115 @@ const ToolsMenu = () => {
     { name: 'Test Vocacional', icon: Target, href: '/test-vocacional', highlight: true },
     { name: 'Frase del día', icon: Quote, href: '/frase-del-dia' },
     { name: 'Atlas de la Humanidad', icon: Map, href: '/atlas-humanidad' },
-    { name: 'Dinámica del día', icon: Calendar, href: '/dinamica-del-dia' },
-    { name: 'Meditaciones', icon: Brain, href: '/meditaciones' },
-    { name: 'Ejercicios', icon: Heart, href: '/ejercicios' },
-    { name: 'Recursos', icon: Coffee, href: '/recursos' }
+    { name: 'Dinámica de la semana', icon: Calendar, href: '/dinamica-del-dia' }
   ]
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsOpen(false)
+    if (!isMobile) {
+      const handleClickOutside = (event) => {
+        if (menuRef.current && !menuRef.current.contains(event.target)) {
+          setIsOpen(false)
+        }
       }
+
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
     }
+  }, [isMobile])
 
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  // Versión móvil - Pantalla completa
+  if (isMobile) {
+    return (
+      <>
+        <motion.button
+          onClick={() => setIsOpen(!isOpen)}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-4 rounded-full text-sm font-medium tracking-[0.2em] transition-all duration-300 uppercase shadow-lg shadow-blue-500/30 border-2 border-blue-500 hover:border-white/30"
+          style={{ fontFamily: 'Gotham, sans-serif' }}
+        >
+          <Wrench className="w-4 h-4" strokeWidth={2.5} />
+          <span className="text-xs">Herramientas</span>
+        </motion.button>
 
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[60] bg-black/98 backdrop-blur-xl flex items-center justify-center"
+            >
+              {/* Botón cerrar */}
+              <button
+                onClick={() => setIsOpen(false)}
+                className="absolute top-6 right-6 w-11 h-11 flex items-center justify-center rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-white/20 transition-all"
+              >
+                <X className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+              </button>
+
+              {/* Contenido */}
+              <div className="w-full max-w-md px-6">
+                <motion.h2
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  className="text-2xl font-light text-white tracking-wide text-center mb-8"
+                  style={{ fontFamily: 'Gotham, sans-serif' }}
+                >
+                  HERRAMIENTAS
+                </motion.h2>
+
+                <div className="space-y-3">
+                  {tools.map((tool, index) => {
+                    const Icon = tool.icon
+                    return (
+                      <motion.div
+                        key={tool.name}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <Link
+                          to={tool.href}
+                          onClick={() => setIsOpen(false)}
+                          className="block"
+                        >
+                          <motion.div
+                            whileHover={{ scale: 1.02, x: 8 }}
+                            className={`flex items-center gap-4 px-6 py-5 rounded-2xl transition-all duration-300 ${
+                              tool.highlight
+                                ? 'bg-gradient-to-r from-purple-500/20 to-fuchsia-500/20 border-2 border-purple-500/40'
+                                : 'bg-white/5 border border-white/10 hover:border-white/20'
+                            }`}
+                          >
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                              tool.highlight ? 'bg-purple-500/30' : 'bg-white/10'
+                            }`}>
+                              <Icon className="w-5 h-5 text-white" strokeWidth={1.5} />
+                            </div>
+                            <span className="text-white text-base font-light tracking-wide flex-1">
+                              {tool.name}
+                            </span>
+                            {tool.highlight && (
+                              <span className="text-xs px-3 py-1 bg-purple-500/30 rounded-full text-purple-200">
+                                Nuevo
+                              </span>
+                            )}
+                          </motion.div>
+                        </Link>
+                      </motion.div>
+                    )
+                  })}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </>
+    )
+  }
+
+  // Versión desktop - Dropdown normal
   return (
     <div className="relative" ref={menuRef}>
       <motion.button

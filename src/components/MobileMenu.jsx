@@ -115,13 +115,13 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                 </div>
               </motion.div>
 
-              {/* Menu Items - Ultra Elegant */}
+              {/* Menu Items - Ultra Elegant con más espacio arriba */}
               <motion.ul
                 variants={menuVariants}
                 initial="closed"
                 animate={isOpen ? "open" : "closed"}
                 exit="closed"
-                className="space-y-1 z-10 w-full max-w-md"
+                className="space-y-1 z-10 w-full max-w-md mt-20"
               >
                 {menuItems.map((item, index) => {
                   const isStore = item.name.toLowerCase().includes('store') || 
@@ -234,22 +234,30 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                 })}
               </motion.ul>
 
-              {/* Herramientas - Solo visible en móvil con estilo mejorado */}
+              {/* Tienda y Herramientas en la misma línea */}
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="mt-8 z-10 w-full max-w-md"
+                className="mt-6 z-10 w-full max-w-md"
               >
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  className="flex items-center justify-center gap-3 bg-gradient-to-r from-amber-600/20 to-orange-600/20 border border-amber-500/30 hover:border-amber-500/50 text-white/80 hover:text-white px-8 py-4 rounded-full text-base font-medium tracking-[0.2em] transition-all duration-300 uppercase shadow-lg shadow-amber-500/10"
-                  style={{ fontFamily: 'Gotham, sans-serif' }}
-                >
-                  <Wrench className="w-5 h-5" strokeWidth={2} />
-                  <span>Herramientas</span>
-                </motion.div>
-                <div className="mt-2">
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Botón Tienda */}
+                  <Link to="/tienda" onClick={onClose}>
+                    <motion.div
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      className="flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-4 py-4 rounded-full text-sm font-medium tracking-[0.2em] transition-all duration-300 uppercase shadow-lg shadow-violet-500/30 border-2 border-violet-500 hover:border-white/30"
+                      style={{ fontFamily: 'Gotham, sans-serif' }}
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                      </svg>
+                      <span className="text-xs">Tienda</span>
+                    </motion.div>
+                  </Link>
+
+                  {/* Botón Herramientas */}
                   <ToolsMenu isMobile={true} />
                 </div>
               </motion.div>
