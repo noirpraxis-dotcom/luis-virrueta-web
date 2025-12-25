@@ -1893,8 +1893,12 @@ const FraseDelDiaPage = () => {
   }
 
   const handleShare = async () => {
-    const title = '1 frase x día'
-    const shareText = `"${phrase.quote}" — ${phrase.author}\n\n¿Quieres saber qué significa? Presiona este link: ${shareUrl}`
+    const title = '💭 Frase del día'
+    const shareText = `💭 "${phrase.quote}"
+— ${phrase.author}
+
+✨ ¿Quieres saber más?
+👉 ${shareUrl}`
 
     try {
       if (navigator?.share) {
@@ -1907,7 +1911,7 @@ const FraseDelDiaPage = () => {
     }
 
     try {
-      await navigator.clipboard.writeText(shareUrl)
+      await navigator.clipboard.writeText(shareText)
       notifyOk('copy')
     } catch {
       // ignore
@@ -1915,8 +1919,12 @@ const FraseDelDiaPage = () => {
   }
 
   const handleShareTo = (platform) => {
-    const title = '1 frase x día'
-    const shareText = `"${phrase.quote}" — ${phrase.author}\n\n¿Quieres saber qué significa? Entra a este enlace:`
+    const title = '💭 Frase del día'
+    const shareText = `💭 "${phrase.quote}"
+— ${phrase.author}
+
+✨ ¿Quieres saber más?
+👉 ${shareUrl}`
     const encodedText = encodeURIComponent(shareText)
     const encodedUrl = encodeURIComponent(shareUrl)
     
@@ -1924,7 +1932,7 @@ const FraseDelDiaPage = () => {
     
     switch (platform) {
       case 'whatsapp':
-        url = `https://wa.me/?text=${encodedText}%20${encodedUrl}`
+        url = `https://wa.me/?text=${encodedText}`
         break
       case 'facebook':
         url = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`
@@ -1942,8 +1950,13 @@ const FraseDelDiaPage = () => {
   }
 
   const handleCopyLink = async () => {
+    const shareText = `💭 "${phrase.quote}"
+— ${phrase.author}
+
+✨ ¿Quieres saber más?
+👉 ${shareUrl}`
     try {
-      await navigator.clipboard.writeText(shareUrl)
+      await navigator.clipboard.writeText(shareText)
       notifyOk('copy')
     } catch {
       // ignore
@@ -1996,13 +2009,15 @@ const FraseDelDiaPage = () => {
         <meta property="og:description" content={phrase.quote} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={shareUrl} />
-        <meta property="og:image" content="https://luisvirrueta.com/portada.webp" />
+        <meta property="og:image" content="https://luisvirrueta.com/frases-og.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`1 Frase × Día - ${phrase.author}`} />
         <meta name="twitter:description" content={phrase.quote} />
-        <meta name="twitter:image" content="https://luisvirrueta.com/portada.webp" />
+        <meta name="twitter:image" content="https://luisvirrueta.com/frases-og.png" />
         
         {/* SEO */}
         <meta name="keywords" content="frase del día, filosofía, psicología, reflexión, Carl Jung, crecimiento personal, desarrollo personal, coaching" />
