@@ -1,0 +1,330 @@
+  {
+    id: '021',
+    quote: 'Lo que niegas en ti, lo encontrarás en el mundo.',
+    author: 'Carl G. Jung',
+    meaning: 'La proyección psíquica no es accidente ni error perceptivo: es mecanismo fundamental de construcción de realidad. Lo que rechazas de ti mismo no desaparece, simplemente se externaliza y lo combates "allá afuera" con la misma fuerza con que lo reprimes "aquí dentro". El mundo se convierte en pantalla donde proyectas tu sombra negada. Cada juicio sobre el otro es confesión encubierta sobre ti mismo. La paz exterior solo llega cuando aceptas el conflicto interior.',
+    questions: [
+      '¿Qué característica te irrita visceralmente en otros y en qué forma minimizada vive en ti?',
+      '¿Cuánta energía vital gastas combatiendo en el mundo lo que no aceptas en tu interior?',
+      '¿Qué conflicto externo se disolvería si integraras la parte tuya que proyectas en ese otro?'
+    ]
+  },
+  {
+    id: '022',
+    quote: 'La gratitud convierte lo que tenemos en suficiente.',
+    author: 'Anónimo',
+    meaning: 'La escasez no es primariamente objetiva sino perceptiva: es producto de comparación, expectativa inflada y desatención selectiva. La gratitud no es positividad tóxica ni conformismo resignado: es recalibración radical de la mirada que disuelve el hambre insaciable del deseo neurótico. Ver lo que hay en lugar de obsesionarse con lo que falta es acto revolucionario contra la cultura de consumo perpetuo. La abundancia no se alcanza acumulando más, sino necesitando menos desde un estado de plenitud interna.',
+    questions: [
+      '¿Qué tienes ahora mismo que darías por sentado pero que alguien ruega por tener?',
+      '¿Cuánto de tu insatisfacción viene de compararte con otros en lugar de apreciar tu camino único?',
+      '¿Qué experiencia presente estás perdiendo por obsesionarte con lo que aún no posees?'
+    ]
+  },
+  {
+    id: '023',
+    quote: 'No son las cosas las que nos perturban, sino la opinión que tenemos sobre ellas.',
+    author: 'Epicteto',
+    meaning: 'No existe el "hecho puro" accesible sin mediación: toda experiencia llega filtrada por tu marco interpretativo heredado, aprendido, inconsciente. Lo que llamas "realidad insoportable" es realidad más interpretación catastrófica. El evento es neutro hasta que lo cargas con significado. Cambiar el marco no es autoengaño ni pensamiento mágico: es reconocer que ya estabas interpretando, solo que con marcos tóxicos heredados. La libertad no está en cambiar el hecho externo sino en desmontar la narrativa interna que lo vuelve prisión.',
+    questions: [
+      '¿Qué evento reciente etiquetaste como "catástrofe" que podría ser también "oportunidad" si cambiaras el lente?',
+      '¿Qué interpretación automática aplicas a las situaciones que heredaste de tu familia o cultura sin cuestionarla?',
+      '¿Cómo sería tu vida si pudieras elegir conscientemente el significado que das a lo que te pasa?'
+    ]
+  },
+  {
+    id: '024',
+    quote: 'El inconsciente es aquello que está obligado a repetirse mientras no se haga consciente.',
+    author: 'Sigmund Freud',
+    meaning: 'La compulsión a la repetición no es masoquismo ni mala suerte: es el inconsciente intentando resolver un conflicto no procesado recreando las condiciones originales. Repites la escena traumática disfrazada esperando inconscientemente un desenlace diferente que nunca llega porque no has cambiado la estructura interna. Mientras el patrón permanezca invisible, tu vida será variaciones del mismo guion. La repetición es tanto síntoma como oportunidad: te muestra exactamente qué debes mirar. Solo lo que se hace consciente puede dejar de actuarse.',
+    questions: [
+      '¿Qué situación dolorosa has vivido en relaciones diferentes con personas diferentes que siempre termina igual?',
+      '¿Qué papel invisible juegas tú en cada repetición que te niegas a reconocer?',
+      '¿Qué tendría que volver consciente para romper de una vez el patrón que domina tu vida?'
+    ]
+  },
+  {
+    id: '025',
+    quote: 'Sólo se puede amar lo que se ha perdido.',
+    author: 'Jacques Lacan',
+    meaning: 'El amor no nace de la posesión plena sino de la falta constitutiva. Amamos lo ausente, lo perdido, lo que nunca tuvimos completamente o lo que ya no podemos retener. La presencia total mata el deseo porque el deseo se alimenta de brecha, distancia, imposibilidad. Por eso los amantes se separan: la fusión total es la muerte del amor mismo. Amar no es poseer sino sostener la ausencia sin intentar llenarla. La nostalgia no es debilidad sentimental: es reconocimiento de que el amor habita la pérdida.',
+    questions: [
+      '¿Qué amaste más cuando lo perdiste que cuando lo tenías presente?',
+      '¿Estás amando a la persona real o idealizando su versión ausente?',
+      '¿Puedes amar sin intentar poseer, capturar o inmovilizar al otro?'
+    ]
+  },
+  {
+    id: '026',
+    quote: 'La paz no llega cuando desaparece el dolor, sino cuando dejas de añadirle historia.',
+    author: 'Buda',
+    meaning: 'El dolor es sensación pura, fenómeno corporal inevitable del estar vivo. El sufrimiento es la narrativa que construyes encima: "no debería estar pasando", "es injusto", "por qué a mí", "nunca terminará". La historia amplifica exponencialmente el dolor primario hasta volverlo insoportable. Soltar la narrativa no elimina el dolor físico o emocional, pero disuelve el 90% del sufrimiento psicológico añadido. La paz no es ausencia de dolor: es presencia sin resistencia.',
+    questions: [
+      '¿Qué historia dramática estás contando sobre tu dolor que lo multiplica diez veces?',
+      '¿Puedes sentir el dolor puro sin la narrativa victimista que lo rodea?',
+      '¿Qué energía recuperarías si dejaras de discutir mentalmente con lo inevitable?'
+    ]
+  },
+  {
+    id: '027',
+    quote: 'No hay camino a la felicidad: la felicidad es el camino.',
+    author: 'Lao Tzu',
+    meaning: 'La felicidad condicional es trampa psíquica: "seré feliz cuando logre X". Pero al lograr X, la meta se desplaza a Y, perpetuando la insatisfacción. La felicidad no es destino final sino modo de transitar. Si esperas ser feliz "después", nunca lo serás porque siempre habrá un "después" posterior. La paz no está al final del camino: está en cada paso o en ninguno. Postergar la felicidad es garantizar la infelicidad perpetua.',
+    questions: [
+      '¿Qué logro esperas alcanzar para finalmente permitirte ser feliz?',
+      '¿Cuántas metas has alcanzado que no te dieron la felicidad prometida?',
+      '¿Puedes elegir ser feliz ahora mismo sin condiciones previas ni méritos acumulados?'
+    ]
+  },
+  {
+    id: '028',
+    quote: 'La existencia precede a la esencia.',
+    author: 'Jean-Paul Sartre',
+    meaning: 'No vienes con manual de identidad preinstalada. Primero existes, luego te construyes mediante tus elecciones concretas. No hay "yo verdadero" esperando ser descubierto: hay un yo que se crea con cada decisión. La identidad no es sustancia fija sino proceso dinámico. Evitar elegir es también elegir: elegir la inercia, el default, la identidad heredada. Tu esencia no te define: tus actos repetidos te construyen. La responsabilidad es total porque no tienes naturaleza fija que culpar.',
+    questions: [
+      '¿Qué parte de tu identidad estás esperando "descubrir" en lugar de decidir activamente crear?',
+      '¿Qué decisión concreta tomarías hoy si te asumieras completamente libre de esencia predeterminada?',
+      '¿Cómo cambiarían tus elecciones si aceptaras que no hay "yo verdadero" escondido sino uno que construyes diariamente?'
+    ]
+  },
+  {
+    id: '029',
+    quote: 'La compasión es la respuesta radical a todos los juicios.',
+    author: 'Pema Chödrön',
+    meaning: 'Juzgar es fácil y automático: proyectas superioridad moral sin entender contexto ni dolor ajeno. Comprender es difícil: requiere suspender el ego y ver al otro como sujeto doliente, no como objeto juzgable. La compasión no justifica comportamientos destructivos ni elimina responsabilidad: humaniza sin aprobar. Cuando ves que el otro actúa desde su herida no procesada, el juicio se disuelve naturalmente. No es debilidad ni ingenuidad: es reconocimiento de que todos operamos desde nuestro dolor no visto.',
+    questions: [
+      '¿A quién juzgas con más dureza sin conocer el dolor que lo mueve?',
+      '¿Qué sufrimiento invisible en esa persona explicaría su comportamiento sin justificarlo?',
+      '¿Cómo cambiaría tu relación con esa persona si pudieras ver su herida primaria?'
+    ]
+  },
+  {
+    id: '030',
+    quote: 'El universo no está fuera de ti. Mira dentro de ti: todo lo que quieres ser, ya lo eres.',
+    author: 'Rumi',
+    meaning: 'La búsqueda externa es proyección de una plenitud interna no reconocida. No te falta nada esencial: lo que buscas en logros, personas o lugares ya existe como potencial latente en ti. El problema no es carencia objetiva sino ceguera subjetiva. Mirar adentro no es introspección narcisista sino reconocimiento de tu naturaleza completa. Lo que anhelas afuera es reflejo distorsionado de lo que niegas adentro. Dejar de buscar es empezar a ver lo que siempre estuvo.',
+    questions: [
+      '¿Qué cualidad buscas desesperadamente en otros que te niegas a reconocer en ti?',
+      '¿Qué logro externo esperas que te confirme un valor interno que ya posees?',
+      '¿Cómo sería tu vida si confiaras en tu plenitud inherente sin necesidad de validación externa?'
+    ]
+  },
+  {
+    id: '031',
+    quote: 'No hay ego en el ahora.',
+    author: 'Eckhart Tolle',
+    meaning: 'El ego se construye con memoria (pasado) y proyección (futuro): historias de quién fuiste y fantasías de quién serás. En el presente puro no hay narrativa, solo experiencia directa sin mediación conceptual. Por eso meditar disuelve el ego temporalmente: te arranca del tiempo psicológico donde el ego habita. El ahora no es truco psicológico: es el único momento real donde la identidad fija se desvanece. Tu sentido de "yo" es película mental que proyectas sobre el presente; sin película, solo hay presencia.',
+    questions: [
+      '¿Cuánto de tu identidad actual se basa en historias pasadas que ya no son reales?',
+      '¿Puedes experimentarte sin memoria ni proyección, solo como presencia en este instante?',
+      '¿Qué liberación sentirías si dejaras de cargar todo tu pasado en cada momento presente?'
+    ]
+  },
+  {
+    id: '032',
+    quote: 'No busques ser perfecto, busca ser completo.',
+    author: 'Carl G. Jung',
+    meaning: 'La perfección es fantasía neurótica basada en rechazar partes tuyas: buscas ser solo luz, solo virtud, solo control. La completud es integración de opuestos: luz y sombra, control y caos, virtud y pulsión. Ser completo no es ser bueno sino ser real: aceptar tu complejidad contradictoria sin resolverla en síntesis armónica falsa. La perfección te divide, la completud te unifica. Renunciar a la perfección no es resignación: es madurez que acepta tu naturaleza paradójica.',
+    questions: [
+      '¿Qué aspecto tuyo rechazas por imperfecto que es parte necesaria de tu completud?',
+      '¿Cuánta energía desperdicias intentando ser perfectamente bueno en lugar de íntegramente real?',
+      '¿Cómo cambiaría tu autoimagen si aceptaras tu complejidad contradictoria como fortaleza?'
+    ]
+  },
+  {
+    id: '033',
+    quote: 'La vulnerabilidad es la cuna de la innovación, la creatividad y el cambio.',
+    author: 'Brené Brown',
+    meaning: 'La armadura protectora también aísla: te mantiene seguro pero estéril. La creatividad requiere riesgo de fracaso, el cambio requiere incertidumbre, la innovación requiere exponerse. Mostrarte vulnerable no es debilidad: es valentía que permite crecimiento. Sin vulnerabilidad no hay conexión profunda ni creación genuina. Protegerte de todo dolor es garantizar una vida pequeña y predecible. El precio de la invulnerabilidad es la muerte lenta de tu potencial.',
+    questions: [
+      '¿En qué área de tu vida te proteges tanto que ya no creces ni creas?',
+      '¿Qué oportunidad transformadora pierdes por no atreverte a ser vulnerable?',
+      '¿Puedes aceptar el riesgo de ser visto completamente como condición para vivir plenamente?'
+    ]
+  },
+  {
+    id: '034',
+    quote: 'El amor propio no es egoísmo. Es el fundamento de toda relación sana.',
+    author: 'Anónimo',
+    meaning: 'No puedes dar lo que no tienes: si no te cuidas, solo puedes ofrecer resentimiento disfrazado de sacrificio. El amor propio no es vanidad narcisista sino responsabilidad básica de sostener tu propio bienestar sin depender del otro. Quien no se ama busca en el otro lo que solo puede darse a sí mismo, convirtiendo la relación en demanda infinita. Las relaciones sanas son encuentro de dos personas completas, no fusión de dos mitades necesitadas. Cuidarte no es abandonar al otro: es llegar entero al encuentro.',
+    questions: [
+      '¿Cómo te tratas a ti mismo cuando nadie te ve: con respeto o con desprecio?',
+      '¿Cuánto de tu cuidado al otro viene del amor y cuánto del miedo a ser egoísta?',
+      '¿Qué cambiaría en tus relaciones si priorizaras tu bienestar sin culpa?'
+    ]
+  },
+  {
+    id: '035',
+    quote: 'El silencio es una respuesta.',
+    author: 'Proverbio',
+    meaning: 'No todo merece respuesta verbal. A veces callar es más contundente que argumentar porque comunica sin entrar en el juego. El silencio consciente es acto de poder: niegas el combustible del conflicto. El silencio reactivo es ausencia cobarde. La diferencia está en la intención: uno sostiene límites, otro evita confrontación. Aprender cuándo callar y cuándo hablar es sabiduría práctica que desescala conflictos y preserva energía.',
+    questions: [
+      '¿Dónde hablas compulsivamente por necesidad de controlar o convencer?',
+      '¿Qué mensaje enviarías con tu silencio que tus palabras no logran transmitir?',
+      '¿Puedes distinguir entre el silencio que sostiene límites y el que evita responsabilidad?'
+    ]
+  },
+  {
+    id: '036',
+    quote: 'Nada grande se hace de repente.',
+    author: 'Epicteto',
+    meaning: 'La transformación profunda es casi siempre gradual, no dramática. El cambio real se parece más a reeducación de la atención mediante repetición sostenida que a epifanía instantánea. La cultura del evento mágico te distrae de la práctica diaria que sí transforma. La paciencia no es pasividad: es método disciplinado que respeta los tiempos orgánicos del crecimiento. Lo que buscas como salto cuántico es en realidad suma de mil pasos pequeños invisibles.',
+    questions: [
+      '¿Qué proceso profundo estás intentando forzar como evento instantáneo?',
+      '¿Qué práctica diaria del 1% de mejora acumularía transformación en un año?',
+      '¿Puedes aceptar la lentitud del cambio real sin sabotear el proceso por impaciencia?'
+    ]
+  },
+  {
+    id: '037',
+    quote: 'Conviértete en quien eres.',
+    author: 'Friedrich Nietzsche',
+    meaning: 'No se trata de inventar una identidad fantasiosa sino de reconocer tu estructura profunda y dejar de traicionarla. Hay diferencia radical entre fabricar una imagen social y develar una verdad interna. Convertirte en quien eres es quitar capas de condicionamiento hasta revelar tu núcleo singular. No es autodescubrimiento místico sino honestidad brutal: dejar de interpretar personajes que no eres. Requiere menos fantasía y más coraje para ser lo que ya sabes que eres.',
+    questions: [
+      '¿Qué parte tuya conoces perfectamente pero finges no ver por miedo al rechazo?',
+      '¿A quién estás interpretando diariamente en lugar de simplemente ser quien eres?',
+      '¿Qué tendrías que dejar de fingir para vivir como quien realmente eres?'
+    ]
+  },
+  {
+    id: '038',
+    quote: 'El ego no es amo en su propia casa.',
+    author: 'Sigmund Freud',
+    meaning: 'Crees que decides conscientemente pero gran parte de tu conducta responde a fuerzas inconscientes que no controlas ni ves: pulsiones, defensas, repeticiones. El yo consciente es jinete que cree dirigir el caballo sin ver que el caballo elige el camino. Aceptar esto no es rendirse al determinismo: es lucidez que reconoce la verdadera proporción de tu control. La libertad no empieza asumiendo poder total sino reconociendo honestamente tu atadura. Solo lo que reconoces como fuera de control puede empezar a hacerse consciente.',
+    questions: [
+      '¿Qué comportamiento repites sin entender por qué lo haces una y otra vez?',
+      '¿Qué fuerza interna contradice constantemente tu voluntad consciente?',
+      '¿Puedes aceptar que no controlas gran parte de ti sin colapsar en impotencia?'
+    ]
+  },
+  {
+    id: '039',
+    quote: 'El símbolo mata la cosa.',
+    author: 'Jacques Lacan',
+    meaning: 'Cuando nombras una experiencia, ya la distanciaste: el lenguaje captura, fija, separa. La palabra crea ausencia de la cosa misma. Hablar de amor no es amar, hablar de dolor no es sentirlo. El lenguaje es mediación inevitable que nos separa de lo real al mismo tiempo que nos permite compartirlo. No hay experiencia pura accesible sin pérdida: nombrar es matar y resucitar en forma simbólica. El silencio preserva lo real; la palabra lo sacrifica para comunicarlo.',
+    questions: [
+      '¿Qué experiencia profunda pierdes su esencia cuando intentas explicarla con palabras?',
+      '¿Dónde prefieres el silencio vivido al concepto compartido?',
+      '¿Puedes sostener una experiencia sin necesidad de nombrarla o narrarla?'
+    ]
+  },
+  {
+    id: '040',
+    quote: 'Entre el estímulo y la respuesta hay un espacio. En ese espacio reside nuestra libertad.',
+    author: 'Viktor Frankl',
+    meaning: 'No eres tus impulsos automáticos. Existe un micro-instante entre lo que te pasa y cómo reaccionas donde la elección es posible. Ese espacio diminuto es todo tu poder como sujeto libre. La mayoría vive en reactividad total: estímulo directo a respuesta sin espacio intermedio. Ampliar ese espacio mediante conciencia es el trabajo de toda una vida. La libertad no es ausencia de condicionamiento sino capacidad creciente de pausar antes de actuar.',
+    questions: [
+      '¿Dónde reaccionas automáticamente sin espacio de elección consciente?',
+      '¿Cómo podrías crear más pausa entre el impulso y la acción?',
+      '¿Qué cambiaría en tu vida si pudieras elegir tu respuesta en lugar de reaccionar instintivamente?'
+    ]
+  },
+  {
+    id: '041',
+    quote: 'No podemos resolver problemas usando el mismo nivel de pensamiento que usamos cuando los creamos.',
+    author: 'Albert Einstein',
+    meaning: 'El problema y su solución no habitan el mismo plano lógico. Si sigues pensando con la misma estructura mental que generó el problema, solo obtendrás variaciones del mismo resultado. Cambiar de nivel requiere salto epistémico, no esfuerzo incrementado. Más de lo mismo no es solución: es profundización del problema. La verdadera transformación ocurre cuando cambias el paradigma desde el cual miras, no cuando trabajas más duro dentro del mismo marco obsoleto.',
+    questions: [
+      '¿Qué problema sigues atacando con la misma lógica esperando resultado diferente?',
+      '¿Desde qué nueva perspectiva podrías mirarlo que disolvería el problema en lugar de resolverlo?',
+      '¿Qué supuesto fundamental tendrías que soltar para cambiar de nivel de pensamiento?'
+    ]
+  },
+  {
+    id: '042',
+    quote: 'El significado de la vida es encontrar tu don. El propósito de la vida es entregarlo.',
+    author: 'Pablo Picasso',
+    meaning: 'La plenitud no llega solo descubriendo tu talento sino ofreciéndolo. El don guardado se pudre en egocentrismo estéril; el don circulado se multiplica y trasciende. No basta con ser bueno en algo: necesitas ponerlo al servicio de algo mayor que tú. La realización no es logro personal sino contribución significativa. Tu don no es tuyo para acumularlo: es préstamo que debes circular. Recibirlo es solo la primera mitad; entregarlo completa el ciclo.',
+    questions: [
+      '¿Cuál es tu don natural que reconoces pero no ofreces plenamente?',
+      '¿A quién o a qué causa podrías servir con ese don que aún retienes?',
+      '¿Qué te impide dar tu don: miedo, comodidad, espera de perfección?'
+    ]
+  },
+  {
+    id: '043',
+    quote: 'La muerte no es lo opuesto a la vida, sino parte de ella.',
+    author: 'Haruki Murakami',
+    meaning: 'Negar la muerte es negar la vida misma. La finitud no contamina la existencia: la define y le da peso. Aceptar que esto termina no es resignación mórbida sino realismo que vuelve cada instante precioso. La urgencia existencial nace de saber que el tiempo es limitado. Vivir como si fueras inmortal es garantía de vida desperdiciada. La muerte no es enemiga: es la que obliga a vivir en serio.',
+    questions: [
+      '¿Qué harías diferente hoy si supieras con certeza que te queda un año de vida?',
+      '¿Qué estás posponiendo indefinidamente como si tuvieras tiempo infinito?',
+      '¿Puedes usar tu mortalidad como motivación en lugar de negarla como amenaza?'
+    ]
+  },
+  {
+    id: '044',
+    quote: 'El problema no es el problema. El problema es tu actitud sobre el problema.',
+    author: 'Jack Sparrow',
+    meaning: 'Los hechos son estructuralmente neutrales hasta que tu interpretación los carga emocionalmente. Cambiar la actitud no modifica el hecho objetivo, pero transforma radicalmente tu relación con él, y eso cambia todo tu campo experiencial. Dos personas enfrentan el mismo evento: una lo vive como catástrofe, otra como desafío. La diferencia no está en el hecho sino en el marco interpretativo. Tu actitud no es superficial: es el filtro que construye tu realidad vivida.',
+    questions: [
+      '¿Qué problema actual sería menor o hasta desaparecería si cambiaras radicalmente tu actitud hacia él?',
+      '¿Qué narrativa añades al hecho puro que lo vuelve insoportable?',
+      '¿Puedes separar el evento objetivo de tu interpretación catastrófica?'
+    ]
+  },
+  {
+    id: '045',
+    quote: 'Eres el cielo. Todo lo demás es solo el clima.',
+    author: 'Pema Chödrön',
+    meaning: 'Tus pensamientos, emociones y circunstancias son fenómenos transitorios como nubes: vienen, pasan, cambian. Tú no eres ninguno de ellos: eres el espacio donde ocurren. Identificarte con el clima es sufrir cada cambio como crisis de identidad. Reconocerte como el cielo es estabilidad que sostiene cualquier tormenta sin colapsar. El clima no define al cielo; tus estados no te definen. Esta distinción es libertad fundamental.',
+    questions: [
+      '¿Con qué pensamiento o emoción te estás identificando ahora como si fueras tú?',
+      '¿Puedes observar ese estado sin ser ese estado?',
+      '¿Cómo sería vivir como el espacio que contiene todo sin ser nada específico?'
+    ]
+  },
+  {
+    id: '046',
+    quote: 'El silencio es la respuesta más fuerte.',
+    author: 'Dalai Lama',
+    meaning: 'No todo requiere refutación verbal ni justificación defensiva. A veces callar con presencia es más contundente que argumentar desde reactividad. El silencio consciente es posición de poder: no entras al juego, no alimentas el drama, sostienes tu centro. El silencio reactivo es ausencia cobarde. La diferencia: uno viene de claridad, otro de miedo. Aprender a sostener silencio ante provocación es maestría que desescala conflictos y preserva tu energía.',
+    questions: [
+      '¿Dónde hablas compulsivamente por necesidad de controlar la percepción ajena?',
+      '¿Qué pasaría si guardaras silencio ante la próxima provocación?',
+      '¿Puedes distinguir el silencio poderoso del silencio pasivo-agresivo?'
+    ]
+  },
+  {
+    id: '047',
+    quote: 'La ansiedad es la sensación de estar separado de la vida.',
+    author: 'Alan Watts',
+    meaning: 'Te angustias cuando te sientes observador externo del flujo en lugar de parte integrada. La ansiedad no es enemigo químico a suprimir: es señal de desconexión existencial. Volver al presente disuelve la separación ilusoria porque en el ahora no hay observador separado de lo observado. La ansiedad vive en el futuro imaginado; el presente solo contiene lo que es. No necesitas eliminar la ansiedad: necesitas reconectar con la vida que ocurre ahora.',
+    questions: [
+      '¿En qué momento del día sientes más ansiedad y qué te desconecta del presente en ese instante?',
+      '¿Qué pasaría si dejaras de pelear con la ansiedad y la vieras como llamado a volver al ahora?',
+      '¿Puedes sentir tu cuerpo respirando en este momento y dejar que eso sea suficiente?'
+    ]
+  },
+  {
+    id: '048',
+    quote: 'Tu tarea no es buscar el amor, sino buscar y encontrar todas las barreras que has construido contra él.',
+    author: 'Rumi',
+    meaning: 'El amor no es recurso escaso a conseguir afuera: es tu estado natural bloqueado por defensas. No necesitas atraer amor sino desmontar las murallas de miedo, juicio y control que construiste para protegerte del dolor. Cada barrera fue útil alguna vez pero ahora solo te aísla. El amor no llega cuando lo buscas desesperadamente: aparece cuando sueltas las defensas que lo bloquean. No es trabajo de adición sino de sustracción.',
+    questions: [
+      '¿Qué barrera principal levantas contra el amor: miedo al abandono, al rechazo o a perder control?',
+      '¿Cómo sería bajar esa defensa aunque te dé terror la vulnerabilidad?',
+      '¿Qué experiencia pasada te hizo construir ese muro y puedes re-procesarla ahora?'
+    ]
+  },
+  {
+    id: '049',
+    quote: 'La libertad no es hacer lo que quieres, sino querer lo que haces.',
+    author: 'Jean-Paul Sartre',
+    meaning: 'Libertad no es ausencia de límites ni posibilidad infinita: es apropiación activa de tus circunstancias mediante aceptación comprometida. Puedes no elegir lo que te pasa, pero siempre eliges tu postura ante ello. Vivir como víctima de tus circunstancias es negar tu libertad fundamental. Libertad es reconocer que incluso en prisión decides cómo habitar tu celda. No necesitas cambiar la situación para ser libre: necesitas elegir conscientemente tu relación con ella.',
+    questions: [
+      '¿Dónde actúas como víctima de tu propia vida negando tu poder de elegir tu actitud?',
+      '¿Qué circunstancia inmodificable podrías apropiarte activamente en lugar de resentir pasivamente?',
+      '¿Cómo cambiaría tu experiencia si eligieras querer lo que ya estás haciendo?'
+    ]
+  },
+  {
+    id: '050',
+    quote: 'El apego es la raíz del sufrimiento.',
+    author: 'Buda',
+    meaning: 'No sufres por perder algo sino por aferrarte a la ilusión de permanencia. Todo fluye, nada permanece, pero tú intentas congelar lo impermanente generando sufrimiento inevitable. El apego crea fantasía de control sobre lo incontrolable. Soltar no es perder ni rendirse: es aceptar la naturaleza transitoria de todo sin intentar capturarlo. No se trata de no amar sino de amar sin poseer. La liberación no viene de la renuncia externa sino de la aceptación interna del flujo.',
+    questions: [
+      '¿A qué persona, situación o identidad te aferras desesperadamente temiendo perderla?',
+      '¿Qué sufrimiento innecesario creas intentando congelar lo que naturalmente cambia?',
+      '¿Puedes amar plenamente algo aceptando desde ahora que lo perderás eventualmente?'
+    ]
+  },

@@ -76,141 +76,221 @@ const PHRASES = [
     id: '001',
     quote: 'Quien mira hacia afuera sueña; quien mira hacia adentro despierta.',
     author: 'Carl G. Jung',
-    meaning: 'Lo externo da contenido; lo interno da dirección. Sin lectura de tus deseos y defensas, el mundo te empuja. Mirar hacia dentro no es encerrarte: es recuperar agencia.',
-    questions: ['¿Qué estás proyectando en otros?', '¿Qué verdad interna estás evitando nombrar?']
+    meaning: 'La mirada externa busca validación, proyecta fantasías, deposita responsabilidad. La interna enfrenta lo que no quieres ver: tus deseos reales, tus patrones destructivos, tu parte en cada conflicto. No es introspección narcisista, es responsabilidad radical. Despertar no es iluminarse: es dejar de huir de ti mismo.',
+    questions: [
+      '¿Qué aspecto tuyo proyectas en otros para no reconocerlo como propio?',
+      '¿Qué verdad interna evitas porque cambiaría tu vida por completo?',
+      '¿En qué momento dejaste de mirarte y empezaste a vivir para la mirada ajena?'
+    ]
   },
   {
     id: '002',
     quote: 'El tiempo no cura nada, solo te enseña a vivir con el dolor.',
     author: 'Anónimo',
-    meaning: 'El tiempo no borra. Solo pone distancia. El dolor se integra, no se elimina. Aprendes a cargarlo, no a olvidarlo.',
-    questions: ['¿Qué dolor esperas que el tiempo cure?', '¿Puedes aprender a vivir con él en lugar de esperar que desaparezca?']
+    meaning: 'El tiempo no es sanador mágico. Es distancia que permite integración si trabajas activamente. Sin procesamiento, el dolor se enquista, se vuelve carácter, estructura defensiva. "Esperar a que pase" es fantasía. El dolor procesado se vuelve sabiduría; el dolor negado, se vuelve síntoma.',
+    questions: [
+      '¿Qué dolor esperas que el tiempo cure sin hacer nada al respecto?',
+      '¿Cómo se ha transformado tu relación con ese dolor en los últimos años?',
+      '¿Qué tendrías que aceptar para dejar de esperar que desaparezca?'
+    ]
   },
   {
     id: '003',
     quote: 'La Sombra es aquello que no queremos ser.',
     author: 'Carl G. Jung',
-    meaning: 'Todo lo que niegas, lo proyectas. Lo que más te molesta de otros suele ser lo que más escondes de ti. Integrar la sombra no es volverse oscuro: es volverse completo.',
-    questions: ['¿Qué te irrita profundamente en otros?', '¿Dónde podría estar esa cualidad escondida en ti?']
+    meaning: 'La sombra no es "tu lado oscuro". Es todo lo que rechazaste para ser aceptado: tu poder, tu sexualidad, tu rabia, tu vulnerabilidad. Lo que niegas en ti lo proyectas en otros y lo atacas ahí. Integrar la sombra no es volverse malo: es recuperar energía vital que gastabas en negar. La completud incluye lo rechazado.',
+    questions: [
+      '¿Qué cualidad te irrita profundamente en otros y dónde la ocultas en ti?',
+      '¿Qué parte tuya sacrificaste para ser querido o aceptado?',
+      '¿Cómo sería tu vida si dejaras de rechazar esa cualidad y la integraras conscientemente?'
+    ]
   },
   {
     id: '004',
     quote: 'La madurez no es la ausencia de trauma, sino la habilidad de no transmitirlo.',
     author: 'Anónimo',
-    meaning: 'Todos llevamos heridas. La madurez no es estar curado, sino no herir desde tu herida. Es cortar la cadena de transmisión.',
-    questions: ['¿Qué herida tuya hiere a otros?', '¿Cómo podrías contenerla en lugar de pasarla?']
+    meaning: 'Todos llevamos heridas fundacionales. La diferencia está en cómo las gestionas: las proyectas o las procesas. Repetir el daño es inconsciente; contenerlo es responsabilidad adulta. No se trata de estar "curado", sino de no usar tu dolor como excusa para herir. Cortar la cadena transgeneracional es acto heroico silencioso.',
+    questions: [
+      '¿Qué herida tuya reconoces hiriendo a otros aunque no quieras?',
+      '¿Qué patrón heredaste de tus padres que ahora repites sin darte cuenta?',
+      '¿Cómo podrías contener tu dolor sin convertirlo en arma?'
+    ]
   },
   {
     id: '005',
     quote: 'La neurosis es siempre un sustituto del sufrimiento legítimo.',
     author: 'Carl G. Jung',
-    meaning: 'A veces preferimos un dolor indirecto, confuso, inmanejable, antes que enfrentar el dolor real que sí podemos nombrar. El síntoma es una defensa contra la verdad.',
-    questions: ['¿Qué dolor estás evitando con tus síntomas?', '¿Qué verdad se volvería visible si dejaras de distraerte?']
+    meaning: 'El síntoma neurótico es un desvío: preferimos un malestar difuso, inmanejable, sin nombre claro, antes que enfrentar el dolor específico que sí podemos nombrar. "Me siento ansioso" es más tolerable que "estoy en una relación que me destruye". El síntoma protege y distrae. Curarse es atreverse a nombrar lo real.',
+    questions: [
+      '¿Qué síntoma recurrente usas para no ver el problema de fondo?',
+      '¿Qué verdad dolorosa se volvería inevitable si tu síntoma desapareciera?',
+      '¿Qué ganarías manteniendo este sufrimiento indirecto?'
+    ]
   },
   {
     id: '006',
     quote: 'El síntoma es un compromiso entre el deseo y la defensa.',
     author: 'Jacques Lacan',
-    meaning: 'Lo que te molesta de ti mismo no es solo un problema: es una solución fracasada. El síntoma intenta resolver algo que no sabes nombrar. Escucharlo es descifrarlo.',
-    questions: ['¿Qué conflicto interno expresa tu síntoma?', '¿Qué deseo y qué prohibición chocan en él?']
+    meaning: 'Tu síntoma no es solo problema: es solución fallida a un conflicto interno. Quieres algo (deseo) pero también lo prohibes (defensa), entonces el síntoma emerge como pacto: ni satisfaces plenamente el deseo ni lo eliminas. Es mensaje cifrado. Descifrarlo es preguntarle: ¿qué intentas resolver? ¿Qué te permites sin permiso consciente?',
+    questions: [
+      '¿Qué conflicto interno está expresando tu síntoma más molesto?',
+      '¿Qué deseo prohibido podría estar buscando salida disfrazada?',
+      '¿Qué perderías si tu síntoma desapareciera de repente?'
+    ]
   },
   {
     id: '007',
     quote: 'Hasta que lo inconsciente no se haga consciente, el subconsciente seguirá dirigiendo tu vida y tú lo llamarás destino.',
     author: 'Carl G. Jung',
-    meaning: 'Lo que no ves, te gobierna. Lo llamas mala suerte, karma, destino. Pero es solo patrón invisible. Hacerlo consciente no garantiza control, pero al menos te devuelve elección.',
-    questions: ['¿Qué patrón repetitivo culpas al destino?', '¿Qué papel juegas tú en esa repetición?']
+    meaning: 'Lo que no ves, te gobierna desde las sombras. Repites patrones y los llamas "mala suerte", "así soy", "es mi karma". Pero son solo estructuras invisibles que operan sin tu permiso consciente. Hacerlo consciente no garantiza control inmediato, pero al menos te devuelve la posibilidad de elegir. La conciencia no es solución mágica: es punto de partida.',
+    questions: [
+      '¿Qué situación dolorosa se repite en tu vida sin que entiendas por qué?',
+      '¿Qué papel invisible juegas tú en esa repetición que llamas destino?',
+      '¿Qué tendrías que reconocer de ti mismo para romper el patrón?'
+    ]
   },
   {
     id: '008',
     quote: 'Donde hay voluntad, hay camino. Donde no hay voluntad, hay excusas.',
     author: 'Anónimo',
-    meaning: 'La falta de recursos no es el problema. La falta de voluntad sí. Las excusas son voluntad invertida: energía usada para justificar la inacción.',
-    questions: ['¿Qué excusa repites más?', '¿Qué voluntad falta debajo de esa excusa?']
+    meaning: 'La falta de recursos, tiempo o capacidad rara vez es el problema real. El problema es falta de voluntad disfrazada de imposibilidad. Las excusas son voluntad invertida: la misma energía que usarías para actuar, la usas para justificar por qué no actúas. El autoengaño más común es creer tus propias excusas.',
+    questions: [
+      '¿Cuál es la excusa que más repites para no hacer lo que dices que quieres?',
+      '¿Qué miedo real está debajo de esa excusa aparentemente razonable?',
+      '¿Qué tendrías que aceptar sobre ti mismo si admites que no es falta de recursos sino falta de voluntad?'
+    ]
   },
   {
     id: '009',
     quote: 'Amar es dar lo que no se tiene a alguien que no lo es.',
     author: 'Jacques Lacan',
-    meaning: 'El amor no se basa en plenitud ni posesión. Amamos desde la falta, no desde la abundancia. Y el otro no es un objeto que completa: es un sujeto que permanece enigma.',
-    questions: ['¿Qué esperas que el otro llene en ti?', '¿Puedes amar sin necesitar ser completado?']
+    meaning: 'El amor no se basa en plenitud ni posesión, sino en falta mutua. Amamos desde la carencia, no desde la abundancia imaginaria. Y el otro no es objeto que te completa: es sujeto que permanece enigma irreductible. El amor maduro acepta que nunca tendrás al otro "completo". Amar es sostener esa falta sin intentar llenarla.',
+    questions: [
+      '¿Qué esperas que el otro llene en ti que solo tú puedes llenar?',
+      '¿Puedes amar aceptando que el otro nunca será exactamente lo que necesitas?',
+      '¿Qué falta tuya estás proyectando como exigencia hacia el otro?'
+    ]
   },
   {
     id: '010',
     quote: 'Lo que niegas te somete. Lo que aceptas te transforma.',
     author: 'Carl G. Jung',
-    meaning: 'Resistir algo le da poder. Aceptarlo le quita carga. No se trata de rendirse, sino de integrar. Lo que aceptas puede cambiar; lo que niegas, te controla.',
-    questions: ['¿Qué aspecto tuyo estás rechazando?', '¿Cómo sería aceptarlo sin justificarlo?']
+    meaning: 'Resistir algo le otorga poder invisible. Mientras pelees contra un aspecto tuyo, ese aspecto te controla desde la negación. Aceptar no es rendirse ni aprobar: es reconocer sin juicio. Solo lo que aceptas puede transformarse; lo que niegas, se enquista y gobierna desde las sombras. La aceptación es el primer acto de libertad real.',
+    questions: [
+      '¿Qué aspecto tuyo rechazas constantemente esperando que desaparezca?',
+      '¿Cuánta energía gastas peleando contra eso en lugar de integrarlo?',
+      '¿Cómo sería aceptarlo sin justificarlo ni eliminarlo, solo reconociéndolo como parte tuya?'
+    ]
   },
   {
     id: '011',
     quote: 'No hay relaciones rotas, solo personas rotas tratando de relacionarse.',
     author: 'Anónimo',
-    meaning: 'El problema no es la relación: son las personas sin procesar. Dos heridas no resueltas no hacen una relación sana.',
-    questions: ['¿Qué herida tuya está rompiendo tus relaciones?', '¿Puedes trabajar en ti antes de exigir al otro?']
+    meaning: 'La relación es emergente: surge del encuentro de dos estructuras psíquicas. Si ambos operan desde heridas no procesadas, la relación será campo de batalla, no de encuentro. No es "la relación" la que falla: son las personas que no han hecho su trabajo interno. Dos heridas abiertas no hacen una relación sana, hacen infección mutua.',
+    questions: [
+      '¿Qué herida tuya está saboteando tus relaciones actuales?',
+      '¿Esperas que la relación te cure o estás dispuesto a curarte antes de entrar?',
+      '¿Qué patrón relacional repites que viene de tu herida primaria?'
+    ]
   },
   {
     id: '012',
     quote: 'No hay relación sexual.',
     author: 'Jacques Lacan',
-    meaning: 'Hombre y mujer hablan lenguajes inconscientes distintos. No hay complementariedad perfecta. El encuentro siempre es parcial, siempre es malentendido. Aceptarlo es madurar.',
-    questions: ['¿Qué esperas del otro que nunca llegará?', '¿Puedes sostener el desencuentro sin huir?']
+    meaning: 'Hombre y mujer (o cualquier par deseante) no hablan el mismo lenguaje inconsciente. No hay complementariedad perfecta, no hay "media naranja". El encuentro siempre es parcial, siempre es malentendido estructural. Aceptar esto es madurez: dejar de buscar la fusión imposible y sostener el desencuentro sin huir. El amor real empieza donde termina la fantasía de completud.',
+    questions: [
+      '¿Qué esperas del otro que estructuralmente nunca podrá darte?',
+      '¿Puedes sostener el desencuentro sin culpar ni huir?',
+      '¿Dónde confundes la necesidad de completud con el amor?'
+    ]
   },
   {
     id: '013',
     quote: 'La herida es el lugar por donde entra la luz.',
     author: 'Rumi',
-    meaning: 'Lo que más duele suele ser lo que más transforma. La fractura permite entrada. No niegues el dolor: úsalo como puerta.',
-    questions: ['¿Qué herida te sigue doliendo?', '¿Qué podría estar tratando de enseñarte?']
+    meaning: 'La fractura psíquica abre. Lo que más duele suele ser lo que más transforma, no por masoquismo sino porque la herida quiebra defensas y deja entrar lo que antes negabas. El dolor puede ser portal si no lo rechazas. No se trata de glorificar el sufrimiento: se trata de no desperdiciarlo. La luz no entra por la perfección, sino por la grieta.',
+    questions: [
+      '¿Qué herida tuya sigue doliendo y qué podría estar intentando enseñarte?',
+      '¿Cómo has transformado dolores pasados en sabiduría presente?',
+      '¿Qué grieta tuya te resistes a ver como posible entrada de luz?'
+    ]
   },
   {
     id: '014',
     quote: 'Aquello a lo que te resistes, persiste.',
     author: 'Carl G. Jung',
-    meaning: 'La resistencia alimenta lo que quieres evitar. Mientras pelees contra algo, le das energía. Aceptarlo no es aprobarlo: es dejar de luchar.',
-    questions: ['¿Contra qué estás luchando internamente?', '¿Qué pasaría si dejaras de resistir?']
+    meaning: 'La resistencia alimenta aquello que resistes. Es paradoja psíquica: mientras peleas contra algo, le das energía. La atención obsesiva —aunque sea para rechazarlo— lo mantiene vivo. Aceptar no es aprobar ni resignarse: es soltar la lucha interna que perpetúa el problema. Lo que dejas de resistir, pierde fuerza o se transforma naturalmente.',
+    questions: [
+      '¿Contra qué aspecto interno estás luchando que no desaparece?',
+      '¿Qué pasaría si dejaras de resistirlo y simplemente lo observaras sin pelear?',
+      '¿Cuánta energía recuperarías si soltaras esa resistencia?'
+    ]
   },
   {
     id: '015',
     quote: 'El universo no te da lo que quieres, te da lo que necesitas para crecer.',
     author: 'Anónimo',
-    meaning: 'Lo que llega no siempre es lo que pediste. Pero suele ser lo que necesitas. Confiar en el proceso es aceptar que hay una inteligencia mayor.',
-    questions: ['¿Qué llegó que no querías?', '¿Qué te enseñó?']
+    meaning: 'Lo que llega no siempre coincide con tu deseo consciente. A veces llega justo lo que no querías pero necesitabas enfrentar. Confiar en el proceso no es pensamiento mágico: es reconocer que hay un orden mayor en el caos aparente. Las crisis no son castigos: son invitaciones forzadas a evolucionar. Resistirlas es prolongar el aprendizaje.',
+    questions: [
+      '¿Qué situación no deseada llegó a tu vida y qué te enseñó que no habrías aprendido de otro modo?',
+      '¿Puedes confiar en que lo que llega tiene propósito aunque no lo entiendas ahora?',
+      '¿Qué estás resistiendo que podría ser exactamente lo que necesitas?'
+    ]
   },
   {
     id: '016',
     quote: 'El sufrimiento es opcional, el dolor es inevitable.',
     author: 'Buda',
-    meaning: 'El dolor viene solo; el sufrimiento lo añades tú con tu resistencia. Aceptar el dolor no es masoquismo: es dejar de pelear contra lo que ya es.',
-    questions: ['¿Dónde estás resistiendo algo inevitable?', '¿Qué pasaría si aceptaras en lugar de luchar?']
+    meaning: 'El dolor es parte de estar vivo: pérdida, enfermedad, muerte, cambio. Es inevitable. El sufrimiento es la historia que añades encima: "esto no debería pasar", "es injusto", "por qué a mí". Aceptar el dolor sin la narrativa victimista no elimina el dolor, pero sí disuelve el sufrimiento añadido. Es distinción fundamental entre lo real y lo interpretado.',
+    questions: [
+      '¿Dónde estás resistiendo un dolor inevitable y convirtiéndolo en sufrimiento?',
+      '¿Qué narrativa estás añadiendo al dolor puro que lo vuelve insoportable?',
+      '¿Puedes sentir el dolor sin la historia de injusticia?'
+    ]
   },
   {
     id: '017',
     quote: 'La única forma de dar sentido a la libertad es ejercerla.',
     author: 'Jean-Paul Sartre',
-    meaning: 'Libertad no es concepto: es acto. No eres libre porque puedas elegir; eres libre cuando eliges. Y cada elección te define.',
-    questions: ['¿Dónde finges no tener opciones?', '¿Qué elegirías si te sintieras libre de verdad?']
+    meaning: 'Libertad no es concepto filosófico abstracto: es acto concreto. No eres libre porque puedas elegir en teoría; eres libre cuando eliges en la práctica. Y cada elección te define, te construye, te compromete. No ejercer la libertad es elegir por omisión, y eso también te define. La libertad no dada: es responsabilidad que asumes o evades.',
+    questions: [
+      '¿Dónde finges no tener opciones para evitar elegir?',
+      '¿Qué elegirías hoy si te sintieras verdaderamente libre de consecuencias?',
+      '¿Qué elección estás posponiendo que ya sabes que debes hacer?'
+    ]
   },
   {
     id: '018',
     quote: 'La pregunta no es quién soy, sino qué deseo.',
     author: 'Jacques Lacan',
-    meaning: 'La identidad es engañosa; el deseo, revelador. No preguntes qué eres: pregunta qué te mueve. La respuesta no estará en las palabras, sino en tus actos recurrentes.',
-    questions: ['¿Hacia dónde se dirige tu energía sin que lo decidas?', '¿Qué revela eso sobre tu deseo real?']
+    meaning: 'La identidad es ficción útil pero engañosa. El deseo es más honesto: te mueve sin permiso consciente. No preguntes "qué soy" (respuesta siempre fantasiosa), pregunta "qué deseo" y obsérvalo en tus actos, no en tus palabras. El deseo se revela en lo que haces repetidamente, no en lo que dices querer. Tu vida es mapa de tu deseo real.',
+    questions: [
+      '¿Hacia dónde se dirige tu energía vital sin que lo decidas conscientemente?',
+      '¿Qué revela eso sobre tu deseo real versus lo que dices desear?',
+      '¿Qué harías diferente si aceptaras tu deseo tal como es, sin justificarlo?'
+    ]
   },
   {
     id: '019',
     quote: 'El presente es el único momento en el que puedes actuar.',
     author: 'Eckhart Tolle',
-    meaning: 'El pasado ya no existe, el futuro aún no llega. Solo tienes ahora. Vivir en otro tiempo es fantasía. El poder está en este instante, no en el que vendrá.',
-    questions: ['¿Cuánto tiempo pasas fuera del presente?', '¿Qué puedes hacer ahora mismo?']
+    meaning: 'El pasado ya no existe más que como memoria en el ahora. El futuro no existe más que como proyección en el ahora. Vivir en otro tiempo es fantasía mental. Todo tu poder está concentrado en este instante, no en el que vendrá ni en el que fue. La acción solo ocurre aquí. Postergar es vivir en tiempo imaginario donde nunca actúas.',
+    questions: [
+      '¿Cuánto tiempo pasas mentalmente fuera del momento presente?',
+      '¿Qué podrías hacer ahora mismo si te centraras completamente en el presente?',
+      '¿Qué excusa temporal usas para no actuar en este momento?'
+    ]
   },
   {
     id: '020',
     quote: 'No eres una gota en el océano. Eres el océano entero en una gota.',
     author: 'Rumi',
-    meaning: 'No eres pequeño. Eres la totalidad concentrada en forma singular. Cada persona contiene universos. Dejar de sentirte insignificante es un acto místico.',
-    questions: ['¿Dónde te sientes pequeño e irrelevante?', '¿Puedes verte como parte del todo?']
+    meaning: 'No eres fragmento insignificante: eres totalidad concentrada en forma singular. Cada persona contiene universos, patrones fractales de lo absoluto. Dejar de sentirte pequeño e irrelevante es despertar místico: reconocerte como parte inseparable del todo. No es ego inflado, es disolución del ego separado. Eres tan vasto como el cosmos porque eres el cosmos manifestándose.',
+    questions: [
+      '¿Dónde te sientes pequeño, insignificante, sin poder real?',
+      '¿Puedes reconocerte como expresión única de algo infinitamente mayor?',
+      '¿Qué cambiaría en tu vida si te vieras como el océano completo y no como la gota aislada?'
+    ]
   },
   {
     id: '021',
@@ -1893,11 +1973,13 @@ const FraseDelDiaPage = () => {
   }
 
   const handleShare = async () => {
-    const title = '💭 Frase del día'
-    const shareText = `💭 "${phrase.quote}"
-— ${phrase.author}
+    const title = '1 FRASE × DÍA'
+    const shareText = `*1 FRASE × DÍA*
 
-✨ ¿Quieres saber más?
+💭 "${phrase.quote}"
+— _${phrase.author}_
+
+✨ *¿Quieres saber más?*
 👉 ${shareUrl}`
 
     try {
@@ -1919,11 +2001,13 @@ const FraseDelDiaPage = () => {
   }
 
   const handleShareTo = (platform) => {
-    const title = '💭 Frase del día'
-    const shareText = `💭 "${phrase.quote}"
-— ${phrase.author}
+    const title = '1 FRASE × DÍA'
+    const shareText = `*1 FRASE × DÍA*
 
-✨ ¿Quieres saber más?
+💭 "${phrase.quote}"
+— _${phrase.author}_
+
+✨ *¿Quieres saber más?*
 👉 ${shareUrl}`
     const encodedText = encodeURIComponent(shareText)
     const encodedUrl = encodeURIComponent(shareUrl)
@@ -1950,10 +2034,12 @@ const FraseDelDiaPage = () => {
   }
 
   const handleCopyLink = async () => {
-    const shareText = `💭 "${phrase.quote}"
-— ${phrase.author}
+    const shareText = `*1 FRASE × DÍA*
 
-✨ ¿Quieres saber más?
+💭 "${phrase.quote}"
+— _${phrase.author}_
+
+✨ *¿Quieres saber más?*
 👉 ${shareUrl}`
     try {
       await navigator.clipboard.writeText(shareText)
