@@ -158,19 +158,7 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                             to={item.href}
                             onClick={onClose}
                           >
-                            {isStore ? (
-                              <motion.div
-                                whileHover={{ scale: 1.03, boxShadow: '0 0 30px rgba(168, 85, 247, 0.5)' }}
-                                whileTap={{ scale: 0.97 }}
-                                className="flex items-center justify-center gap-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-10 py-5 rounded-full text-base font-medium tracking-[0.25em] transition-all duration-300 uppercase shadow-lg shadow-violet-500/30 border-2 border-violet-500 hover:border-white/30 my-6"
-                                style={{ fontFamily: 'Gotham, sans-serif' }}
-                              >
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                </svg>
-                                {item.name}
-                              </motion.div>
-                            ) : (
+                            {!isStore ? (
                               <motion.div
                                 whileHover={{ x: 8, scale: 1.02 }}
                                 className="block text-white/70 hover:text-white text-xl font-light tracking-[0.3em] transition-all duration-300 py-4 uppercase relative group"
@@ -179,7 +167,7 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                                 <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 rounded-lg transition-all duration-300" />
                                 <span className="relative z-10">{item.name}</span>
                               </motion.div>
-                            )}
+                            ) : null}
                           </Link>
                         )}
 
@@ -221,7 +209,7 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                       </div>
 
                       {/* Línea decorativa ultra sutil */}
-                      {!isStore && (
+                      {!isStore && !item.subItems && (
                         <motion.div
                           initial={{ scaleX: 0 }}
                           animate={{ scaleX: 1 }}

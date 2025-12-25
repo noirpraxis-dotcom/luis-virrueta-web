@@ -48,18 +48,27 @@ const ToolsMenu = ({ isMobile = false }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[60] bg-black/98 backdrop-blur-xl flex items-center justify-center"
+              className="fixed inset-0 z-[60] flex items-center justify-center"
             >
+              {/* Fondo sólido con difuminado elegante */}
+              <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black opacity-98 backdrop-blur-2xl" />
+              
+              {/* Efectos decorativos */}
+              <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px]" />
+                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-600/10 rounded-full blur-[120px]" />
+              </div>
+
               {/* Botón cerrar */}
               <button
                 onClick={() => setIsOpen(false)}
-                className="absolute top-6 right-6 w-11 h-11 flex items-center justify-center rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-white/20 transition-all"
+                className="absolute top-6 right-6 w-11 h-11 flex items-center justify-center rounded-xl bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/40 transition-all z-20"
               >
-                <X className="w-5 h-5 text-white/70" strokeWidth={1.5} />
+                <X className="w-5 h-5 text-white" strokeWidth={2} />
               </button>
 
               {/* Contenido */}
-              <div className="w-full max-w-md px-6">
+              <div className="relative w-full max-w-md px-6 z-10">
                 <motion.h2
                   initial={{ y: -20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
