@@ -2542,6 +2542,41 @@ const FraseDelDiaPage = () => {
             </div>
           </motion.div>
 
+          {/* Únete a la comunidad - Sección sutil */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 1.15 }}
+            className="mt-8 max-w-2xl mx-auto"
+          >
+            <a
+              href="https://chat.whatsapp.com/BjvBnSM6tILK6veH3mOLzv"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] hover:from-white/[0.06] hover:to-white/[0.03] hover:border-white/[0.15] backdrop-blur-sm p-5 sm:p-6 transition-all duration-500"
+            >
+              <div className="flex items-center gap-4">
+                <div className="flex-shrink-0 w-11 h-11 rounded-full bg-gradient-to-br from-green-500/20 to-emerald-500/10 border border-green-500/20 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                  <MessageCircle className="w-5 h-5 text-green-400/80" strokeWidth={1.5} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-sm sm:text-base font-light text-white/85 group-hover:text-white tracking-wide transition-colors">
+                    ¿Quieres seguir aprendiendo?
+                  </h4>
+                  <p className="mt-0.5 text-xs sm:text-sm text-white/45 group-hover:text-white/60 font-light transition-colors">
+                    Únete a nuestra comunidad en WhatsApp
+                  </p>
+                </div>
+                <div className="flex-shrink-0 opacity-40 group-hover:opacity-70 group-hover:translate-x-1 transition-all duration-300">
+                  <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </a>
+          </motion.div>
+
           {/* Sección de Enlaces Estratégicos */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
