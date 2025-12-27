@@ -212,13 +212,13 @@ const LaboratorioEticoPage = () => {
   }
 
   const handleShareTo = (platformId) => {
-    const text = `Acabo de enfrentar un dilema ético imposible en el Laboratorio Ético. ¿Tú qué elegirías?\n\nDilema: ${dilema.titulo}`
+    const gancho = `⚗️ LABORATORIO ÉTICO - Dilema de la semana\n\n"${dilema.titulo}"\n\n¿Qué eliges cuando ninguna opción te deja limpio?\n\nNo hay respuestas correctas. Solo un espejo de tu sistema de valores.`
     const url = window.location.href
 
     let shareUrl = ''
     switch (platformId) {
       case 'whatsapp':
-        shareUrl = `https://wa.me/?text=${encodeURIComponent(`${text}\n\n${url}`)}`
+        shareUrl = `https://wa.me/?text=${encodeURIComponent(`${gancho}\n\n👉 ${url}`)}`
         break
       case 'facebook':
         shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`
@@ -286,6 +286,22 @@ const LaboratorioEticoPage = () => {
       <Helmet>
         <title>Laboratorio Ético - Zuzana Virrueta | Dilemas sin respuestas correctas</title>
         <meta name="description" content="Cada semana, un dilema imposible. No hay respuestas correctas. Solo un espejo de tu sistema de valores." />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.href} />
+        <meta property="og:title" content={`${dilema?.titulo || 'Laboratorio Ético'} - Dilema de la semana`} />
+        <meta property="og:description" content="¿Qué eliges cuando ninguna opción te deja limpio? No hay respuestas correctas. Solo un espejo." />
+        <meta property="og:image" content={`${window.location.origin}/dilema-imagen.jpg`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={window.location.href} />
+        <meta property="twitter:title" content={`${dilema?.titulo || 'Laboratorio Ético'} - Dilema de la semana`} />
+        <meta property="twitter:description" content="¿Qué eliges cuando ninguna opción te deja limpio? No hay respuestas correctas. Solo un espejo." />
+        <meta property="twitter:image" content={`${window.location.origin}/dilema-imagen.jpg`} />
       </Helmet>
 
       <div className="relative min-h-screen bg-[#0a0a0f] text-white overflow-hidden">
@@ -507,7 +523,7 @@ const LaboratorioEticoPage = () => {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1 }}
                   onClick={scrollToAnalysis}
-                  className="text-sm text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-2 mx-auto"
+                  className="text-sm text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-2 mx-auto mt-4"
                 >
                   <Eye className="w-4 h-4" />
                   Quiero leer la reflexión antes de responder
@@ -611,17 +627,14 @@ const LaboratorioEticoPage = () => {
             </div>
           </motion.div>
 
-          {/* Análisis profundo */}
-          <AnimatePresence>
-            {(showAnalysis || hasVoted) && (
-              <motion.div
-                ref={analysisRef}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 50 }}
-                transition={{ duration: 0.8 }}
-                className="mt-16 space-y-8"
-              >
+          {/* Análisis profundo - Siempre visible */}
+          <motion.div
+            ref={analysisRef}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="mt-16 space-y-8"
+          >
                 {/* Lo que se juega */}
                 <div className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-10">
                   <div className="flex items-center gap-3 mb-6">
@@ -688,8 +701,6 @@ const LaboratorioEticoPage = () => {
                   Volver arriba
                 </motion.button>
               </motion.div>
-            )}
-          </AnimatePresence>
 
           {/* Compartir y acciones */}
           <motion.div
