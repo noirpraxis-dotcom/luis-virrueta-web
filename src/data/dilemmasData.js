@@ -249,11 +249,39 @@ El dilema es elegir qué traición estás dispuesto a cargar.`,
 ]
 
 // Función helper para obtener el dilema actual basado en la fecha
+// Se renueva cada lunes a las 12:00 PM hora México
 export const getDilemaActual = () => {
-  // Por ahora, retornamos el primer dilema
-  // Puedes implementar lógica de rotación semanal aquí
-  const weekNumber = Math.floor((Date.now() / 1000 / 60 / 60 / 24 / 7)) % DILEMAS.length
-  return DILEMAS[weekNumber]
+  // Obtener fecha actual en hora México
+  const now = new Date()
+  const mexicoTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Mexico_City' }))
+  
+  // Calcular el lunes más reciente a las 12pm
+  const dayOfWeek = mexicoTime.getDay() // 0 = domingo, 1 = lunes, etc.
+  const hour = mexicoTime.getHours()
+  
+  // Calcular días desde el último lunes 12pm
+  let daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+  
+  // Si es lunes pero antes de las 12pm, retroceder una semana
+  if (dayOfWeek === 1 && hour < 12) {
+    daysSinceMonday += 7
+  }
+  
+  // Calcular la fecha del último lunes 12pm
+  const lastMonday = new Date(mexicoTime)
+  lastMonday.setDate(lastMonday.getDate() - daysSinceMonday)
+  lastMonday.setHours(12, 0, 0, 0)
+  
+  // Fecha de inicio del sistema (primer lunes 12pm)
+  const startDate = new Date('2025-12-29T12:00:00') // Lunes 29 de diciembre 2025
+  
+  // Calcular semanas desde el inicio
+  const weeksSinceStart = Math.floor((lastMonday - startDate) / (7 * 24 * 60 * 60 * 1000))
+  
+  // Obtener el índice del dilema (rotación circular)
+  const dilemaIndex = weeksSinceStart % DILEMAS.length
+  
+  return DILEMAS[dilemaIndex >= 0 ? dilemaIndex : 0]
 }
 
 // Función para obtener todos los dilemas

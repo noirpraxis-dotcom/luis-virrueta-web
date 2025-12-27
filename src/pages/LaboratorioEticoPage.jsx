@@ -1,9 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
-import { Share2, ChevronDown, ChevronUp, ArrowLeft, Home, Brain, Scale, Heart, Eye, EyeOff, Sparkles, Coffee, MessageCircle, Copy, CheckCircle, User, Compass, BookOpen, Map } from 'lucide-react'
+import { Share2, ChevronDown, ChevronUp, ArrowLeft, Home, Brain, Flask, Heart, Eye, EyeOff, Sparkles, Coffee, MessageCircle, Copy, CheckCircle, User, Compass, BookOpen, Map, Send } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { getDilemaActual } from '../data/dilemmasData'
+import { getVotes, saveVote, saveComment, getComments } from '../lib/supabase'
 
 const SOCIAL_PLATFORMS = [
   { id: 'whatsapp', name: 'WhatsApp', icon: MessageCircle },
@@ -33,19 +34,15 @@ const hashIP = async (ip) => {
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
 }
 
-// Gestión de votos en localStorage
-const STORAGE_KEY = 'laboratorio_etico_votos'
-const GLOBAL_VOTES_KEY = 'laboratorio_etico_global'
+// Gestión de votos en localStorage (fallback si Supabase falla)
+const STORAGE_KEY = 'laboratorio_etico_votos_local'
 
 const getLocalVote = (dilemaId) => {
   const votes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
   return votes[dilemaId]
 }
 
-const saveLocalVote = async (dilemaId, opcionId) => {
-  const ip = await getUserIP()
-  const ipHash = await hashIP(ip)
-  
+const saveLocalVote = async (dilemaId, opcionId, ipHash) => {
   const votes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
   votes[dilemaId] = {
     opcion: opcionId,
@@ -53,33 +50,9 @@ const saveLocalVote = async (dilemaId, opcionId) => {
     ipHash
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(votes))
-  
-  // También guardar en el contador global
-  saveGlobalVote(dilemaId, opcionId)
 }
 
-const saveGlobalVote = (dilemaId, opcionId) => {
-  const globalVotes = JSON.parse(localStorage.getItem(GLOBAL_VOTES_KEY) || '{}')
-  
-  if (!globalVotes[dilemaId]) {
-    globalVotes[dilemaId] = {}
-  }
-  
-  if (!globalVotes[dilemaId][opcionId]) {
-    globalVotes[dilemaId][opcionId] = 0
-  }
-  
-  globalVotes[dilemaId][opcionId]++
-  localStorage.setItem(GLOBAL_VOTES_KEY, JSON.stringify(globalVotes))
-}
-
-const getGlobalVotes = (dilemaId) => {
-  const globalVotes = JSON.parse(localStorage.getItem(GLOBAL_VOTES_KEY) || '{}')
-  return globalVotes[dilemaId] || {}
-}
-
-const calculatePercentages = (dilemaId, opciones) => {
-  const votes = getGlobalVotes(dilemaId)
+const calculatePercentages = (votes, opciones) => {
   const total = Object.values(votes).reduce((sum, count) => sum + count, 0)
   
   if (total === 0) {
@@ -109,23 +82,47 @@ const LaboratorioEticoPage = () => {
   const [shareOpen, setShareOpen] = useState(false)
   const [actionOk, setActionOk] = useState(false)
   const [lastAction, setLastAction] = useState('')
+  const [comments, setComments] = useState([])
+  const [showCommentForm, setShowCommentForm] = useState(false)
+  const [commentForm, setCommentForm] = useState({ nombre: '', comentario: '', telefono: '' })
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const videoRef = useRef(null)
   const analysisRef = useRef(null)
   const donateRef = useRef(null)
+  const commentsRef = useRef(null)
 
   useEffect(() => {
-    const currentDilema = getDilemaActual()
-    setDilema(currentDilema)
-    
-    // Verificar si ya votó
-    const existingVote = getLocalVote(currentDilema.id)
-    if (existingVote) {
-      setHasVoted(true)
-      setSelectedOption(existingVote.opcion)
-      setPercentages(calculatePercentages(currentDilema.id, currentDilema.opciones))
+    const loadDilema = async () => {
+      const currentDilema = getDilemaActual()
+      setDilema(currentDilema)
+      
+      // Verificar si ya votó localmente
+      const existingVote = getLocalVote(currentDilema.id)
+      if (existingVote) {
+        setHasVoted(true)
+        setSelectedOption(existingVote.opcion)
+      }
+      
+      // Cargar votos desde Supabase
+      try {
+        const votes = await getVotes(currentDilema.id)
+        setPercentages(calculatePercentages(votes, currentDilema.opciones))
+      } catch (error) {
+        console.error('Error cargando votos:', error)
+      }
+      
+      // Cargar comentarios
+      try {
+        const loadedComments = await getComments(currentDilema.id)
+        setComments(loadedComments)
+      } catch (error) {
+        console.error('Error cargando comentarios:', error)
+      }
+      
+      setIsLoading(false)
     }
     
-    setIsLoading(false)
+    loadDilema()
   }, [])
 
   useEffect(() => {
@@ -139,14 +136,68 @@ const LaboratorioEticoPage = () => {
     if (hasVoted || !dilema) return
     
     setSelectedOption(opcionId)
-    await saveLocalVote(dilema.id, opcionId)
+    
+    // Obtener IP y hashearla
+    const ip = await getUserIP()
+    const ipHash = await hashIP(ip)
+    
+    // Guardar localmente primero
+    await saveLocalVote(dilema.id, opcionId, ipHash)
+    
+    // Intentar guardar en Supabase
+    try {
+      const result = await saveVote(dilema.id, opcionId, ipHash)
+      if (result.success) {
+        // Recargar votos desde Supabase
+        const votes = await getVotes(dilema.id)
+        setPercentages(calculatePercentages(votes, dilema.opciones))
+      }
+    } catch (error) {
+      console.error('Error guardando voto en Supabase:', error)
+    }
+    
     setHasVoted(true)
-    setPercentages(calculatePercentages(dilema.id, dilema.opciones))
     
     // Pequeña pausa para la animación
     setTimeout(() => {
       setShowReflection(true)
     }, 600)
+  }
+
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault()
+    if (!commentForm.nombre || !commentForm.comentario || !dilema) return
+    
+    setIsSubmitting(true)
+    
+    try {
+      const result = await saveComment(
+        dilema.id,
+        commentForm.nombre.trim(),
+        commentForm.comentario.trim(),
+        commentForm.telefono.trim() || null
+      )
+      
+      if (result.success) {
+        // Recargar comentarios
+        const loadedComments = await getComments(dilema.id)
+        setComments(loadedComments)
+        
+        // Limpiar formulario
+        setCommentForm({ nombre: '', comentario: '', telefono: '' })
+        setShowCommentForm(false)
+        
+        // Mostrar mensaje de éxito
+        setActionOk(true)
+        setLastAction('comment')
+        setTimeout(() => setActionOk(false), 3000)
+      }
+    } catch (error) {
+      console.error('Error enviando comentario:', error)
+      alert('Error al enviar el comentario. Por favor intenta de nuevo.')
+    }
+    
+    setIsSubmitting(false)
   }
 
   const scrollToAnalysis = () => {
@@ -341,7 +392,7 @@ const LaboratorioEticoPage = () => {
               transition={{ delay: 0.2, duration: 0.6 }}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/20 border border-purple-500/30 mb-6"
             >
-              <Brain className="w-4 h-4 text-purple-400" />
+              <Flask className="w-4 h-4 text-purple-400" />
               <span className="text-sm text-purple-300 font-light tracking-wider">LABORATORIO ÉTICO</span>
             </motion.div>
 
@@ -368,7 +419,7 @@ const LaboratorioEticoPage = () => {
               {/* Label del dilema */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <Scale className="w-5 h-5 text-purple-400" />
+                  <Flask className="w-5 h-5 text-purple-400" />
                   <span className="text-sm text-gray-400">
                     Dilema #{dilema.numero.toString().padStart(2, '0')} · {dilema.categoria}
                   </span>
@@ -590,7 +641,7 @@ const LaboratorioEticoPage = () => {
                 <div className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-10">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center">
-                      <Scale className="w-5 h-5 text-pink-400" />
+                      <Flask className="w-5 h-5 text-pink-400" />
                     </div>
                     <h3 className="text-2xl font-light">Por qué ninguna respuesta te deja "limpio"</h3>
                   </div>
@@ -778,6 +829,166 @@ const LaboratorioEticoPage = () => {
                 Pagos seguros con tarjeta mediante Stripe (se abre en una nueva pestaña).
               </div>
             </div>
+          </motion.div>
+
+          {/* Sección de Comentarios */}
+          <motion.div
+            ref={commentsRef}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, delay: 0.3 }}
+            className="mt-10 max-w-4xl mx-auto"
+          >
+            <div className="text-center mb-6">
+              <h3 className="text-2xl sm:text-3xl font-light text-white/95 tracking-wide mb-2">
+                Comparte tu reflexión
+              </h3>
+              <p className="text-sm text-white/60 font-light">
+                ¿Qué te hizo pensar este dilema? Déjanos tu opinión
+              </p>
+            </div>
+
+            {/* Formulario de comentarios */}
+            <div className="bg-black/25 backdrop-blur-md border border-white/10 rounded-3xl p-6 sm:p-8 mb-6">
+              {!showCommentForm ? (
+                <button
+                  onClick={() => setShowCommentForm(true)}
+                  className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-light tracking-wide hover:from-purple-500 hover:to-pink-500 transition-all flex items-center justify-center gap-2"
+                >
+                  <MessageCircle className="w-5 h-5" strokeWidth={1.5} />
+                  Dejar mi reflexión
+                </button>
+              ) : (
+                <form onSubmit={handleCommentSubmit} className="space-y-4">
+                  {actionOk && lastAction === 'comment' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center gap-2 text-green-400 text-sm bg-green-500/10 border border-green-500/20 rounded-lg p-3"
+                    >
+                      <CheckCircle className="w-5 h-5" />
+                      <span>¡Gracias por compartir tu reflexión!</span>
+                    </motion.div>
+                  )}
+
+                  <div>
+                    <label className="block text-sm text-white/70 mb-2 font-light">
+                      Tu nombre *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={commentForm.nombre}
+                      onChange={(e) => setCommentForm({...commentForm, nombre: e.target.value})}
+                      placeholder="Ej: María García"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-purple-500/50 transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-white/70 mb-2 font-light">
+                      Tu reflexión *
+                    </label>
+                    <textarea
+                      required
+                      value={commentForm.comentario}
+                      onChange={(e) => setCommentForm({...commentForm, comentario: e.target.value})}
+                      placeholder="Comparte qué te hizo pensar este dilema, cómo lo relacionas con tu vida, o qué insights surgieron..."
+                      rows="4"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-purple-500/50 transition-all resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-white/70 mb-2 font-light">
+                      WhatsApp (opcional)
+                    </label>
+                    <input
+                      type="tel"
+                      value={commentForm.telefono}
+                      onChange={(e) => setCommentForm({...commentForm, telefono: e.target.value})}
+                      placeholder="Ej: +52 55 1234 5678"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-purple-500/50 transition-all"
+                    />
+                    <p className="mt-1 text-xs text-white/40">
+                      Solo si quieres que te contactemos para profundizar en tu reflexión
+                    </p>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowCommentForm(false)
+                        setCommentForm({ nombre: '', comentario: '', telefono: '' })
+                      }}
+                      disabled={isSubmitting}
+                      className="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl font-light tracking-wide hover:bg-white/10 transition-all disabled:opacity-50"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-light tracking-wide hover:from-purple-500 hover:to-pink-500 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                          Enviando...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4" strokeWidth={1.5} />
+                          Enviar reflexión
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+
+            {/* Lista de comentarios */}
+            {comments.length > 0 && (
+              <div className="space-y-4">
+                <h4 className="text-lg font-light text-white/80 mb-4">
+                  Reflexiones de la comunidad ({comments.length})
+                </h4>
+                {comments.map((comment, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center flex-shrink-0">
+                        <User className="w-5 h-5 text-purple-400" strokeWidth={1.5} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-sm font-medium text-white/90">
+                            {comment.nombre}
+                          </span>
+                          <span className="text-xs text-white/40">
+                            {new Date(comment.created_at).toLocaleDateString('es-MX', {
+                              day: 'numeric',
+                              month: 'short'
+                            })}
+                          </span>
+                        </div>
+                        <p className="text-sm text-white/70 leading-relaxed">
+                          {comment.comentario}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </motion.div>
 
           {/* Únete a la comunidad */}
