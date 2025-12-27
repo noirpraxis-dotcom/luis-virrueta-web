@@ -185,7 +185,6 @@ const LaboratorioEticoPage = () => {
         
         // Limpiar formulario
         setCommentForm({ nombre: '', comentario: '', telefono: '' })
-        setShowCommentForm(false)
         
         // Mostrar mensaje de éxito
         setActionOk(true)
@@ -284,7 +283,7 @@ const LaboratorioEticoPage = () => {
   return (
     <>
       <Helmet>
-        <title>Laboratorio Ético - Zuzana Virrueta | Dilemas sin respuestas correctas</title>
+        <title>Laboratorio Ético - Luis Virrueta | Dilemas sin respuestas correctas</title>
         <meta name="description" content="Cada semana, un dilema imposible. No hay respuestas correctas. Solo un espejo de tu sistema de valores." />
         
         {/* Open Graph / Facebook */}
@@ -860,18 +859,9 @@ const LaboratorioEticoPage = () => {
               </p>
             </div>
 
-            {/* Formulario de comentarios */}
+            {/* Formulario de comentarios - Siempre visible */}
             <div className="bg-black/25 backdrop-blur-md border border-white/10 rounded-3xl p-6 sm:p-8 mb-6">
-              {!showCommentForm ? (
-                <button
-                  onClick={() => setShowCommentForm(true)}
-                  className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-light tracking-wide hover:from-purple-500 hover:to-pink-500 transition-all flex items-center justify-center gap-2"
-                >
-                  <MessageCircle className="w-5 h-5" strokeWidth={1.5} />
-                  Dejar mi reflexión
-                </button>
-              ) : (
-                <form onSubmit={handleCommentSubmit} className="space-y-4">
+              <form onSubmit={handleCommentSubmit} className="space-y-4">
                   {actionOk && lastAction === 'comment' && (
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
@@ -931,13 +921,12 @@ const LaboratorioEticoPage = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        setShowCommentForm(false)
                         setCommentForm({ nombre: '', comentario: '', telefono: '' })
                       }}
                       disabled={isSubmitting}
                       className="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl font-light tracking-wide hover:bg-white/10 transition-all disabled:opacity-50"
                     >
-                      Cancelar
+                      Limpiar
                     </button>
                     <button
                       type="submit"
@@ -958,7 +947,6 @@ const LaboratorioEticoPage = () => {
                     </button>
                   </div>
                 </form>
-              )}
             </div>
 
             {/* Lista de comentarios */}
