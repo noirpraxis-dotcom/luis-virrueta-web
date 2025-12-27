@@ -86,7 +86,9 @@ const LaboratorioEticoPage = () => {
   const [showCommentForm, setShowCommentForm] = useState(false)
   const [commentForm, setCommentForm] = useState({ nombre: '', comentario: '', telefono: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showNameAlert, setShowNameAlert] = useState(false)
   const videoRef = useRef(null)
+  const nameInputRef = useRef(null)
   const analysisRef = useRef(null)
   const donateRef = useRef(null)
   const commentsRef = useRef(null)
@@ -135,6 +137,15 @@ const LaboratorioEticoPage = () => {
   const handleVote = async (opcionId) => {
     if (hasVoted || !dilema) return
     
+    // Validar que haya nombre antes de votar
+    if (!commentForm.nombre.trim()) {
+      setShowNameAlert(true)
+      nameInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      nameInputRef.current?.focus()
+      setTimeout(() => setShowNameAlert(false), 5000)
+      return
+    }
+    
     setSelectedOption(opcionId)
     
     // Obtener IP y hashearla
@@ -166,7 +177,18 @@ const LaboratorioEticoPage = () => {
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault()
-    if (!commentForm.nombre || !commentForm.comentario || !dilema) return
+    if (!dilema) return
+    
+    // Validar: nombre es requerido, comentario es opcional
+    if (!commentForm.nombre.trim()) {
+      nameInputRef.current?.focus()
+      return
+    }
+    
+    // Si no hay comentario, no enviar
+    if (!commentForm.comentario.trim()) {
+      return
+    }
     
     setIsSubmitting(true)
     
@@ -875,24 +897,36 @@ const LaboratorioEticoPage = () => {
 
                   <div>
                     <label className="block text-sm text-white/70 mb-2 font-light">
-                      Tu nombre *
+                      Tu nombre * <span className="text-xs text-white/50">(requerido para votar)</span>
                     </label>
+                    {showNameAlert && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mb-2 flex items-center gap-2 text-amber-400 text-sm bg-amber-500/10 border border-amber-500/30 rounded-lg p-3"
+                      >
+                        <Sparkles className="w-4 h-4" />
+                        <span>Necesitamos tu nombre para registrar tu voto (será anónimo públicamente)</span>
+                      </motion.div>
+                    )}
                     <input
+                      ref={nameInputRef}
                       type="text"
                       required
                       value={commentForm.nombre}
                       onChange={(e) => setCommentForm({...commentForm, nombre: e.target.value})}
                       placeholder="Ej: María García"
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-purple-500/50 transition-all"
+                      className={`w-full px-4 py-3 bg-white/5 border rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-purple-500/50 transition-all ${
+                        showNameAlert ? 'border-amber-500/50 animate-pulse' : 'border-white/10'
+                      }`}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm text-white/70 mb-2 font-light">
-                      Tu reflexión *
+                      Tu reflexión <span className="text-xs text-white/50">(opcional)</span>
                     </label>
                     <textarea
-                      required
                       value={commentForm.comentario}
                       onChange={(e) => setCommentForm({...commentForm, comentario: e.target.value})}
                       placeholder="Comparte qué te hizo pensar este dilema, cómo lo relacionas con tu vida, o qué insights surgieron..."
@@ -930,8 +964,8 @@ const LaboratorioEticoPage = () => {
                     </button>
                     <button
                       type="submit"
-                      disabled={isSubmitting}
-                      className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-light tracking-wide hover:from-purple-500 hover:to-pink-500 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                      disabled={isSubmitting || !commentForm.comentario.trim()}
+                      className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-light tracking-wide hover:from-purple-500 hover:to-pink-500 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSubmitting ? (
                         <>
