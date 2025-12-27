@@ -37,6 +37,7 @@ const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage'))
 const VocationalTestPage = lazy(() => import('./pages/VocationalTestPage'))
 const FraseDelDiaPage = lazy(() => import('./pages/FraseDelDiaPage'))
 const AtlasHumanidadPage = lazy(() => import('./pages/AtlasHumanidadPage'))
+const LaboratorioEticoPage = lazy(() => import('./pages/LaboratorioEticoPage'))
 
 // Loading component
 const PageLoader = () => (
@@ -64,7 +65,7 @@ const AppContent = () => {
 
   const AppShell = () => {
     const location = useLocation()
-    const hideGlobalHeader = location.pathname.startsWith('/test-vocacional/iniciar') || location.pathname === '/frase-del-dia' || location.pathname === '/atlas-humanidad'
+    const hideGlobalHeader = location.pathname.startsWith('/test-vocacional/iniciar') || location.pathname === '/frase-del-dia' || location.pathname === '/atlas-humanidad' || location.pathname === '/laboratorio-etico'
 
     return (
       <div className="relative min-h-screen">
@@ -171,6 +172,10 @@ const AppContent = () => {
 
               <Route path="/atlas-humanidad" element={
                 <AtlasHumanidadPage />
+              } />
+
+              <Route path="/laboratorio-etico" element={
+                <LaboratorioEticoPage />
               } />
 
               {/* Página Inversión: Precios premium */}
