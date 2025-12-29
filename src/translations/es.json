@@ -48,72 +48,6 @@
     "ctaSubtitle": "Cuéntame tu situación para explicarte cómo puedo ayudarte",
     "scrollText": "Desliza para conocer más",
     "whatsappMessage": "Hola! Me gustaría platicar sobre mi proyecto y ver cómo pueden ayudarme",
-    "luisSection": {
-      "badge": "Sobre Mí",
-      "title": "Luis Virrueta",
-      "subtitle": "Psicólogo × Diseñador",
-      "foundedText": "Fundé",
-      "luxmaniaName": "Luxmania",
-      "description": "Para crear marcas que",
-      "emotionalConnect": "conectan emocionalmente",
-      "fusing": "fusionando:",
-      "psychology": "Psicología",
-      "design": "Diseño",
-      "technology": "Tecnología",
-      "quote95Start": "El",
-      "quote95Bold": "95% de las decisiones",
-      "quote95End": "ocurren en el inconsciente.",
-      "quoteSecond": "Las personas no eligen con la mente,",
-      "quoteSecondBold": "eligen desde la emoción.",
-      "cta": "Conoce Mi Enfoque",
-      "aboutBadge": "El Creador"
-    },
-    "luxmaniaSection": {
-      "title": "LUXMANIA",
-      "subtitle": "Psicología × Diseño × IA",
-      "weDesign": "Diseñamos",
-      "words": ["emociones", "experiencias", "sensaciones", "reacciones", "deseos", "conexiones"],
-      "description": "Creamos identidades visuales que",
-      "feelBefore": "se sienten antes de entenderse",
-      "psychology": "Psicología",
-      "design": "Diseño",
-      "technology": "Tecnología",
-      "quote1": "Sabemos",
-      "quote1Bold": "qué capta la atención",
-      "quote2": "Sabemos",
-      "quote2Bold": "qué despierta emociones",
-      "quote3": "Sabemos",
-      "quote3Bold": "qué impulsa las decisiones",
-      "videoOverlay": "Descubre qué podemos hacer",
-      "videoOverlayBrand": "por tu marca",
-      "turnUpVolume": "Sube el volumen"
-    },
-    "showcaseSection": {
-      "title": "MUESTRA",
-      "subtitle": "Un poco sobre nuestro trabajo",
-      "eliteBadge": "Diseño UX/UI Élite",
-      "everyClick": "Cada clic está pensado",
-      "everyScroll": "Cada scroll es intencional",
-      "designGuides": "El diseño guía hacia la acción",
-      "viewPortfolio": "Ver portafolio completo"
-    },
-    "whySection": {
-      "badge": "La Diferencia",
-      "title": "EL PROBLEMA",
-      "subtitle": "Branding Tradicional",
-      "problemText": "La mayoría de las agencias",
-      "problemBold": "diseñan para impresionar",
-      "solutionText": "Nosotros",
-      "solutionBold": "diseñamos para conectar",
-      "approachText": "Nuestro enfoque fusiona neurociencia, arquetipos y diseño para crear marcas que activan",
-      "identity": "identidad",
-      "belonging": "pertenencia",
-      "archetypes": "arquetipos que resuenan con su propia psique",
-      "psychology": "Psicología",
-      "design": "Diseño",
-      "technology": "Tecnología",
-      "cta": "Descubre tu Arquetipo"
-    },
     "servicesSection": {
       "badge": "A tu medida",
       "title": "Nuestros",
@@ -534,73 +468,6 @@
     "paragraph2": "Es el momento en que la parte observadora de mí vislumbra las huellas de la otra parte, la que creó sin necesidad de observar.",
     "quote": "Ahí reside la extraña tensión: la consciencia en flujo es ciega, porque ve a través de todo. Mientras que la consciencia a distancia observa, pero sólo la memoria de ese flujo.",
     "quoteAuthor": "AUREN"
-  },
-  "services": {
-    "hero": {
-      "title": "SERVICIOS",
-      "subtitle": "PREMIUM",
-      "description": "Desde identidades visuales completas hasta aplicaciones que resuelven problemas reales. Cada proyecto es una fusión estratégica de psicología, diseño e inteligencia artificial."
-    },
-    "brandIdentity": {
-      "title": "Identidad Visual",
-      "subtitle": "Sistemas de marca que conectan con el inconsciente",
-      "description": "No solo logotipos. Construimos lenguajes visuales completos: tipografía, color, forma, ritmo. Cada decisión está fundamentada en cómo la mente procesa, recuerda y desea.",
-      "includes": [
-        "Investigación psicológica del target",
-        "Sistema de marca completo (logo, tipografía, paleta)",
-        "Manual de identidad con fundamentos perceptuales",
-        "Aplicaciones digitales y físicas",
-        "Guías de implementación para equipos"
-      ]
-    },
-    "premiumApps": {
-      "title": "Apps Premium",
-      "subtitle": "Aplicaciones que resuelven problemas reales",
-      "description": "Diseñamos experiencias digitales donde cada interacción está calibrada. No se trata solo de interfaz: se trata de arquitectura de la atención, jerarquía del deseo, y memoria emocional.",
-      "includes": [
-        "UX estratégico con psicología cognitiva",
-        "UI premium con animaciones significativas",
-        "Prototipos interactivos de alta fidelidad",
-        "Sistema de diseño escalable",
-        "Desarrollo front-end con tecnología moderna"
-      ]
-    },
-    "digitalContent": {
-      "title": "Contenido Digital",
-      "subtitle": "Videos, audios y elementos visuales que permanecen",
-      "description": "Desde motion graphics hasta piezas audiovisuales complejas. Cada frame, cada transición, cada segundo está diseñado para capturar atención, generar emoción y anclar memoria.",
-      "includes": [
-        "Motion graphics y animaciones 2D/3D",
-        "Videos explicativos y comerciales",
-        "Identidad sonora y diseño de audio",
-        "Ilustraciones y elementos gráficos custom",
-        "Post-producción con IA generativa"
-      ]
-    },
-    "aiAvatars": {
-      "title": "Avatares IA",
-      "subtitle": "Representaciones digitales coherentes con tu marca",
-      "description": "Entrenamos modelos de IA para generar avatares, personajes y representaciones visuales que mantienen la coherencia perceptual de tu identidad. No es solo generar: es dirigir la IA hacia tu objetivo estratégico.",
-      "includes": [
-        "Fine-tuning de modelos (Stable Diffusion, Midjourney, etc.)",
-        "Generación de avatares consistentes",
-        "Bibliotecas de assets generativos",
-        "Workflows de producción con IA",
-        "Entrenamiento de modelos custom"
-      ]
-    },
-    "brandPsychology": {
-      "title": "Psicología de Marca",
-      "subtitle": "Consultoría estratégica para marcas que quieren conectar",
-      "description": "Analizamos tu marca desde la neurociencia y la psicología cognitiva. Identificamos qué funciona, qué no, y por qué. Te entregamos un mapa claro de cómo tu audiencia te percibe, te desea y te recuerda.",
-      "includes": [
-        "Auditoría perceptual de marca",
-        "Análisis de competencia desde psicología",
-        "Mapeo de arquetipos y territorios emocionales",
-        "Estrategia de posicionamiento inconsciente",
-        "Roadmap de optimización visual y verbal"
-      ]
-    }
   },
   "healingSessions": {
     "hero": {
@@ -1144,14 +1011,6 @@
       "successMessage": "¡Mensaje enviado! Te responderé en menos de 24 horas.",
       "errorMessage": "Error al enviar. Por favor intenta por email o WhatsApp.",
       "required": "*"
-    },
-    "services": {
-      "individual": "Consulta Individual",
-      "pareja": "Consulta de Pareja",
-      "familiar": "Consulta Familiar",
-      "consultoria": "Consultoría Psicoanalítica",
-      "audios": "Audios Reprogramables",
-      "luxmania": "LUXMANIA · Psicología Aplicada a Proyectos"
     },
     "sidebar": {
       "responseTitle": "Tiempo de respuesta",

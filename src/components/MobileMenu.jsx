@@ -2,7 +2,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Wrench } from 'lucide-react'
-import LanguageSelector from './LanguageSelector'
 import ToolsMenu from './ToolsMenu'
 
 const MobileMenu = ({ isOpen, onClose, menuItems }) => {
@@ -102,18 +101,6 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
               </motion.button>
-
-              {/* Language Selector - Top Right with elegant background */}
-              <motion.div
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.1 }}
-                className="absolute top-6 right-6 z-20"
-              >
-                <div className="bg-white/5 backdrop-blur-md rounded-full border border-white/10 p-1">
-                  <LanguageSelector />
-                </div>
-              </motion.div>
 
               {/* Menu Items - Ultra Elegant con más espacio arriba */}
               <motion.ul
