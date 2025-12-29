@@ -56,12 +56,12 @@ const ServicesOverview = () => {
     },
     {
       icon: Brain,
-      title: 'Consultoría Psicoanalítica',
-      subtitle: 'Brand Psychology',
-      description: 'Auditoría psicoanalítica de tu marca: deseos inconscientes de tu audiencia, arquetipos, optimización emocional para vender más.',
+      title: 'Consultoría Psicológica',
+      subtitle: 'Psychology Consulting',
+      description: 'Análisis profundo de personalidad, vocación y desarrollo personal desde el psicoanálisis y la psicología humanista.',
       gradient: 'from-violet-500 to-violet-600',
       glowColor: 'violet',
-      includes: ['Análisis Inconsciente', 'Arquetipos de Marca', 'Estrategia Emocional', 'Reporte Ejecutivo']
+      includes: ['Análisis Profundo', 'Test Vocacional', 'Orientación Personal', 'Reporte Personalizado']
     }
   ]
 

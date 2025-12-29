@@ -3704,15 +3704,8 @@ const blogArticlesContent = {
       ]
     },
 
-    // Artículo 17 - Los 12 Arquetipos de Jung
-    '12-arquetipos-jung-branding-cual-elegir-marca': {
-      title: 'Los 12 Arquetipos de Jung Aplicados al Branding: Descubre la Personalidad Oculta de Tu Marca',
-      author: 'Luis Virrueta',
-      date: '14 Dic 2025',
-      readTime: '24 min',
-      category: 'Branding × Psychology',
-      tags: ['Arquetipos de Jung', 'Carl Jung', 'Personalidad de Marca', 'Brand Archetype', 'Estrategia de Marca', 'Psicología'],
-      gradient: 'from-amber-600 via-orange-500 to-rose-600',
+    // Artículo 16 - MEGA ARTÍCULO IAs 2025
+    'mapa-completo-inteligencias-artificiales-2025-cual-usar': {
       sections: [
         {
           type: 'intro',
