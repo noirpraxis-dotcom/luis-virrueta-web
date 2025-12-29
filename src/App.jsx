@@ -17,7 +17,6 @@ import GoogleAnalytics from './components/GoogleAnalytics'
 const PhilosophyPage = lazy(() => import('./pages/PhilosophyPage'))
 const ServiciosPage = lazy(() => import('./pages/ServiciosPage'))
 const IdentidadMarcaPage = lazy(() => import('./pages/IdentidadMarcaPage'))
-const ArquetiposPage = lazy(() => import('./pages/ArquetiposPage'))
 const AppsPremiumPage = lazy(() => import('./pages/AppsPremiumPage'))
 const ContenidoDigitalPage = lazy(() => import('./pages/ContenidoDigitalPage'))
 const AvataresIAPage = lazy(() => import('./pages/AvataresIAPage'))
@@ -109,11 +108,6 @@ const AppContent = () => {
               {/* Páginas individuales de servicios */}
               <Route path="/servicios/identidad-marca" element={
                 <IdentidadMarcaPage />
-              } />
-
-              {/* Página Arquetipos */}
-              <Route path="/identidad-de-marca" element={
-                <ArquetiposPage />
               } />
 
               <Route path="/servicios/apps-premium" element={

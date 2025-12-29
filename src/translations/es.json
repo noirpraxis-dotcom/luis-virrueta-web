@@ -80,14 +80,6 @@
           "name": "Fotografía",
           "description": "Sesiones profesionales"
         },
-        "videoBranding": {
-          "name": "Video Branding",
-          "description": "Contenido visual"
-        },
-        "audioBranding": {
-          "name": "Audio Branding",
-          "description": "Identidad sonora"
-        },
         "aiAvatars": {
           "name": "Avatares IA",
           "description": "Representación digital"
@@ -114,7 +106,7 @@
   "hero": {
     "manifesto1": "Más del 90% de las decisiones de compra ocurren en el inconsciente.",
     "manifesto2": "¿Tu marca está hablando el lenguaje correcto?",
-    "brandName": "LUXMANIA",
+    "brandName": "Luis Virrueta",
     "manifesto3": "No creamos logos bonitos. Diseñamos identidades que activan emociones profundas y construyen conexiones que tu competencia no puede copiar.",
     "manifesto4": "",
     "subtitle": "Psicología × Diseño × Tecnología",
@@ -122,74 +114,6 @@
     "cta": "Descubre tu Arquetipo",
     "cta2": "Ver Casos de Éxito",
     "scrollDown": "Desplázate"
-  },
-  "archetypes": {
-    "title": "Arquetipos de Marca",
-    "subtitle": "Descubre la personalidad que define tu marca",
-    "ruler": {
-      "name": "El Gobernante",
-      "desire": "Control y orden",
-      "description": "Marca que representa poder, estabilidad y liderazgo. Ideal para empresas que buscan proyectar autoridad y excelencia. Ejemplos: Mercedes-Benz, Rolex, Microsoft."
-    },
-    "explorer": {
-      "name": "El Explorador",
-      "desire": "Libertad y descubrimiento",
-      "description": "Marca aventurera que inspira individualidad y autenticidad. Perfecta para negocios que valoran la innovación y la experiencia. Ejemplos: Jeep, Patagonia, Red Bull."
-    },
-    "sage": {
-      "name": "El Sabio",
-      "desire": "Conocimiento y verdad",
-      "description": "Marca que educa y comparte sabiduría. Para empresas que buscan ser fuente confiable de información. Ejemplos: Google, BBC, Harvard."
-    },
-    "hero": {
-      "name": "El Héroe",
-      "desire": "Logro y superación",
-      "description": "Marca que inspira a superar desafíos. Ideal para productos que ayudan a mejorar el desempeño. Ejemplos: Nike, Gatorade, FedEx."
-    },
-    "outlaw": {
-      "name": "El Rebelde",
-      "desire": "Revolución y cambio",
-      "description": "Marca disruptiva que desafía el status quo. Para negocios que rompen reglas y crean nuevas categorías. Ejemplos: Harley-Davidson, Virgin, Diesel."
-    },
-    "magician": {
-      "name": "El Mago",
-      "desire": "Transformación",
-      "description": "Marca que hace realidad los sueños. Perfecta para productos que ofrecen experiencias únicas. Ejemplos: Disney, Apple, MasterCard."
-    },
-    "everyman": {
-      "name": "El Hombre Común",
-      "desire": "Pertenencia",
-      "description": "Marca accesible y confiable. Ideal para empresas que priorizan la conexión humana. Ejemplos: IKEA, Levi's, Target."
-    },
-    "lover": {
-      "name": "El Amante",
-      "desire": "Intimidad y pasión",
-      "description": "Marca sensorial y emocional. Para negocios que crean experiencias placenteras. Ejemplos: Victoria's Secret, Godiva, Alfa Romeo."
-    },
-    "jester": {
-      "name": "El Bufón",
-      "desire": "Diversión y alegría",
-      "description": "Marca divertida que alegra el día. Perfecta para productos que no se toman demasiado en serio. Ejemplos: M&M's, Old Spice, Ben & Jerry's."
-    },
-    "caregiver": {
-      "name": "El Cuidador",
-      "desire": "Servicio y protección",
-      "description": "Marca compasiva y generosa. Ideal para empresas enfocadas en el bienestar. Ejemplos: Johnson & Johnson, Volvo, UNICEF."
-    },
-    "creator": {
-      "name": "El Creador",
-      "desire": "Innovación y expresión",
-      "description": "Marca imaginativa que fomenta la creatividad. Para negocios que valoran la originalidad. Ejemplos: Adobe, Lego, Crayola."
-    },
-    "innocent": {
-      "name": "El Inocente",
-      "desire": "Felicidad y simplicidad",
-      "description": "Marca optimista y pura. Ideal para productos que ofrecen nostalgia y positividad. Ejemplos: Coca-Cola, Dove, McDonald's."
-    },
-    "cta": {
-      "title": "¿Identificaste tu arquetipo?",
-      "subtitle": "Trabajemos juntos para construir una marca que resuene con tu audiencia"
-    }
   },
   "countries": {
     "intro": "He trabajado con personas de",
@@ -765,7 +689,7 @@
     "hero": {
       "title": "Sobre Mí",
       "badge": "Mi Historia",
-      "pillar1": "Arquetipos",
+      "pillar1": "Psicología",
       "pillar2": "Identidad",
       "pillar3": "Transformación",
       "question": "¿Qué pasa cuando un psicólogo entiende tu inconsciente y lo convierte en una marca que conecta?"
@@ -794,8 +718,8 @@
       "title": "Mi Trayectoria",
       "subtitle": "Cada proyecto es el resultado de años estudiando cómo las personas toman decisiones, qué las motiva y cómo construir experiencias que trascienden lo visual.",
       "milestone1Year": "2018",
-      "milestone1Title": "Fundación de LUXMANIA",
-      "milestone1Desc": "Creo un estudio que fusiona psicoanálisis jungiano, diseño estratégico y desarrollo tecnológico para marcas que buscan diferenciación radical.",
+      "milestone1Title": "Inicio de Práctica Clínica",
+      "milestone1Desc": "Comienzo mi práctica como psicólogo clínico, fusionando psicoanálisis jungiano con enfoque humanista para trabajar con individuos que buscan autoconocimiento profundo.",
       "milestone2Year": "2015-2018",
       "milestone2Title": "Psicología Clínica + Diseño Digital",
       "milestone2Desc": "Formación en psicología profunda y diseño de experiencias. Descubro que las marcas más poderosas hablan al inconsciente antes que a la razón.",
