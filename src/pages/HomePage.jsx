@@ -1,5 +1,4 @@
 import Home from '../components/Home'
-import Hero from '../components/Hero'
 import LuisViruettaIntro from '../components/LuisViruettaIntro'
 import IndividualServices from '../components/IndividualServices'
 import SEOHead from '../components/SEOHead'
