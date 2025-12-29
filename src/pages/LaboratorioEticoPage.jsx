@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
-import { Share2, ChevronDown, ChevronUp, ArrowLeft, Home, Brain, Flask, Heart, Eye, EyeOff, Sparkles, Coffee, MessageCircle, Copy, CheckCircle, User, Compass, BookOpen, Map, Send } from 'lucide-react'
+import { Share2, ChevronDown, ChevronUp, ArrowLeft, Home, Brain, Beaker, Heart, Eye, EyeOff, Sparkles, Coffee, MessageCircle, Copy, CheckCircle, User, Compass, BookOpen, Map, Send } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { getDilemaActual } from '../data/dilemmasData'
@@ -429,7 +429,7 @@ const LaboratorioEticoPage = () => {
               transition={{ delay: 0.2, duration: 0.6 }}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/20 border border-purple-500/30 mb-6"
             >
-              <Flask className="w-4 h-4 text-purple-400" />
+              <Beaker className="w-4 h-4 text-purple-400" />
               <span className="text-sm text-purple-300 font-light tracking-wider">LABORATORIO ÉTICO</span>
             </motion.div>
 
@@ -456,7 +456,7 @@ const LaboratorioEticoPage = () => {
               {/* Label del dilema */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <Flask className="w-5 h-5 text-purple-400" />
+                  <Beaker className="w-5 h-5 text-purple-400" />
                   <span className="text-sm text-gray-400">
                     Dilema #{dilema.numero.toString().padStart(2, '0')} · {dilema.categoria}
                   </span>
@@ -675,7 +675,7 @@ const LaboratorioEticoPage = () => {
                 <div className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-10">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center">
-                      <Flask className="w-5 h-5 text-pink-400" />
+                      <Beaker className="w-5 h-5 text-pink-400" />
                     </div>
                     <h3 className="text-2xl font-light">Por qué ninguna respuesta te deja "limpio"</h3>
                   </div>
