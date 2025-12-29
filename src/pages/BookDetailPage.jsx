@@ -17,7 +17,7 @@ const BookDetailPage = () => {
     id: 'the-journey-within',
     title: 'The Journey Within',
     subtitle: 'A Guide to Self-Discovery and Healing',
-    author: 'Zuzana Erdösová',
+    author: 'Luis Virrueta',
     description: 'A profound exploration into the depths of consciousness, this book guides you through transformative practices and ancient wisdom. Discover tools for emotional healing, spiritual growth, and self-realization.',
     fullDescription: `This comprehensive guide takes you on a journey through the landscapes of your inner world. Through carefully crafted exercises, meditations, and reflections, you'll learn to:\n\n• Release emotional blockages and limiting beliefs\n• Connect with your authentic self\n• Discover your life's purpose\n• Heal past traumas with compassion\n• Cultivate inner peace and joy\n\nDrawing from years of experience in energy healing and spiritual guidance, this book offers practical wisdom that you can apply immediately to transform your life.`,
     coverImage: '/book-cover-1.jpg',

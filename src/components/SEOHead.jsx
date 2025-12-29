@@ -28,7 +28,7 @@ const SEOHead = ({
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={fullImage} />
-      <meta property="og:site_name" content="LUXMANIA" />
+      <meta property="og:site_name" content="Luis Virrueta" />
       {publishedTime && <meta property="article:published_time" content={publishedTime} />}
       {author && <meta property="article:author" content={author} />}
       {tags.map((tag, i) => (
@@ -41,7 +41,7 @@ const SEOHead = ({
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={fullImage} />
-      <meta name="twitter:creator" content="@luxmania" />
+      <meta name="twitter:creator" content="@luisvirrueta" />
 
       {/* Additional SEO */}
       <link rel="canonical" content={fullUrl} />

@@ -222,8 +222,8 @@ const CookiePolicyPage = () => {
           <Section title="7. Contacto">
             <p className="mb-4">Si tienes preguntas sobre nuestro uso de cookies, contáctanos:</p>
             <div className="bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-2xl p-6 border border-purple-100">
-              <p className="font-semibold text-gray-900 mb-2">LUXMANIA</p>
-              <p className="text-gray-600">Email: <a href="mailto:contacto@luxmania.com" className="text-purple-600 hover:text-fuchsia-600 underline">contacto@luxmania.com</a></p>
+              <p className="font-semibold text-gray-900 mb-2">Luis Virrueta</p>
+              <p className="text-gray-600">Email: <a href="mailto:contacto@luisvirrueta.com" className="text-purple-600 hover:text-fuchsia-600 underline">contacto@luisvirrueta.com</a></p>
               <p className="text-gray-600">Ubicación: México</p>
             </div>
           </Section>

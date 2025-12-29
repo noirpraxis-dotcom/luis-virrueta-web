@@ -281,7 +281,7 @@ const LaboratorioEticoPage = () => {
   }
 
   const handleShare = () => {
-    const text = `Acabo de enfrentar un dilema ético imposible en el Laboratorio Ético de Zuzana Virrueta. ¿Tú qué elegirías?`
+    const text = `Acabo de enfrentar un dilema ético imposible en el Laboratorio Ético de Luis Virrueta. ¿Tú qué elegirías?`
     const url = window.location.href
     
     if (navigator.share) {

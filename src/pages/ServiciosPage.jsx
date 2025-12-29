@@ -357,30 +357,6 @@ const ServiciosPage = () => {
               </motion.button>
             ))}
           </div>
-
-          {/* CTA Portafolio - Abajo de los hexágonos */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center pt-8 border-t border-white/10"
-          >
-            <div className="flex items-center justify-center gap-3 text-white/40 text-sm font-extralight">
-              <Eye className="w-4 h-4" strokeWidth={1.5} />
-              <span>{t('servicesPage.hexGrid.portfolioQuestion')}</span>
-              <a
-                href="/portafolio"
-                className="group relative inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors"
-              >
-                <span className="relative">
-                  {t('servicesPage.hexGrid.portfolioAction')}
-                  <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full" />
-                </span>
-                <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.5} />
-              </a>
-            </div>
-          </motion.div>
         </div>
       </section>
 

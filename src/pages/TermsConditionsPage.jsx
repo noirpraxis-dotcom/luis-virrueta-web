@@ -167,18 +167,18 @@ const TermsConditionsPage = () => {
           <Section title="6. Propiedad Intelectual" icon={Shield}>
             <p>
               Todo el contenido en este sitio web, incluyendo textos, gráficos, logos, imágenes, videos, diseños y materiales del blog, es 
-              propiedad de LUXMANIA y está protegido por leyes de derechos de autor. No puedes:
+              propiedad de Luis Virrueta y está protegido por leyes de derechos de autor. No puedes:
             </p>
             <ul className="list-disc pl-6 space-y-2 mt-3 text-gray-600">
               <li>Reproducir, distribuir o mostrar nuestro contenido sin permiso</li>
-              <li>Usar trabajos de branding creados por LUXMANIA sin acreditar</li>
+              <li>Usar trabajos creados por Luis Virrueta sin acreditar</li>
               <li>Compartir materiales de consultoría con terceros</li>
               <li>Usar nuestras marcas registradas o branding sin autorización</li>
               <li>Copiar o redistribuir contenido del blog sin atribución</li>
             </ul>
             <p className="mt-4 text-gray-600">
-              Los proyectos de branding creados específicamente para ti son de tu propiedad una vez pagados en su totalidad, 
-              pero LUXMANIA retiene el derecho de usar el trabajo en su portafolio.
+              Los proyectos creados específicamente para ti son de tu propiedad una vez pagados en su totalidad, 
+              pero Luis Virrueta retiene el derecho de usar el trabajo con fines de portafolio.
             </p>
           </Section>
 
@@ -209,7 +209,7 @@ const TermsConditionsPage = () => {
           {/* Limitation of Liability */}
           <Section title="9. Limitación de Responsabilidad" icon={Scale}>
             <p>
-              En la medida máxima permitida por la ley, LUXMANIA no será responsable de daños indirectos, 
+              En la medida máxima permitida por la ley, Luis Virrueta no será responsable de daños indirectos, 
               incidentales, especiales, consecuentes o punitivos que surjan del uso de nuestros servicios.
             </p>
           </Section>
@@ -242,8 +242,8 @@ const TermsConditionsPage = () => {
           <Section title="13. Información de Contacto">
             <p className="mb-4">Para preguntas sobre estos Términos y Condiciones, contáctanos:</p>
             <div className="bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-2xl p-6 border border-purple-100">
-              <p className="font-semibold text-gray-900 mb-2">LUXMANIA</p>
-              <p className="text-gray-600">Email: <a href="mailto:contacto@luxmania.com" className="text-purple-600 hover:text-fuchsia-600 underline">contacto@luxmania.com</a></p>
+              <p className="font-semibold text-gray-900 mb-2">Luis Virrueta</p>
+              <p className="text-gray-600">Email: <a href="mailto:contacto@luisvirrueta.com" className="text-purple-600 hover:text-fuchsia-600 underline">contacto@luisvirrueta.com</a></p>
               <p className="text-gray-600">Ubicación: México</p>
             </div>
           </Section>
