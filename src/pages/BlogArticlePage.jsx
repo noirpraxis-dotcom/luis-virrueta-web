@@ -321,7 +321,7 @@ const getArticleBySlug = (slug) => {
           colors: [
             { name: 'Personaje', hex: '#8B5CF6', emotion: 'Emprendedor creativo', brands: 'Quiere destacar con autenticidad' },
             { name: 'Problema', hex: '#EC4899', emotion: 'Marcas genéricas sin alma', brands: 'Se siente invisible en su mercado' },
-            { name: 'Guía', hex: '#10B981', emotion: 'LUXMANIA como mentor', brands: 'Empatía + autoridad en branding' },
+            { name: 'Guía', hex: '#10B981', emotion: 'Luis Virrueta como mentor', brands: 'Empatía + autoridad psicológica' },
             { name: 'Plan', hex: '#F59E0B', emotion: '1.Sesión → 2.Estrategia → 3.Implementación', brands: '3 pasos claros y simples' },
           ]
         },
@@ -568,7 +568,7 @@ const getArticleBySlug = (slug) => {
           items: [
             {
               title: 'Contenido Gratuito de Alto Valor',
-              description: 'No des "muestras gratis", da regalos que resuelvan problemas reales. Ejemplo: LUXMANIA podría ofrecer un "Mini-Análisis de Arquetipo de Marca" gratuito. El cliente recibe valor real, siente reciprocidad, y cuando necesita branding completo, ya existe deuda psicológica.'
+              description: 'No des "muestras gratis", da regalos que resuelvan problemas reales. Ejemplo: Un psicólogo podría ofrecer un "Test Vocacional" o "Análisis de Personalidad" gratuito. El cliente recibe valor real, siente reciprocidad, y cuando necesita consultoría completa, ya existe deuda psicológica.'
             },
             {
               title: 'Sorprende con lo Inesperado',
@@ -708,7 +708,7 @@ const getArticleBySlug = (slug) => {
           items: [
             {
               title: 'Humaniza Tu Marca',
-              description: 'Muestra al equipo detrás de la marca. "About Us" con fotos, behind-the-scenes, stories personales. La gente compra de gente, no de logos anónimos. Ejemplo: LUXMANIA muestra a Luis Virrueta, su filosofía, su enfoque. Eso genera simpatía.'
+              description: 'Muestra al equipo detrás de la marca. "About Us" con fotos, behind-the-scenes, stories personales. La gente compra de gente, no de logos anónimos. Ejemplo: Luis Virrueta muestra su filosofía, su enfoque psicológico. Eso genera simpatía.'
             },
             {
               title: 'Encuentra Puntos en Común',
@@ -806,7 +806,7 @@ const getArticleBySlug = (slug) => {
         },
         {
           type: 'text',
-          content: 'En LUXMANIA creemos que el branding debe ser persuasivo, no manipulador. Si tu marca entrega valor real, estas armas simplemente eliminan fricción en el camino del cliente hacia lo que ya necesita.'
+          content: 'Como psicólogo, creo que la comunicación debe ser persuasiva, no manipuladora. Si tu proyecto entrega valor real, estos principios simplemente eliminan fricción en el camino del cliente hacia lo que ya necesita.'
         },
         {
           type: 'conclusion',
@@ -920,8 +920,8 @@ const getArticleBySlug = (slug) => {
           type: 'list',
           items: [
             {
-              title: 'Ejemplo LUXMANIA',
-              description: 'En lugar de "Diseño de logo, Branding completo, Rediseño, Consultoría, Estrategia de marca, Manual de marca, Arquetipo, Paleta de colores, Tipografía..." (cliente: 😵), ofrece: "Identidad Esencial" (logo + colores básicos), "Identidad Completa" (sistema visual total), "Identidad Premium" (todo + estrategia + consultoría). Cliente: "Ah, quiero la Completa". Conversión.'
+              title: 'Ejemplo Servicios Psicológicos',
+              description: 'En lugar de "Terapia individual, Terapia de pareja, Consultoría vocacional, Coaching, Evaluaciones, Test psicológico, Orientación..." (cliente: 😵), ofrece: "Sesión Individual" (terapia básica), "Proceso Completo" (seguimiento + evaluaciones), "Transformación Premium" (todo + coaching + test vocacional). Cliente: "Ah, quiero el Proceso Completo". Conversión.'
             },
           ]
         },
