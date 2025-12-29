@@ -514,15 +514,12 @@
       "helpQuestion": "¿No sabes por dónde empezar?",
       "helpAction": "Conversemos",
       "helpWhatsapp": "Hola Luis, quiero explorar qué camino es el indicado para mí",
-      "portfolioQuestion": "¿Quieres ver ejemplos de nuestro trabajo?",
-      "portfolioAction": "Explora el Portafolio",
       "hexagons": {
         "individual": { "title": "Consulta Individual", "subtitle": "Trabajo profundo" },
         "pareja": { "title": "Consulta de Pareja", "subtitle": "Vínculo auténtico" },
         "familiar": { "title": "Consulta Familiar", "subtitle": "Patrones sistémicos" },
         "consultoria": { "title": "Consultoría Psicoanalítica", "subtitle": "Para organizaciones" },
-        "audios": { "title": "Audios del Inconsciente", "subtitle": "Reprogramación" },
-        "luxmania": { "title": "LUXMANIA", "subtitle": "Psicología aplicada" }
+        "audios": { "title": "Audios del Inconsciente", "subtitle": "Reprogramación" }
       }
     },
     "services": {
@@ -650,29 +647,7 @@
           "Seguimiento y ajustes"
         ],
         "duration": "2-3 semanas"
-      },
-      "luxmania": {
-        "title": "LUXMANIA - Psicología Aplicada a Proyectos",
-        "subtitle": "Branding desde el Inconsciente",
-        "tagline": "Branding, diseño y comunicación desde el inconsciente · Un proyecto separado",
-        "description": "LUXMANIA es mi proyecto de branding y diseño donde aplico toda la psicología del inconsciente al desarrollo de identidades de marca. Si buscas servicios de diseño, branding o desarrollo web, visita luxmania.com",
-        "features": [
-          "Identidad de marca completa",
-          "Diseño web y aplicaciones",
-          "Estrategia de branding",
-          "Análisis psicológico de audiencia",
-          "Arquetipos de marca (Jung)",
-          "Motion graphics y video",
-          "Fotografía de producto/marca",
-          "Consultoría integral"
-        ],
-        "process": [
-          "Ir a luxmania.com",
-          "Agendar consultoría inicial",
-          "Definir alcance del proyecto",
-          "Propuesta y cotización",
-          "Inicio del proyecto",
-          "Desarrollo y entregas"
+      }
         ],
         "duration": "Según proyecto"
       }
@@ -724,8 +699,8 @@
       "milestone2Title": "Psicología Clínica + Diseño Digital",
       "milestone2Desc": "Formación en psicología profunda y diseño de experiencias. Descubro que las marcas más poderosas hablan al inconsciente antes que a la razón.",
       "milestone3Year": "2019-2022",
-      "milestone3Title": "Desarrollo Full-Stack & Arquetipos de Marca",
-      "milestone3Desc": "Especializo en identidades visuales basadas en los 12 arquetipos junguianos. Más de 50 proyectos transformados con este enfoque único.",
+      "milestone3Title": "Desarrollo Full-Stack & Psicología Digital",
+      "milestone3Desc": "Especializo en la integración de psicología profunda con desarrollo de aplicaciones y experiencias digitales transformadoras.",
       "milestone4Year": "2023-2025",
       "milestone4Title": "Psicoanálisis Junguiano & Neuromarketing + IA",
       "milestone4Desc": "Integro análisis arquetipal profundo con inteligencia artificial para crear marcas que anticipan deseos inconscientes y generan conexión emocional instantánea."

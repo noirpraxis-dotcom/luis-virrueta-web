@@ -36,13 +36,6 @@ const IndividualServices = () => {
       description: currentLanguage === 'en' ? 'Not positive thinking, but a structural modification of how you perceive' : 'No pensamiento positivo, sino modificación estructural de cómo percibes',
       icon: Mic,
       color: "from-[#f59e0b] to-[#d97706]"
-    },
-    { 
-      name: currentLanguage === 'en' ? 'Psychology Applied to Projects' : 'Psicología Aplicada a Proyectos',
-      description: currentLanguage === 'en' ? 'Branding, design, and communication from the unconscious · LUXMANIA' : 'Branding, diseño y comunicación desde el inconsciente · LUXMANIA',
-      icon: ExternalLink,
-      color: "from-[#d946ef] to-[#c026d3]",
-      link: 'https://luxmania.com'
     }
   ]
 

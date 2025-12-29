@@ -57,14 +57,6 @@ const ServiciosPage = () => {
       icon: Mic,
       key: 'audios',
       gradient: 'from-amber-500 to-orange-600'
-    },
-    // 6. LUXMANIA - Psicología aplicada a proyectos
-    {
-      id: 'luxmania-proyecto',
-      icon: Sparkles,
-      key: 'luxmania',
-      gradient: 'from-fuchsia-500 to-pink-600',
-      external: true
     }
   ]
 
@@ -254,14 +246,13 @@ const ServiciosPage = () => {
           </motion.div>
 
           {/* Hexagon Grid - SERVICIOS PSICOLÓGICOS */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 lg:gap-8 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 lg:gap-8 mb-12">
             {[
               { id: 'individual', icon: Brain, titleKey: 'individual', color: 'from-violet-500 to-purple-600', target: 'consulta-individual' },
               { id: 'pareja', icon: Heart, titleKey: 'pareja', color: 'from-pink-500 to-rose-500', target: 'consulta-pareja' },
               { id: 'familiar', icon: Users, titleKey: 'familiar', color: 'from-cyan-400 to-blue-500', target: 'consulta-familiar' },
               { id: 'consultoria', icon: Briefcase, titleKey: 'consultoria', color: 'from-indigo-500 to-purple-500', target: 'consultoria-psicoanalitica' },
-              { id: 'audios', icon: Mic, titleKey: 'audios', color: 'from-amber-400 to-orange-500', target: 'audios-inconsciente' },
-              { id: 'luxmania', icon: Sparkles, titleKey: 'luxmania', color: 'from-fuchsia-400 to-pink-500', target: 'luxmania-proyecto' },
+              { id: 'audios', icon: Mic, titleKey: 'audios', color: 'from-amber-400 to-orange-500', target: 'audios-inconsciente' }
             ].map((item, i) => (
               <motion.button
                 key={item.id}
@@ -430,38 +421,8 @@ const ServiceDetail = ({ service, index }) => {
               <span className="text-base lg:text-lg font-light text-white/90 tracking-wide">{serviceData.duration}</span>
             </div>
 
-            {/* CTA - Personalizado según servicio */}
-            {service.external ? (
-              <motion.a
-                href="https://lux-mania.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                initial={{ opacity: 0, y: 10 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="group relative inline-flex items-center gap-3 overflow-hidden"
-              >
-                {/* Línea animada */}
-                <motion.div
-                  className="h-px bg-white/60 transition-all duration-500 group-hover:w-24"
-                  style={{ width: '48px' }}
-                />
-                
-                {/* Texto del botón */}
-                <span className="text-sm font-light text-white uppercase tracking-[0.25em] transition-all duration-300 group-hover:tracking-[0.3em]">
-                  Ir a LUXMANIA
-                </span>
-                
-                {/* Ícono con animación */}
-                <motion.div
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <ArrowRight className="w-4 h-4 text-white/80" strokeWidth={1.5} />
-                </motion.div>
-              </motion.a>
-            ) : (
-              <motion.a
+            {/* CTA WhatsApp */}
+            <motion.a
                 href={`https://wa.me/527228720520?text=${encodeURIComponent(`Hola, me interesa ${serviceData.title}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -489,13 +450,11 @@ const ServiceDetail = ({ service, index }) => {
                   <ArrowRight className="w-4 h-4 text-white/80" strokeWidth={1.5} />
                 </motion.div>
               </motion.a>
-            )}
           </div>
         </div>
 
-        {/* Right: Features + Process - Minimalista (oculto para LUXMANIA) */}
-        {!service.external && (
-          <div className="space-y-8">
+        {/* Right: Features + Process - Minimalista */}
+        <div className="space-y-8">
             {/* Features */}
             <div className="border border-white/10 rounded-2xl p-8 lg:p-10 bg-white/[0.02] backdrop-blur-sm">
               <h3 className="text-base font-light text-white/90 mb-8 uppercase tracking-[0.2em]">
@@ -548,7 +507,6 @@ const ServiceDetail = ({ service, index }) => {
               </ol>
             </div>
           </div>
-        )}
       </motion.div>
     </div>
   )
