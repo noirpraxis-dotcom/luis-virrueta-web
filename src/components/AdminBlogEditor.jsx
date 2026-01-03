@@ -253,7 +253,6 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 overflow-y-auto"
-      onClick={(e) => e.target === e.currentTarget && onClose?.()}
     >
       <div className="min-h-screen p-4 md:p-8 py-24">
         <div className="max-w-5xl mx-auto">
