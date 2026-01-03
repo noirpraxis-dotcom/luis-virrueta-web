@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
   X, Save, Eye, Image as ImageIcon, Upload, Loader, 
   Calendar, Clock, Tag, Globe, Sparkles, ArrowLeft,
-  AlertCircle, CheckCircle, Trash2
+  AlertCircle, CheckCircle, Trash2, User
 } from 'lucide-react'
 import RichTextEditor from './RichTextEditor'
 import { compressImage, isValidImage, getImagePreview, revokeImagePreview } from '../utils/imageCompression'
