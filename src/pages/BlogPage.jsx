@@ -25,32 +25,8 @@ const BlogPage = () => {
   const [deletingArticle, setDeletingArticle] = useState(null)
   const [isDeleting, setIsDeleting] = useState(false)
 
-  // Datos iniciales de blog posts
-  const [blogPosts, setBlogPosts] = useState([
-    {
-      id: 34,
-      title: currentLanguage === 'en' 
-        ? 'SU·DO·KU: The art of thinking by elimination'
-        : 'SU·DO·KU: El arte de pensar por descarte',
-      excerpt: currentLanguage === 'en'
-        ? 'Why life doesn\'t answer by affirming. What if the problem wasn\'t the lack of answers, but the rush to close them?'
-        : 'Por qué la vida no responde afirmando. ¿Y si el problema no fuera la falta de respuestas, sino la prisa por clausurarlas?',
-      category: currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
-      author: 'Luis Virrueta',
-      date: '22 Dic 2025',
-      readTime: '15 min',
-      gradient: 'from-purple-500/20 to-fuchsia-500/20',
-      borderGradient: 'from-purple-500 to-fuchsia-500',
-      tags: currentLanguage === 'en'
-        ? ['Thinking', 'Psychoanalysis', 'Philosophy', 'Life', 'Negative Way', 'Lacan']
-        : ['Pensamiento', 'Psicoanálisis', 'Filosofía', 'Vida', 'Vía Negativa', 'Lacan'],
-      slug: 'sudoku',
-      image: '/IMAGENES BLOG/SUDOKU HUMANO.jpg',
-      rating: 5.0,
-      featured: true
-    },
-    // ... resto de artículos aquí
-  ])
+  // Datos iniciales de blog posts (se cargan en useEffect)
+  const [blogPosts, setBlogPosts] = useState([])
   const categories = [
     { id: 'all', label: t('blogPage.categories.all'), icon: BookOpen },
     { id: 'philosophy', label: currentLanguage === 'en' ? 'Philosophy' : 'Filosofía', icon: Eye },
@@ -111,16 +87,10 @@ const BlogPage = () => {
     }
   }
 
-  // Cargar blogs desde Supabase al iniciar (OPCIONAL, si quieres cargar de la base de datos)
+  // Cargar blogs al iniciar
   useEffect(() => {
-    // Puedes implementar la carga desde Supabase aquí si lo deseas
-  }, [])
-
-  // Array de datos de blog posts (solo si useState está vacío al inicio)
-  // Este código se puede eliminar si ya tienes datos en Supabase
-  useEffect(() => {
-    if (blogPosts.length === 0) {
-      setBlogPosts([
+    // Cargar datos iniciales de blogs
+    const initialBlogs = [
     {
       id: 34,
       title: currentLanguage === 'en' 
@@ -385,8 +355,10 @@ const BlogPage = () => {
       rating: 4.8,
       featured: true
     }
-  ])
-    }
+  ]
+    
+    // Cargar los datos iniciales
+    setBlogPosts(initialBlogs)
   }, [])
 
   const filteredPosts = activeCategory === 'all'
@@ -719,38 +691,42 @@ const BlogCard = ({ post, index, isAdmin, onDelete }) => {
               <ArrowRight className="w-5 h-5" />
             </motion.div>
           </div>
-          {/* Category badge */}
-          <div className="absolute top-4 left-4 px-3 py-1.5 bg-black/60 backdrop-blur-md rounded-full border border-white/20 z-20">
-            <span className="text-xs text-white/90 uppercase tracking-wider font-medium">
-              {categoryLabels[post.category] || post.category}
-            </span>
-          </div>
-          {/* Rating - Esquina superior derecha */}
-          <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
-            {/* Rating con estrellas */}
-            <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-black/70 backdrop-blur-md rounded-full border border-yellow-500/30">
-              <svg className="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <span className="text-xs font-bold text-white">{post.rating}</span>
+          {/* Badges superiores */}
+          <div className="absolute top-4 left-4 right-4 flex items-start justify-between z-20">
+            {/* Category badge izquierda */}
+            <div className="px-3 py-1.5 bg-black/60 backdrop-blur-md rounded-full border border-white/20">
+              <span className="text-xs text-white/90 uppercase tracking-wider font-medium">
+                {categoryLabels[post.category] || post.category}
+              </span>
             </div>
             
-            {/* Botón Eliminar (solo para admin) */}
-            {isAdmin && (
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  onDelete(post)
-                }}
-                className="flex items-center justify-center w-8 h-8 bg-red-500/80 hover:bg-red-600/90 backdrop-blur-md rounded-full border border-red-400/50 transition-all"
-                title="Eliminar artículo"
-              >
-                <X className="w-4 h-4 text-white" />
-              </motion.button>
-            )}
+            {/* Rating y botón eliminar derecha */}
+            <div className="flex items-center gap-2">
+              {/* Rating con estrellas */}
+              <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-black/70 backdrop-blur-md rounded-full border border-yellow-500/30">
+                <svg className="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <span className="text-xs font-bold text-white">{post.rating}</span>
+              </div>
+              
+              {/* Botón Eliminar (solo para admin) */}
+              {isAdmin && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    onDelete(post)
+                  }}
+                  className="flex items-center justify-center w-8 h-8 bg-red-500/90 hover:bg-red-600 backdrop-blur-md rounded-full border border-red-400/60 shadow-lg transition-all"
+                  title="Eliminar artículo"
+                >
+                  <Trash2 className="w-3.5 h-3.5 text-white" />
+                </motion.button>
+              )}
+            </div>
           </div>
         </div>
         {/* Content */}

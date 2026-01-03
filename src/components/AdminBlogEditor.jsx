@@ -253,9 +253,9 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 overflow-y-auto py-32 md:py-36"
+      className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-start justify-center overflow-y-auto"
     >
-      <div className="min-h-full p-4 md:p-8">
+      <div className="w-full max-w-5xl p-4 md:p-8 my-32 md:my-36">
         <div className="max-w-5xl mx-auto">
           {/* Header */}
           <div className="bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl border border-purple-500/20 rounded-2xl p-6 mb-6 shadow-2xl">
