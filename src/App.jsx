@@ -2,6 +2,7 @@ import { useState, lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import { LanguageProvider, useLanguage } from './context/LanguageContext'
+import { AuthProvider } from './context/AuthContext'
 import Header from './components/Header'
 import MobileMenu from './components/MobileMenu'
 import ToggleButton from './components/ToggleButton'
@@ -237,7 +238,9 @@ function App() {
   return (
     <HelmetProvider>
       <LanguageProvider>
-        <AppContent />
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
       </LanguageProvider>
     </HelmetProvider>
   )

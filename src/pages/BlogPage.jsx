@@ -1,16 +1,25 @@
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Brain, Zap, Eye } from 'lucide-react'
+import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Brain, Zap, Eye, Plus, Lock, LogOut } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 import { useLanguage } from '../context/LanguageContext'
+import { useAuth } from '../context/AuthContext'
+import AdminLogin from '../components/AdminLogin'
+import AdminBlogEditor from '../components/AdminBlogEditor'
 import { getArticleContent } from '../data/blogArticlesContent'
 // Updated: Dec 17, 2025 - New images for articles 17-20
 const BlogPage = () => {
   const { t, currentLanguage } = useLanguage()
+  const { isAdmin, logout } = useAuth()
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
   const [activeCategory, setActiveCategory] = useState('all')
+  
+  // Estados para admin
+  const [showLogin, setShowLogin] = useState(false)
+  const [showEditor, setShowEditor] = useState(false)
+  const [editingArticle, setEditingArticle] = useState(null)
   const categories = [
     { id: 'all', label: t('blogPage.categories.all'), icon: BookOpen },
     { id: 'philosophy', label: currentLanguage === 'en' ? 'Philosophy' : 'Filosofía', icon: Eye },
@@ -300,8 +309,10 @@ const BlogPage = () => {
   const filteredPosts = activeCategory === 'all'
     ? blogPosts
     : blogPosts.filter(post => post.category === activeCategory)
+  
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28 overflow-x-hidden">
+    <>
+      <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-20 lg:pt-28 overflow-x-hidden">
       <SEOHead 
         title={t('blogPage.seo.title')}
         description={t('blogPage.seo.description')}
@@ -311,6 +322,53 @@ const BlogPage = () => {
         tags={['blog', 'psicología', 'psicoanálisis', 'filosofía', 'inconsciente', 'percepción', 'consciencia', 'transformación']}
       />
       {/* Hero Section - Estilo AboutPage */}
+      {/* Header Admin Controls - Elegante y Discreto */}
+      <div className="fixed top-24 right-6 z-50">
+        <AnimatePresence>
+          {!isAdmin ? (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowLogin(true)}
+              className="group flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-lg border border-white/10 hover:border-white/30 rounded-full transition-all duration-300"
+            >
+              <Lock className="w-4 h-4 text-white/60 group-hover:text-white/90 transition-colors" />
+              <span className="text-xs text-white/60 group-hover:text-white/90 transition-colors tracking-wide">Admin</span>
+            </motion.button>
+          ) : (
+            <div className="flex items-center gap-3">
+              <motion.button
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  setEditingArticle(null)
+                  setShowEditor(true)
+                }}
+                className="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/10 to-fuchsia-500/10 backdrop-blur-lg border border-purple-500/30 hover:border-purple-400/60 rounded-full transition-all duration-300"
+              >
+                <Plus className="w-4 h-4 text-purple-400" />
+                <span className="text-xs text-purple-300 tracking-wide">Nuevo</span>
+              </motion.button>
+              <motion.button
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={logout}
+                className="group flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-lg border border-white/10 hover:border-red-500/50 rounded-full transition-all duration-300"
+              >
+                <LogOut className="w-4 h-4 text-white/60 group-hover:text-red-400 transition-colors" />
+              </motion.button>
+            </div>
+          )}
+        </AnimatePresence>
+      </div>
+
       <section ref={heroRef} className="relative pt-12 lg:pt-20 pb-40 lg:pb-56 px-6 lg:px-20 overflow-hidden">
         {/* Video de fondo */}
         <div className="absolute inset-0 -top-16 lg:-top-24 -bottom-80 lg:-bottom-96 overflow-hidden pointer-events-none z-0">
@@ -455,6 +513,31 @@ const BlogPage = () => {
         </div>
       </section>
     </div>
+
+    {/* Login Modal */}
+    <AnimatePresence>
+      {showLogin && (
+        <AdminLogin onClose={() => setShowLogin(false)} />
+      )}
+    </AnimatePresence>
+
+    {/* Editor Modal */}
+    <AnimatePresence>
+      {showEditor && (
+        <AdminBlogEditor
+          article={editingArticle}
+          onClose={() => {
+            setShowEditor(false)
+            setEditingArticle(null)
+          }}
+          onSave={(savedArticle) => {
+            console.log('Artículo guardado:', savedArticle)
+            // Aquí podrías recargar la lista de blogs
+          }}
+        />
+      )}
+    </AnimatePresence>
+  </>
   )
 }
 const BlogCard = ({ post, index }) => {
@@ -613,4 +696,6 @@ const BlogCard = ({ post, index }) => {
     </Link>
   )
 }
+
 export default BlogPage
+

@@ -7,7 +7,148 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'tu-clave-publ
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-// Funciones helper para el Laboratorio Ético
+// ============================================
+// FUNCIONES PARA BLOG CMS
+// ============================================
+
+/**
+ * Obtener todos los artículos del blog (publicados y borradores)
+ * @param {boolean} onlyPublished - Si solo quiere artículos publicados
+ * @param {string} language - Filtrar por idioma (es/en)
+ */
+export async function getBlogArticles(onlyPublished = true, language = null) {
+  let query = supabase
+    .from('blog_articles')
+    .select('*')
+    .order('published_at', { ascending: false, nullsFirst: false })
+
+  if (onlyPublished) {
+    query = query.eq('is_published', true)
+  }
+
+  if (language) {
+    query = query.eq('language', language)
+  }
+
+  const { data, error } = await query
+
+  if (error) {
+    console.error('Error obteniendo artículos:', error)
+    throw error
+  }
+
+  return data
+}
+
+/**
+ * Obtener un artículo por su slug
+ */
+export async function getBlogArticleBySlug(slug) {
+  const { data, error } = await supabase
+    .from('blog_articles')
+    .select('*')
+    .eq('slug', slug)
+    .single()
+
+  if (error) {
+    console.error('Error obteniendo artículo:', error)
+    throw error
+  }
+
+  return data
+}
+
+/**
+ * Crear nuevo artículo
+ */
+export async function createBlogArticle(articleData) {
+  const { data, error } = await supabase
+    .from('blog_articles')
+    .insert([{
+      ...articleData,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }])
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Error creando artículo:', error)
+    throw error
+  }
+
+  return data
+}
+
+/**
+ * Actualizar artículo existente
+ */
+export async function updateBlogArticle(id, updates) {
+  const { data, error } = await supabase
+    .from('blog_articles')
+    .update({
+      ...updates,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Error actualizando artículo:', error)
+    throw error
+  }
+
+  return data
+}
+
+/**
+ * Eliminar artículo
+ */
+export async function deleteBlogArticle(id) {
+  const { error } = await supabase
+    .from('blog_articles')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    console.error('Error eliminando artículo:', error)
+    throw error
+  }
+
+  return true
+}
+
+/**
+ * Subir imagen al storage de Supabase
+ */
+export async function uploadBlogImage(file, folder = 'blog-images') {
+  const fileName = `${Date.now()}-${file.name}`
+  const filePath = `${folder}/${fileName}`
+
+  const { data, error } = await supabase.storage
+    .from('blog-images')
+    .upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: false
+    })
+
+  if (error) {
+    console.error('Error subiendo imagen:', error)
+    throw error
+  }
+
+  // Obtener URL pública
+  const { data: { publicUrl } } = supabase.storage
+    .from('blog-images')
+    .getPublicUrl(filePath)
+
+  return publicUrl
+}
+
+// ============================================
+// FUNCIONES PARA LABORATORIO ÉTICO
+// ============================================
 
 /**
  * Obtener todos los votos de un dilema
