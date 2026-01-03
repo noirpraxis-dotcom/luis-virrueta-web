@@ -323,7 +323,7 @@ const BlogPage = () => {
       />
       {/* Hero Section - Estilo AboutPage */}
       {/* Header Admin Controls - Elegante y Discreto */}
-      <div className="fixed top-32 right-6 z-50">
+      <div className="fixed top-40 right-6 z-50">
         <AnimatePresence>
           {!isAdmin ? (
             <motion.button
