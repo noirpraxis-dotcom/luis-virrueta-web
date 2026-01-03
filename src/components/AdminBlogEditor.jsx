@@ -46,6 +46,30 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
   const fileInputRef = useRef(null)
 
   /**
+   * Calcular tiempo de lectura automáticamente
+   * Basado en 200 palabras por minuto (promedio de lectura en español)
+   */
+  const calculateReadTime = (contentBlocks) => {
+    if (!contentBlocks || contentBlocks.length === 0) return '5 min'
+    
+    const totalText = contentBlocks
+      .map(block => block.content || '')
+      .join(' ')
+    
+    const wordCount = totalText.trim().split(/\s+/).length
+    const minutes = Math.ceil(wordCount / 200)
+    
+    return `${Math.max(minutes, 1)} min`
+  }
+
+  // Actualizar tiempo de lectura cuando cambia el contenido
+  const handleContentChange = (newContent) => {
+    setContent(newContent)
+    const calculatedTime = calculateReadTime(newContent)
+    setReadTime(calculatedTime)
+  }
+
+  /**
    * Manejar selección de imagen
    */
   const handleImageSelect = async (e) => {
@@ -228,7 +252,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 overflow-y-auto"
+      className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-start justify-center overflow-y-auto"
     >
       <div className="min-h-screen p-4 md:p-8">
         <div className="max-w-5xl mx-auto">
@@ -437,14 +461,14 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
                     <Clock className="w-4 h-4 inline mr-2" />
-                    Tiempo de Lectura
+                    Tiempo de Lectura <span className="text-xs text-purple-400">(Automático)</span>
                   </label>
                   <input
                     type="text"
                     value={readTime}
-                    onChange={(e) => setReadTime(e.target.value)}
-                    placeholder="15 min"
-                    className="w-full px-4 py-2 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 transition-all"
+                    readOnly
+                    placeholder="Se calcula automáticamente"
+                    className="w-full px-4 py-2 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-600 cursor-not-allowed opacity-70"
                   />
                 </div>
 
@@ -463,6 +487,11 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                     <option value="psychoanalysis">Psicoanálisis</option>
                     <option value="spirituality">Espiritualidad</option>
                     <option value="consciousness">Consciencia</option>
+                    <option value="perception">Percepción</option>
+                    <option value="ai">Inteligencia Artificial</option>
+                    <option value="neuroscience">Neurociencia</option>
+                    <option value="branding">Branding</option>
+                    <option value="personal-development">Desarrollo Personal</option>
                   </select>
                 </div>
 
@@ -508,7 +537,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
               
               <RichTextEditor
                 initialContent={content}
-                onChange={setContent}
+                onChange={handleContentChange}
               />
             </div>
           </div>
