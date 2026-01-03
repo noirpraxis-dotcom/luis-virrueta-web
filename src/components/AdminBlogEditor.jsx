@@ -252,13 +252,13 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50"
+      className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 overflow-y-auto"
+      onClick={(e) => e.target === e.currentTarget && onClose?.()}
     >
-      <div className="w-full h-full overflow-y-auto">
-        <div className="min-h-screen p-4 md:p-8">
-          <div className="max-w-5xl mx-auto">
+      <div className="min-h-screen p-4 md:p-8 py-24">
+        <div className="max-w-5xl mx-auto">
           {/* Header */}
-          <div className="sticky top-0 z-10 bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl border border-purple-500/20 rounded-2xl p-6 mb-6 shadow-2xl">
+          <div className="bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl border border-purple-500/20 rounded-2xl p-6 mb-6 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-4">
                 <button
@@ -541,7 +541,6 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                 onChange={handleContentChange}
               />
             </div>
-          </div>
           </div>
         </div>
       </div>
