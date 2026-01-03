@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   X, Save, Eye, Image as ImageIcon, Upload, Loader, 
@@ -42,8 +42,40 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
   
   // Estado de publicación
   const [isPublished, setIsPublished] = useState(article?.isPublished ?? true)
+
+  // Fecha/hora de publicación (permite programar)
+  const toLocalDateTimeInputValue = (isoString) => {
+    if (!isoString) return ''
+    const date = new Date(isoString)
+    if (Number.isNaN(date.getTime())) return ''
+    const pad = (n) => String(n).padStart(2, '0')
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
+  }
+
+  const [publishedAtLocal, setPublishedAtLocal] = useState(
+    toLocalDateTimeInputValue(article?.published_at || article?.publishedAt || null)
+  )
   
   const fileInputRef = useRef(null)
+
+  // Evita doble scrollbar (page + modal) bloqueando el scroll del body
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow
+    const previousPaddingRight = document.body.style.paddingRight
+
+    document.body.style.overflow = 'hidden'
+
+    // Evita “layout shift” cuando desaparece la scrollbar
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`
+    }
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      document.body.style.paddingRight = previousPaddingRight
+    }
+  }, [])
 
   /**
    * Calcular tiempo de lectura automáticamente
@@ -168,6 +200,25 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
       }
 
       // Preparar datos del artículo
+      const finalIsPublished = publish ? true : isPublished
+
+      const resolvePublishedAtIso = () => {
+        if (!finalIsPublished) return null
+
+        if (publishedAtLocal) {
+          const asDate = new Date(publishedAtLocal)
+          if (!Number.isNaN(asDate.getTime())) return asDate.toISOString()
+        }
+
+        // Si se está publicando ahora y no se eligió fecha, usar ahora
+        if (publish) return new Date().toISOString()
+
+        // Mantener el valor previo si venía del artículo
+        if (article?.published_at) return article.published_at
+
+        return null
+      }
+
       const articleData = {
         title: title.trim(),
         subtitle: subtitle.trim(),
@@ -179,7 +230,8 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
         language: language,
         image_url: finalImageUrl,
         content: content,
-        is_published: publish ? true : isPublished,
+        is_published: finalIsPublished,
+        published_at: resolvePublishedAtIso(),
         slug: generateSlug(title),
         updated_at: new Date().toISOString()
       }
@@ -187,7 +239,6 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
       // Si es nuevo artículo, agregar created_at
       if (!article?.id) {
         articleData.created_at = new Date().toISOString()
-        articleData.published_at = publish ? new Date().toISOString() : null
       }
 
       // Guardar en Supabase
@@ -253,31 +304,32 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-start justify-center overflow-y-auto"
+      data-lenis-prevent
+      data-lenis-prevent-wheel
+      className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 overflow-y-auto"
     >
-      <div className="w-full max-w-5xl p-4 md:p-8 my-32 md:my-36">
-        <div className="max-w-5xl mx-auto">
-          {/* Header */}
-          <div className="bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl border border-purple-500/20 rounded-2xl p-6 mb-6 shadow-2xl">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={onClose}
-                  className="p-2 hover:bg-white/10 rounded-lg transition-all"
-                >
-                  <ArrowLeft className="w-6 h-6 text-gray-400" />
-                </button>
-                <div>
-                  <h1 className="text-2xl font-bold text-white">
-                    {article?.id ? 'Editar Artículo' : 'Nuevo Artículo'}
-                  </h1>
-                  <p className="text-sm text-gray-400">
-                    {article?.id ? `Editando ${article.slug}` : 'Crea un nuevo artículo de blog'}
-                  </p>
-                </div>
+      <div className="w-full max-w-5xl mx-auto p-4 md:p-8 my-32 md:my-36">
+        {/* Header */}
+        <div className="bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl border border-purple-500/20 rounded-2xl p-6 mb-6 shadow-2xl">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-white/10 rounded-lg transition-all"
+              >
+                <ArrowLeft className="w-6 h-6 text-gray-400" />
+              </button>
+              <div>
+                <h1 className="text-2xl font-bold text-white">
+                  {article?.id ? 'Editar Artículo' : 'Nuevo Artículo'}
+                </h1>
+                <p className="text-sm text-gray-400">
+                  {article?.id ? `Editando ${article.slug}` : 'Crea un nuevo artículo de blog'}
+                </p>
               </div>
+            </div>
 
-              <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
                 <button
                   onClick={() => handleSave(false)}
                   disabled={saving}
@@ -332,10 +384,10 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+        </div>
 
-          {/* Contenido */}
-          <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-xl border border-gray-800 rounded-2xl p-6 md:p-8 space-y-8">
+        {/* Contenido */}
+        <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-xl border border-gray-800 rounded-2xl p-6 md:p-8 space-y-8">
             
             {/* Imagen Principal */}
             <div>
@@ -448,6 +500,22 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
+                    <Calendar className="w-4 h-4 inline mr-2" />
+                    Fecha/Hora de Publicación
+                  </label>
+                  <input
+                    type="datetime-local"
+                    value={publishedAtLocal}
+                    onChange={(e) => setPublishedAtLocal(e.target.value)}
+                    className="w-full px-4 py-2 bg-white/5 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Si eliges una fecha futura, quedará programado.
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     <User className="w-4 h-4 inline mr-2" />
                     Autor
                   </label>
@@ -543,7 +611,6 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
             </div>
           </div>
         </div>
-      </div>
     </motion.div>
   )
 }

@@ -77,7 +77,7 @@ const BlogPage = () => {
       }
 
       // Eliminar del estado local
-      setBlogPosts(blogPosts.filter(post => post.id !== deletingArticle.id))
+      setBlogPosts((prev) => prev.filter(post => post.id !== deletingArticle.id))
       
       handleCancelDelete()
     } catch (error) {
@@ -361,9 +361,62 @@ const BlogPage = () => {
     setBlogPosts(initialBlogs)
   }, [])
 
-  const filteredPosts = activeCategory === 'all'
+  const toCardDate = (isoString) => {
+    if (!isoString) return ''
+    const date = new Date(isoString)
+    if (Number.isNaN(date.getTime())) return ''
+    // Mantener estilo corto similar a los hardcodeados
+    return date.toLocaleDateString(currentLanguage === 'en' ? 'en-US' : 'es-MX', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    })
+  }
+
+  const normalizeSavedArticleToPost = (savedArticle) => {
+    if (!savedArticle) return null
+
+    const publishedIso = savedArticle.published_at || savedArticle.publishedAt || null
+    const createdIso = savedArticle.created_at || savedArticle.createdAt || null
+    const bestDateIso = publishedIso || createdIso
+
+    return {
+      id: savedArticle.id ?? savedArticle.slug,
+      title: savedArticle.title,
+      excerpt: savedArticle.excerpt,
+      category: savedArticle.category,
+      author: savedArticle.author,
+      date: toCardDate(bestDateIso) || (currentLanguage === 'en' ? 'Draft' : 'Borrador'),
+      readTime: savedArticle.read_time || savedArticle.readTime || '—',
+      tags: savedArticle.tags || [],
+      slug: savedArticle.slug,
+      image: savedArticle.image_url || savedArticle.imageUrl || null,
+      rating: savedArticle.rating ?? 0,
+      featured: false,
+      // Campos para lógica de programación
+      isPublished: savedArticle.is_published ?? savedArticle.isPublished ?? false,
+      publishedAt: publishedIso
+    }
+  }
+
+  const nowTs = Date.now()
+  const visiblePosts = isAdmin
     ? blogPosts
-    : blogPosts.filter(post => post.category === activeCategory)
+    : blogPosts.filter((post) => {
+        const publishedFlag = post.isPublished ?? post.is_published ?? true
+        if (!publishedFlag) return false
+
+        const publishedIso = post.publishedAt || post.published_at || null
+        if (!publishedIso) return true
+
+        const ts = Date.parse(publishedIso)
+        if (!Number.isFinite(ts)) return true
+        return ts <= nowTs
+      })
+
+  const filteredPosts = activeCategory === 'all'
+    ? visiblePosts
+    : visiblePosts.filter(post => post.category === activeCategory)
   
   return (
     <>
@@ -593,7 +646,18 @@ const BlogPage = () => {
           }}
           onSave={(savedArticle) => {
             console.log('Artículo guardado:', savedArticle)
-            // Aquí podrías recargar la lista de blogs
+            const normalized = normalizeSavedArticleToPost(savedArticle)
+            if (!normalized) return
+
+            setBlogPosts((prev) => {
+              const index = prev.findIndex((p) => p.id === normalized.id)
+              if (index >= 0) {
+                const copy = [...prev]
+                copy[index] = { ...prev[index], ...normalized }
+                return copy
+              }
+              return [normalized, ...prev]
+            })
           }}
         />
       )}
