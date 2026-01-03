@@ -542,6 +542,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
               />
             </div>
           </div>
+          </div>
         </div>
       </div>
     </motion.div>
