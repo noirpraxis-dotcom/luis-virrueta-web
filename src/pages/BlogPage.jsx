@@ -1,13 +1,15 @@
 import { motion, useInView, AnimatePresence } from 'framer-motion'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Brain, Zap, Eye, Plus, Lock, LogOut } from 'lucide-react'
+import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Brain, Zap, Eye, Plus, Lock, LogOut, X, AlertTriangle, Trash2 } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
 import AdminLogin from '../components/AdminLogin'
 import AdminBlogEditor from '../components/AdminBlogEditor'
+import DeleteConfirmModal from '../components/DeleteConfirmModal'
 import { getArticleContent } from '../data/blogArticlesContent'
+import { supabase } from '../lib/supabase'
 // Updated: Dec 17, 2025 - New images for articles 17-20
 const BlogPage = () => {
   const { t, currentLanguage } = useLanguage()
@@ -20,6 +22,35 @@ const BlogPage = () => {
   const [showLogin, setShowLogin] = useState(false)
   const [showEditor, setShowEditor] = useState(false)
   const [editingArticle, setEditingArticle] = useState(null)
+  const [deletingArticle, setDeletingArticle] = useState(null)
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  // Datos iniciales de blog posts
+  const [blogPosts, setBlogPosts] = useState([
+    {
+      id: 34,
+      title: currentLanguage === 'en' 
+        ? 'SU·DO·KU: The art of thinking by elimination'
+        : 'SU·DO·KU: El arte de pensar por descarte',
+      excerpt: currentLanguage === 'en'
+        ? 'Why life doesn\'t answer by affirming. What if the problem wasn\'t the lack of answers, but the rush to close them?'
+        : 'Por qué la vida no responde afirmando. ¿Y si el problema no fuera la falta de respuestas, sino la prisa por clausurarlas?',
+      category: currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
+      author: 'Luis Virrueta',
+      date: '22 Dic 2025',
+      readTime: '15 min',
+      gradient: 'from-purple-500/20 to-fuchsia-500/20',
+      borderGradient: 'from-purple-500 to-fuchsia-500',
+      tags: currentLanguage === 'en'
+        ? ['Thinking', 'Psychoanalysis', 'Philosophy', 'Life', 'Negative Way', 'Lacan']
+        : ['Pensamiento', 'Psicoanálisis', 'Filosofía', 'Vida', 'Vía Negativa', 'Lacan'],
+      slug: 'sudoku',
+      image: '/IMAGENES BLOG/SUDOKU HUMANO.jpg',
+      rating: 5.0,
+      featured: true
+    },
+    // ... resto de artículos aquí
+  ])
   const categories = [
     { id: 'all', label: t('blogPage.categories.all'), icon: BookOpen },
     { id: 'philosophy', label: currentLanguage === 'en' ? 'Philosophy' : 'Filosofía', icon: Eye },
@@ -40,7 +71,56 @@ const BlogPage = () => {
     }
     return { title: '', excerpt: '' }
   }
-  const blogPosts = [
+
+  // Función para confirmar eliminación
+  const handleDeleteClick = (post) => {
+    setDeletingArticle(post)
+  }
+
+  // Función para cancelar eliminación
+  const handleCancelDelete = () => {
+    setDeletingArticle(null)
+    setIsDeleting(false)
+  }
+
+  // Función para eliminar artículo
+  const handleConfirmDelete = async () => {
+    if (!deletingArticle) return
+
+    setIsDeleting(true)
+    
+    try {
+      // Eliminar de Supabase (si está allí)
+      if (deletingArticle.id) {
+        const { error } = await supabase
+          .from('blog_articles')
+          .delete()
+          .eq('id', deletingArticle.id)
+        
+        if (error) throw error
+      }
+
+      // Eliminar del estado local
+      setBlogPosts(blogPosts.filter(post => post.id !== deletingArticle.id))
+      
+      handleCancelDelete()
+    } catch (error) {
+      console.error('Error eliminando artículo:', error)
+      alert('Error al eliminar el artículo: ' + error.message)
+      setIsDeleting(false)
+    }
+  }
+
+  // Cargar blogs desde Supabase al iniciar (OPCIONAL, si quieres cargar de la base de datos)
+  useEffect(() => {
+    // Puedes implementar la carga desde Supabase aquí si lo deseas
+  }, [])
+
+  // Array de datos de blog posts (solo si useState está vacío al inicio)
+  // Este código se puede eliminar si ya tienes datos en Supabase
+  useEffect(() => {
+    if (blogPosts.length === 0) {
+      setBlogPosts([
     {
       id: 34,
       title: currentLanguage === 'en' 
@@ -305,7 +385,10 @@ const BlogPage = () => {
       rating: 4.8,
       featured: true
     }
-  ]
+  ])
+    }
+  }, [])
+
   const filteredPosts = activeCategory === 'all'
     ? blogPosts
     : blogPosts.filter(post => post.category === activeCategory)
@@ -323,7 +406,7 @@ const BlogPage = () => {
       />
       {/* Hero Section - Estilo AboutPage */}
       {/* Header Admin Controls - Elegante y Discreto */}
-      <div className="fixed top-48 right-6 z-50">
+      <div className="fixed top-32 right-6 z-50">
         <AnimatePresence>
           {!isAdmin ? (
             <motion.button
@@ -507,7 +590,13 @@ const BlogPage = () => {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPosts.map((post, index) => (
-              <BlogCard key={post.id} post={post} index={index} />
+              <BlogCard 
+                key={post.id} 
+                post={post} 
+                index={index}
+                isAdmin={isAdmin}
+                onDelete={handleDeleteClick}
+              />
             ))}
           </div>
         </div>
@@ -537,10 +626,22 @@ const BlogPage = () => {
         />
       )}
     </AnimatePresence>
+
+    {/* Delete Confirmation Modal */}
+    <AnimatePresence>
+      {deletingArticle && (
+        <DeleteConfirmModal
+          article={deletingArticle}
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+          isDeleting={isDeleting}
+        />
+      )}
+    </AnimatePresence>
   </>
   )
 }
-const BlogCard = ({ post, index }) => {
+const BlogCard = ({ post, index, isAdmin, onDelete }) => {
   const { t, currentLanguage } = useLanguage()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
@@ -633,6 +734,23 @@ const BlogCard = ({ post, index }) => {
               </svg>
               <span className="text-xs font-bold text-white">{post.rating}</span>
             </div>
+            
+            {/* Botón Eliminar (solo para admin) */}
+            {isAdmin && (
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  onDelete(post)
+                }}
+                className="flex items-center justify-center w-8 h-8 bg-red-500/80 hover:bg-red-600/90 backdrop-blur-md rounded-full border border-red-400/50 transition-all"
+                title="Eliminar artículo"
+              >
+                <X className="w-4 h-4 text-white" />
+              </motion.button>
+            )}
           </div>
         </div>
         {/* Content */}

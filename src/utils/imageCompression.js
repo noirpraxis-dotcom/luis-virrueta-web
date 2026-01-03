@@ -11,10 +11,11 @@
  */
 export async function compressImage(file, options = {}) {
   const {
-    maxWidth = 1920,
-    maxHeight = 1080,
-    quality = 0.85,
-    type = 'image/webp'
+    maxWidth = 1200,
+    maxHeight = 800,
+    quality = 0.70,
+    type = 'image/webp',
+    targetSizeKB = 100
   } = options
 
   return new Promise((resolve, reject) => {
@@ -47,33 +48,46 @@ export async function compressImage(file, options = {}) {
         ctx.imageSmoothingQuality = 'high'
         ctx.drawImage(img, 0, 0, width, height)
 
-        // Convertir a blob
-        canvas.toBlob(
-          (blob) => {
-            if (!blob) {
-              reject(new Error('Error al comprimir imagen'))
-              return
-            }
+        // Función recursiva para comprimir hasta alcanzar el tamaño objetivo
+        const compressToTarget = (currentQuality) => {
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) {
+                reject(new Error('Error al comprimir imagen'))
+                return
+              }
 
-            // Crear nuevo archivo
-            const compressedFile = new File(
-              [blob],
-              file.name.replace(/\.[^/.]+$/, '.webp'),
-              { type, lastModified: Date.now() }
-            )
+              const sizeKB = blob.size / 1024
 
-            // Log de compresión
-            console.log('📸 Compresión:', {
-              original: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
-              compressed: `${(compressedFile.size / 1024 / 1024).toFixed(2)} MB`,
-              reduction: `${(((file.size - compressedFile.size) / file.size) * 100).toFixed(1)}%`
-            })
+              // Si ya está por debajo del objetivo, o la calidad es muy baja, terminar
+              if (sizeKB <= targetSizeKB || currentQuality <= 0.3) {
+                const compressedFile = new File(
+                  [blob],
+                  file.name.replace(/\.[^/.]+$/, '.webp'),
+                  { type, lastModified: Date.now() }
+                )
 
-            resolve(compressedFile)
-          },
-          type,
-          quality
-        )
+                // Log de compresión
+                console.log('📸 Compresión:', {
+                  original: `${(file.size / 1024).toFixed(2)} KB`,
+                  compressed: `${sizeKB.toFixed(2)} KB`,
+                  reduction: `${(((file.size - blob.size) / file.size) * 100).toFixed(1)}%`,
+                  quality: `${(currentQuality * 100).toFixed(0)}%`
+                })
+
+                resolve(compressedFile)
+              } else {
+                // Reducir calidad y reintentar
+                compressToTarget(currentQuality - 0.05)
+              }
+            },
+            type,
+            currentQuality
+          )
+        }
+
+        // Iniciar compresión con la calidad especificada
+        compressToTarget(quality)
       }
 
       img.onerror = () => reject(new Error('Error al cargar imagen'))

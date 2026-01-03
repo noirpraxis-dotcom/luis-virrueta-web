@@ -87,12 +87,13 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
     setMessage({ type: 'info', text: 'Comprimiendo imagen...' })
 
     try {
-      // Comprimir imagen
+      // Comprimir imagen agresivamente (70-100KB)
       const compressed = await compressImage(file, {
-        maxWidth: 1920,
-        maxHeight: 1080,
-        quality: 0.85,
-        type: 'image/webp'
+        maxWidth: 1200,
+        maxHeight: 800,
+        quality: 0.70,
+        type: 'image/webp',
+        targetSizeKB: 100
       })
 
       setImageFile(compressed)
@@ -252,9 +253,9 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 overflow-y-auto"
+      className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 overflow-y-auto py-32 md:py-36"
     >
-      <div className="min-h-screen p-4 md:p-8 py-24">
+      <div className="min-h-full p-4 md:p-8">
         <div className="max-w-5xl mx-auto">
           {/* Header */}
           <div className="bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl border border-purple-500/20 rounded-2xl p-6 mb-6 shadow-2xl">
