@@ -36,6 +36,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
   const [imagePreview, setImagePreview] = useState(article?.image || null)
   const [imageUrl, setImageUrl] = useState(article?.imageUrl || null)
   const [uploadingImage, setUploadingImage] = useState(false)
+  const [compressionStats, setCompressionStats] = useState(null) // { original, compressed, percentage }
   
   // Contenido (bloques del editor)
   const [content, setContent] = useState(article?.content || [])
@@ -130,6 +131,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
       return
     }
 
+    const originalSize = file.size
     setUploadingImage(true)
     setMessage({ type: 'info', text: 'Comprimiendo imagen...' })
 
@@ -143,8 +145,16 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
         targetSizeKB: 100
       })
 
+      const compressedSize = compressed.size
+      const percentage = Math.round((1 - compressedSize / originalSize) * 100)
+
       setImageFile(compressed)
       setImagePreview(getImagePreview(compressed))
+      setCompressionStats({
+        original: (originalSize / 1024).toFixed(0), // KB
+        compressed: (compressedSize / 1024).toFixed(0), // KB
+        percentage
+      })
       setMessage({ type: 'success', text: '✅ Imagen optimizada' })
     } catch (error) {
       console.error('Error comprimiendo imagen:', error)
@@ -429,6 +439,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                       onClick={() => {
                         setImageFile(null)
                         setImagePreview(null)
+                        setCompressionStats(null)
                         if (imagePreview.startsWith('blob:')) {
                           revokeImagePreview(imagePreview)
                         }
@@ -439,6 +450,21 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                       Eliminar
                     </button>
                   </div>
+                  
+                  {/* Mostrar estadísticas de compresión */}
+                  {compressionStats && (
+                    <div className="absolute bottom-3 right-3 bg-black/80 backdrop-blur-sm px-4 py-2 rounded-lg border border-green-500/30">
+                      <div className="flex items-center gap-2 text-xs">
+                        <Sparkles className="w-4 h-4 text-green-400" />
+                        <span className="text-gray-300">
+                          {compressionStats.original} KB → {compressionStats.compressed} KB
+                        </span>
+                        <span className="text-green-400 font-bold">
+                          (-{compressionStats.percentage}%)
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <button

@@ -1,7 +1,7 @@
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Brain, Zap, Eye, Plus, Lock, LogOut, X, AlertTriangle, Trash2 } from 'lucide-react'
+import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Brain, Zap, Eye, Plus, Lock, LogOut, X, AlertTriangle, Trash2, Edit } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
@@ -51,6 +51,33 @@ const BlogPage = () => {
   // Función para confirmar eliminación
   const handleDeleteClick = (post) => {
     setDeletingArticle(post)
+  }
+
+  // Función para editar artículo
+  const handleEditClick = async (post) => {
+    try {
+      // Si el post viene de Supabase, cargar su data completa
+      if (post.id && typeof post.id === 'string' && post.id.includes('-')) {
+        const { data, error } = await supabase
+          .from('blog_articles')
+          .select('*')
+          .eq('id', post.id)
+          .single()
+        
+        if (error) throw error
+        
+        setEditingArticle(data)
+      } else {
+        // Si es un post hardcoded, no podemos editarlo
+        alert('Este artículo está hardcoded y no puede ser editado desde el CMS. Solo se pueden editar artículos creados en Supabase.')
+        return
+      }
+      
+      setShowEditor(true)
+    } catch (error) {
+      console.error('Error cargando artículo para editar:', error)
+      alert('Error al cargar el artículo: ' + error.message)
+    }
   }
 
   // Función para cancelar eliminación
@@ -693,6 +720,7 @@ const BlogPage = () => {
                 index={index}
                 isAdmin={isAdmin}
                 onDelete={handleDeleteClick}
+                onEdit={handleEditClick}
               />
             ))}
           </div>
@@ -749,7 +777,7 @@ const BlogPage = () => {
   </>
   )
 }
-const BlogCard = ({ post, index, isAdmin, onDelete }) => {
+const BlogCard = ({ post, index, isAdmin, onDelete, onEdit }) => {
   const { t, currentLanguage } = useLanguage()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
@@ -848,19 +876,34 @@ const BlogCard = ({ post, index, isAdmin, onDelete }) => {
               
               {/* Botón Eliminar (solo para admin) */}
               {isAdmin && (
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    onDelete(post)
-                  }}
-                  className="flex items-center justify-center w-8 h-8 bg-red-500/90 hover:bg-red-600 backdrop-blur-md rounded-full border border-red-400/60 shadow-lg transition-all"
-                  title="Eliminar artículo"
-                >
-                  <Trash2 className="w-3.5 h-3.5 text-white" />
-                </motion.button>
+                <>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      onEdit(post)
+                    }}
+                    className="flex items-center justify-center w-8 h-8 bg-blue-500/90 hover:bg-blue-600 backdrop-blur-md rounded-full border border-blue-400/60 shadow-lg transition-all"
+                    title="Editar artículo"
+                  >
+                    <Edit className="w-3.5 h-3.5 text-white" />
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      onDelete(post)
+                    }}
+                    className="flex items-center justify-center w-8 h-8 bg-red-500/90 hover:bg-red-600 backdrop-blur-md rounded-full border border-red-400/60 shadow-lg transition-all"
+                    title="Eliminar artículo"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 text-white" />
+                  </motion.button>
+                </>
               )}
             </div>
           </div>
