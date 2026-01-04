@@ -5,14 +5,21 @@ const ScrollToTop = () => {
   const { pathname } = useLocation()
 
   useEffect(() => {
-    // Scroll instantáneo al cambiar de página
-    // Forzar scroll a 0 inmediatamente sin animación
-    window.scrollTo(0, 0)
-    
-    // Backup: forzar nuevamente después de un frame
-    requestAnimationFrame(() => {
+    const scrollNow = () => {
+      const lenis = window.__lenis
+      if (lenis && typeof lenis.scrollTo === 'function') {
+        lenis.scrollTo(0, { immediate: true, force: true })
+        return
+      }
       window.scrollTo(0, 0)
-    })
+    }
+
+    // Scroll instantáneo al cambiar de página
+    scrollNow()
+
+    // Backups: forzar nuevamente después de frames / layout
+    requestAnimationFrame(scrollNow)
+    setTimeout(scrollNow, 50)
   }, [pathname])
 
   return null

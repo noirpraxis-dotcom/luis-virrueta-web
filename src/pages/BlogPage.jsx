@@ -11,6 +11,12 @@ import DeleteConfirmModal from '../components/DeleteConfirmModal'
 import { getArticleContent } from '../data/blogArticlesContent'
 import { supabase } from '../lib/supabase'
 // Updated: Dec 17, 2025 - New images for articles 17-20
+
+const HIDDEN_BLOG_SLUGS = new Set([
+  'rebranding-vs-refresh-cuando-redisenar-marca-completa',
+  'branding-con-inteligencia-artificial-2025-guia-completa'
+])
+
 const BlogPage = () => {
   const { t, currentLanguage } = useLanguage()
   const { isAdmin, logout } = useAuth()
@@ -25,6 +31,34 @@ const BlogPage = () => {
   const [deletingArticle, setDeletingArticle] = useState(null)
   const [isDeleting, setIsDeleting] = useState(false)
 
+  const isUuid = (value) => {
+    if (typeof value !== 'string') return false
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)
+  }
+
+  const tryRemoveStorageByPublicUrl = async (publicUrl) => {
+    if (!publicUrl || typeof publicUrl !== 'string') return
+
+    try {
+      const u = new URL(publicUrl)
+      const marker = '/storage/v1/object/public/'
+      const idx = u.pathname.indexOf(marker)
+      if (idx === -1) return
+
+      const rest = u.pathname.slice(idx + marker.length)
+      const parts = rest.split('/').filter(Boolean)
+      if (parts.length < 2) return
+
+      const bucket = parts[0]
+      const objectPath = parts.slice(1).join('/')
+      if (!bucket || !objectPath) return
+
+      await supabase.storage.from(bucket).remove([objectPath])
+    } catch {
+      // Best-effort only
+    }
+  }
+
   // Datos iniciales de blog posts (se cargan en useEffect)
   const [blogPosts, setBlogPosts] = useState([])
   const categories = [
@@ -37,6 +71,7 @@ const BlogPage = () => {
   ]
   // Helper function to get translated content
   const getPostContent = (slug) => {
+    if (HIDDEN_BLOG_SLUGS.has(slug)) return { title: '', excerpt: '' }
     const content = getArticleContent(slug, currentLanguage)
     console.log(`🌐 BlogPage - Getting content for: ${slug}, language: ${currentLanguage}`, content?.title)
     if (content) {
@@ -93,15 +128,22 @@ const BlogPage = () => {
     setIsDeleting(true)
     
     try {
-      // Eliminar de Supabase (si está allí)
-      if (deletingArticle.id) {
-        const { error } = await supabase
-          .from('blog_articles')
-          .delete()
-          .eq('id', deletingArticle.id)
-        
-        if (error) throw error
+      // Solo se pueden eliminar artículos creados en Supabase.
+      if (!isUuid(deletingArticle.id)) {
+        alert('Este artículo es legacy/hardcoded y no se puede eliminar desde el CMS. Solo se pueden eliminar artículos creados en Supabase.')
+        handleCancelDelete()
+        return
       }
+
+      // Best-effort: borrar también la imagen en Storage si es una URL pública de Supabase
+      await tryRemoveStorageByPublicUrl(deletingArticle.image || deletingArticle.image_url)
+
+      const { error } = await supabase
+        .from('blog_articles')
+        .delete()
+        .eq('id', deletingArticle.id)
+      
+      if (error) throw error
 
       // Eliminar del estado local
       setBlogPosts((prev) => prev.filter(post => post.id !== deletingArticle.id))
@@ -403,6 +445,38 @@ const BlogPage = () => {
     // Traer artículos desde Supabase (migrados / creados desde el CMS)
     const loadSupabaseArticles = async () => {
       try {
+        const mergePreferLegacyMeta = (legacy, incoming) => {
+          if (!legacy) return incoming
+
+          // Para artículos que ya existen hardcoded (legacy), NO permitimos que Supabase
+          // pise metadatos visuales si vienen vacíos/por defecto o inconsistentes.
+          const merged = { ...legacy, ...incoming }
+
+          // Mantener gradientes/tags/categoría/rating/image del legacy a menos que incoming traiga algo útil.
+          merged.gradient = legacy.gradient
+          merged.borderGradient = legacy.borderGradient
+
+          merged.category = legacy.category
+
+          // En artículos legacy, conservar tags originales (los de Supabase suelen venir incompletos)
+          merged.tags = Array.isArray(legacy.tags) && legacy.tags.length > 0
+            ? legacy.tags
+            : (Array.isArray(incoming.tags) ? incoming.tags : [])
+
+          // Si Supabase trae rating 0/null, conservar legacy.
+          const incomingRating = typeof incoming.rating === 'number' ? incoming.rating : null
+          merged.rating = incomingRating && incomingRating > 0 ? incomingRating : legacy.rating
+
+          // En artículos legacy, conservar SIEMPRE la imagen original para evitar el bug
+          // de "todas las tarjetas con la misma imagen" cuando Supabase termina de cargar.
+          merged.image = legacy.image || incoming.image || ''
+
+          // Mantener el accent del legacy si existe; si no, usar el del CMS.
+          merged.accent = legacy.accent || incoming.accent || null
+
+          return merged
+        }
+
         const { data, error } = await supabase
           .from('blog_articles')
           .select('*')
@@ -420,6 +494,7 @@ const BlogPage = () => {
             title: row.title,
             excerpt: row.excerpt,
             category: row.category,
+            accent: row.accent || null,
             author: row.author,
             date: formatDateForCard(bestDateIso) || (currentLanguage === 'en' ? 'Draft' : 'Borrador'),
             readTime: row.read_time || '—',
@@ -428,7 +503,8 @@ const BlogPage = () => {
             tags: row.tags || [],
             slug: row.slug,
             image: row.image_url || '',
-            rating: row.rating || 5.0,
+            // OJO: usar nullish coalescing para no convertir 0 en 5
+            rating: (typeof row.rating === 'number' ? row.rating : null),
             featured: Boolean(row.featured),
             language: row.language,
             isPublished: row.is_published,
@@ -436,15 +512,19 @@ const BlogPage = () => {
             createdAt: row.created_at,
             content: row.content
           }
-        })
+        }).filter((post) => !HIDDEN_BLOG_SLUGS.has(post.slug))
+
+        const filteredInitialBlogs = initialBlogs.filter((post) => !HIDDEN_BLOG_SLUGS.has(post.slug))
 
         // Merge: supabase posts ganan sobre los hardcodeados por (slug, language)
         const merged = new Map()
-        initialBlogs.forEach((post) => {
+        filteredInitialBlogs.forEach((post) => {
           merged.set(`${post.slug}:${currentLanguage}`, post)
         })
         supabasePosts.forEach((post) => {
-          merged.set(`${post.slug}:${currentLanguage}`, { ...merged.get(`${post.slug}:${currentLanguage}`), ...post })
+          const key = `${post.slug}:${currentLanguage}`
+          const legacy = merged.get(key)
+          merged.set(key, mergePreferLegacyMeta(legacy, post))
         })
 
         setBlogPosts(Array.from(merged.values()))
@@ -781,6 +861,11 @@ const BlogCard = ({ post, index, isAdmin, onDelete, onEdit }) => {
   const { t, currentLanguage } = useLanguage()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
+  const displayRating = (() => {
+    const n = typeof post.rating === 'number' ? post.rating : Number(post.rating)
+    if (!Number.isFinite(n)) return 5.0
+    return n
+  })()
   // Mapeo de categorías con traducciones
   const categoryLabels = {
     'all': t('blogPage.categories.all'),
@@ -871,7 +956,7 @@ const BlogCard = ({ post, index, isAdmin, onDelete, onEdit }) => {
                 <svg className="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
-                <span className="text-xs font-bold text-white">{post.rating}</span>
+                <span className="text-xs font-bold text-white">{displayRating}</span>
               </div>
               
               {/* Botón Eliminar (solo para admin) */}

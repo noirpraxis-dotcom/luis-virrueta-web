@@ -41,10 +41,15 @@ const TableOfContents = ({ sections }) => {
       const elementPosition = element.getBoundingClientRect().top
       const offsetPosition = elementPosition + window.pageYOffset - offset
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      })
+      const lenis = window.__lenis
+      if (lenis && typeof lenis.scrollTo === 'function') {
+        lenis.scrollTo(offsetPosition, { duration: 0.9, easing: (t) => 1 - Math.pow(1 - t, 3) })
+      } else {
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        })
+      }
       setIsOpen(false)
     }
   }

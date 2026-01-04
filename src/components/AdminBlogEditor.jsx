@@ -27,6 +27,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
   const [excerpt, setExcerpt] = useState(article?.excerpt || '')
   const [author, setAuthor] = useState(article?.author || 'Luis Virrueta')
   const [category, setCategory] = useState(article?.category || 'philosophy')
+  const [accent, setAccent] = useState(article?.accent || 'purple')
   const [rating, setRating] = useState(article?.rating || 5.0)
   const [tags, setTags] = useState(article?.tags?.join(', ') || '')
   const [readTime, setReadTime] = useState(article?.readTime || '15 min')
@@ -251,6 +252,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
         excerpt: excerpt.trim(),
         author: author.trim(),
         category: category,
+        accent: accent,
         rating: parseFloat(rating) || 5.0,
         tags: tags.split(',').map(t => t.trim()).filter(Boolean),
         read_time: readTime,
@@ -604,6 +606,24 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                     <option value="neuroscience">Neurociencia</option>
                     <option value="branding">Branding</option>
                     <option value="personal-development">Desarrollo Personal</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Color / Tema
+                  </label>
+                  <select
+                    value={accent}
+                    onChange={(e) => setAccent(e.target.value)}
+                    className="w-full px-4 py-2 bg-white/5 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all"
+                  >
+                    <option value="purple">Morado (SU·DO·KU)</option>
+                    <option value="red">Rojo (P.U.T.A.)</option>
+                    <option value="indigo">Índigo</option>
+                    <option value="emerald">Esmeralda</option>
+                    <option value="amber">Ámbar</option>
+                    <option value="slate">Neutro</option>
                   </select>
                 </div>
 

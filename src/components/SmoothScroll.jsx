@@ -21,6 +21,9 @@ const SmoothScroll = ({ children }) => {
       infinite: false,
     })
 
+    // Exponer Lenis para scroll programático (route changes, TOC, etc.)
+    window.__lenis = lenis
+
     // RAF loop para animaciones
     function raf(time) {
       lenis.raf(time)
@@ -30,6 +33,9 @@ const SmoothScroll = ({ children }) => {
 
     // Cleanup
     return () => {
+      if (window.__lenis === lenis) {
+        delete window.__lenis
+      }
       lenis.destroy()
     }
   }, [])

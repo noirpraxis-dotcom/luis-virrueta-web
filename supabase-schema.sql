@@ -27,6 +27,9 @@ CREATE TABLE IF NOT EXISTS blog_articles (
   
   -- Imagen
   image_url TEXT,
+
+    -- Tema / acento visual (para hero + separadores)
+    accent TEXT,
   
   -- Estado de publicación
   is_published BOOLEAN DEFAULT false,
@@ -40,6 +43,9 @@ CREATE TABLE IF NOT EXISTS blog_articles (
   views INTEGER DEFAULT 0,
   rating DECIMAL(2,1) DEFAULT 0.0
 );
+
+-- Para instalaciones existentes
+ALTER TABLE blog_articles ADD COLUMN IF NOT EXISTS accent TEXT;
 
 -- Nota importante sobre idiomas y slugs
 -- Si quieres soportar ES+EN con el mismo slug, el slug NO debe ser único por sí solo.

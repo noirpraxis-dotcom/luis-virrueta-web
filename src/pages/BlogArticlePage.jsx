@@ -1,9 +1,9 @@
-import { motion, useInView } from 'framer-motion'
+import { AnimatePresence, motion, useInView } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles, Award, Check, Shield, AlertCircle, Copy } from 'lucide-react'
 import ReadingProgressBar from '../components/ReadingProgressBar'
-import ShareButtons from '../components/ShareButtons'
+import { ChevronDown, Facebook, Linkedin, MessageCircle, Twitter } from 'lucide-react'
 import RelatedArticles from '../components/RelatedArticles'
 import NewsletterSignup from '../components/NewsletterSignup'
 import TableOfContents from '../components/TableOfContents'
@@ -12,6 +12,11 @@ import { calculateReadTime, toISODate } from '../utils/blogHelpers'
 import { useLanguage } from '../context/LanguageContext'
 import { getArticleContent } from '../data/blogArticlesContent'
 import { supabase } from '../lib/supabase'
+
+const HIDDEN_BLOG_SLUGS = new Set([
+  'rebranding-vs-refresh-cuando-redisenar-marca-completa',
+  'branding-con-inteligencia-artificial-2025-guia-completa'
+])
 
 // Función para obtener el artículo basado en el slug
 const getArticleBySlug = (slug) => {
@@ -1758,13 +1763,31 @@ const getArticleBySlug = (slug) => {
 const BlogArticlePage = () => {
   const { slug } = useParams()
   const { currentLanguage, t } = useLanguage()
+  const isHiddenSlug = HIDDEN_BLOG_SLUGS.has(slug)
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.1 })
 
   const [cmsRow, setCmsRow] = useState(null)
 
   useEffect(() => {
+    // En SPA, el scroll puede quedarse donde estabas; forzamos inicio al abrir artículo.
+    const lenis = window.__lenis
+    if (lenis && typeof lenis.scrollTo === 'function') {
+      lenis.scrollTo(0, { immediate: true, force: true })
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    }
+  }, [slug, currentLanguage])
+
+  useEffect(() => {
     let isCancelled = false
+
+    if (isHiddenSlug) {
+      setCmsRow(null)
+      return () => {
+        isCancelled = true
+      }
+    }
 
     const loadFromSupabase = async () => {
       try {
@@ -1791,6 +1814,19 @@ const BlogArticlePage = () => {
       isCancelled = true
     }
   }, [slug, currentLanguage])
+
+  if (isHiddenSlug) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-white mb-4">{t('blogArticles.common.notFound')}</h1>
+          <Link to="/blog" className="text-cyan-400 hover:text-cyan-300">
+            {t('blogArticles.common.backToBlog')}
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   const cmsBlocksToSections = (blocks) => {
     if (!Array.isArray(blocks)) return []
@@ -1857,23 +1893,245 @@ const BlogArticlePage = () => {
     return {
       title: row.title,
       subtitle: row.subtitle || '',
+      excerpt: row.excerpt || '',
       author: row.author,
       date: displayDate,
       readTime: row.read_time || '—',
       category: row.category,
       tags: row.tags || [],
+      accent: row.accent || null,
       gradient: 'from-slate-600/20 to-zinc-700/20',
       // NO usar heroImage para artículos de Supabase - solo gradientes
       heroImage: null,
+      image: row.image_url || null,
       sections: cmsBlocksToSections(row.content)
     }
+  }
+
+  const ACCENT_PRESETS = {
+    purple: {
+      heroVia: 'via-purple-500/30',
+      headingTopBar: 'from-purple-500 via-fuchsia-500 to-purple-500',
+      badgeBg: 'bg-purple-500/10',
+      badgeBorder: 'border-purple-500/30',
+      badgeText: 'text-purple-300',
+      badgeIcon: 'text-purple-400',
+      quoteBar: 'from-purple-500/50 via-fuchsia-500/30 to-transparent',
+      quoteMark: 'text-purple-400/20',
+      highlightBg: 'from-purple-900/30 via-fuchsia-900/20 to-purple-900/30',
+      highlightBorder: 'border-purple-500/30',
+      highlightCornerA: 'from-fuchsia-500/20 to-transparent',
+      highlightCornerB: 'from-purple-500/20 to-transparent',
+      highlightQuote: 'text-purple-500/20',
+      highlightDivider: 'via-purple-500/50',
+      highlightCite: 'text-purple-300',
+      questionsBg: 'from-purple-500/10 via-fuchsia-500/10 to-purple-500/10',
+      questionsBorder: 'border-purple-500/20',
+      questionsHoverBorder: 'group-hover:border-purple-500/40',
+      questionsOrbA: 'from-purple-500/20 to-fuchsia-500/20',
+      questionsOrbB: 'from-fuchsia-500/20 to-purple-500/20',
+      questionsIconBg: 'from-purple-500/30 to-fuchsia-500/30',
+      questionsIconBorder: 'border-purple-500/30',
+      questionsIcon: 'text-purple-300',
+      questionsTitle: 'from-purple-300 via-fuchsia-300 to-purple-300',
+      questionsDot: 'from-purple-400 to-fuchsia-400'
+    },
+    red: {
+      heroVia: 'via-red-500/30',
+      headingTopBar: 'from-red-600 via-pink-700 to-red-600',
+      badgeBg: 'bg-red-600/10',
+      badgeBorder: 'border-red-600/30',
+      badgeText: 'text-red-200',
+      badgeIcon: 'text-red-300',
+      quoteBar: 'from-red-600/50 via-pink-700/30 to-transparent',
+      quoteMark: 'text-red-300/20',
+      highlightBg: 'from-red-950/30 via-pink-950/20 to-red-950/30',
+      highlightBorder: 'border-red-600/30',
+      highlightCornerA: 'from-pink-500/20 to-transparent',
+      highlightCornerB: 'from-red-500/20 to-transparent',
+      highlightQuote: 'text-red-500/20',
+      highlightDivider: 'via-red-500/50',
+      highlightCite: 'text-red-200',
+      questionsBg: 'from-red-500/10 via-pink-500/10 to-rose-500/10',
+      questionsBorder: 'border-red-500/20',
+      questionsHoverBorder: 'group-hover:border-red-500/40',
+      questionsOrbA: 'from-red-500/20 to-pink-500/20',
+      questionsOrbB: 'from-rose-500/20 to-red-500/20',
+      questionsIconBg: 'from-red-500/30 to-pink-500/30',
+      questionsIconBorder: 'border-red-500/30',
+      questionsIcon: 'text-red-300',
+      questionsTitle: 'from-red-300 via-pink-300 to-rose-300',
+      questionsDot: 'from-red-400 to-pink-400'
+    },
+    indigo: {
+      heroVia: 'via-indigo-500/30',
+      headingTopBar: 'from-indigo-500 via-purple-600 to-indigo-500',
+      badgeBg: 'bg-indigo-500/10',
+      badgeBorder: 'border-indigo-500/30',
+      badgeText: 'text-indigo-200',
+      badgeIcon: 'text-indigo-300',
+      quoteBar: 'from-indigo-500/50 via-purple-600/30 to-transparent',
+      quoteMark: 'text-indigo-300/20',
+      highlightBg: 'from-indigo-950/30 via-purple-950/20 to-indigo-950/30',
+      highlightBorder: 'border-indigo-500/30',
+      highlightCornerA: 'from-purple-500/20 to-transparent',
+      highlightCornerB: 'from-indigo-500/20 to-transparent',
+      highlightQuote: 'text-indigo-500/20',
+      highlightDivider: 'via-indigo-500/50',
+      highlightCite: 'text-indigo-200',
+      questionsBg: 'from-indigo-500/10 via-purple-500/10 to-indigo-500/10',
+      questionsBorder: 'border-indigo-500/20',
+      questionsHoverBorder: 'group-hover:border-indigo-500/40',
+      questionsOrbA: 'from-indigo-500/20 to-purple-500/20',
+      questionsOrbB: 'from-purple-500/20 to-indigo-500/20',
+      questionsIconBg: 'from-indigo-500/30 to-purple-500/30',
+      questionsIconBorder: 'border-indigo-500/30',
+      questionsIcon: 'text-indigo-200',
+      questionsTitle: 'from-indigo-200 via-purple-200 to-indigo-200',
+      questionsDot: 'from-indigo-400 to-purple-400'
+    },
+    emerald: {
+      heroVia: 'via-emerald-500/30',
+      headingTopBar: 'from-emerald-500 via-teal-500 to-emerald-500',
+      badgeBg: 'bg-emerald-500/10',
+      badgeBorder: 'border-emerald-500/30',
+      badgeText: 'text-emerald-200',
+      badgeIcon: 'text-emerald-300',
+      quoteBar: 'from-emerald-500/50 via-teal-500/30 to-transparent',
+      quoteMark: 'text-emerald-300/20',
+      highlightBg: 'from-emerald-950/30 via-teal-950/20 to-emerald-950/30',
+      highlightBorder: 'border-emerald-500/30',
+      highlightCornerA: 'from-teal-500/20 to-transparent',
+      highlightCornerB: 'from-emerald-500/20 to-transparent',
+      highlightQuote: 'text-emerald-500/20',
+      highlightDivider: 'via-emerald-500/50',
+      highlightCite: 'text-emerald-200',
+      questionsBg: 'from-emerald-500/10 via-teal-500/10 to-emerald-500/10',
+      questionsBorder: 'border-emerald-500/20',
+      questionsHoverBorder: 'group-hover:border-emerald-500/40',
+      questionsOrbA: 'from-emerald-500/20 to-teal-500/20',
+      questionsOrbB: 'from-teal-500/20 to-emerald-500/20',
+      questionsIconBg: 'from-emerald-500/30 to-teal-500/30',
+      questionsIconBorder: 'border-emerald-500/30',
+      questionsIcon: 'text-emerald-200',
+      questionsTitle: 'from-emerald-200 via-teal-200 to-emerald-200',
+      questionsDot: 'from-emerald-400 to-teal-400'
+    },
+    amber: {
+      heroVia: 'via-amber-500/30',
+      headingTopBar: 'from-amber-500 via-orange-500 to-amber-500',
+      badgeBg: 'bg-amber-500/10',
+      badgeBorder: 'border-amber-500/30',
+      badgeText: 'text-amber-200',
+      badgeIcon: 'text-amber-300',
+      quoteBar: 'from-amber-500/50 via-orange-500/30 to-transparent',
+      quoteMark: 'text-amber-300/20',
+      highlightBg: 'from-amber-950/30 via-orange-950/20 to-amber-950/30',
+      highlightBorder: 'border-amber-500/30',
+      highlightCornerA: 'from-orange-500/20 to-transparent',
+      highlightCornerB: 'from-amber-500/20 to-transparent',
+      highlightQuote: 'text-amber-500/20',
+      highlightDivider: 'via-amber-500/50',
+      highlightCite: 'text-amber-200',
+      questionsBg: 'from-amber-500/10 via-orange-500/10 to-amber-500/10',
+      questionsBorder: 'border-amber-500/20',
+      questionsHoverBorder: 'group-hover:border-amber-500/40',
+      questionsOrbA: 'from-amber-500/20 to-orange-500/20',
+      questionsOrbB: 'from-orange-500/20 to-amber-500/20',
+      questionsIconBg: 'from-amber-500/30 to-orange-500/30',
+      questionsIconBorder: 'border-amber-500/30',
+      questionsIcon: 'text-amber-200',
+      questionsTitle: 'from-amber-200 via-orange-200 to-amber-200',
+      questionsDot: 'from-amber-400 to-orange-400'
+    },
+    slate: {
+      heroVia: 'via-white/25',
+      headingTopBar: 'from-slate-600 via-zinc-700 to-slate-600',
+      badgeBg: 'bg-white/5',
+      badgeBorder: 'border-white/15',
+      badgeText: 'text-white/70',
+      badgeIcon: 'text-white/60',
+      quoteBar: 'from-white/20 via-white/10 to-transparent',
+      quoteMark: 'text-white/10',
+      highlightBg: 'from-white/10 via-white/[0.04] to-white/10',
+      highlightBorder: 'border-white/15',
+      highlightCornerA: 'from-white/10 to-transparent',
+      highlightCornerB: 'from-white/10 to-transparent',
+      highlightQuote: 'text-white/15',
+      highlightDivider: 'via-white/25',
+      highlightCite: 'text-white/60',
+      questionsBg: 'from-white/5 via-white/[0.03] to-white/5',
+      questionsBorder: 'border-white/10',
+      questionsHoverBorder: 'group-hover:border-white/20',
+      questionsOrbA: 'from-white/10 to-white/5',
+      questionsOrbB: 'from-white/10 to-white/5',
+      questionsIconBg: 'from-white/10 to-white/5',
+      questionsIconBorder: 'border-white/10',
+      questionsIcon: 'text-white/70',
+      questionsTitle: 'from-white/80 via-white/70 to-white/80',
+      questionsDot: 'from-white/40 to-white/20'
+    }
+  }
+
+  const inferAccentKey = (a) => {
+    const explicit = a?.accent ? String(a.accent).toLowerCase().trim() : ''
+    if (explicit && ACCENT_PRESETS[explicit]) return explicit
+
+    const g = a?.gradient ? String(a.gradient) : ''
+    if (/\bred\b|\bred-/.test(g) || /\bpink\b|\bpink-/.test(g) || /\brose\b|\brose-/.test(g)) return 'red'
+    if (/\bemerald\b|\bemerald-/.test(g) || /\bteal\b|\bteal-/.test(g)) return 'emerald'
+    if (/\bamber\b|\bamber-/.test(g) || /\borange\b|\borange-/.test(g)) return 'amber'
+    if (/\bindigo\b|\bindigo-/.test(g) || /\bviolet\b|\bviolet-/.test(g)) return 'indigo'
+    if (/\bslate\b|\bslate-/.test(g) || /\bzinc\b|\bzinc-/.test(g) || /\bgray\b|\bgray-/.test(g)) return 'slate'
+    return 'purple'
+  }
+
+  const resolvePublicImageUrl = (raw) => {
+    if (!raw || typeof raw !== 'string') return null
+    const trimmed = raw.trim()
+    if (!trimmed) return null
+
+    // Supabase/public URLs
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed
+
+    // Site-relative assets
+    if (trimmed.startsWith('/')) return encodeURI(trimmed)
+
+    // Legacy content uses only filename; map to public folder path
+    return encodeURI(`/IMAGENES BLOG/${trimmed}`)
   }
 
   // Intentar obtener artículo traducido, si no existe usar el código original
   const translatedArticle = getArticleContent(slug, currentLanguage)
   console.log('🌐 Language:', currentLanguage, '| Slug:', slug, '| Found translation:', !!translatedArticle)
   const cmsArticle = normalizeCmsArticle(cmsRow)
-  const article = cmsArticle || translatedArticle || getArticleBySlug(slug)
+  const baseArticle = translatedArticle || getArticleBySlug(slug)
+  const article = (() => {
+    // Si existe artículo legacy (baseArticle), conservar su look (gradiente/categoría/tags)
+    // pero permitir que Supabase reemplace el contenido y campos editables.
+    if (cmsArticle && baseArticle) {
+      return {
+        ...baseArticle,
+        ...cmsArticle,
+        gradient: baseArticle.gradient || cmsArticle.gradient,
+        category: baseArticle.category || cmsArticle.category,
+        tags: Array.isArray(baseArticle.tags) && baseArticle.tags.length
+          ? baseArticle.tags
+          : cmsArticle.tags,
+        heroImage: null
+      }
+    }
+
+    return cmsArticle || baseArticle
+  })()
+
+  const accentKey = inferAccentKey(article)
+  const accent = ACCENT_PRESETS[accentKey] || ACCENT_PRESETS.purple
+
+  const heroBackgroundImage =
+    resolvePublicImageUrl(article.image) ||
+    resolvePublicImageUrl(article.heroImage) ||
+    null
 
   if (!article) {
     return (
@@ -1891,33 +2149,107 @@ const BlogArticlePage = () => {
   // Calcular tiempo de lectura dinámicamente
   const dynamicReadTime = calculateReadTime(article.sections)
 
-  // Función para compartir el artículo
-  const handleShare = async () => {
-    const shareUrl = `${window.location.origin}/blog/${slug}`
-    const shareTitle = article.title
-    const shareImage = article.heroImage || '/IMAGENES BLOG/1.jpg'
+  const shareUrl = `${window.location.origin}/blog/${slug}`
+  const shareTitle = article.title
+  const shareSubtitle = article.subtitle || ''
+  const shareExcerptRaw = article.excerpt || article.sections?.[0]?.content || ''
+  const shareExcerpt = String(shareExcerptRaw).replace(/\s+/g, ' ').trim().slice(0, 220)
+  const shareText = [shareTitle, shareSubtitle, shareExcerpt].filter(Boolean).join('\n\n')
+  // No usar fallback genérico repetido: si no hay imagen, ArticleSchema ya cae a /portada.webp.
+  const shareImage = heroBackgroundImage
 
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: shareTitle,
-          text: article.sections[0]?.content?.substring(0, 160) || article.title,
-          url: shareUrl
-        })
-      } catch (err) {
-        if (err.name !== 'AbortError') {
-          console.error('Error compartiendo:', err)
-        }
+  const ShareDropdown = () => {
+    const [open, setOpen] = useState(false)
+    const rootRef = useRef(null)
+
+    useEffect(() => {
+      if (!open) return
+      const onKeyDown = (e) => {
+        if (e.key === 'Escape') setOpen(false)
       }
-    } else {
-      // Fallback: copiar al portapapeles
-      try {
-        await navigator.clipboard.writeText(shareUrl)
-        alert('Enlace copiado al portapapeles')
-      } catch (err) {
-        console.error('Error copiando:', err)
+      const onMouseDown = (e) => {
+        if (!rootRef.current) return
+        if (rootRef.current.contains(e.target)) return
+        setOpen(false)
       }
-    }
+
+      document.addEventListener('keydown', onKeyDown)
+      document.addEventListener('mousedown', onMouseDown)
+      return () => {
+        document.removeEventListener('keydown', onKeyDown)
+        document.removeEventListener('mousedown', onMouseDown)
+      }
+    }, [open])
+
+    const encodedUrl = encodeURIComponent(shareUrl)
+    const encodedText = encodeURIComponent(`${shareText}\n\n${shareUrl}`)
+    const encodedTweet = encodeURIComponent(`${shareTitle}${shareSubtitle ? ` — ${shareSubtitle}` : ''}\n\n${shareExcerpt}`)
+
+    const items = [
+      {
+        label: 'WhatsApp',
+        href: `https://wa.me/?text=${encodedText}`,
+        Icon: MessageCircle
+      },
+      {
+        label: 'X',
+        href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(encodedTweet)}&url=${encodedUrl}`,
+        Icon: Twitter
+      },
+      {
+        label: 'LinkedIn',
+        href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+        Icon: Linkedin
+      },
+      {
+        label: 'Facebook',
+        href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+        Icon: Facebook
+      }
+    ]
+
+    return (
+      <div ref={rootRef} className="relative">
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-white text-sm flex items-center gap-2 transition-all"
+          aria-haspopup="menu"
+          aria-expanded={open}
+        >
+          <span>{t('blogArticles.common.share')}</span>
+          <ChevronDown className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`} />
+        </button>
+
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ opacity: 0, y: 8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 8, scale: 0.98 }}
+              transition={{ duration: 0.15 }}
+              className="absolute right-0 mt-3 w-56 rounded-2xl bg-zinc-950/95 backdrop-blur-sm border border-white/10 shadow-lg shadow-black/40 overflow-hidden z-50"
+              role="menu"
+            >
+              {items.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 px-4 py-3 text-sm text-white/80 hover:text-white hover:bg-white/5 transition-colors"
+                  role="menuitem"
+                  onClick={() => setOpen(false)}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{label}</span>
+                </a>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    )
   }
 
   const article_old = {
@@ -2030,8 +2362,8 @@ const BlogArticlePage = () => {
       {/* Schema Markup para SEO */}
       <ArticleSchema 
         title={article.title}
-        description={article.sections[0]?.content?.substring(0, 160)}
-        image={article.heroImage || '/IMAGENES BLOG/1.jpg'}
+        description={(article.excerpt || article.sections[0]?.content || '').substring(0, 160)}
+        image={shareImage}
         author={article.author}
         publishedTime={toISODate(article.date)}
         tags={article.tags}
@@ -2044,16 +2376,32 @@ const BlogArticlePage = () => {
       {/* Table of Contents flotante */}
       <TableOfContents sections={article.sections} />
 
-      {/* Hero Section - solo gradientes, sin imagen grande */}
+      {/* Hero Section - imagen como fondo + gradientes */}
       <section ref={heroRef} className="relative py-20 lg:py-32 px-6 lg:px-20 overflow-hidden">
+        {/* Background image */}
+        {heroBackgroundImage && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: `url(${heroBackgroundImage})`,
+                filter: 'saturate(0.9) contrast(1.05)'
+              }}
+            />
+            <div className="absolute inset-0 bg-black/60" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80" />
+          </div>
+        )}
+
         {/* Background effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className={`absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br ${article.gradient}/10 rounded-full blur-3xl`} />
-          <div className={`absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br ${article.gradient}/10 rounded-full blur-3xl`} />
+          <div className={`absolute -top-24 -left-24 w-[28rem] h-[28rem] bg-gradient-to-br ${article.gradient} opacity-25 rounded-full blur-3xl mix-blend-screen`} />
+          <div className={`absolute -bottom-28 -right-28 w-[30rem] h-[30rem] bg-gradient-to-br ${article.gradient} opacity-20 rounded-full blur-3xl mix-blend-screen`} />
+          <div className={`absolute top-1/3 right-1/3 w-80 h-80 bg-gradient-to-br ${article.gradient} opacity-15 rounded-full blur-2xl mix-blend-screen`} />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto">
-          {/* Back button y Copy button */}
+          {/* Back button + Copy + Compartir */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -2068,7 +2416,10 @@ const BlogArticlePage = () => {
               <span className="text-sm">{t('blogArticles.common.backToBlog')}</span>
             </Link>
             
-            <CopyArticleButton article={article} />
+            <div className="flex items-center gap-2">
+              <CopyArticleButton article={article} />
+              <ShareDropdown />
+            </div>
           </motion.div>
 
           {/* Category badge */}
@@ -2145,25 +2496,7 @@ const BlogArticlePage = () => {
             ))}
           </motion.div>
 
-          {/* Action buttons */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={isHeroInView ? { opacity: 1 } : {}}
-            transition={{ duration: 1, delay: 0.7 }}
-            className="flex gap-3"
-          >
-            <button 
-              onClick={handleShare}
-              className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-white text-sm flex items-center gap-2 transition-all"
-            >
-              <Share2 className="w-4 h-4" />
-              {t('blogArticles.common.share')}
-            </button>
-            <button className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-white text-sm flex items-center gap-2 transition-all">
-              <BookmarkPlus className="w-4 h-4" />
-              {t('blogArticles.common.save')}
-            </button>
-          </motion.div>
+          {/* (Compartir) ahora vive junto a “Copiar artículo” */}
         </div>
 
         {/* Decorative line */}
@@ -2171,7 +2504,7 @@ const BlogArticlePage = () => {
           initial={{ scaleX: 0 }}
           animate={isHeroInView ? { scaleX: 1 } : {}}
           transition={{ duration: 1.2, delay: 0.8 }}
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"
+          className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-px bg-gradient-to-r from-transparent ${accent.heroVia} to-transparent`}
           style={{ width: '80%' }}
         />
       </section>
@@ -2185,7 +2518,7 @@ const BlogArticlePage = () => {
               if (section.type === 'heading') {
                 headingCount++
               }
-              return <ArticleSection key={index} section={section} index={index} headingNumber={headingCount} />
+              return <ArticleSection key={index} section={section} index={index} headingNumber={headingCount} accent={accent} />
             })
           })()}
         </div>
@@ -2221,9 +2554,6 @@ const BlogArticlePage = () => {
           </motion.div>
         </div>
       </section>
-
-      {/* Share Buttons */}
-      <ShareButtons title={article.title} url={`/blog/${slug}`} />
 
       {/* Newsletter Signup */}
       <NewsletterSignup />
@@ -2397,7 +2727,7 @@ const CopyArticleButton = ({ article }) => {
   )
 }
 
-const ArticleSection = ({ section, index, headingNumber }) => {
+const ArticleSection = ({ section, index, headingNumber, accent }) => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.1 })
 
@@ -2428,13 +2758,13 @@ const ArticleSection = ({ section, index, headingNumber }) => {
       >
         <div className="relative">
           {/* Decorative quote icon */}
-          <div className="absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-purple-500/50 via-fuchsia-500/30 to-transparent rounded-full" />
+          <div className={`absolute -left-4 top-0 w-1 h-full bg-gradient-to-b ${accent.quoteBar} rounded-full`} />
           
           <div className="pl-8 pr-4 py-1">
             <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic relative">
-              <span className="absolute -left-2 -top-1 text-5xl text-purple-400/20 font-serif">“</span>
+              <span className={`absolute -left-2 -top-1 text-5xl ${accent.quoteMark} font-serif`}>“</span>
               {section.content}
-              <span className="absolute -bottom-6 right-0 text-5xl text-purple-400/20 font-serif">”</span>
+              <span className={`absolute -bottom-6 right-0 text-5xl ${accent.quoteMark} font-serif`}>”</span>
             </p>
           </div>
         </div>
@@ -2455,13 +2785,13 @@ const ArticleSection = ({ section, index, headingNumber }) => {
       >
         <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden">
           {/* Gradient accent top */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-fuchsia-500 to-purple-500" />
+          <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accent.headingTopBar}`} />
           
           {/* Number badge */}
           {headingNumber > 0 && (
-            <div className="inline-flex items-center gap-2 mb-4 px-4 py-1.5 bg-purple-500/10 border border-purple-500/30 rounded-full">
-              <span className="text-xs font-mono text-purple-300 tracking-wider">SECCIÓN {String(headingNumber).padStart(2, '0')}</span>
-              {Icon && <Icon className="w-3.5 h-3.5 text-purple-400" />}
+            <div className={`inline-flex items-center gap-2 mb-4 px-4 py-1.5 ${accent.badgeBg} border ${accent.badgeBorder} rounded-full`}>
+              <span className={`text-xs font-mono ${accent.badgeText} tracking-wider`}>SECCIÓN {String(headingNumber).padStart(2, '0')}</span>
+              {Icon && <Icon className={`w-3.5 h-3.5 ${accent.badgeIcon}`} />}
             </div>
           )}
           
@@ -2498,21 +2828,21 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         transition={{ duration: 0.4, delay: index * 0.05 }}
         className="my-16 relative"
       >
-        <div className="relative bg-gradient-to-br from-purple-900/30 via-fuchsia-900/20 to-purple-900/30 backdrop-blur-xl border-2 border-purple-500/30 rounded-3xl p-10 lg:p-12 overflow-hidden">
+        <div className={`relative bg-gradient-to-br ${accent.highlightBg} backdrop-blur-xl border-2 ${accent.highlightBorder} rounded-3xl p-10 lg:p-12 overflow-hidden`}>
           {/* Decorative corner accents */}
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-fuchsia-500/20 to-transparent rounded-bl-full" />
-          <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-purple-500/20 to-transparent rounded-tr-full" />
+          <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${accent.highlightCornerA} rounded-bl-full`} />
+          <div className={`absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr ${accent.highlightCornerB} rounded-tr-full`} />
           
           {/* Quote icon */}
-          <div className="absolute top-8 left-8 text-6xl text-purple-500/20 font-serif leading-none">“</div>
+          <div className={`absolute top-8 left-8 text-6xl ${accent.highlightQuote} font-serif leading-none`}>“</div>
           
           <blockquote className="relative text-2xl lg:text-3xl text-white font-light italic leading-relaxed mb-6 pl-8">
             {section.content}
           </blockquote>
           
-          <div className="h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent mb-4" />
+          <div className={`h-px bg-gradient-to-r from-transparent ${accent.highlightDivider} to-transparent mb-4`} />
           
-          <cite className="block text-sm text-purple-300 not-italic font-normal tracking-wide">— {section.author}</cite>
+          <cite className={`block text-sm ${accent.highlightCite} not-italic font-normal tracking-wide`}>— {section.author}</cite>
         </div>
       </motion.div>
     )
@@ -2561,17 +2891,17 @@ const ArticleSection = ({ section, index, headingNumber }) => {
         transition={{ duration: 0.4, delay: index * 0.05 }}
         className="my-12"
       >
-        <div className="relative bg-gradient-to-br from-red-500/10 via-pink-500/10 to-rose-500/10 backdrop-blur-sm border-2 border-red-500/20 rounded-3xl p-10 overflow-hidden group hover:border-red-500/40 transition-all duration-500">
+        <div className={`relative bg-gradient-to-br ${accent.questionsBg} backdrop-blur-sm border-2 ${accent.questionsBorder} rounded-3xl p-10 overflow-hidden group ${accent.questionsHoverBorder} transition-all duration-500`}>
           {/* Animated gradient orbs */}
-          <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-red-500/20 to-pink-500/20 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700" />
-          <div className="absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-tr from-rose-500/20 to-red-500/20 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700" />
+          <div className={`absolute top-0 right-0 w-48 h-48 bg-gradient-to-br ${accent.questionsOrbA} rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700`} />
+          <div className={`absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-tr ${accent.questionsOrbB} rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700`} />
           
           <div className="relative z-10">
             <div className="flex items-center gap-4 mb-8">
-              <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500/30 to-pink-500/30 border border-red-500/30 flex items-center justify-center backdrop-blur-sm">
-                <AlertCircle className="w-7 h-7 text-red-300" />
+              <div className={`flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br ${accent.questionsIconBg} border ${accent.questionsIconBorder} flex items-center justify-center backdrop-blur-sm`}>
+                <AlertCircle className={`w-7 h-7 ${accent.questionsIcon}`} />
               </div>
-              <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-red-300 via-pink-300 to-rose-300 bg-clip-text text-transparent">
+              <h3 className={`text-2xl md:text-3xl font-bold bg-gradient-to-r ${accent.questionsTitle} bg-clip-text text-transparent`}>
                 {section.title}
               </h3>
             </div>
@@ -2585,7 +2915,7 @@ const ArticleSection = ({ section, index, headingNumber }) => {
                   transition={{ duration: 0.5, delay: index * 0.05 + i * 0.15 }}
                   className="flex items-start gap-4 group/item"
                 >
-                  <div className="flex-shrink-0 mt-1 w-2 h-2 rounded-full bg-gradient-to-br from-red-400 to-pink-400 group-hover/item:scale-150 transition-transform duration-300" />
+                  <div className={`flex-shrink-0 mt-1 w-2 h-2 rounded-full bg-gradient-to-br ${accent.questionsDot} group-hover/item:scale-150 transition-transform duration-300`} />
                   <p className="text-lg text-white/90 leading-relaxed font-light group-hover/item:text-white transition-colors duration-300">
                     {question}
                   </p>
