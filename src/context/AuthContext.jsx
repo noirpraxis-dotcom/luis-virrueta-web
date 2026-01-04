@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { supabase } from '../lib/supabase'
 
 const AuthContext = createContext()
 
@@ -14,47 +15,52 @@ export function AuthProvider({ children }) {
   const [isAdmin, setIsAdmin] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  // Verificar si hay sesión guardada al cargar
+  // Verificar sesión de Supabase y escuchar cambios
   useEffect(() => {
-    const adminSession = localStorage.getItem('admin_session')
-    if (adminSession) {
-      try {
-        const session = JSON.parse(adminSession)
-        // Verificar que no haya expirado (24 horas)
-        if (Date.now() - session.timestamp < 24 * 60 * 60 * 1000) {
-          setIsAdmin(true)
-        } else {
-          localStorage.removeItem('admin_session')
-        }
-      } catch (error) {
-        localStorage.removeItem('admin_session')
-      }
+    let isMounted = true
+
+    const init = async () => {
+      const { data } = await supabase.auth.getSession()
+      if (!isMounted) return
+      setIsAdmin(Boolean(data.session))
+      setLoading(false)
     }
-    setLoading(false)
+
+    init()
+
+    const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAdmin(Boolean(session))
+    })
+
+    return () => {
+      isMounted = false
+      subscription?.subscription?.unsubscribe?.()
+    }
   }, [])
 
-  const login = (username, password) => {
-    // Credenciales hardcodeadas por seguridad (solo para admin)
-    // En producción, esto estaría en variables de entorno
-    const ADMIN_USERNAME = import.meta.env.VITE_ADMIN_USERNAME || 'admin'
-    const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'Zuzana2026!'
+  const login = async (email, password) => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      })
 
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+      if (error) return { success: false, error: error.message }
+      if (!data?.session) return { success: false, error: 'No se pudo iniciar sesión' }
+
       setIsAdmin(true)
-      // Guardar sesión
-      localStorage.setItem('admin_session', JSON.stringify({
-        timestamp: Date.now(),
-        username
-      }))
       return { success: true }
+    } catch (err) {
+      return { success: false, error: err?.message || 'Error al iniciar sesión' }
     }
-    
-    return { success: false, error: 'Credenciales incorrectas' }
   }
 
-  const logout = () => {
-    setIsAdmin(false)
-    localStorage.removeItem('admin_session')
+  const logout = async () => {
+    try {
+      await supabase.auth.signOut()
+    } finally {
+      setIsAdmin(false)
+    }
   }
 
   const value = {

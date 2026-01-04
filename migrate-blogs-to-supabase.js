@@ -14,8 +14,6 @@
  */
 
 import { createClient } from '@supabase/supabase-js'
-import * as fs from 'fs'
-import * as path from 'path'
 
 // ============================================
 // CONFIGURACIÓN
@@ -25,64 +23,151 @@ import * as path from 'path'
 import dotenv from 'dotenv'
 dotenv.config()
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL
-const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY
+const isHelp = process.argv.includes('--help') || process.argv.includes('-h')
+const isDryRun = process.argv.includes('--dry-run')
 
-if (!supabaseUrl || !supabaseKey) {
-  console.error('❌ Error: Variables de entorno no configuradas')
-  console.error('Asegúrate de tener VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en .env')
-  process.exit(1)
+const supabaseUrl = process.env.VITE_SUPABASE_URL
+const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY
+
+// Para pasar RLS (escritura solo autenticado)
+const adminEmail = process.env.SUPABASE_ADMIN_EMAIL
+const adminPassword = process.env.SUPABASE_ADMIN_PASSWORD
+
+let supabase = null
+
+// ============================================
+// DATOS DE BLOGS EXISTENTES (AUTOMÁTICO)
+// ============================================
+
+let existingBlogs = []
+
+function loadBlogArticlesContent() {
+  throw new Error('loadBlogArticlesContent() ahora es async; usa loadBlogArticlesContentAsync()')
 }
 
-const supabase = createClient(supabaseUrl, supabaseKey)
+async function loadBlogArticlesContentAsync() {
+  const moduleUrl = new URL('./src/data/blogArticlesContent.js', import.meta.url)
+  const mod = await import(moduleUrl.href)
+  if (!mod?.default) {
+    throw new Error('No se pudo importar el export default desde src/data/blogArticlesContent.js')
+  }
+  return mod.default
+}
 
-// ============================================
-// DATOS DE BLOGS EXISTENTES
-// ============================================
+function toBlocksFromSections(sections = []) {
+  const blocks = []
+  let i = 0
 
-// Mapeo de tus blogs actuales
-const existingBlogs = [
-  {
-    slug: 'sudoku',
-    title: 'SU·DO·KU: El arte de pensar por descarte',
-    subtitle: 'Por qué la vida no responde afirmando',
-    excerpt: 'Por qué la vida no responde afirmando. ¿Y si el problema no fuera la falta de respuestas, sino la prisa por clausurarlas?',
-    category: 'psychoanalysis',
-    author: 'Luis Virrueta',
-    tags: ['Pensamiento', 'Psicoanálisis', 'Filosofía', 'Vida', 'Vía Negativa', 'Lacan'],
-    read_time: '15 min',
-    language: 'es',
-    image_url: '/IMAGENES BLOG/SUDOKU HUMANO.jpg',
-    published_at: '2025-12-22T00:00:00Z'
-  },
-  {
-    slug: 'puta-panico-usurpacion-terror-autonomia',
-    title: 'P.U.T.A. (Pánico · Usurpación · Terror · Autonomía)',
-    subtitle: 'El deseo que acusa, el goce que se esconde',
-    excerpt: 'La palabra no describe al otro. Revela a quien necesita decirla para no sentir.',
-    category: 'psychoanalysis',
-    author: 'Luis Virrueta',
-    tags: ['Psicoanálisis', 'Lacan', 'Freud', 'Žižek', 'Deseo', 'Goce', 'Represión', 'Proyección'],
-    read_time: '19 min',
-    language: 'es',
-    image_url: '/IMAGENES BLOG/puta.jpg',
-    published_at: '2025-12-22T00:00:00Z'
-  },
-  {
-    slug: 'el-juego-que-nadie-confiesa-estar-jugando',
-    title: 'El juego que nadie confiesa estar jugando',
-    subtitle: 'Sobre la corrupción y el juego simbólico',
-    excerpt: 'Llamar "corrupción" a algo es a veces solo una forma de no verte jugando.',
-    category: 'philosophy',
-    author: 'Luis Virrueta',
-    tags: ['Moral', 'Ética', 'Lacan', 'Žižek', 'Lenguaje', 'Juego Simbólico', 'Responsabilidad', 'Espiritualidad'],
-    read_time: '16 min',
-    language: 'es',
-    image_url: '/IMAGENES BLOG/ajedrez.jpg',
-    published_at: '2025-12-18T00:00:00Z'
-  },
-  // ... Puedes agregar todos los demás blogs aquí
-]
+  const pushBlock = (block) => {
+    blocks.push({ id: `block-${Date.now()}-${i++}`, ...block })
+  }
+
+  for (const section of sections) {
+    if (!section) continue
+
+    switch (section.type) {
+      case 'heading':
+        pushBlock({ type: 'heading', level: 'h2', content: section.title || '' })
+        break
+      case 'text':
+      case 'intro':
+      case 'conclusion':
+        pushBlock({ type: 'paragraph', content: section.content || '' })
+        break
+      case 'highlight':
+        pushBlock({ type: 'highlight', content: section.content || '' })
+        break
+      case 'questions':
+        if (section.title) pushBlock({ type: 'heading', level: 'h3', content: section.title })
+        for (const item of section.items || []) {
+          pushBlock({ type: 'list', content: String(item || '') })
+        }
+        break
+      case 'list':
+        if (section.title) pushBlock({ type: 'heading', level: 'h3', content: section.title })
+        for (const item of section.items || []) {
+          const line = item?.title
+            ? `${item.title}${item.description ? `: ${item.description}` : ''}`
+            : String(item?.description || '')
+          if (line.trim()) pushBlock({ type: 'list', content: line })
+        }
+        break
+      default:
+        if (section.title) pushBlock({ type: 'heading', level: 'h3', content: section.title })
+        if (section.content) pushBlock({ type: 'paragraph', content: String(section.content) })
+        break
+    }
+  }
+
+  return blocks.filter(b => (b.content || '').trim())
+}
+
+function buildExcerptFromSections(sections = []) {
+  const firstText = sections.find(s => s && (s.type === 'intro' || s.type === 'text') && s.content)
+  const raw = firstText?.content || ''
+  const cleaned = raw.replace(/\s+/g, ' ').trim()
+  return cleaned.length > 180 ? `${cleaned.slice(0, 177)}...` : cleaned
+}
+
+function parsePublishedAt(dateString, language) {
+  if (!dateString) return null
+
+  // EN like: "Dec 15, 2025"
+  if (language === 'en') {
+    const d = new Date(dateString)
+    return Number.isNaN(d.getTime()) ? null : d.toISOString()
+  }
+
+  // ES like: "20 Dic 2025"
+  const months = {
+    ene: 0, feb: 1, mar: 2, abr: 3, may: 4, jun: 5,
+    jul: 6, ago: 7, sep: 8, oct: 9, nov: 10, dic: 11
+  }
+
+  const parts = dateString.replace(/\./g, '').trim().split(/\s+/)
+  if (parts.length < 3) return null
+  const day = Number(parts[0])
+  const month = months[String(parts[1]).toLowerCase().slice(0, 3)]
+  const year = Number(parts[2])
+  if (!Number.isFinite(day) || !Number.isFinite(month) || !Number.isFinite(year)) return null
+
+  const d = new Date(Date.UTC(year, month, day, 0, 0, 0))
+  return Number.isNaN(d.getTime()) ? null : d.toISOString()
+}
+
+function toImageUrl(imageField) {
+  if (!imageField) return null
+  if (imageField.startsWith('/')) return imageField
+  return `/IMAGENES BLOG/${imageField}`
+}
+
+function buildExistingBlogsFromContent(blogArticlesContent) {
+  const blogs = []
+  const languages = Object.keys(blogArticlesContent)
+  for (const language of languages) {
+    const bySlug = blogArticlesContent[language] || {}
+    for (const slug of Object.keys(bySlug)) {
+      const a = bySlug[slug]
+      if (!a?.title || !a?.sections) continue
+
+      blogs.push({
+        slug,
+        title: a.title,
+        subtitle: a.subtitle || '',
+        excerpt: a.excerpt || buildExcerptFromSections(a.sections),
+        category: a.category || 'philosophy',
+        author: a.author || 'Luis Virrueta',
+        tags: a.tags || [],
+        read_time: a.readTime || a.read_time || '15 min',
+        language,
+        image_url: toImageUrl(a.image || a.heroImage || a.image_url),
+        published_at: parsePublishedAt(a.date, language),
+        sections: a.sections
+      })
+    }
+  }
+  return blogs
+}
 
 // ============================================
 // FUNCIÓN DE MIGRACIÓN
@@ -92,21 +177,8 @@ async function migrateBlog(blog) {
   try {
     console.log(`\n📝 Migrando: ${blog.title}`)
 
-    // Convertir contenido a formato de bloques
-    // Nota: Aquí deberías adaptar según tu estructura actual
-    const content = [
-      {
-        id: 'block-1',
-        type: 'heading',
-        level: 'h1',
-        content: blog.title
-      },
-      {
-        id: 'block-2',
-        type: 'paragraph',
-        content: blog.excerpt
-      }
-    ]
+    // Convertir contenido a formato de bloques (compatible con el CMS)
+    const content = toBlocksFromSections(blog.sections)
 
     // Preparar datos para inserción
     const articleData = {
@@ -123,7 +195,7 @@ async function migrateBlog(blog) {
       image_url: blog.image_url,
       is_published: true,
       published_at: blog.published_at,
-      created_at: blog.published_at,
+      created_at: blog.published_at || new Date().toISOString(),
       updated_at: new Date().toISOString()
     }
 
@@ -132,11 +204,12 @@ async function migrateBlog(blog) {
       .from('blog_articles')
       .select('id')
       .eq('slug', blog.slug)
+      .eq('language', blog.language)
       .single()
 
     if (existing) {
-      console.log(`⚠️  Ya existe: ${blog.slug} - Saltando...`)
-      return { status: 'skipped', blog: blog.slug }
+      console.log(`⚠️  Ya existe: ${blog.slug} (${blog.language}) - Saltando...`)
+      return { status: 'skipped', blog: `${blog.slug}:${blog.language}` }
     }
 
     // Insertar en Supabase
@@ -151,7 +224,7 @@ async function migrateBlog(blog) {
     }
 
     console.log(`✅ Migrado exitosamente: ${blog.slug}`)
-    return { status: 'success', blog: blog.slug }
+    return { status: 'success', blog: `${blog.slug}:${blog.language}` }
 
   } catch (error) {
     console.error(`❌ Error procesando ${blog.slug}:`, error.message)
@@ -165,6 +238,23 @@ async function migrateBlog(blog) {
 
 async function runMigration() {
   console.log('🚀 Iniciando migración de blogs...\n')
+
+  console.log('🔐 Iniciando sesión en Supabase Auth...')
+  const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+    email: adminEmail,
+    password: adminPassword
+  })
+  if (authError || !authData?.session) {
+    console.error('❌ No se pudo iniciar sesión:', authError?.message || 'sin sesión')
+    process.exit(1)
+  }
+  console.log('✅ Sesión iniciada.\n')
+
+  console.log('📦 Cargando contenido existente desde src/data/blogArticlesContent.js...')
+  const blogArticlesContent = await loadBlogArticlesContentAsync()
+  existingBlogs = buildExistingBlogsFromContent(blogArticlesContent)
+  console.log(`✅ Contenido cargado.\n`)
+
   console.log(`📊 Total de blogs a migrar: ${existingBlogs.length}\n`)
 
   const results = {
@@ -226,7 +316,7 @@ async function runMigration() {
 // COMANDO DE AYUDA
 // ============================================
 
-if (process.argv.includes('--help') || process.argv.includes('-h')) {
+if (isHelp) {
   console.log(`
 📚 Script de Migración de Blogs a Supabase
 
@@ -252,16 +342,26 @@ NOTAS:
 // DRY RUN (Simulación)
 // ============================================
 
-if (process.argv.includes('--dry-run')) {
+if (isDryRun) {
   console.log('🔍 MODO DRY RUN (Simulación - No se guardará nada)\n')
-  existingBlogs.forEach((blog, index) => {
-    console.log(`${index + 1}. ${blog.title}`)
-    console.log(`   Slug: ${blog.slug}`)
-    console.log(`   Categoría: ${blog.category}`)
-    console.log(`   Tags: ${blog.tags.join(', ')}`)
-    console.log()
-  })
-  console.log(`\n📊 Total: ${existingBlogs.length} blogs`)
+  try {
+    const blogArticlesContent = await loadBlogArticlesContentAsync()
+    existingBlogs = buildExistingBlogsFromContent(blogArticlesContent)
+
+    existingBlogs.forEach((blog, index) => {
+      console.log(`${index + 1}. ${blog.title}`)
+      console.log(`   Slug: ${blog.slug}`)
+      console.log(`   Idioma: ${blog.language}`)
+      console.log(`   Categoría: ${blog.category}`)
+      console.log(`   Tags: ${(blog.tags || []).join(', ')}`)
+      console.log()
+    })
+
+    console.log(`\n📊 Total: ${existingBlogs.length} blogs`)
+  } catch (err) {
+    console.error('❌ Error en dry-run:', err.message)
+    process.exit(1)
+  }
   console.log('\n💡 Para ejecutar la migración real, ejecuta sin --dry-run\n')
   process.exit(0)
 }
@@ -269,6 +369,20 @@ if (process.argv.includes('--dry-run')) {
 // ============================================
 // EJECUTAR
 // ============================================
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('❌ Error: Variables de entorno no configuradas')
+  console.error('Asegúrate de tener VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en .env')
+  process.exit(1)
+}
+
+if (!adminEmail || !adminPassword) {
+  console.error('❌ Error: Faltan credenciales de admin para Supabase Auth')
+  console.error('Agrega SUPABASE_ADMIN_EMAIL y SUPABASE_ADMIN_PASSWORD a tu .env (solo local).')
+  process.exit(1)
+}
+
+supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 // Verificar conexión a Supabase
 console.log('🔌 Verificando conexión a Supabase...')

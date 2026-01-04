@@ -89,6 +89,19 @@ const BlogPage = () => {
 
   // Cargar blogs al iniciar
   useEffect(() => {
+    let isCancelled = false
+
+    const formatDateForCard = (isoString) => {
+      if (!isoString) return ''
+      const date = new Date(isoString)
+      if (Number.isNaN(date.getTime())) return ''
+      return date.toLocaleDateString(currentLanguage === 'en' ? 'en-US' : 'es-MX', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      })
+    }
+
     // Cargar datos iniciales de blogs
     const initialBlogs = [
     {
@@ -359,7 +372,66 @@ const BlogPage = () => {
     
     // Cargar los datos iniciales
     setBlogPosts(initialBlogs)
-  }, [])
+
+    // Traer artículos desde Supabase (migrados / creados desde el CMS)
+    const loadSupabaseArticles = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('blog_articles')
+          .select('*')
+          .eq('language', currentLanguage)
+          .order('published_at', { ascending: false, nullsFirst: false })
+          .order('created_at', { ascending: false })
+
+        if (error) throw error
+        if (isCancelled) return
+
+        const supabasePosts = (data || []).map((row) => {
+          const bestDateIso = row.published_at || row.created_at
+          return {
+            id: row.id,
+            title: row.title,
+            excerpt: row.excerpt,
+            category: row.category,
+            author: row.author,
+            date: formatDateForCard(bestDateIso) || (currentLanguage === 'en' ? 'Draft' : 'Borrador'),
+            readTime: row.read_time || '—',
+            gradient: 'from-slate-600/20 to-zinc-700/20',
+            borderGradient: 'from-slate-600 to-zinc-700',
+            tags: row.tags || [],
+            slug: row.slug,
+            image: row.image_url || '',
+            rating: row.rating || 5.0,
+            featured: Boolean(row.featured),
+            language: row.language,
+            isPublished: row.is_published,
+            publishedAt: row.published_at,
+            createdAt: row.created_at,
+            content: row.content
+          }
+        })
+
+        // Merge: supabase posts ganan sobre los hardcodeados por (slug, language)
+        const merged = new Map()
+        initialBlogs.forEach((post) => {
+          merged.set(`${post.slug}:${currentLanguage}`, post)
+        })
+        supabasePosts.forEach((post) => {
+          merged.set(`${post.slug}:${currentLanguage}`, { ...merged.get(`${post.slug}:${currentLanguage}`), ...post })
+        })
+
+        setBlogPosts(Array.from(merged.values()))
+      } catch (err) {
+        console.warn('No se pudieron cargar artículos desde Supabase:', err)
+      }
+    }
+
+    loadSupabaseArticles()
+
+    return () => {
+      isCancelled = true
+    }
+  }, [currentLanguage, isAdmin])
 
   const toCardDate = (isoString) => {
     if (!isoString) return ''

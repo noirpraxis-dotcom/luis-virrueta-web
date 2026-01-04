@@ -3,11 +3,14 @@
 -- Ejecuta este SQL en Supabase SQL Editor
 -- ============================================
 
+-- Requerido para gen_random_uuid()
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 -- 1. CREAR TABLA DE ARTÍCULOS
 CREATE TABLE IF NOT EXISTS blog_articles (
   -- Identificadores
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  slug TEXT UNIQUE NOT NULL,
+    slug TEXT NOT NULL,
   
   -- Contenido principal
   title TEXT NOT NULL,
@@ -37,6 +40,14 @@ CREATE TABLE IF NOT EXISTS blog_articles (
   views INTEGER DEFAULT 0,
   rating DECIMAL(2,1) DEFAULT 0.0
 );
+
+-- Nota importante sobre idiomas y slugs
+-- Si quieres soportar ES+EN con el mismo slug, el slug NO debe ser único por sí solo.
+-- En su lugar, debe ser único por (slug, language).
+-- Si tu tabla ya existe con slug UNIQUE, corre este ALTER para permitir duplicados por idioma:
+-- (El nombre del constraint por defecto suele ser: blog_articles_slug_key)
+ALTER TABLE blog_articles DROP CONSTRAINT IF EXISTS blog_articles_slug_key;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_blog_articles_slug_language_unique ON blog_articles (slug, language);
 
 -- 2. CREAR ÍNDICES PARA MEJORAR PERFORMANCE
 CREATE INDEX IF NOT EXISTS idx_blog_articles_slug ON blog_articles(slug);
@@ -91,7 +102,14 @@ BEGIN
     END IF;
     
     -- Si el slug ya existe, agregar timestamp
-    IF EXISTS (SELECT 1 FROM blog_articles WHERE slug = NEW.slug AND id != NEW.id) THEN
+    -- Importante: para soportar ES/EN, solo colisiona si coincide slug+language
+    IF EXISTS (
+        SELECT 1
+        FROM blog_articles
+        WHERE slug = NEW.slug
+          AND language = NEW.language
+          AND id != NEW.id
+    ) THEN
         NEW.slug = NEW.slug || '-' || EXTRACT(EPOCH FROM NOW())::TEXT;
     END IF;
     
@@ -114,15 +132,56 @@ ALTER TABLE blog_articles ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Artículos publicados son públicos" ON blog_articles;
 CREATE POLICY "Artículos publicados son públicos"
 ON blog_articles FOR SELECT
-USING (is_published = true);
+USING (
+    is_published = true
+    AND (published_at IS NULL OR published_at <= now())
+);
 
--- Política: Permitir todas las operaciones para desarrollo
--- ⚠️ IMPORTANTE: En producción, reemplaza esto con autenticación real
+-- Política adicional: usuarios autenticados (admin) pueden leer TODO
+-- Sin esto, el admin no verá borradores ni programados en el CMS.
+DROP POLICY IF EXISTS "Admin puede leer todo" ON blog_articles;
+CREATE POLICY "Admin puede leer todo"
+ON blog_articles FOR SELECT
+TO authenticated
+USING (true);
+
+-- Producción: escritura SOLO para usuarios autenticados (admin)
+-- Recomendación: desactiva "Enable email signups" en Supabase Auth,
+-- y crea manualmente solo tu usuario admin.
 DROP POLICY IF EXISTS "Permitir todas las operaciones" ON blog_articles;
-CREATE POLICY "Permitir todas las operaciones"
-ON blog_articles FOR ALL
+DROP POLICY IF EXISTS "Admin puede insertar" ON blog_articles;
+DROP POLICY IF EXISTS "Admin puede actualizar" ON blog_articles;
+DROP POLICY IF EXISTS "Admin puede borrar" ON blog_articles;
+
+CREATE POLICY "Admin puede insertar"
+ON blog_articles FOR INSERT
+TO authenticated
+WITH CHECK (true);
+
+CREATE POLICY "Admin puede actualizar"
+ON blog_articles FOR UPDATE
+TO authenticated
 USING (true)
 WITH CHECK (true);
+
+CREATE POLICY "Admin puede borrar"
+ON blog_articles FOR DELETE
+TO authenticated
+USING (true);
+
+-- ============================================
+-- STORAGE POLICIES (blog-images)
+-- ============================================
+-- IMPORTANTE:
+-- En muchos proyectos Supabase, la tabla interna storage.objects NO permite
+-- ALTER/CREATE POLICY desde el rol del SQL Editor y falla con:
+--   "ERROR: 42501: must be owner of table objects"
+--
+-- Por eso, configura el bucket y las policies desde la UI:
+-- 1) Storage -> New bucket -> name: blog-images -> Public: ON
+-- 2) Storage -> Policies (o "Access policies") -> blog-images:
+--    - Public read: allow SELECT (bucket_id = 'blog-images')
+--    - Authenticated write: allow INSERT/UPDATE/DELETE for authenticated
 
 -- 9. CREAR STORAGE BUCKET PARA IMÁGENES
 -- Nota: Esto debe hacerse desde la UI de Supabase Storage
@@ -264,10 +323,6 @@ SELECT
     END as estado
 UNION ALL
 SELECT
-    'Storage bucket blog-images' as objeto,
-    '⚠️ Verificar manualmente en Storage' as estado
-UNION ALL
-SELECT
     'RLS habilitado' as objeto,
     CASE WHEN EXISTS (
         SELECT 1 FROM pg_tables 
@@ -309,18 +364,20 @@ INSERT INTO blog_articles (
     'es',
     true,
     NOW()
-) ON CONFLICT (slug) DO NOTHING;
+) ON CONFLICT (slug, language) DO NOTHING;
+
 
 -- ============================================
 -- NOTAS IMPORTANTES
 -- ============================================
 
 /*
-1. Este schema está listo para producción pero con políticas permisivas
-2. En producción, deberías:
-   - Implementar autenticación real con Supabase Auth
-   - Restringir políticas RLS a usuarios autenticados
-   - Agregar validaciones adicionales
+1. Este schema está pensado para producción con RLS estricto:
+    - Público: SOLO lectura de artículos publicados y NO programados a futuro
+    - Admin (authenticated): lectura total + escritura
+2. Recomendación:
+    - Desactiva "Enable email signups" en Supabase Auth
+    - Crea manualmente solo tu usuario admin
    
 3. El bucket de Storage "blog-images" debe crearse manualmente:
    - Ve a Storage en Supabase
@@ -330,5 +387,5 @@ INSERT INTO blog_articles (
    
 4. Para usar el CMS, asegúrate de:
    - Configurar las variables de entorno VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY
-   - Tener las credenciales de admin en VITE_ADMIN_USERNAME y VITE_ADMIN_PASSWORD
+    - Crear un usuario admin en Supabase Auth (email/password)
 */

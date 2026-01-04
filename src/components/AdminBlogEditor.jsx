@@ -41,7 +41,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
   const [content, setContent] = useState(article?.content || [])
   
   // Estado de publicación
-  const [isPublished, setIsPublished] = useState(article?.isPublished ?? true)
+  const [isPublished, setIsPublished] = useState(article?.isPublished ?? article?.is_published ?? false)
 
   // Fecha/hora de publicación (permite programar)
   const toLocalDateTimeInputValue = (isoString) => {
@@ -52,9 +52,24 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
   }
 
+  const nowLocalDateTimeInputValue = () => {
+    const now = new Date()
+    const pad = (n) => String(n).padStart(2, '0')
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`
+  }
+
   const [publishedAtLocal, setPublishedAtLocal] = useState(
-    toLocalDateTimeInputValue(article?.published_at || article?.publishedAt || null)
+    toLocalDateTimeInputValue(article?.published_at || article?.publishedAt || null) || nowLocalDateTimeInputValue()
   )
+
+  // Si el artículo no trae read_time, calcularlo desde el contenido inicial
+  useEffect(() => {
+    const hasReadTime = Boolean(article?.read_time || article?.readTime)
+    if (!hasReadTime && content?.length) {
+      setReadTime(calculateReadTime(content))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   
   const fileInputRef = useRef(null)
 

@@ -1,5 +1,5 @@
 import { motion, useInView } from 'framer-motion'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles, Award, Check, Shield, AlertCircle, Copy } from 'lucide-react'
 import ReadingProgressBar from '../components/ReadingProgressBar'
@@ -11,6 +11,7 @@ import ArticleSchema from '../components/ArticleSchema'
 import { calculateReadTime, toISODate } from '../utils/blogHelpers'
 import { useLanguage } from '../context/LanguageContext'
 import { getArticleContent } from '../data/blogArticlesContent'
+import { supabase } from '../lib/supabase'
 
 // Función para obtener el artículo basado en el slug
 const getArticleBySlug = (slug) => {
@@ -1760,10 +1761,118 @@ const BlogArticlePage = () => {
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.1 })
 
+  const [cmsRow, setCmsRow] = useState(null)
+
+  useEffect(() => {
+    let isCancelled = false
+
+    const loadFromSupabase = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('blog_articles')
+          .select('*')
+          .eq('slug', slug)
+          .eq('language', currentLanguage)
+          .maybeSingle()
+
+        if (error) throw error
+        if (isCancelled) return
+
+        setCmsRow(data || null)
+      } catch (err) {
+        console.warn('No se pudo cargar el artículo desde Supabase:', err)
+        if (!isCancelled) setCmsRow(null)
+      }
+    }
+
+    loadFromSupabase()
+
+    return () => {
+      isCancelled = true
+    }
+  }, [slug, currentLanguage])
+
+  const cmsBlocksToSections = (blocks) => {
+    if (!Array.isArray(blocks)) return []
+
+    const sections = []
+    let pendingList = null
+
+    const flushList = () => {
+      if (pendingList && pendingList.items.length) {
+        sections.push(pendingList)
+      }
+      pendingList = null
+    }
+
+    for (const block of blocks) {
+      const type = block?.type
+      const content = String(block?.content || '').trim()
+
+      if (type === 'list') {
+        if (!pendingList) {
+          pendingList = { type: 'list', items: [] }
+        }
+        if (content) {
+          pendingList.items.push({ title: content, description: '' })
+        }
+        continue
+      }
+
+      flushList()
+
+      if (type === 'heading') {
+        if (content) sections.push({ type: 'heading', title: content, icon: null })
+        continue
+      }
+
+      if (type === 'highlight') {
+        if (content) sections.push({ type: 'highlight', content, author: block.author || '' })
+        continue
+      }
+
+      // paragraph / unknown
+      if (content) sections.push({ type: 'text', content })
+    }
+
+    flushList()
+    return sections
+  }
+
+  const normalizeCmsArticle = (row) => {
+    if (!row) return null
+
+    const displayDate = (() => {
+      const iso = row.published_at || row.created_at
+      if (!iso) return ''
+      const d = new Date(iso)
+      if (Number.isNaN(d.getTime())) return ''
+      return d.toLocaleDateString(currentLanguage === 'en' ? 'en-US' : 'es-MX', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      })
+    })()
+
+    return {
+      title: row.title,
+      subtitle: row.subtitle || '',
+      author: row.author,
+      date: displayDate,
+      readTime: row.read_time || '—',
+      category: row.category,
+      tags: row.tags || [],
+      gradient: 'from-slate-600/20 to-zinc-700/20',
+      heroImage: row.image_url || '',
+      sections: cmsBlocksToSections(row.content)
+    }
+  }
+
   // Intentar obtener artículo traducido, si no existe usar el código original
   const translatedArticle = getArticleContent(slug, currentLanguage)
   console.log('🌐 Language:', currentLanguage, '| Slug:', slug, '| Found translation:', !!translatedArticle)
-  const article = translatedArticle || getArticleBySlug(slug)
+  const cmsArticle = normalizeCmsArticle(cmsRow)
+  const article = cmsArticle || translatedArticle || getArticleBySlug(slug)
 
   if (!article) {
     return (
@@ -2259,7 +2368,14 @@ const CopyArticleButton = ({ article }) => {
           formattedText += `\n**${section.title}**\n\n`
         }
         section.items.forEach((item) => {
-          formattedText += `• ${item}\n`
+          if (typeof item === 'string') {
+            formattedText += `• ${item}\n`
+            return
+          }
+          const title = item?.title ? String(item.title) : ''
+          const description = item?.description ? String(item.description) : ''
+          const line = description ? `${title}: ${description}` : title
+          if (line) formattedText += `• ${line}\n`
         })
         formattedText += `\n`
       } else if (section.type === 'subsection') {
