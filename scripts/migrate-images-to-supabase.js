@@ -8,8 +8,8 @@ dotenv.config()
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY
-const adminEmail = process.env.VITE_ADMIN_EMAIL
-const adminPassword = process.env.VITE_ADMIN_PASSWORD
+const adminEmail = process.env.SUPABASE_ADMIN_EMAIL
+const adminPassword = process.env.SUPABASE_ADMIN_PASSWORD
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 

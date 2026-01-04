@@ -1863,7 +1863,8 @@ const BlogArticlePage = () => {
       category: row.category,
       tags: row.tags || [],
       gradient: 'from-slate-600/20 to-zinc-700/20',
-      heroImage: row.image_url || '',
+      // NO usar heroImage para artículos de Supabase - solo gradientes
+      heroImage: null,
       sections: cmsBlocksToSections(row.content)
     }
   }
@@ -2043,35 +2044,7 @@ const BlogArticlePage = () => {
       {/* Table of Contents flotante */}
       <TableOfContents sections={article.sections} />
 
-      {/* Hero Image si existe */}
-      {article.heroImage && (
-        <div className="relative w-full h-[60vh] lg:h-[70vh] overflow-hidden">
-          <img 
-            src={article.heroImage} 
-            alt={article.title}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          {/* Overlay oscuro cinematográfico */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black" />
-          
-          {/* Título sobre la imagen - solo para artículos con hero image */}
-          <div className="absolute inset-0 flex items-end justify-center pb-16 px-6">
-            <div className="max-w-4xl text-center">
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.3 }}
-                className="text-4xl lg:text-6xl font-bold text-white leading-tight drop-shadow-2xl"
-                style={{ letterSpacing: '0.02em', fontWeight: 300 }}
-              >
-                {article.title}
-              </motion.h1>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Hero Section */}
+      {/* Hero Section - solo gradientes, sin imagen grande */}
       <section ref={heroRef} className="relative py-20 lg:py-32 px-6 lg:px-20 overflow-hidden">
         {/* Background effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">

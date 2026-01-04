@@ -15,12 +15,40 @@ export default function RichTextEditor({ initialContent = [], onChange }) {
   const [blocks, setBlocks] = useState(initialContent)
   const [selectedBlockId, setSelectedBlockId] = useState(null)
   const [showFormatMenu, setShowFormatMenu] = useState(false)
+  const [showFloatingToolbar, setShowFloatingToolbar] = useState(false)
+  const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 })
+  const [selectedText, setSelectedText] = useState({ start: 0, end: 0, blockId: null })
   const pasteAreaRef = useRef(null)
 
   // Cuando los bloques cambian, notificar al padre
   useEffect(() => {
     onChange?.(blocks)
   }, [blocks])
+
+  // Detectar selección de texto para mostrar toolbar flotante
+  useEffect(() => {
+    const handleSelectionChange = () => {
+      const selection = window.getSelection()
+      const selectedTextContent = selection?.toString() || ''
+      
+      if (selectedTextContent.length > 0) {
+        const range = selection.getRangeAt(0)
+        const rect = range.getBoundingClientRect()
+        
+        // Posicionar toolbar arriba del texto seleccionado
+        setToolbarPosition({
+          top: rect.top + window.scrollY - 60,
+          left: rect.left + (rect.width / 2)
+        })
+        setShowFloatingToolbar(true)
+      } else {
+        setShowFloatingToolbar(false)
+      }
+    }
+
+    document.addEventListener('selectionchange', handleSelectionChange)
+    return () => document.removeEventListener('selectionchange', handleSelectionChange)
+  }, [])
 
   /**
    * Detecta automáticamente el tipo de contenido al pegar
@@ -153,6 +181,16 @@ export default function RichTextEditor({ initialContent = [], onChange }) {
 
   return (
     <div className="space-y-4">
+      {/* Barra Flotante de Formateo (tipo Medium) */}
+      <AnimatePresence>
+        {showFloatingToolbar && (
+          <FloatingFormatToolbar
+            position={toolbarPosition}
+            onClose={() => setShowFloatingToolbar(false)}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Área de pegado inicial */}
       {blocks.length === 0 && (
         <motion.div
@@ -418,5 +456,63 @@ function BlockTypeSelector({ onSelect }) {
         )}
       </AnimatePresence>
     </div>
+  )
+}
+
+/**
+ * Barra Flotante de Formateo (tipo Medium)
+ * Aparece al seleccionar texto
+ */
+function FloatingFormatToolbar({ position, onClose }) {
+  const formatOptions = [
+    { icon: Bold, label: 'Negrita', action: 'bold' },
+    { icon: Italic, label: 'Cursiva', action: 'italic' },
+    { icon: Heading2, label: 'Título', action: 'heading' },
+    { icon: Sparkles, label: 'Destacar', action: 'highlight' },
+    { icon: LinkIcon, label: 'Enlace', action: 'link' },
+  ]
+
+  const handleFormat = (action) => {
+    const selection = window.getSelection()
+    if (!selection || selection.rangeCount === 0) return
+
+    const range = selection.getRangeAt(0)
+    const selectedText = selection.toString()
+
+    // Aquí podrías implementar la lógica de formateo según el action
+    // Por ahora solo mostramos la toolbar
+    console.log('Formato:', action, 'Texto:', selectedText)
+    
+    onClose()
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -10, scale: 0.9 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -10, scale: 0.9 }}
+      transition={{ duration: 0.2 }}
+      style={{
+        position: 'fixed',
+        top: `${position.top}px`,
+        left: `${position.left}px`,
+        transform: 'translateX(-50%)',
+        zIndex: 9999
+      }}
+      className="bg-gray-900 border border-gray-700 rounded-xl shadow-2xl overflow-hidden"
+    >
+      <div className="flex items-center gap-1 p-2">
+        {formatOptions.map(({ icon: Icon, label, action }) => (
+          <button
+            key={action}
+            onClick={() => handleFormat(action)}
+            title={label}
+            className="p-2.5 rounded-lg hover:bg-white/10 text-gray-300 hover:text-white transition-all group"
+          >
+            <Icon className="w-4 h-4" />
+          </button>
+        ))}
+      </div>
+    </motion.div>
   )
 }
