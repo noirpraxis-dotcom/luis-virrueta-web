@@ -2226,6 +2226,30 @@ const BlogArticlePage = () => {
     const [open, setOpen] = useState(false)
     const rootRef = useRef(null)
 
+    const copyToClipboard = async () => {
+      try {
+        await navigator.clipboard.writeText(shareUrl)
+      } catch {
+        // Fallback for older browsers / permissions
+        const input = document.createElement('textarea')
+        input.value = shareUrl
+        input.setAttribute('readonly', 'true')
+        input.style.position = 'fixed'
+        input.style.top = '-1000px'
+        input.style.left = '-1000px'
+        document.body.appendChild(input)
+        input.focus()
+        input.select()
+        try {
+          document.execCommand('copy')
+        } finally {
+          document.body.removeChild(input)
+        }
+      } finally {
+        setOpen(false)
+      }
+    }
+
     useEffect(() => {
       if (!open) return
       const onKeyDown = (e) => {
@@ -2269,6 +2293,11 @@ const BlogArticlePage = () => {
         label: 'Facebook',
         href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
         Icon: Facebook
+      },
+      {
+        label: currentLanguage === 'en' ? 'Copy' : 'Copiar',
+        onClick: copyToClipboard,
+        Icon: Copy
       }
     ]
 
@@ -2295,20 +2324,34 @@ const BlogArticlePage = () => {
               className="absolute right-0 mt-3 w-56 rounded-2xl bg-zinc-950/95 backdrop-blur-sm border border-white/10 shadow-lg shadow-black/40 overflow-hidden z-50"
               role="menu"
             >
-              {items.map(({ label, href, Icon }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 px-4 py-3 text-sm text-white/80 hover:text-white hover:bg-white/5 transition-colors"
-                  role="menuitem"
-                  onClick={() => setOpen(false)}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{label}</span>
-                </a>
-              ))}
+              {items.map(({ label, href, onClick, Icon }) => {
+                const commonClass = 'flex w-full items-center gap-3 px-4 py-3 text-sm text-white/80 hover:text-white hover:bg-white/5 transition-colors'
+                return href ? (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={commonClass}
+                    role="menuitem"
+                    onClick={() => setOpen(false)}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{label}</span>
+                  </a>
+                ) : (
+                  <button
+                    key={label}
+                    type="button"
+                    className={commonClass}
+                    role="menuitem"
+                    onClick={onClick}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{label}</span>
+                  </button>
+                )
+              })}
             </motion.div>
           )}
         </AnimatePresence>
@@ -2451,7 +2494,7 @@ const BlogArticlePage = () => {
       <TableOfContents sections={article.sections} />
 
       {/* Hero Image Section - SOLO LA IMAGEN */}
-      <section ref={heroRef} className="relative h-[60vh] lg:h-[70vh] overflow-hidden">
+      <section ref={heroRef} className="relative h-[36vh] sm:h-[50vh] lg:h-[70vh] overflow-hidden">
         {/* Background image (robusto con fallback) */}
         {heroBackgroundImage && (
           <div className="absolute inset-0 overflow-hidden">
@@ -2498,11 +2541,13 @@ const BlogArticlePage = () => {
               className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              <span className="text-sm">{t('blogArticles.common.backToBlog')}</span>
+              <span className="text-sm">
+                <span className="sm:hidden">{currentLanguage === 'en' ? 'Back' : 'Volver'}</span>
+                <span className="hidden sm:inline">{t('blogArticles.common.backToBlog')}</span>
+              </span>
             </Link>
             
             <div className="flex items-center gap-2">
-              <CopyArticleButton article={article} />
               <ShareDropdown />
             </div>
           </motion.div>
@@ -2580,12 +2625,12 @@ const BlogArticlePage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
-            className="flex flex-wrap gap-2 mb-8"
+            className="flex flex-wrap gap-1.5 sm:gap-2 mb-8"
           >
             {article.tags.map((tag, i) => (
               <span
                 key={i}
-                className="px-3 py-1.5 text-xs bg-white/5 border border-white/10 rounded-full text-white/70 flex items-center gap-1.5"
+                className="px-2 py-1 text-[11px] sm:px-3 sm:py-1.5 sm:text-xs bg-white/5 border border-white/10 rounded-full text-white/70 flex items-center gap-1 sm:gap-1.5"
               >
                 <Tag className="w-3 h-3" />
                 {tag}
