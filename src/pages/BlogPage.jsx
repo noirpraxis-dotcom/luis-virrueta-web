@@ -174,6 +174,23 @@ const BlogPage = () => {
     // Cargar datos iniciales de blogs
     const initialBlogs = [
     {
+      id: 36,
+      title: 'REINO ERUDITO',
+      excerpt: 'A veces el conocimiento no nos libera; nos domestica. Nos volvemos guardianes del prestigio intelectual antes que amantes de la verdad. Este blog es una rebelión contra el “no estás listo todavía”.\n❓Pregunta: ¿Aprendemos para pensar… o para obedecer?',
+      category: 'philosophy',
+      author: 'Luis Virrueta',
+      date: '07 Ene 2026',
+      readTime: '16 min',
+      gradient: 'from-emerald-600/20 via-teal-600/20 to-cyan-600/20',
+      borderGradient: 'from-emerald-600 via-teal-600 to-cyan-600',
+      tags: ['Filosofía', 'Psicoanálisis', 'Foucault', 'Adorno', 'Althusser', 'Gramsci', 'Byung-Chul Han', 'Hannah Arendt', 'Lacan', 'Deleuze', 'Nietzsche', 'Kierkegaard'],
+      slug: 'reino-erudito',
+      image: '/IMAGENES BLOG/REINO ERUDITO.jpg',
+      rating: 4.9,
+      featured: true,
+      accent: 'emerald'
+    },
+    {
       id: 35,
       title: 'Fábrica de percepciones',
       excerpt: '¿Deseas lo que miras… o deseas la emoción que tu fantasía fabrica? ¿Qué parte de tu realidad es percepción, y qué parte es identidad imaginada? Este ensayo recorre mirada, deseo y el Otro para responderlo.',

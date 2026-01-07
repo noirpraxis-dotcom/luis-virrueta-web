@@ -1892,6 +1892,21 @@ const BlogArticlePage = () => {
         continue
       }
 
+      if (type === 'questions') {
+        if (content) {
+          const title = String(block?.title || 'Preguntas incómodas').trim()
+          const items = content
+            .split('\n')
+            .map((l) => String(l || '').trim())
+            .filter(Boolean)
+            .map((l) => l.replace(/^([-*•]|\d+[\.)])\s+/, '').trim())
+            .filter(Boolean)
+
+          if (items.length) sections.push({ type: 'questions', title, items })
+        }
+        continue
+      }
+
       if (type === 'highlight') {
         if (content) sections.push({ type: 'highlight', content, author: block.author || '' })
         continue
@@ -1931,8 +1946,8 @@ const BlogArticlePage = () => {
       tags: row.tags || [],
       accent: row.accent || null,
       gradient: 'from-slate-600/20 to-zinc-700/20',
-      // NO usar heroImage para artículos de Supabase - solo gradientes
-      heroImage: null,
+      // En artículos del CMS, usar la imagen principal también como hero
+      heroImage: row.image_url || null,
       image: row.image_url || null,
       sections: cmsBlocksToSections(row.content)
     }
@@ -2121,8 +2136,8 @@ const BlogArticlePage = () => {
     const trimmed = raw.trim()
     if (!trimmed) return null
 
-    // Supabase/public URLs
-    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed
+    // Supabase/public URLs (encode to handle spaces safely)
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return encodeURI(trimmed)
 
     // Site-relative assets
     if (trimmed.startsWith('/')) return encodeURI(trimmed)
@@ -2866,6 +2881,75 @@ const ArticleSection = ({ section, index, headingNumber, accent }) => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.1 })
 
+  const renderInlineMarkdown = (input) => {
+    const text = String(input ?? '')
+    if (!text) return null
+
+    // Preserve line breaks
+    const lines = text.split('\n')
+    const renderLine = (line, lineIndex) => {
+      const parts = []
+      let i = 0
+
+      const pushText = (value) => {
+        if (value) parts.push(value)
+      }
+
+      while (i < line.length) {
+        const boldAt = line.indexOf('**', i)
+
+        // find italic marker '*' that is not part of '**'
+        let italicAt = line.indexOf('*', i)
+        while (italicAt !== -1 && line[italicAt + 1] === '*') {
+          italicAt = line.indexOf('*', italicAt + 2)
+        }
+
+        const nextAt = Math.min(
+          boldAt === -1 ? Number.POSITIVE_INFINITY : boldAt,
+          italicAt === -1 ? Number.POSITIVE_INFINITY : italicAt
+        )
+
+        if (!Number.isFinite(nextAt)) {
+          pushText(line.slice(i))
+          break
+        }
+
+        pushText(line.slice(i, nextAt))
+
+        if (nextAt === boldAt) {
+          const closeAt = line.indexOf('**', boldAt + 2)
+          if (closeAt === -1) {
+            pushText(line.slice(boldAt))
+            break
+          }
+          const inner = line.slice(boldAt + 2, closeAt)
+          parts.push(<strong key={`b-${lineIndex}-${boldAt}`}>{inner}</strong>)
+          i = closeAt + 2
+          continue
+        }
+
+        // italic
+        const closeAt = line.indexOf('*', italicAt + 1)
+        if (closeAt === -1) {
+          pushText(line.slice(italicAt))
+          break
+        }
+        const inner = line.slice(italicAt + 1, closeAt)
+        parts.push(<em key={`i-${lineIndex}-${italicAt}`}>{inner}</em>)
+        i = closeAt + 1
+      }
+
+      return (
+        <span key={`l-${lineIndex}`}>
+          {parts}
+          {lineIndex < lines.length - 1 ? <br /> : null}
+        </span>
+      )
+    }
+
+    return lines.map(renderLine)
+  }
+
   if (section.type === 'intro') {
     return (
       <motion.div
@@ -2876,7 +2960,7 @@ const ArticleSection = ({ section, index, headingNumber, accent }) => {
         className="mb-12"
       >
         <p className="text-xl lg:text-2xl text-white/80 leading-relaxed font-light italic">
-          {section.content}
+          {renderInlineMarkdown(section.content)}
         </p>
       </motion.div>
     )
@@ -2898,7 +2982,7 @@ const ArticleSection = ({ section, index, headingNumber, accent }) => {
           <div className="pl-8 pr-4 py-1">
             <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic relative">
               <span className={`absolute -left-2 -top-1 text-5xl ${accent.quoteMark} font-serif`}>“</span>
-              {section.content}
+              {renderInlineMarkdown(section.content)}
               <span className={`absolute -bottom-6 right-0 text-5xl ${accent.quoteMark} font-serif`}>”</span>
             </p>
           </div>
@@ -2948,7 +3032,7 @@ const ArticleSection = ({ section, index, headingNumber, accent }) => {
         className="mb-8"
       >
         <p className="text-lg text-white/70 leading-relaxed">
-          {section.content}
+          {renderInlineMarkdown(section.content)}
         </p>
       </motion.div>
     )
@@ -2972,7 +3056,7 @@ const ArticleSection = ({ section, index, headingNumber, accent }) => {
           <div className={`absolute top-8 left-8 text-6xl ${accent.highlightQuote} font-serif leading-none`}>“</div>
           
           <blockquote className="relative text-2xl lg:text-3xl text-white font-light italic leading-relaxed mb-6 pl-8">
-            {section.content}
+            {renderInlineMarkdown(section.content)}
           </blockquote>
           
           <div className={`h-px bg-gradient-to-r from-transparent ${accent.highlightDivider} to-transparent mb-4`} />
@@ -3006,7 +3090,7 @@ const ArticleSection = ({ section, index, headingNumber, accent }) => {
                   {section.title}
                 </h3>
                 <p className="text-base text-white/70 leading-relaxed">
-                  {section.content}
+                  {renderInlineMarkdown(section.content)}
                 </p>
               </div>
             </div>
@@ -3125,8 +3209,8 @@ const ArticleSection = ({ section, index, headingNumber, accent }) => {
               <span className="text-sm font-bold text-white">{i + 1}</span>
             </div>
             <div className="flex-1">
-              <h4 className="text-lg font-bold text-white mb-2">{item.title}</h4>
-              <p className="text-base text-white/70 leading-relaxed">{item.description}</p>
+              <h4 className="text-lg font-bold text-white mb-2">{renderInlineMarkdown(item.title)}</h4>
+              <p className="text-base text-white/70 leading-relaxed">{renderInlineMarkdown(item.description)}</p>
             </div>
           </motion.div>
         ))}
@@ -3146,7 +3230,7 @@ const ArticleSection = ({ section, index, headingNumber, accent }) => {
         <div className="relative bg-gradient-to-br from-pink-500/5 to-rose-500/5 backdrop-blur-sm border border-white/10 rounded-2xl p-10">
           <div className="absolute top-4 left-4 w-12 h-12 bg-gradient-to-br from-pink-500/20 to-rose-500/20 rounded-full blur-xl" />
           <p className="relative text-xl text-white/80 leading-relaxed font-light">
-            {section.content}
+            {renderInlineMarkdown(section.content)}
           </p>
         </div>
       </motion.div>

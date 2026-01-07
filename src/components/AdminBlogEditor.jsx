@@ -119,6 +119,8 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
     setReadTime(calculatedTime)
   }
 
+
+
   /**
    * Manejar selección de imagen
    */
@@ -270,29 +272,41 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
         articleData.created_at = new Date().toISOString()
       }
 
-      // Guardar en Supabase
+      const saveToSupabase = async (dataToSave) => {
+        if (article?.id) {
+          const { data, error } = await supabase
+            .from('blog_articles')
+            .update(dataToSave)
+            .eq('id', article.id)
+            .select()
+            .single()
+          if (error) throw error
+          return data
+        }
+
+        const { data, error } = await supabase
+          .from('blog_articles')
+          .insert([dataToSave])
+          .select()
+          .single()
+        if (error) throw error
+        return data
+      }
+
+      // Guardar en Supabase (compat: si la columna 'accent' no existe, reintentar sin ella)
       let result
-      if (article?.id) {
-        // Actualizar artículo existente
-        const { data, error } = await supabase
-          .from('blog_articles')
-          .update(articleData)
-          .eq('id', article.id)
-          .select()
-          .single()
+      try {
+        result = await saveToSupabase(articleData)
+      } catch (err) {
+        const message = String(err?.message || '')
+        const isAccentSchemaCache =
+          message.includes("Could not find the 'accent' column") ||
+          (message.toLowerCase().includes('accent') && message.toLowerCase().includes('schema cache'))
 
-        if (error) throw error
-        result = data
-      } else {
-        // Crear nuevo artículo
-        const { data, error } = await supabase
-          .from('blog_articles')
-          .insert([articleData])
-          .select()
-          .single()
+        if (!isAccentSchemaCache) throw err
 
-        if (error) throw error
-        result = data
+        const { accent: _accent, ...fallbackData } = articleData
+        result = await saveToSupabase(fallbackData)
       }
 
       setMessage({ 
@@ -594,6 +608,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
+                    style={{ colorScheme: 'dark' }}
                     className="w-full px-4 py-2 bg-white/5 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all"
                   >
                     <option value="philosophy">Filosofía</option>
@@ -616,6 +631,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                   <select
                     value={accent}
                     onChange={(e) => setAccent(e.target.value)}
+                    style={{ colorScheme: 'dark' }}
                     className="w-full px-4 py-2 bg-white/5 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all"
                   >
                     <option value="purple">Morado (SU·DO·KU)</option>
@@ -635,6 +651,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                   <select
                     value={language}
                     onChange={(e) => setLanguage(e.target.value)}
+                    style={{ colorScheme: 'dark' }}
                     className="w-full px-4 py-2 bg-white/5 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all"
                   >
                     <option value="es">Español</option>
@@ -643,7 +660,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                  <label className="text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
                     <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
@@ -690,7 +707,38 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
               <RichTextEditor
                 initialContent={content}
                 onChange={handleContentChange}
+                showAddBlockButton={false}
+                mode="document"
               />
+
+              {/* Acciones al final (para no tener que volver arriba) */}
+              <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-end">
+                <button
+                  onClick={() => handleSave(false)}
+                  disabled={saving}
+                  className="px-4 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  <Save className="w-4 h-4" />
+                  Guardar Borrador
+                </button>
+                <button
+                  onClick={() => handleSave(true)}
+                  disabled={saving}
+                  className="px-4 py-3 bg-gradient-to-r from-purple-500 to-fuchsia-500 hover:from-purple-600 hover:to-fuchsia-600 text-white font-medium rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {saving ? (
+                    <>
+                      <Loader className="w-4 h-4 animate-spin" />
+                      Guardando...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4" />
+                      Publicar
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
