@@ -1,5 +1,5 @@
 import { motion, useInView, AnimatePresence } from 'framer-motion'
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Brain, Zap, Eye, Plus, Lock, LogOut, X, AlertTriangle, Trash2, Edit } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
@@ -175,15 +175,15 @@ const BlogPage = () => {
     const initialBlogs = [
     {
       id: 35,
-      title: 'EL PUNTO DE PARTIDA: El deseo de habitar la imagen',
-      excerpt: 'Iba por la carretera observando a unos trabajadores diminutos frente al paisaje inmenso que los contenía. Sentí una punzada de envidia: ellos pertenecían a ese mundo; yo solo lo miraba desde la distancia. Pero de pronto comprendí algo inquietante: ellos no estaban viviendo la escena que yo estaba viendo.',
+      title: 'Fábrica de percepciones',
+      excerpt: '¿Deseas lo que miras… o deseas la emoción que tu fantasía fabrica? ¿Qué parte de tu realidad es percepción, y qué parte es identidad imaginada? Este ensayo recorre mirada, deseo y el Otro para responderlo.',
       category: 'philosophy',
       author: 'Luis Virrueta',
       date: '07 Ene 2026',
       readTime: '15 min',
       gradient: 'from-indigo-600/20 via-purple-600/20 to-fuchsia-600/20',
       borderGradient: 'from-indigo-600 via-purple-600 to-fuchsia-600',
-      tags: ['Psicoanálisis', 'Lacan', 'Sartre', 'Filosofía', 'Mirada', 'Deseo', 'Realidad'],
+      tags: ['Psicoanálisis', 'Jacques Lacan', 'Sigmund Freud', 'Jean-Paul Sartre', 'Walter Benjamin', 'Mirada', 'Deseo', 'Percepción'],
       slug: 'fabrica-percepciones-identidades-imaginadas',
       image: '/blog-compressed/blog-22-fabrica.webp',
       rating: 4.9,
@@ -195,17 +195,17 @@ const BlogPage = () => {
         ? 'SU·DO·KU: The art of thinking by elimination'
         : 'SU·DO·KU: El arte de pensar por descarte',
       excerpt: currentLanguage === 'en'
-        ? 'Why life doesn\'t answer by affirming. What if the problem wasn\'t the lack of answers, but the rush to close them?'
-        : 'Por qué la vida no responde afirmando. ¿Y si el problema no fuera la falta de respuestas, sino la prisa por clausurarlas?',
-      category: currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
+        ? 'What if thinking were elimination, not certainty? Sudoku becomes a map of negation, decision and the ethics of sustaining the question instead of “closing” it too fast.'
+        : '¿Y si pensar fuera descartar, no “tener razón”? El Sudoku se vuelve un mapa de negación, decisión y la ética de sostener la pregunta en vez de cerrarla con prisa.',
+      category: 'psychoanalysis',
       author: 'Luis Virrueta',
       date: '22 Dic 2025',
       readTime: '15 min',
       gradient: 'from-purple-500/20 to-fuchsia-500/20',
       borderGradient: 'from-purple-500 to-fuchsia-500',
       tags: currentLanguage === 'en'
-        ? ['Thinking', 'Psychoanalysis', 'Philosophy', 'Life', 'Negative Way', 'Lacan']
-        : ['Pensamiento', 'Psicoanálisis', 'Filosofía', 'Vida', 'Vía Negativa', 'Lacan'],
+        ? ['Psychoanalysis', 'Jacques Lacan', 'Thinking', 'Decision fatigue', 'Negation', 'Philosophy']
+        : ['Psicoanálisis', 'Jacques Lacan', 'Pensamiento', 'Decisión', 'Vía negativa', 'Filosofía'],
       slug: 'sudoku',
       image: '/IMAGENES BLOG/SUDOKU HUMANO.jpg',
       rating: 5.0,
@@ -217,17 +217,17 @@ const BlogPage = () => {
         ? 'P.U.T.A. (Panic · Usurpation · Terror · Autonomy)'
         : 'P.U.T.A. (Pánico · Usurpación · Terror · Autonomía)',
       excerpt: currentLanguage === 'en'
-        ? 'The word doesn\'t describe the other. It reveals the one who needs to say it to avoid feeling.'
-        : 'La palabra no describe al otro. Revela a quien necesita decirla para no sentir.',
-      category: currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
+        ? 'Who does the insult describe: the woman, or the speaker? Panic, usurpation, terror and autonomy of desire—why the word works as a psychic shield.'
+        : '¿A quién describe el insulto: a la mujer… o a quien lo pronuncia? Pánico, usurpación, terror y autonomía del deseo: por qué la palabra funciona como escudo psíquico.',
+      category: 'psychoanalysis',
       author: 'Luis Virrueta',
       date: '22 Dic 2025',
       readTime: '19 min',
       gradient: 'from-red-600/20 to-pink-700/20',
       borderGradient: 'from-red-600 to-pink-700',
       tags: currentLanguage === 'en'
-        ? ['Psychoanalysis', 'Lacan', 'Freud', 'Žižek', 'Desire', 'Jouissance', 'Repression', 'Projection']
-        : ['Psicoanálisis', 'Lacan', 'Freud', 'Žižek', 'Deseo', 'Goce', 'Represión', 'Proyección'],
+        ? ['Psychoanalysis', 'Jacques Lacan', 'Sigmund Freud', 'Slavoj Žižek', 'Desire', 'Jouissance', 'Projection']
+        : ['Psicoanálisis', 'Jacques Lacan', 'Sigmund Freud', 'Slavoj Žižek', 'Deseo', 'Goce', 'Proyección'],
       slug: 'puta-panico-usurpacion-terror-autonomia',
       image: '/IMAGENES BLOG/puta.jpg',
       rating: 4.9,
@@ -239,17 +239,17 @@ const BlogPage = () => {
         ? 'The Game No One Confesses to Playing'
         : 'El juego que nadie confiesa estar jugando',
       excerpt: currentLanguage === 'en'
-        ? 'Calling something "corruption" is sometimes just a way to avoid seeing yourself in the game.'
-        : 'Llamar "corrupción" a algo es a veces solo una forma de no verte jugando.',
-      category: currentLanguage === 'en' ? 'Ethics' : 'Ética',
+        ? 'What do you gain when you call the world “corrupt”? And what do you lose by keeping your innocence intact? A piece on symbolic games, language and responsibility.'
+        : '¿Qué ganas cuando llamas al mundo “corrupto”? ¿Y qué pierdes al preservar tu inocencia intacta? Un ensayo sobre juego simbólico, lenguaje y responsabilidad.',
+      category: 'philosophy',
       author: 'Luis Virrueta',
       date: '18 Dic 2025',
       readTime: '16 min',
       gradient: 'from-slate-600/20 to-zinc-700/20',
       borderGradient: 'from-slate-600 to-zinc-700',
       tags: currentLanguage === 'en'
-        ? ['Morality', 'Ethics', 'Lacan', 'Žižek', 'Language', 'Symbolic Game', 'Responsibility', 'Spirituality']
-        : ['Moral', 'Ética', 'Lacan', 'Žižek', 'Lenguaje', 'Juego Simbólico', 'Responsabilidad', 'Espiritualidad'],
+        ? ['Philosophy', 'Ethics', 'Jacques Lacan', 'Slavoj Žižek', 'Language', 'Responsibility', 'Symbolic order']
+        : ['Filosofía', 'Ética', 'Jacques Lacan', 'Slavoj Žižek', 'Lenguaje', 'Responsabilidad', 'Orden simbólico'],
       slug: 'el-juego-que-nadie-confiesa-estar-jugando',
       image: '/IMAGENES BLOG/ajedrez.jpg',
       rating: 4.8,
@@ -261,17 +261,17 @@ const BlogPage = () => {
         ? 'The Breaking of the Break'
         : 'La ruptura de la ruptura',
       excerpt: currentLanguage === 'en'
-        ? 'Why what relieves you at first stops working later. The dark night of the soul explained.'
-        : '¿Por qué lo que alivia primero, después deja de hacerlo? La noche oscura del alma explicada.',
-      category: currentLanguage === 'en' ? 'Spirituality' : 'Espiritualidad',
+        ? 'Why does what saved you at first stop working later? When the old self breaks, what is actually beginning? A map of the “dark night” and the clarity that follows.'
+        : '¿Por qué lo que te salvó al principio deja de funcionar después? Cuando el yo viejo se rompe, ¿qué es lo que realmente comienza? Un mapa de la “noche oscura” y su claridad.',
+      category: 'consciousness',
       author: 'Luis Virrueta',
       date: '10 Dic 2025',
       readTime: '15 min',
       gradient: 'from-indigo-500/20 to-purple-600/20',
       borderGradient: 'from-indigo-500 to-purple-600',
       tags: currentLanguage === 'en'
-        ? ['Meditation', 'Dark Night', 'Enlightenment', 'Unity', 'Presence', 'Consciousness', 'Spirituality']
-        : ['Meditación', 'Noche Oscura', 'Iluminación', 'Unidad', 'Presencia', 'Conciencia', 'Espiritualidad'],
+        ? ['Consciousness', 'Dark night of the soul', 'Meditation', 'Presence', 'Spirituality', 'Transformation']
+        : ['Conciencia', 'Noche oscura del alma', 'Meditación', 'Presencia', 'Transformación', 'Espiritualidad'],
       slug: 'la-ruptura-de-la-ruptura',
       image: '/IMAGENES BLOG/ruptura.jpg',
       rating: 4.9,
@@ -283,9 +283,9 @@ const BlogPage = () => {
         ? 'It Doesn\'t Hurt Because Something Breaks'
         : 'No duele porque algo se rompe, duele porque algo no puede romperse',
       excerpt: currentLanguage === 'en'
-        ? 'Pain doesn\'t empty the world: it fills it. What does that reveal about consciousness?'
-        : 'El dolor no vacía el mundo: lo llena. ¿Qué revela eso sobre la conciencia?',
-      category: currentLanguage === 'en' ? 'Phenomenology' : 'Fenomenología',
+        ? 'What if pain doesn\'t “go away” but takes over the whole world? What does it reveal about body, meaning and the Real? A phenomenological + psychoanalytic look.'
+        : '¿Y si el dolor no fuera algo que se quita, sino algo que ocupa todo el mundo? ¿Qué revela del cuerpo, el sentido y lo Real? Fenomenología + psicoanálisis para mirarlo de frente.',
+      category: 'consciousness',
       author: 'Luis Virrueta',
       date: '28 Nov 2025',
       readTime: '17 min',
@@ -305,9 +305,9 @@ const BlogPage = () => {
         ? 'Where Is the Body When Everything Works?'
         : '¿Dónde está el cuerpo cuando todo funciona?',
       excerpt: currentLanguage === 'en'
-        ? 'Your arm falls asleep and suddenly you feel what was always there. What does that reveal?'
-        : 'Tu brazo se duerme y de pronto sientes lo que siempre estuvo ahí. ¿Qué revela eso?',
-      category: currentLanguage === 'en' ? 'Consciousness' : 'Conciencia',
+        ? 'Where is the body when everything works—and why does it appear only when it fails? A short entry into perception, attention and the invisible background that holds daily life.'
+        : '¿Dónde está tu cuerpo cuando todo va bien… y por qué aparece cuando falla? Una entrada breve a percepción, atención y ese fondo invisible que sostiene tu vida diaria.',
+      category: 'consciousness',
       author: 'Luis Virrueta',
       date: '15 Nov 2025',
       readTime: '14 min',
@@ -327,9 +327,9 @@ const BlogPage = () => {
         ? 'The Tearing of Unity'
         : 'El desgarro de la unidad',
       excerpt: currentLanguage === 'en'
-        ? 'What if love isn\'t born from uniting two pieces, but from tearing a single one?'
-        : '¿Y si el amor no nace de unir dos piezas, sino de desgarrar una sola?',
-      category: currentLanguage === 'en' ? 'Love & Relationships' : 'Amor y Relaciones',
+        ? 'What if love isn\'t “two halves becoming one”, but the tear inside unity? Desire, lack, and why union can hurt.'
+        : '¿Y si amar no fuera “hacerse uno”, sino sostener el desgarro dentro de la unidad? Deseo, falta y por qué la unión puede doler.',
+      category: 'psychoanalysis',
       author: 'Luis Virrueta',
       date: '2 Nov 2025',
       readTime: '15 min',
@@ -349,9 +349,9 @@ const BlogPage = () => {
         ? 'The Fish That Is Not Eaten'
         : 'El pez que no se come',
       excerpt: currentLanguage === 'en'
-        ? 'Seagulls pass a fish between them without eating it. What does that say about relationships?'
-        : 'Las gaviotas se pasan un pez sin comerlo. ¿Qué dice eso sobre las relaciones?',
-      category: currentLanguage === 'en' ? 'Love & Relationships' : 'Amor y Relaciones',
+        ? 'Why does a bond sometimes need the object—but not the satisfaction? A fish is exchanged without being eaten: a metaphor for desire, listening, and the desire of the Other.'
+        : '¿Por qué a veces el vínculo necesita el objeto… pero no la satisfacción? Un pez que se intercambia sin comerse: metáfora de deseo, escucha y deseo del Otro.',
+      category: 'psychoanalysis',
       author: 'Luis Virrueta',
       date: '20 Oct 2025',
       readTime: '13 min',
@@ -371,9 +371,9 @@ const BlogPage = () => {
         ? 'Loving from the Wound'
         : 'Amar desde la herida',
       excerpt: currentLanguage === 'en'
-        ? 'If love requires a wound, what happens when you stop asking the other to heal it?'
-        : 'Si el amor requiere una herida, ¿qué pasa cuando dejas de pedirle al otro que la cure?',
-      category: currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
+        ? 'Love often starts where something hurts. What changes when you stop demanding the other repair your lack—and you assume your desire? What becomes possible then?'
+        : 'El amor suele empezar donde algo duele. ¿Qué cambia cuando dejas de exigirle al otro que repare tu falta y asumes tu deseo? ¿Qué se vuelve posible entonces?',
+      category: 'psychoanalysis',
       author: 'Luis Virrueta',
       date: '8 Oct 2025',
       readTime: '15 min',
@@ -393,9 +393,9 @@ const BlogPage = () => {
         ? 'Being Free Is Not Choosing: It Is Not Being Able to Stop Repeating'
         : 'Ser libre no es elegir: es no poder dejar de repetir',
       excerpt: currentLanguage === 'en'
-        ? 'You change masks, but always fail in the same place. What if that\'s your only freedom?'
-        : 'Cambias de máscara, pero siempre fallas en el mismo lugar. ¿Y si esa es tu única libertad?',
-      category: currentLanguage === 'en' ? 'Philosophy' : 'Filosofía',
+        ? 'Are you free when you choose—or when you can\'t stop repeating? Freedom is where repetition becomes visible, and an act becomes possible.'
+        : '¿Eres libre cuando eliges… o cuando ya no puedes dejar de repetir? La libertad aparece cuando la repetición se vuelve visible y el acto se vuelve posible.',
+      category: 'psychoanalysis',
       author: 'Luis Virrueta',
       date: '25 Sep 2025',
       readTime: '16 min',
@@ -415,9 +415,9 @@ const BlogPage = () => {
         ? 'I Used to Be Happy'
         : 'Antes era feliz',
       excerpt: currentLanguage === 'en'
-        ? 'The place you want to return to never existed. Then what is it that you\'re really looking for?'
-        : 'El lugar al que quieres volver nunca existió. Entonces, ¿qué es lo que buscas realmente?',
-      category: currentLanguage === 'en' ? 'Identity' : 'Identidad',
+        ? 'What “before” do you want to return to—if that before never existed? A psychoanalytic look at nostalgia, identity and the fantasy of a lost point zero.'
+        : '¿A qué “antes” quieres volver… si ese antes nunca existió? Una lectura psicoanalítica sobre nostalgia, identidad y la fantasía de un punto cero perdido.',
+      category: 'psychoanalysis',
       author: 'Luis Virrueta',
       date: '12 Sep 2025',
       readTime: '17 min',
@@ -437,9 +437,9 @@ const BlogPage = () => {
         ? 'From the Dog Who Loves Me to the Void I Inhabit'
         : 'Del perro que me ama al vacío que me habita',
       excerpt: currentLanguage === 'en'
-        ? 'Your dog loves without asking. You love and demand. Who actually knows how to love?'
-        : 'Tu perro ama sin pedir. Tú amas y exiges. ¿Quién sabe realmente amar?',
-      category: currentLanguage === 'en' ? 'Existentialism' : 'Existencialismo',
+        ? 'What does a love that doesn\'t demand—your dog\'s—show you about the void you inhabit? A piece on lack, presence and what you keep asking the Other to fill.'
+        : '¿Qué te muestra un amor que no exige —el de tu perro— sobre el vacío que habitas? Un texto sobre falta, presencia y eso que sigues pidiéndole al Otro que llene.',
+      category: 'psychoanalysis',
       author: 'Luis Virrueta',
       date: '30 Ago 2025',
       readTime: '20 min',
@@ -467,6 +467,14 @@ const BlogPage = () => {
           // Para artículos que ya existen hardcoded (legacy), NO permitimos que Supabase
           // pise metadatos visuales si vienen vacíos/por defecto o inconsistentes.
           const merged = { ...legacy, ...incoming }
+
+          // En artículos legacy, conservar copy curado (título/extract/metadata de tarjeta)
+          // para que Supabase no los pise con versiones viejas o genéricas.
+          merged.title = legacy.title || merged.title
+          merged.excerpt = legacy.excerpt || merged.excerpt
+          merged.author = legacy.author || merged.author
+          merged.readTime = legacy.readTime || merged.readTime
+          merged.date = legacy.date || merged.date
 
           // Mantener gradientes/tags/categoría/rating/image del legacy a menos que incoming traiga algo útil.
           merged.gradient = legacy.gradient
@@ -619,7 +627,7 @@ const BlogPage = () => {
       <SEOHead 
         title={t('blogPage.seo.title')}
         description={t('blogPage.seo.description')}
-        image="/ajedrez video.mp4"
+        image="/portada.webp"
         url="/blog"
         type="website"
         tags={['blog', 'psicología', 'psicoanálisis', 'filosofía', 'inconsciente', 'percepción', 'consciencia', 'transformación']}
@@ -877,11 +885,23 @@ const BlogCard = ({ post, index, isAdmin, onDelete, onEdit }) => {
   const { t, currentLanguage } = useLanguage()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
-  const displayRating = (() => {
-    const n = typeof post.rating === 'number' ? post.rating : Number(post.rating)
-    if (!Number.isFinite(n)) return 5.0
-    return n
-  })()
+
+  const resolvedImageSrc = useMemo(() => {
+    const raw = typeof post.image === 'string' ? post.image.trim() : ''
+    if (!raw) return ''
+    if (/^https?:\/\//i.test(raw)) return raw
+    try {
+      return encodeURI(raw)
+    } catch {
+      return raw
+    }
+  }, [post.image])
+
+  const [cardImageError, setCardImageError] = useState(false)
+  useEffect(() => {
+    setCardImageError(false)
+  }, [resolvedImageSrc])
+
   // Mapeo de categorías con traducciones
   const categoryLabels = {
     'all': t('blogPage.categories.all'),
@@ -889,6 +909,7 @@ const BlogCard = ({ post, index, isAdmin, onDelete, onEdit }) => {
     'branding': t('blogPage.categories.branding'),
     'psychology': t('blogPage.categories.psychology'),
     'trends': t('blogPage.categories.trends'),
+    'perception': currentLanguage === 'en' ? 'Perception' : 'Percepción',
     'Philosophy': currentLanguage === 'en' ? 'Philosophy' : 'Filosofía',
     'philosophy': currentLanguage === 'en' ? 'Philosophy' : 'Filosofía',
     'Psychoanalysis': currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
@@ -906,6 +927,7 @@ const BlogCard = ({ post, index, isAdmin, onDelete, onEdit }) => {
     'Perception': currentLanguage === 'en' ? 'Perception' : 'Percepción',
     'Percepción': currentLanguage === 'en' ? 'Perception' : 'Percepción',
     'Consciousness': currentLanguage === 'en' ? 'Consciousness' : 'Consciencia',
+    'consciousness': currentLanguage === 'en' ? 'Consciousness' : 'Consciencia',
     'Conciencia': currentLanguage === 'en' ? 'Consciousness' : 'Consciencia',
     'Consciencia': currentLanguage === 'en' ? 'Consciousness' : 'Consciencia',
     'Branding × Strategy': currentLanguage === 'en' ? 'Branding × Strategy' : 'Branding × Estrategia',
@@ -915,6 +937,11 @@ const BlogCard = ({ post, index, isAdmin, onDelete, onEdit }) => {
     'Love & Relationships': currentLanguage === 'en' ? 'Love & Relationships' : 'Amor y Relaciones',
     'Amor y Relaciones': currentLanguage === 'en' ? 'Love & Relationships' : 'Amor y Relaciones'
   }
+
+  const categoryLabel = categoryLabels[post.category]
+    || categoryLabels[String(post.category || '').toLowerCase()]
+    || (currentLanguage === 'en' ? 'Article' : 'Artículo')
+
   return (
     <Link to={post.slug ? `/blog/${post.slug}` : '#'}>
       <motion.article
@@ -928,16 +955,17 @@ const BlogCard = ({ post, index, isAdmin, onDelete, onEdit }) => {
         {/* Image with gradient overlay */}
         <div className={`aspect-[16/9] bg-gradient-to-br ${post.gradient} relative overflow-hidden`}>
           {/* Imagen real del blog con Lazy Loading */}
-          {post.image && (
+          {resolvedImageSrc && !cardImageError && (
             <img 
-              src={post.image} 
+              src={resolvedImageSrc} 
               alt={post.title}
               loading="lazy"
               className="absolute inset-0 w-full h-full object-cover"
+              onError={() => setCardImageError(true)}
             />
           )}
           {/* Fallback si no hay imagen */}
-          {!post.image && (
+          {(!resolvedImageSrc || cardImageError) && (
             <div className="absolute inset-0 flex items-center justify-center">
               <BookOpen className="w-16 h-16 text-white/20" strokeWidth={1} />
             </div>
@@ -961,52 +989,41 @@ const BlogCard = ({ post, index, isAdmin, onDelete, onEdit }) => {
             {/* Category badge izquierda */}
             <div className="px-3 py-1.5 bg-black/60 backdrop-blur-md rounded-full border border-white/20">
               <span className="text-xs text-white/90 uppercase tracking-wider font-medium">
-                {categoryLabels[post.category] || post.category}
+                {categoryLabel}
               </span>
             </div>
             
-            {/* Rating y botón eliminar derecha */}
-            <div className="flex items-center gap-2">
-              {/* Rating con estrellas */}
-              <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-black/70 backdrop-blur-md rounded-full border border-yellow-500/30">
-                <svg className="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <span className="text-xs font-bold text-white">{displayRating}</span>
+            {/* Botones admin derecha */}
+            {isAdmin && (
+              <div className="flex items-center gap-2">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    onEdit(post)
+                  }}
+                  className="flex items-center justify-center w-8 h-8 bg-blue-500/90 hover:bg-blue-600 backdrop-blur-md rounded-full border border-blue-400/60 shadow-lg transition-all"
+                  title="Editar artículo"
+                >
+                  <Edit className="w-3.5 h-3.5 text-white" />
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    onDelete(post)
+                  }}
+                  className="flex items-center justify-center w-8 h-8 bg-red-500/90 hover:bg-red-600 backdrop-blur-md rounded-full border border-red-400/60 shadow-lg transition-all"
+                  title="Eliminar artículo"
+                >
+                  <Trash2 className="w-3.5 h-3.5 text-white" />
+                </motion.button>
               </div>
-              
-              {/* Botón Eliminar (solo para admin) */}
-              {isAdmin && (
-                <>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      onEdit(post)
-                    }}
-                    className="flex items-center justify-center w-8 h-8 bg-blue-500/90 hover:bg-blue-600 backdrop-blur-md rounded-full border border-blue-400/60 shadow-lg transition-all"
-                    title="Editar artículo"
-                  >
-                    <Edit className="w-3.5 h-3.5 text-white" />
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      onDelete(post)
-                    }}
-                    className="flex items-center justify-center w-8 h-8 bg-red-500/90 hover:bg-red-600 backdrop-blur-md rounded-full border border-red-400/60 shadow-lg transition-all"
-                    title="Eliminar artículo"
-                  >
-                    <Trash2 className="w-3.5 h-3.5 text-white" />
-                  </motion.button>
-                </>
-              )}
-            </div>
+            )}
           </div>
         </div>
         {/* Content */}

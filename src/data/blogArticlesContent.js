@@ -6046,18 +6046,18 @@ const blogArticlesContent = {
     ]
   },
 
-  // Artículo 22 - EL PUNTO DE PARTIDA
+  // Artículo 22 - Fabrica de percepciones
   'fabrica-percepciones-identidades-imaginadas': {
-    title: 'EL PUNTO DE PARTIDA: El deseo de habitar la imagen',
-    subtitle: 'Ensayo filosófico–psicoanalítico sobre la mirada, el deseo y la ilusión de realidad',
+    title: 'Fábrica de percepciones',
+    subtitle: 'Producción en serie de identidades imaginadas',
     author: 'Luis Virrueta',
     date: '07 Ene 2026',
     readTime: '15 min',
     category: 'philosophy',
-    tags: ['Psicoanálisis', 'Lacan', 'Sartre', 'Filosofía', 'Mirada', 'Deseo', 'Realidad'],
+    tags: ['Psicoanálisis', 'Jacques Lacan', 'Sigmund Freud', 'Jean-Paul Sartre', 'Walter Benjamin', 'Mirada', 'Deseo', 'Percepción'],
     gradient: 'from-indigo-600 via-purple-600 to-fuchsia-600',
-    extract: 'Iba por la carretera observando a unos trabajadores diminutos frente al paisaje inmenso que los contenía. Sentí una punzada de envidia: ellos pertenecían a ese mundo; yo solo lo miraba desde la distancia.',
-    metaDescription: 'Ensayo filosófico-psicoanalítico sobre la mirada, el deseo y la ilusión de realidad. ¿Deseas realmente lo que miras o deseas la emoción que tu fantasía construye sobre ello?',
+    extract: '¿Deseas lo que miras… o deseas la emoción que tu fantasía fabrica? Este ensayo explora cómo la mirada, el deseo y el Otro construyen percepciones que luego confundimos con realidad e identidad.',
+    metaDescription: 'Ensayo psicoanalítico y filosófico sobre la mirada, el deseo y la percepción: cómo el Otro y la fantasía fabrican realidades e identidades imaginadas.',
     heroImage: '/blog-compressed/blog-22-fabrica.webp',
     sections: [
       {

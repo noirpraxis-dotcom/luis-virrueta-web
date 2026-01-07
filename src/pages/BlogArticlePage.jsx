@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useInView } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles, Award, Check, Shield, AlertCircle, Copy } from 'lucide-react'
 import ReadingProgressBar from '../components/ReadingProgressBar'
@@ -8,6 +8,7 @@ import RelatedArticles from '../components/RelatedArticles'
 import NewsletterSignup from '../components/NewsletterSignup'
 import TableOfContents from '../components/TableOfContents'
 import ArticleSchema from '../components/ArticleSchema'
+import SEOHead from '../components/SEOHead'
 import { calculateReadTime, toISODate } from '../utils/blogHelpers'
 import { useLanguage } from '../context/LanguageContext'
 import { getArticleContent } from '../data/blogArticlesContent'
@@ -17,6 +18,35 @@ const HIDDEN_BLOG_SLUGS = new Set([
   'rebranding-vs-refresh-cuando-redisenar-marca-completa',
   'branding-con-inteligencia-artificial-2025-guia-completa'
 ])
+
+const CATEGORY_LABELS = {
+  philosophy: { es: 'Filosofía', en: 'Philosophy' },
+  psychoanalysis: { es: 'Psicoanálisis', en: 'Psychoanalysis' },
+  psychology: { es: 'Psicología', en: 'Psychology' },
+  perception: { es: 'Percepción', en: 'Perception' },
+  consciousness: { es: 'Conciencia', en: 'Consciousness' }
+}
+
+const normalizeCategoryId = (raw) => {
+  if (!raw) return ''
+  const v = String(raw).trim().toLowerCase()
+  if (!v) return ''
+
+  if (v === 'philosophy' || v === 'filosofía' || v === 'filosofia') return 'philosophy'
+  if (v === 'psychoanalysis' || v === 'psicoanálisis' || v === 'psicoanalisis') return 'psychoanalysis'
+  if (v === 'psychology' || v === 'psicología' || v === 'psicologia') return 'psychology'
+  if (v === 'perception' || v === 'percepción' || v === 'percepcion') return 'perception'
+  if (v === 'consciousness' || v === 'conciencia' || v === 'consciencia') return 'consciousness'
+
+  return v
+}
+
+const getCategoryLabel = (rawCategory, language) => {
+  const id = normalizeCategoryId(rawCategory)
+  const preset = CATEGORY_LABELS[id]
+  if (!preset) return String(rawCategory || '').trim() || (language === 'en' ? 'Article' : 'Artículo')
+  return language === 'en' ? preset.en : preset.es
+}
 
 // Función para obtener el artículo basado en el slug
 const getArticleBySlug = (slug) => {
@@ -2121,8 +2151,9 @@ const BlogArticlePage = () => {
         tags: Array.isArray(baseArticle.tags) && baseArticle.tags.length
           ? baseArticle.tags
           : cmsArticle.tags,
-        // IMPORTANTE: no permitir que Supabase borre la imagen legacy si viene vacío
-        image: hasCmsImage ? cmsArticle.image : baseArticle.image,
+        // IMPORTANTE: en artículos legacy, preferir SIEMPRE la imagen legacy (evita caer a /portada.webp
+        // cuando el CMS trae una URL incorrecta o genérica).
+        image: baseArticle.image || (hasCmsImage ? cmsArticle.image : baseArticle.image),
         // Mantener heroImage legacy si existe (no usar el null forzado)
         heroImage: baseArticle.heroImage || cmsArticle.heroImage || null,
         // Mantener accent legacy si existe; si no, usar el del CMS
@@ -2136,10 +2167,30 @@ const BlogArticlePage = () => {
   const accentKey = inferAccentKey(article)
   const accent = ACCENT_PRESETS[accentKey] || ACCENT_PRESETS.purple
 
-  const heroBackgroundImage =
-    resolvePublicImageUrl(article.image) ||
-    resolvePublicImageUrl(article.heroImage) ||
-    null
+  const heroImageCandidates = useMemo(() => {
+    const candidates = [
+      resolvePublicImageUrl(article.heroImage),
+      resolvePublicImageUrl(article.image),
+      // Last resort: site cover
+      '/portada.webp'
+    ].filter(Boolean)
+
+    // Unique preserve order
+    const seen = new Set()
+    return candidates.filter((u) => {
+      if (!u) return false
+      if (seen.has(u)) return false
+      seen.add(u)
+      return true
+    })
+  }, [article.heroImage, article.image])
+
+  const [heroCandidateIndex, setHeroCandidateIndex] = useState(0)
+  const heroBackgroundImage = heroImageCandidates[heroCandidateIndex] || null
+
+  useEffect(() => {
+    setHeroCandidateIndex(0)
+  }, [slug, heroImageCandidates.join('|')])
 
   if (!article) {
     return (
@@ -2165,6 +2216,11 @@ const BlogArticlePage = () => {
   const shareText = [shareTitle, shareSubtitle, shareExcerpt].filter(Boolean).join('\n\n')
   // No usar fallback genérico repetido: si no hay imagen, ArticleSchema ya cae a /portada.webp.
   const shareImage = heroBackgroundImage
+
+  const seoDescription = (() => {
+    const raw = article.metaDescription || shareExcerptRaw || article.sections?.[0]?.content || ''
+    return String(raw).replace(/\s+/g, ' ').trim().slice(0, 160)
+  })()
 
   const ShareDropdown = () => {
     const [open, setOpen] = useState(false)
@@ -2367,6 +2423,16 @@ const BlogArticlePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28">
+      <SEOHead
+        title={`${article.title} | Luis Virrueta`}
+        description={seoDescription}
+        image={shareImage}
+        url={`/blog/${slug}`}
+        type="article"
+        publishedTime={toISODate(article.date)}
+        author={article.author}
+        tags={article.tags}
+      />
       {/* Schema Markup para SEO */}
       <ArticleSchema 
         title={article.title}
@@ -2384,37 +2450,48 @@ const BlogArticlePage = () => {
       {/* Table of Contents flotante */}
       <TableOfContents sections={article.sections} />
 
-      {/* Hero Section - imagen como fondo + gradientes */}
-      <section ref={heroRef} className="relative py-20 lg:py-32 px-6 lg:px-20 overflow-hidden">
-        {/* Background image */}
+      {/* Hero Image Section - SOLO LA IMAGEN */}
+      <section ref={heroRef} className="relative h-[60vh] lg:h-[70vh] overflow-hidden">
+        {/* Background image (robusto con fallback) */}
         {heroBackgroundImage && (
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: `url(${heroBackgroundImage})`,
-                filter: 'saturate(0.9) contrast(1.05)'
+          <div className="absolute inset-0 overflow-hidden">
+            <img
+              src={heroBackgroundImage}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover object-center"
+              style={{ filter: 'saturate(1) contrast(1.08) brightness(1.05)' }}
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              onError={() => {
+                setHeroCandidateIndex((prev) => {
+                  const next = prev + 1
+                  return next < heroImageCandidates.length ? next : prev
+                })
               }}
             />
-            <div className="absolute inset-0 bg-black/45" />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/35 to-black/85" />
+
+            {/* Soft dark veil to keep transitions readable */}
+            <div className="absolute inset-0 bg-black/10" />
+            {/* Top fade (para que no corte tosco con el header) */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/25 to-transparent" />
+            {/* Bottom fade (para unir con la sección de abajo) */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
           </div>
         )}
+      </section>
 
-        {/* Background effects */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className={`absolute -top-24 -left-24 w-[28rem] h-[28rem] bg-gradient-to-br ${article.gradient} opacity-35 rounded-full blur-3xl mix-blend-screen`} />
-          <div className={`absolute -bottom-28 -right-28 w-[30rem] h-[30rem] bg-gradient-to-br ${article.gradient} opacity-28 rounded-full blur-3xl mix-blend-screen`} />
-          <div className={`absolute top-1/3 right-1/3 w-80 h-80 bg-gradient-to-br ${article.gradient} opacity-22 rounded-full blur-2xl mix-blend-screen`} />
-        </div>
-
-        <div className="relative z-10 max-w-4xl mx-auto">
-          {/* Back button + Copy + Compartir */}
+      {/* Navigation bar - después de la imagen */}
+      <section className="relative py-6 px-6 lg:px-20 border-b border-white/5">
+        {/* Gradiente superior para transición suave desde hero */}
+        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black via-black/60 to-transparent pointer-events-none" />
+        
+        <div className="relative max-w-4xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="flex items-center justify-between mb-8"
+            className="flex items-center justify-between"
           >
             <Link
               to="/blog"
@@ -2429,23 +2506,35 @@ const BlogArticlePage = () => {
               <ShareDropdown />
             </div>
           </motion.div>
+        </div>
+      </section>
 
+      {/* Article Header - título, metadata, etc */}
+      <section className="relative py-12 lg:py-16 px-6 lg:px-20">
+        {/* Glows behind title/meta (not behind the image) - PRO version */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className={`absolute top-8 left-1/2 -translate-x-1/2 w-[26rem] h-[26rem] bg-gradient-to-br ${article.gradient} opacity-60 rounded-full blur-[70px] mix-blend-screen`} />
+          <div className={`absolute top-40 left-10 w-[20rem] h-[20rem] bg-gradient-to-br ${article.gradient} opacity-45 rounded-full blur-[60px] mix-blend-screen`} />
+          <div className={`absolute top-44 right-8 w-[18rem] h-[18rem] bg-gradient-to-br ${article.gradient} opacity-40 rounded-full blur-[55px] mix-blend-screen`} />
+        </div>
+
+        <div className="relative z-10 max-w-4xl mx-auto">
           {/* Category badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.2 }}
             className="inline-block px-4 py-2 border border-white/20 rounded-full backdrop-blur-sm bg-white/5 mb-6"
           >
             <span className="text-xs lg:text-sm text-white/80 font-light tracking-wider uppercase">
-              {article.category}
+              {getCategoryLabel(article.category, currentLanguage)}
             </span>
           </motion.div>
 
           {/* Title */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
-            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
             className="text-4xl lg:text-6xl font-bold text-white mb-4 leading-tight"
             style={{ letterSpacing: '0.02em', fontWeight: 300 }}
@@ -2457,7 +2546,7 @@ const BlogArticlePage = () => {
           {article.subtitle && (
             <motion.p
               initial={{ opacity: 0, y: 20 }}
-              animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.4 }}
               className="text-lg lg:text-xl text-white/70 mb-8 leading-relaxed font-light"
             >
@@ -2468,7 +2557,7 @@ const BlogArticlePage = () => {
           {/* Meta info */}
           <motion.div
             initial={{ opacity: 0 }}
-            animate={isHeroInView ? { opacity: 1 } : {}}
+            animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
             className="flex flex-wrap items-center gap-6 text-white/60 mb-8"
           >
@@ -2489,7 +2578,7 @@ const BlogArticlePage = () => {
           {/* Tags */}
           <motion.div
             initial={{ opacity: 0 }}
-            animate={isHeroInView ? { opacity: 1 } : {}}
+            animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
             className="flex flex-wrap gap-2 mb-8"
           >
@@ -2503,18 +2592,7 @@ const BlogArticlePage = () => {
               </span>
             ))}
           </motion.div>
-
-          {/* (Compartir) ahora vive junto a “Copiar artículo” */}
         </div>
-
-        {/* Decorative line */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={isHeroInView ? { scaleX: 1 } : {}}
-          transition={{ duration: 1.2, delay: 0.8 }}
-          className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-px bg-gradient-to-r from-transparent ${accent.heroVia} to-transparent`}
-          style={{ width: '80%' }}
-        />
       </section>
 
       {/* Article Content */}

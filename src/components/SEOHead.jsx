@@ -11,8 +11,23 @@ const SEOHead = ({
   tags = []
 }) => {
   const siteUrl = 'https://luisvirrueta.com'
-  const fullUrl = url ? `${siteUrl}${url}` : siteUrl
-  const fullImage = image ? `${siteUrl}${image}` : `${siteUrl}/og-default.jpg`
+  const fullUrl = (() => {
+    if (!url) return siteUrl
+    if (typeof url !== 'string') return siteUrl
+    const trimmed = url.trim()
+    if (!trimmed) return siteUrl
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed
+    return `${siteUrl}${trimmed.startsWith('/') ? trimmed : `/${trimmed}`}`
+  })()
+
+  const fullImage = (() => {
+    if (!image) return `${siteUrl}/portada.webp`
+    if (typeof image !== 'string') return `${siteUrl}/portada.webp`
+    const trimmed = image.trim()
+    if (!trimmed) return `${siteUrl}/portada.webp`
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed
+    return `${siteUrl}${trimmed.startsWith('/') ? trimmed : `/${trimmed}`}`
+  })()
 
   return (
     <Helmet>
