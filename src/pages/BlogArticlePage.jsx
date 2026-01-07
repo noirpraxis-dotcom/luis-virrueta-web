@@ -2110,15 +2110,23 @@ const BlogArticlePage = () => {
     // Si existe artículo legacy (baseArticle), conservar su look (gradiente/categoría/tags)
     // pero permitir que Supabase reemplace el contenido y campos editables.
     if (cmsArticle && baseArticle) {
+      const hasCmsImage = typeof cmsArticle.image === 'string' && cmsArticle.image.trim().length > 0
+
       return {
         ...baseArticle,
         ...cmsArticle,
+        // Mantener look/metadata del legacy
         gradient: baseArticle.gradient || cmsArticle.gradient,
         category: baseArticle.category || cmsArticle.category,
         tags: Array.isArray(baseArticle.tags) && baseArticle.tags.length
           ? baseArticle.tags
           : cmsArticle.tags,
-        heroImage: null
+        // IMPORTANTE: no permitir que Supabase borre la imagen legacy si viene vacío
+        image: hasCmsImage ? cmsArticle.image : baseArticle.image,
+        // Mantener heroImage legacy si existe (no usar el null forzado)
+        heroImage: baseArticle.heroImage || cmsArticle.heroImage || null,
+        // Mantener accent legacy si existe; si no, usar el del CMS
+        accent: baseArticle.accent || cmsArticle.accent || null
       }
     }
 
@@ -2388,16 +2396,16 @@ const BlogArticlePage = () => {
                 filter: 'saturate(0.9) contrast(1.05)'
               }}
             />
-            <div className="absolute inset-0 bg-black/60" />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80" />
+            <div className="absolute inset-0 bg-black/45" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/35 to-black/85" />
           </div>
         )}
 
         {/* Background effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className={`absolute -top-24 -left-24 w-[28rem] h-[28rem] bg-gradient-to-br ${article.gradient} opacity-25 rounded-full blur-3xl mix-blend-screen`} />
-          <div className={`absolute -bottom-28 -right-28 w-[30rem] h-[30rem] bg-gradient-to-br ${article.gradient} opacity-20 rounded-full blur-3xl mix-blend-screen`} />
-          <div className={`absolute top-1/3 right-1/3 w-80 h-80 bg-gradient-to-br ${article.gradient} opacity-15 rounded-full blur-2xl mix-blend-screen`} />
+          <div className={`absolute -top-24 -left-24 w-[28rem] h-[28rem] bg-gradient-to-br ${article.gradient} opacity-35 rounded-full blur-3xl mix-blend-screen`} />
+          <div className={`absolute -bottom-28 -right-28 w-[30rem] h-[30rem] bg-gradient-to-br ${article.gradient} opacity-28 rounded-full blur-3xl mix-blend-screen`} />
+          <div className={`absolute top-1/3 right-1/3 w-80 h-80 bg-gradient-to-br ${article.gradient} opacity-22 rounded-full blur-2xl mix-blend-screen`} />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto">
