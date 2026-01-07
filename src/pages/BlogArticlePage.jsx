@@ -2502,7 +2502,7 @@ const BlogArticlePage = () => {
               src={heroBackgroundImage}
               alt=""
               className="absolute inset-0 w-full h-full object-cover object-center"
-              style={{ filter: 'saturate(1) contrast(1.08) brightness(1.05)' }}
+              style={{ filter: 'saturate(1.05) contrast(1.06) brightness(1.14)' }}
               loading="eager"
               fetchpriority="high"
               decoding="async"
@@ -2514,12 +2514,12 @@ const BlogArticlePage = () => {
               }}
             />
 
-            {/* Soft dark veil to keep transitions readable */}
-            <div className="absolute inset-0 bg-black/10" />
+            {/* Soft veil (muy ligero) */}
+            <div className="absolute inset-0 bg-black/5" />
             {/* Top fade (para que no corte tosco con el header) */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/25 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/15 to-transparent" />
             {/* Bottom fade (para unir con la sección de abajo) */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent" />
           </div>
         )}
       </section>
@@ -2556,6 +2556,10 @@ const BlogArticlePage = () => {
 
       {/* Article Header - título, metadata, etc */}
       <section className="relative py-12 lg:py-16 px-6 lg:px-20">
+        {/* Fades de unión (arriba/abajo) para que no se vea el corte */}
+        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black via-black/75 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black via-black/75 to-transparent pointer-events-none" />
+
         {/* Glows behind title/meta (not behind the image) - PRO version */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className={`absolute top-8 left-1/2 -translate-x-1/2 w-[26rem] h-[26rem] bg-gradient-to-br ${article.gradient} opacity-60 rounded-full blur-[70px] mix-blend-screen`} />
