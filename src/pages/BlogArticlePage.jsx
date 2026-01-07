@@ -2226,16 +2226,32 @@ const BlogArticlePage = () => {
   const shareUrl = `${window.location.origin}/blog/${slug}`
   const shareTitle = article.title
   const shareSubtitle = article.subtitle || ''
-  const shareExcerptRaw = article.excerpt || article.sections?.[0]?.content || ''
-  const shareExcerpt = String(shareExcerptRaw).replace(/\s+/g, ' ').trim().slice(0, 220)
-  const shareText = [shareTitle, shareSubtitle, shareExcerpt].filter(Boolean).join('\n\n')
+  // Usar el extract de la tarjeta (article.extract o article.excerpt)
+  const shareExcerptRaw = article.extract || article.excerpt || article.sections?.[0]?.content || ''
+  const shareExcerpt = String(shareExcerptRaw).replace(/\s+/g, ' ').trim().slice(0, 300)
+  
+  // Formato para WhatsApp: título en negritas, subtítulo en itálicas, extract normal
+  const shareTextFormatted = [
+    `*${shareTitle}*`,
+    shareSubtitle ? `_${shareSubtitle}_` : '',
+    shareExcerpt
+  ].filter(Boolean).join('\n\n')
+  
+  // Para redes sin formato markdown
+  const shareTextPlain = [shareTitle, shareSubtitle, shareExcerpt].filter(Boolean).join('\n\n')
+  
   // No usar fallback genérico repetido: si no hay imagen, ArticleSchema ya cae a /portada.webp.
   const shareImage = heroBackgroundImage
 
+  // SEO description con contexto del sitio
   const seoDescription = (() => {
     const raw = article.metaDescription || shareExcerptRaw || article.sections?.[0]?.content || ''
-    return String(raw).replace(/\s+/g, ' ').trim().slice(0, 160)
+    const cleanDesc = String(raw).replace(/\s+/g, ' ').trim()
+    return cleanDesc.slice(0, 160)
   })()
+  
+  // Título SEO con contexto del sitio
+  const seoTitle = shareSubtitle ? `${shareTitle} — ${shareSubtitle} | Luis Virrueta` : `${shareTitle} | Luis Virrueta`
 
   const ShareDropdown = () => {
     const [open, setOpen] = useState(false)
@@ -2285,13 +2301,16 @@ const BlogArticlePage = () => {
     }, [open])
 
     const encodedUrl = encodeURIComponent(shareUrl)
-    const encodedText = encodeURIComponent(`${shareText}\n\n${shareUrl}`)
+    // WhatsApp con formato markdown
+    const encodedTextWhatsApp = encodeURIComponent(`${shareTextFormatted}\n\n${shareUrl}`)
+    // Otras redes sin formato
+    const encodedText = encodeURIComponent(`${shareTextPlain}\n\n${shareUrl}`)
     const encodedTweet = encodeURIComponent(`${shareTitle}${shareSubtitle ? ` — ${shareSubtitle}` : ''}\n\n${shareExcerpt}`)
 
     const items = [
       {
         label: 'WhatsApp',
-        href: `https://wa.me/?text=${encodedText}`,
+        href: `https://wa.me/?text=${encodedTextWhatsApp}`,
         Icon: MessageCircle
       },
       {
@@ -2482,7 +2501,7 @@ const BlogArticlePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28">
       <SEOHead
-        title={`${article.title} | Luis Virrueta`}
+        title={seoTitle}
         description={seoDescription}
         image={shareImage}
         url={`/blog/${slug}`}

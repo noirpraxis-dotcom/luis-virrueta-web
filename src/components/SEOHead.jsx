@@ -11,6 +11,9 @@ const SEOHead = ({
   tags = []
 }) => {
   const siteUrl = 'https://luisvirrueta.com'
+  const siteName = 'Luis Virrueta - Psicólogo · Psicoanalista'
+  const siteDescription = 'Psicología, Psicoanálisis y Filosofía aplicada. Explorando la conciencia, el deseo y la identidad desde Lacan, Freud y la filosofía contemporánea.'
+  
   const fullUrl = (() => {
     if (!url) return siteUrl
     if (typeof url !== 'string') return siteUrl
@@ -43,7 +46,7 @@ const SEOHead = ({
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={fullImage} />
-      <meta property="og:site_name" content="Luis Virrueta" />
+      <meta property="og:site_name" content={siteName} />
       {publishedTime && <meta property="article:published_time" content={publishedTime} />}
       {author && <meta property="article:author" content={author} />}
       {tags.map((tag, i) => (
@@ -57,9 +60,10 @@ const SEOHead = ({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={fullImage} />
       <meta name="twitter:creator" content="@luisvirrueta" />
+      <meta name="twitter:site" content="@luisvirrueta" />
 
       {/* Additional SEO */}
-      <link rel="canonical" content={fullUrl} />
+      <link rel="canonical" href={fullUrl} />
       <meta name="robots" content="index, follow" />
       <meta name="language" content="Spanish" />
       <meta name="revisit-after" content="7 days" />
