@@ -174,6 +174,22 @@ const BlogPage = () => {
     // Cargar datos iniciales de blogs
     const initialBlogs = [
     {
+      id: 35,
+      title: 'EL PUNTO DE PARTIDA: El deseo de habitar la imagen',
+      excerpt: 'Iba por la carretera observando a unos trabajadores diminutos frente al paisaje inmenso que los contenía. Sentí una punzada de envidia: ellos pertenecían a ese mundo; yo solo lo miraba desde la distancia. Pero de pronto comprendí algo inquietante: ellos no estaban viviendo la escena que yo estaba viendo.',
+      category: 'philosophy',
+      author: 'Luis Virrueta',
+      date: '07 Ene 2026',
+      readTime: '15 min',
+      gradient: 'from-indigo-600/20 via-purple-600/20 to-fuchsia-600/20',
+      borderGradient: 'from-indigo-600 via-purple-600 to-fuchsia-600',
+      tags: ['Psicoanálisis', 'Lacan', 'Sartre', 'Filosofía', 'Mirada', 'Deseo', 'Realidad'],
+      slug: 'fabrica-percepciones-identidades-imaginadas',
+      image: '/blog-compressed/blog-22-fabrica.webp',
+      rating: 4.9,
+      featured: true
+    },
+    {
       id: 34,
       title: currentLanguage === 'en' 
         ? 'SU·DO·KU: The art of thinking by elimination'
