@@ -35,8 +35,9 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
   
   // Imagen
   const [imageFile, setImageFile] = useState(null)
-  const [imagePreview, setImagePreview] = useState(article?.image || null)
-  const [imageUrl, setImageUrl] = useState(article?.imageUrl || null)
+  const initialImage = article?.image_url || article?.imageUrl || article?.image || null
+  const [imagePreview, setImagePreview] = useState(initialImage)
+  const [imageUrl, setImageUrl] = useState(initialImage)
   const [uploadingImage, setUploadingImage] = useState(false)
   const [compressionStats, setCompressionStats] = useState(null) // { original, compressed, percentage }
   
@@ -314,6 +315,17 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
         text: publish ? '✅ Artículo publicado' : '✅ Artículo guardado como borrador' 
       })
 
+      // Mantener el estado local consistente para siguientes guardados
+      if (typeof finalImageUrl === 'string') {
+        setImageUrl(finalImageUrl)
+        if (imagePreview?.startsWith?.('blob:')) {
+          revokeImagePreview(imagePreview)
+        }
+        setImagePreview(finalImageUrl)
+        setImageFile(null)
+        setCompressionStats(null)
+      }
+
       // Notificar al componente padre
       setTimeout(() => {
         onSave?.(result)
@@ -457,6 +469,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                       onClick={() => {
                         setImageFile(null)
                         setImagePreview(null)
+                        setImageUrl(null)
                         setCompressionStats(null)
                         if (imagePreview.startsWith('blob:')) {
                           revokeImagePreview(imagePreview)
@@ -710,6 +723,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                 onChange={handleContentChange}
                 showAddBlockButton={false}
                 mode="document"
+                accent={accent}
               />
 
               {/* Acciones al final (para no tener que volver arriba) */}
