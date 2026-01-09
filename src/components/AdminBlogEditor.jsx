@@ -608,8 +608,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    style={{ colorScheme: 'dark' }}
-                    className="w-full px-4 py-2 bg-white/5 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all"
+                    className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all [&>option]:bg-gray-900 [&>option]:text-white"
                   >
                     <option value="philosophy">Filosofía</option>
                     <option value="psychology">Psicología</option>
@@ -631,15 +630,18 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                   <select
                     value={accent}
                     onChange={(e) => setAccent(e.target.value)}
-                    style={{ colorScheme: 'dark' }}
-                    className="w-full px-4 py-2 bg-white/5 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all"
+                    className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all [&>option]:bg-gray-900 [&>option]:text-white"
                   >
-                    <option value="purple">Morado (SU·DO·KU)</option>
-                    <option value="red">Rojo (P.U.T.A.)</option>
-                    <option value="indigo">Índigo</option>
-                    <option value="emerald">Esmeralda</option>
-                    <option value="amber">Ámbar</option>
-                    <option value="slate">Neutro</option>
+                    <option value="purple">🟣 Morado (SU·DO·KU)</option>
+                    <option value="red">🔴 Rojo (P.U.T.A.)</option>
+                    <option value="indigo">🔵 Índigo</option>
+                    <option value="emerald">🟢 Esmeralda</option>
+                    <option value="amber">🟡 Ámbar</option>
+                    <option value="blue">💙 Azul</option>
+                    <option value="cyan">🩵 Cian</option>
+                    <option value="pink">🩷 Rosa</option>
+                    <option value="orange">🟠 Naranja</option>
+                    <option value="slate">⚪ Neutro</option>
                   </select>
                 </div>
 
@@ -651,8 +653,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                   <select
                     value={language}
                     onChange={(e) => setLanguage(e.target.value)}
-                    style={{ colorScheme: 'dark' }}
-                    className="w-full px-4 py-2 bg-white/5 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all"
+                    className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all [&>option]:bg-gray-900 [&>option]:text-white"
                   >
                     <option value="es">Español</option>
                     <option value="en">English</option>

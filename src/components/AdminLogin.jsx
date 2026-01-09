@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Lock, Eye, EyeOff, LogIn, AlertCircle, Sparkles } from 'lucide-react'
+import { Lock, Eye, EyeOff, LogIn, AlertCircle, Sparkles, X } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 export default function AdminLogin({ onClose }) {
@@ -32,7 +32,6 @@ export default function AdminLogin({ onClose }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
-      onClick={onClose}
     >
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
@@ -41,6 +40,15 @@ export default function AdminLogin({ onClose }) {
         onClick={(e) => e.stopPropagation()}
         className="bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-8 max-w-md w-full relative overflow-hidden"
       >
+        {/* Decoración de fondo */}
+        {/* Botón Cerrar */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-20 p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-gray-700 hover:border-gray-600 text-gray-400 hover:text-white transition-all group"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
         {/* Decoración de fondo */}
         <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-fuchsia-500/5 pointer-events-none" />
         <div className="absolute -top-20 -right-20 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl" />

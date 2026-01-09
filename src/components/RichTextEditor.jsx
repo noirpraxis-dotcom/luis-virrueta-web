@@ -27,6 +27,7 @@ export default function RichTextEditor({
   const editorRootRef = useRef(null)
   const docEditorRef = useRef(null)
   const docSeededRef = useRef(false)
+  const docInputTimeoutRef = useRef(null)
 
   // History for undo/redo across blocks operations
   const historyRef = useRef({ stack: [initialContent], index: 0 })
@@ -140,32 +141,48 @@ export default function RichTextEditor({
   useEffect(() => {
     if (mode !== 'document') return
 
+    let timeoutId = null
+
     const onSelectionChange = () => {
-      const selection = window.getSelection()
-      if (!isSelectionInsideDocEditor(selection)) {
-        setShowFloatingToolbar(false)
-        return
-      }
+      // Debounce para evitar problemas de rendimiento
+      if (timeoutId) clearTimeout(timeoutId)
+      
+      timeoutId = setTimeout(() => {
+        const selection = window.getSelection()
+        if (!isSelectionInsideDocEditor(selection)) {
+          setShowFloatingToolbar(false)
+          return
+        }
 
-      const text = selection?.toString() || ''
-      if (!text.trim()) {
-        setShowFloatingToolbar(false)
-        return
-      }
+        const text = selection?.toString() || ''
+        if (!text.trim() || text.length < 1) {
+          setShowFloatingToolbar(false)
+          return
+        }
 
-      const range = selection.getRangeAt(0)
-      const rect = range.getBoundingClientRect()
+        try {
+          const range = selection.getRangeAt(0)
+          const rect = range.getBoundingClientRect()
 
-      setSelectedText({ start: 0, end: 0, blockId: 'document', text })
-      setToolbarPosition({
-        top: rect.top + window.scrollY - 56,
-        left: rect.left + rect.width / 2
-      })
-      setShowFloatingToolbar(true)
+          setSelectedText({ start: 0, end: 0, blockId: 'document', text })
+          setToolbarPosition({
+            top: rect.top + window.scrollY - 60,
+            left: rect.left + rect.width / 2
+          })
+          setShowFloatingToolbar(true)
+        } catch (e) {
+          // Si hay error en getBoundingClientRect, ignorar
+          console.warn('Error getting selection rect:', e)
+          setShowFloatingToolbar(false)
+        }
+      }, 100) // Pequeño delay para estabilidad
     }
 
     document.addEventListener('selectionchange', onSelectionChange)
-    return () => document.removeEventListener('selectionchange', onSelectionChange)
+    return () => {
+      document.removeEventListener('selectionchange', onSelectionChange)
+      if (timeoutId) clearTimeout(timeoutId)
+    }
   }, [mode])
 
   /**
@@ -199,12 +216,13 @@ export default function RichTextEditor({
     }
 
     const html = []
+    let sectionCounter = 0
 
     const push = (h) => html.push(h)
     const listItems = []
     const flushList = () => {
       if (!listItems.length) return
-      push(`<ul class="my-6 space-y-3">${listItems.join('')}</ul>`)
+      push(`<ul class="my-8 space-y-4">${listItems.join('')}</ul>`)
       listItems.length = 0
     }
 
@@ -214,48 +232,80 @@ export default function RichTextEditor({
       if (!content && type !== 'questions') continue
 
       if (type === 'list') {
-        listItems.push(`<li class="flex gap-3"><span class="mt-2 h-2 w-2 rounded-full bg-purple-400 flex-shrink-0"></span><div class="text-white/75">${inline(content)}</div></li>`)
+        listItems.push(`<li class="flex gap-4 items-start"><span class="mt-2.5 h-2.5 w-2.5 rounded-full bg-gradient-to-br from-purple-400 to-fuchsia-500 flex-shrink-0 shadow-lg shadow-purple-500/50"></span><div class="text-white/80 text-lg leading-relaxed">${inline(content)}</div></li>`)
         continue
       }
 
       flushList()
 
       if (type === 'heading') {
-        push(`<h2 class="mt-10 mb-4 text-2xl md:text-3xl font-light text-white">${inline(content)}</h2>`)
+        sectionCounter++
+        const level = b?.level || 'h2'
+        const sectionNum = String(sectionCounter).padStart(2, '0')
+        
+        // Estilo con caja y número de sección como en el artículo final
+        push(
+          `<div class="mb-12 mt-16 relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden" data-section="${sectionCounter}">` +
+          `<div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-fuchsia-500 to-purple-500"></div>` +
+          `<div class="inline-flex items-center gap-2 mb-4 px-4 py-1.5 bg-purple-500/10 border border-purple-500/30 rounded-full">` +
+          `<span class="text-xs font-mono text-purple-300 tracking-wider">SECCIÓN ${sectionNum}</span>` +
+          `</div>` +
+          `<h2 class="text-3xl lg:text-4xl font-light text-white leading-tight">${inline(content)}</h2>` +
+          `</div>`
+        )
         continue
       }
 
       if (type === 'highlight') {
-        push(`<div class="my-8 rounded-3xl border border-purple-500/20 bg-purple-500/10 p-8"><p class="text-lg md:text-xl text-white italic leading-relaxed">${inline(content)}</p></div>`)
+        // Cita destacada con autor
+        const hasAuthor = content.includes('—') || content.includes('–')
+        if (hasAuthor) {
+          const parts = content.split(/[—–]/)
+          const quote = parts[0]?.trim() || content
+          const author = parts[1]?.trim() || ''
+          
+          push(
+            `<div class="my-16 relative bg-gradient-to-br from-purple-500/15 via-fuchsia-500/10 to-purple-500/15 backdrop-blur-xl border-2 border-purple-500/30 rounded-3xl p-10 lg:p-12 overflow-hidden shadow-2xl shadow-purple-500/20">` +
+            `<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 rounded-bl-full"></div>` +
+            `<div class="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-fuchsia-500/20 to-purple-500/20 rounded-tr-full"></div>` +
+            `<div class="absolute top-8 left-8 text-6xl text-purple-400/30 font-serif leading-none">"</div>` +
+            `<blockquote class="relative text-2xl lg:text-3xl text-white font-light italic leading-relaxed mb-6 pl-8">${inline(quote)}</blockquote>` +
+            `<div class="h-px bg-gradient-to-r from-transparent via-purple-400/30 to-transparent mb-4"></div>` +
+            `<cite class="block text-sm text-purple-300/80 not-italic font-normal tracking-wide">— ${inline(author)}</cite>` +
+            `</div>`
+          )
+        } else {
+          push(`<div class="my-10 rounded-3xl border-2 border-purple-500/30 bg-gradient-to-br from-purple-500/15 via-fuchsia-500/10 to-purple-500/15 p-10 shadow-2xl shadow-purple-500/20"><p class="text-xl md:text-2xl text-white font-light italic leading-relaxed tracking-wide">${inline(content)}</p></div>`)
+        }
         continue
       }
 
       if (type === 'questions') {
-        const title = String(b?.title || 'Preguntas incómodas').trim() || 'Preguntas incómodas'
+        const title = String(b?.title || '❓ Preguntas psicoanalíticas').trim() || '❓ Preguntas psicoanalíticas'
         const items = String(b?.content || '')
           .split('\n')
           .map((l) => String(l || '').trim())
           .filter(Boolean)
 
         const li = items
-          .map((q) => `<li class="flex gap-3 text-white/80"><span class="mt-2 h-2 w-2 rounded-full bg-gradient-to-br from-purple-400 to-fuchsia-400 flex-shrink-0"></span><div>${inline(q)}</div></li>`)
+          .map((q) => `<li class="flex gap-4 items-start text-white/85"><span class="mt-2.5 h-2.5 w-2.5 rounded-full bg-gradient-to-br from-fuchsia-400 to-purple-500 flex-shrink-0 shadow-lg shadow-fuchsia-500/50"></span><div class="text-lg leading-relaxed">${inline(q)}</div></li>`)
           .join('')
 
         push(
-          `<section data-rte-type="questions" class="my-10 rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-500/10 via-fuchsia-500/10 to-purple-500/10 p-8">` +
-          `<h3 class="text-xl md:text-2xl font-bold text-white mb-4" data-rte-role="questions-title">${inline(title)}</h3>` +
-          `<ul class="space-y-3" data-rte-role="questions-items">${li}</ul>` +
+          `<section data-rte-type="questions" class="my-12 rounded-3xl border-2 border-purple-500/30 bg-gradient-to-br from-purple-500/15 via-fuchsia-500/15 to-purple-500/15 p-10 shadow-2xl shadow-purple-500/20">` +
+          `<h3 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-300 via-fuchsia-300 to-purple-300 bg-clip-text text-transparent mb-6" data-rte-role="questions-title">${inline(title)}</h3>` +
+          `<ul class="space-y-4" data-rte-role="questions-items">${li}</ul>` +
           `</section>`
         )
         continue
       }
 
       // paragraph
-      push(`<p class="my-4 text-base md:text-lg text-white/70 leading-relaxed">${inline(content)}</p>`)
+      push(`<p class="my-6 text-lg md:text-xl text-white/75 leading-relaxed tracking-wide">${inline(content)}</p>`)
     }
 
     flushList()
-    return html.join('') || `<p class="text-white/50">Escribe aquí…</p>`
+    return html.join('') || `<p class="text-white/40 text-xl italic">Escribe aquí o pega tu contenido…</p>`
   }
 
   const htmlToBlocks = (rootEl) => {
@@ -271,6 +321,27 @@ export default function RichTextEditor({
     const children = Array.from(rootEl.children || [])
     for (const el of children) {
       const tag = el.tagName?.toLowerCase?.() || ''
+
+      // Detectar sección con número (div con data-section)
+      if (tag === 'div' && el.hasAttribute('data-section')) {
+        const h2El = el.querySelector('h2')
+        const t = String(h2El?.textContent || '').trim()
+        if (t) next.push({ id: `block-${Date.now()}-${next.length}`, type: 'heading', level: 'h2', content: t })
+        continue
+      }
+
+      // Detectar blockquote complejo (cita con autor)
+      if (tag === 'div' && el.querySelector('blockquote')) {
+        const quoteEl = el.querySelector('blockquote')
+        const citeEl = el.querySelector('cite')
+        let content = String(quoteEl?.textContent || '').trim()
+        if (citeEl) {
+          const author = String(citeEl.textContent || '').replace(/^[—–]\s*/, '').trim()
+          content = content + '\n' + author
+        }
+        if (content) next.push({ id: `block-${Date.now()}-${next.length}`, type: 'highlight', content })
+        continue
+      }
 
       if (tag === 'h1' || tag === 'h2' || tag === 'h3') {
         const t = String(el.textContent || '').trim()
@@ -346,25 +417,42 @@ export default function RichTextEditor({
 
     const nextHtml = blocksToHtml(blocks)
 
+    // Primera vez: seed inicial
     if (!docSeededRef.current) {
       host.innerHTML = nextHtml
       docSeededRef.current = true
       return
     }
 
-    // If blocks were updated externally (e.g., load different article) while not focused,
-    // reflect it in the editor.
-    if (!isDocEditorFocused()) {
+    // NO actualizar el HTML si el usuario está escribiendo
+    // El DOM del contentEditable es la fuente de verdad mientras edita
+    // Solo actualizar si viene de fuera (ej: cambiar de artículo)
+    const isFocused = isDocEditorFocused()
+    if (!isFocused) {
       host.innerHTML = nextHtml
     }
+    // Si está enfocado, NO tocar el HTML para evitar perder el cursor
   }, [mode, blocks])
 
   const handleDocInput = () => {
-    syncBlocksFromDocDom('doc:typing')
+    // Limpiar timeout anterior
+    if (docInputTimeoutRef.current) {
+      clearTimeout(docInputTimeoutRef.current)
+    }
+    
+    // Sincronizar con debounce para ver cambios en tiempo real sin loops
+    docInputTimeoutRef.current = setTimeout(() => {
+      syncBlocksFromDocDom('doc:typing')
+    }, 500)
   }
 
   const handleDocPaste = () => {
     setTimeout(() => syncBlocksFromDocDom('doc:paste'), 0)
+  }
+  
+  // Sincronizar bloques cuando pierde el foco (para guardar cambios)
+  const handleDocBlur = () => {
+    syncBlocksFromDocDom('doc:blur')
   }
 
   /**
@@ -632,23 +720,76 @@ export default function RichTextEditor({
       }
 
       if (action === 'heading') {
+        // Contar las secciones actuales para auto-numerar
+        const currentSections = docEditorRef.current?.querySelectorAll('[data-section]').length || 0
+        const nextNum = currentSections + 1
+        const sectionNum = String(nextNum).padStart(2, '0')
+        
+        const wrapper = document.createElement('div')
+        wrapper.setAttribute('data-section', nextNum)
+        wrapper.className = 'mb-12 mt-16 relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden'
+        
+        const topBar = document.createElement('div')
+        topBar.className = 'absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-fuchsia-500 to-purple-500'
+        
+        const badge = document.createElement('div')
+        badge.className = 'inline-flex items-center gap-2 mb-4 px-4 py-1.5 bg-purple-500/10 border border-purple-500/30 rounded-full'
+        const badgeText = document.createElement('span')
+        badgeText.className = 'text-xs font-mono text-purple-300 tracking-wider'
+        badgeText.textContent = `SECCIÓN ${sectionNum}`
+        badge.appendChild(badgeText)
+        
         const h2 = document.createElement('h2')
-        h2.className = 'mt-10 mb-4 text-2xl md:text-3xl font-light text-white'
+        h2.className = 'text-3xl lg:text-4xl font-light text-white leading-tight'
         h2.textContent = text.replace(/\s+/g, ' ').trim()
-        insertBlockElement(h2)
+        
+        wrapper.appendChild(topBar)
+        wrapper.appendChild(badge)
+        wrapper.appendChild(h2)
+        
+        insertBlockElement(wrapper)
         syncBlocksFromDocDom('doc:format')
         setShowFloatingToolbar(false)
         return
       }
 
       if (action === 'highlight') {
-        const wrap = document.createElement('div')
-        wrap.className = 'my-8 rounded-3xl border border-purple-500/20 bg-purple-500/10 p-8'
-        const p = document.createElement('p')
-        p.className = 'text-lg md:text-xl text-white italic leading-relaxed'
-        p.textContent = text.replace(/\s+/g, ' ').trim()
-        wrap.appendChild(p)
-        insertBlockElement(wrap)
+        // Detectar si tiene autor (líneas múltiples donde la última es el autor)
+        const lines = text.split('\n').map(l => l.trim()).filter(Boolean)
+        const hasAuthor = lines.length > 1 && lines[lines.length - 1].length < 50
+        
+        const wrapper = document.createElement('div')
+        wrapper.className = 'my-16 relative bg-gradient-to-br from-purple-500/15 via-fuchsia-500/10 to-purple-500/15 backdrop-blur-xl border-2 border-purple-500/30 rounded-3xl p-10 lg:p-12 overflow-hidden shadow-2xl shadow-purple-500/20'
+        
+        // Decoraciones
+        const cornerA = document.createElement('div')
+        cornerA.className = 'absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 rounded-bl-full'
+        const cornerB = document.createElement('div')
+        cornerB.className = 'absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-fuchsia-500/20 to-purple-500/20 rounded-tr-full'
+        const quoteIcon = document.createElement('div')
+        quoteIcon.className = 'absolute top-8 left-8 text-6xl text-purple-400/30 font-serif leading-none'
+        quoteIcon.textContent = '"'
+        
+        const blockquote = document.createElement('blockquote')
+        blockquote.className = 'relative text-2xl lg:text-3xl text-white font-light italic leading-relaxed mb-6 pl-8'
+        blockquote.textContent = hasAuthor ? lines.slice(0, -1).join(' ') : text.trim()
+        
+        wrapper.appendChild(cornerA)
+        wrapper.appendChild(cornerB)
+        wrapper.appendChild(quoteIcon)
+        wrapper.appendChild(blockquote)
+        
+        if (hasAuthor) {
+          const divider = document.createElement('div')
+          divider.className = 'h-px bg-gradient-to-r from-transparent via-purple-400/30 to-transparent mb-4'
+          const cite = document.createElement('cite')
+          cite.className = 'block text-sm text-purple-300/80 not-italic font-normal tracking-wide'
+          cite.textContent = '— ' + lines[lines.length - 1]
+          wrapper.appendChild(divider)
+          wrapper.appendChild(cite)
+        }
+        
+        insertBlockElement(wrapper)
         syncBlocksFromDocDom('doc:format')
         setShowFloatingToolbar(false)
         return
@@ -657,16 +798,16 @@ export default function RichTextEditor({
       if (action === 'questions') {
         const section = document.createElement('section')
         section.setAttribute('data-rte-type', 'questions')
-        section.className = 'my-10 rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-500/10 via-fuchsia-500/10 to-purple-500/10 p-8'
+        section.className = 'my-12 rounded-3xl border-2 border-purple-500/30 bg-gradient-to-br from-purple-500/15 via-fuchsia-500/15 to-purple-500/15 p-10 shadow-2xl shadow-purple-500/20'
 
         const title = document.createElement('h3')
         title.setAttribute('data-rte-role', 'questions-title')
-        title.className = 'text-xl md:text-2xl font-bold text-white mb-4'
-        title.textContent = 'Preguntas incómodas'
+        title.className = 'text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-300 via-fuchsia-300 to-purple-300 bg-clip-text text-transparent mb-6'
+        title.textContent = '❓ Preguntas psicoanalíticas'
 
         const ul = document.createElement('ul')
         ul.setAttribute('data-rte-role', 'questions-items')
-        ul.className = 'space-y-3'
+        ul.className = 'space-y-4'
 
         String(text || '')
           .split('\n')
@@ -674,10 +815,11 @@ export default function RichTextEditor({
           .filter(Boolean)
           .forEach((q) => {
             const li = document.createElement('li')
-            li.className = 'flex gap-3 text-white/80'
+            li.className = 'flex gap-4 items-start text-white/85'
             const dot = document.createElement('span')
-            dot.className = 'mt-2 h-2 w-2 rounded-full bg-gradient-to-br from-purple-400 to-fuchsia-400 flex-shrink-0'
+            dot.className = 'mt-2.5 h-2.5 w-2.5 rounded-full bg-gradient-to-br from-fuchsia-400 to-purple-500 flex-shrink-0 shadow-lg shadow-fuchsia-500/50'
             const div = document.createElement('div')
+            div.className = 'text-lg leading-relaxed'
             div.textContent = q
             li.appendChild(dot)
             li.appendChild(div)
@@ -826,18 +968,31 @@ También puedes usar el botón + para agregar bloques específicos."
 
       {/* Modo documento (selección continua) */}
       {mode === 'document' && (
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm shadow-2xl overflow-hidden">
-          <div className="p-4 md:p-6">
+        <div className="rounded-3xl border-2 border-purple-500/20 bg-gradient-to-br from-gray-900/80 via-black/80 to-gray-900/80 backdrop-blur-xl shadow-2xl shadow-purple-500/10 overflow-hidden">
+          <div className="p-8 md:p-12">
+            <div className="mb-6 flex items-center gap-3 pb-6 border-b border-purple-500/20">
+              <Eye className="w-5 h-5 text-purple-400" />
+              <span className="text-purple-300 font-medium">Vista Previa en Vivo</span>
+              <span className="text-gray-500 text-sm">- Se ve exactamente como el artículo final</span>
+            </div>
             <div
               ref={docEditorRef}
               contentEditable
               suppressContentEditableWarning
               onInput={handleDocInput}
               onPaste={handleDocPaste}
-              className="min-h-[420px] outline-none text-white selection:bg-purple-500/30 selection:text-white"
+              onBlur={handleDocBlur}
+              className="min-h-[500px] outline-none text-white selection:bg-purple-500/40 selection:text-white focus:ring-0 max-w-4xl mx-auto"
+              style={{
+                caretColor: '#a78bfa'
+              }}
             />
-            <div className="mt-3 text-xs text-white/40">
-              Tip: selecciona varias líneas y usa la barra flotante (Título / Destacar / Preguntas).
+            <div className="mt-8 pt-6 border-t border-purple-500/20 flex items-start gap-3 text-sm text-gray-400">
+              <Sparkles className="w-4 h-4 text-purple-400 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="mb-2"><strong className="text-purple-300">Tip:</strong> Selecciona texto para usar la barra de formato flotante</p>
+                <p className="text-xs text-gray-500">• Usa **texto** para negrita • Usa *texto* para cursiva • Los títulos y listas se detectan automáticamente</p>
+              </div>
             </div>
           </div>
         </div>
