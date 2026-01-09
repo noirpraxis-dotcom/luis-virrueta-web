@@ -74,9 +74,7 @@ export default function RichTextEditor({
 
   // Undo/Redo (Ctrl/Cmd+Z / Ctrl+Y / Ctrl+Shift+Z)
   const handleKeyDownCapture = (e) => {
-    // In document mode, let the browser handle native undo/redo inside the editor
-    if (mode === 'document' && docEditorRef.current && docEditorRef.current.contains(e.target)) return
-
+    // En modo document también permitir undo/redo personalizado
     const isMac = navigator.platform.toLowerCase().includes('mac')
     const isMod = isMac ? e.metaKey : e.ctrlKey
 
@@ -97,14 +95,24 @@ export default function RichTextEditor({
     if (isUndo) {
       if (state.index <= 0) return
       state.index -= 1
-      setBlocks(state.stack[state.index] || [])
+      const prevBlocks = state.stack[state.index] || []
+      setBlocks(prevBlocks)
+      // Actualizar el HTML en modo document
+      if (mode === 'document' && docEditorRef.current) {
+        docEditorRef.current.innerHTML = blocksToHtml(prevBlocks)
+      }
       return
     }
 
     if (isRedo) {
       if (state.index >= state.stack.length - 1) return
       state.index += 1
-      setBlocks(state.stack[state.index] || [])
+      const nextBlocks = state.stack[state.index] || []
+      setBlocks(nextBlocks)
+      // Actualizar el HTML en modo document
+      if (mode === 'document' && docEditorRef.current) {
+        docEditorRef.current.innerHTML = blocksToHtml(nextBlocks)
+      }
     }
   }
 
@@ -155,7 +163,8 @@ export default function RichTextEditor({
         }
 
         const text = selection?.toString() || ''
-        if (!text.trim() || text.length < 1) {
+        // Mínimo 1 carácter para mostrar la barra
+        if (!text || text.trim().length < 1) {
           setShowFloatingToolbar(false)
           return
         }
@@ -175,7 +184,7 @@ export default function RichTextEditor({
           console.warn('Error getting selection rect:', e)
           setShowFloatingToolbar(false)
         }
-      }, 100) // Pequeño delay para estabilidad
+      }, 50) // Reducido a 50ms para respuesta más rápida
     }
 
     document.addEventListener('selectionchange', onSelectionChange)
