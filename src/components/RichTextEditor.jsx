@@ -19,7 +19,8 @@ export default function RichTextEditor({
   showAddBlockButton = true,
   mode = 'blocks',
   accent = 'purple',
-  documentVariant = 'editor'
+  documentVariant = 'editor',
+  sectionIcon = '👑'
 }) {
   const [blocks, setBlocks] = useState(initialContent)
   const [selectedBlockId, setSelectedBlockId] = useState(null)
@@ -33,6 +34,8 @@ export default function RichTextEditor({
   const docSeededRef = useRef(false)
   const docInputTimeoutRef = useRef(null)
   const docSelectionRangeRef = useRef(null)
+  const toolbarInteractingRef = useRef(false)
+  const toolbarInteractTimeoutRef = useRef(null)
 
   const DOC_PLACEHOLDER_TEXT = 'Escribe aquí o pega tu contenido…'
   const QUESTIONS_MARKER_CLASS = 'marker:text-emerald-400'
@@ -263,6 +266,7 @@ export default function RichTextEditor({
       if (timeoutId) clearTimeout(timeoutId)
       
       timeoutId = setTimeout(() => {
+        if (toolbarInteractingRef.current) return
         updateToolbarFromDocSelection(window.getSelection())
       }, 50) // Reducido a 50ms para respuesta más rápida
     }
@@ -350,6 +354,7 @@ export default function RichTextEditor({
         sectionCounter++
         const level = b?.level || 'h2'
         const sectionNum = String(sectionCounter).padStart(2, '0')
+        const icon = String(b?.icon || sectionIcon || '').trim()
         const tocIdAttr = mode === 'document' && documentVariant === 'article'
           ? ` id="section-${sectionCounter - 1}"`
           : ''
@@ -359,6 +364,7 @@ export default function RichTextEditor({
           `<div${tocIdAttr} class="mb-12 mt-16 relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden" data-section="${sectionCounter}">` +
           `<div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accentPreset.headingTopBar}"></div>` +
           `<div class="inline-flex items-center gap-2 mb-4 px-4 py-1.5 ${accentPreset.badgeBg} border ${accentPreset.badgeBorder} rounded-full">` +
+          (icon ? `<span data-rte-role="section-icon" class="text-base leading-none">${esc(icon)}</span>` : '') +
           `<span class="text-xs font-mono ${accentPreset.badgeText} tracking-wider">SECCIÓN ${sectionNum}</span>` +
           `</div>` +
           `<h2 class="text-3xl lg:text-4xl font-light text-white leading-tight">${inline(content)}</h2>` +
@@ -567,7 +573,17 @@ export default function RichTextEditor({
       if (tag === 'div' && el.hasAttribute('data-section')) {
         const h2El = el.querySelector('h2')
         const t = String(h2El?.textContent || '').trim()
-        if (t) next.push({ id: `block-${Date.now()}-${next.length}`, type: 'heading', level: 'h2', content: t })
+        const iconEl = el.querySelector('[data-rte-role="section-icon"]')
+        const icon = String(iconEl?.textContent || '').trim()
+        if (t) {
+          next.push({
+            id: `block-${Date.now()}-${next.length}`,
+            type: 'heading',
+            level: 'h2',
+            content: t,
+            icon: icon || undefined
+          })
+        }
         continue
       }
 
@@ -1286,6 +1302,7 @@ export default function RichTextEditor({
       }
 
       if (action === 'delete') {
+        // "Eliminar" = quitar el formato del contenedor, dejando el texto normal.
         const deletableTypes = new Set(['heading', 'highlight', 'questions', 'reflection', 'subsection'])
 
         const isDeletableTopLevel = (n) => {
@@ -1297,6 +1314,94 @@ export default function RichTextEditor({
           if (deletableTypes.has(rteType)) return true
           if (rteRole === 'title' || rteRole === 'subtitle') return true
           return false
+        }
+
+        const stripQuotes = (s) => {
+          const t = String(s || '').trim()
+          if ((t.startsWith('"') && t.endsWith('"')) || (t.startsWith('“') && t.endsWith('”'))) {
+            return t.slice(1, -1).trim()
+          }
+          return t
+        }
+
+        const makeParagraph = () => {
+          const p = document.createElement('p')
+          p.className = 'my-6 text-lg md:text-xl text-white/75 leading-relaxed tracking-wide'
+          return p
+        }
+
+        const paragraphFromLines = (lines) => {
+          const p = makeParagraph()
+          const cleaned = (lines || []).map((l) => String(l || '').trim()).filter(Boolean)
+          cleaned.forEach((line, idx) => {
+            if (idx) p.appendChild(document.createElement('br'))
+            p.appendChild(document.createTextNode(line))
+          })
+          return p
+        }
+
+        const unwrapNode = (node) => {
+          const el = node
+          const rteType = String(el.getAttribute?.('data-rte-type') || '')
+          const rteRole = String(el.getAttribute?.('data-rte-role') || '')
+
+          // Title/subtitle
+          if (rteRole === 'title' || rteRole === 'subtitle') {
+            const p = makeParagraph()
+            p.textContent = String(el.textContent || '').trim()
+            el.replaceWith(p)
+            return
+          }
+
+          // Section heading wrapper
+          if (el.hasAttribute?.('data-section')) {
+            const h2 = el.querySelector('h2')
+            const p = makeParagraph()
+            p.textContent = String(h2?.textContent || el.textContent || '').trim()
+            el.replaceWith(p)
+            return
+          }
+
+          if (rteType === 'highlight') {
+            const quote = stripQuotes(String(el.querySelector('blockquote')?.textContent || '').trim())
+            const cite = String(el.querySelector('cite')?.textContent || '').replace(/^[—–]\s*/, '').trim()
+            const lines = []
+            if (quote) lines.push(quote)
+            if (cite) lines.push(`— ${cite}`)
+            el.replaceWith(paragraphFromLines(lines.length ? lines : [String(el.textContent || '').trim()]))
+            return
+          }
+
+          if (rteType === 'questions') {
+            const title = String(el.querySelector('[data-rte-role="questions-title"]')?.textContent || '').trim()
+            const items = Array.from(el.querySelectorAll('li')).map((li) => String(li.textContent || '').trim()).filter(Boolean)
+            const lines = []
+            if (title) lines.push(title)
+            items.forEach((q) => lines.push(`- ${q}`))
+            el.replaceWith(paragraphFromLines(lines.length ? lines : [String(el.textContent || '').trim()]))
+            return
+          }
+
+          if (rteType === 'reflection') {
+            const pEl = el.querySelector('p')
+            const text = stripQuotes(String(pEl?.textContent || el.textContent || '').trim())
+            const p = makeParagraph()
+            p.textContent = text
+            el.replaceWith(p)
+            return
+          }
+
+          if (rteType === 'subsection') {
+            const n = String(el.querySelector('[data-rte-role="subsection-number"]')?.textContent || '').trim()
+            const title = String(el.querySelector('h3')?.textContent || '').trim()
+            const body = String(el.querySelector('p')?.textContent || '').trim()
+            const lines = []
+            const header = [n, title].filter(Boolean).join(' ')
+            if (header) lines.push(header)
+            if (body) lines.push(body)
+            el.replaceWith(paragraphFromLines(lines.length ? lines : [String(el.textContent || '').trim()]))
+            return
+          }
         }
 
         let topLevelNodes = []
@@ -1320,18 +1425,14 @@ export default function RichTextEditor({
 
         targets.forEach((n) => {
           try {
-            n.remove?.()
+            unwrapNode(n)
           } catch {
-            try {
-              host.removeChild(n)
-            } catch {
-              // ignore
-            }
+            // ignore
           }
         })
 
         cleanupDocDom(host)
-        syncBlocksFromDocDom('doc:delete')
+        syncBlocksFromDocDom('doc:unformat')
         setShowFloatingToolbar(false)
         return
       }
@@ -1354,6 +1455,15 @@ export default function RichTextEditor({
         const badge = document.createElement('div')
         badge.setAttribute('data-rte-role', 'section-badge')
         badge.className = `inline-flex items-center gap-2 mb-4 px-4 py-1.5 ${accentPreset.badgeBg} border ${accentPreset.badgeBorder} rounded-full`
+
+        const icon = String(sectionIcon || '').trim()
+        if (icon) {
+          const iconSpan = document.createElement('span')
+          iconSpan.setAttribute('data-rte-role', 'section-icon')
+          iconSpan.className = 'text-base leading-none'
+          iconSpan.textContent = icon
+          badge.appendChild(iconSpan)
+        }
         const badgeText = document.createElement('span')
         badgeText.setAttribute('data-rte-role', 'section-badge-text')
         badgeText.className = `text-xs font-mono ${accentPreset.badgeText} tracking-wider`
@@ -1630,7 +1740,29 @@ export default function RichTextEditor({
     }
 
     if (action === 'delete') {
-      deleteBlock(blockId)
+      const makePlain = () => {
+        const t = String(block.content || '').trim()
+        if (block.type === 'questions') {
+          const title = String(block.title || '').trim()
+          const items = String(block.content || '')
+            .split('\n')
+            .map((l) => String(l || '').trim())
+            .filter(Boolean)
+          const lines = []
+          if (title) lines.push(title)
+          items.forEach((q) => lines.push(`- ${q}`))
+          return lines.join('\n')
+        }
+        if (block.type === 'subsection') {
+          const n = String(block.number || '').trim()
+          const title = String(block.title || '').trim()
+          const header = [n, title].filter(Boolean).join(' ')
+          return [header, t].filter(Boolean).join('\n')
+        }
+        return t
+      }
+
+      updateBlock(blockId, { type: 'paragraph', content: makePlain() })
       setShowFloatingToolbar(false)
       return
     }
@@ -1649,6 +1781,15 @@ export default function RichTextEditor({
                 position={toolbarPosition}
                 onClose={() => setShowFloatingToolbar(false)}
                 onFormat={applyFormat}
+                  onInteract={() => {
+                    toolbarInteractingRef.current = true
+                    if (toolbarInteractTimeoutRef.current) {
+                      window.clearTimeout(toolbarInteractTimeoutRef.current)
+                    }
+                    toolbarInteractTimeoutRef.current = window.setTimeout(() => {
+                      toolbarInteractingRef.current = false
+                    }, 800)
+                  }}
               />
             )}
           </AnimatePresence>,
@@ -2030,7 +2171,7 @@ function BlockTypeSelector({ onSelect }) {
  * Barra Flotante de Formateo (tipo Medium)
  * Aparece al seleccionar texto
  */
-function FloatingFormatToolbar({ position, onClose, onFormat }) {
+function FloatingFormatToolbar({ position, onClose, onFormat, onInteract }) {
   const [showTitleMenu, setShowTitleMenu] = useState(false)
   const [showBlockMenu, setShowBlockMenu] = useState(false)
 
@@ -2040,11 +2181,13 @@ function FloatingFormatToolbar({ position, onClose, onFormat }) {
     { icon: Heading2, label: 'Sección', action: 'heading' },
     { icon: Type, label: 'Tarjeta', action: 'subsection' },
     { icon: LinkIcon, label: 'Enlace', action: 'link' },
-    { icon: Trash2, label: 'Eliminar bloque', action: 'delete' },
+    { icon: Trash2, label: 'Quitar formato', action: 'delete' },
   ]
 
   return (
     <motion.div
+      onMouseDownCapture={() => onInteract?.()}
+      onTouchStart={() => onInteract?.()}
       initial={{ opacity: 0, y: -10, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -10, scale: 0.9 }}

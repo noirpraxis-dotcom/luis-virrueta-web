@@ -67,6 +67,12 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
   const [author, setAuthor] = useState(article?.author || 'Luis Virrueta')
   const [category, setCategory] = useState(article?.category || 'philosophy')
   const [accent, setAccent] = useState(article?.accent || 'purple')
+  const getInitialSectionIcon = () => {
+    const blocks = Array.isArray(article?.content) ? article.content : []
+    const firstHeadingWithIcon = blocks.find((b) => String(b?.type || '') === 'heading' && String(b?.icon || '').trim())
+    return String(firstHeadingWithIcon?.icon || '👑')
+  }
+  const [sectionIcon, setSectionIcon] = useState(getInitialSectionIcon)
   const [tags, setTags] = useState(article?.tags?.join(', ') || '')
   const [readTime, setReadTime] = useState(article?.readTime || '15 min')
   const [language, setLanguage] = useState(article?.language || 'es')
@@ -294,6 +300,11 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
         return null
       }
 
+      const bodyWithSectionIcon = (Array.isArray(body) ? body : []).map((b) => {
+        if (String(b?.type || '') !== 'heading') return b
+        return { ...b, icon: sectionIcon }
+      })
+
       const articleData = {
         title: finalTitle,
         subtitle: finalSubtitle,
@@ -305,7 +316,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
         read_time: readTime,
         language: language,
         image_url: finalImageUrl,
-        content: body,
+        content: bodyWithSectionIcon,
         is_published: finalIsPublished,
         published_at: resolvePublishedAtIso(),
         slug: generateSlug(finalTitle),
@@ -706,6 +717,26 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Ícono de Secciones
+                  </label>
+                  <select
+                    value={sectionIcon}
+                    onChange={(e) => setSectionIcon(e.target.value)}
+                    className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all [&>option]:bg-gray-900 [&>option]:text-white"
+                  >
+                    <option value="👑">👑 Corona</option>
+                    <option value="⚜️">⚜️ Fleur-de-lis</option>
+                    <option value="✦">✦ Estrella fina</option>
+                    <option value="❖">❖ Diamante</option>
+                    <option value="☾">☾ Luna</option>
+                    <option value="✧">✧ Brillo</option>
+                    <option value="⟡">⟡ Estrella</option>
+                    <option value="•">• Punto</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     <Globe className="w-4 h-4 inline mr-2" />
                     Idioma
                   </label>
@@ -751,6 +782,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                 showAddBlockButton={false}
                 mode="document"
                 accent={accent}
+                sectionIcon={sectionIcon}
               />
 
               {/* Acciones al final (para no tener que volver arriba) */}
