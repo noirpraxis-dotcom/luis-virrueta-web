@@ -6,7 +6,6 @@ import {
   AlertCircle, CheckCircle, Trash2, User
 } from 'lucide-react'
 import RichTextEditor from './RichTextEditor'
-import { compressImage, isValidImage, getImagePreview, revokeImagePreview } from '../utils/imageCompression'
 import { supabase } from '../lib/supabase'
 
 /**
@@ -173,6 +172,9 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
   const handleImageSelect = async (e) => {
     const file = e.target.files?.[0]
     if (!file) return
+
+    // Importar dinámicamente las funciones de compresión
+    const { compressImage, isValidImage, getImagePreview } = await import('../utils/imageCompression')
 
     // Validar imagen
     const validation = isValidImage(file)
@@ -363,6 +365,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
       if (typeof finalImageUrl === 'string') {
         setImageUrl(finalImageUrl)
         if (imagePreview?.startsWith?.('blob:')) {
+          const { revokeImagePreview } = await import('../utils/imageCompression')
           revokeImagePreview(imagePreview)
         }
         setImagePreview(finalImageUrl)
@@ -510,12 +513,13 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                       Cambiar
                     </button>
                     <button
-                      onClick={() => {
+                      onClick={async () => {
                         setImageFile(null)
                         setImagePreview(null)
                         setImageUrl(null)
                         setCompressionStats(null)
                         if (imagePreview.startsWith('blob:')) {
+                          const { revokeImagePreview } = await import('../utils/imageCompression')
                           revokeImagePreview(imagePreview)
                         }
                       }}

@@ -17,7 +17,6 @@ import AdminLogin from '../components/AdminLogin'
 import RichTextEditor from '../components/RichTextEditor'
 import { getArticleContent } from '../data/blogArticlesContent'
 import { supabase } from '../lib/supabase'
-import { compressImage } from '../utils/imageCompression'
 import { uploadBlogImage, updateBlogArticle, createBlogArticle } from '../lib/supabase'
 
 const HIDDEN_BLOG_SLUGS = new Set([
@@ -2251,6 +2250,7 @@ const BlogArticlePage = () => {
     try {
       setSaveError('')
       setSaveStatus('Subiendo imagen…')
+      const { compressImage } = await import('../utils/imageCompression')
       const compressed = await compressImage(file, { maxWidth: 1920, quality: 0.82, outputFormat: 'webp' })
       const url = await uploadBlogImage(compressed, 'blog-images')
       setDraftImageUrl(url)
