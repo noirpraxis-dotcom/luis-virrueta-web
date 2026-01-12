@@ -20,7 +20,7 @@ export default function RichTextEditor({
   mode = 'blocks',
   accent = 'purple',
   documentVariant = 'editor',
-  sectionIcon = '♛'
+  sectionIcon = 'crown'
 }) {
   const [blocks, setBlocks] = useState(initialContent)
   const [selectedBlockId, setSelectedBlockId] = useState(null)
@@ -39,6 +39,81 @@ export default function RichTextEditor({
 
   const DOC_PLACEHOLDER_TEXT = 'Escribe aquí o pega tu contenido…'
   const QUESTIONS_MARKER_CLASS = 'marker:text-emerald-400'
+
+  const SECTION_ICON_PATHS = {
+    crown: [
+      'M3 6l3 6 6-9 6 9 3-6v14H3z',
+      'M3 20h18'
+    ],
+    moon: [
+      'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'
+    ],
+    sparkles: [
+      'M12 2l1.7 5.8L19.5 9l-5.8 1.7L12 16.5l-1.7-5.8L4.5 9l5.8-1.7L12 2z',
+      'M4 14l.8 2.7L7.5 17.5l-2.7.8L4 21l-.8-2.7L.5 17.5l2.7-.8L4 14z'
+    ],
+    diamond: [
+      'M12 2l7 10-7 10-7-10z'
+    ],
+    star: [
+      'M12 2l3 7 7 .6-5.3 4.6 1.7 7.2L12 17.8 5.6 21.4l1.7-7.2L2 9.6 9 9z'
+    ],
+    bookmark: [
+      'M6 2h12v20l-6-4-6 4z'
+    ]
+  }
+
+  const normalizeSectionIconKey = (raw) => {
+    const t = String(raw || '').trim()
+    const migrate = {
+      // previous emoji/symbol variants
+      '👑': 'crown',
+      '♛': 'crown',
+      '⚜': 'crown',
+      '⚜️': 'crown',
+      '☾': 'moon',
+      '✦': 'star',
+      '✧': 'sparkles',
+      '⟡': 'sparkles',
+      '❖': 'diamond',
+      '⬦': 'diamond',
+      '⬥': 'diamond'
+    }
+
+    const key = migrate[t] || t
+    return Object.prototype.hasOwnProperty.call(SECTION_ICON_PATHS, key) ? key : 'crown'
+  }
+
+  const createSectionIconSvgEl = (iconKey) => {
+    const key = normalizeSectionIconKey(iconKey)
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    svg.setAttribute('viewBox', '0 0 24 24')
+    svg.setAttribute('fill', 'none')
+    svg.setAttribute('stroke', 'currentColor')
+    svg.setAttribute('stroke-width', '2')
+    svg.setAttribute('stroke-linecap', 'round')
+    svg.setAttribute('stroke-linejoin', 'round')
+    svg.setAttribute('width', '16')
+    svg.setAttribute('height', '16')
+    ;(SECTION_ICON_PATHS[key] || SECTION_ICON_PATHS.crown).forEach((d) => {
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+      path.setAttribute('d', d)
+      svg.appendChild(path)
+    })
+    return svg
+  }
+
+  const sectionIconHtml = (key, escAttr) => {
+    const k = normalizeSectionIconKey(key)
+    const paths = SECTION_ICON_PATHS[k] || SECTION_ICON_PATHS.crown
+    return (
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" ` +
+      `stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ` +
+      `width="16" height="16" aria-hidden="true">` +
+      paths.map((d) => `<path d="${escAttr(d)}"></path>`).join('') +
+      `</svg>`
+    )
+  }
 
   const accentPreset = getAccentPreset(accent)
 
@@ -164,15 +239,25 @@ export default function RichTextEditor({
 
   // Undo/Redo (Ctrl/Cmd+Z / Ctrl+Y / Ctrl+Shift+Z)
   const handleKeyDownCapture = (e) => {
-    // En modo document, permitir undo/redo NATIVO del navegador.
-    // El historial por bloques no captura cambios del contentEditable mientras tecleas.
+    const isMac = navigator.platform.toLowerCase().includes('mac')
+    const isMod = isMac ? e.metaKey : e.ctrlKey
+    if (!isMod) return
+
+    const key = String(e.key || '').toLowerCase()
+    const isUndo = key === 'z' && !e.shiftKey
+    const isRedo = key === 'y' || (key === 'z' && e.shiftKey)
+    if (!isUndo && !isRedo) return
+
+    // Document mode: use our blocks history so Ctrl+Z also undoes structural conversions
+    // (sections/highlights/questions/subsections), not only typed text.
     if (mode === 'document') {
       const host = docEditorRef.current
-      const sel = window.getSelection?.()
+      if (!host) return
 
+      const sel = window.getSelection?.()
       const selectionInside = (() => {
         try {
-          if (!host || !sel || sel.rangeCount === 0) return false
+          if (!sel || sel.rangeCount === 0) return false
           const range = sel.getRangeAt(0)
           const common = range?.commonAncestorContainer || null
           return (
@@ -186,11 +271,33 @@ export default function RichTextEditor({
       })()
 
       const active = document.activeElement
-      const focusedInside = !!(host && active && (host === active || host.contains(active)))
+      const focusedInside = !!(active && (host === active || host.contains(active)))
 
-      // Dejar Ctrl/Cmd+Z nativo cuando el último contexto fue el editor,
-      // incluso si el foco quedó en la toolbar (portal).
-      if (selectionInside || focusedInside) return
+      // Only handle if user is in this editor context
+      if (!selectionInside && !focusedInside) return
+
+      e.preventDefault()
+
+      // Cancel any pending debounced sync
+      if (docInputTimeoutRef.current) {
+        clearTimeout(docInputTimeoutRef.current)
+        docInputTimeoutRef.current = null
+      }
+
+      const state = historyRef.current
+      if (isUndo) {
+        if (state.index <= 0) return
+        state.index -= 1
+      } else {
+        if (state.index >= state.stack.length - 1) return
+        state.index += 1
+      }
+
+      const snapshot = state.stack[state.index] || []
+      setBlocks(snapshot)
+      host.innerHTML = blocksToHtml(snapshot)
+      docSeededRef.current = true
+      applyAccentClassesInPlace(host)
       return
     }
 
@@ -200,17 +307,6 @@ export default function RichTextEditor({
     if (targetTag === 'textarea' || targetTag === 'input') {
       return
     }
-
-    const isMac = navigator.platform.toLowerCase().includes('mac')
-    const isMod = isMac ? e.metaKey : e.ctrlKey
-
-    if (!isMod) return
-
-    const key = e.key.toLowerCase()
-    const isUndo = key === 'z' && !e.shiftKey
-    const isRedo = key === 'y' || (key === 'z' && e.shiftKey)
-
-    if (!isUndo && !isRedo) return
 
     // Only if the event is inside this editor
     if (editorRootRef.current && !editorRootRef.current.contains(e.target)) return
@@ -385,18 +481,18 @@ export default function RichTextEditor({
         sectionCounter++
         const level = b?.level || 'h2'
         const sectionNum = String(sectionCounter).padStart(2, '0')
-        const icon = String(b?.icon || sectionIcon || '').trim()
+        const iconKey = normalizeSectionIconKey(b?.icon || sectionIcon)
         const tocIdAttr = mode === 'document' && documentVariant === 'article'
           ? ` id="section-${sectionCounter - 1}"`
           : ''
         
         // Estilo con caja y número de sección como en el artículo final
         push(
-          `<div${tocIdAttr} class="mb-12 mt-16 relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden" data-section="${sectionCounter}">` +
-          `<div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accentPreset.headingTopBar}"></div>` +
-          `<div class="inline-flex items-center gap-2 mb-4 px-4 py-1.5 ${accentPreset.badgeBg} border ${accentPreset.badgeBorder} rounded-full">` +
-          (icon ? `<span data-rte-role="section-icon" class="text-sm leading-none">${esc(icon)}</span>` : '') +
-          `<span class="text-xs font-mono ${accentPreset.badgeText} tracking-wider">SECCIÓN ${sectionNum}</span>` +
+          `<div${tocIdAttr} class="mb-12 mt-16 relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden" data-section="${sectionCounter}" data-rte-type="heading">` +
+          `<div data-rte-role="section-topbar" contenteditable="false" class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accentPreset.headingTopBar}"></div>` +
+          `<div data-rte-role="section-badge" contenteditable="false" class="inline-flex items-center gap-2 mb-4 px-4 py-1.5 ${accentPreset.badgeBg} border ${accentPreset.badgeBorder} rounded-full">` +
+          `<span data-rte-role="section-icon" data-icon="${escAttr(iconKey)}" contenteditable="false" class="inline-flex items-center justify-center text-white/80">${sectionIconHtml(iconKey, escAttr)}</span>` +
+          `<span data-rte-role="section-badge-text" contenteditable="false" class="text-xs font-mono ${accentPreset.badgeText} tracking-wider">SECCIÓN ${sectionNum}</span>` +
           `</div>` +
           `<h2 class="text-3xl lg:text-4xl font-light text-white leading-tight">${inline(content)}</h2>` +
           `</div>`
@@ -447,8 +543,9 @@ export default function RichTextEditor({
       }
 
       if (type === 'questions') {
-        const titleRaw = String(b?.title || 'Preguntas que incomodan').trim() || 'Preguntas que incomodan'
-        const title = titleRaw.replace(/^❓\s*/, '').trim() || 'Preguntas que incomodan'
+        const titleRaw = String(b?.title || 'Preguntas').trim() || 'Preguntas'
+        let title = titleRaw.replace(/^❓\s*/, '').trim() || 'Preguntas'
+        if (/^preguntas\s+(que\s+incomodan|incómodas)$/i.test(title)) title = 'Preguntas'
         const items = String(b?.content || '')
           .split('\n')
           .map((l) => String(l || '').trim())
@@ -589,7 +686,8 @@ export default function RichTextEditor({
         const liEls = Array.from(el.querySelectorAll('ul li'))
         const items = liEls.map((li) => String(li.textContent || '').trim()).filter(Boolean)
         if (hasQuestionsWord && items.length) {
-          const cleanedTitle = titleGuess.replace(/^\??\s*/, '').trim() || 'Preguntas incómodas'
+          let cleanedTitle = titleGuess.replace(/^\??\s*/, '').trim() || 'Preguntas'
+          if (/^preguntas\s+(que\s+incomodan|incómodas)$/i.test(cleanedTitle)) cleanedTitle = 'Preguntas'
           next.push({
             id: `block-${Date.now()}-${next.length}`,
             type: 'questions',
@@ -605,14 +703,15 @@ export default function RichTextEditor({
         const h2El = el.querySelector('h2')
         const t = String(h2El?.textContent || '').trim()
         const iconEl = el.querySelector('[data-rte-role="section-icon"]')
-        const icon = String(iconEl?.textContent || '').trim()
+        const iconRaw = String(iconEl?.getAttribute?.('data-icon') || iconEl?.textContent || '').trim()
+        const iconKey = normalizeSectionIconKey(iconRaw || sectionIcon)
         if (t) {
           next.push({
             id: `block-${Date.now()}-${next.length}`,
             type: 'heading',
             level: 'h2',
             content: t,
-            icon: icon || undefined
+            icon: iconKey || undefined
           })
         }
         continue
@@ -671,7 +770,8 @@ export default function RichTextEditor({
 
       if (tag === 'section' && el.getAttribute('data-rte-type') === 'questions') {
         const titleEl = el.querySelector('[data-rte-role="questions-title"]')
-        const title = String(titleEl?.textContent || 'Preguntas incómodas').trim() || 'Preguntas incómodas'
+        let title = String(titleEl?.textContent || 'Preguntas').trim() || 'Preguntas'
+        if (/^preguntas\s+(que\s+incomodan|incómodas)$/i.test(title)) title = 'Preguntas'
         const liEls = Array.from(el.querySelectorAll('li'))
         const items = liEls.map((li) => String(li.textContent || '').trim()).filter(Boolean)
         if (items.length) {
@@ -779,11 +879,74 @@ export default function RichTextEditor({
       if (/^section-\d+$/.test(String(section.id || ''))) {
         section.id = `section-${n - 1}`
       }
-      const badgeText =
-        section.querySelector('[data-rte-role="section-badge-text"]') ||
-        section.querySelector('span.text-xs')
-      if (badgeText) {
+
+      const topBar =
+        section.querySelector('[data-rte-role="section-topbar"]') ||
+        section.querySelector('div.absolute.top-0.left-0.right-0.h-1')
+      if (topBar) {
+        topBar.setAttribute('data-rte-role', 'section-topbar')
+        topBar.setAttribute('contenteditable', 'false')
+      }
+
+      const badge =
+        section.querySelector('[data-rte-role="section-badge"]') ||
+        section.querySelector('div.inline-flex.items-center')
+      if (badge) {
+        badge.setAttribute('data-rte-role', 'section-badge')
+        badge.setAttribute('contenteditable', 'false')
+
+        // Remove stray text nodes (e.g., when user types inside the badge)
+        Array.from(badge.childNodes || []).forEach((node) => {
+          if (node && node.nodeType === 3) {
+            const t = String(node.nodeValue || '')
+            if (t.trim()) {
+              try { node.remove?.() } catch { try { badge.removeChild(node) } catch { /* ignore */ } }
+            }
+          }
+        })
+
+        // Ensure exactly one badge text span
+        let badgeText =
+          badge.querySelector('[data-rte-role="section-badge-text"]') ||
+          badge.querySelector('span.text-xs') ||
+          badge.querySelector('span')
+        if (!badgeText) {
+          badgeText = document.createElement('span')
+          badge.appendChild(badgeText)
+        }
+        badgeText.setAttribute('data-rte-role', 'section-badge-text')
+        badgeText.setAttribute('contenteditable', 'false')
         badgeText.textContent = `SECCIÓN ${String(n).padStart(2, '0')}`
+
+        Array.from(badge.querySelectorAll('[data-rte-role="section-badge-text"]') || []).forEach((el, i) => {
+          if (i === 0) return
+          try { el.remove?.() } catch { try { badge.removeChild(el) } catch { /* ignore */ } }
+        })
+
+        // Ensure icon span exists and is SVG-only
+        const defaultKey = normalizeSectionIconKey(sectionIcon)
+        let iconSpan = badge.querySelector('[data-rte-role="section-icon"]')
+        if (!iconSpan) {
+          iconSpan = document.createElement('span')
+          badge.insertBefore(iconSpan, badgeText)
+        }
+        iconSpan.setAttribute('data-rte-role', 'section-icon')
+        iconSpan.setAttribute('contenteditable', 'false')
+        iconSpan.className = iconSpan.className || 'inline-flex items-center justify-center text-white/80'
+
+        const existingKey = normalizeSectionIconKey(
+          iconSpan.getAttribute('data-icon') || iconSpan.textContent || defaultKey
+        )
+        iconSpan.setAttribute('data-icon', existingKey)
+
+        // Clear any text/children and re-add svg
+        try {
+          iconSpan.textContent = ''
+          while (iconSpan.firstChild) iconSpan.removeChild(iconSpan.firstChild)
+          iconSpan.appendChild(createSectionIconSvgEl(existingKey))
+        } catch {
+          // ignore
+        }
       }
     })
   }
@@ -809,13 +972,31 @@ export default function RichTextEditor({
     // Headings (section wrappers)
     Array.from(root.querySelectorAll('div[data-section]')).forEach((section) => {
       const topBar = section.querySelector('[data-rte-role="section-topbar"]') || section.querySelector('div.absolute.top-0.left-0.right-0.h-1')
-      if (topBar) topBar.className = `absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accentPreset.headingTopBar}`
+      if (topBar) {
+        topBar.setAttribute('data-rte-role', 'section-topbar')
+        topBar.setAttribute('contenteditable', 'false')
+        topBar.className = `absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accentPreset.headingTopBar}`
+      }
 
       const badge = section.querySelector('[data-rte-role="section-badge"]') || section.querySelector('div.inline-flex.items-center')
-      if (badge) badge.className = `inline-flex items-center gap-2 mb-4 px-4 py-1.5 ${accentPreset.badgeBg} border ${accentPreset.badgeBorder} rounded-full`
+      if (badge) {
+        badge.setAttribute('data-rte-role', 'section-badge')
+        badge.setAttribute('contenteditable', 'false')
+        badge.className = `inline-flex items-center gap-2 mb-4 px-4 py-1.5 ${accentPreset.badgeBg} border ${accentPreset.badgeBorder} rounded-full`
+      }
 
       const badgeText = section.querySelector('[data-rte-role="section-badge-text"]') || badge?.querySelector('span')
-      if (badgeText) badgeText.className = `text-xs font-mono ${accentPreset.badgeText} tracking-wider`
+      if (badgeText) {
+        badgeText.setAttribute('data-rte-role', 'section-badge-text')
+        badgeText.setAttribute('contenteditable', 'false')
+        badgeText.className = `text-xs font-mono ${accentPreset.badgeText} tracking-wider`
+      }
+
+      const iconSpan = section.querySelector('[data-rte-role="section-icon"]')
+      if (iconSpan) {
+        iconSpan.setAttribute('data-rte-role', 'section-icon')
+        iconSpan.setAttribute('contenteditable', 'false')
+      }
     })
 
     // Questions blocks
@@ -978,7 +1159,8 @@ export default function RichTextEditor({
       // [[/QUESTIONS]]
       const qOpen = trimmed.match(/^\[\[QUESTIONS(?::(.+))?\]\]$/i)
       if (qOpen) {
-        const title = String(qOpen[1] || 'Preguntas incómodas').trim() || 'Preguntas incómodas'
+        let title = String(qOpen[1] || 'Preguntas').trim() || 'Preguntas'
+        if (/^preguntas\s+(que\s+incomodan|incómodas)$/i.test(title)) title = 'Preguntas'
         const bodyLines = []
         let j = index + 1
         for (; j < lines.length; j += 1) {
@@ -1081,7 +1263,7 @@ export default function RichTextEditor({
       id: `block-${Date.now()}`,
       type,
       content: '',
-      ...(type === 'questions' ? { title: 'Preguntas incómodas' } : null)
+      ...(type === 'questions' ? { title: 'Preguntas' } : null)
     }
     
     if (selectedBlockId) {
@@ -1209,6 +1391,12 @@ export default function RichTextEditor({
           sel.addRange(afterRange)
           docSelectionRangeRef.current = afterRange.cloneRange()
         }
+
+        try {
+          host?.focus?.({ preventScroll: true })
+        } catch {
+          // ignore
+        }
       }
 
       const replaceSelectionWithTopLevelBlock = (el, coalesceKey) => {
@@ -1264,6 +1452,12 @@ export default function RichTextEditor({
           after.collapse(true)
           sel.addRange(after)
           docSelectionRangeRef.current = after.cloneRange()
+        }
+
+        try {
+          host.focus?.({ preventScroll: true })
+        } catch {
+          // ignore
         }
 
         cleanupDocDom(host)
@@ -1481,22 +1675,30 @@ export default function RichTextEditor({
         
         const topBar = document.createElement('div')
         topBar.setAttribute('data-rte-role', 'section-topbar')
+        topBar.setAttribute('contenteditable', 'false')
         topBar.className = `absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accentPreset.headingTopBar}`
         
         const badge = document.createElement('div')
         badge.setAttribute('data-rte-role', 'section-badge')
+        badge.setAttribute('contenteditable', 'false')
         badge.className = `inline-flex items-center gap-2 mb-4 px-4 py-1.5 ${accentPreset.badgeBg} border ${accentPreset.badgeBorder} rounded-full`
 
-        const icon = String(sectionIcon || '').trim()
-        if (icon) {
-          const iconSpan = document.createElement('span')
-          iconSpan.setAttribute('data-rte-role', 'section-icon')
-          iconSpan.className = 'text-sm leading-none'
-          iconSpan.textContent = icon
-          badge.appendChild(iconSpan)
+        const iconKey = normalizeSectionIconKey(sectionIcon)
+        const iconSpan = document.createElement('span')
+        iconSpan.setAttribute('data-rte-role', 'section-icon')
+        iconSpan.setAttribute('data-icon', iconKey)
+        iconSpan.setAttribute('contenteditable', 'false')
+        iconSpan.className = 'inline-flex items-center justify-center text-white/80'
+        try {
+          iconSpan.appendChild(createSectionIconSvgEl(iconKey))
+        } catch {
+          // ignore
         }
+        badge.appendChild(iconSpan)
+
         const badgeText = document.createElement('span')
         badgeText.setAttribute('data-rte-role', 'section-badge-text')
+        badgeText.setAttribute('contenteditable', 'false')
         badgeText.className = `text-xs font-mono ${accentPreset.badgeText} tracking-wider`
         badgeText.textContent = `SECCIÓN ${sectionNum}`
         badge.appendChild(badgeText)
@@ -1582,7 +1784,7 @@ export default function RichTextEditor({
         const title = document.createElement('h3')
         title.setAttribute('data-rte-role', 'questions-title')
         title.className = `text-2xl md:text-3xl font-bold bg-gradient-to-r ${accentPreset.questionsTitle} bg-clip-text text-transparent`
-        title.textContent = 'Preguntas que incomodan'
+        title.textContent = 'Preguntas'
 
         header.appendChild(iconBox)
         header.appendChild(title)
@@ -1730,7 +1932,7 @@ export default function RichTextEditor({
     }
 
     if (action === 'questions') {
-      const replacement = splitBlockBySelection(block, start, end, { type: 'questions', title: 'Preguntas incómodas' })
+      const replacement = splitBlockBySelection(block, start, end, { type: 'questions', title: 'Preguntas' })
       const next = [...blocks.slice(0, index), ...replacement, ...blocks.slice(index + 1)]
       setBlocksWithHistory(next)
       setShowFloatingToolbar(false)

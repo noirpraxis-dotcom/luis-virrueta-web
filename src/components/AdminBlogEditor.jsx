@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
   X, Save, Eye, Image as ImageIcon, Upload, Loader, 
   Calendar, Clock, Tag, Globe, Sparkles, ArrowLeft,
-  AlertCircle, CheckCircle, Trash2, User
+  AlertCircle, CheckCircle, Trash2, User,
+  Crown, Moon, Diamond, Star, Bookmark
 } from 'lucide-react'
 import RichTextEditor from './RichTextEditor'
 import { supabase } from '../lib/supabase'
@@ -72,11 +73,21 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
     const firstHeadingWithIcon = blocks.find((b) => String(b?.type || '') === 'heading' && String(b?.icon || '').trim())
     const raw = String(firstHeadingWithIcon?.icon || '').trim()
     const migrate = {
-      '👑': '♛',
-      '⚜️': '⚜'
+      // old emoji/symbol variants -> new key-based icons
+      '👑': 'crown',
+      '♛': 'crown',
+      '⚜': 'crown',
+      '⚜️': 'crown',
+      '☾': 'moon',
+      '✦': 'star',
+      '✧': 'sparkles',
+      '⟡': 'sparkles',
+      '❖': 'diamond',
+      '⬦': 'diamond',
+      '⬥': 'diamond'
     }
     const normalized = raw ? (migrate[raw] || raw) : ''
-    return normalized || '♛'
+    return normalized || 'crown'
   }
   const [sectionIcon, setSectionIcon] = useState(getInitialSectionIcon)
   const [tags, setTags] = useState(article?.tags?.join(', ') || '')
@@ -723,25 +734,34 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Ícono de Secciones
+                    <span className="inline-flex items-center gap-2">
+                      {sectionIcon === 'moon' ? (
+                        <Moon className="w-4 h-4 text-gray-200" />
+                      ) : sectionIcon === 'sparkles' ? (
+                        <Sparkles className="w-4 h-4 text-gray-200" />
+                      ) : sectionIcon === 'diamond' ? (
+                        <Diamond className="w-4 h-4 text-gray-200" />
+                      ) : sectionIcon === 'star' ? (
+                        <Star className="w-4 h-4 text-gray-200" />
+                      ) : sectionIcon === 'bookmark' ? (
+                        <Bookmark className="w-4 h-4 text-gray-200" />
+                      ) : (
+                        <Crown className="w-4 h-4 text-gray-200" />
+                      )}
+                      Ícono de Secciones
+                    </span>
                   </label>
                   <select
                     value={sectionIcon}
                     onChange={(e) => setSectionIcon(e.target.value)}
                     className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all [&>option]:bg-gray-900 [&>option]:text-white"
                   >
-                    <option value="♛">♛ Corona</option>
-                    <option value="⚜">⚜ Fleur-de-lis</option>
-                    <option value="☾">☾ Luna</option>
-                    <option value="✦">✦ Estrella fina</option>
-                    <option value="✧">✧ Brillo</option>
-                    <option value="⟡">⟡ Estrella</option>
-                    <option value="❖">❖ Diamante</option>
-                    <option value="⬦">⬦ Rombo</option>
-                    <option value="⬥">⬥ Rombo sólido</option>
-                    <option value="✶">✶ Estrella clásica</option>
-                    <option value="⌁">⌁ Onda</option>
-                    <option value="•">• Punto</option>
+                    <option value="crown">Corona</option>
+                    <option value="moon">Luna</option>
+                    <option value="sparkles">Brillo</option>
+                    <option value="diamond">Diamante</option>
+                    <option value="star">Estrella</option>
+                    <option value="bookmark">Marcador</option>
                   </select>
                 </div>
 
