@@ -257,11 +257,6 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
       return
     }
 
-    if (!excerpt.trim()) {
-      setMessage({ type: 'error', text: 'El extracto es obligatorio' })
-      return
-    }
-
     if (!Array.isArray(body) || body.length === 0) {
       setMessage({ type: 'error', text: 'El contenido no puede estar vacío' })
       return
@@ -412,7 +407,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
       data-lenis-prevent-wheel
       className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 overflow-y-auto"
     >
-      <div className="w-full max-w-5xl mx-auto p-4 md:p-8 my-32 md:my-36">
+      <div className="w-full p-4 md:p-8 my-32 md:my-36">
         {/* Header */}
         <div className="bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl border border-purple-500/20 rounded-2xl p-6 mb-6 shadow-2xl">
           <div className="flex items-center justify-between mb-4">
@@ -606,7 +601,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Extracto/Descripción *
+                  Extracto/Descripción
                 </label>
                 <textarea
                   value={excerpt}

@@ -395,6 +395,42 @@ export default function RichTextEditor({
         continue
       }
 
+      if (type === 'reflection') {
+        push(
+          `<div data-rte-type="reflection" class="my-12 relative">` +
+          `<div data-rte-role="reflection-bar" class="absolute -left-4 top-0 w-1 h-full bg-gradient-to-b ${accentPreset.quoteBar} rounded-full"></div>` +
+          `<div class="pl-8 pr-4 py-1">` +
+          `<p class="text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic relative">` +
+          `<span class="absolute -left-2 -top-1 text-5xl ${accentPreset.quoteMark} font-serif">"</span>` +
+          `${inline(content)}` +
+          `<span class="absolute -bottom-6 right-0 text-5xl ${accentPreset.quoteMark} font-serif">"</span>` +
+          `</p>` +
+          `</div>` +
+          `</div>`
+        )
+        continue
+      }
+
+      if (type === 'subsection') {
+        const number = String(b?.number || '01')
+        const title = String(b?.title || 'Subtítulo')
+        push(
+          `<div data-rte-type="subsection" class="mb-8 relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden group hover:border-white/30 transition-all">` +
+          `<div data-rte-role="subsection-orb" class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity"></div>` +
+          `<div class="relative z-10">` +
+          `<div class="flex items-start gap-4 mb-4">` +
+          `<span data-rte-role="subsection-number" class="text-6xl font-bold bg-gradient-to-br from-purple-500 to-fuchsia-500 bg-clip-text text-transparent opacity-50">${number}</span>` +
+          `<div class="flex-1 pt-2">` +
+          `<h3 class="text-2xl font-bold text-white mb-3">${inline(title)}</h3>` +
+          `<p class="text-base text-white/70 leading-relaxed">${inline(content)}</p>` +
+          `</div>` +
+          `</div>` +
+          `</div>` +
+          `</div>`
+        )
+        continue
+      }
+
       // paragraph
       push(`<p class="my-6 text-lg md:text-xl text-white/75 leading-relaxed tracking-wide">${inline(content)}</p>`)
     }
@@ -550,6 +586,32 @@ export default function RichTextEditor({
             type: 'questions',
             title,
             content: items.join('\n')
+          })
+        }
+        continue
+      }
+
+      if (tag === 'div' && el.getAttribute('data-rte-type') === 'reflection') {
+        const p = el.querySelector('p')
+        const t = normalizeInlineText(extractInlineMarkedText(p))
+        if (t) next.push({ id: `block-${Date.now()}-${next.length}`, type: 'reflection', content: t })
+        continue
+      }
+
+      if (tag === 'div' && el.getAttribute('data-rte-type') === 'subsection') {
+        const numberEl = el.querySelector('[data-rte-role="subsection-number"]')
+        const number = String(numberEl?.textContent || '01').trim()
+        const h3El = el.querySelector('h3')
+        const title = String(h3El?.textContent || '').trim()
+        const p = el.querySelector('p')
+        const content = normalizeInlineText(extractInlineMarkedText(p))
+        if (title || content) {
+          next.push({ 
+            id: `block-${Date.now()}-${next.length}`, 
+            type: 'subsection', 
+            number,
+            title,
+            content 
           })
         }
         continue
@@ -1294,6 +1356,94 @@ export default function RichTextEditor({
         return
       }
 
+      if (action === 'reflection') {
+        const wrapper = document.createElement('div')
+        wrapper.setAttribute('data-rte-type', 'reflection')
+        wrapper.className = 'my-12 relative'
+        
+        const leftBar = document.createElement('div')
+        leftBar.setAttribute('data-rte-role', 'reflection-bar')
+        leftBar.className = `absolute -left-4 top-0 w-1 h-full bg-gradient-to-b ${accentPreset.quoteBar} rounded-full`
+        
+        const content = document.createElement('div')
+        content.className = 'pl-8 pr-4 py-1'
+        
+        const p = document.createElement('p')
+        p.className = 'text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic relative'
+        p.textContent = text.trim()
+        
+        const openQuote = document.createElement('span')
+        openQuote.className = `absolute -left-2 -top-1 text-5xl ${accentPreset.quoteMark} font-serif`
+        openQuote.textContent = '"'
+        
+        const closeQuote = document.createElement('span')
+        closeQuote.className = `absolute -bottom-6 right-0 text-5xl ${accentPreset.quoteMark} font-serif`
+        closeQuote.textContent = '"'
+        
+        p.appendChild(openQuote)
+        p.appendChild(document.createTextNode(text.trim()))
+        p.appendChild(closeQuote)
+        
+        content.appendChild(p)
+        wrapper.appendChild(leftBar)
+        wrapper.appendChild(content)
+        
+        replaceSelectionWithTopLevelBlock(wrapper, 'doc:format')
+        setShowFloatingToolbar(false)
+        return
+      }
+
+      if (action === 'subsection') {
+        const lines = text.split('\n').map(l => l.trim()).filter(Boolean)
+        const title = lines[0] || 'Subtítulo'
+        const content = lines.slice(1).join(' ') || text.trim()
+        
+        const wrapper = document.createElement('div')
+        wrapper.setAttribute('data-rte-type', 'subsection')
+        wrapper.className = 'mb-8 relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden group hover:border-white/30 transition-all'
+        
+        const orb = document.createElement('div')
+        orb.setAttribute('data-rte-role', 'subsection-orb')
+        orb.className = 'absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity'
+        
+        const innerContainer = document.createElement('div')
+        innerContainer.className = 'relative z-10'
+        
+        const flexContainer = document.createElement('div')
+        flexContainer.className = 'flex items-start gap-4 mb-4'
+        
+        const number = document.createElement('span')
+        number.setAttribute('data-rte-role', 'subsection-number')
+        number.className = 'text-6xl font-bold bg-gradient-to-br from-purple-500 to-fuchsia-500 bg-clip-text text-transparent opacity-50'
+        number.contentEditable = 'true'
+        number.textContent = '01'
+        
+        const textContainer = document.createElement('div')
+        textContainer.className = 'flex-1 pt-2'
+        
+        const h3 = document.createElement('h3')
+        h3.className = 'text-2xl font-bold text-white mb-3'
+        h3.contentEditable = 'true'
+        h3.textContent = title
+        
+        const p = document.createElement('p')
+        p.className = 'text-base text-white/70 leading-relaxed'
+        p.contentEditable = 'true'
+        p.textContent = content
+        
+        textContainer.appendChild(h3)
+        textContainer.appendChild(p)
+        flexContainer.appendChild(number)
+        flexContainer.appendChild(textContainer)
+        innerContainer.appendChild(flexContainer)
+        wrapper.appendChild(orb)
+        wrapper.appendChild(innerContainer)
+        
+        replaceSelectionWithTopLevelBlock(wrapper, 'doc:format')
+        setShowFloatingToolbar(false)
+        return
+      }
+
       setShowFloatingToolbar(false)
       return
     }
@@ -1440,10 +1590,34 @@ También puedes usar el botón + para agregar bloques específicos."
       {mode === 'document' && (
         <div className="rounded-3xl border-2 border-purple-500/20 bg-gradient-to-br from-gray-900/80 via-black/80 to-gray-900/80 backdrop-blur-xl shadow-2xl shadow-purple-500/10 overflow-hidden">
           <div className="p-8 md:p-12">
-            <div className="mb-6 flex items-center gap-3 pb-6 border-b border-purple-500/20">
-              <Eye className="w-5 h-5 text-purple-400" />
-              <span className="text-purple-300 font-medium">Vista Previa en Vivo</span>
-              <span className="text-gray-500 text-sm">- Se ve exactamente como el artículo final</span>
+            <div className="mb-6 flex items-center justify-between pb-6 border-b border-purple-500/20">
+              <div className="flex items-center gap-3">
+                <Eye className="w-5 h-5 text-purple-400" />
+                <span className="text-purple-300 font-medium">Vista Previa en Vivo</span>
+                <span className="text-gray-500 text-sm hidden md:inline">- Se ve exactamente como el artículo final</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={undo}
+                  disabled={historyRef.current.index <= 0}
+                  title="Deshacer (Ctrl+Z)"
+                  className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                  </svg>
+                </button>
+                <button
+                  onClick={redo}
+                  disabled={historyRef.current.index >= historyRef.current.stack.length - 1}
+                  title="Rehacer (Ctrl+Y)"
+                  className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 10h-10a8 8 0 00-8 8v2m18-10l-6 6m6-6l-6-6" />
+                  </svg>
+                </button>
+              </div>
             </div>
             <div
               ref={docEditorRef}
@@ -1729,7 +1903,9 @@ function FloatingFormatToolbar({ position, onClose, onFormat }) {
     { icon: Italic, label: 'Cursiva', action: 'italic' },
     { icon: Heading2, label: 'Título', action: 'heading' },
     { icon: Sparkles, label: 'Destacar', action: 'highlight' },
+    { icon: Quote, label: 'Reflexión', action: 'reflection' },
     { icon: AlertCircle, label: 'Preguntas', action: 'questions' },
+    { icon: Type, label: 'Tarjeta', action: 'subsection' },
     { icon: LinkIcon, label: 'Enlace', action: 'link' },
   ]
 
