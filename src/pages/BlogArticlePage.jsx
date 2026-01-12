@@ -2080,11 +2080,10 @@ const BlogArticlePage = () => {
         tags: Array.isArray(baseArticle.tags) && baseArticle.tags.length
           ? baseArticle.tags
           : cmsArticle.tags,
-        // IMPORTANTE: en artículos legacy, preferir SIEMPRE la imagen legacy (evita caer a /portada.webp
-        // cuando el CMS trae una URL incorrecta o genérica).
-        image: baseArticle.image || (hasCmsImage ? cmsArticle.image : baseArticle.image),
-        // Mantener heroImage legacy si existe (no usar el null forzado)
-        heroImage: baseArticle.heroImage || cmsArticle.heroImage || null,
+        // PRIORIDAD: usar imagen del CMS si existe, sino usar la legacy
+        image: hasCmsImage ? cmsArticle.image : (baseArticle.image || baseArticle.heroImage),
+        // heroImage también prioriza CMS sobre legacy
+        heroImage: (hasCmsImage ? cmsArticle.image : null) || baseArticle.heroImage || null,
         // Mantener accent legacy si existe; si no, usar el del CMS
         accent: baseArticle.accent || cmsArticle.accent || null
       }

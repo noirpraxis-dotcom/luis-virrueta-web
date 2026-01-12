@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useLayoutEffect } from 'react'
+import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
@@ -121,6 +121,32 @@ export default function RichTextEditor({
     setBlocks(nextBlocks)
     pushHistory(nextBlocks, options)
   }
+
+  // Undo function
+  const undo = useCallback(() => {
+    const state = historyRef.current
+    if (state.index <= 0) return
+    state.index -= 1
+    const prevBlocks = state.stack[state.index] || []
+    setBlocks(prevBlocks)
+    // Actualizar el HTML en modo document
+    if (mode === 'document' && docEditorRef.current) {
+      docEditorRef.current.innerHTML = blocksToHtml(prevBlocks)
+    }
+  }, [mode, blocksToHtml])
+
+  // Redo function
+  const redo = useCallback(() => {
+    const state = historyRef.current
+    if (state.index >= state.stack.length - 1) return
+    state.index += 1
+    const nextBlocks = state.stack[state.index] || []
+    setBlocks(nextBlocks)
+    // Actualizar el HTML en modo document
+    if (mode === 'document' && docEditorRef.current) {
+      docEditorRef.current.innerHTML = blocksToHtml(nextBlocks)
+    }
+  }, [mode, blocksToHtml])
 
   // Cuando los bloques cambian, notificar al padre
   useEffect(() => {
