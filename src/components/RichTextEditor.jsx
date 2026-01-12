@@ -291,7 +291,7 @@ export default function RichTextEditor({
     setBlocksWithHistory(next)
   }
 
-  const blocksToHtml = (blocksToRender) => {
+  function blocksToHtml(blocksToRender) {
     const esc = (s) => String(s || '')
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
