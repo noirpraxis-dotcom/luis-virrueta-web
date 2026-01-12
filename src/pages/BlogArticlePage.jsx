@@ -1832,6 +1832,7 @@ const BlogArticlePage = () => {
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.1 })
 
   const [cmsRow, setCmsRow] = useState(null)
+  const [cmsLoading, setCmsLoading] = useState(false)
 
   const [isEditMode, setIsEditMode] = useState(false)
   const [showAdminLogin, setShowAdminLogin] = useState(false)
@@ -1867,6 +1868,7 @@ const BlogArticlePage = () => {
 
     if (isHiddenSlug) {
       setCmsRow(null)
+      setCmsLoading(false)
       return () => {
         isCancelled = true
       }
@@ -1874,6 +1876,7 @@ const BlogArticlePage = () => {
 
     const loadFromSupabase = async () => {
       try {
+        setCmsLoading(true)
         const { data, error } = await supabase
           .from('blog_articles')
           .select('*')
@@ -1888,6 +1891,8 @@ const BlogArticlePage = () => {
       } catch (err) {
         console.warn('No se pudo cargar el artículo desde Supabase:', err)
         if (!isCancelled) setCmsRow(null)
+      } finally {
+        if (!isCancelled) setCmsLoading(false)
       }
     }
 
@@ -2143,7 +2148,7 @@ const BlogArticlePage = () => {
   }, [article.heroImage, article.image])
 
   const [heroCandidateIndex, setHeroCandidateIndex] = useState(0)
-  const heroBackgroundImage = heroImageCandidates[heroCandidateIndex] || null
+  const heroBackgroundImage = (!isEditMode && cmsLoading) ? null : (heroImageCandidates[heroCandidateIndex] || null)
 
   const effectiveHeroImage = isEditMode
     ? (resolvePublicImageUrl(draftImageUrl) || heroBackgroundImage)
@@ -2677,7 +2682,7 @@ const BlogArticlePage = () => {
       </section>
 
       {/* Navigation bar - después de la imagen */}
-      <section className="relative py-6 px-6 lg:px-20 border-b border-white/5">
+      <section className="relative py-6 px-4 sm:px-6 lg:px-20 border-b border-white/5">
         {/* Gradiente superior para transición suave desde hero */}
         <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black via-black/60 to-transparent pointer-events-none" />
         
@@ -2747,7 +2752,7 @@ const BlogArticlePage = () => {
       </section>
 
       {/* Article Header - título, metadata, etc */}
-      <section className="relative py-12 lg:py-16 px-6 lg:px-20">
+      <section className="relative py-12 lg:py-16 px-4 sm:px-6 lg:px-20">
         {/* Fades de unión (arriba/abajo) para que no se vea el corte */}
         <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black via-black/75 to-transparent pointer-events-none" />
         <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black via-black/75 to-transparent pointer-events-none" />
@@ -3041,7 +3046,7 @@ const BlogArticlePage = () => {
       </AnimatePresence>
 
       {/* CTA Section */}
-      <section className="relative py-20 px-6 lg:px-20">
+      <section className="relative py-20 px-4 sm:px-6 lg:px-20">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -3323,7 +3328,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="mb-12 px-6"
+        className="mb-12"
       >
         <p className="text-xl lg:text-2xl text-white/80 leading-relaxed font-light italic">
           {renderInlineMarkdown(section.content)}
@@ -3339,7 +3344,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="mb-16 px-6"
+        className="mb-16"
       >
         <div className="relative">
           {/* Decorative quote icon */}
@@ -3395,7 +3400,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="mb-8 px-6"
+        className="mb-8"
       >
         <p className="text-lg text-white/70 leading-relaxed">
           {renderInlineMarkdown(section.content)}

@@ -431,14 +431,53 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
    * Generar slug del título
    */
   const generateSlug = (text) => {
-    return text
+    const raw = String(text || '').trim()
+    if (!raw) return ''
+
+    const stopwords = new Set([
+      'el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas',
+      'de', 'del', 'al', 'y', 'o', 'u',
+      'en', 'para', 'por', 'con', 'sin', 'sobre', 'entre', 'hacia', 'desde', 'hasta',
+      'que', 'como', 'a', 'e'
+    ])
+
+    const normalized = raw
       .toLowerCase()
       .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') // Remover acentos
-      .replace(/[^a-z0-9\s-]/g, '') // Solo letras, números, espacios y guiones
-      .trim()
-      .replace(/\s+/g, '-') // Espacios a guiones
-      .replace(/-+/g, '-') // Múltiples guiones a uno solo
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s-]/g, ' ')
+
+    const words = normalized
+      .split(/\s+/g)
+      .map((w) => w.trim())
+      .filter(Boolean)
+
+    const meaningful = words
+      .filter((w) => w.length > 1)
+      .filter((w) => !stopwords.has(w))
+
+    const pick = (list) => {
+      const maxWords = 6
+      const maxLen = 60
+      const out = []
+      let len = 0
+
+      for (const w of list) {
+        if (!w) continue
+        if (out.length >= maxWords) break
+        const nextLen = len ? (len + 1 + w.length) : w.length
+        if (out.length && nextLen > maxLen) break
+        out.push(w)
+        len = nextLen
+      }
+
+      return out.join('-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+    }
+
+    // Prefer meaningful words; fallback to all words.
+    const pretty = pick(meaningful)
+    if (pretty) return pretty
+    return pick(words)
   }
 
   return (
