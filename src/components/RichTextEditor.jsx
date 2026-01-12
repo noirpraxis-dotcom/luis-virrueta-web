@@ -297,11 +297,25 @@ export default function RichTextEditor({
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
 
+    const escAttr = (s) => String(s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+
     const inline = (s) => {
       const t = esc(s)
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      return t.replace(/\n/g, '<br/>')
+
+      // Markdown-style links: [text](url)
+      const withLinks = t.replace(/\[([^\]]+?)\]\(([^\s)]+)\)/g, (_m, label, href) => {
+        const safeHref = escAttr(href)
+        return `<a href="${safeHref}" target="_blank" rel="noopener noreferrer" class="underline underline-offset-4">${label}</a>`
+      })
+
+      return withLinks.replace(/\n/g, '<br/>')
     }
 
     const html = []
@@ -482,6 +496,13 @@ export default function RichTextEditor({
       if (node.nodeType === 1) {
         const tag = String(node.tagName || '').toLowerCase()
         if (tag === 'br') return '\n'
+
+        if (tag === 'a') {
+          const inner = Array.from(node.childNodes || []).map(extractInlineMarkedText).join('')
+          const href = String(node.getAttribute?.('href') || '')
+          if (!href) return inner
+          return `[${inner}](${href})`
+        }
 
         const inner = Array.from(node.childNodes || []).map(extractInlineMarkedText).join('')
         if (!inner) return ''
@@ -1250,6 +1271,71 @@ export default function RichTextEditor({
         return
       }
 
+      if (action === 'link') {
+        const href = window.prompt('URL del enlace (https://...)')
+        const cleaned = String(href || '').trim()
+        if (!cleaned) {
+          setShowFloatingToolbar(false)
+          return
+        }
+
+        document.execCommand?.('createLink', false, cleaned)
+        syncBlocksFromDocDom('doc:format')
+        setShowFloatingToolbar(false)
+        return
+      }
+
+      if (action === 'delete') {
+        const deletableTypes = new Set(['heading', 'highlight', 'questions', 'reflection', 'subsection'])
+
+        const isDeletableTopLevel = (n) => {
+          if (!n || n.nodeType !== 1) return false
+          const el = n
+          const rteType = String(el.getAttribute?.('data-rte-type') || '')
+          const rteRole = String(el.getAttribute?.('data-rte-role') || '')
+          if (el.hasAttribute?.('data-section')) return true
+          if (deletableTypes.has(rteType)) return true
+          if (rteRole === 'title' || rteRole === 'subtitle') return true
+          return false
+        }
+
+        let topLevelNodes = []
+        try {
+          topLevelNodes = Array.from(host?.childNodes || []).filter((n) => {
+            try {
+              return range.intersectsNode(n)
+            } catch {
+              return false
+            }
+          })
+        } catch {
+          topLevelNodes = []
+        }
+
+        const targets = topLevelNodes.filter(isDeletableTopLevel)
+        if (!targets.length) {
+          setShowFloatingToolbar(false)
+          return
+        }
+
+        targets.forEach((n) => {
+          try {
+            n.remove?.()
+          } catch {
+            try {
+              host.removeChild(n)
+            } catch {
+              // ignore
+            }
+          }
+        })
+
+        cleanupDocDom(host)
+        syncBlocksFromDocDom('doc:delete')
+        setShowFloatingToolbar(false)
+        return
+      }
+
       if (action === 'heading') {
         // Contar las secciones actuales para auto-numerar
         const currentSections = docEditorRef.current?.querySelectorAll('[data-section]').length || 0
@@ -1526,6 +1612,29 @@ export default function RichTextEditor({
     }
 
     // Link is intentionally a no-op (no extra UI)
+    if (action === 'link') {
+      const href = window.prompt('URL del enlace (https://...)')
+      const cleaned = String(href || '').trim()
+      if (!cleaned) {
+        setShowFloatingToolbar(false)
+        return
+      }
+
+      const before = content.slice(0, start)
+      const middle = content.slice(start, end)
+      const after = content.slice(end)
+      const nextContent = `${before}[${middle}](${cleaned})${after}`
+      updateBlock(blockId, { content: nextContent })
+      setShowFloatingToolbar(false)
+      return
+    }
+
+    if (action === 'delete') {
+      deleteBlock(blockId)
+      setShowFloatingToolbar(false)
+      return
+    }
+
     setShowFloatingToolbar(false)
   }
 
@@ -1923,16 +2032,15 @@ function BlockTypeSelector({ onSelect }) {
  */
 function FloatingFormatToolbar({ position, onClose, onFormat }) {
   const [showTitleMenu, setShowTitleMenu] = useState(false)
+  const [showBlockMenu, setShowBlockMenu] = useState(false)
 
   const formatOptions = [
     { icon: Bold, label: 'Negrita', action: 'bold' },
     { icon: Italic, label: 'Cursiva', action: 'italic' },
-    { icon: Heading2, label: 'Título', action: 'heading' },
-    { icon: Sparkles, label: 'Destacar', action: 'highlight' },
-    { icon: Quote, label: 'Reflexión', action: 'reflection' },
-    { icon: AlertCircle, label: 'Preguntas', action: 'questions' },
+    { icon: Heading2, label: 'Sección', action: 'heading' },
     { icon: Type, label: 'Tarjeta', action: 'subsection' },
     { icon: LinkIcon, label: 'Enlace', action: 'link' },
+    { icon: Trash2, label: 'Eliminar bloque', action: 'delete' },
   ]
 
   return (
@@ -1986,6 +2094,59 @@ function FloatingFormatToolbar({ position, onClose, onFormat }) {
                 className="w-full px-3 py-2 text-left text-sm text-white/90 hover:bg-white/10"
               >
                 S  Subtítulo
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="relative">
+          <button
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => setShowBlockMenu((v) => !v)}
+            title="Destacar / Reflexión / Preguntas"
+            className="p-2.5 rounded-lg hover:bg-white/10 text-gray-300 hover:text-white transition-all group"
+          >
+            <Sparkles className="w-4 h-4" />
+          </button>
+
+          {showBlockMenu && (
+            <div
+              onMouseDown={(e) => e.preventDefault()}
+              className="absolute left-0 top-full mt-2 w-48 rounded-lg border border-white/10 bg-gray-900 shadow-2xl overflow-hidden"
+              style={{ zIndex: 100000 }}
+            >
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  setShowBlockMenu(false)
+                  onFormat?.('highlight')
+                }}
+                className="w-full px-3 py-2 text-left text-sm text-white/90 hover:bg-white/10 flex items-center gap-2"
+              >
+                <Sparkles className="w-4 h-4 text-purple-300" />
+                Destacar
+              </button>
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  setShowBlockMenu(false)
+                  onFormat?.('reflection')
+                }}
+                className="w-full px-3 py-2 text-left text-sm text-white/90 hover:bg-white/10 flex items-center gap-2"
+              >
+                <Quote className="w-4 h-4 text-purple-300" />
+                Reflexión
+              </button>
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  setShowBlockMenu(false)
+                  onFormat?.('questions')
+                }}
+                className="w-full px-3 py-2 text-left text-sm text-white/90 hover:bg-white/10 flex items-center gap-2"
+              >
+                <AlertCircle className="w-4 h-4 text-purple-300" />
+                Preguntas
               </button>
             </div>
           )}
