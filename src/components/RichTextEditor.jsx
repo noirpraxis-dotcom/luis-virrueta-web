@@ -18,7 +18,8 @@ export default function RichTextEditor({
   onChange,
   showAddBlockButton = true,
   mode = 'blocks',
-  accent = 'purple'
+  accent = 'purple',
+  documentVariant = 'editor'
 }) {
   const [blocks, setBlocks] = useState(initialContent)
   const [selectedBlockId, setSelectedBlockId] = useState(null)
@@ -32,6 +33,9 @@ export default function RichTextEditor({
   const docSeededRef = useRef(false)
   const docInputTimeoutRef = useRef(null)
   const docSelectionRangeRef = useRef(null)
+
+  const DOC_PLACEHOLDER_TEXT = 'Escribe aquí o pega tu contenido…'
+  const QUESTIONS_MARKER_CLASS = 'marker:text-emerald-400'
 
   const accentPreset = getAccentPreset(accent)
 
@@ -131,7 +135,12 @@ export default function RichTextEditor({
 
   // Undo/Redo (Ctrl/Cmd+Z / Ctrl+Y / Ctrl+Shift+Z)
   const handleKeyDownCapture = (e) => {
-    // En modo document también permitir undo/redo personalizado
+    // En modo document, permitir undo/redo NATIVO del navegador.
+    // El historial por bloques no captura cambios del contentEditable mientras tecleas.
+    if (mode === 'document' && docEditorRef.current && docEditorRef.current.contains(e.target)) {
+      return
+    }
+
     const isMac = navigator.platform.toLowerCase().includes('mac')
     const isMod = isMac ? e.metaKey : e.ctrlKey
 
@@ -301,10 +310,13 @@ export default function RichTextEditor({
         sectionCounter++
         const level = b?.level || 'h2'
         const sectionNum = String(sectionCounter).padStart(2, '0')
+        const tocIdAttr = mode === 'document' && documentVariant === 'article'
+          ? ` id="section-${sectionCounter - 1}"`
+          : ''
         
         // Estilo con caja y número de sección como en el artículo final
         push(
-          `<div class="mb-12 mt-16 relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden" data-section="${sectionCounter}">` +
+          `<div${tocIdAttr} class="mb-12 mt-16 relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden" data-section="${sectionCounter}">` +
           `<div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accentPreset.headingTopBar}"></div>` +
           `<div class="inline-flex items-center gap-2 mb-4 px-4 py-1.5 ${accentPreset.badgeBg} border ${accentPreset.badgeBorder} rounded-full">` +
           `<span class="text-xs font-mono ${accentPreset.badgeText} tracking-wider">SECCIÓN ${sectionNum}</span>` +
@@ -343,21 +355,41 @@ export default function RichTextEditor({
         continue
       }
 
+      if (type === 'title') {
+        push(
+          `<h1 data-rte-role="title" class="my-8 text-4xl md:text-5xl font-light text-white leading-tight">${inline(content)}</h1>`
+        )
+        continue
+      }
+
+      if (type === 'subtitle') {
+        push(
+          `<h2 data-rte-role="subtitle" class="my-6 text-xl md:text-2xl font-light text-white/70 leading-relaxed">${inline(content)}</h2>`
+        )
+        continue
+      }
+
       if (type === 'questions') {
-        const title = String(b?.title || '❓ Preguntas psicoanalíticas').trim() || '❓ Preguntas psicoanalíticas'
+        const titleRaw = String(b?.title || 'Preguntas que incomodan').trim() || 'Preguntas que incomodan'
+        const title = titleRaw.replace(/^❓\s*/, '').trim() || 'Preguntas que incomodan'
         const items = String(b?.content || '')
           .split('\n')
           .map((l) => String(l || '').trim())
           .filter(Boolean)
 
         const li = items
-          .map((q) => `<li class="flex gap-4 items-start text-white/85"><span class="mt-2.5 h-2.5 w-2.5 rounded-full bg-gradient-to-br ${accentPreset.questionsDot} flex-shrink-0 shadow-lg shadow-black/30"></span><div class="text-lg leading-relaxed">${inline(q)}</div></li>`)
+          .map((q) => `<li class="text-lg leading-relaxed text-white/85">${inline(q)}</li>`)
           .join('')
 
         push(
           `<section data-rte-type="questions" class="my-12 rounded-3xl border-2 ${accentPreset.questionsBorder} bg-gradient-to-br ${accentPreset.questionsBg} p-10 shadow-2xl shadow-black/30">` +
-          `<h3 class="text-2xl md:text-3xl font-bold bg-gradient-to-r ${accentPreset.questionsTitle} bg-clip-text text-transparent mb-6" data-rte-role="questions-title">${inline(title)}</h3>` +
-          `<ul class="space-y-4" data-rte-role="questions-items">${li}</ul>` +
+          `<div class="flex items-center gap-3 mb-6" data-rte-role="questions-header">` +
+          `<span data-rte-role="questions-icon-box" class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br ${accentPreset.questionsIconBg} border ${accentPreset.questionsIconBorder}">` +
+          `<span data-rte-role="questions-icon" class="${accentPreset.questionsIcon} text-lg font-bold leading-none">?</span>` +
+          `</span>` +
+          `<h3 class="text-2xl md:text-3xl font-bold bg-gradient-to-r ${accentPreset.questionsTitle} bg-clip-text text-transparent" data-rte-role="questions-title">${inline(title)}</h3>` +
+          `</div>` +
+          `<ul class="space-y-3 pl-6 list-disc ${QUESTIONS_MARKER_CLASS}" data-rte-role="questions-items">${li}</ul>` +
           `</section>`
         )
         continue
@@ -368,7 +400,10 @@ export default function RichTextEditor({
     }
 
     flushList()
-    return html.join('') || `<p class="text-white/40 text-xl italic">Escribe aquí o pega tu contenido…</p>`
+    return (
+      html.join('') ||
+      `<p data-rte-placeholder="1" class="text-white/40 text-xl italic">${DOC_PLACEHOLDER_TEXT}</p>`
+    )
   }
 
   const htmlToBlocks = (rootEl) => {
@@ -420,6 +455,31 @@ export default function RichTextEditor({
     for (const el of children) {
       const tag = el.tagName?.toLowerCase?.() || ''
 
+      // Ignore placeholder
+      if (tag === 'p' && el.getAttribute('data-rte-placeholder') === '1') {
+        continue
+      }
+
+      // Heurística: si pegan el artículo "final" (sin data-rte-type), detectar un bloque de preguntas
+      // por su título y lista interna.
+      if ((tag === 'section' || tag === 'div') && !el.getAttribute('data-rte-type')) {
+        const headingEl = el.querySelector('h2, h3, h4')
+        const titleGuess = String(headingEl?.textContent || '').trim()
+        const hasQuestionsWord = /preguntas/i.test(titleGuess)
+        const liEls = Array.from(el.querySelectorAll('ul li'))
+        const items = liEls.map((li) => String(li.textContent || '').trim()).filter(Boolean)
+        if (hasQuestionsWord && items.length) {
+          const cleanedTitle = titleGuess.replace(/^\??\s*/, '').trim() || 'Preguntas incómodas'
+          next.push({
+            id: `block-${Date.now()}-${next.length}`,
+            type: 'questions',
+            title: cleanedTitle,
+            content: items.join('\n')
+          })
+          continue
+        }
+      }
+
       // Detectar sección con número (div con data-section)
       if (tag === 'div' && el.hasAttribute('data-section')) {
         const h2El = el.querySelector('h2')
@@ -441,8 +501,20 @@ export default function RichTextEditor({
         continue
       }
 
+      if (tag === 'h1' && el.getAttribute('data-rte-role') === 'title') {
+        const t = normalizeInlineText(extractInlineMarkedText(el))
+        if (t) next.push({ id: `block-${Date.now()}-${next.length}`, type: 'title', content: t })
+        continue
+      }
+
+      if (tag === 'h2' && el.getAttribute('data-rte-role') === 'subtitle') {
+        const t = normalizeInlineText(extractInlineMarkedText(el))
+        if (t) next.push({ id: `block-${Date.now()}-${next.length}`, type: 'subtitle', content: t })
+        continue
+      }
+
       if (tag === 'h1' || tag === 'h2' || tag === 'h3') {
-        const t = String(el.textContent || '').trim()
+        const t = normalizeInlineText(extractInlineMarkedText(el))
         if (t) next.push({ id: `block-${Date.now()}-${next.length}`, type: 'heading', level: tag === 'h1' ? 'h1' : tag === 'h2' ? 'h2' : 'h3', content: t })
         continue
       }
@@ -490,9 +562,80 @@ export default function RichTextEditor({
     return next
   }
 
+  const cleanupDocDom = (root) => {
+    if (!root) return
+
+    const isNodeEmpty = (node) => {
+      if (!node) return true
+      if (node.querySelector?.('img')) return false
+      const text = String(node.textContent || '').replace(/\u00A0/g, ' ').trim()
+      if (text) return false
+      const html = String(node.innerHTML || '')
+        .replace(/<br\s*\/?>/gi, '')
+        .replace(/&nbsp;/gi, '')
+        .replace(/<span[^>]*>\s*<\/span>/gi, '')
+        .replace(/\s+/g, '')
+      return html.length === 0
+    }
+
+    // Remove placeholder if there is any real content besides it.
+    const placeholder = root.querySelector?.('[data-rte-placeholder="1"]')
+    if (placeholder) {
+      const otherEls = Array.from(root.children || []).filter((c) => c !== placeholder)
+      const hasOtherContent = otherEls.some((c) => !isNodeEmpty(c))
+      if (hasOtherContent) placeholder.remove()
+    }
+
+    // Remove empty wrappers (sections/questions/highlights/paragraphs)
+    Array.from(root.children || []).forEach((child) => {
+      const tag = child.tagName?.toLowerCase?.() || ''
+
+      if (tag === 'div' && child.hasAttribute('data-section')) {
+        const h2 = child.querySelector('h2')
+        const t = String(h2?.textContent || '').replace(/\u00A0/g, ' ').trim()
+        if (!t) child.remove()
+        return
+      }
+
+      if (tag === 'section' && child.getAttribute('data-rte-type') === 'questions') {
+        const items = Array.from(child.querySelectorAll('li'))
+          .map((li) => String(li.textContent || '').trim())
+          .filter(Boolean)
+        const title = String(child.querySelector('[data-rte-role="questions-title"]')?.textContent || '').trim()
+        if (!title && items.length === 0) child.remove()
+        return
+      }
+
+      if (tag === 'div' && child.querySelector('blockquote')) {
+        const q = String(child.querySelector('blockquote')?.textContent || '').trim()
+        if (!q) child.remove()
+        return
+      }
+
+      if (isNodeEmpty(child)) child.remove()
+    })
+
+    // Renumber SECCIÓN blocks after deletions.
+    const sections = Array.from(root.querySelectorAll('div[data-section]'))
+    sections.forEach((section, idx) => {
+      const n = idx + 1
+      section.setAttribute('data-section', String(n))
+      if (/^section-\d+$/.test(String(section.id || ''))) {
+        section.id = `section-${n - 1}`
+      }
+      const badgeText =
+        section.querySelector('[data-rte-role="section-badge-text"]') ||
+        section.querySelector('span.text-xs')
+      if (badgeText) {
+        badgeText.textContent = `SECCIÓN ${String(n).padStart(2, '0')}`
+      }
+    })
+  }
+
   const syncBlocksFromDocDom = (coalesceKey) => {
     const root = docEditorRef.current
     if (!root) return
+    cleanupDocDom(root)
     const parsed = htmlToBlocks(root)
     setBlocksWithHistory(parsed, { coalesceKey })
   }
@@ -523,10 +666,13 @@ export default function RichTextEditor({
     Array.from(root.querySelectorAll('[data-rte-type="questions"]')).forEach((qSection) => {
       qSection.className = `my-12 rounded-3xl border-2 ${accentPreset.questionsBorder} bg-gradient-to-br ${accentPreset.questionsBg} p-10 shadow-2xl shadow-black/30`
       const title = qSection.querySelector('[data-rte-role="questions-title"]')
-      if (title) title.className = `text-2xl md:text-3xl font-bold bg-gradient-to-r ${accentPreset.questionsTitle} bg-clip-text text-transparent mb-6`
-      qSection.querySelectorAll('li > span').forEach((dot) => {
-        dot.className = `mt-2.5 h-2.5 w-2.5 rounded-full bg-gradient-to-br ${accentPreset.questionsDot} flex-shrink-0 shadow-lg shadow-black/30`
-      })
+      if (title) title.className = `text-2xl md:text-3xl font-bold bg-gradient-to-r ${accentPreset.questionsTitle} bg-clip-text text-transparent`
+      const iconBox = qSection.querySelector('[data-rte-role="questions-icon-box"]')
+      if (iconBox) iconBox.className = `inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br ${accentPreset.questionsIconBg} border ${accentPreset.questionsIconBorder}`
+      const icon = qSection.querySelector('[data-rte-role="questions-icon"]')
+      if (icon) icon.className = `${accentPreset.questionsIcon} text-lg font-bold leading-none`
+      const ul = qSection.querySelector('[data-rte-role="questions-items"]')
+      if (ul) ul.className = `space-y-3 pl-6 list-disc ${QUESTIONS_MARKER_CLASS}`
     })
 
     // Highlight blocks (only tagged ones)
@@ -578,6 +724,14 @@ export default function RichTextEditor({
   }, [mode, blocks, accent])
 
   const handleDocInput = () => {
+    const host = docEditorRef.current
+    if (host) {
+      const placeholderEl = host.querySelector?.('[data-rte-placeholder="1"]')
+      if (placeholderEl) {
+        host.innerHTML = ''
+      }
+    }
+
     // Limpiar timeout anterior
     if (docInputTimeoutRef.current) {
       clearTimeout(docInputTimeoutRef.current)
@@ -589,7 +743,29 @@ export default function RichTextEditor({
     }, 500)
   }
 
+  const handleDocBeforeInput = (e) => {
+    const t = e?.inputType
+    if (t !== 'historyUndo' && t !== 'historyRedo') return
+    setTimeout(() => syncBlocksFromDocDom(`doc:${t}`), 0)
+  }
+
+  const handleDocFocus = () => {
+    const host = docEditorRef.current
+    if (!host) return
+    const placeholderEl = host.querySelector?.('[data-rte-placeholder="1"]')
+    if (placeholderEl) {
+      host.innerHTML = ''
+    }
+  }
+
   const handleDocPaste = () => {
+    const host = docEditorRef.current
+    if (host) {
+      const placeholderEl = host.querySelector?.('[data-rte-placeholder="1"]')
+      if (placeholderEl) {
+        host.innerHTML = ''
+      }
+    }
     setTimeout(() => syncBlocksFromDocDom('doc:paste'), 0)
   }
   
@@ -864,20 +1040,6 @@ export default function RichTextEditor({
         return
       }
 
-      if (action === 'bold') {
-        document.execCommand?.('bold')
-        syncBlocksFromDocDom('doc:format')
-        setShowFloatingToolbar(false)
-        return
-      }
-
-      if (action === 'italic') {
-        document.execCommand?.('italic')
-        syncBlocksFromDocDom('doc:format')
-        setShowFloatingToolbar(false)
-        return
-      }
-
       const insertBlockElement = (el) => {
         range.deleteContents()
         range.insertNode(el)
@@ -891,6 +1053,113 @@ export default function RichTextEditor({
           sel.addRange(afterRange)
           docSelectionRangeRef.current = afterRange.cloneRange()
         }
+      }
+
+      const replaceSelectionWithTopLevelBlock = (el, coalesceKey) => {
+        if (!host) {
+          insertBlockElement(el)
+          return
+        }
+
+        let topLevelNodes = []
+        try {
+          topLevelNodes = Array.from(host.childNodes || []).filter((n) => {
+            try {
+              return range.intersectsNode(n)
+            } catch {
+              return false
+            }
+          })
+        } catch {
+          topLevelNodes = []
+        }
+
+        if (!topLevelNodes.length) {
+          insertBlockElement(el)
+          cleanupDocDom(host)
+          if (coalesceKey) syncBlocksFromDocDom(coalesceKey)
+          return
+        }
+
+        const first = topLevelNodes[0]
+        try {
+          host.insertBefore(el, first)
+        } catch {
+          host.appendChild(el)
+        }
+
+        topLevelNodes.forEach((n) => {
+          try {
+            n.remove?.()
+          } catch {
+            try {
+              host.removeChild(n)
+            } catch {
+              // ignore
+            }
+          }
+        })
+
+        const sel = window.getSelection()
+        if (sel) {
+          sel.removeAllRanges()
+          const after = document.createRange()
+          after.setStartAfter(el)
+          after.collapse(true)
+          sel.addRange(after)
+          docSelectionRangeRef.current = after.cloneRange()
+        }
+
+        cleanupDocDom(host)
+        if (coalesceKey) syncBlocksFromDocDom(coalesceKey)
+      }
+
+      if (action === 'title' || action === 'subtitle') {
+        const role = action === 'title' ? 'title' : 'subtitle'
+        const tag = action === 'title' ? 'h1' : 'h2'
+        const cleaned = String(text || '').replace(/\s+/g, ' ').trim()
+        if (!cleaned) {
+          setShowFloatingToolbar(false)
+          return
+        }
+
+        // Enforce only one title/subtitle in the document
+        try {
+          host?.querySelectorAll?.(`[data-rte-role="${role}"]`)?.forEach?.((node) => {
+            const p = document.createElement('p')
+            p.className = 'my-6 text-lg md:text-xl text-white/75 leading-relaxed tracking-wide'
+            p.innerHTML = node.innerHTML
+            node.replaceWith(p)
+          })
+        } catch {
+          // ignore
+        }
+
+        const h = document.createElement(tag)
+        h.setAttribute('data-rte-role', role)
+        h.className =
+          role === 'title'
+            ? 'my-8 text-4xl md:text-5xl font-light text-white leading-tight'
+            : 'my-6 text-xl md:text-2xl font-light text-white/70 leading-relaxed'
+        h.textContent = cleaned
+
+        replaceSelectionWithTopLevelBlock(h, `doc:${role}`)
+        setShowFloatingToolbar(false)
+        return
+      }
+
+      if (action === 'bold') {
+        document.execCommand?.('bold')
+        syncBlocksFromDocDom('doc:format')
+        setShowFloatingToolbar(false)
+        return
+      }
+
+      if (action === 'italic') {
+        document.execCommand?.('italic')
+        syncBlocksFromDocDom('doc:format')
+        setShowFloatingToolbar(false)
+        return
       }
 
       if (action === 'heading') {
@@ -925,8 +1194,7 @@ export default function RichTextEditor({
         wrapper.appendChild(badge)
         wrapper.appendChild(h2)
         
-        insertBlockElement(wrapper)
-        syncBlocksFromDocDom('doc:format')
+        replaceSelectionWithTopLevelBlock(wrapper, 'doc:format')
         setShowFloatingToolbar(false)
         return
       }
@@ -973,8 +1241,7 @@ export default function RichTextEditor({
           wrapper.appendChild(cite)
         }
         
-        insertBlockElement(wrapper)
-        syncBlocksFromDocDom('doc:format')
+        replaceSelectionWithTopLevelBlock(wrapper, 'doc:format')
         setShowFloatingToolbar(false)
         return
       }
@@ -984,14 +1251,30 @@ export default function RichTextEditor({
         section.setAttribute('data-rte-type', 'questions')
         section.className = `my-12 rounded-3xl border-2 ${accentPreset.questionsBorder} bg-gradient-to-br ${accentPreset.questionsBg} p-10 shadow-2xl shadow-black/30`
 
+        const header = document.createElement('div')
+        header.setAttribute('data-rte-role', 'questions-header')
+        header.className = 'flex items-center gap-3 mb-6'
+
+        const iconBox = document.createElement('span')
+        iconBox.setAttribute('data-rte-role', 'questions-icon-box')
+        iconBox.className = `inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br ${accentPreset.questionsIconBg} border ${accentPreset.questionsIconBorder}`
+        const icon = document.createElement('span')
+        icon.setAttribute('data-rte-role', 'questions-icon')
+        icon.className = `${accentPreset.questionsIcon} text-lg font-bold leading-none`
+        icon.textContent = '?'
+        iconBox.appendChild(icon)
+
         const title = document.createElement('h3')
         title.setAttribute('data-rte-role', 'questions-title')
-        title.className = `text-2xl md:text-3xl font-bold bg-gradient-to-r ${accentPreset.questionsTitle} bg-clip-text text-transparent mb-6`
-        title.textContent = '❓ Preguntas psicoanalíticas'
+        title.className = `text-2xl md:text-3xl font-bold bg-gradient-to-r ${accentPreset.questionsTitle} bg-clip-text text-transparent`
+        title.textContent = 'Preguntas que incomodan'
+
+        header.appendChild(iconBox)
+        header.appendChild(title)
 
         const ul = document.createElement('ul')
         ul.setAttribute('data-rte-role', 'questions-items')
-        ul.className = 'space-y-4'
+        ul.className = `space-y-3 pl-6 list-disc ${QUESTIONS_MARKER_CLASS}`
 
         String(text || '')
           .split('\n')
@@ -999,21 +1282,14 @@ export default function RichTextEditor({
           .filter(Boolean)
           .forEach((q) => {
             const li = document.createElement('li')
-            li.className = 'flex gap-4 items-start text-white/85'
-            const dot = document.createElement('span')
-            dot.className = `mt-2.5 h-2.5 w-2.5 rounded-full bg-gradient-to-br ${accentPreset.questionsDot} flex-shrink-0 shadow-lg shadow-black/30`
-            const div = document.createElement('div')
-            div.className = 'text-lg leading-relaxed'
-            div.textContent = q
-            li.appendChild(dot)
-            li.appendChild(div)
+            li.className = 'text-lg leading-relaxed text-white/85'
+            li.textContent = q
             ul.appendChild(li)
           })
 
-        section.appendChild(title)
+        section.appendChild(header)
         section.appendChild(ul)
-        insertBlockElement(section)
-        syncBlocksFromDocDom('doc:format')
+        replaceSelectionWithTopLevelBlock(section, 'doc:format')
         setShowFloatingToolbar(false)
         return
       }
@@ -1174,8 +1450,10 @@ También puedes usar el botón + para agregar bloques específicos."
               contentEditable
               suppressContentEditableWarning
               onInput={handleDocInput}
+              onBeforeInput={handleDocBeforeInput}
               onPaste={handleDocPaste}
               onBlur={handleDocBlur}
+              onFocus={handleDocFocus}
               onMouseUp={() => updateToolbarFromDocSelection(window.getSelection())}
               onKeyUp={() => updateToolbarFromDocSelection(window.getSelection())}
               onTouchEnd={() => updateToolbarFromDocSelection(window.getSelection())}
@@ -1444,6 +1722,8 @@ function BlockTypeSelector({ onSelect }) {
  * Aparece al seleccionar texto
  */
 function FloatingFormatToolbar({ position, onClose, onFormat }) {
+  const [showTitleMenu, setShowTitleMenu] = useState(false)
+
   const formatOptions = [
     { icon: Bold, label: 'Negrita', action: 'bold' },
     { icon: Italic, label: 'Cursiva', action: 'italic' },
@@ -1469,6 +1749,46 @@ function FloatingFormatToolbar({ position, onClose, onFormat }) {
       className="bg-gray-900 border-2 border-purple-500 rounded-xl shadow-2xl shadow-purple-500/50 overflow-hidden"
     >
       <div className="flex items-center gap-1 p-2">
+        <div className="relative">
+          <button
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => setShowTitleMenu((v) => !v)}
+            title="Título/Subtítulo"
+            className="px-3 py-2 rounded-lg hover:bg-white/10 text-gray-300 hover:text-white transition-all font-semibold"
+          >
+            T
+          </button>
+
+          {showTitleMenu && (
+            <div
+              onMouseDown={(e) => e.preventDefault()}
+              className="absolute left-0 top-full mt-2 w-44 rounded-lg border border-white/10 bg-gray-900 shadow-2xl overflow-hidden"
+              style={{ zIndex: 100000 }}
+            >
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  setShowTitleMenu(false)
+                  onFormat?.('title')
+                }}
+                className="w-full px-3 py-2 text-left text-sm text-white/90 hover:bg-white/10"
+              >
+                T  Título
+              </button>
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  setShowTitleMenu(false)
+                  onFormat?.('subtitle')
+                }}
+                className="w-full px-3 py-2 text-left text-sm text-white/90 hover:bg-white/10"
+              >
+                S  Subtítulo
+              </button>
+            </div>
+          )}
+        </div>
+
         {formatOptions.map(({ icon: Icon, label, action }) => (
           <button
             key={action}

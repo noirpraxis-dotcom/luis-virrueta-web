@@ -20,6 +20,46 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState(null)
+
+  const extractMetaFromContent = (blocks) => {
+    const list = Array.isArray(blocks) ? blocks : []
+    let extractedTitle = ''
+    let extractedSubtitle = ''
+    const body = []
+
+    for (const b of list) {
+      const type = String(b?.type || '')
+      if (!extractedTitle && type === 'title') {
+        extractedTitle = String(b?.content || '').trim()
+        continue
+      }
+      if (!extractedSubtitle && type === 'subtitle') {
+        extractedSubtitle = String(b?.content || '').trim()
+        continue
+      }
+      body.push(b)
+    }
+
+    return { extractedTitle, extractedSubtitle, body }
+  }
+
+  const seedContentWithMetaBlocks = (blocks, metaTitle, metaSubtitle) => {
+    const list = Array.isArray(blocks) ? blocks : []
+    const hasTitle = list.some((b) => String(b?.type || '') === 'title')
+    const hasSubtitle = list.some((b) => String(b?.type || '') === 'subtitle')
+
+    const seeded = []
+    const makeId = (suffix) => `meta-${Date.now()}-${suffix}`
+
+    if (!hasTitle && String(metaTitle || '').trim()) {
+      seeded.push({ id: makeId('title'), type: 'title', content: String(metaTitle || '').trim() })
+    }
+    if (!hasSubtitle && String(metaSubtitle || '').trim()) {
+      seeded.push({ id: makeId('subtitle'), type: 'subtitle', content: String(metaSubtitle || '').trim() })
+    }
+
+    return seeded.length ? [...seeded, ...list] : list
+  }
   
   // Metadatos del artículo
   const [title, setTitle] = useState(article?.title || '')
@@ -42,7 +82,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
   const [compressionStats, setCompressionStats] = useState(null) // { original, compressed, percentage }
   
   // Contenido (bloques del editor)
-  const [content, setContent] = useState(article?.content || [])
+  const [content, setContent] = useState(() => seedContentWithMetaBlocks(article?.content || [], article?.title || '', article?.subtitle || ''))
   
   // Estado de publicación
   const [isPublished, setIsPublished] = useState(article?.isPublished ?? article?.is_published ?? false)
@@ -116,7 +156,12 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
   // Actualizar tiempo de lectura cuando cambia el contenido
   const handleContentChange = (newContent) => {
     setContent(newContent)
-    const calculatedTime = calculateReadTime(newContent)
+
+    const { extractedTitle, extractedSubtitle, body } = extractMetaFromContent(newContent)
+    if (extractedTitle && extractedTitle !== title) setTitle(extractedTitle)
+    if (extractedSubtitle && extractedSubtitle !== subtitle) setSubtitle(extractedSubtitle)
+
+    const calculatedTime = calculateReadTime(body)
     setReadTime(calculatedTime)
   }
 
@@ -202,8 +247,12 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
    * Guardar artículo en Supabase
    */
   const handleSave = async (publish = false) => {
+    const { extractedTitle, extractedSubtitle, body } = extractMetaFromContent(content)
+    const finalTitle = (extractedTitle || title).trim()
+    const finalSubtitle = (extractedSubtitle || subtitle).trim()
+
     // Validaciones
-    if (!title.trim()) {
+    if (!finalTitle) {
       setMessage({ type: 'error', text: 'El título es obligatorio' })
       return
     }
@@ -213,7 +262,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
       return
     }
 
-    if (content.length === 0) {
+    if (!Array.isArray(body) || body.length === 0) {
       setMessage({ type: 'error', text: 'El contenido no puede estar vacío' })
       return
     }
@@ -250,8 +299,8 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
       }
 
       const articleData = {
-        title: title.trim(),
-        subtitle: subtitle.trim(),
+        title: finalTitle,
+        subtitle: finalSubtitle,
         excerpt: excerpt.trim(),
         author: author.trim(),
         category: category,
@@ -261,10 +310,10 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
         read_time: readTime,
         language: language,
         image_url: finalImageUrl,
-        content: content,
+        content: body,
         is_published: finalIsPublished,
         published_at: resolvePublishedAtIso(),
-        slug: generateSlug(title),
+        slug: generateSlug(finalTitle),
         updated_at: new Date().toISOString()
       }
 

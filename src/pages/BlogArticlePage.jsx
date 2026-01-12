@@ -12,8 +12,13 @@ import ArticleSchema from '../components/ArticleSchema'
 import SEOHead from '../components/SEOHead'
 import { calculateReadTime, toISODate } from '../utils/blogHelpers'
 import { useLanguage } from '../context/LanguageContext'
+import { useAuth } from '../context/AuthContext'
+import AdminLogin from '../components/AdminLogin'
+import RichTextEditor from '../components/RichTextEditor'
 import { getArticleContent } from '../data/blogArticlesContent'
 import { supabase } from '../lib/supabase'
+import { compressImage } from '../utils/imageCompression'
+import { uploadBlogImage, updateBlogArticle, createBlogArticle } from '../lib/supabase'
 
 const HIDDEN_BLOG_SLUGS = new Set([
   'rebranding-vs-refresh-cuando-redisenar-marca-completa',
@@ -558,7 +563,7 @@ const getArticleBySlug = (slug) => {
       category: 'Branding × Psicología',
       tags: ['Influence', 'Persuasion', 'Psychology', 'Brand Strategy'],
       gradient: 'from-rose-500 to-pink-500',
-      heroImage: '/IMAGENES BLOG/persuación.webp',
+      heroImage: '/IMAGENES BLOG/persuacion.webp',
       sections: [
         {
           type: 'intro',
@@ -859,7 +864,7 @@ const getArticleBySlug = (slug) => {
       category: 'Branding × Psicología',
       tags: ['Choice Paradox', 'Psychology', 'Conversion', 'Strategy'],
       gradient: 'from-sky-500 to-blue-500',
-      heroImage: '/IMAGENES BLOG/paralisis de elección.webp',
+      heroImage: '/IMAGENES BLOG/paralisis-de-eleccion.webp',
       sections: [
         {
           type: 'intro',
@@ -1794,11 +1799,31 @@ const getArticleBySlug = (slug) => {
 const BlogArticlePage = () => {
   const { slug } = useParams()
   const { currentLanguage, t } = useLanguage()
+  const { isAdmin } = useAuth()
   const isHiddenSlug = HIDDEN_BLOG_SLUGS.has(slug)
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.1 })
 
   const [cmsRow, setCmsRow] = useState(null)
+
+  const [isEditMode, setIsEditMode] = useState(false)
+  const [showAdminLogin, setShowAdminLogin] = useState(false)
+  const [draftTitle, setDraftTitle] = useState('')
+  const [draftSubtitle, setDraftSubtitle] = useState('')
+  const [draftAuthor, setDraftAuthor] = useState('')
+  const [draftReadTime, setDraftReadTime] = useState('')
+  const [draftTags, setDraftTags] = useState([])
+  const [draftImageUrl, setDraftImageUrl] = useState('')
+  const [draftPublishedAt, setDraftPublishedAt] = useState('')
+  const [draftBlocks, setDraftBlocks] = useState([])
+  const [isDirty, setIsDirty] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveStatus, setSaveStatus] = useState('')
+  const [saveError, setSaveError] = useState('')
+  const [tagInput, setTagInput] = useState('')
+
+  const heroFileInputRef = useRef(null)
+  const autosaveTimerRef = useRef(null)
 
   useEffect(() => {
     // En SPA, el scroll puede quedarse donde estabas; forzamos inicio al abrir artículo.
@@ -1876,6 +1901,11 @@ const BlogArticlePage = () => {
       const type = block?.type
       const content = String(block?.content || '').trim()
 
+      // Meta blocks (se guardan como campos del artículo, no como contenido renderizado)
+      if (type === 'title' || type === 'subtitle') {
+        continue
+      }
+
       if (type === 'list') {
         if (!pendingList) {
           pendingList = { type: 'list', items: [] }
@@ -1919,6 +1949,54 @@ const BlogArticlePage = () => {
 
     flushList()
     return sections
+  }
+
+  const sectionsToCmsBlocks = (sections) => {
+    if (!Array.isArray(sections)) return []
+    const blocks = []
+    for (const section of sections) {
+      if (!section) continue
+      if (section.type === 'heading') {
+        blocks.push({ type: 'heading', content: String(section.title || '').trim() })
+        continue
+      }
+      if (section.type === 'text' || section.type === 'intro' || section.type === 'conclusion' || section.type === 'reflection') {
+        const content = String(section.content || '').trim()
+        if (content) blocks.push({ type: 'paragraph', content })
+        continue
+      }
+      if (section.type === 'highlight') {
+        const content = String(section.content || '').trim()
+        if (content) blocks.push({ type: 'highlight', content, author: section.author || '' })
+        continue
+      }
+      if (section.type === 'questions') {
+        const items = Array.isArray(section.items) ? section.items : []
+        const content = items.map((i) => String(i || '').trim()).filter(Boolean).join('\n')
+        if (content) blocks.push({ type: 'questions', title: section.title || 'Preguntas incómodas', content })
+        continue
+      }
+      if (section.type === 'list') {
+        const items = Array.isArray(section.items) ? section.items : []
+        for (const item of items) {
+          const title = String(item?.title || '').trim()
+          if (title) blocks.push({ type: 'list', content: title })
+        }
+        continue
+      }
+    }
+    return blocks
+  }
+
+  const extractMetaFromBlocks = (blocks) => {
+    const titleBlock = (blocks || []).find((b) => b?.type === 'title' && String(b?.content || '').trim())
+    const subtitleBlock = (blocks || []).find((b) => b?.type === 'subtitle' && String(b?.content || '').trim())
+    const body = (blocks || []).filter((b) => b?.type !== 'title' && b?.type !== 'subtitle')
+    return {
+      title: titleBlock ? String(titleBlock.content).trim() : '',
+      subtitle: subtitleBlock ? String(subtitleBlock.content).trim() : '',
+      body
+    }
   }
 
   const normalizeCmsArticle = (row) => {
@@ -2015,6 +2093,9 @@ const BlogArticlePage = () => {
     return cmsArticle || baseArticle
   })()
 
+  const editorSections = isEditMode ? cmsBlocksToSections(draftBlocks) : article.sections
+  const tocSections = editorSections
+
   const accentKey = inferAccentKey(article)
   const accent = ACCENT_PRESETS[accentKey] || ACCENT_PRESETS.purple
 
@@ -2039,6 +2120,10 @@ const BlogArticlePage = () => {
   const [heroCandidateIndex, setHeroCandidateIndex] = useState(0)
   const heroBackgroundImage = heroImageCandidates[heroCandidateIndex] || null
 
+  const effectiveHeroImage = isEditMode
+    ? (resolvePublicImageUrl(draftImageUrl) || heroBackgroundImage)
+    : heroBackgroundImage
+
   useEffect(() => {
     setHeroCandidateIndex(0)
   }, [slug, heroImageCandidates.join('|')])
@@ -2056,8 +2141,151 @@ const BlogArticlePage = () => {
     )
   }
 
+  const beginEditMode = () => {
+    if (!isAdmin) {
+      setShowAdminLogin(true)
+      return
+    }
+
+    const row = cmsRow
+    const initialBlocks = Array.isArray(row?.content) && row.content.length
+      ? row.content
+      : sectionsToCmsBlocks(article.sections)
+
+    setDraftTitle(String(row?.title || article.title || '').trim())
+    setDraftSubtitle(String(row?.subtitle || article.subtitle || '').trim())
+    setDraftAuthor(String(row?.author || article.author || '').trim())
+    setDraftReadTime(String(row?.read_time || row?.readTime || article.readTime || '').trim())
+    setDraftTags(Array.isArray(row?.tags) ? row.tags : (Array.isArray(article.tags) ? article.tags : []))
+    setDraftImageUrl(String(row?.image_url || article.heroImage || article.image || '').trim())
+    setDraftPublishedAt(String(row?.published_at || row?.created_at || '').slice(0, 16))
+    setDraftBlocks(initialBlocks)
+    setIsDirty(false)
+    setSaveError('')
+    setSaveStatus('')
+    setIsEditMode(true)
+  }
+
+  const stopEditMode = () => {
+    setIsEditMode(false)
+    setSaveError('')
+    setSaveStatus('')
+  }
+
+  const saveToSupabase = async ({ publish = false, silent = false } = {}) => {
+    if (!isAdmin) return
+    if (isSaving) return
+
+    setIsSaving(true)
+    if (!silent) setSaveStatus(publish ? 'Publicando…' : 'Guardando borrador…')
+    setSaveError('')
+
+    try {
+      const { title: metaTitle, subtitle: metaSubtitle, body } = extractMetaFromBlocks(draftBlocks)
+      const finalTitle = metaTitle || draftTitle || article.title
+      const finalSubtitle = metaSubtitle || draftSubtitle || ''
+
+      const updates = {
+        title: finalTitle,
+        subtitle: finalSubtitle,
+        author: draftAuthor || article.author,
+        read_time: draftReadTime || calculateReadTime(cmsBlocksToSections(body)),
+        tags: Array.isArray(draftTags) ? draftTags.filter(Boolean) : [],
+        image_url: draftImageUrl || null,
+        content: body,
+        language: currentLanguage,
+        slug,
+        is_published: publish ? true : (cmsRow?.is_published ?? false),
+        published_at: publish
+          ? (cmsRow?.published_at || new Date().toISOString())
+          : (cmsRow?.published_at || null)
+      }
+
+      const result = cmsRow?.id
+        ? await updateBlogArticle(cmsRow.id, updates)
+        : await createBlogArticle({
+          ...updates,
+          category: cmsRow?.category || article.category || null,
+          accent: cmsRow?.accent || article.accent || null
+        })
+
+      setCmsRow(result)
+      setDraftTitle(result.title || finalTitle)
+      setDraftSubtitle(result.subtitle || finalSubtitle)
+      setIsDirty(false)
+      if (!silent) setSaveStatus(publish ? 'Publicado' : 'Borrador guardado')
+
+      if (!silent) {
+        window.setTimeout(() => setSaveStatus(''), 1500)
+      }
+    } catch (err) {
+      console.error('Error guardando in-place:', err)
+      const msg = err?.message || 'Error al guardar'
+      setSaveError(msg)
+      if (!silent) setSaveStatus('')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  useEffect(() => {
+    if (!isEditMode || !isAdmin) return
+    if (autosaveTimerRef.current) {
+      window.clearInterval(autosaveTimerRef.current)
+      autosaveTimerRef.current = null
+    }
+    autosaveTimerRef.current = window.setInterval(() => {
+      if (!isDirty) return
+      saveToSupabase({ publish: false, silent: true })
+    }, 60_000)
+
+    return () => {
+      if (autosaveTimerRef.current) {
+        window.clearInterval(autosaveTimerRef.current)
+        autosaveTimerRef.current = null
+      }
+    }
+  }, [isEditMode, isAdmin, isDirty])
+
+  const handleHeroFilePick = async (file) => {
+    if (!file) return
+    try {
+      setSaveError('')
+      setSaveStatus('Subiendo imagen…')
+      const compressed = await compressImage(file, { maxWidth: 1920, quality: 0.82, outputFormat: 'webp' })
+      const url = await uploadBlogImage(compressed, 'blog-images')
+      setDraftImageUrl(url)
+      setIsDirty(true)
+      setSaveStatus('')
+    } catch (err) {
+      console.error('Error subiendo hero:', err)
+      setSaveStatus('')
+      setSaveError(err?.message || 'No se pudo subir la imagen')
+    }
+  }
+
+  const addTagFromInput = () => {
+    const raw = String(tagInput || '').trim()
+    if (!raw) return
+    const parts = raw
+      .split(/[,\n]/g)
+      .map((s) => String(s || '').trim())
+      .filter(Boolean)
+    if (!parts.length) return
+    const next = Array.from(new Set([...(draftTags || []), ...parts]))
+    setDraftTags(next)
+    setTagInput('')
+    setIsDirty(true)
+  }
+
+  const removeTag = (tag) => {
+    const next = (draftTags || []).filter((t) => t !== tag)
+    setDraftTags(next)
+    setIsDirty(true)
+  }
+
   // Calcular tiempo de lectura dinámicamente
-  const dynamicReadTime = calculateReadTime(article.sections)
+  const dynamicReadTime = calculateReadTime(editorSections)
 
   const shareUrl = `${window.location.origin}/blog/${slug}`
   const shareTitle = article.title
@@ -2361,15 +2589,15 @@ const BlogArticlePage = () => {
       <ReadingProgressBar />
       
       {/* Table of Contents flotante */}
-      <TableOfContents sections={article.sections} />
+      <TableOfContents sections={tocSections} />
 
       {/* Hero Image Section - SOLO LA IMAGEN */}
       <section ref={heroRef} className="relative h-[36vh] sm:h-[50vh] lg:h-[70vh] overflow-hidden">
         {/* Background image (robusto con fallback) */}
-        {heroBackgroundImage && (
+        {effectiveHeroImage && (
           <div className="absolute inset-0 overflow-hidden">
             <img
-              src={heroBackgroundImage}
+              src={effectiveHeroImage}
               alt=""
               className="absolute inset-0 w-full h-full object-cover object-center"
               style={{ filter: 'saturate(1.05) contrast(1.06) brightness(1.14)' }}
@@ -2390,6 +2618,29 @@ const BlogArticlePage = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/15 to-transparent" />
             {/* Bottom fade (para unir con la sección de abajo) */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent" />
+          </div>
+        )}
+
+        {isEditMode && (
+          <div className="absolute inset-0 flex items-start justify-end p-4">
+            <input
+              ref={heroFileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0]
+                e.target.value = ''
+                handleHeroFilePick(file)
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => heroFileInputRef.current?.click?.()}
+              className="px-3 py-2 rounded-xl bg-black/60 backdrop-blur-sm border border-white/15 text-white/90 text-sm hover:bg-black/70"
+            >
+              Cambiar imagen
+            </button>
           </div>
         )}
       </section>
@@ -2419,8 +2670,48 @@ const BlogArticlePage = () => {
             
             <div className="flex items-center gap-2">
               <ShareDropdown />
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (isEditMode) {
+                    stopEditMode()
+                  } else {
+                    beginEditMode()
+                  }
+                }}
+                className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 text-sm"
+              >
+                {!isAdmin ? 'Admin' : (isEditMode ? 'Salir' : 'Editar')}
+              </button>
             </div>
           </motion.div>
+
+          {isEditMode && (
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={() => saveToSupabase({ publish: false })}
+                className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 text-sm disabled:opacity-60"
+              >
+                Guardar borrador
+              </button>
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={() => saveToSupabase({ publish: true })}
+                className="px-3 py-2 rounded-xl bg-gradient-to-r from-purple-500/60 to-fuchsia-500/60 hover:from-purple-500/80 hover:to-fuchsia-500/80 border border-white/10 text-white text-sm disabled:opacity-60"
+              >
+                Publicar
+              </button>
+
+              <div className="text-sm text-white/50">
+                {isSaving ? 'Guardando…' : (saveStatus || (isDirty ? 'Cambios sin guardar' : ''))}
+              </div>
+              {saveError && <div className="text-sm text-red-300">{saveError}</div>}
+            </div>
+          )}
         </div>
       </section>
 
@@ -2458,7 +2749,18 @@ const BlogArticlePage = () => {
             className="text-4xl lg:text-6xl font-bold text-white mb-4 leading-tight"
             style={{ letterSpacing: '0.02em', fontWeight: 300 }}
           >
-            {article.title}
+            {isEditMode ? (
+              <input
+                value={draftTitle}
+                onChange={(e) => {
+                  setDraftTitle(e.target.value)
+                  setIsDirty(true)
+                }}
+                className="w-full bg-transparent outline-none border-b border-white/10 focus:border-white/30"
+              />
+            ) : (
+              article.title
+            )}
           </motion.h1>
 
           {/* Subtitle */}
@@ -2469,7 +2771,37 @@ const BlogArticlePage = () => {
               transition={{ duration: 1, delay: 0.4 }}
               className="text-lg lg:text-xl text-white/70 mb-8 leading-relaxed font-light"
             >
-              {article.subtitle}
+              {isEditMode ? (
+                <input
+                  value={draftSubtitle}
+                  onChange={(e) => {
+                    setDraftSubtitle(e.target.value)
+                    setIsDirty(true)
+                  }}
+                  className="w-full bg-transparent outline-none border-b border-white/10 focus:border-white/30"
+                />
+              ) : (
+                article.subtitle
+              )}
+            </motion.p>
+          )}
+
+          {isEditMode && !article.subtitle && (
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.4 }}
+              className="text-lg lg:text-xl text-white/70 mb-8 leading-relaxed font-light"
+            >
+              <input
+                value={draftSubtitle}
+                placeholder={currentLanguage === 'en' ? 'Subtitle…' : 'Subtítulo…'}
+                onChange={(e) => {
+                  setDraftSubtitle(e.target.value)
+                  setIsDirty(true)
+                }}
+                className="w-full bg-transparent outline-none border-b border-white/10 focus:border-white/30"
+              />
             </motion.p>
           )}
 
@@ -2482,15 +2814,50 @@ const BlogArticlePage = () => {
           >
             <div className="flex items-center gap-2">
               <User className="w-4 h-4" />
-              <span className="text-sm">{article.author}</span>
+              {isEditMode ? (
+                <input
+                  value={draftAuthor}
+                  onChange={(e) => {
+                    setDraftAuthor(e.target.value)
+                    setIsDirty(true)
+                  }}
+                  className="text-sm bg-transparent outline-none border-b border-white/10 focus:border-white/30"
+                />
+              ) : (
+                <span className="text-sm">{article.author}</span>
+              )}
             </div>
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
-              <span className="text-sm">{article.date}</span>
+              {isEditMode ? (
+                <input
+                  type="datetime-local"
+                  value={draftPublishedAt}
+                  onChange={(e) => {
+                    setDraftPublishedAt(e.target.value)
+                    setIsDirty(true)
+                  }}
+                  className="text-sm bg-transparent outline-none border-b border-white/10 focus:border-white/30"
+                />
+              ) : (
+                <span className="text-sm">{article.date}</span>
+              )}
             </div>
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4" />
-              <span className="text-sm">{article.readTime}</span>
+              {isEditMode ? (
+                <input
+                  value={draftReadTime}
+                  onChange={(e) => {
+                    setDraftReadTime(e.target.value)
+                    setIsDirty(true)
+                  }}
+                  placeholder={dynamicReadTime}
+                  className="text-sm bg-transparent outline-none border-b border-white/10 focus:border-white/30"
+                />
+              ) : (
+                <span className="text-sm">{article.readTime}</span>
+              )}
             </div>
           </motion.div>
 
@@ -2501,15 +2868,43 @@ const BlogArticlePage = () => {
             transition={{ duration: 1, delay: 0.6 }}
             className="flex flex-wrap gap-1.5 sm:gap-2 mb-8"
           >
-            {article.tags.map((tag, i) => (
+            {(isEditMode ? (draftTags || []) : article.tags).map((tag, i) => (
               <span
-                key={i}
+                key={`${tag}-${i}`}
                 className="px-2 py-1 text-[11px] sm:px-3 sm:py-1.5 sm:text-xs bg-white/5 border border-white/10 rounded-full text-white/70 flex items-center gap-1 sm:gap-1.5"
               >
                 <Tag className="w-3 h-3" />
                 {tag}
+                {isEditMode && (
+                  <button
+                    type="button"
+                    onClick={() => removeTag(tag)}
+                    className="ml-1 text-white/40 hover:text-white/80"
+                    aria-label="remove tag"
+                  >
+                    ×
+                  </button>
+                )}
               </span>
             ))}
+
+            {isEditMode && (
+              <span className="px-2 py-1 text-[11px] sm:px-3 sm:py-1.5 sm:text-xs bg-white/5 border border-white/10 rounded-full text-white/70 flex items-center gap-1 sm:gap-1.5">
+                <input
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ',') {
+                      e.preventDefault()
+                      addTagFromInput()
+                    }
+                  }}
+                  onBlur={() => addTagFromInput()}
+                  placeholder={currentLanguage === 'en' ? '+ tag' : '+ tag'}
+                  className="w-20 sm:w-28 bg-transparent outline-none"
+                />
+              </span>
+            )}
           </motion.div>
         </div>
       </section>
@@ -2517,17 +2912,53 @@ const BlogArticlePage = () => {
       {/* Article Content */}
       <section className="relative py-12 px-6 lg:px-20">
         <div className="max-w-3xl mx-auto">
-          {(() => {
-            let headingCount = 0
-            return article.sections.map((section, index) => {
-              if (section.type === 'heading') {
-                headingCount++
-              }
-              return <ArticleSection key={index} section={section} index={index} headingNumber={headingCount} accent={accent} />
-            })
-          })()}
+          {isEditMode ? (
+            <RichTextEditor
+              initialContent={draftBlocks}
+              onChange={(next) => {
+                setDraftBlocks(next)
+                setIsDirty(true)
+              }}
+              mode="document"
+              documentVariant="article"
+              accent={accentKey}
+              showAddBlockButton={false}
+            />
+          ) : (
+            (() => {
+              let headingCount = 0
+              return article.sections.map((section, index) => {
+                let headingAnchorId = null
+                if (section.type === 'heading') {
+                  headingCount++
+                  headingAnchorId = `section-${headingCount - 1}`
+                }
+                return (
+                  <ArticleSection
+                    key={index}
+                    section={section}
+                    index={index}
+                    headingNumber={headingCount}
+                    headingAnchorId={headingAnchorId}
+                    accent={accent}
+                  />
+                )
+              })
+            })()
+          )}
         </div>
       </section>
+
+      <AnimatePresence>
+        {showAdminLogin && (
+          <AdminLogin
+            onClose={() => {
+              setShowAdminLogin(false)
+              if (!isEditMode && isAdmin) beginEditMode()
+            }}
+          />
+        )}
+      </AnimatePresence>
 
       {/* CTA Section */}
       <section className="relative py-20 px-6 lg:px-20">
@@ -2732,7 +3163,7 @@ const CopyArticleButton = ({ article }) => {
   )
 }
 
-const ArticleSection = ({ section, index, headingNumber, accent }) => {
+const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent }) => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.1 })
 
@@ -2855,9 +3286,9 @@ const ArticleSection = ({ section, index, headingNumber, accent }) => {
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
         className="mb-12 mt-16"
-        id={`section-${index}`}
+        id={typeof headingAnchorId === 'string' && headingAnchorId ? headingAnchorId : `section-${index}`}
       >
-        <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden">
           {/* Gradient accent top */}
           <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accent.headingTopBar}`} />
           
@@ -2902,7 +3333,7 @@ const ArticleSection = ({ section, index, headingNumber, accent }) => {
         transition={{ duration: 0.4, delay: index * 0.05 }}
         className="my-16 relative"
       >
-        <div className={`relative bg-gradient-to-br ${accent.highlightBg} backdrop-blur-xl border-2 ${accent.highlightBorder} rounded-3xl p-10 lg:p-12 overflow-hidden`}>
+        <div className={`relative bg-gradient-to-br ${accent.highlightBg} backdrop-blur-xl border-2 ${accent.highlightBorder} rounded-3xl p-6 overflow-hidden`}>
           {/* Decorative corner accents */}
           <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${accent.highlightCornerA} rounded-bl-full`} />
           <div className={`absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr ${accent.highlightCornerB} rounded-tr-full`} />
@@ -2931,7 +3362,7 @@ const ArticleSection = ({ section, index, headingNumber, accent }) => {
         transition={{ duration: 0.4, delay: index * 0.05 }}
         className="mb-8"
       >
-        <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden group hover:border-white/30 transition-all">
+        <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden group hover:border-white/30 transition-all">
           {/* Gradient orb */}
           <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${section.gradient} opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity`} />
           
@@ -2965,7 +3396,7 @@ const ArticleSection = ({ section, index, headingNumber, accent }) => {
         transition={{ duration: 0.4, delay: index * 0.05 }}
         className="my-12"
       >
-        <div className={`relative bg-gradient-to-br ${accent.questionsBg} backdrop-blur-sm border-2 ${accent.questionsBorder} rounded-3xl p-10 overflow-hidden group ${accent.questionsHoverBorder} transition-all duration-500`}>
+        <div className={`relative bg-gradient-to-br ${accent.questionsBg} backdrop-blur-sm border-2 ${accent.questionsBorder} rounded-3xl p-6 overflow-hidden group ${accent.questionsHoverBorder} transition-all duration-500`}>
           {/* Animated gradient orbs */}
           <div className={`absolute top-0 right-0 w-48 h-48 bg-gradient-to-br ${accent.questionsOrbA} rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700`} />
           <div className={`absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-tr ${accent.questionsOrbB} rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700`} />
