@@ -20,7 +20,7 @@ export default function RichTextEditor({
   mode = 'blocks',
   accent = 'purple',
   documentVariant = 'editor',
-  sectionIcon = '👑'
+  sectionIcon = '♛'
 }) {
   const [blocks, setBlocks] = useState(initialContent)
   const [selectedBlockId, setSelectedBlockId] = useState(null)
@@ -166,7 +166,38 @@ export default function RichTextEditor({
   const handleKeyDownCapture = (e) => {
     // En modo document, permitir undo/redo NATIVO del navegador.
     // El historial por bloques no captura cambios del contentEditable mientras tecleas.
-    if (mode === 'document' && docEditorRef.current && docEditorRef.current.contains(e.target)) {
+    if (mode === 'document') {
+      const host = docEditorRef.current
+      const sel = window.getSelection?.()
+
+      const selectionInside = (() => {
+        try {
+          if (!host || !sel || sel.rangeCount === 0) return false
+          const range = sel.getRangeAt(0)
+          const common = range?.commonAncestorContainer || null
+          return (
+            (common && host.contains(common)) ||
+            (sel.anchorNode && host.contains(sel.anchorNode)) ||
+            (sel.focusNode && host.contains(sel.focusNode))
+          )
+        } catch {
+          return false
+        }
+      })()
+
+      const active = document.activeElement
+      const focusedInside = !!(host && active && (host === active || host.contains(active)))
+
+      // Dejar Ctrl/Cmd+Z nativo cuando el último contexto fue el editor,
+      // incluso si el foco quedó en la toolbar (portal).
+      if (selectionInside || focusedInside) return
+      return
+    }
+
+    // En modo blocks: si el usuario está escribiendo en un input/textarea,
+    // dejar el undo/redo nativo del navegador.
+    const targetTag = String(e?.target?.tagName || '').toLowerCase()
+    if (targetTag === 'textarea' || targetTag === 'input') {
       return
     }
 
@@ -364,7 +395,7 @@ export default function RichTextEditor({
           `<div${tocIdAttr} class="mb-12 mt-16 relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden" data-section="${sectionCounter}">` +
           `<div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accentPreset.headingTopBar}"></div>` +
           `<div class="inline-flex items-center gap-2 mb-4 px-4 py-1.5 ${accentPreset.badgeBg} border ${accentPreset.badgeBorder} rounded-full">` +
-          (icon ? `<span data-rte-role="section-icon" class="text-base leading-none">${esc(icon)}</span>` : '') +
+          (icon ? `<span data-rte-role="section-icon" class="text-sm leading-none">${esc(icon)}</span>` : '') +
           `<span class="text-xs font-mono ${accentPreset.badgeText} tracking-wider">SECCIÓN ${sectionNum}</span>` +
           `</div>` +
           `<h2 class="text-3xl lg:text-4xl font-light text-white leading-tight">${inline(content)}</h2>` +
@@ -1460,7 +1491,7 @@ export default function RichTextEditor({
         if (icon) {
           const iconSpan = document.createElement('span')
           iconSpan.setAttribute('data-rte-role', 'section-icon')
-          iconSpan.className = 'text-base leading-none'
+          iconSpan.className = 'text-sm leading-none'
           iconSpan.textContent = icon
           badge.appendChild(iconSpan)
         }
@@ -1783,6 +1814,11 @@ export default function RichTextEditor({
                 onFormat={applyFormat}
                   onInteract={() => {
                     toolbarInteractingRef.current = true
+                    try {
+                      docEditorRef.current?.focus?.({ preventScroll: true })
+                    } catch {
+                      // ignore
+                    }
                     if (toolbarInteractTimeoutRef.current) {
                       window.clearTimeout(toolbarInteractTimeoutRef.current)
                     }
@@ -2172,7 +2208,6 @@ function BlockTypeSelector({ onSelect }) {
  * Aparece al seleccionar texto
  */
 function FloatingFormatToolbar({ position, onClose, onFormat, onInteract }) {
-  const [showTitleMenu, setShowTitleMenu] = useState(false)
   const [showBlockMenu, setShowBlockMenu] = useState(false)
 
   const formatOptions = [
@@ -2199,49 +2234,9 @@ function FloatingFormatToolbar({ position, onClose, onFormat, onInteract }) {
         transform: 'translateX(-50%)',
         zIndex: 99999  // Aumentado para asegurar que esté visible
       }}
-      className="bg-gray-900 border-2 border-purple-500 rounded-xl shadow-2xl shadow-purple-500/50 overflow-hidden"
+      className="bg-gray-900 border-2 border-purple-500 rounded-xl shadow-2xl shadow-purple-500/50 overflow-visible"
     >
       <div className="flex items-center gap-1 p-2">
-        <div className="relative">
-          <button
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={() => setShowTitleMenu((v) => !v)}
-            title="Título/Subtítulo"
-            className="px-3 py-2 rounded-lg hover:bg-white/10 text-gray-300 hover:text-white transition-all font-semibold"
-          >
-            T
-          </button>
-
-          {showTitleMenu && (
-            <div
-              onMouseDown={(e) => e.preventDefault()}
-              className="absolute left-0 top-full mt-2 w-44 rounded-lg border border-white/10 bg-gray-900 shadow-2xl overflow-hidden"
-              style={{ zIndex: 100000 }}
-            >
-              <button
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => {
-                  setShowTitleMenu(false)
-                  onFormat?.('title')
-                }}
-                className="w-full px-3 py-2 text-left text-sm text-white/90 hover:bg-white/10"
-              >
-                T  Título
-              </button>
-              <button
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => {
-                  setShowTitleMenu(false)
-                  onFormat?.('subtitle')
-                }}
-                className="w-full px-3 py-2 text-left text-sm text-white/90 hover:bg-white/10"
-              >
-                S  Subtítulo
-              </button>
-            </div>
-          )}
-        </div>
-
         <div className="relative">
           <button
             onMouseDown={(e) => e.preventDefault()}

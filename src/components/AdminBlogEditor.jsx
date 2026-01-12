@@ -70,7 +70,13 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
   const getInitialSectionIcon = () => {
     const blocks = Array.isArray(article?.content) ? article.content : []
     const firstHeadingWithIcon = blocks.find((b) => String(b?.type || '') === 'heading' && String(b?.icon || '').trim())
-    return String(firstHeadingWithIcon?.icon || '👑')
+    const raw = String(firstHeadingWithIcon?.icon || '').trim()
+    const migrate = {
+      '👑': '♛',
+      '⚜️': '⚜'
+    }
+    const normalized = raw ? (migrate[raw] || raw) : ''
+    return normalized || '♛'
   }
   const [sectionIcon, setSectionIcon] = useState(getInitialSectionIcon)
   const [tags, setTags] = useState(article?.tags?.join(', ') || '')
@@ -724,13 +730,17 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                     onChange={(e) => setSectionIcon(e.target.value)}
                     className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all [&>option]:bg-gray-900 [&>option]:text-white"
                   >
-                    <option value="👑">👑 Corona</option>
-                    <option value="⚜️">⚜️ Fleur-de-lis</option>
-                    <option value="✦">✦ Estrella fina</option>
-                    <option value="❖">❖ Diamante</option>
+                    <option value="♛">♛ Corona</option>
+                    <option value="⚜">⚜ Fleur-de-lis</option>
                     <option value="☾">☾ Luna</option>
+                    <option value="✦">✦ Estrella fina</option>
                     <option value="✧">✧ Brillo</option>
                     <option value="⟡">⟡ Estrella</option>
+                    <option value="❖">❖ Diamante</option>
+                    <option value="⬦">⬦ Rombo</option>
+                    <option value="⬥">⬥ Rombo sólido</option>
+                    <option value="✶">✶ Estrella clásica</option>
+                    <option value="⌁">⌁ Onda</option>
                     <option value="•">• Punto</option>
                   </select>
                 </div>
