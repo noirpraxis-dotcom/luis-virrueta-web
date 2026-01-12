@@ -171,6 +171,49 @@ const BlogPage = () => {
       })
     }
 
+    const getPostSortTs = (post) => {
+      if (!post) return 0
+
+      const iso = post.publishedAt || post.published_at || post.createdAt || post.created_at || null
+      if (iso) {
+        const ts = Date.parse(iso)
+        if (Number.isFinite(ts)) return ts
+      }
+
+      // Legacy: intenta parsear fechas tipo "07 Ene 2026" / "22 Dic 2025"
+      const raw = String(post.date || '').trim()
+      if (!raw) return 0
+      const m = raw.match(/^(\d{1,2})\s+([A-Za-zÁÉÍÓÚáéíóúñÑ\.]{3,})\s+(\d{4})$/)
+      if (!m) return 0
+
+      const day = Number(m[1])
+      const monRaw = String(m[2] || '').replace('.', '').toLowerCase()
+      const year = Number(m[3])
+      if (!Number.isFinite(day) || !Number.isFinite(year)) return 0
+
+      const months = {
+        ene: 0,
+        feb: 1,
+        mar: 2,
+        abr: 3,
+        may: 4,
+        jun: 5,
+        jul: 6,
+        ago: 7,
+        sep: 8,
+        oct: 9,
+        nov: 10,
+        dic: 11
+      }
+      const mon = months[monRaw]
+      if (!Number.isFinite(mon)) return 0
+
+      // Fecha local (suficiente para ordenar)
+      const d = new Date(year, mon, day)
+      const ts = d.getTime()
+      return Number.isFinite(ts) ? ts : 0
+    }
+
     // Cargar datos iniciales de blogs
     const initialBlogs = [
     {
@@ -568,7 +611,17 @@ const BlogPage = () => {
           merged.set(key, mergePreferLegacyMeta(legacy, post))
         })
 
-        setBlogPosts(Array.from(merged.values()))
+        const ordered = Array.from(merged.values())
+          .sort((a, b) => {
+            const ta = getPostSortTs(a)
+            const tb = getPostSortTs(b)
+            if (tb !== ta) return tb - ta
+            const sa = String(a?.slug || '')
+            const sb = String(b?.slug || '')
+            return sa.localeCompare(sb)
+          })
+
+        setBlogPosts(ordered)
       } catch (err) {
         console.warn('No se pudieron cargar artículos desde Supabase:', err)
       }
