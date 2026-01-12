@@ -40,6 +40,63 @@ export default function RichTextEditor({
   const DOC_PLACEHOLDER_TEXT = 'Escribe aquí o pega tu contenido…'
   const QUESTIONS_MARKER_CLASS = 'marker:text-emerald-400'
 
+  const isQuestionLikeLine = (raw) => {
+    const t = String(raw || '').trim()
+    if (!t) return false
+    return /[¿?]/.test(t)
+  }
+
+  const isQuestionsHeadingTitle = (raw) => {
+    const t = String(raw || '').replace(/\s+/g, ' ').trim()
+    if (!t) return false
+    return /\bpreguntas?\b/i.test(t)
+  }
+
+  const autoConvertQuestionSectionsInBlocks = (blocksToScan) => {
+    const list = Array.isArray(blocksToScan) ? blocksToScan : []
+    if (!list.length) return list
+
+    const out = []
+    for (let i = 0; i < list.length; i++) {
+      const b = list[i]
+      const type = String(b?.type || '')
+
+      if (type === 'questions') {
+        out.push({ ...b, title: 'Preguntas' })
+        continue
+      }
+
+      if (type === 'heading' && isQuestionsHeadingTitle(b?.content)) {
+        const items = []
+        let j = i + 1
+        while (j < list.length && String(list[j]?.type || '') === 'list') {
+          const c = String(list[j]?.content || '').trim()
+          if (c) items.push(c)
+          j++
+        }
+
+        if (items.length >= 2) {
+          const qish = items.filter(isQuestionLikeLine).length
+          const ratio = qish / items.length
+          if (qish >= 2 && ratio >= 0.6) {
+            out.push({
+              id: `block-${Date.now()}-${out.length}`,
+              type: 'questions',
+              title: 'Preguntas',
+              content: items.join('\n')
+            })
+            i = j - 1
+            continue
+          }
+        }
+      }
+
+      out.push(b)
+    }
+
+    return out
+  }
+
   const SECTION_ICON_PATHS = {
     crown: [
       'M3 6l3 6 6-9 6 9 3-6v14H3z',
@@ -543,9 +600,7 @@ export default function RichTextEditor({
       }
 
       if (type === 'questions') {
-        const titleRaw = String(b?.title || 'Preguntas').trim() || 'Preguntas'
-        let title = titleRaw.replace(/^❓\s*/, '').trim() || 'Preguntas'
-        if (/^preguntas\s+(que\s+incomodan|incómodas)$/i.test(title)) title = 'Preguntas'
+        const title = 'Preguntas'
         const items = String(b?.content || '')
           .split('\n')
           .map((l) => String(l || '').trim())
@@ -572,8 +627,8 @@ export default function RichTextEditor({
       if (type === 'reflection') {
         push(
           `<div data-rte-type="reflection" class="my-12 relative">` +
-          `<div data-rte-role="reflection-bar" class="absolute -left-4 top-0 w-1 h-full bg-gradient-to-b ${accentPreset.quoteBar} rounded-full"></div>` +
-          `<div class="pl-8 pr-4 py-1">` +
+          `<div data-rte-role="reflection-bar" class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b ${accentPreset.quoteBar} rounded-full"></div>` +
+          `<div class="pl-8 pr-0 py-1">` +
           `<p class="text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic relative">` +
           `<span class="absolute -left-2 -top-1 text-5xl ${accentPreset.quoteMark} font-serif">"</span>` +
           `${inline(content)}` +
@@ -686,12 +741,10 @@ export default function RichTextEditor({
         const liEls = Array.from(el.querySelectorAll('ul li'))
         const items = liEls.map((li) => String(li.textContent || '').trim()).filter(Boolean)
         if (hasQuestionsWord && items.length) {
-          let cleanedTitle = titleGuess.replace(/^\??\s*/, '').trim() || 'Preguntas'
-          if (/^preguntas\s+(que\s+incomodan|incómodas)$/i.test(cleanedTitle)) cleanedTitle = 'Preguntas'
           next.push({
             id: `block-${Date.now()}-${next.length}`,
             type: 'questions',
-            title: cleanedTitle,
+            title: 'Preguntas',
             content: items.join('\n')
           })
           continue
@@ -770,8 +823,7 @@ export default function RichTextEditor({
 
       if (tag === 'section' && el.getAttribute('data-rte-type') === 'questions') {
         const titleEl = el.querySelector('[data-rte-role="questions-title"]')
-        let title = String(titleEl?.textContent || 'Preguntas').trim() || 'Preguntas'
-        if (/^preguntas\s+(que\s+incomodan|incómodas)$/i.test(title)) title = 'Preguntas'
+        const title = 'Preguntas'
         const liEls = Array.from(el.querySelectorAll('li'))
         const items = liEls.map((li) => String(li.textContent || '').trim()).filter(Boolean)
         if (items.length) {
@@ -956,7 +1008,8 @@ export default function RichTextEditor({
     if (!root) return
     cleanupDocDom(root)
     const parsed = htmlToBlocks(root)
-    setBlocksWithHistory(parsed, { coalesceKey })
+    const normalized = autoConvertQuestionSectionsInBlocks(parsed)
+    setBlocksWithHistory(normalized, coalesceKey ? { coalesceKey } : undefined)
   }
 
   const isDocEditorFocused = () => {
@@ -1461,7 +1514,7 @@ export default function RichTextEditor({
         }
 
         cleanupDocDom(host)
-        if (coalesceKey) syncBlocksFromDocDom(coalesceKey)
+        if (coalesceKey !== undefined) syncBlocksFromDocDom(coalesceKey)
       }
 
       if (action === 'title' || action === 'subtitle') {
@@ -1493,21 +1546,23 @@ export default function RichTextEditor({
             : 'my-6 text-xl md:text-2xl font-light text-white/70 leading-relaxed'
         h.textContent = cleaned
 
-        replaceSelectionWithTopLevelBlock(h, `doc:${role}`)
+        // Structural change: do not coalesce, so Ctrl+Z reliably restores previous state
+        replaceSelectionWithTopLevelBlock(h, undefined)
         setShowFloatingToolbar(false)
         return
       }
 
       if (action === 'bold') {
         document.execCommand?.('bold')
-        syncBlocksFromDocDom('doc:format')
+        // Formatting should be undoable as its own step
+        syncBlocksFromDocDom(undefined)
         setShowFloatingToolbar(false)
         return
       }
 
       if (action === 'italic') {
         document.execCommand?.('italic')
-        syncBlocksFromDocDom('doc:format')
+        syncBlocksFromDocDom(undefined)
         setShowFloatingToolbar(false)
         return
       }
@@ -1521,7 +1576,7 @@ export default function RichTextEditor({
         }
 
         document.execCommand?.('createLink', false, cleaned)
-        syncBlocksFromDocDom('doc:format')
+        syncBlocksFromDocDom(undefined)
         setShowFloatingToolbar(false)
         return
       }
@@ -1657,7 +1712,7 @@ export default function RichTextEditor({
         })
 
         cleanupDocDom(host)
-        syncBlocksFromDocDom('doc:unformat')
+        syncBlocksFromDocDom(undefined)
         setShowFloatingToolbar(false)
         return
       }
@@ -1711,7 +1766,7 @@ export default function RichTextEditor({
         wrapper.appendChild(badge)
         wrapper.appendChild(h2)
         
-        replaceSelectionWithTopLevelBlock(wrapper, 'doc:format')
+        replaceSelectionWithTopLevelBlock(wrapper, undefined)
         setShowFloatingToolbar(false)
         return
       }
@@ -1758,7 +1813,7 @@ export default function RichTextEditor({
           wrapper.appendChild(cite)
         }
         
-        replaceSelectionWithTopLevelBlock(wrapper, 'doc:format')
+        replaceSelectionWithTopLevelBlock(wrapper, undefined)
         setShowFloatingToolbar(false)
         return
       }
@@ -1806,7 +1861,7 @@ export default function RichTextEditor({
 
         section.appendChild(header)
         section.appendChild(ul)
-        replaceSelectionWithTopLevelBlock(section, 'doc:format')
+        replaceSelectionWithTopLevelBlock(section, undefined)
         setShowFloatingToolbar(false)
         return
       }
@@ -1818,10 +1873,10 @@ export default function RichTextEditor({
         
         const leftBar = document.createElement('div')
         leftBar.setAttribute('data-rte-role', 'reflection-bar')
-        leftBar.className = `absolute -left-4 top-0 w-1 h-full bg-gradient-to-b ${accentPreset.quoteBar} rounded-full`
+        leftBar.className = `absolute left-0 top-0 w-1 h-full bg-gradient-to-b ${accentPreset.quoteBar} rounded-full`
         
         const content = document.createElement('div')
-        content.className = 'pl-8 pr-4 py-1'
+        content.className = 'pl-8 pr-0 py-1'
         
         const p = document.createElement('p')
         p.className = 'text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic relative'
@@ -1843,7 +1898,7 @@ export default function RichTextEditor({
         wrapper.appendChild(leftBar)
         wrapper.appendChild(content)
         
-        replaceSelectionWithTopLevelBlock(wrapper, 'doc:format')
+        replaceSelectionWithTopLevelBlock(wrapper, undefined)
         setShowFloatingToolbar(false)
         return
       }
@@ -1894,7 +1949,7 @@ export default function RichTextEditor({
         wrapper.appendChild(orb)
         wrapper.appendChild(innerContainer)
         
-        replaceSelectionWithTopLevelBlock(wrapper, 'doc:format')
+        replaceSelectionWithTopLevelBlock(wrapper, undefined)
         setShowFloatingToolbar(false)
         return
       }

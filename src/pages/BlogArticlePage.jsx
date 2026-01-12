@@ -1924,7 +1924,7 @@ const BlogArticlePage = () => {
 
       if (type === 'questions') {
         if (content) {
-          const title = String(block?.title || 'Preguntas incómodas').trim()
+          const title = 'Preguntas'
           const items = content
             .split('\n')
             .map((l) => String(l || '').trim())
@@ -1972,7 +1972,7 @@ const BlogArticlePage = () => {
       if (section.type === 'questions') {
         const items = Array.isArray(section.items) ? section.items : []
         const content = items.map((i) => String(i || '').trim()).filter(Boolean).join('\n')
-        if (content) blocks.push({ type: 'questions', title: section.title || 'Preguntas incómodas', content })
+        if (content) blocks.push({ type: 'questions', title: 'Preguntas', content })
         continue
       }
       if (section.type === 'list') {
@@ -3242,7 +3242,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="mb-12"
+        className="mb-12 px-6"
       >
         <p className="text-xl lg:text-2xl text-white/80 leading-relaxed font-light italic">
           {renderInlineMarkdown(section.content)}
@@ -3258,13 +3258,13 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="mb-16"
+        className="mb-16 px-6"
       >
         <div className="relative">
           {/* Decorative quote icon */}
-          <div className={`absolute -left-4 top-0 w-1 h-full bg-gradient-to-b ${accent.quoteBar} rounded-full`} />
+          <div className={`absolute left-0 top-0 w-1 h-full bg-gradient-to-b ${accent.quoteBar} rounded-full`} />
           
-          <div className="pl-8 pr-4 py-1">
+          <div className="pl-8 pr-0 py-1">
             <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic relative">
               <span className={`absolute -left-2 -top-1 text-5xl ${accent.quoteMark} font-serif`}>“</span>
               {renderInlineMarkdown(section.content)}
@@ -3314,7 +3314,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="mb-8"
+        className="mb-8 px-6"
       >
         <p className="text-lg text-white/70 leading-relaxed">
           {renderInlineMarkdown(section.content)}
@@ -3480,7 +3480,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="my-12 space-y-6"
+        className="my-12 space-y-6 px-6"
       >
         {section.items.map((item, i) => (
           <motion.div
