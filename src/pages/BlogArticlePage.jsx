@@ -29,7 +29,10 @@ const CATEGORY_LABELS = {
   psychoanalysis: { es: 'Psicoanálisis', en: 'Psychoanalysis' },
   psychology: { es: 'Psicología', en: 'Psychology' },
   perception: { es: 'Percepción', en: 'Perception' },
-  consciousness: { es: 'Conciencia', en: 'Consciousness' }
+  consciousness: { es: 'Conciencia', en: 'Consciousness' },
+  metaphysics: { es: 'Metafísica', en: 'Metaphysics' },
+  reflections: { es: 'Reflexiones', en: 'Reflections' },
+  diary: { es: 'Diario', en: 'Diary' }
 }
 
 const normalizeCategoryId = (raw) => {
@@ -42,9 +45,34 @@ const normalizeCategoryId = (raw) => {
   if (v === 'psychology' || v === 'psicología' || v === 'psicologia') return 'psychology'
   if (v === 'perception' || v === 'percepción' || v === 'percepcion') return 'perception'
   if (v === 'consciousness' || v === 'conciencia' || v === 'consciencia') return 'consciousness'
+  if (v === 'metaphysics' || v === 'metafísica' || v === 'metafisica') return 'metaphysics'
+  if (v === 'reflections' || v === 'reflexiones') return 'reflections'
+  if (v === 'diary' || v === 'diario') return 'diary'
 
   return v
 }
+
+const toSentenceCase = (raw) => {
+  const t = String(raw ?? '').replace(/\s+/g, ' ').trim()
+  if (!t) return ''
+  const lower = t.toLocaleLowerCase('es-MX')
+  const match = lower.match(/\p{L}/u)
+  if (!match || typeof match.index !== 'number') return lower
+  const i = match.index
+  return lower.slice(0, i) + lower[i].toLocaleUpperCase('es-MX') + lower.slice(i + 1)
+}
+
+const SUGGESTED_TAGS = [
+  'filosofía',
+  'psicología',
+  'psicoanálisis',
+  'metafísica',
+  'conciencia',
+  'percepción',
+  'ética',
+  'diario',
+  'reflexiones'
+]
 
 const getCategoryLabel = (rawCategory, language) => {
   const id = normalizeCategoryId(rawCategory)
@@ -2075,10 +2103,9 @@ const BlogArticlePage = () => {
         ...cmsArticle,
         // Mantener look/metadata del legacy
         gradient: baseArticle.gradient || cmsArticle.gradient,
-        category: baseArticle.category || cmsArticle.category,
-        tags: Array.isArray(baseArticle.tags) && baseArticle.tags.length
-          ? baseArticle.tags
-          : cmsArticle.tags,
+        // Pero SIEMPRE priorizar la metadata del CMS (category/tags)
+        category: cmsArticle.category || baseArticle.category,
+        tags: Array.isArray(cmsArticle.tags) ? cmsArticle.tags : [],
         // PRIORIDAD: usar imagen del CMS si existe, sino usar la legacy
         image: hasCmsImage ? cmsArticle.image : (baseArticle.image || baseArticle.heroImage),
         // heroImage también prioriza CMS sobre legacy
@@ -2154,7 +2181,12 @@ const BlogArticlePage = () => {
     setDraftSubtitle(String(row?.subtitle || article.subtitle || '').trim())
     setDraftAuthor(String(row?.author || article.author || '').trim())
     setDraftReadTime(String(row?.read_time || row?.readTime || article.readTime || '').trim())
-    setDraftTags(Array.isArray(row?.tags) ? row.tags : (Array.isArray(article.tags) ? article.tags : []))
+    // Si existe fila CMS pero no hay tags, no heredar tags legacy
+    setDraftTags(
+      row
+        ? (Array.isArray(row?.tags) ? row.tags : [])
+        : (Array.isArray(article.tags) ? article.tags : [])
+    )
     setDraftImageUrl(String(row?.image_url || article.heroImage || article.image || '').trim())
     setDraftPublishedAt(String(row?.published_at || row?.created_at || '').slice(0, 16))
     setDraftBlocks(initialBlocks)
@@ -2180,8 +2212,8 @@ const BlogArticlePage = () => {
 
     try {
       const { title: metaTitle, subtitle: metaSubtitle, body } = extractMetaFromBlocks(draftBlocks)
-      const finalTitle = metaTitle || draftTitle || article.title
-      const finalSubtitle = metaSubtitle || draftSubtitle || ''
+      const finalTitle = toSentenceCase(metaTitle || draftTitle || article.title)
+      const finalSubtitle = toSentenceCase(metaSubtitle || draftSubtitle || '')
 
       const updates = {
         title: finalTitle,
@@ -2755,6 +2787,13 @@ const BlogArticlePage = () => {
                   setDraftTitle(e.target.value)
                   setIsDirty(true)
                 }}
+                  onBlur={() => {
+                    const next = toSentenceCase(draftTitle)
+                    if (next !== draftTitle) {
+                      setDraftTitle(next)
+                      setIsDirty(true)
+                    }
+                  }}
                 className="w-full bg-transparent outline-none border-b border-white/10 focus:border-white/30"
               />
             ) : (
@@ -2777,6 +2816,13 @@ const BlogArticlePage = () => {
                     setDraftSubtitle(e.target.value)
                     setIsDirty(true)
                   }}
+                  onBlur={() => {
+                    const next = toSentenceCase(draftSubtitle)
+                    if (next !== draftSubtitle) {
+                      setDraftSubtitle(next)
+                      setIsDirty(true)
+                    }
+                  }}
                   className="w-full bg-transparent outline-none border-b border-white/10 focus:border-white/30"
                 />
               ) : (
@@ -2798,6 +2844,13 @@ const BlogArticlePage = () => {
                 onChange={(e) => {
                   setDraftSubtitle(e.target.value)
                   setIsDirty(true)
+                }}
+                onBlur={() => {
+                  const next = toSentenceCase(draftSubtitle)
+                  if (next !== draftSubtitle) {
+                    setDraftSubtitle(next)
+                    setIsDirty(true)
+                  }
                 }}
                 className="w-full bg-transparent outline-none border-b border-white/10 focus:border-white/30"
               />
@@ -2904,12 +2957,40 @@ const BlogArticlePage = () => {
                 />
               </span>
             )}
+
+            {isEditMode && (
+              <div className="w-full mt-3 flex flex-wrap gap-1.5 sm:gap-2">
+                {SUGGESTED_TAGS.map((suggestion) => {
+                  const exists = (draftTags || []).includes(suggestion)
+                  return (
+                    <button
+                      key={suggestion}
+                      type="button"
+                      disabled={exists}
+                      onClick={() => {
+                        if (exists) return
+                        setDraftTags(Array.from(new Set([...(draftTags || []), suggestion])))
+                        setIsDirty(true)
+                      }}
+                      className={
+                        exists
+                          ? 'px-2 py-1 text-[11px] sm:px-3 sm:py-1.5 sm:text-xs bg-white/5 border border-white/10 rounded-full text-white/30 cursor-not-allowed'
+                          : 'px-2 py-1 text-[11px] sm:px-3 sm:py-1.5 sm:text-xs bg-white/5 border border-white/10 rounded-full text-white/60 hover:text-white/85 hover:border-white/20 transition-colors'
+                      }
+                      title={exists ? 'Ya está agregado' : 'Agregar tag'}
+                    >
+                      {suggestion}
+                    </button>
+                  )
+                })}
+              </div>
+            )}
           </motion.div>
         </div>
       </section>
 
       {/* Article Content */}
-      <section className="relative py-12 px-6 lg:px-20">
+      <section className="relative py-12 px-4 sm:px-6 lg:px-20">
         <div className="max-w-3xl mx-auto">
           {isEditMode ? (
             <RichTextEditor
@@ -3480,25 +3561,24 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="my-12 space-y-6 px-6"
+        className="my-12"
       >
-        {section.items.map((item, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: -20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: index * 0.05 + i * 0.1 }}
-            className="flex gap-4"
-          >
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-pink-500/20 to-rose-500/20 border border-white/20 flex items-center justify-center">
-              <span className="text-sm font-bold text-white">{i + 1}</span>
-            </div>
-            <div className="flex-1">
-              <h4 className="text-lg font-bold text-white mb-2">{renderInlineMarkdown(item.title)}</h4>
-              <p className="text-base text-white/70 leading-relaxed">{renderInlineMarkdown(item.description)}</p>
-            </div>
-          </motion.div>
-        ))}
+        <ul className="space-y-4">
+          {section.items.map((item, i) => (
+            <motion.li
+              key={i}
+              initial={{ opacity: 0, x: -16 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.45, delay: index * 0.05 + i * 0.08 }}
+              className="flex gap-4 items-start"
+            >
+              <span className={`mt-2.5 h-2.5 w-2.5 rounded-full bg-gradient-to-br ${accent.questionsDot} flex-shrink-0 shadow-lg shadow-black/30`} />
+              <div className="flex-1 text-white/70 text-lg leading-relaxed">
+                {renderInlineMarkdown(item?.description ? `${item.title}: ${item.description}` : item.title)}
+              </div>
+            </motion.li>
+          ))}
+        </ul>
       </motion.div>
     )
   }

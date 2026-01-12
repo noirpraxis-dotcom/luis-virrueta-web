@@ -174,6 +174,16 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
     return `${Math.max(minutes, 1)} min`
   }
 
+  const toSentenceCase = (raw) => {
+    const t = String(raw ?? '').replace(/\s+/g, ' ').trim()
+    if (!t) return ''
+    const lower = t.toLocaleLowerCase('es-MX')
+    const match = lower.match(/\p{L}/u)
+    if (!match || typeof match.index !== 'number') return lower
+    const i = match.index
+    return lower.slice(0, i) + lower[i].toLocaleUpperCase('es-MX') + lower.slice(i + 1)
+  }
+
   // Actualizar tiempo de lectura cuando cambia el contenido
   const handleContentChange = (newContent) => {
     setContent(newContent)
@@ -322,10 +332,14 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
         return { ...b, icon: sectionIcon }
       })
 
+      const normalizedTitle = toSentenceCase(finalTitle)
+      const normalizedSubtitle = toSentenceCase(finalSubtitle)
+      const normalizedExcerpt = toSentenceCase(excerpt)
+
       const articleData = {
-        title: finalTitle,
-        subtitle: finalSubtitle,
-        excerpt: excerpt.trim(),
+        title: normalizedTitle,
+        subtitle: normalizedSubtitle,
+        excerpt: normalizedExcerpt,
         author: author.trim(),
         category: category,
         accent: accent,
@@ -336,7 +350,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
         content: bodyWithSectionIcon,
         is_published: finalIsPublished,
         published_at: resolvePublishedAtIso(),
-        slug: generateSlug(finalTitle),
+        slug: generateSlug(normalizedTitle),
         updated_at: new Date().toISOString()
       }
 
@@ -611,6 +625,10 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
+                  onBlur={() => {
+                    const next = toSentenceCase(title)
+                    if (next !== title) setTitle(next)
+                  }}
                   placeholder="El título principal de tu artículo"
                   className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white text-xl font-bold placeholder-gray-600 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
                 />
@@ -624,6 +642,10 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                   type="text"
                   value={subtitle}
                   onChange={(e) => setSubtitle(e.target.value)}
+                  onBlur={() => {
+                    const next = toSentenceCase(subtitle)
+                    if (next !== subtitle) setSubtitle(next)
+                  }}
                   placeholder="Un subtítulo descriptivo (opcional)"
                   className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
                 />
@@ -636,6 +658,10 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                 <textarea
                   value={excerpt}
                   onChange={(e) => setExcerpt(e.target.value)}
+                  onBlur={() => {
+                    const next = toSentenceCase(excerpt)
+                    if (next !== excerpt) setExcerpt(next)
+                  }}
                   placeholder="Breve descripción que aparecerá en la vista previa"
                   rows={3}
                   className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all resize-none"
@@ -698,6 +724,9 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                     className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all [&>option]:bg-gray-900 [&>option]:text-white"
                   >
                     <option value="philosophy">Filosofía</option>
+                    <option value="metaphysics">Metafísica</option>
+                    <option value="reflections">Reflexiones</option>
+                    <option value="diary">Diario</option>
                     <option value="psychology">Psicología</option>
                     <option value="psychoanalysis">Psicoanálisis</option>
                     <option value="spirituality">Espiritualidad</option>
