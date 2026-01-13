@@ -16,12 +16,17 @@ import { useAuth } from '../context/AuthContext'
 import AdminLogin from '../components/AdminLogin'
 import RichTextEditor from '../components/RichTextEditor'
 import { getArticleContent } from '../data/blogArticlesContent'
+import { getLegacyBlogIndex } from '../data/blogIndex'
 import { supabase } from '../lib/supabase'
 import { uploadBlogImage, updateBlogArticle, createBlogArticle } from '../lib/supabase'
 
 const HIDDEN_BLOG_SLUGS = new Set([
   'rebranding-vs-refresh-cuando-redisenar-marca-completa',
-  'branding-con-inteligencia-artificial-2025-guia-completa'
+  'branding-con-inteligencia-artificial-2025-guia-completa',
+  // Removed from the public blog (legacy 2024 series)
+  'neurociencia-del-diseno',
+  'ia-generativa-diseno-emocion',
+  'interfaces-empaticas-machine-learning'
 ])
 
 const CATEGORY_LABELS = {
@@ -83,6 +88,7 @@ const getCategoryLabel = (rawCategory, language) => {
 
 // Función para obtener el artículo basado en el slug
 const getArticleBySlug = (slug) => {
+  if (HIDDEN_BLOG_SLUGS.has(slug)) return null
   const articles = {
     'neurociencia-del-diseno': {
       title: 'Neurociencia del Diseño: Por Qué Algunos Logos Son Inolvidables',
@@ -2132,6 +2138,17 @@ const BlogArticlePage = () => {
     // pero permitir que Supabase reemplace el contenido y campos editables.
     if (cmsArticle && baseArticle) {
       const hasCmsImage = typeof cmsArticle.image === 'string' && cmsArticle.image.trim().length > 0
+      const hasLegacyHero = typeof baseArticle.heroImage === 'string' && baseArticle.heroImage.trim().length > 0
+      const hasLegacyImage = typeof baseArticle.image === 'string' && baseArticle.image.trim().length > 0
+
+      // IMPORTANT:
+      // These legacy/hardcoded posts are not meant to be edited from the CMS.
+      // If Supabase contains a duplicated row with a wrong `image_url`, we should
+      // NOT override the curated hero image (this caused mismatched images like Sudoku).
+      const preferLegacyImage = hasLegacyImage || hasLegacyHero
+      const preferredImage = preferLegacyImage
+        ? (baseArticle.image || baseArticle.heroImage)
+        : (hasCmsImage ? cmsArticle.image : (baseArticle.image || baseArticle.heroImage))
 
       return {
         ...baseArticle,
@@ -2141,10 +2158,9 @@ const BlogArticlePage = () => {
         // Pero SIEMPRE priorizar la metadata del CMS (category/tags)
         category: cmsArticle.category || baseArticle.category,
         tags: Array.isArray(cmsArticle.tags) ? cmsArticle.tags : [],
-        // PRIORIDAD: usar imagen del CMS si existe, sino usar la legacy
-        image: hasCmsImage ? cmsArticle.image : (baseArticle.image || baseArticle.heroImage),
-        // heroImage también prioriza CMS sobre legacy
-        heroImage: (hasCmsImage ? cmsArticle.image : null) || baseArticle.heroImage || null,
+        // Imagen/hero: conservar legacy si existe; si no, permitir CMS.
+        image: preferredImage || null,
+        heroImage: preferredImage || baseArticle.heroImage || null,
         // Mantener accent legacy si existe; si no, usar el del CMS
         accent: baseArticle.accent || cmsArticle.accent || null
       }
@@ -2152,74 +2168,7 @@ const BlogArticlePage = () => {
 
     return cmsArticle || baseArticle
   })()
-
-  const editorSections = isEditMode ? cmsBlocksToSections(draftBlocks) : article.sections
-  const tocSections = editorSections
-
-  const accentKey = inferAccentKey(article)
-  const accent = ACCENT_PRESETS[accentKey] || ACCENT_PRESETS.purple
-
-  const heroImageCandidates = useMemo(() => {
-    const candidates = [
-      resolvePublicImageUrl(article.heroImage),
-      resolvePublicImageUrl(article.image),
-      // Last resort: site cover
-      '/portada.webp'
-    ].filter(Boolean)
-
-    // Unique preserve order
-    const seen = new Set()
-    return candidates.filter((u) => {
-      if (!u) return false
-      if (seen.has(u)) return false
-      seen.add(u)
-      return true
-    })
-  }, [article.heroImage, article.image])
-
-  const [heroCandidateIndex, setHeroCandidateIndex] = useState(0)
-  const heroBackgroundImage = (!isEditMode && cmsLoading) ? null : (heroImageCandidates[heroCandidateIndex] || null)
-
-  const effectiveHeroImage = isEditMode
-    ? (resolvePublicImageUrl(draftImageUrl) || heroBackgroundImage)
-    : heroBackgroundImage
-
-  useEffect(() => {
-    setHeroCandidateIndex(0)
-  }, [slug, heroImageCandidates.join('|')])
-
-  if (!article) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28 flex items-center justify-center overflow-x-hidden">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">{t('blogArticles.common.notFound')}</h1>
-          <Link to="/blog" className="text-cyan-400 hover:text-cyan-300">
-            {t('blogArticles.common.backToBlog')}
-          </Link>
-        </div>
-      </div>
-    )
-  }
-
-  const beginEditMode = () => {
-    if (!isAdmin) {
-      setShowAdminLogin(true)
-      return
-    }
-
-    const row = cmsRow
-    const initialBlocks = Array.isArray(row?.content) && row.content.length
-      ? row.content
-      : sectionsToCmsBlocks(article.sections)
-
-    setDraftTitle(String(row?.title || article.title || '').trim())
-    setDraftSubtitle(String(row?.subtitle || article.subtitle || '').trim())
-    setDraftAuthor(String(row?.author || article.author || '').trim())
-    setDraftReadTime(String(row?.read_time || row?.readTime || article.readTime || '').trim())
-    // Si existe fila CMS pero no hay tags, no heredar tags legacy
-    setDraftTags(
-      row
-        ? (Array.isArray(row?.tags) ? row.tags : [])
+        allArticles={getLegacyBlogIndex(currentLanguage)}
         : (Array.isArray(article.tags) ? article.tags : [])
     )
     setDraftImageUrl(String(row?.image_url || article.heroImage || article.image || '').trim())

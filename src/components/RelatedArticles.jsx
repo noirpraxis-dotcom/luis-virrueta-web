@@ -3,10 +3,81 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Clock, TrendingUp } from 'lucide-react'
 
 const RelatedArticles = ({ currentSlug, allArticles }) => {
-  // Filtrar artículos relacionados (excluir el actual y mostrar máximo 3)
-  const related = allArticles
-    .filter(article => article.slug !== currentSlug)
-    .slice(0, 3)
+  const resolveImageSrc = (raw) => {
+    const v = typeof raw === 'string' ? raw.trim() : ''
+    if (!v) return ''
+    if (/^https?:\/\//i.test(v)) return v
+    try {
+      return encodeURI(v)
+    } catch {
+      return v
+    }
+  }
+
+  const getSortTs = (post) => {
+    if (!post) return 0
+
+    const iso = post.publishedAt || post.published_at || post.createdAt || post.created_at || null
+    if (iso) {
+      const ts = Date.parse(iso)
+      if (Number.isFinite(ts)) return ts
+    }
+
+    const raw = String(post.date || '').trim()
+    if (!raw) return 0
+
+    // ES: "07 Ene 2026"
+    const m = raw.match(/^(\d{1,2})\s+([A-Za-zÁÉÍÓÚáéíóúñÑ\.]{3,})\s+(\d{4})$/)
+    if (m) {
+      const day = Number(m[1])
+      const monRaw = String(m[2] || '').replace('.', '').toLowerCase()
+      const year = Number(m[3])
+      const months = { ene: 0, feb: 1, mar: 2, abr: 3, may: 4, jun: 5, jul: 6, ago: 7, sep: 8, oct: 9, nov: 10, dic: 11 }
+      const mon = months[monRaw]
+      if (Number.isFinite(day) && Number.isFinite(year) && Number.isFinite(mon)) {
+        const d = new Date(year, mon, day)
+        const ts = d.getTime()
+        if (Number.isFinite(ts)) return ts
+      }
+    }
+
+    // EN-like: let Date try
+    const parsed = new Date(raw)
+    const ts = parsed.getTime()
+    return Number.isFinite(ts) ? ts : 0
+  }
+
+  const canon = Array.isArray(allArticles) ? allArticles : []
+  const ordered = canon
+    .filter((a) => a && typeof a.slug === 'string' && a.slug.trim())
+    .slice()
+    .sort((a, b) => {
+      const ta = getSortTs(a)
+      const tb = getSortTs(b)
+      if (tb !== ta) return tb - ta
+      return String(a.slug).localeCompare(String(b.slug))
+    })
+
+  const currentIndex = ordered.findIndex((a) => a.slug === currentSlug)
+
+  // Spec:
+  // - By default: show the 3 previous posts (older than current).
+  //   (List is newest -> oldest, so older are after the current index.)
+  // - If current is the oldest (no older posts exist): show the 2 newer (closer) posts.
+  let related = []
+  if (currentIndex >= 0) {
+    const older = ordered.slice(currentIndex + 1, currentIndex + 4)
+    if (older.length > 0) {
+      related = older
+    } else {
+      // oldest: pick 2 newer
+      related = ordered.slice(Math.max(0, currentIndex - 2), currentIndex)
+    }
+  } else {
+    related = ordered.filter((a) => a.slug !== currentSlug).slice(0, 3)
+  }
+
+  related = related.filter((a) => a.slug !== currentSlug).slice(0, 3)
 
   if (related.length === 0) return null
 
@@ -48,9 +119,9 @@ const RelatedArticles = ({ currentSlug, allArticles }) => {
               >
                 {/* Image */}
                 <div className={`aspect-video bg-gradient-to-br ${article.gradient} relative overflow-hidden`}>
-                  {article.image && (
+                  {resolveImageSrc(article.image) && (
                     <img 
-                      src={article.image} 
+                      src={resolveImageSrc(article.image)} 
                       alt={article.title}
                       loading="lazy"
                       className="absolute inset-0 w-full h-full object-cover"

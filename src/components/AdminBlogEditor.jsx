@@ -796,6 +796,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                     <option value="cyan">🩵 Cian</option>
                     <option value="pink">🩷 Rosa</option>
                     <option value="waifu8">💖 Waifu 8</option>
+                    <option value="waifu9">💜 Waifu 9</option>
                     <option value="orange">🟠 Naranja</option>
                     <option value="slate">⚪ Neutro</option>
                   </select>
