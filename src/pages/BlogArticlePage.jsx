@@ -2096,6 +2096,7 @@ const BlogArticlePage = () => {
       // En artículos del CMS, usar la imagen principal también como hero
       heroImage: row.image_url || null,
       image: row.image_url || null,
+      imageUrl: row.image_url || null, // Para compatibilidad con AdminBlogEditor
       sections: cmsBlocksToSections(row.content)
     }
   }
@@ -3254,7 +3255,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
 
   // Unificar el “gutter” horizontal de TODO el texto para que
   // no haya bloques que queden más “adentro” que otros en móvil.
-  const BODY_GUTTER = 'px-4 sm:px-6'
+  const BODY_GUTTER = '' // Empty: section wrapper already has px-4 sm:px-6 lg:px-20
 
   const renderInlineMarkdown = (input) => {
     const text = String(input ?? '')
