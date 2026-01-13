@@ -1919,6 +1919,17 @@ const BlogArticlePage = () => {
   const cmsBlocksToSections = (blocks) => {
     if (!Array.isArray(blocks)) return []
 
+    const normalizeCmsText = (value) => {
+      const raw = String(value ?? '')
+      // Some editors paste non-breaking spaces or zero-width chars that cause
+      // unexpected visual indentation/offsets when rendered.
+      return raw
+        .replace(/[\u200B\u200C\u200D\uFEFF]/g, '')
+        .replace(/[\u00A0\u2007\u202F]/g, ' ')
+        .replace(/\s+$/g, '')
+        .replace(/^\s+/g, '')
+    }
+
     const sections = []
     let pendingList = null
 
@@ -1931,7 +1942,7 @@ const BlogArticlePage = () => {
 
     for (const block of blocks) {
       const type = block?.type
-      const content = String(block?.content || '').trim()
+      const content = normalizeCmsText(block?.content)
 
       // Meta blocks (se guardan como campos del artículo, no como contenido renderizado)
       if (type === 'title' || type === 'subtitle') {
@@ -1960,7 +1971,7 @@ const BlogArticlePage = () => {
           const title = 'Preguntas'
           const items = content
             .split('\n')
-            .map((l) => String(l || '').trim())
+            .map((l) => normalizeCmsText(l))
             .filter(Boolean)
             .map((l) => l.replace(/^([-*•]|\d+[\.)])\s+/, '').trim())
             .filter(Boolean)
