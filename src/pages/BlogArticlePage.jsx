@@ -3025,7 +3025,7 @@ const BlogArticlePage = () => {
       </section>
 
       {/* Article Content */}
-      <section className="relative py-12 px-4 sm:px-6 lg:px-20 overflow-x-hidden">
+      <section className="relative py-12 px-[5%] sm:px-[5%] lg:px-20 overflow-x-hidden">
         <div className="max-w-3xl mx-auto">
           {isEditMode ? (
             <RichTextEditor
@@ -3373,9 +3373,13 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="mb-12 px-4 sm:px-6"
+        className="mb-12"
       >
-        <p className="text-xl lg:text-2xl text-white/80 leading-relaxed font-light italic">
+        <p
+          className="text-left text-xl lg:text-2xl text-white/80 leading-relaxed font-light italic break-words"
+          dir="ltr"
+          style={{ unicodeBidi: 'plaintext' }}
+        >
           {renderInlineMarkdown(section.content)}
         </p>
       </motion.div>
@@ -3396,7 +3400,11 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
           <div className={`absolute left-0 top-0 w-1 h-full bg-gradient-to-b ${accent.quoteBar} rounded-full`} />
           
           <div className="pl-6 pr-0 py-1">
-            <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic relative">
+            <p
+              className="text-left text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic relative break-words"
+              dir="ltr"
+              style={{ unicodeBidi: 'plaintext' }}
+            >
               <span className={`absolute -left-1 -top-1 text-5xl ${accent.quoteMark} font-serif`}>“</span>
               {renderInlineMarkdown(section.content)}
               <span className={`absolute -bottom-6 right-0 text-5xl ${accent.quoteMark} font-serif`}>”</span>
@@ -3445,9 +3453,13 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="mb-8 px-4 sm:px-6"
+        className="mb-8"
       >
-        <p className="text-lg text-white/70 leading-relaxed break-words">
+        <p
+          className="text-left text-lg text-white/70 leading-relaxed break-words"
+          dir="ltr"
+          style={{ unicodeBidi: 'plaintext' }}
+        >
           {renderInlineMarkdown(section.content)}
         </p>
       </motion.div>
@@ -3471,7 +3483,11 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
           {/* Quote icon */}
           <div className={`absolute top-8 left-8 text-6xl ${accent.highlightQuote} font-serif leading-none`}>“</div>
           
-          <blockquote className="relative text-2xl lg:text-3xl text-white font-light italic leading-relaxed mb-6 pl-8">
+          <blockquote
+            className="text-left relative text-2xl lg:text-3xl text-white font-light italic leading-relaxed mb-6 pl-8 break-words"
+            dir="ltr"
+            style={{ unicodeBidi: 'plaintext' }}
+          >
             {renderInlineMarkdown(section.content)}
           </blockquote>
           
@@ -3505,7 +3521,11 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
                 <h3 className="text-2xl font-bold text-white mb-3">
                   {section.title}
                 </h3>
-                <p className="text-base text-white/70 leading-relaxed">
+                <p
+                  className="text-left text-base text-white/70 leading-relaxed break-words"
+                  dir="ltr"
+                  style={{ unicodeBidi: 'plaintext' }}
+                >
                   {renderInlineMarkdown(section.content)}
                 </p>
               </div>

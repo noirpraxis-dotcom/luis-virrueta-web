@@ -271,6 +271,33 @@ export const ACCENT_PRESETS = {
     questionsIcon: 'text-white/70',
     questionsTitle: 'from-white/80 via-white/70 to-white/80',
     questionsDot: 'from-white/40 to-white/20'
+  },
+  waifu8: {
+    heroVia: 'via-pink-500/35',
+    headingTopBar: 'from-pink-400 via-fuchsia-500 to-violet-500',
+    badgeBg: 'bg-pink-500/10',
+    badgeBorder: 'border-pink-500/25',
+    badgeText: 'text-pink-200',
+    badgeIcon: 'text-pink-300',
+    quoteBar: 'from-pink-500/45 via-fuchsia-500/25 to-transparent',
+    quoteMark: 'text-pink-300/20',
+    highlightBg: 'from-pink-950/28 via-fuchsia-950/18 to-violet-950/28',
+    highlightBorder: 'border-pink-500/25',
+    highlightCornerA: 'from-fuchsia-500/20 to-transparent',
+    highlightCornerB: 'from-violet-500/20 to-transparent',
+    highlightQuote: 'text-pink-500/18',
+    highlightDivider: 'via-fuchsia-500/45',
+    highlightCite: 'text-pink-200',
+    questionsBg: 'from-pink-500/10 via-fuchsia-500/10 to-violet-500/10',
+    questionsBorder: 'border-pink-500/20',
+    questionsHoverBorder: 'group-hover:border-pink-500/35',
+    questionsOrbA: 'from-pink-500/18 to-fuchsia-500/18',
+    questionsOrbB: 'from-violet-500/18 to-pink-500/18',
+    questionsIconBg: 'from-pink-500/28 to-fuchsia-500/28',
+    questionsIconBorder: 'border-pink-500/25',
+    questionsIcon: 'text-pink-200',
+    questionsTitle: 'from-pink-200 via-fuchsia-200 to-violet-200',
+    questionsDot: 'from-pink-400 to-fuchsia-400'
   }
 }
 
@@ -286,6 +313,7 @@ export const normalizeAccentKey = (key) => {
   if (k === 'aqua') return 'cyan'
   if (k === 'magenta' || k === 'fuchsia' || k === 'rose') return 'pink'
   if (k === 'violet') return 'purple'
+  if (k === 'waifu 8' || k === 'waifu8') return 'waifu8'
 
   return 'purple'
 }

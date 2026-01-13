@@ -5,7 +5,7 @@ import {
   Type, Heading1, Heading2, Heading3, Bold, Italic, 
   List, ListOrdered, Quote, Sparkles, AlertCircle,
   Image as ImageIcon, Plus, Trash2, MoveUp, MoveDown,
-  Eye, Code, Link as LinkIcon
+  Eye, Code, Link as LinkIcon, MousePointer, Hash
 } from 'lucide-react'
 import { getAccentPreset } from '../utils/accentPresets'
 
@@ -1904,9 +1904,16 @@ export default function RichTextEditor({
       }
 
       if (action === 'subsection') {
-        const lines = text.split('\n').map(l => l.trim()).filter(Boolean)
+        const host = docEditorRef.current
+        const existing = host?.querySelectorAll?.('[data-rte-type="subsection"]')?.length || 0
+        const nextN = existing + 1
+        const defaultNumber = String(nextN).padStart(2, '0')
+
+        const lines = String(text || '').split('\n').map(l => l.trim()).filter(Boolean)
         const title = lines[0] || 'Subtítulo'
-        const content = lines.slice(1).join(' ') || text.trim()
+        // Si solo hay una línea seleccionada, usarla como título y dejar el body vacío
+        // para evitar duplicar el contenido (título+texto iguales).
+        const content = lines.length > 1 ? lines.slice(1).join(' ') : ''
         
         const wrapper = document.createElement('div')
         wrapper.setAttribute('data-rte-type', 'subsection')
@@ -1926,7 +1933,7 @@ export default function RichTextEditor({
         number.setAttribute('data-rte-role', 'subsection-number')
         number.className = 'text-6xl font-bold bg-gradient-to-br from-purple-500 to-fuchsia-500 bg-clip-text text-transparent opacity-50'
         number.contentEditable = 'true'
-        number.textContent = '01'
+        number.textContent = defaultNumber
         
         const textContainer = document.createElement('div')
         textContainer.className = 'flex-1 pt-2'
@@ -2466,14 +2473,13 @@ function BlockTypeSelector({ onSelect }) {
  */
 function FloatingFormatToolbar({ position, onClose, onFormat, onInteract }) {
   const [showBlockMenu, setShowBlockMenu] = useState(false)
+  const [showHeadingMenu, setShowHeadingMenu] = useState(false)
 
   const formatOptions = [
-    { icon: Heading1, label: 'Título', action: 'title' },
-    { icon: Heading2, label: 'Subtítulo', action: 'subtitle' },
     { icon: Bold, label: 'Negrita', action: 'bold' },
     { icon: Italic, label: 'Cursiva', action: 'italic' },
-    { icon: Heading2, label: 'Sección', action: 'heading' },
-    { icon: Type, label: 'Tarjeta', action: 'subsection' },
+    { icon: MousePointer, label: 'Sección', action: 'heading' },
+    { icon: Hash, label: 'Tarjeta #', action: 'subsection' },
     { icon: LinkIcon, label: 'Enlace', action: 'link' },
     { icon: Trash2, label: 'Quitar formato', action: 'delete' },
   ]
@@ -2496,6 +2502,48 @@ function FloatingFormatToolbar({ position, onClose, onFormat, onInteract }) {
       className="bg-gray-900 border-2 border-purple-500 rounded-xl shadow-2xl shadow-purple-500/50 overflow-visible"
     >
       <div className="flex items-center gap-1 p-2">
+        <div className="relative">
+          <button
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => setShowHeadingMenu((v) => !v)}
+            title="Título / Subtítulo"
+            className="p-2.5 rounded-lg hover:bg-white/10 text-gray-300 hover:text-white transition-all group"
+          >
+            <Heading2 className="w-4 h-4" />
+          </button>
+
+          {showHeadingMenu && (
+            <div
+              onMouseDown={(e) => e.preventDefault()}
+              className="absolute left-0 top-full mt-2 w-52 rounded-lg border border-white/10 bg-gray-900 shadow-2xl overflow-hidden"
+              style={{ zIndex: 100000 }}
+            >
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  setShowHeadingMenu(false)
+                  onFormat?.('title')
+                }}
+                className="w-full px-3 py-2 text-left text-sm text-white/90 hover:bg-white/10 flex items-center gap-2"
+              >
+                <Heading1 className="w-4 h-4 text-purple-300" />
+                Título
+              </button>
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  setShowHeadingMenu(false)
+                  onFormat?.('subtitle')
+                }}
+                className="w-full px-3 py-2 text-left text-sm text-white/90 hover:bg-white/10 flex items-center gap-2"
+              >
+                <Heading2 className="w-4 h-4 text-purple-300" />
+                Subtítulo
+              </button>
+            </div>
+          )}
+        </div>
+
         <div className="relative">
           <button
             onMouseDown={(e) => e.preventDefault()}
