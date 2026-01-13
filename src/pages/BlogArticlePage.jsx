@@ -1905,7 +1905,7 @@ const BlogArticlePage = () => {
 
   if (isHiddenSlug) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28 flex items-center justify-center overflow-x-hidden">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-white mb-4">{t('blogArticles.common.notFound')}</h1>
           <Link to="/blog" className="text-cyan-400 hover:text-cyan-300">
@@ -2190,7 +2190,7 @@ const BlogArticlePage = () => {
 
   if (!article) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28 flex items-center justify-center overflow-x-hidden">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-white mb-4">{t('blogArticles.common.notFound')}</h1>
           <Link to="/blog" className="text-cyan-400 hover:text-cyan-300">
@@ -2629,7 +2629,7 @@ const BlogArticlePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28">
+    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28 overflow-x-hidden">
       <SEOHead
         title={seoTitle}
         description={seoDescription}
