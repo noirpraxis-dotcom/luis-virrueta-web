@@ -3032,14 +3032,27 @@ const BlogArticlePage = () => {
               initialContent={draftBlocks}
               onChange={(next) => {
                 setDraftBlocks(next)
-                // Si el usuario convierte/inserta título/subtítulo dentro del editor,
-                // reflejarlo también en los inputs superiores.
+                // Sincronizar título/subtítulo con los bloques del editor:
+                // Si existe bloque title/subtitle, reflejarlo arriba.
+                // Si se elimina o convierte, limpiar los campos superiores.
                 const { title: metaTitle, subtitle: metaSubtitle } = extractMetaFromBlocks(next)
-                const hasMetaBlocks = Array.isArray(next) && next.some((b) => b?.type === 'title' || b?.type === 'subtitle')
-                if (hasMetaBlocks) {
+                const hasTitleBlock = Array.isArray(next) && next.some((b) => b?.type === 'title')
+                const hasSubtitleBlock = Array.isArray(next) && next.some((b) => b?.type === 'subtitle')
+                
+                if (hasTitleBlock) {
                   setDraftTitle(String(metaTitle || '').trim())
-                  setDraftSubtitle(String(metaSubtitle || '').trim())
+                } else {
+                  // Si ya no hay bloque title, limpiar el campo
+                  setDraftTitle('')
                 }
+                
+                if (hasSubtitleBlock) {
+                  setDraftSubtitle(String(metaSubtitle || '').trim())
+                } else {
+                  // Si ya no hay bloque subtitle, limpiar el campo
+                  setDraftSubtitle('')
+                }
+                
                 setIsDirty(true)
               }}
               mode="document"
@@ -3426,7 +3439,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         className="mb-12 mt-16"
         id={typeof headingAnchorId === 'string' && headingAnchorId ? headingAnchorId : `section-${index}`}
       >
-        <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6 sm:p-8 overflow-hidden">
           {/* Gradient accent top */}
           <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accent.headingTopBar}`} />
           
@@ -3453,12 +3466,12 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="mb-8"
+        className="mb-8 px-1"
       >
         <p
           className="text-left text-lg text-white/70 leading-relaxed break-words"
           dir="ltr"
-          style={{ unicodeBidi: 'plaintext' }}
+          style={{ unicodeBidi: 'plaintext', marginLeft: 0, paddingLeft: 0 }}
         >
           {renderInlineMarkdown(section.content)}
         </p>

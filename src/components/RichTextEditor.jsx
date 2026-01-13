@@ -506,6 +506,18 @@ export default function RichTextEditor({
       return withLinks.replace(/\n/g, '<br/>')
     }
 
+    // Detectar y limpiar prefijos redundantes en títulos de sección
+    const cleanSectionTitle = (raw) => {
+      let t = String(raw || '').trim()
+      // Remover "Capítulo N" / "Chapter N"
+      t = t.replace(/^Cap[íi]tulo\s+[\dIVXLCM]+[\s:—–-]+/i, '')
+      t = t.replace(/^Chapter\s+[\dIVXLCM]+[\s:—–-]+/i, '')
+      // Remover "N." o "N —" al inicio (números arábigos o romanos)
+      t = t.replace(/^[IVXLCM]+[.):\s—–-]+/i, '')
+      t = t.replace(/^\d+[.):\s—–-]+/, '')
+      return t.trim()
+    }
+
     const html = []
     let sectionCounter = 0
 
@@ -543,6 +555,9 @@ export default function RichTextEditor({
           ? ` id="section-${sectionCounter - 1}"`
           : ''
         
+        // Limpiar prefijos redundantes del título
+        const cleanedTitle = cleanSectionTitle(content)
+        
         // Estilo con caja y número de sección como en el artículo final
         push(
           `<div${tocIdAttr} class="mb-12 mt-16 relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8 overflow-hidden" data-section="${sectionCounter}" data-rte-type="heading">` +
@@ -551,7 +566,7 @@ export default function RichTextEditor({
           `<span data-rte-role="section-icon" data-icon="${escAttr(iconKey)}" contenteditable="false" class="inline-flex items-center justify-center text-white/80">${sectionIconHtml(iconKey, escAttr)}</span>` +
           `<span data-rte-role="section-badge-text" contenteditable="false" class="text-xs font-mono ${accentPreset.badgeText} tracking-wider">SECCIÓN ${sectionNum}</span>` +
           `</div>` +
-          `<h2 class="text-3xl lg:text-4xl font-light text-white leading-tight">${inline(content)}</h2>` +
+          `<h2 class="text-3xl lg:text-4xl font-light text-white leading-tight">${inline(cleanedTitle)}</h2>` +
           `</div>`
         )
         continue
