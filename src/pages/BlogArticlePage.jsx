@@ -3397,7 +3397,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         className="mb-12 mt-16"
         id={typeof headingAnchorId === 'string' && headingAnchorId ? headingAnchorId : `section-${index}`}
       >
-        <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6 overflow-hidden">
           {/* Gradient accent top */}
           <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accent.headingTopBar}`} />
           
@@ -3442,7 +3442,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         transition={{ duration: 0.4, delay: index * 0.05 }}
         className="my-16 relative"
       >
-        <div className={`relative bg-gradient-to-br ${accent.highlightBg} backdrop-blur-xl border-2 ${accent.highlightBorder} rounded-3xl p-6 overflow-hidden`}>
+        <div className={`relative bg-gradient-to-br ${accent.highlightBg} backdrop-blur-xl border-2 ${accent.highlightBorder} rounded-3xl p-4 sm:p-6 overflow-hidden`}>
           {/* Decorative corner accents */}
           <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${accent.highlightCornerA} rounded-bl-full`} />
           <div className={`absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr ${accent.highlightCornerB} rounded-tr-full`} />
@@ -3471,7 +3471,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         transition={{ duration: 0.4, delay: index * 0.05 }}
         className="mb-8"
       >
-        <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden group hover:border-white/30 transition-all">
+        <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6 overflow-hidden group hover:border-white/30 transition-all">
           {/* Gradient orb */}
           <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${section.gradient} opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity`} />
           
@@ -3505,7 +3505,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         transition={{ duration: 0.4, delay: index * 0.05 }}
         className="my-12"
       >
-        <div className={`relative bg-gradient-to-br ${accent.questionsBg} backdrop-blur-sm border-2 ${accent.questionsBorder} rounded-3xl p-6 overflow-hidden group ${accent.questionsHoverBorder} transition-all duration-500`}>
+        <div className={`relative bg-gradient-to-br ${accent.questionsBg} backdrop-blur-sm border-2 ${accent.questionsBorder} rounded-3xl p-4 sm:p-6 overflow-hidden group ${accent.questionsHoverBorder} transition-all duration-500`}>
           {/* Animated gradient orbs */}
           <div className={`absolute top-0 right-0 w-48 h-48 bg-gradient-to-br ${accent.questionsOrbA} rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700`} />
           <div className={`absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-tr ${accent.questionsOrbB} rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700`} />
