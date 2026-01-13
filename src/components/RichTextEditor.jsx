@@ -666,7 +666,7 @@ export default function RichTextEditor({
           `<span data-rte-role="subsection-number" class="text-6xl font-bold bg-gradient-to-br from-purple-500 to-fuchsia-500 bg-clip-text text-transparent opacity-50">${number}</span>` +
           `<div class="flex-1 pt-2">` +
           `<h3 class="text-2xl font-bold text-white mb-3">${inline(title)}</h3>` +
-          `<p class="text-base text-white/70 leading-relaxed" dir="ltr" style="unicode-bidi: plaintext; padding-left: 0; margin-left: 0; overflow-wrap: break-word; word-break: break-word;">${inline(content)}</p>` +
+          `<p class="text-base text-white/70 leading-relaxed">${inline(content)}</p>` +
           `</div>` +
           `</div>` +
           `</div>` +
@@ -676,7 +676,7 @@ export default function RichTextEditor({
       }
 
       // paragraph
-      push(`<p class="my-6 text-lg md:text-xl text-white/75 leading-relaxed tracking-wide" dir="ltr" style="unicode-bidi: plaintext; padding-left: 0; margin-left: 0; overflow-wrap: break-word; word-break: break-word;">${inline(content)}</p>`)
+      push(`<p class="my-6 text-lg md:text-xl text-white/75 leading-relaxed tracking-wide">${inline(content)}</p>`)
     }
 
     flushList()
@@ -2222,15 +2222,9 @@ También puedes usar el botón + para agregar bloques específicos."
               onMouseUp={() => updateToolbarFromDocSelection(window.getSelection())}
               onKeyUp={() => updateToolbarFromDocSelection(window.getSelection())}
               onTouchEnd={() => updateToolbarFromDocSelection(window.getSelection())}
-              className="min-h-[500px] outline-none text-white selection:bg-purple-500/40 selection:text-white focus:ring-0 w-full overflow-x-clip"
-              dir="ltr"
+              className="min-h-[500px] outline-none text-white selection:bg-purple-500/40 selection:text-white focus:ring-0 max-w-4xl mx-auto"
               style={{
-                caretColor: '#a78bfa',
-                unicodeBidi: 'plaintext',
-                paddingLeft: 0,
-                paddingRight: 0,
-                marginLeft: 0,
-                marginRight: 0
+                caretColor: '#a78bfa'
               }}
             />
             <div className="mt-8 pt-6 border-t border-purple-500/20 flex items-start gap-3 text-sm text-gray-400">

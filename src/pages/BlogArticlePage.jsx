@@ -3025,7 +3025,7 @@ const BlogArticlePage = () => {
       </section>
 
       {/* Article Content */}
-      <section className="relative py-12 px-4 sm:px-6 lg:px-20 overflow-x-clip">
+      <section className="relative py-12 px-6 sm:px-8 lg:px-20 overflow-x-clip">
         <div className="max-w-3xl mx-auto w-full">
           {isEditMode ? (
             <RichTextEditor
@@ -3466,12 +3466,12 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="mb-8 px-1"
+        className="mb-8"
       >
         <p
           className="text-left text-lg text-white/70 leading-relaxed break-words"
           dir="ltr"
-          style={{ unicodeBidi: 'plaintext', marginLeft: 0, paddingLeft: 0 }}
+          style={{ unicodeBidi: 'plaintext', marginLeft: 0, paddingLeft: 0, wordBreak: 'break-word', overflowWrap: 'break-word' }}
         >
           {renderInlineMarkdown(section.content)}
         </p>
