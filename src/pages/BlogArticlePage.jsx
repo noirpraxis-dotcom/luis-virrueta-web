@@ -3025,7 +3025,7 @@ const BlogArticlePage = () => {
       </section>
 
       {/* Article Content */}
-      <section className="relative py-12 px-8 sm:px-10 lg:px-20">
+      <section className="relative py-12 px-6 sm:px-8 lg:px-20 text-left">
         <div className="max-w-3xl mx-auto w-full">
           {isEditMode ? (
             <RichTextEditor
@@ -3303,6 +3303,10 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.1 })
 
+  // Unificar el “gutter” horizontal de TODO el texto para que
+  // no haya bloques que queden más “adentro” que otros en móvil.
+  const BODY_GUTTER = 'px-4 sm:px-6'
+
   const renderInlineMarkdown = (input) => {
     const text = String(input ?? '')
       // Strip bidi control marks that can flip direction (RTL/LTR) for a single paragraph
@@ -3389,9 +3393,9 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         className="mb-12"
       >
         <p
-          className="text-left text-xl lg:text-2xl text-white/80 leading-relaxed font-light italic break-words pl-0"
+          className={`text-left ${BODY_GUTTER} text-xl lg:text-2xl text-white/80 leading-relaxed font-light italic break-words`}
           dir="ltr"
-          style={{ unicodeBidi: 'plaintext', marginLeft: 0, paddingLeft: 0, textIndent: 0 }}
+          style={{ unicodeBidi: 'plaintext', marginLeft: 0, textIndent: 0 }}
         >
           {renderInlineMarkdown(section.content)}
         </p>
@@ -3412,7 +3416,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
           {/* Decorative quote icon */}
           <div className={`absolute left-0 top-0 w-1 h-full bg-gradient-to-b ${accent.quoteBar} rounded-full`} />
           
-          <div className="pl-6 pr-0 py-1">
+          <div className={`${BODY_GUTTER} pl-6 pr-0 py-1`}>
             <p
               className="text-left text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic relative break-words"
               dir="ltr"
@@ -3439,21 +3443,23 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         className="mb-12 mt-16"
         id={typeof headingAnchorId === 'string' && headingAnchorId ? headingAnchorId : `section-${index}`}
       >
-        <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8 sm:p-8 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
           {/* Gradient accent top */}
           <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accent.headingTopBar}`} />
-          
-          {/* Number badge */}
-          {headingNumber > 0 && (
-            <div className={`inline-flex items-center gap-2 mb-4 px-4 py-1.5 ${accent.badgeBg} border ${accent.badgeBorder} rounded-full`}>
-              <span className={`text-xs font-mono ${accent.badgeText} tracking-wider`}>SECCIÓN {String(headingNumber).padStart(2, '0')}</span>
-              {Icon && <Icon className={`w-3.5 h-3.5 ${accent.badgeIcon}`} />}
-            </div>
-          )}
-          
-          <h2 className="text-3xl lg:text-4xl font-light text-white leading-tight break-words">
-            {section.title}
-          </h2>
+
+          <div className={`${BODY_GUTTER} py-8`}>
+            {/* Number badge */}
+            {headingNumber > 0 && (
+              <div className={`inline-flex items-center gap-2 mb-4 px-4 py-1.5 ${accent.badgeBg} border ${accent.badgeBorder} rounded-full`}>
+                <span className={`text-xs font-mono ${accent.badgeText} tracking-wider`}>SECCIÓN {String(headingNumber).padStart(2, '0')}</span>
+                {Icon && <Icon className={`w-3.5 h-3.5 ${accent.badgeIcon}`} />}
+              </div>
+            )}
+
+            <h2 className="text-3xl lg:text-4xl font-light text-white leading-tight break-words">
+              {section.title}
+            </h2>
+          </div>
         </div>
       </motion.div>
     )
@@ -3466,12 +3472,12 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="mb-8 pl-0.5"
+        className="mb-8"
       >
         <p
-          className="text-left text-lg text-white/70 leading-relaxed break-words pl-0"
+          className={`text-left ${BODY_GUTTER} text-lg text-white/70 leading-relaxed break-words`}
           dir="ltr"
-          style={{ unicodeBidi: 'plaintext', marginLeft: 0, paddingLeft: 0, wordBreak: 'break-word', overflowWrap: 'break-word', textIndent: 0 }}
+          style={{ unicodeBidi: 'plaintext', marginLeft: 0, wordBreak: 'break-word', overflowWrap: 'break-word', textIndent: 0 }}
         >
           {renderInlineMarkdown(section.content)}
         </p>
@@ -3497,7 +3503,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
           <div className={`absolute top-8 left-8 text-6xl ${accent.highlightQuote} font-serif leading-none`}>“</div>
           
           <blockquote
-            className="text-left relative text-2xl lg:text-3xl text-white font-light italic leading-relaxed mb-6 pl-8 break-words"
+            className={`text-left relative ${BODY_GUTTER} text-2xl lg:text-3xl text-white font-light italic leading-relaxed mb-6 pl-8 break-words`}
             dir="ltr"
             style={{ unicodeBidi: 'plaintext' }}
           >
@@ -3535,7 +3541,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
                   {section.title}
                 </h3>
                 <p
-                  className="text-left text-base text-white/70 leading-relaxed break-words"
+                  className={`text-left ${BODY_GUTTER} text-base text-white/70 leading-relaxed break-words`}
                   dir="ltr"
                   style={{ unicodeBidi: 'plaintext' }}
                 >
@@ -3584,7 +3590,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
                   className="flex items-start gap-4 group/item"
                 >
                   <div className={`flex-shrink-0 mt-1 w-2 h-2 rounded-full bg-gradient-to-br ${accent.questionsDot} group-hover/item:scale-150 transition-transform duration-300`} />
-                  <p className="text-lg text-white/90 leading-relaxed font-light break-words group-hover/item:text-white transition-colors duration-300">
+                  <p className={`text-left ${BODY_GUTTER} text-lg text-white/90 leading-relaxed font-light break-words group-hover/item:text-white transition-colors duration-300`}>
                     {question}
                   </p>
                 </motion.div>
