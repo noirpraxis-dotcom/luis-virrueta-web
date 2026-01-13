@@ -3025,8 +3025,8 @@ const BlogArticlePage = () => {
       </section>
 
       {/* Article Content */}
-      <section className="relative py-12 px-[5%] sm:px-[5%] lg:px-20 overflow-x-hidden">
-        <div className="max-w-3xl mx-auto">
+      <section className="relative py-12 px-4 sm:px-6 lg:px-20 overflow-x-clip">
+        <div className="max-w-3xl mx-auto w-full">
           {isEditMode ? (
             <RichTextEditor
               initialContent={draftBlocks}
