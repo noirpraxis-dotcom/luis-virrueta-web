@@ -1924,6 +1924,11 @@ const BlogArticlePage = () => {
       // Some editors paste non-breaking spaces or zero-width chars that cause
       // unexpected visual indentation/offsets when rendered.
       return raw
+        // Strip bidi control marks that can flip direction (RTL/LTR) for a single paragraph
+        // and cause it to overflow off-screen (often to the left on mobile).
+        .replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069]/g, '')
+        // Strip other non-printing ASCII control chars (keep newlines)
+        .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '')
         .replace(/[\u200B\u200C\u200D\uFEFF]/g, '')
         .replace(/[\u00A0\u2007\u202F]/g, ' ')
         .replace(/\s+$/g, '')
@@ -1978,10 +1983,11 @@ const BlogArticlePage = () => {
             const hasMultipleQuestions = (line.match(/\?/g) || []).length > 1
             if (hasMultipleQuestions) {
               // Split by '?' but keep the '?'
-              const parts = line.split(/(?<=\?)/).map(p => p.trim()).filter(Boolean)
+              const parts = line.split(/(?<=\?)/).map((p) => p.trim()).filter(Boolean)
               for (const part of parts) {
                 const clean = part.replace(/^([-*•]|\d+[\.)])\s+/, '').trim()
-                if (clean && clean.includes('¿')) items.push(clean)
+                // Accept both Spanish opening mark and plain '?' usage
+                if (clean && /[\u00BF\?]/.test(clean)) items.push(clean)
               }
             } else {
               const clean = line.replace(/^([-*•]|\d+[\.)])\s+/, '').trim()
@@ -3019,7 +3025,7 @@ const BlogArticlePage = () => {
       </section>
 
       {/* Article Content */}
-      <section className="relative py-12 px-4 sm:px-6 lg:px-20">
+      <section className="relative py-12 px-4 sm:px-6 lg:px-20 overflow-x-hidden">
         <div className="max-w-3xl mx-auto">
           {isEditMode ? (
             <RichTextEditor
@@ -3409,7 +3415,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
             </div>
           )}
           
-          <h2 className="text-3xl lg:text-4xl font-light text-white leading-tight">
+          <h2 className="text-3xl lg:text-4xl font-light text-white leading-tight break-words">
             {section.title}
           </h2>
         </div>
@@ -3426,7 +3432,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         transition={{ duration: 0.4, delay: index * 0.05 }}
         className="mb-8"
       >
-        <p className="text-lg text-white/70 leading-relaxed">
+        <p className="text-lg text-white/70 leading-relaxed break-words">
           {renderInlineMarkdown(section.content)}
         </p>
       </motion.div>
@@ -3530,7 +3536,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
                   className="flex items-start gap-4 group/item"
                 >
                   <div className={`flex-shrink-0 mt-1 w-2 h-2 rounded-full bg-gradient-to-br ${accent.questionsDot} group-hover/item:scale-150 transition-transform duration-300`} />
-                  <p className="text-lg text-white/90 leading-relaxed font-light group-hover/item:text-white transition-colors duration-300">
+                  <p className="text-lg text-white/90 leading-relaxed font-light break-words group-hover/item:text-white transition-colors duration-300">
                     {question}
                   </p>
                 </motion.div>
@@ -3602,7 +3608,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
               className="flex gap-4 items-start"
             >
               <span className={`mt-2.5 h-2.5 w-2.5 rounded-full bg-gradient-to-br ${accent.questionsDot} flex-shrink-0 shadow-lg shadow-black/30`} />
-              <div className="flex-1 text-white/70 text-lg leading-relaxed">
+              <div className="flex-1 text-white/70 text-lg leading-relaxed break-words">
                 {renderInlineMarkdown(item?.description ? `${item.title}: ${item.description}` : item.title)}
               </div>
             </motion.li>
