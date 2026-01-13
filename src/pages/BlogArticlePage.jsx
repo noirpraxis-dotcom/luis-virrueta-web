@@ -2168,7 +2168,74 @@ const BlogArticlePage = () => {
 
     return cmsArticle || baseArticle
   })()
-        allArticles={getLegacyBlogIndex(currentLanguage)}
+
+  const editorSections = isEditMode ? cmsBlocksToSections(draftBlocks) : article.sections
+  const tocSections = editorSections
+
+  const accentKey = inferAccentKey(article)
+  const accent = ACCENT_PRESETS[accentKey] || ACCENT_PRESETS.purple
+
+  const heroImageCandidates = useMemo(() => {
+    const candidates = [
+      resolvePublicImageUrl(article.heroImage),
+      resolvePublicImageUrl(article.image),
+      // Last resort: site cover
+      '/portada.webp'
+    ].filter(Boolean)
+
+    // Unique preserve order
+    const seen = new Set()
+    return candidates.filter((u) => {
+      if (!u) return false
+      if (seen.has(u)) return false
+      seen.add(u)
+      return true
+    })
+  }, [article.heroImage, article.image])
+
+  const [heroCandidateIndex, setHeroCandidateIndex] = useState(0)
+  const heroBackgroundImage = (!isEditMode && cmsLoading) ? null : (heroImageCandidates[heroCandidateIndex] || null)
+
+  const effectiveHeroImage = isEditMode
+    ? (resolvePublicImageUrl(draftImageUrl) || heroBackgroundImage)
+    : heroBackgroundImage
+
+  useEffect(() => {
+    setHeroCandidateIndex(0)
+  }, [slug, heroImageCandidates.join('|')])
+
+  if (!article) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28 flex items-center justify-center overflow-x-hidden">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-white mb-4">{t('blogArticles.common.notFound')}</h1>
+          <Link to="/blog" className="text-cyan-400 hover:text-cyan-300">
+            {t('blogArticles.common.backToBlog')}
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  const beginEditMode = () => {
+    if (!isAdmin) {
+      setShowAdminLogin(true)
+      return
+    }
+
+    const row = cmsRow
+    const initialBlocks = Array.isArray(row?.content) && row.content.length
+      ? row.content
+      : sectionsToCmsBlocks(article.sections)
+
+    setDraftTitle(String(row?.title || article.title || '').trim())
+    setDraftSubtitle(String(row?.subtitle || article.subtitle || '').trim())
+    setDraftAuthor(String(row?.author || article.author || '').trim())
+    setDraftReadTime(String(row?.read_time || row?.readTime || article.readTime || '').trim())
+    // Si existe fila CMS pero no hay tags, no heredar tags legacy
+    setDraftTags(
+      Array.isArray(row?.tags) && row.tags.length
+        ? row.tags
         : (Array.isArray(article.tags) ? article.tags : [])
     )
     setDraftImageUrl(String(row?.image_url || article.heroImage || article.image || '').trim())
@@ -3082,74 +3149,7 @@ const BlogArticlePage = () => {
       {/* Related Articles */}
       <RelatedArticles 
         currentSlug={slug} 
-        allArticles={[
-          {
-            title: 'Neurociencia del Diseño: Por Qué Algunos Logos Son Inolvidables',
-            slug: 'neurociencia-del-diseno',
-            excerpt: 'La ciencia detrás de los logos icónicos y cómo aplicar estos principios neurológicos a tu marca.',
-            image: '/IMAGENES BLOG/1.jpg',
-            date: '15 Nov 2024',
-            readTime: '12 min',
-            gradient: 'from-pink-500/20 to-rose-500/20',
-            borderGradient: 'from-pink-500 to-rose-500',
-            rating: 4.9
-          },
-          {
-            title: 'La IA Generativa en el Diseño: Del Prompt a la Emoción',
-            slug: 'ia-generativa-diseno-emocion',
-            excerpt: 'Cómo fusionar inteligencia artificial, diseño visual y psicología para crear experiencias que conectan emocionalmente.',
-            image: '/IMAGENES BLOG/2.jpg',
-            date: '22 Nov 2024',
-            readTime: '14 min',
-            gradient: 'from-purple-500/20 to-fuchsia-500/20',
-            borderGradient: 'from-purple-500 to-fuchsia-500',
-            rating: 5.0
-          },
-          {
-            title: 'Interfaces que Leen tu Mente: UX Empático con Machine Learning',
-            slug: 'interfaces-empaticas-machine-learning',
-            excerpt: 'Descubre cómo el ML y la psicología del usuario se unen para crear interfaces que anticipan necesidades.',
-            image: '/IMAGENES BLOG/3.jpg',
-            date: '28 Nov 2024',
-            readTime: '13 min',
-            gradient: 'from-cyan-500/20 to-blue-500/20',
-            borderGradient: 'from-cyan-500 to-blue-500',
-            rating: 4.8
-          },
-          {
-            title: 'La Psicología del Color en el Branding de Lujo',
-            slug: 'psicologia-color-branding-lujo',
-            excerpt: 'Descubre cómo las marcas premium utilizan la teoría del color para crear conexiones emocionales profundas.',
-            image: '/IMAGENES BLOG/4.jpg',
-            date: '3 Dic 2024',
-            readTime: '10 min',
-            gradient: 'from-emerald-500/20 to-teal-500/20',
-            borderGradient: 'from-emerald-500 to-teal-500',
-            rating: 4.7
-          },
-          {
-            title: 'Tendencias de Diseño 2025: Minimalismo Maximalista',
-            slug: 'tendencias-diseno-2025',
-            excerpt: 'El nuevo paradigma que combina la simplicidad estructural con detalles ricos y experiencias sensoriales complejas.',
-            image: '/IMAGENES BLOG/5.jpg',
-            date: '5 Dic 2024',
-            readTime: '9 min',
-            gradient: 'from-violet-500/20 to-purple-500/20',
-            borderGradient: 'from-violet-500 to-purple-500',
-            rating: 4.9
-          },
-          {
-            title: 'Creando Identidades de Marca Memorables',
-            slug: 'identidades-marca-memorables',
-            excerpt: 'Un sistema paso a paso para desarrollar marcas que resuenan emocionalmente y permanecen en la mente del consumidor.',
-            image: '/IMAGENES BLOG/6.jpg',
-            date: '7 Dic 2024',
-            readTime: '11 min',
-            gradient: 'from-amber-500/20 to-orange-500/20',
-            borderGradient: 'from-amber-500 to-orange-500',
-            rating: 5.0
-          }
-        ]} 
+        allArticles={getLegacyBlogIndex(currentLanguage)}
       />
     </div>
   )
