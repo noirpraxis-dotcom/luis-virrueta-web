@@ -189,8 +189,9 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
     setContent(newContent)
 
     const { extractedTitle, extractedSubtitle, body } = extractMetaFromContent(newContent)
-    if (extractedTitle && extractedTitle !== title) setTitle(extractedTitle)
-    if (extractedSubtitle && extractedSubtitle !== subtitle) setSubtitle(extractedSubtitle)
+    // Solo actualizar si hay valor extraído no vacío (evitar borrar título/subtítulo cuando usuario vacía bloques)
+    if (extractedTitle && extractedTitle.trim() && extractedTitle !== title) setTitle(extractedTitle)
+    if (extractedSubtitle && extractedSubtitle.trim() && extractedSubtitle !== subtitle) setSubtitle(extractedSubtitle)
 
     const calculatedTime = calculateReadTime(body)
     setReadTime(calculatedTime)
