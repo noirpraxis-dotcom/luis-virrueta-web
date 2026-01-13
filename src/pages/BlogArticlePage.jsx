@@ -3025,7 +3025,7 @@ const BlogArticlePage = () => {
       </section>
 
       {/* Article Content */}
-      <section className="relative py-12 px-6 sm:px-8 lg:px-20 overflow-x-clip">
+      <section className="relative py-12 px-8 sm:px-10 lg:px-20">
         <div className="max-w-3xl mx-auto w-full">
           {isEditMode ? (
             <RichTextEditor
@@ -3389,9 +3389,9 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         className="mb-12"
       >
         <p
-          className="text-left text-xl lg:text-2xl text-white/80 leading-relaxed font-light italic break-words"
+          className="text-left text-xl lg:text-2xl text-white/80 leading-relaxed font-light italic break-words pl-0"
           dir="ltr"
-          style={{ unicodeBidi: 'plaintext' }}
+          style={{ unicodeBidi: 'plaintext', marginLeft: 0, paddingLeft: 0, textIndent: 0 }}
         >
           {renderInlineMarkdown(section.content)}
         </p>
@@ -3439,7 +3439,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         className="mb-12 mt-16"
         id={typeof headingAnchorId === 'string' && headingAnchorId ? headingAnchorId : `section-${index}`}
       >
-        <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6 sm:p-8 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-8 sm:p-8 overflow-hidden">
           {/* Gradient accent top */}
           <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accent.headingTopBar}`} />
           
@@ -3466,12 +3466,12 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="mb-8"
+        className="mb-8 pl-0.5"
       >
         <p
-          className="text-left text-lg text-white/70 leading-relaxed break-words"
+          className="text-left text-lg text-white/70 leading-relaxed break-words pl-0"
           dir="ltr"
-          style={{ unicodeBidi: 'plaintext', marginLeft: 0, paddingLeft: 0, wordBreak: 'break-word', overflowWrap: 'break-word' }}
+          style={{ unicodeBidi: 'plaintext', marginLeft: 0, paddingLeft: 0, wordBreak: 'break-word', overflowWrap: 'break-word', textIndent: 0 }}
         >
           {renderInlineMarkdown(section.content)}
         </p>
