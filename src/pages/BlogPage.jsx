@@ -260,7 +260,8 @@ const BlogPage = () => {
 
           // En artículos legacy, conservar SIEMPRE la imagen original para evitar el bug
           // de "todas las tarjetas con la misma imagen" cuando Supabase termina de cargar.
-          merged.image = legacy.image || incoming.image || ''
+          // CRÍTICO: NUNCA permitir que Supabase pise la imagen legacy hardcoded.
+          merged.image = legacy.image || ''
 
           // Mantener el accent del legacy si existe; si no, usar el del CMS.
           merged.accent = legacy.accent || incoming.accent || null
