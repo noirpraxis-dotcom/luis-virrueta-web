@@ -3032,6 +3032,14 @@ const BlogArticlePage = () => {
               initialContent={draftBlocks}
               onChange={(next) => {
                 setDraftBlocks(next)
+                // Si el usuario convierte/inserta título/subtítulo dentro del editor,
+                // reflejarlo también en los inputs superiores.
+                const { title: metaTitle, subtitle: metaSubtitle } = extractMetaFromBlocks(next)
+                const hasMetaBlocks = Array.isArray(next) && next.some((b) => b?.type === 'title' || b?.type === 'subtitle')
+                if (hasMetaBlocks) {
+                  setDraftTitle(String(metaTitle || '').trim())
+                  setDraftSubtitle(String(metaSubtitle || '').trim())
+                }
                 setIsDirty(true)
               }}
               mode="document"
@@ -3284,6 +3292,13 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
 
   const renderInlineMarkdown = (input) => {
     const text = String(input ?? '')
+      // Strip bidi control marks that can flip direction (RTL/LTR) for a single paragraph
+      // and cause it to overflow off-screen (often to the left on mobile).
+      .replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069]/g, '')
+      // Strip other non-printing ASCII control chars (keep newlines)
+      .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '')
+      .replace(/[\u200B\u200C\u200D\uFEFF]/g, '')
+      .replace(/[\u00A0\u2007\u202F]/g, ' ')
     if (!text) return null
 
     // Preserve line breaks
@@ -3358,7 +3373,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="mb-12"
+        className="mb-12 px-4 sm:px-6"
       >
         <p className="text-xl lg:text-2xl text-white/80 leading-relaxed font-light italic">
           {renderInlineMarkdown(section.content)}
@@ -3430,7 +3445,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="mb-8"
+        className="mb-8 px-4 sm:px-6"
       >
         <p className="text-lg text-white/70 leading-relaxed break-words">
           {renderInlineMarkdown(section.content)}

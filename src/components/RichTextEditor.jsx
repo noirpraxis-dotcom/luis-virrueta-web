@@ -2468,6 +2468,8 @@ function FloatingFormatToolbar({ position, onClose, onFormat, onInteract }) {
   const [showBlockMenu, setShowBlockMenu] = useState(false)
 
   const formatOptions = [
+    { icon: Heading1, label: 'Título', action: 'title' },
+    { icon: Heading2, label: 'Subtítulo', action: 'subtitle' },
     { icon: Bold, label: 'Negrita', action: 'bold' },
     { icon: Italic, label: 'Cursiva', action: 'italic' },
     { icon: Heading2, label: 'Sección', action: 'heading' },
