@@ -1969,12 +1969,25 @@ const BlogArticlePage = () => {
       if (type === 'questions') {
         if (content) {
           const title = 'Preguntas'
-          const items = content
-            .split('\n')
-            .map((l) => normalizeCmsText(l))
-            .filter(Boolean)
-            .map((l) => l.replace(/^([-*•]|\d+[\.)])\s+/, '').trim())
-            .filter(Boolean)
+          // Auto-split by multiple question marks when on same line
+          let rawLines = content.split('\n').map((l) => normalizeCmsText(l)).filter(Boolean)
+          
+          const items = []
+          for (const line of rawLines) {
+            // If line has multiple question marks, split into separate questions
+            const hasMultipleQuestions = (line.match(/\?/g) || []).length > 1
+            if (hasMultipleQuestions) {
+              // Split by '?' but keep the '?'
+              const parts = line.split(/(?<=\?)/).map(p => p.trim()).filter(Boolean)
+              for (const part of parts) {
+                const clean = part.replace(/^([-*•]|\d+[\.)])\s+/, '').trim()
+                if (clean && clean.includes('¿')) items.push(clean)
+              }
+            } else {
+              const clean = line.replace(/^([-*•]|\d+[\.)])\s+/, '').trim()
+              if (clean) items.push(clean)
+            }
+          }
 
           if (items.length) sections.push({ type: 'questions', title, items })
         }
@@ -3361,9 +3374,9 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
           {/* Decorative quote icon */}
           <div className={`absolute left-0 top-0 w-1 h-full bg-gradient-to-b ${accent.quoteBar} rounded-full`} />
           
-          <div className="pl-8 pr-0 py-1">
+          <div className="pl-6 pr-0 py-1">
             <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic relative">
-              <span className={`absolute -left-2 -top-1 text-5xl ${accent.quoteMark} font-serif`}>“</span>
+              <span className={`absolute -left-1 -top-1 text-5xl ${accent.quoteMark} font-serif`}>“</span>
               {renderInlineMarkdown(section.content)}
               <span className={`absolute -bottom-6 right-0 text-5xl ${accent.quoteMark} font-serif`}>”</span>
             </p>
