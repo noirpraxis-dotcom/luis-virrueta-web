@@ -2421,7 +2421,7 @@ const BlogArticlePage = () => {
         read_time: draftReadTime || calculateReadTime(cmsBlocksToSections(body)),
         tags: Array.isArray(draftTags) ? draftTags.filter(Boolean) : [],
         image_url: draftImageUrl || null,
-        accent: draftGradient || 'from-purple-500 to-fuchsia-500',
+        // accent: draftGradient || 'from-purple-500 to-fuchsia-500', // Comentado hasta agregar columna en Supabase
         content: body,
         language: currentLanguage,
         slug: finalSlug,
