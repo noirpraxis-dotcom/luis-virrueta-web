@@ -555,6 +555,12 @@ export default function RichTextEditor({
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;')
 
+    const whatsappIconSvg = () => (
+      `<svg class="w-5 h-5 text-emerald-300" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">` +
+      `<path d="M12 2a9.94 9.94 0 0 0-8.72 14.8L2 22l5.36-1.42A9.95 9.95 0 1 0 12 2Zm0 18a8 8 0 0 1-4.08-1.12l-.29-.17-3.14.83.84-3.06-.2-.31A8 8 0 1 1 12 20Zm4.45-5.32c-.24-.12-1.43-.7-1.65-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.44-1.34-1.68-.14-.24-.02-.36.1-.48.1-.1.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.48-.4-.42-.54-.42-.14 0-.3-.02-.46-.02-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.1.16 1.52.1.46-.06 1.43-.58 1.63-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28Z" />` +
+      `</svg>`
+    )
+
     const inline = (s) => {
       const t = esc(s)
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -739,17 +745,17 @@ export default function RichTextEditor({
       }
 
       if (type === 'whatsapp') {
-        const title = String(b?.title || 'Grupo privado de WhatsApp')
-        const body = String(b?.content || '¿Quieres recibir cada nuevo artículo y ejercicios breves?')
+        const title = String(b?.title || 'Comunidad privada de WhatsApp')
+        const body = String(b?.content || 'No te pierdas ningún artículo ni reflexión importante. Un espacio para quienes quieren ir más allá de las ideas tradicionales.')
         const cta = String(b?.cta || 'Únete aquí')
-        const url = String(b?.url || 'https://wa.me/527228720520?text=Quiero%20recibir%20los%20art%C3%ADculos')
+        const url = String(b?.url || 'https://chat.whatsapp.com/BjvBnSM6tILK6veH3mOLzv')
         push(
           `<div data-rte-type="whatsapp" data-wa-title="${escAttr(title)}" data-wa-body="${escAttr(body)}" data-wa-cta="${escAttr(cta)}" data-wa-url="${escAttr(url)}" class="my-12 relative bg-gradient-to-br from-emerald-500/10 to-green-500/10 border border-emerald-400/20 rounded-3xl p-8 overflow-hidden shadow-2xl shadow-black/30">` +
           `<div class="absolute -top-10 -right-10 w-40 h-40 bg-emerald-400/20 rounded-full blur-3xl"></div>` +
           `<div class="relative z-10">` +
           `<div class="flex items-center gap-3 mb-4">` +
           `<div class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center">` +
-          `<span class="text-emerald-300 text-xs font-bold">WA</span>` +
+          `${whatsappIconSvg()}` +
           `</div>` +
           `<div>` +
           `<p class="text-xs uppercase tracking-widest text-emerald-300/80 font-semibold">${inline(title)}</p>` +
@@ -1776,10 +1782,10 @@ export default function RichTextEditor({
       }
 
       if (action === 'whatsapp') {
-        const waTitle = 'Grupo privado de WhatsApp'
-        const waBody = '¿Quieres recibir cada nuevo artículo y ejercicios breves?'
+        const waTitle = 'Comunidad privada de WhatsApp'
+        const waBody = 'No te pierdas ningún artículo ni reflexión importante. Un espacio para quienes quieren ir más allá de las ideas tradicionales.'
         const waCta = 'Únete aquí'
-        const waUrl = 'https://wa.me/527228720520?text=Quiero%20recibir%20los%20art%C3%ADculos'
+        const waUrl = 'https://chat.whatsapp.com/BjvBnSM6tILK6veH3mOLzv'
 
         const card = document.createElement('div')
         card.setAttribute('data-rte-type', 'whatsapp')
@@ -1800,10 +1806,15 @@ export default function RichTextEditor({
 
         const iconWrap = document.createElement('div')
         iconWrap.className = 'w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center'
-        const iconText = document.createElement('span')
-        iconText.className = 'text-emerald-300 text-xs font-bold'
-        iconText.textContent = 'WA'
-        iconWrap.appendChild(iconText)
+        const svgNS = 'http://www.w3.org/2000/svg'
+        const svg = document.createElementNS(svgNS, 'svg')
+        svg.setAttribute('viewBox', '0 0 24 24')
+        svg.setAttribute('fill', 'currentColor')
+        svg.setAttribute('class', 'w-5 h-5 text-emerald-300')
+        const path = document.createElementNS(svgNS, 'path')
+        path.setAttribute('d', 'M12 2a9.94 9.94 0 0 0-8.72 14.8L2 22l5.36-1.42A9.95 9.95 0 1 0 12 2Zm0 18a8 8 0 0 1-4.08-1.12l-.29-.17-3.14.83.84-3.06-.2-.31A8 8 0 1 1 12 20Zm4.45-5.32c-.24-.12-1.43-.7-1.65-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.44-1.34-1.68-.14-.24-.02-.36.1-.48.1-.1.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.48-.4-.42-.54-.42-.14 0-.3-.02-.46-.02-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.1.16 1.52.1.46-.06 1.43-.58 1.63-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28Z')
+        svg.appendChild(path)
+        iconWrap.appendChild(svg)
 
         const titleWrap = document.createElement('div')
         const titleEl = document.createElement('p')

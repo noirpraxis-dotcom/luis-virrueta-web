@@ -2123,6 +2123,15 @@ const BlogArticlePage = () => {
         continue
       }
 
+      if (type === 'whatsapp') {
+        const title = String(block?.title || 'Grupo privado de WhatsApp').trim()
+        const body = String(block?.content || '').trim()
+        const cta = String(block?.cta || 'Únete aquí').trim()
+        const url = String(block?.url || '').trim()
+        sections.push({ type: 'whatsapp', title, content: body, cta, url })
+        continue
+      }
+
       // paragraph / unknown
       if (content) sections.push({ type: 'text', content })
     }
@@ -2162,6 +2171,16 @@ const BlogArticlePage = () => {
           const title = String(item?.title || '').trim()
           if (title) blocks.push({ type: 'list', content: title })
         }
+        continue
+      }
+      if (section.type === 'whatsapp') {
+        blocks.push({
+          type: 'whatsapp',
+          title: String(section.title || 'Grupo privado de WhatsApp').trim(),
+          content: String(section.content || '').trim(),
+          cta: String(section.cta || 'Únete aquí').trim(),
+          url: String(section.url || 'https://chat.whatsapp.com/BjvBnSM6tILK6veH3mOLzv').trim()
+        })
         continue
       }
     }
