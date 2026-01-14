@@ -2276,14 +2276,17 @@ const BlogArticlePage = () => {
 
   // En modo edición, usar draftGradient para calcular accentKey (recalcula cuando cambia el gradient)
   const accentKey = useMemo(() => {
-    if (isEditMode) {
-      return inferAccentKey({ gradient: draftGradient, accent: null })
-    }
-    return inferAccentKey({ gradient: article.gradient, accent: article.accent })
+    const key = isEditMode 
+      ? inferAccentKey({ gradient: draftGradient, accent: null })
+      : inferAccentKey({ gradient: article.gradient, accent: article.accent })
+    console.log('🎨 AccentKey calculado:', key, 'Gradient:', isEditMode ? draftGradient : article.gradient)
+    return key
   }, [isEditMode, draftGradient, article.gradient, article.accent])
   
   const accent = useMemo(() => {
-    return ACCENT_PRESETS[accentKey] || ACCENT_PRESETS.purple
+    const result = ACCENT_PRESETS[accentKey] || ACCENT_PRESETS.purple
+    console.log('✨ Accent preset:', accentKey, 'questionsDot:', result.questionsDot)
+    return result
   }, [accentKey])
 
   const heroImageCandidates = useMemo(() => {
@@ -3770,20 +3773,36 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
             </div>
             
             <div className="space-y-5">
-              {section.items.map((question, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={isInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.5, delay: index * 0.05 + i * 0.15 }}
-                  className="flex items-start gap-4 group/item"
-                >
-                  <div className={`flex-shrink-0 mt-1 w-2 h-2 rounded-full bg-gradient-to-br ${accent.questionsDot} group-hover/item:scale-150 transition-transform duration-300`} />
-                  <p className={`text-left ${BODY_GUTTER} text-lg text-white/90 leading-relaxed font-light break-words group-hover/item:text-white transition-colors duration-300`}>
-                    {question}
-                  </p>
-                </motion.div>
-              ))}
+              {section.items.map((question, i) => {
+                // Determinar color del punto basado en accentKey
+                let dotColors = 'from-purple-400 to-fuchsia-400'
+                if (accentKey === 'red') dotColors = 'from-red-400 to-pink-400'
+                else if (accentKey === 'emerald') dotColors = 'from-emerald-400 to-teal-400'
+                else if (accentKey === 'amber') dotColors = 'from-amber-400 to-orange-400'
+                else if (accentKey === 'indigo') dotColors = 'from-indigo-400 to-purple-400'
+                else if (accentKey === 'blue') dotColors = 'from-blue-400 to-sky-400'
+                else if (accentKey === 'cyan') dotColors = 'from-cyan-400 to-sky-400'
+                else if (accentKey === 'pink') dotColors = 'from-pink-400 to-rose-400'
+                else if (accentKey === 'orange') dotColors = 'from-orange-400 to-amber-400'
+                else if (accentKey === 'slate') dotColors = 'from-white/40 to-white/20'
+                else if (accentKey === 'fuchsia') dotColors = 'from-pink-400 to-fuchsia-400'
+                else if (accentKey === 'violet') dotColors = 'from-violet-400 to-fuchsia-400'
+                
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={isInView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ duration: 0.5, delay: index * 0.05 + i * 0.15 }}
+                    className="flex items-start gap-4 group/item"
+                  >
+                    <div className={`flex-shrink-0 mt-1 w-2 h-2 rounded-full bg-gradient-to-br ${dotColors} group-hover/item:scale-150 transition-transform duration-300`} />
+                    <p className={`text-left ${BODY_GUTTER} text-lg text-white/90 leading-relaxed font-light break-words group-hover/item:text-white transition-colors duration-300`}>
+                      {question}
+                    </p>
+                  </motion.div>
+                )
+              })}
             </div>
           </div>
         </div>
