@@ -875,7 +875,13 @@ export default function RichTextEditor({
 
       if (tag === 'h1' || tag === 'h2' || tag === 'h3') {
         const t = normalizeInlineText(extractInlineMarkedText(el))
-        if (t) next.push({ id: `block-${Date.now()}-${next.length}`, type: 'heading', level: tag === 'h1' ? 'h1' : tag === 'h2' ? 'h2' : 'h3', content: t })
+        if (t) next.push({ 
+          id: `block-${Date.now()}-${next.length}`, 
+          type: 'heading', 
+          level: tag === 'h1' ? 'h1' : tag === 'h2' ? 'h2' : 'h3', 
+          content: t,
+          icon: 'crown'
+        })
         continue
       }
 

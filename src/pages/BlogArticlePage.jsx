@@ -2168,7 +2168,8 @@ const BlogArticlePage = () => {
       readTime: row.read_time || '—',
       category: row.category,
       tags: row.tags || [],
-      gradient: 'from-slate-600/20 to-zinc-700/20',
+      gradient: row.accent || row.gradient || 'from-purple-500 to-fuchsia-500',
+      accent: row.accent, // Mantener para inferAccentKey
       // En artículos del CMS, usar la imagen principal también como hero
       heroImage: row.image_url || null,
       image: row.image_url || null,
@@ -2415,6 +2416,7 @@ const BlogArticlePage = () => {
         read_time: draftReadTime || calculateReadTime(cmsBlocksToSections(body)),
         tags: Array.isArray(draftTags) ? draftTags.filter(Boolean) : [],
         image_url: draftImageUrl || null,
+        accent: draftGradient || 'from-purple-500 to-fuchsia-500',
         content: body,
         language: currentLanguage,
         slug: finalSlug,
