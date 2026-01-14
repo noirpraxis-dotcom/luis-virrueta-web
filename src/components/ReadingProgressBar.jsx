@@ -38,12 +38,13 @@ const ReadingProgressBar = ({ accentKey = 'purple', contentRef }) => {
   const colors = colorMap[accentKey] || colorMap.purple
 
   const message = useMemo(() => {
-    if (progress < 5) return 'Ya empezaste'
-    if (progress < 25) return 'Sigue leyendo'
-    if (progress < 50) return 'Vas muy bien'
-    if (progress < 75) return 'Mitad del camino'
-    if (progress < 95) return 'Casi terminas'
-    return '¡Listo!'
+    if (progress < 1) return 'Baja para leer'
+    if (progress < 20) return 'Ya diste el primer paso'
+    if (progress < 40) return 'Vas descubriendo algo nuevo'
+    if (progress < 60) return 'La mitad ya es tuya'
+    if (progress < 80) return 'Casi lo tienes dominado'
+    if (progress < 95) return 'Un último empujón'
+    return '¡Lo lograste!'
   }, [progress])
 
   return (
