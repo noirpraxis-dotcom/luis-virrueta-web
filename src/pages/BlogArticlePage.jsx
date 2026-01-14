@@ -1879,6 +1879,7 @@ const BlogArticlePage = () => {
   const [saveStatus, setSaveStatus] = useState('')
   const [saveError, setSaveError] = useState('')
   const [tagInput, setTagInput] = useState('')
+  const [tocOpen, setTocOpen] = useState(false)
 
   const heroFileInputRef = useRef(null)
   const publishDateInputRef = useRef(null)
@@ -2911,10 +2912,19 @@ const BlogArticlePage = () => {
       />
       
       {/* Reading Progress Bar */}
-      <ReadingProgressBar accentKey={accentKey} contentRef={articleContentRef} />
+      <ReadingProgressBar 
+        accentKey={accentKey} 
+        contentRef={articleContentRef}
+        onToggleTOC={() => setTocOpen(prev => !prev)}
+      />
       
       {/* Table of Contents flotante */}
-      <TableOfContents sections={tocSections} accentKey={accentKey} />
+      <TableOfContents 
+        sections={tocSections} 
+        accentKey={accentKey}
+        isOpen={tocOpen}
+        onToggle={setTocOpen}
+      />
 
       {/* Hero Image Section - SOLO LA IMAGEN */}
       <section ref={heroRef} className="relative h-[36vh] sm:h-[50vh] lg:h-[95vh] overflow-hidden">

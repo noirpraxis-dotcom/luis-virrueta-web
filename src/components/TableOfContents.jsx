@@ -2,8 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { List, X } from 'lucide-react'
 
-const TableOfContents = ({ sections, accentKey = 'purple' }) => {
-  const [isOpen, setIsOpen] = useState(false)
+const TableOfContents = ({ sections, accentKey = 'purple', isOpen, onToggle }) => {
   const [activeSection, setActiveSection] = useState('')
 
   // Color map for different accent themes
@@ -68,7 +67,7 @@ const TableOfContents = ({ sections, accentKey = 'purple' }) => {
           behavior: 'smooth'
         })
       }
-      setIsOpen(false)
+      if (onToggle) onToggle(false)
     }
   }
 
@@ -76,8 +75,8 @@ const TableOfContents = ({ sections, accentKey = 'purple' }) => {
 
   return (
     <>
-      {/* Toggle Button - Fixed on right side */}
-      <motion.button
+      {/* Toggle Button - Ahora controlado por ReadingProgressBar */}
+      {/* <motion.button
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -92,7 +91,7 @@ const TableOfContents = ({ sections, accentKey = 'purple' }) => {
         ) : (
           <List className="w-5 h-5 text-white" />
         )}
-      </motion.button>
+      </motion.button> */}
 
       {/* TOC Panel */}
       <AnimatePresence>

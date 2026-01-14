@@ -131,6 +131,16 @@ input.datetime-no-picker::-webkit-clear-button {
   }
 }
 
+/* Animación rainbow para barra de progreso completa */
+@keyframes rainbow {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
 /* Animación de resplandor lento para LIGHTWORKS - pasa por dentro de las letras */
 @keyframes shimmer-slow {
   0% {
