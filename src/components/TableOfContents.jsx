@@ -82,7 +82,7 @@ const TableOfContents = ({ sections, accentKey = 'purple' }) => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         aria-label={isOpen ? "Cerrar tabla de contenidos" : "Abrir tabla de contenidos"}
-        className="fixed right-6 top-32 z-40 w-12 h-12 rounded-full backdrop-blur-xl border border-white/20 items-center justify-center hover:border-white/40 transition-all duration-300 shadow-lg hidden lg:flex"
+        className="fixed z-40 w-11 h-11 rounded-full backdrop-blur-xl border border-white/20 items-center justify-center hover:border-white/40 transition-all duration-300 shadow-lg flex right-4 bottom-24 lg:right-6 lg:top-32 lg:bottom-auto"
         style={{
           background: `linear-gradient(to bottom right, ${colors.from}33, ${colors.to}33)`
         }}
@@ -102,7 +102,7 @@ const TableOfContents = ({ sections, accentKey = 'purple' }) => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 100 }}
             transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
-            className="fixed right-6 top-48 z-40 w-80 max-h-[60vh] overflow-y-auto bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl hidden lg:block"
+            className="fixed z-40 max-h-[60vh] overflow-y-auto bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl left-4 right-4 bottom-24 lg:left-auto lg:right-6 lg:top-48 lg:bottom-auto lg:w-80"
           >
             <h4 className="text-sm font-bold text-white/90 uppercase tracking-wider mb-4">
               Contenido

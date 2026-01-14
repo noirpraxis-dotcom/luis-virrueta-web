@@ -1,8 +1,11 @@
 import { motion, useScroll, useSpring } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
-const ReadingProgressBar = () => {
-  const { scrollYProgress } = useScroll()
+const ReadingProgressBar = ({ accentKey = 'purple', contentRef }) => {
+  const { scrollYProgress } = useScroll({
+    target: contentRef,
+    offset: ['start end', 'end end']
+  })
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
@@ -17,25 +20,50 @@ const ReadingProgressBar = () => {
     })
   }, [scrollYProgress])
 
+  const colorMap = {
+    purple: { from: '#a855f7', to: '#d946ef' },
+    red: { from: '#f87171', to: '#ec4899' },
+    emerald: { from: '#34d399', to: '#14b8a6' },
+    amber: { from: '#fbbf24', to: '#f97316' },
+    indigo: { from: '#818cf8', to: '#6366f1' },
+    blue: { from: '#60a5fa', to: '#3b82f6' },
+    cyan: { from: '#22d3ee', to: '#14b8a6' },
+    pink: { from: '#f472b6', to: '#ec4899' },
+    orange: { from: '#f97316', to: '#ef4444' },
+    slate: { from: '#94a3b8', to: '#64748b' },
+    lime: { from: '#84cc16', to: '#22c55e' },
+    violet: { from: '#8b5cf6', to: '#a855f7' }
+  }
+
+  const colors = colorMap[accentKey] || colorMap.purple
+
+  const message = useMemo(() => {
+    if (progress < 5) return 'Ya empezaste'
+    if (progress < 25) return 'Sigue leyendo'
+    if (progress < 50) return 'Vas muy bien'
+    if (progress < 75) return 'Mitad del camino'
+    if (progress < 95) return 'Casi terminas'
+    return '¡Listo!'
+  }, [progress])
+
   return (
-    <div className="fixed top-0 left-0 right-0 z-50">
+    <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
+      {/* Mensaje centrado con porcentaje */}
+      <div className="flex items-center justify-center mb-2">
+        <div className="px-4 py-1.5 bg-black/70 backdrop-blur-md border border-white/10 rounded-full flex items-center gap-2">
+          <span className="text-[11px] sm:text-xs text-white/80">{message}</span>
+          <span className="text-[11px] sm:text-xs font-bold text-white/90">{progress}%</span>
+        </div>
+      </div>
+
       {/* Progress bar */}
       <motion.div
-        className="h-1 bg-gradient-to-r from-purple-500 via-fuchsia-500 to-cyan-500 origin-left"
-        style={{ scaleX }}
+        className="h-[2px] origin-left"
+        style={{
+          scaleX,
+          background: `linear-gradient(90deg, ${colors.from}, ${colors.to})`
+        }}
       />
-      
-      {/* Progress percentage badge - aparece después del 10% */}
-      {progress > 10 && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="absolute top-4 right-4 px-3 py-1.5 bg-black/80 backdrop-blur-xl border border-white/20 rounded-full"
-        >
-          <span className="text-xs font-medium text-white">{progress}%</span>
-        </motion.div>
-      )}
     </div>
   )
 }

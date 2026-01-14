@@ -1841,7 +1841,7 @@ const getArticleBySlug = (slug) => {
     }
   }
 
-  return articles[slug] || articles['neurociencia-del-diseno']
+  return articles[slug] || null
 }
 
 const BlogArticlePage = () => {
@@ -1883,6 +1883,7 @@ const BlogArticlePage = () => {
   const heroFileInputRef = useRef(null)
   const publishDateInputRef = useRef(null)
   const autosaveTimerRef = useRef(null)
+  const articleContentRef = useRef(null)
 
   useEffect(() => {
     // En SPA, el scroll puede quedarse donde estabas; forzamos inicio al abrir artículo.
@@ -2258,6 +2259,22 @@ const BlogArticlePage = () => {
   console.log('🌐 Language:', currentLanguage, '| Slug:', slug, '| Found translation:', !!translatedArticle)
   const cmsArticle = normalizeCmsArticle(cmsRow)
   const baseArticle = translatedArticle || getArticleBySlug(slug)
+  const placeholderArticle = {
+    title: '',
+    subtitle: '',
+    excerpt: '',
+    author: '',
+    date: '',
+    readTime: '',
+    category: '',
+    tags: [],
+    gradient: 'from-slate-700 to-slate-900',
+    accent: 'slate',
+    heroImage: null,
+    image: null,
+    imageUrl: null,
+    sections: []
+  }
   
   // Si slug es "nuevo", crear artículo base vacío
   const newArticleTemplate = slug === 'nuevo' ? {
@@ -2314,7 +2331,7 @@ const BlogArticlePage = () => {
       }
     }
 
-    return cmsArticle || baseArticle
+    return cmsArticle || baseArticle || placeholderArticle
   })()
 
   const editorSections = isEditMode ? cmsBlocksToSections(draftBlocks) : article.sections
@@ -2894,7 +2911,7 @@ const BlogArticlePage = () => {
       />
       
       {/* Reading Progress Bar */}
-      <ReadingProgressBar />
+      <ReadingProgressBar accentKey={accentKey} contentRef={articleContentRef} />
       
       {/* Table of Contents flotante */}
       <TableOfContents sections={tocSections} accentKey={accentKey} />
@@ -3399,7 +3416,7 @@ const BlogArticlePage = () => {
       </section>
 
       {/* Article Content */}
-      <section className="relative py-12 px-6 sm:px-8 lg:px-20 text-left">
+      <section ref={articleContentRef} className="relative py-12 px-6 sm:px-8 lg:px-20 text-left">
         <div className="max-w-3xl mx-auto w-full">
           <RichTextEditor
             initialContent={isEditMode ? draftBlocks : sectionsToCmsBlocks(article.sections)}
