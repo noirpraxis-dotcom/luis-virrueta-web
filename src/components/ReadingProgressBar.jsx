@@ -1,12 +1,9 @@
-import { motion, useScroll, useSpring } from 'framer-motion'
+import { motion, useMotionValue, useSpring } from 'framer-motion'
 import { useEffect, useMemo, useState } from 'react'
 
 const ReadingProgressBar = ({ accentKey = 'purple', contentRef, onToggleTOC }) => {
-  const { scrollYProgress } = useScroll({
-    target: contentRef,
-    offset: ['start end', 'end end']
-  })
-  const scaleX = useSpring(scrollYProgress, {
+  const progressValue = useMotionValue(0)
+  const scaleX = useSpring(progressValue, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001
@@ -15,10 +12,60 @@ const ReadingProgressBar = ({ accentKey = 'purple', contentRef, onToggleTOC }) =
   const [progress, setProgress] = useState(0)
   
   useEffect(() => {
-    return scrollYProgress.on('change', (latest) => {
-      setProgress(Math.round(latest * 100))
-    })
-  }, [scrollYProgress])
+    if (!contentRef?.current) return
+
+    let rafId = null
+
+    const updateProgress = () => {
+      const element = contentRef.current
+      if (!element) return
+
+      const rect = element.getBoundingClientRect()
+      const viewportHeight = window.innerHeight || 0
+      const scrollY = window.scrollY || window.pageYOffset || 0
+
+      const elementTop = rect.top + scrollY
+      const elementBottom = rect.bottom + scrollY
+
+      const start = elementTop - viewportHeight
+      const end = elementBottom - viewportHeight
+      const total = Math.max(1, end - start)
+
+      const raw = (scrollY - start) / total
+      const clamped = Math.max(0, Math.min(1, raw))
+
+      progressValue.set(clamped)
+      setProgress(Math.round(clamped * 100))
+    }
+
+    const onScroll = () => {
+      if (rafId) cancelAnimationFrame(rafId)
+      rafId = requestAnimationFrame(updateProgress)
+    }
+
+    const lenis = window.__lenis
+    if (lenis && typeof lenis.on === 'function') {
+      lenis.on('scroll', onScroll)
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+
+    const resizeObserver = new ResizeObserver(() => onScroll())
+    resizeObserver.observe(contentRef.current)
+
+    updateProgress()
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (lenis && typeof lenis.off === 'function') {
+        lenis.off('scroll', onScroll)
+      }
+      resizeObserver.disconnect()
+      if (rafId) cancelAnimationFrame(rafId)
+    }
+  }, [contentRef, progressValue])
 
   const colorMap = {
     purple: { from: '#9333ea', to: '#c026d3' },
