@@ -1873,6 +1873,7 @@ const BlogArticlePage = () => {
     return now.toISOString().slice(0, 16)
   })
   const [draftBlocks, setDraftBlocks] = useState([])
+  const [draftRelatedSlugs, setDraftRelatedSlugs] = useState([])
   const [isDirty, setIsDirty] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [saveStatus, setSaveStatus] = useState('')
@@ -1987,6 +1988,7 @@ const BlogArticlePage = () => {
             setDraftCategory(String(row?.category || articleData?.category || 'philosophy').trim())
             setDraftGradient(String(row?.accent || articleData?.gradient || 'from-purple-500 to-fuchsia-500').trim())
             setDraftSectionIcon(String(row?.icon || 'crown').trim())
+            setDraftRelatedSlugs(Array.isArray(row?.related_slugs) ? row.related_slugs : [])
             setDraftTags(
               Array.isArray(row?.tags) && row.tags.length
                 ? row.tags
@@ -2392,6 +2394,7 @@ const BlogArticlePage = () => {
     setDraftCategory(String(row?.category || article.category || 'philosophy').trim())
     setDraftGradient(String(row?.accent || article.gradient || 'from-purple-500 to-fuchsia-500').trim())
     setDraftSectionIcon(String(row?.icon || 'crown').trim())
+    setDraftRelatedSlugs(Array.isArray(row?.related_slugs) ? row.related_slugs : [])
     // Si existe fila CMS pero no hay tags, no heredar tags legacy
     setDraftTags(
       Array.isArray(row?.tags) && row.tags.length
@@ -2469,6 +2472,8 @@ const BlogArticlePage = () => {
         tags: Array.isArray(draftTags) ? draftTags.filter(Boolean) : [],
         image_url: draftImageUrl || null,
         accent: draftGradient || 'from-purple-500 to-fuchsia-500',
+        icon: draftSectionIcon || 'crown',
+        related_slugs: Array.isArray(draftRelatedSlugs) ? draftRelatedSlugs.filter(Boolean) : [],
         content: body,
         language: currentLanguage,
         slug: finalSlug,
@@ -2575,6 +2580,27 @@ const BlogArticlePage = () => {
 
   // Calcular tiempo de lectura dinámicamente
   const dynamicReadTime = calculateReadTime(editorSections)
+
+  // Actualizar íconos en headings cuando cambia draftSectionIcon
+  useEffect(() => {
+    if (!isEditMode || !draftBlocks.length) return
+    
+    const updatedBlocks = draftBlocks.map(block => {
+      if (block.type === 'heading') {
+        return { ...block, icon: draftSectionIcon }
+      }
+      return block
+    })
+    
+    // Solo actualizar si realmente cambió
+    const hasChanges = draftBlocks.some((block, i) => 
+      block.type === 'heading' && block.icon !== updatedBlocks[i].icon
+    )
+    
+    if (hasChanges) {
+      setDraftBlocks(updatedBlocks)
+    }
+  }, [draftSectionIcon, isEditMode])
 
   // Callback estable para onChange del RichTextEditor
   const handleBlocksChange = useCallback((next) => {
@@ -3439,6 +3465,12 @@ const BlogArticlePage = () => {
       <RelatedArticles 
         currentSlug={slug} 
         allArticles={getLegacyBlogIndex(currentLanguage)}
+        isEditMode={isEditMode}
+        selectedSlugs={draftRelatedSlugs}
+        onSelectArticles={(slugs) => {
+          setDraftRelatedSlugs(slugs)
+          setIsDirty(true)
+        }}
       />
     </div>
   )
