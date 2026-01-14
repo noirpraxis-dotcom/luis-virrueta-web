@@ -30,7 +30,7 @@ const NewsletterSignup = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
           viewport={{ once: true }}
-          className="relative bg-gradient-to-br from-purple-900/20 via-fuchsia-900/20 to-cyan-900/20 backdrop-blur-sm border border-white/10 rounded-3xl p-8 sm:p-10 lg:p-16 overflow-hidden min-h-[420px] sm:min-h-[380px] flex items-center">
+          className="relative bg-gradient-to-br from-purple-900/20 via-fuchsia-900/20 to-cyan-900/20 backdrop-blur-sm border border-white/10 rounded-3xl p-8 sm:p-10 lg:p-16 overflow-hidden min-h-[420px] sm:min-h-[380px] flex items-center"
         >
           {/* Animated gradient orbs */}
           <motion.div
@@ -59,16 +59,16 @@ const NewsletterSignup = () => {
             className="absolute bottom-0 right-0 w-64 h-64 bg-gradient-to-br from-cyan-500/30 to-transparent rounded-full blur-3xl"
           />
 
-          <div className="relative z-10 text-center">
+          <div className="relative z-10 text-center w-full">
             {/* Icon */}
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               whileInView={{ scale: 1, rotate: 0 }}
               transition={{ duration: 0.4, type: "spring" }}
               viewport={{ once: true }}
-              className="inline-flex w-16 h-16 rounded-full bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 border border-white/20 items-center justify-center mb-6"
+              className="inline-flex w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 border border-white/20 items-center justify-center mb-4 sm:mb-6"
             >
-              <Sparkles className="w-8 h-8 text-white" />
+              <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
             </motion.div>
 
             {/* Badge Newsletter */}
@@ -77,7 +77,7 @@ const NewsletterSignup = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.1 }}
               viewport={{ once: true }}
-              className="inline-block px-4 py-1.5 border border-purple-500/30 rounded-full backdrop-blur-sm bg-purple-500/10 mb-4"
+              className="inline-block px-3 sm:px-4 py-1.5 border border-purple-500/30 rounded-full backdrop-blur-sm bg-purple-500/10 mb-3 sm:mb-4"
             >
               <span className="text-xs lg:text-sm text-purple-300 font-medium tracking-wider uppercase">Newsletter</span>
             </motion.div>
@@ -88,7 +88,7 @@ const NewsletterSignup = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.2 }}
               viewport={{ once: true }}
-              className="text-3xl lg:text-4xl font-bold text-white mb-4"
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4"
             >
               Transformación Desde el Inconsciente
             </motion.h3>
@@ -98,7 +98,7 @@ const NewsletterSignup = () => {
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.3, delay: 0.3 }}
               viewport={{ once: true }}
-              className="text-lg text-white/70 mb-8 max-w-2xl mx-auto leading-relaxed"
+              className="text-base sm:text-lg text-white/70 mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed"
             >
               Únete a nuestra comunidad que recibe cada semana las intersecciones entre sabiduría ancestral y ciencia contemporánea. Psicología del inconsciente, neurociencia y filosofía aplicada a tu realidad.
             </motion.p>
