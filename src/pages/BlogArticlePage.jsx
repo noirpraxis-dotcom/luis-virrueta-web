@@ -2276,8 +2276,11 @@ const BlogArticlePage = () => {
 
   // En modo edición, usar draftGradient para calcular accentKey (recalcula cuando cambia el gradient)
   const accentKey = useMemo(() => {
-    return isEditMode ? inferAccentKey({ gradient: draftGradient }) : inferAccentKey(article)
-  }, [isEditMode, draftGradient, article])
+    if (isEditMode) {
+      return inferAccentKey({ gradient: draftGradient, accent: null })
+    }
+    return inferAccentKey({ gradient: article.gradient, accent: article.accent })
+  }, [isEditMode, draftGradient, article.gradient, article.accent])
   
   const accent = useMemo(() => {
     return ACCENT_PRESETS[accentKey] || ACCENT_PRESETS.purple
