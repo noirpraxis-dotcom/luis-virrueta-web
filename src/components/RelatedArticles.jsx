@@ -66,12 +66,15 @@ const RelatedArticles = ({ currentSlug, allArticles, isEditMode = false, selecte
 
   // En modo edición, usar los slugs seleccionados manualmente
   let related = []
-  if (isEditMode && selectedSlugs.length > 0) {
+  
+  // Si hay slugs seleccionados manualmente (guardados en BD), usarlos siempre
+  if (selectedSlugs.length > 0) {
     related = selectedSlugs
       .map(slug => ordered.find(a => a.slug === slug))
       .filter(Boolean)
       .slice(0, 3)
   } else if (!isEditMode) {
+    // Lógica automática solo si NO hay selección manual
     // Spec original:
     // - By default: show the 3 previous posts (older than current).
     //   (List is newest -> oldest, so older are after the current index.)
