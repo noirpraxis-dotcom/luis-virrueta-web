@@ -556,7 +556,7 @@ export default function RichTextEditor({
       .replace(/'/g, '&#39;')
 
     const whatsappIconSvg = () => (
-      `<svg class="w-5 h-5 text-emerald-300" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">` +
+      `<svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">` +
       `<path d="M12 2a9.94 9.94 0 0 0-8.72 14.8L2 22l5.36-1.42A9.95 9.95 0 1 0 12 2Zm0 18a8 8 0 0 1-4.08-1.12l-.29-.17-3.14.83.84-3.06-.2-.31A8 8 0 1 1 12 20Zm4.45-5.32c-.24-.12-1.43-.7-1.65-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.44-1.34-1.68-.14-.24-.02-.36.1-.48.1-.1.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.48-.4-.42-.54-.42-.14 0-.3-.02-.46-.02-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.1.16 1.52.1.46-.06 1.43-.58 1.63-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28Z" />` +
       `</svg>`
     )
@@ -745,25 +745,27 @@ export default function RichTextEditor({
       }
 
       if (type === 'whatsapp') {
-        const title = String(b?.title || 'Comunidad privada de WhatsApp')
-        const body = String(b?.content || 'No te pierdas ningún artículo ni reflexión importante. Un espacio para quienes quieren ir más allá de las ideas tradicionales.')
+        const title = String(b?.title || 'Comunidad de WhatsApp')
+        const body = String(b?.content || 'No te pierdas ningún artículo ni reflexión importante')
+        const subtitle = String(b?.subtitle || 'Para quienes van más allá de lo tradicional')
         const cta = String(b?.cta || 'Únete aquí')
         const url = String(b?.url || 'https://chat.whatsapp.com/BjvBnSM6tILK6veH3mOLzv')
         push(
-          `<div data-rte-type="whatsapp" data-wa-title="${escAttr(title)}" data-wa-body="${escAttr(body)}" data-wa-cta="${escAttr(cta)}" data-wa-url="${escAttr(url)}" class="my-12 relative bg-gradient-to-br from-emerald-500/10 to-green-500/10 border border-emerald-400/20 rounded-3xl p-8 overflow-hidden shadow-2xl shadow-black/30">` +
-          `<div class="absolute -top-10 -right-10 w-40 h-40 bg-emerald-400/20 rounded-full blur-3xl"></div>` +
-          `<div class="relative z-10">` +
-          `<div class="flex items-center gap-3 mb-4">` +
-          `<div class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center">` +
+          `<div data-rte-type="whatsapp" data-wa-title="${escAttr(title)}" data-wa-body="${escAttr(body)}" data-wa-subtitle="${escAttr(subtitle)}" data-wa-cta="${escAttr(cta)}" data-wa-url="${escAttr(url)}" class="my-16 mx-auto max-w-2xl relative bg-gradient-to-br from-emerald-400/20 via-green-500/20 to-teal-400/20 border-2 border-emerald-400/40 rounded-3xl p-10 overflow-hidden shadow-2xl shadow-emerald-500/20">` +
+          `<div class="absolute -top-16 -right-16 w-48 h-48 bg-emerald-400/30 rounded-full blur-3xl"></div>` +
+          `<div class="absolute -bottom-16 -left-16 w-48 h-48 bg-green-400/30 rounded-full blur-3xl"></div>` +
+          `<div class="relative z-10 text-center">` +
+          `<div class="flex justify-center mb-6">` +
+          `<div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-xl shadow-emerald-500/40">` +
           `${whatsappIconSvg()}` +
           `</div>` +
-          `<div>` +
-          `<p class="text-xs uppercase tracking-widest text-emerald-300/80 font-semibold">${inline(title)}</p>` +
           `</div>` +
-          `</div>` +
-          `<p class="text-lg text-white/80 leading-relaxed mb-5">${inline(body)}</p>` +
-          `<a href="${escAttr(url)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-200 text-sm font-medium hover:bg-emerald-500/30 transition-all">` +
+          `<p class="text-xs uppercase tracking-[0.2em] text-emerald-300 font-bold mb-3 opacity-90">${inline(title)}</p>` +
+          `<h3 class="text-2xl md:text-3xl font-bold text-white mb-2 leading-tight">${inline(body)}</h3>` +
+          `<p class="text-sm text-white/60 mb-6 font-light">${inline(subtitle)}</p>` +
+          `<a href="${escAttr(url)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 text-white text-base font-semibold hover:from-emerald-600 hover:to-green-700 transition-all shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 hover:scale-105">` +
           `<span>${inline(cta)}</span>` +
+          `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>` +
           `</a>` +
           `</div>` +
           `</div>`
@@ -981,15 +983,17 @@ export default function RichTextEditor({
       }
 
       if (tag === 'div' && el.getAttribute('data-rte-type') === 'whatsapp') {
-        const title = String(el.getAttribute('data-wa-title') || 'Grupo privado de WhatsApp').trim()
+        const title = String(el.getAttribute('data-wa-title') || 'Comunidad de WhatsApp').trim()
         const body = String(el.getAttribute('data-wa-body') || '').trim()
+        const subtitle = String(el.getAttribute('data-wa-subtitle') || 'Para quienes van más allá de lo tradicional').trim()
         const cta = String(el.getAttribute('data-wa-cta') || 'Únete aquí').trim()
-        const url = String(el.getAttribute('data-wa-url') || '').trim()
+        const url = String(el.getAttribute('data-wa-url') || 'https://chat.whatsapp.com/BjvBnSM6tILK6veH3mOLzv').trim()
         next.push({
           id: `block-${Date.now()}-${next.length}`,
           type: 'whatsapp',
           title,
           content: body,
+          subtitle,
           cta,
           url
         })
@@ -1782,8 +1786,9 @@ export default function RichTextEditor({
       }
 
       if (action === 'whatsapp') {
-        const waTitle = 'Comunidad privada de WhatsApp'
-        const waBody = 'No te pierdas ningún artículo ni reflexión importante. Un espacio para quienes quieren ir más allá de las ideas tradicionales.'
+        const waTitle = 'Comunidad de WhatsApp'
+        const waBody = 'No te pierdas ningún artículo ni reflexión importante'
+        const waSubtitle = 'Para quienes van más allá de lo tradicional'
         const waCta = 'Únete aquí'
         const waUrl = 'https://chat.whatsapp.com/BjvBnSM6tILK6veH3mOLzv'
 
@@ -1791,56 +1796,80 @@ export default function RichTextEditor({
         card.setAttribute('data-rte-type', 'whatsapp')
         card.setAttribute('data-wa-title', waTitle)
         card.setAttribute('data-wa-body', waBody)
+        card.setAttribute('data-wa-subtitle', waSubtitle)
         card.setAttribute('data-wa-cta', waCta)
         card.setAttribute('data-wa-url', waUrl)
-        card.className = 'my-12 relative bg-gradient-to-br from-emerald-500/10 to-green-500/10 border border-emerald-400/20 rounded-3xl p-8 overflow-hidden shadow-2xl shadow-black/30'
+        card.className = 'my-16 mx-auto max-w-2xl relative bg-gradient-to-br from-emerald-400/20 via-green-500/20 to-teal-400/20 border-2 border-emerald-400/40 rounded-3xl p-10 overflow-hidden shadow-2xl shadow-emerald-500/20'
 
-        const orb = document.createElement('div')
-        orb.className = 'absolute -top-10 -right-10 w-40 h-40 bg-emerald-400/20 rounded-full blur-3xl'
+        const orb1 = document.createElement('div')
+        orb1.className = 'absolute -top-16 -right-16 w-48 h-48 bg-emerald-400/30 rounded-full blur-3xl'
+
+        const orb2 = document.createElement('div')
+        orb2.className = 'absolute -bottom-16 -left-16 w-48 h-48 bg-green-400/30 rounded-full blur-3xl'
 
         const content = document.createElement('div')
-        content.className = 'relative z-10'
+        content.className = 'relative z-10 text-center'
 
-        const header = document.createElement('div')
-        header.className = 'flex items-center gap-3 mb-4'
+        const iconContainer = document.createElement('div')
+        iconContainer.className = 'flex justify-center mb-6'
 
         const iconWrap = document.createElement('div')
-        iconWrap.className = 'w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center'
+        iconWrap.className = 'w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-xl shadow-emerald-500/40'
         const svgNS = 'http://www.w3.org/2000/svg'
         const svg = document.createElementNS(svgNS, 'svg')
         svg.setAttribute('viewBox', '0 0 24 24')
         svg.setAttribute('fill', 'currentColor')
-        svg.setAttribute('class', 'w-5 h-5 text-emerald-300')
+        svg.setAttribute('class', 'w-8 h-8 text-white')
         const path = document.createElementNS(svgNS, 'path')
         path.setAttribute('d', 'M12 2a9.94 9.94 0 0 0-8.72 14.8L2 22l5.36-1.42A9.95 9.95 0 1 0 12 2Zm0 18a8 8 0 0 1-4.08-1.12l-.29-.17-3.14.83.84-3.06-.2-.31A8 8 0 1 1 12 20Zm4.45-5.32c-.24-.12-1.43-.7-1.65-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.44-1.34-1.68-.14-.24-.02-.36.1-.48.1-.1.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.48-.4-.42-.54-.42-.14 0-.3-.02-.46-.02-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.1.16 1.52.1.46-.06 1.43-.58 1.63-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28Z')
         svg.appendChild(path)
         iconWrap.appendChild(svg)
+        iconContainer.appendChild(iconWrap)
 
-        const titleWrap = document.createElement('div')
         const titleEl = document.createElement('p')
-        titleEl.className = 'text-xs uppercase tracking-widest text-emerald-300/80 font-semibold'
+        titleEl.className = 'text-xs uppercase tracking-[0.2em] text-emerald-300 font-bold mb-3 opacity-90'
         titleEl.textContent = waTitle
-        titleWrap.appendChild(titleEl)
 
-        header.appendChild(iconWrap)
-        header.appendChild(titleWrap)
+        const headingEl = document.createElement('h3')
+        headingEl.className = 'text-2xl md:text-3xl font-bold text-white mb-2 leading-tight'
+        headingEl.textContent = waBody
 
-        const bodyEl = document.createElement('p')
-        bodyEl.className = 'text-lg text-white/80 leading-relaxed mb-5'
-        bodyEl.textContent = waBody
+        const subtitleEl = document.createElement('p')
+        subtitleEl.className = 'text-sm text-white/60 mb-6 font-light'
+        subtitleEl.textContent = waSubtitle
 
         const cta = document.createElement('a')
         cta.href = waUrl
         cta.target = '_blank'
         cta.rel = 'noopener noreferrer'
-        cta.className = 'inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-200 text-sm font-medium hover:bg-emerald-500/30 transition-all'
-        cta.textContent = waCta
+        cta.className = 'inline-flex items-center gap-2 px-8 py-3 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 text-white text-base font-semibold hover:from-emerald-600 hover:to-green-700 transition-all shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 hover:scale-105'
+        
+        const ctaText = document.createElement('span')
+        ctaText.textContent = waCta
+        
+        const arrowSvg = document.createElementNS(svgNS, 'svg')
+        arrowSvg.setAttribute('class', 'w-4 h-4')
+        arrowSvg.setAttribute('fill', 'none')
+        arrowSvg.setAttribute('stroke', 'currentColor')
+        arrowSvg.setAttribute('viewBox', '0 0 24 24')
+        const arrowPath = document.createElementNS(svgNS, 'path')
+        arrowPath.setAttribute('stroke-linecap', 'round')
+        arrowPath.setAttribute('stroke-linejoin', 'round')
+        arrowPath.setAttribute('stroke-width', '2')
+        arrowPath.setAttribute('d', 'M9 5l7 7-7 7')
+        arrowSvg.appendChild(arrowPath)
+        
+        cta.appendChild(ctaText)
+        cta.appendChild(arrowSvg)
 
-        content.appendChild(header)
-        content.appendChild(bodyEl)
+        content.appendChild(iconContainer)
+        content.appendChild(titleEl)
+        content.appendChild(headingEl)
+        content.appendChild(subtitleEl)
         content.appendChild(cta)
 
-        card.appendChild(orb)
+        card.appendChild(orb1)
+        card.appendChild(orb2)
         card.appendChild(content)
 
         insertAfterTopLevelBlock(card)

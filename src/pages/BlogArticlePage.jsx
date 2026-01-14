@@ -2124,11 +2124,12 @@ const BlogArticlePage = () => {
       }
 
       if (type === 'whatsapp') {
-        const title = String(block?.title || 'Grupo privado de WhatsApp').trim()
+        const title = String(block?.title || 'Comunidad de WhatsApp').trim()
         const body = String(block?.content || '').trim()
+        const subtitle = String(block?.subtitle || 'Para quienes van más allá de lo tradicional').trim()
         const cta = String(block?.cta || 'Únete aquí').trim()
-        const url = String(block?.url || '').trim()
-        sections.push({ type: 'whatsapp', title, content: body, cta, url })
+        const url = String(block?.url || 'https://chat.whatsapp.com/BjvBnSM6tILK6veH3mOLzv').trim()
+        sections.push({ type: 'whatsapp', title, content: body, subtitle, cta, url })
         continue
       }
 
@@ -2176,8 +2177,9 @@ const BlogArticlePage = () => {
       if (section.type === 'whatsapp') {
         blocks.push({
           type: 'whatsapp',
-          title: String(section.title || 'Grupo privado de WhatsApp').trim(),
+          title: String(section.title || 'Comunidad de WhatsApp').trim(),
           content: String(section.content || '').trim(),
+          subtitle: String(section.subtitle || 'Para quienes van más allá de lo tradicional').trim(),
           cta: String(section.cta || 'Únete aquí').trim(),
           url: String(section.url || 'https://chat.whatsapp.com/BjvBnSM6tILK6veH3mOLzv').trim()
         })
