@@ -23,14 +23,14 @@ const NewsletterSignup = () => {
   }
 
   return (
-    <section className="relative py-16 px-6 lg:px-20">
+    <section className="relative py-12 sm:py-14 lg:py-16 px-4 sm:px-6 lg:px-20">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
           viewport={{ once: true }}
-          className="relative bg-gradient-to-br from-purple-900/20 via-fuchsia-900/20 to-cyan-900/20 backdrop-blur-sm border border-white/10 rounded-3xl p-10 lg:p-16 overflow-hidden"
+          className="relative bg-gradient-to-br from-purple-900/20 via-fuchsia-900/20 to-cyan-900/20 backdrop-blur-sm border border-white/10 rounded-3xl p-8 sm:p-10 lg:p-16 overflow-hidden min-h-[420px] sm:min-h-[380px] flex items-center">
         >
           {/* Animated gradient orbs */}
           <motion.div

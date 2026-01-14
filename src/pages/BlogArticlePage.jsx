@@ -3454,23 +3454,23 @@ const BlogArticlePage = () => {
       </AnimatePresence>
 
       {/* CTA Section */}
-      <section className="relative py-20 px-4 sm:px-6 lg:px-20">
+      <section className="relative py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-20">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
             viewport={{ once: true }}
-            className="relative bg-gradient-to-br from-pink-500/10 to-rose-500/10 backdrop-blur-sm border border-white/10 rounded-3xl p-12 text-center overflow-hidden"
+            className="relative bg-gradient-to-br from-pink-500/10 to-rose-500/10 backdrop-blur-sm border border-white/10 rounded-3xl p-8 sm:p-10 lg:p-12 text-center overflow-hidden min-h-[320px] sm:min-h-[280px] flex items-center"
           >
             {/* Background gradient orb */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-pink-500/20 to-rose-500/20 rounded-full blur-3xl" />
             
-            <div className="relative z-10">
-              <h3 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+            <div className="relative z-10 w-full">
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
                 {t('blogArticles.common.readyForProject')}
               </h3>
-              <p className="text-lg text-white/70 mb-8 max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg text-white/70 mb-6 sm:mb-8 max-w-2xl mx-auto">
                 {t('blogArticles.common.applyPrinciples')}
               </p>
               <Link

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 const ReadingProgressBar = ({ accentKey = 'purple', contentRef, onToggleTOC }) => {
   const { scrollYProgress } = useScroll({
     target: contentRef,
-    offset: ['start end', 'end end']
+    offset: ['start end', 'end start']
   })
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -21,18 +21,18 @@ const ReadingProgressBar = ({ accentKey = 'purple', contentRef, onToggleTOC }) =
   }, [scrollYProgress])
 
   const colorMap = {
-    purple: { from: '#a855f7', to: '#d946ef' },
-    red: { from: '#f87171', to: '#ec4899' },
-    emerald: { from: '#34d399', to: '#14b8a6' },
-    amber: { from: '#fbbf24', to: '#f97316' },
-    indigo: { from: '#818cf8', to: '#6366f1' },
-    blue: { from: '#60a5fa', to: '#3b82f6' },
-    cyan: { from: '#22d3ee', to: '#14b8a6' },
-    pink: { from: '#f472b6', to: '#ec4899' },
-    orange: { from: '#f97316', to: '#ef4444' },
-    slate: { from: '#94a3b8', to: '#64748b' },
-    lime: { from: '#84cc16', to: '#22c55e' },
-    violet: { from: '#8b5cf6', to: '#a855f7' }
+    purple: { from: '#9333ea', to: '#c026d3' },
+    red: { from: '#ef4444', to: '#db2777' },
+    emerald: { from: '#10b981', to: '#0d9488' },
+    amber: { from: '#f59e0b', to: '#ea580c' },
+    indigo: { from: '#6366f1', to: '#4f46e5' },
+    blue: { from: '#3b82f6', to: '#2563eb' },
+    cyan: { from: '#06b6d4', to: '#0891b2' },
+    pink: { from: '#ec4899', to: '#db2777' },
+    orange: { from: '#f97316', to: '#dc2626' },
+    slate: { from: '#64748b', to: '#475569' },
+    lime: { from: '#65a30d', to: '#16a34a' },
+    violet: { from: '#7c3aed', to: '#9333ea' }
   }
 
   const colors = colorMap[accentKey] || colorMap.purple
@@ -52,9 +52,9 @@ const ReadingProgressBar = ({ accentKey = 'purple', contentRef, onToggleTOC }) =
   const isComplete = progress >= 100
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
+    <div className="fixed bottom-0 left-0 right-0 z-[60] pointer-events-none">
       {/* Contenedor con botón de contenido y mensaje */}
-      <div className="flex items-center justify-center mb-2 gap-3">
+      <div className="flex items-center justify-center mb-2 gap-3 px-4">
         {/* Botón de contenido a la izquierda */}
         <button
           onClick={onToggleTOC}
@@ -73,7 +73,7 @@ const ReadingProgressBar = ({ accentKey = 'purple', contentRef, onToggleTOC }) =
         <div className="relative px-4 py-1.5 bg-black/70 backdrop-blur-md border border-white/10 rounded-full overflow-hidden">
           {/* Relleno gradiente que crece */}
           <div
-            className="absolute inset-0 opacity-30 transition-all duration-300"
+            className="absolute inset-0 opacity-50 transition-all duration-300"
             style={{
               background: isComplete 
                 ? 'linear-gradient(90deg, #a855f7, #d946ef, #ec4899, #f97316, #fbbf24, #84cc16, #22d3ee, #60a5fa)'

@@ -103,9 +103,18 @@ const TableOfContents = ({ sections, accentKey = 'purple', isOpen, onToggle }) =
             transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
             className="fixed z-40 max-h-[60vh] overflow-y-auto bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl left-4 right-4 bottom-24 lg:left-auto lg:right-6 lg:top-48 lg:bottom-auto lg:w-80"
           >
-            <h4 className="text-sm font-bold text-white/90 uppercase tracking-wider mb-4">
-              Contenido
-            </h4>
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-sm font-bold text-white/90 uppercase tracking-wider">
+                Contenido
+              </h4>
+              <button
+                onClick={() => onToggle(false)}
+                className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors duration-200"
+                aria-label="Cerrar tabla de contenidos"
+              >
+                <X className="w-4 h-4 text-white/60 hover:text-white" />
+              </button>
+            </div>
             <nav className="space-y-2">
               {headings.map((heading, index) => {
                 const isActive = activeSection === heading.id
