@@ -2274,9 +2274,14 @@ const BlogArticlePage = () => {
   const editorSections = isEditMode ? cmsBlocksToSections(draftBlocks) : article.sections
   const tocSections = editorSections
 
-  // En modo edición, usar draftGradient para calcular accentKey
-  const accentKey = isEditMode ? inferAccentKey({ gradient: draftGradient }) : inferAccentKey(article)
-  const accent = ACCENT_PRESETS[accentKey] || ACCENT_PRESETS.purple
+  // En modo edición, usar draftGradient para calcular accentKey (recalcula cuando cambia el gradient)
+  const accentKey = useMemo(() => {
+    return isEditMode ? inferAccentKey({ gradient: draftGradient }) : inferAccentKey(article)
+  }, [isEditMode, draftGradient, article])
+  
+  const accent = useMemo(() => {
+    return ACCENT_PRESETS[accentKey] || ACCENT_PRESETS.purple
+  }, [accentKey])
 
   const heroImageCandidates = useMemo(() => {
     const candidates = [
@@ -2481,7 +2486,7 @@ const BlogArticlePage = () => {
     try {
       setSaveError('')
       setSaveStatus('Comprimiendo imagen…')
-      const { compressImage } = await import('../utils/imageCompression')
+      const { compressImage } = await import('/src/utils/imageCompression.js')
       const compressed = await compressImage(file, { 
         maxWidth: 1920, 
         quality: 0.75, 
@@ -2964,9 +2969,9 @@ const BlogArticlePage = () => {
 
         {/* Glows behind title/meta (not behind the image) - PRO version */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className={`absolute top-8 left-1/2 -translate-x-1/2 w-[26rem] h-[26rem] bg-gradient-to-br ${article.gradient} opacity-60 rounded-full blur-[70px] mix-blend-screen`} />
-          <div className={`absolute top-40 left-10 w-[20rem] h-[20rem] bg-gradient-to-br ${article.gradient} opacity-45 rounded-full blur-[60px] mix-blend-screen`} />
-          <div className={`absolute top-44 right-8 w-[18rem] h-[18rem] bg-gradient-to-br ${article.gradient} opacity-40 rounded-full blur-[55px] mix-blend-screen`} />
+          <div className={`absolute top-8 left-1/2 -translate-x-1/2 w-[26rem] h-[26rem] bg-gradient-to-br ${isEditMode ? draftGradient : article.gradient} opacity-60 rounded-full blur-[70px] mix-blend-screen`} />
+          <div className={`absolute top-40 left-10 w-[20rem] h-[20rem] bg-gradient-to-br ${isEditMode ? draftGradient : article.gradient} opacity-45 rounded-full blur-[60px] mix-blend-screen`} />
+          <div className={`absolute top-44 right-8 w-[18rem] h-[18rem] bg-gradient-to-br ${isEditMode ? draftGradient : article.gradient} opacity-40 rounded-full blur-[55px] mix-blend-screen`} />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto">
