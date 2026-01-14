@@ -144,7 +144,7 @@ const RelatedArticles = ({ currentSlug, allArticles, isEditMode = false, selecte
         <div className="grid md:grid-cols-3 gap-6">
           {displaySlots.map((index) => {
             const article = related[index]
-            
+
             // En modo edición sin artículo, mostrar botón +
             if (isEditMode && !article) {
               return (
@@ -172,9 +172,7 @@ const RelatedArticles = ({ currentSlug, allArticles, isEditMode = false, selecte
             if (!article) return null
 
             const Component = isEditMode ? motion.div : Link
-            const componentProps = isEditMode 
-              ? {}
-              : { to: `/blog/${article.slug}` }
+            const componentProps = isEditMode ? {} : { to: `/blog/${article.slug}` }
 
             return (
               <Component key={article.slug} {...componentProps}>
@@ -202,8 +200,8 @@ const RelatedArticles = ({ currentSlug, allArticles, isEditMode = false, selecte
                   {/* Image */}
                   <div className={`aspect-video bg-gradient-to-br ${article.gradient} relative overflow-hidden`}>
                     {resolveImageSrc(article.image) && (
-                      <img 
-                        src={resolveImageSrc(article.image)} 
+                      <img
+                        src={resolveImageSrc(article.image)}
                         alt={article.title}
                         loading="lazy"
                         className="absolute inset-0 w-full h-full object-cover"
@@ -211,7 +209,7 @@ const RelatedArticles = ({ currentSlug, allArticles, isEditMode = false, selecte
                     )}
                     {/* Overlay oscuro */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
-                    
+
                     {/* Rating badge */}
                     <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 bg-black/70 backdrop-blur-md rounded-full border border-yellow-500/30 z-10">
                       <svg className="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
@@ -221,44 +219,45 @@ const RelatedArticles = ({ currentSlug, allArticles, isEditMode = false, selecte
                     </div>
                   </div>
 
-                {/* Content */}
-                <div className="p-5 flex flex-col flex-grow">
-                  {/* Meta */}
-                  <div className="flex items-center gap-3 text-xs text-white/50 mb-3">
-                    <span>{article.date}</span>
-                    <span>•</span>
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      <span>{article.readTime}</span>
+                  {/* Content */}
+                  <div className="p-5 flex flex-col flex-grow">
+                    {/* Meta */}
+                    <div className="flex items-center gap-3 text-xs text-white/50 mb-3">
+                      <span>{article.date}</span>
+                      <span>•</span>
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        <span>{article.readTime}</span>
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <h4 className="text-lg font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-cyan-400 group-hover:to-purple-400 transition-all leading-tight line-clamp-2">
+                      {article.title}
+                    </h4>
+
+                    {/* Excerpt */}
+                    <p className="text-white/60 text-sm leading-relaxed mb-4 flex-grow line-clamp-2">
+                      {article.excerpt}
+                    </p>
+
+                    {/* CTA */}
+                    <div className="flex items-center gap-2 text-white/70 group-hover:text-white transition-colors">
+                      <span className="text-xs font-medium">Leer más</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
 
-                  {/* Title */}
-                  <h4 className="text-lg font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-cyan-400 group-hover:to-purple-400 transition-all leading-tight line-clamp-2">
-                    {article.title}
-                  </h4>
-
-                  {/* Excerpt */}
-                  <p className="text-white/60 text-sm leading-relaxed mb-4 flex-grow line-clamp-2">
-                    {article.excerpt}
-                  </p>
-
-                  {/* CTA */}
-                  <div className="flex items-center gap-2 text-white/70 group-hover:text-white transition-colors">
-                    <span className="text-xs font-medium">Leer más</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </div>
-
-                {/* Gradient line on hover */}
-                <motion.div
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${article.borderGradient} origin-left`}
-                />
-              </motion.article>
-            </Component>
-          ))}
+                  {/* Gradient line on hover */}
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    whileHover={{ scaleX: 1 }}
+                    className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${article.borderGradient} origin-left`}
+                  />
+                </motion.article>
+              </Component>
+            )
+          })}
         </div>
 
         {/* Modal Selector */}
