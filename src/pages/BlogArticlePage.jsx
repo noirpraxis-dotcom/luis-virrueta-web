@@ -2581,27 +2581,6 @@ const BlogArticlePage = () => {
   // Calcular tiempo de lectura dinámicamente
   const dynamicReadTime = calculateReadTime(editorSections)
 
-  // Actualizar íconos en headings cuando cambia draftSectionIcon
-  useEffect(() => {
-    if (!isEditMode || !draftBlocks.length) return
-    
-    const updatedBlocks = draftBlocks.map(block => {
-      if (block.type === 'heading') {
-        return { ...block, icon: draftSectionIcon }
-      }
-      return block
-    })
-    
-    // Solo actualizar si realmente cambió
-    const hasChanges = draftBlocks.some((block, i) => 
-      block.type === 'heading' && block.icon !== updatedBlocks[i].icon
-    )
-    
-    if (hasChanges) {
-      setDraftBlocks(updatedBlocks)
-    }
-  }, [draftSectionIcon, isEditMode])
-
   // Callback estable para onChange del RichTextEditor
   const handleBlocksChange = useCallback((next) => {
     setDraftBlocks(next)
@@ -3387,6 +3366,10 @@ const BlogArticlePage = () => {
                         onClick={() => {
                           setDraftSectionIcon(value)
                           setIsDirty(true)
+                          // Actualizar íconos en todos los headings existentes
+                          setDraftBlocks(prev => prev.map(block => 
+                            block.type === 'heading' ? { ...block, icon: value } : block
+                          ))
                         }}
                         className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
                           draftSectionIcon === value
