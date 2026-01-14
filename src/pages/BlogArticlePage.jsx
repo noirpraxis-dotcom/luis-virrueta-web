@@ -2585,11 +2585,11 @@ const BlogArticlePage = () => {
   const shareUrl = `${window.location.origin}/blog/${slug}`
   const shareTitle = article.title
   const shareSubtitle = article.subtitle || ''
-  // Usar el extract de la tarjeta (article.extract o article.excerpt)
-  const shareExcerptRaw = article.extract || article.excerpt || article.sections?.[0]?.content || ''
+  // Usar el excerpt del CMS primero, luego extract de article, luego primer contenido
+  const shareExcerptRaw = article.excerpt || article.extract || article.sections?.[0]?.content || ''
   const shareExcerpt = String(shareExcerptRaw).replace(/\s+/g, ' ').trim().slice(0, 300)
   
-  // Formato para WhatsApp: título en negritas, subtítulo en itálicas, extract normal
+  // Formato para WhatsApp: título en negritas, subtítulo en itálicas, excerpt normal
   const shareTextFormatted = [
     `*${shareTitle}*`,
     shareSubtitle ? `_${shareSubtitle}_` : '',
@@ -2599,8 +2599,13 @@ const BlogArticlePage = () => {
   // Para redes sin formato markdown
   const shareTextPlain = [shareTitle, shareSubtitle, shareExcerpt].filter(Boolean).join('\n\n')
   
-  // No usar fallback genérico repetido: si no hay imagen, ArticleSchema ya cae a /portada.webp.
-  const shareImage = heroBackgroundImage
+  // Asegurar que shareImage sea URL absoluta para compartir correctamente
+  const shareImage = (() => {
+    const img = heroBackgroundImage || effectiveHeroImage
+    if (!img) return `${window.location.origin}/portada.webp`
+    if (img.startsWith('http://') || img.startsWith('https://')) return img
+    return `${window.location.origin}${img.startsWith('/') ? img : `/${img}`}`
+  })()
 
   // SEO description con contexto del sitio
   const seoDescription = (() => {
@@ -2872,7 +2877,7 @@ const BlogArticlePage = () => {
       {/* Schema Markup para SEO */}
       <ArticleSchema 
         title={article.title}
-        description={(article.excerpt || article.sections[0]?.content || '').substring(0, 160)}
+        description={seoDescription}
         image={shareImage}
         author={article.author}
         publishedTime={toISODate(article.date)}

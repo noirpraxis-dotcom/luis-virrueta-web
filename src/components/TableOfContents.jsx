@@ -11,15 +11,15 @@ const TableOfContents = ({ sections, accentKey = 'purple' }) => {
     purple: { from: '#a855f7', to: '#d946ef' },
     red: { from: '#f87171', to: '#ec4899' },
     emerald: { from: '#34d399', to: '#14b8a6' },
-    amber: { from: '#fbbf24', to: '#f59e0b' },
+    amber: { from: '#fbbf24', to: '#f97316' },
     indigo: { from: '#818cf8', to: '#6366f1' },
     blue: { from: '#60a5fa', to: '#3b82f6' },
-    cyan: { from: '#22d3ee', to: '#06b6d4' },
+    cyan: { from: '#22d3ee', to: '#14b8a6' },
     pink: { from: '#f472b6', to: '#ec4899' },
-    orange: { from: '#fb923c', to: '#f97316' },
+    orange: { from: '#f97316', to: '#ef4444' },
     slate: { from: '#94a3b8', to: '#64748b' },
-    fuchsia: { from: '#e879f9', to: '#d946ef' },
-    violet: { from: '#a78bfa', to: '#8b5cf6' }
+    lime: { from: '#84cc16', to: '#22c55e' },
+    violet: { from: '#8b5cf6', to: '#a855f7' }
   }
 
   const colors = colorMap[accentKey] || colorMap.purple
