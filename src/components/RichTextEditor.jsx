@@ -835,7 +835,7 @@ export default function RichTextEditor({
         const t = String(h2El?.textContent || '').trim()
         const iconEl = el.querySelector('[data-rte-role="section-icon"]')
         const iconRaw = String(iconEl?.getAttribute?.('data-icon') || iconEl?.textContent || '').trim()
-        const iconKey = normalizeSectionIconKey(iconRaw || sectionIcon)
+        const iconKey = normalizeSectionIconKey(iconRaw || 'crown')
         if (t) {
           next.push({
             id: `block-${Date.now()}-${next.length}`,

@@ -1867,7 +1867,11 @@ const BlogArticlePage = () => {
   const [draftSectionIcon, setDraftSectionIcon] = useState('crown')
   const [draftTags, setDraftTags] = useState([])
   const [draftImageUrl, setDraftImageUrl] = useState('')
-  const [draftPublishedAt, setDraftPublishedAt] = useState('')
+  const [draftPublishedAt, setDraftPublishedAt] = useState(() => {
+    const now = new Date()
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset())
+    return now.toISOString().slice(0, 16)
+  })
   const [draftBlocks, setDraftBlocks] = useState([])
   const [isDirty, setIsDirty] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
@@ -2822,7 +2826,7 @@ const BlogArticlePage = () => {
       <TableOfContents sections={tocSections} />
 
       {/* Hero Image Section - SOLO LA IMAGEN */}
-      <section ref={heroRef} className="relative h-[36vh] sm:h-[50vh] lg:h-[80vh] overflow-hidden">
+      <section ref={heroRef} className="relative h-[36vh] sm:h-[50vh] lg:h-[95vh] overflow-hidden">
         {/* Background image (robusto con fallback) */}
         {effectiveHeroImage && (
           <div className="absolute inset-0 overflow-hidden">
@@ -3042,19 +3046,27 @@ const BlogArticlePage = () => {
               )}
             </div>
             <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
               {isEditMode ? (
-                <input
-                  type="datetime-local"
-                  value={draftPublishedAt}
-                  onChange={(e) => {
-                    setDraftPublishedAt(e.target.value)
-                    setIsDirty(true)
-                  }}
-                  className="text-sm bg-transparent outline-none border-b border-white/10 focus:border-white/30"
-                />
+                <>
+                  <label htmlFor="datetime-input" className="cursor-pointer">
+                    <Calendar className="w-4 h-4" />
+                  </label>
+                  <input
+                    id="datetime-input"
+                    type="datetime-local"
+                    value={draftPublishedAt}
+                    onChange={(e) => {
+                      setDraftPublishedAt(e.target.value)
+                      setIsDirty(true)
+                    }}
+                    className="text-sm bg-transparent outline-none border-b border-white/10 focus:border-white/30 cursor-pointer"
+                  />
+                </>
               ) : (
-                <span className="text-sm">{article.date}</span>
+                <>
+                  <Calendar className="w-4 h-4" />
+                  <span className="text-sm">{article.date}</span>
+                </>
               )}
             </div>
             <div className="flex items-center gap-2">
