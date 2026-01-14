@@ -2478,13 +2478,20 @@ const BlogArticlePage = () => {
     if (!file) return
     try {
       setSaveError('')
-      setSaveStatus('Subiendo imagen…')
+      setSaveStatus('Comprimiendo imagen…')
       const { compressImage } = await import('../utils/imageCompression')
-      const compressed = await compressImage(file, { maxWidth: 1920, quality: 0.82, outputFormat: 'webp' })
+      const compressed = await compressImage(file, { 
+        maxWidth: 1920, 
+        quality: 0.75, 
+        type: 'image/webp',
+        targetSizeKB: 200 // Máximo 200kb
+      })
+      setSaveStatus('Subiendo imagen…')
       const url = await uploadBlogImage(compressed, 'blog-images')
       setDraftImageUrl(url)
       setIsDirty(true)
-      setSaveStatus('')
+      setSaveStatus('Imagen subida exitosamente')
+      setTimeout(() => setSaveStatus(''), 2000)
     } catch (err) {
       console.error('Error subiendo hero:', err)
       setSaveStatus('')
@@ -2833,8 +2840,8 @@ const BlogArticlePage = () => {
             <img
               src={effectiveHeroImage}
               alt=""
-              className="absolute inset-0 w-full h-full object-cover object-top"
-              style={{ filter: 'saturate(1.05) contrast(1.06) brightness(1.14)' }}
+              className="absolute inset-0 w-full h-full object-cover object-center"
+              style={{ filter: 'saturate(1.05) contrast(1.06) brightness(1.20)' }}
               loading="eager"
               fetchpriority="high"
               decoding="async"
@@ -2846,12 +2853,10 @@ const BlogArticlePage = () => {
               }}
             />
 
-            {/* Soft veil (muy ligero) */}
-            <div className="absolute inset-0 bg-black/5" />
-            {/* Top fade (para que no corte tosco con el header) */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/15 to-transparent" />
-            {/* Bottom fade (para unir con la sección de abajo) */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent" />
+            {/* Top fade ligero (para transición suave con header) */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent" />
+            {/* Bottom fade ligero (para unir con la sección de abajo) */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
           </div>
         )}
 
