@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useSpring } from 'framer-motion'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 const ReadingProgressBar = ({ accentKey = 'purple', contentRef, onToggleTOC }) => {
   const progressValue = useMotionValue(0)
@@ -10,6 +10,7 @@ const ReadingProgressBar = ({ accentKey = 'purple', contentRef, onToggleTOC }) =
   })
   
   const [progress, setProgress] = useState(0)
+  const lastProgressRef = useRef(0)
   
   useEffect(() => {
     if (!contentRef?.current) return
@@ -35,7 +36,11 @@ const ReadingProgressBar = ({ accentKey = 'purple', contentRef, onToggleTOC }) =
       const clamped = Math.max(0, Math.min(1, raw))
 
       progressValue.set(clamped)
-      setProgress(Math.round(clamped * 100))
+      const next = Math.round(clamped * 100)
+      if (next !== lastProgressRef.current) {
+        lastProgressRef.current = next
+        setProgress(next)
+      }
     }
 
     const onScroll = () => {

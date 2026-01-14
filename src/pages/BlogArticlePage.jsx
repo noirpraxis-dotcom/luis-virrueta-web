@@ -2647,6 +2647,34 @@ const BlogArticlePage = () => {
     const [open, setOpen] = useState(false)
     const rootRef = useRef(null)
 
+    const handleNativeShare = async () => {
+      if (!navigator.share) return
+      try {
+        const shareData = {
+          title: shareTitle,
+          text: shareTextPlain,
+          url: shareUrl
+        }
+
+        if (shareImage) {
+          const res = await fetch(shareImage, { mode: 'cors' })
+          const blob = await res.blob()
+          const file = new File([blob], 'articulo.jpg', { type: blob.type || 'image/jpeg' })
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            shareData.files = [file]
+          }
+        }
+
+        await navigator.share(shareData)
+      } catch (err) {
+        if (err?.name !== 'AbortError') {
+          console.error('Error al compartir:', err)
+        }
+      } finally {
+        setOpen(false)
+      }
+    }
+
     const copyToClipboard = async () => {
       try {
         await navigator.clipboard.writeText(shareUrl)
@@ -2698,6 +2726,11 @@ const BlogArticlePage = () => {
     const encodedTweet = encodeURIComponent(`${shareTitle}${shareSubtitle ? ` — ${shareSubtitle}` : ''}\n\n${shareExcerpt}`)
 
     const items = [
+      ...(navigator.share ? [{
+        label: currentLanguage === 'en' ? 'Share' : 'Compartir',
+        onClick: handleNativeShare,
+        Icon: Share2
+      }] : []),
       {
         label: 'WhatsApp',
         href: `https://wa.me/?text=${encodedTextWhatsApp}`,
