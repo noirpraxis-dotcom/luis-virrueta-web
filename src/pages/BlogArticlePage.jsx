@@ -1881,6 +1881,7 @@ const BlogArticlePage = () => {
   const [tagInput, setTagInput] = useState('')
 
   const heroFileInputRef = useRef(null)
+  const publishDateInputRef = useRef(null)
   const autosaveTimerRef = useRef(null)
 
   useEffect(() => {
@@ -3119,7 +3120,18 @@ const BlogArticlePage = () => {
             <div className="flex items-center gap-2">
               {isEditMode ? (
                 <>
-                  <label htmlFor="datetime-input" className="cursor-pointer">
+                  <label
+                    htmlFor="datetime-input"
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      if (publishDateInputRef.current?.showPicker) {
+                        publishDateInputRef.current.showPicker()
+                      } else {
+                        publishDateInputRef.current?.focus()
+                      }
+                    }}
+                  >
                     <Calendar className="w-4 h-4" />
                   </label>
                   <input
@@ -3130,7 +3142,8 @@ const BlogArticlePage = () => {
                       setDraftPublishedAt(e.target.value)
                       setIsDirty(true)
                     }}
-                    className="text-sm bg-transparent outline-none border-b border-white/10 focus:border-white/30 cursor-pointer"
+                    ref={publishDateInputRef}
+                    className="text-sm bg-transparent outline-none border-b border-white/10 focus:border-white/30 cursor-pointer datetime-no-picker"
                   />
                 </>
               ) : (
@@ -3219,6 +3232,169 @@ const BlogArticlePage = () => {
               </div>
             )}
           </motion.div>
+
+          {/* Sección de Edición - Debajo de tags */}
+          {isEditMode && (
+            <section className="relative py-12 px-6 sm:px-8 lg:px-20">
+              <div className="max-w-3xl mx-auto">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="p-6 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl"
+                >
+                  <h3 className="text-2xl font-light text-white mb-8 flex items-center gap-3">
+                    <span className="w-1.5 h-8 bg-gradient-to-b from-purple-400 to-fuchsia-400 rounded-full"></span>
+                    Configuración del Artículo
+                  </h3>
+
+                  <div className="space-y-8">
+                    {/* Excerpt */}
+                    <div>
+                      <label className="block text-sm font-medium text-white/80 mb-3">Excerpt (Resumen)</label>
+                      <textarea
+                        value={draftExcerpt}
+                        onChange={(e) => {
+                          setDraftExcerpt(e.target.value)
+                          setIsDirty(true)
+                        }}
+                        placeholder="Breve descripción del artículo (se usa en SEO y vista previa)..."
+                        rows={3}
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white/90 placeholder:text-white/30 outline-none focus:border-white/30 resize-none"
+                      />
+                      <p className="mt-2 text-xs text-white/40">{draftExcerpt.length} caracteres (recomendado: 120-160)</p>
+                    </div>
+
+                    {/* Categoría */}
+                    <div>
+                      <label className="block text-sm font-medium text-white/80 mb-3">Categoría</label>
+                      <select
+                        value={draftCategory}
+                        onChange={(e) => {
+                          setDraftCategory(e.target.value)
+                          setIsDirty(true)
+                        }}
+                        className="w-full px-4 py-3 bg-black/80 border border-white/20 rounded-xl text-white outline-none focus:border-white/40 cursor-pointer"
+                        style={{ color: 'white' }}
+                      >
+                        <option value="philosophy" style={{ backgroundColor: '#000', color: '#fff' }}>Filosofía</option>
+                        <option value="psychoanalysis" style={{ backgroundColor: '#000', color: '#fff' }}>Psicoanálisis</option>
+                        <option value="psychology" style={{ backgroundColor: '#000', color: '#fff' }}>Psicología</option>
+                        <option value="perception" style={{ backgroundColor: '#000', color: '#fff' }}>Percepción</option>
+                        <option value="consciousness" style={{ backgroundColor: '#000', color: '#fff' }}>Conciencia</option>
+                        <option value="metaphysics" style={{ backgroundColor: '#000', color: '#fff' }}>Metafísica</option>
+                        <option value="reflections" style={{ backgroundColor: '#000', color: '#fff' }}>Reflexiones</option>
+                        <option value="diary" style={{ backgroundColor: '#000', color: '#fff' }}>Diario</option>
+                        <option value="ethics" style={{ backgroundColor: '#000', color: '#fff' }}>Ética</option>
+                        <option value="existence" style={{ backgroundColor: '#000', color: '#fff' }}>Existencia</option>
+                        <option value="epistemology" style={{ backgroundColor: '#000', color: '#fff' }}>Epistemología</option>
+                        <option value="ontology" style={{ backgroundColor: '#000', color: '#fff' }}>Ontología</option>
+                        <option value="aesthetics" style={{ backgroundColor: '#000', color: '#fff' }}>Estética</option>
+                        <option value="phenomenology" style={{ backgroundColor: '#000', color: '#fff' }}>Fenomenología</option>
+                        <option value="hermeneutics" style={{ backgroundColor: '#000', color: '#fff' }}>Hermenéutica</option>
+                      </select>
+                    </div>
+
+                    {/* Gradiente */}
+                    <div>
+                      <label className="block text-sm font-medium text-white/80 mb-3">Color / Gradiente</label>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        {[
+                          { label: 'Púrpura', value: 'from-purple-500 to-fuchsia-500', preview: 'bg-gradient-to-r from-purple-500 to-fuchsia-500' },
+                          { label: 'Azul', value: 'from-blue-500 to-cyan-500', preview: 'bg-gradient-to-r from-blue-500 to-cyan-500' },
+                          { label: 'Rojo', value: 'from-red-500 to-rose-500', preview: 'bg-gradient-to-r from-red-500 to-rose-500' },
+                          { label: 'Verde', value: 'from-emerald-500 to-teal-500', preview: 'bg-gradient-to-r from-emerald-500 to-teal-500' },
+                          { label: 'Ámbar', value: 'from-amber-500 to-orange-500', preview: 'bg-gradient-to-r from-amber-500 to-orange-500' },
+                          { label: 'Índigo', value: 'from-indigo-500 to-violet-500', preview: 'bg-gradient-to-r from-indigo-500 to-violet-500' },
+                          { label: 'Rosa', value: 'from-pink-500 to-rose-500', preview: 'bg-gradient-to-r from-pink-500 to-rose-500' },
+                          { label: 'Gris', value: 'from-slate-600 to-zinc-700', preview: 'bg-gradient-to-r from-slate-600 to-zinc-700' },
+                          { label: 'Naranja', value: 'from-orange-500 to-red-500', preview: 'bg-gradient-to-r from-orange-500 to-red-500' },
+                          { label: 'Teal', value: 'from-teal-500 to-cyan-500', preview: 'bg-gradient-to-r from-teal-500 to-cyan-500' },
+                          { label: 'Lima', value: 'from-lime-500 to-green-500', preview: 'bg-gradient-to-r from-lime-500 to-green-500' },
+                          { label: 'Violeta', value: 'from-violet-500 to-purple-500', preview: 'bg-gradient-to-r from-violet-500 to-purple-500' }
+                        ].map((grad) => (
+                          <button
+                            key={grad.value}
+                            type="button"
+                            onClick={() => {
+                              setDraftGradient(grad.value)
+                              setIsDirty(true)
+                            }}
+                            className={`p-3 rounded-xl border-2 transition-all ${
+                              draftGradient === grad.value
+                                ? 'border-white/40 bg-white/10'
+                                : 'border-white/10 hover:border-white/20 bg-white/5'
+                            }`}
+                          >
+                            <div className={`h-8 rounded-lg ${grad.preview}`}></div>
+                            <p className="mt-2 text-xs text-white/70">{grad.label}</p>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Ícono de Sección */}
+                    <div>
+                      <label className="block text-sm font-medium text-white/80 mb-3">Ícono para Secciones</label>
+                      <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
+                        {[
+                          { value: 'crown', Icon: Crown, label: 'Corona' },
+                          { value: 'moon', Icon: Moon, label: 'Luna' },
+                          { value: 'sparkles', Icon: Sparkles, label: 'Chispas' },
+                          { value: 'diamond', Icon: Diamond, label: 'Diamante' },
+                          { value: 'star', Icon: Star, label: 'Estrella' },
+                          { value: 'bookmark', Icon: Bookmark, label: 'Marca' },
+                          { value: 'brain', Icon: Brain, label: 'Cerebro' },
+                          { value: 'zap', Icon: Zap, label: 'Rayo' },
+                          { value: 'eye', Icon: Eye, label: 'Ojo' },
+                          { value: 'shield', Icon: Shield, label: 'Escudo' },
+                          { value: 'alert-circle', Icon: AlertCircle, label: 'Alerta' },
+                          { value: 'check', Icon: Check, label: 'Check' },
+                          { value: 'award', Icon: Award, label: 'Premio' },
+                          { value: 'target', Icon: Target, label: 'Diana' },
+                          { value: 'compass', Icon: Compass, label: 'Brújula' },
+                          { value: 'flame', Icon: Flame, label: 'Llama' },
+                          { value: 'heart', Icon: Heart, label: 'Corazón' },
+                          { value: 'lightbulb', Icon: Lightbulb, label: 'Bombilla' }
+                        ].map(({ value, Icon, label }) => (
+                          <button
+                            key={value}
+                            type="button"
+                            onClick={() => {
+                              setDraftSectionIcon(value)
+                              setIsDirty(true)
+                              // Actualizar íconos en todos los headings existentes
+                              setDraftBlocks(prev => prev.map(block => 
+                                block.type === 'heading' ? { ...block, icon: value } : block
+                              ))
+                            }}
+                            className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
+                              draftSectionIcon === value
+                                ? 'border-white/40 bg-white/10'
+                                : 'border-white/10 hover:border-white/20 bg-white/5'
+                            }`}
+                            title={label}
+                          >
+                            <Icon className="w-6 h-6 text-white/80" />
+                            <p className="text-[10px] text-white/60 text-center">{label}</p>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Tiempo de lectura */}
+                    <div>
+                      <label className="block text-sm font-medium text-white/80 mb-3">Tiempo de Lectura</label>
+                      <div className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white/60 text-sm">
+                        Calculado automáticamente: <span className="text-white/90 font-medium">{dynamicReadTime}</span>
+                      </div>
+                      <p className="mt-2 text-xs text-white/40">Se calcula según el contenido del artículo</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </section>
+          )}
         </div>
       </section>
 
@@ -3238,168 +3414,6 @@ const BlogArticlePage = () => {
         </div>
       </section>
 
-      {/* Sección de Edición - Al final del artículo, solo visible en modo edición */}
-      {isEditMode && (
-        <section className="relative py-12 px-6 sm:px-8 lg:px-20">
-          <div className="max-w-3xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="p-6 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl"
-            >
-              <h3 className="text-2xl font-light text-white mb-8 flex items-center gap-3">
-                <span className="w-1.5 h-8 bg-gradient-to-b from-purple-400 to-fuchsia-400 rounded-full"></span>
-                Configuración del Artículo
-              </h3>
-
-              <div className="space-y-8">
-                {/* Excerpt */}
-                <div>
-                  <label className="block text-sm font-medium text-white/80 mb-3">Excerpt (Resumen)</label>
-                  <textarea
-                    value={draftExcerpt}
-                    onChange={(e) => {
-                      setDraftExcerpt(e.target.value)
-                      setIsDirty(true)
-                    }}
-                    placeholder="Breve descripción del artículo (se usa en SEO y vista previa)..."
-                    rows={3}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white/90 placeholder:text-white/30 outline-none focus:border-white/30 resize-none"
-                  />
-                  <p className="mt-2 text-xs text-white/40">{draftExcerpt.length} caracteres (recomendado: 120-160)</p>
-                </div>
-
-                {/* Categoría */}
-                <div>
-                  <label className="block text-sm font-medium text-white/80 mb-3">Categoría</label>
-                  <select
-                    value={draftCategory}
-                    onChange={(e) => {
-                      setDraftCategory(e.target.value)
-                      setIsDirty(true)
-                    }}
-                    className="w-full px-4 py-3 bg-black/80 border border-white/20 rounded-xl text-white outline-none focus:border-white/40 cursor-pointer"
-                    style={{ color: 'white' }}
-                  >
-                    <option value="philosophy" style={{ backgroundColor: '#000', color: '#fff' }}>Filosofía</option>
-                    <option value="psychoanalysis" style={{ backgroundColor: '#000', color: '#fff' }}>Psicoanálisis</option>
-                    <option value="psychology" style={{ backgroundColor: '#000', color: '#fff' }}>Psicología</option>
-                    <option value="perception" style={{ backgroundColor: '#000', color: '#fff' }}>Percepción</option>
-                    <option value="consciousness" style={{ backgroundColor: '#000', color: '#fff' }}>Conciencia</option>
-                    <option value="metaphysics" style={{ backgroundColor: '#000', color: '#fff' }}>Metafísica</option>
-                    <option value="reflections" style={{ backgroundColor: '#000', color: '#fff' }}>Reflexiones</option>
-                    <option value="diary" style={{ backgroundColor: '#000', color: '#fff' }}>Diario</option>
-                    <option value="ethics" style={{ backgroundColor: '#000', color: '#fff' }}>Ética</option>
-                    <option value="existence" style={{ backgroundColor: '#000', color: '#fff' }}>Existencia</option>
-                    <option value="epistemology" style={{ backgroundColor: '#000', color: '#fff' }}>Epistemología</option>
-                    <option value="ontology" style={{ backgroundColor: '#000', color: '#fff' }}>Ontología</option>
-                    <option value="aesthetics" style={{ backgroundColor: '#000', color: '#fff' }}>Estética</option>
-                    <option value="phenomenology" style={{ backgroundColor: '#000', color: '#fff' }}>Fenomenología</option>
-                    <option value="hermeneutics" style={{ backgroundColor: '#000', color: '#fff' }}>Hermenéutica</option>
-                  </select>
-                </div>
-
-                {/* Gradiente */}
-                <div>
-                  <label className="block text-sm font-medium text-white/80 mb-3">Color / Gradiente</label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {[
-                      { label: 'Púrpura', value: 'from-purple-500 to-fuchsia-500', preview: 'bg-gradient-to-r from-purple-500 to-fuchsia-500' },
-                      { label: 'Azul', value: 'from-blue-500 to-cyan-500', preview: 'bg-gradient-to-r from-blue-500 to-cyan-500' },
-                      { label: 'Rojo', value: 'from-red-500 to-rose-500', preview: 'bg-gradient-to-r from-red-500 to-rose-500' },
-                      { label: 'Verde', value: 'from-emerald-500 to-teal-500', preview: 'bg-gradient-to-r from-emerald-500 to-teal-500' },
-                      { label: 'Ámbar', value: 'from-amber-500 to-orange-500', preview: 'bg-gradient-to-r from-amber-500 to-orange-500' },
-                      { label: 'Índigo', value: 'from-indigo-500 to-violet-500', preview: 'bg-gradient-to-r from-indigo-500 to-violet-500' },
-                      { label: 'Rosa', value: 'from-pink-500 to-rose-500', preview: 'bg-gradient-to-r from-pink-500 to-rose-500' },
-                      { label: 'Gris', value: 'from-slate-600 to-zinc-700', preview: 'bg-gradient-to-r from-slate-600 to-zinc-700' },
-                      { label: 'Naranja', value: 'from-orange-500 to-red-500', preview: 'bg-gradient-to-r from-orange-500 to-red-500' },
-                      { label: 'Teal', value: 'from-teal-500 to-cyan-500', preview: 'bg-gradient-to-r from-teal-500 to-cyan-500' },
-                      { label: 'Lima', value: 'from-lime-500 to-green-500', preview: 'bg-gradient-to-r from-lime-500 to-green-500' },
-                      { label: 'Violeta', value: 'from-violet-500 to-purple-500', preview: 'bg-gradient-to-r from-violet-500 to-purple-500' }
-                    ].map((grad) => (
-                      <button
-                        key={grad.value}
-                        type="button"
-                        onClick={() => {
-                          setDraftGradient(grad.value)
-                          setIsDirty(true)
-                        }}
-                        className={`p-3 rounded-xl border-2 transition-all ${
-                          draftGradient === grad.value
-                            ? 'border-white/40 bg-white/10'
-                            : 'border-white/10 hover:border-white/20 bg-white/5'
-                        }`}
-                      >
-                        <div className={`h-8 rounded-lg ${grad.preview}`}></div>
-                        <p className="mt-2 text-xs text-white/70">{grad.label}</p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Ícono de Sección */}
-                <div>
-                  <label className="block text-sm font-medium text-white/80 mb-3">Ícono para Secciones</label>
-                  <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
-                    {[
-                      { value: 'crown', Icon: Crown, label: 'Corona' },
-                      { value: 'moon', Icon: Moon, label: 'Luna' },
-                      { value: 'sparkles', Icon: Sparkles, label: 'Chispas' },
-                      { value: 'diamond', Icon: Diamond, label: 'Diamante' },
-                      { value: 'star', Icon: Star, label: 'Estrella' },
-                      { value: 'bookmark', Icon: Bookmark, label: 'Marca' },
-                      { value: 'brain', Icon: Brain, label: 'Cerebro' },
-                      { value: 'zap', Icon: Zap, label: 'Rayo' },
-                      { value: 'eye', Icon: Eye, label: 'Ojo' },
-                      { value: 'shield', Icon: Shield, label: 'Escudo' },
-                      { value: 'alert-circle', Icon: AlertCircle, label: 'Alerta' },
-                      { value: 'check', Icon: Check, label: 'Check' },
-                      { value: 'award', Icon: Award, label: 'Premio' },
-                      { value: 'target', Icon: Target, label: 'Diana' },
-                      { value: 'compass', Icon: Compass, label: 'Brújula' },
-                      { value: 'flame', Icon: Flame, label: 'Llama' },
-                      { value: 'heart', Icon: Heart, label: 'Corazón' },
-                      { value: 'lightbulb', Icon: Lightbulb, label: 'Bombilla' }
-                    ].map(({ value, Icon, label }) => (
-                      <button
-                        key={value}
-                        type="button"
-                        onClick={() => {
-                          setDraftSectionIcon(value)
-                          setIsDirty(true)
-                          // Actualizar íconos en todos los headings existentes
-                          setDraftBlocks(prev => prev.map(block => 
-                            block.type === 'heading' ? { ...block, icon: value } : block
-                          ))
-                        }}
-                        className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
-                          draftSectionIcon === value
-                            ? 'border-white/40 bg-white/10'
-                            : 'border-white/10 hover:border-white/20 bg-white/5'
-                        }`}
-                        title={label}
-                      >
-                        <Icon className="w-6 h-6 text-white/80" />
-                        <p className="text-[10px] text-white/60 text-center">{label}</p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Tiempo de lectura */}
-                <div>
-                  <label className="block text-sm font-medium text-white/80 mb-3">Tiempo de Lectura</label>
-                  <div className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white/60 text-sm">
-                    Calculado automáticamente: <span className="text-white/90 font-medium">{dynamicReadTime}</span>
-                  </div>
-                  <p className="mt-2 text-xs text-white/40">Se calcula según el contenido del artículo</p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-      )}
 
       <AnimatePresence>
         {showAdminLogin && (

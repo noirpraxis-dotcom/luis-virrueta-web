@@ -72,6 +72,18 @@ button, a {
   animation: gradient-shift 3s ease infinite;
 }
 
+/* Ocultar el icono nativo del selector de fecha/hora */
+input.datetime-no-picker {
+  appearance: none;
+}
+
+input.datetime-no-picker::-webkit-calendar-picker-indicator,
+input.datetime-no-picker::-webkit-inner-spin-button,
+input.datetime-no-picker::-webkit-clear-button {
+  opacity: 0;
+  display: none;
+}
+
 /* Animación de shimmer continuo para botones */
 @keyframes shimmer {
   0% {

@@ -1,35 +1,70 @@
 // Utilidad para calcular el tiempo de lectura basado en palabra count
 export const calculateReadTime = (sections) => {
-  // Promedio de palabras por minuto en español: 200-250
-  const wordsPerMinute = 225
-  
-  // Contar palabras en todas las secciones
+  // Promedio más realista para español en lectura de contenido denso
+  const wordsPerMinute = 180
+
+  const normalizeText = (value) => {
+    if (!value) return ''
+    const raw = String(value)
+    return raw
+      // Remover HTML
+      .replace(/<[^>]*>/g, ' ')
+      // Convertir links markdown a texto
+      .replace(/\[(.*?)\]\((.*?)\)/g, '$1')
+      // Remover markdown básico
+      .replace(/[*_`~>#-]/g, ' ')
+      // Normalizar espacios
+      .replace(/\s+/g, ' ')
+      .trim()
+  }
+
+  const countWords = (value) => {
+    const text = normalizeText(value)
+    if (!text) return 0
+    const matches = text.match(/[\p{L}\p{N}]+/gu)
+    return matches ? matches.length : 0
+  }
+
+  const addWords = (value) => countWords(value)
+
   let totalWords = 0
-  
-  sections.forEach(section => {
-    if (section.content) {
-      totalWords += section.content.split(/\s+/).length
-    }
-    if (section.title) {
-      totalWords += section.title.split(/\s+/).length
-    }
-    if (section.items) {
-      section.items.forEach(item => {
-        if (item.title) totalWords += item.title.split(/\s+/).length
-        if (item.description) totalWords += item.description.split(/\s+/).length
+  const list = Array.isArray(sections) ? sections : []
+
+  list.forEach((section) => {
+    if (!section) return
+
+    totalWords += addWords(section.title)
+    totalWords += addWords(section.subtitle)
+    totalWords += addWords(section.content)
+    totalWords += addWords(section.author)
+
+    if (Array.isArray(section.items)) {
+      section.items.forEach((item) => {
+        if (typeof item === 'string') {
+          totalWords += addWords(item)
+          return
+        }
+        totalWords += addWords(item?.title)
+        totalWords += addWords(item?.description)
+        totalWords += addWords(item?.content)
       })
     }
-    if (section.colors) {
-      section.colors.forEach(color => {
-        if (color.emotion) totalWords += color.emotion.split(/\s+/).length
-        if (color.brands) totalWords += color.brands.split(/\s+/).length
+
+    if (Array.isArray(section.colors)) {
+      section.colors.forEach((color) => {
+        totalWords += addWords(color?.emotion)
+        if (Array.isArray(color?.brands)) {
+          color.brands.forEach((brand) => {
+            totalWords += addWords(brand)
+          })
+        } else {
+          totalWords += addWords(color?.brands)
+        }
       })
     }
   })
-  
-  // Calcular minutos
-  const minutes = Math.ceil(totalWords / wordsPerMinute)
-  
+
+  const minutes = Math.max(1, Math.ceil(totalWords / wordsPerMinute))
   return `${minutes} min`
 }
 
