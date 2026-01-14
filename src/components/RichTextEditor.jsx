@@ -613,7 +613,7 @@ export default function RichTextEditor({
         sectionCounter++
         const level = b?.level || 'h2'
         const sectionNum = String(sectionCounter).padStart(2, '0')
-        const iconKey = normalizeSectionIconKey(b?.icon || sectionIcon)
+        const iconKey = normalizeSectionIconKey(b?.icon || 'crown')
         const tocIdAttr = mode === 'document' && documentVariant === 'article'
           ? ` id="section-${sectionCounter - 1}"`
           : ''
@@ -1060,7 +1060,7 @@ export default function RichTextEditor({
         })
 
         // Ensure icon span exists and is SVG-only
-        const defaultKey = normalizeSectionIconKey(sectionIcon)
+        const defaultKey = normalizeSectionIconKey('crown')
         let iconSpan = badge.querySelector('[data-rte-role="section-icon"]')
         if (!iconSpan) {
           iconSpan = document.createElement('span')
@@ -1167,7 +1167,7 @@ export default function RichTextEditor({
 
   const updateSectionIconsInPlace = (root) => {
     if (!root) return
-    const iconKey = normalizeSectionIconKey(sectionIcon)
+    const iconKey = normalizeSectionIconKey('crown')
     
     Array.from(root.querySelectorAll('[data-rte-role="section-icon"]')).forEach((iconSpan) => {
       iconSpan.innerHTML = ''

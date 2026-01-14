@@ -2,9 +2,27 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { List, X } from 'lucide-react'
 
-const TableOfContents = ({ sections }) => {
+const TableOfContents = ({ sections, accentKey = 'purple' }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('')
+
+  // Color map for different accent themes
+  const colorMap = {
+    purple: { from: '#a855f7', to: '#d946ef' },
+    red: { from: '#f87171', to: '#ec4899' },
+    emerald: { from: '#34d399', to: '#14b8a6' },
+    amber: { from: '#fbbf24', to: '#f59e0b' },
+    indigo: { from: '#818cf8', to: '#6366f1' },
+    blue: { from: '#60a5fa', to: '#3b82f6' },
+    cyan: { from: '#22d3ee', to: '#06b6d4' },
+    pink: { from: '#f472b6', to: '#ec4899' },
+    orange: { from: '#fb923c', to: '#f97316' },
+    slate: { from: '#94a3b8', to: '#64748b' },
+    fuchsia: { from: '#e879f9', to: '#d946ef' },
+    violet: { from: '#a78bfa', to: '#8b5cf6' }
+  }
+
+  const colors = colorMap[accentKey] || colorMap.purple
 
   // Extraer solo los headings
   const headings = sections
@@ -64,7 +82,10 @@ const TableOfContents = ({ sections }) => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         aria-label={isOpen ? "Cerrar tabla de contenidos" : "Abrir tabla de contenidos"}
-        className="fixed right-6 top-32 z-40 w-12 h-12 rounded-full bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 backdrop-blur-xl border border-white/20 items-center justify-center hover:border-white/40 transition-all duration-300 shadow-lg hidden lg:flex"
+        className="fixed right-6 top-32 z-40 w-12 h-12 rounded-full backdrop-blur-xl border border-white/20 items-center justify-center hover:border-white/40 transition-all duration-300 shadow-lg hidden lg:flex"
+        style={{
+          background: `linear-gradient(to bottom right, ${colors.from}33, ${colors.to}33)`
+        }}
       >
         {isOpen ? (
           <X className="w-5 h-5 text-white" />
@@ -87,27 +108,36 @@ const TableOfContents = ({ sections }) => {
               Contenido
             </h4>
             <nav className="space-y-2">
-              {headings.map((heading, index) => (
-                <motion.button
-                  key={heading.id}
-                  onClick={() => scrollToSection(heading.id)}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all duration-300 ${
-                    activeSection === heading.id
-                      ? 'bg-gradient-to-r from-purple-500/20 to-fuchsia-500/20 text-white border border-white/20'
-                      : 'text-white/60 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  <span className="flex items-start gap-2">
-                    <span className={`flex-shrink-0 w-1.5 h-1.5 rounded-full mt-1.5 ${
-                      activeSection === heading.id ? 'bg-fuchsia-400' : 'bg-white/30'
-                    }`} />
-                    <span className="line-clamp-2">{heading.title}</span>
-                  </span>
-                </motion.button>
-              ))}
+              {headings.map((heading, index) => {
+                const isActive = activeSection === heading.id
+                return (
+                  <motion.button
+                    key={heading.id}
+                    onClick={() => scrollToSection(heading.id)}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all duration-300 border ${
+                      isActive
+                        ? 'text-white border-white/20'
+                        : 'text-white/60 hover:text-white hover:bg-white/5 border-transparent'
+                    }`}
+                    style={isActive ? {
+                      background: `linear-gradient(to right, ${colors.from}33, ${colors.to}33)`
+                    } : {}}
+                  >
+                    <span className="flex items-start gap-2">
+                      <span 
+                        className="flex-shrink-0 w-1.5 h-1.5 rounded-full mt-1.5"
+                        style={{
+                          backgroundColor: isActive ? colors.to : 'rgba(255,255,255,0.3)'
+                        }}
+                      />
+                      <span className="line-clamp-2">{heading.title}</span>
+                    </span>
+                  </motion.button>
+                )
+              })}
             </nav>
           </motion.div>
         )}

@@ -1968,8 +1968,38 @@ const BlogArticlePage = () => {
         
         // Si hay parámetro ?edit=true, activar modo edición
         const urlParams = new URLSearchParams(window.location.search)
-        if (urlParams.get('edit') === 'true' && isAdmin) {
-          setTimeout(() => setIsEditMode(true), 100)
+        if (urlParams.get('edit') === 'true' && isAdmin && data) {
+          // Usar setTimeout para asegurar que cmsRow esté actualizado
+          setTimeout(() => {
+            // No llamar beginEditMode() directamente porque causaría loop
+            // En su lugar, replicar la lógica de inicialización aquí
+            const row = data
+            const articleData = getArticleBySlug(slug)
+            const initialBlocks = Array.isArray(row?.content) && row.content.length
+              ? row.content
+              : (articleData ? sectionsToCmsBlocks(articleData.sections) : [])
+
+            setDraftTitle(String(row?.title || articleData?.title || '').trim())
+            setDraftSubtitle(String(row?.subtitle || articleData?.subtitle || '').trim())
+            setDraftExcerpt(String(row?.excerpt || articleData?.excerpt || '').trim())
+            setDraftAuthor(String(row?.author || articleData?.author || '').trim())
+            setDraftReadTime(String(row?.read_time || row?.readTime || articleData?.readTime || '').trim())
+            setDraftCategory(String(row?.category || articleData?.category || 'philosophy').trim())
+            setDraftGradient(String(row?.accent || articleData?.gradient || 'from-purple-500 to-fuchsia-500').trim())
+            setDraftSectionIcon(String(row?.icon || 'crown').trim())
+            setDraftTags(
+              Array.isArray(row?.tags) && row.tags.length
+                ? row.tags
+                : (Array.isArray(articleData?.tags) ? articleData.tags : [])
+            )
+            setDraftImageUrl(String(row?.image_url || articleData?.heroImage || articleData?.image || '').trim())
+            setDraftPublishedAt(String(row?.published_at || row?.created_at || '').slice(0, 16))
+            setDraftBlocks(initialBlocks)
+            setIsDirty(false)
+            setSaveError('')
+            setSaveStatus('')
+            setIsEditMode(true)
+          }, 100)
         }
       } catch (err) {
         console.warn('No se pudo cargar el artículo desde Supabase:', err)
@@ -2183,12 +2213,23 @@ const BlogArticlePage = () => {
     if (explicit && ACCENT_PRESETS[explicit]) return explicit
 
     const g = a?.gradient ? String(a.gradient) : ''
+    // Match specific gradient patterns to avoid conflicts
+    if (/from-orange-500.*to-red-500/.test(g)) return 'orange'
+    if (/from-teal-500.*to-cyan-500/.test(g)) return 'cyan'
+    if (/from-lime-500.*to-green-500/.test(g)) return 'lime'
+    if (/from-violet-500.*to-purple-500/.test(g)) return 'violet'
+    // General patterns
     if (/\bred\b|\bred-/.test(g) || /\bpink\b|\bpink-/.test(g) || /\brose\b|\brose-/.test(g)) return 'red'
-    if (/\bemerald\b|\bemerald-/.test(g) || /\bteal\b|\bteal-/.test(g)) return 'emerald'
-    if (/\bamber\b|\bamber-/.test(g) || /\borange\b|\borange-/.test(g)) return 'amber'
-    if (/\bindigo\b|\bindigo-/.test(g) || /\bviolet\b|\bviolet-/.test(g)) return 'indigo'
+    if (/\bemerald\b|\bemerald-/.test(g)) return 'emerald'
+    if (/\bamber\b|\bamber-/.test(g)) return 'amber'
+    if (/\bindigo\b|\bindigo-/.test(g)) return 'indigo'
     if (/\bslate\b|\bslate-/.test(g) || /\bzinc\b|\bzinc-/.test(g) || /\bgray\b|\bgray-/.test(g)) return 'slate'
-    if (/\bblue\b|\bblue-/.test(g) || /\bcyan\b|\bcyan-/.test(g)) return 'blue'
+    if (/\bblue\b|\bblue-/.test(g)) return 'blue'
+    if (/\bcyan\b|\bcyan-/.test(g)) return 'cyan'
+    if (/\bteal\b|\bteal-/.test(g)) return 'emerald'
+    if (/\bviolet\b|\bviolet-/.test(g)) return 'violet'
+    if (/\borange\b|\borange-/.test(g)) return 'orange'
+    if (/\blime\b|\blime-/.test(g)) return 'lime'
     return 'purple'
   }
 
@@ -2257,8 +2298,8 @@ const BlogArticlePage = () => {
       return {
         ...baseArticle,
         ...cmsArticle,
-        // Mantener look/metadata del legacy
-        gradient: baseArticle.gradient || cmsArticle.gradient,
+        // Priorizar gradient del CMS para que los cambios se reflejen
+        gradient: cmsArticle.gradient || baseArticle.gradient,
         // Pero SIEMPRE priorizar la metadata del CMS (category/tags)
         category: cmsArticle.category || baseArticle.category,
         tags: Array.isArray(cmsArticle.tags) ? cmsArticle.tags : [],
@@ -2349,7 +2390,7 @@ const BlogArticlePage = () => {
     setDraftAuthor(String(row?.author || article.author || '').trim())
     setDraftReadTime(String(row?.read_time || row?.readTime || article.readTime || '').trim())
     setDraftCategory(String(row?.category || article.category || 'philosophy').trim())
-    setDraftGradient(String(article.gradient || 'from-purple-500 to-fuchsia-500').trim())
+    setDraftGradient(String(row?.accent || article.gradient || 'from-purple-500 to-fuchsia-500').trim())
     setDraftSectionIcon(String(row?.icon || 'crown').trim())
     // Si existe fila CMS pero no hay tags, no heredar tags legacy
     setDraftTags(
@@ -2843,7 +2884,7 @@ const BlogArticlePage = () => {
       <ReadingProgressBar />
       
       {/* Table of Contents flotante */}
-      <TableOfContents sections={tocSections} />
+      <TableOfContents sections={tocSections} accentKey={accentKey} />
 
       {/* Hero Image Section - SOLO LA IMAGEN */}
       <section ref={heroRef} className="relative h-[36vh] sm:h-[50vh] lg:h-[95vh] overflow-hidden">
@@ -3774,19 +3815,22 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
             
             <div className="space-y-5">
               {section.items.map((question, i) => {
-                // Determinar color del punto basado en accentKey
-                let dotColors = 'from-purple-400 to-fuchsia-400'
-                if (accentKey === 'red') dotColors = 'from-red-400 to-pink-400'
-                else if (accentKey === 'emerald') dotColors = 'from-emerald-400 to-teal-400'
-                else if (accentKey === 'amber') dotColors = 'from-amber-400 to-orange-400'
-                else if (accentKey === 'indigo') dotColors = 'from-indigo-400 to-purple-400'
-                else if (accentKey === 'blue') dotColors = 'from-blue-400 to-sky-400'
-                else if (accentKey === 'cyan') dotColors = 'from-cyan-400 to-sky-400'
-                else if (accentKey === 'pink') dotColors = 'from-pink-400 to-rose-400'
-                else if (accentKey === 'orange') dotColors = 'from-orange-400 to-amber-400'
-                else if (accentKey === 'slate') dotColors = 'from-white/40 to-white/20'
-                else if (accentKey === 'fuchsia') dotColors = 'from-pink-400 to-fuchsia-400'
-                else if (accentKey === 'violet') dotColors = 'from-violet-400 to-fuchsia-400'
+                // Colores según accentKey
+                const colorMap = {
+                  purple: { from: '#a855f7', to: '#d946ef' },
+                  red: { from: '#f87171', to: '#ec4899' },
+                  emerald: { from: '#34d399', to: '#14b8a6' },
+                  amber: { from: '#fbbf24', to: '#f97316' },
+                  indigo: { from: '#818cf8', to: '#a78bfa' },
+                  blue: { from: '#60a5fa', to: '#22d3ee' },
+                  cyan: { from: '#22d3ee', to: '#14b8a6' },
+                  pink: { from: '#f472b6', to: '#fb7185' },
+                  orange: { from: '#f97316', to: '#ef4444' },
+                  slate: { from: 'rgba(255,255,255,0.4)', to: 'rgba(255,255,255,0.2)' },
+                  lime: { from: '#84cc16', to: '#22c55e' },
+                  violet: { from: '#8b5cf6', to: '#a855f7' }
+                }
+                const colors = colorMap[accentKey] || colorMap.purple
                 
                 return (
                   <motion.div
@@ -3796,7 +3840,12 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
                     transition={{ duration: 0.5, delay: index * 0.05 + i * 0.15 }}
                     className="flex items-start gap-4 group/item"
                   >
-                    <div className={`flex-shrink-0 mt-1 w-2 h-2 rounded-full bg-gradient-to-br ${dotColors} group-hover/item:scale-150 transition-transform duration-300`} />
+                    <div 
+                      className="flex-shrink-0 mt-1 w-2 h-2 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                      style={{
+                        background: `linear-gradient(to bottom right, ${colors.from}, ${colors.to})`
+                      }}
+                    />
                     <p className={`text-left ${BODY_GUTTER} text-lg text-white/90 leading-relaxed font-light break-words group-hover/item:text-white transition-colors duration-300`}>
                       {question}
                     </p>
