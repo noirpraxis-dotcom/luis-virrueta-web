@@ -5,7 +5,7 @@ import {
   Type, Heading1, Heading2, Heading3, Bold, Italic, 
   List, ListOrdered, Quote, Sparkles, AlertCircle,
   Image as ImageIcon, Plus, Trash2, MoveUp, MoveDown,
-  Eye, Code, Link as LinkIcon, MousePointer, Hash
+  Eye, Code, Link as LinkIcon, MousePointer, Hash, MessageCircle
 } from 'lucide-react'
 import { getAccentPreset } from '../utils/accentPresets'
 
@@ -738,6 +738,33 @@ export default function RichTextEditor({
         continue
       }
 
+      if (type === 'whatsapp') {
+        const title = String(b?.title || 'Grupo privado de WhatsApp')
+        const body = String(b?.content || '¿Quieres recibir cada nuevo artículo y ejercicios breves?')
+        const cta = String(b?.cta || 'Únete aquí')
+        const url = String(b?.url || 'https://wa.me/527228720520?text=Quiero%20recibir%20los%20art%C3%ADculos')
+        push(
+          `<div data-rte-type="whatsapp" data-wa-title="${escAttr(title)}" data-wa-body="${escAttr(body)}" data-wa-cta="${escAttr(cta)}" data-wa-url="${escAttr(url)}" class="my-12 relative bg-gradient-to-br from-emerald-500/10 to-green-500/10 border border-emerald-400/20 rounded-3xl p-8 overflow-hidden shadow-2xl shadow-black/30">` +
+          `<div class="absolute -top-10 -right-10 w-40 h-40 bg-emerald-400/20 rounded-full blur-3xl"></div>` +
+          `<div class="relative z-10">` +
+          `<div class="flex items-center gap-3 mb-4">` +
+          `<div class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center">` +
+          `<span class="text-emerald-300 text-xs font-bold">WA</span>` +
+          `</div>` +
+          `<div>` +
+          `<p class="text-xs uppercase tracking-widest text-emerald-300/80 font-semibold">${inline(title)}</p>` +
+          `</div>` +
+          `</div>` +
+          `<p class="text-lg text-white/80 leading-relaxed mb-5">${inline(body)}</p>` +
+          `<a href="${escAttr(url)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-200 text-sm font-medium hover:bg-emerald-500/30 transition-all">` +
+          `<span>${inline(cta)}</span>` +
+          `</a>` +
+          `</div>` +
+          `</div>`
+        )
+        continue
+      }
+
       // paragraph
       push(`<p class="my-6 text-lg md:text-xl text-white/75 leading-relaxed tracking-wide" dir="ltr" style="unicode-bidi: plaintext">${inline(content)}</p>`)
     }
@@ -944,6 +971,22 @@ export default function RichTextEditor({
             content 
           })
         }
+        continue
+      }
+
+      if (tag === 'div' && el.getAttribute('data-rte-type') === 'whatsapp') {
+        const title = String(el.getAttribute('data-wa-title') || 'Grupo privado de WhatsApp').trim()
+        const body = String(el.getAttribute('data-wa-body') || '').trim()
+        const cta = String(el.getAttribute('data-wa-cta') || 'Únete aquí').trim()
+        const url = String(el.getAttribute('data-wa-url') || '').trim()
+        next.push({
+          id: `block-${Date.now()}-${next.length}`,
+          type: 'whatsapp',
+          title,
+          content: body,
+          cta,
+          url
+        })
         continue
       }
 
@@ -1553,6 +1596,56 @@ export default function RichTextEditor({
         }
       }
 
+      const insertAfterTopLevelBlock = (el) => {
+        if (!host) {
+          insertBlockElement(el)
+          return
+        }
+
+        let topLevelNodes = []
+        try {
+          topLevelNodes = Array.from(host.childNodes || []).filter((n) => {
+            try {
+              return range.intersectsNode(n)
+            } catch {
+              return false
+            }
+          })
+        } catch {
+          topLevelNodes = []
+        }
+
+        if (!topLevelNodes.length) {
+          host.appendChild(el)
+        } else {
+          const last = topLevelNodes[topLevelNodes.length - 1]
+          if (last?.nextSibling) {
+            host.insertBefore(el, last.nextSibling)
+          } else {
+            host.appendChild(el)
+          }
+        }
+
+        const sel = window.getSelection()
+        if (sel) {
+          sel.removeAllRanges()
+          const after = document.createRange()
+          after.setStartAfter(el)
+          after.collapse(true)
+          sel.addRange(after)
+          docSelectionRangeRef.current = after.cloneRange()
+        }
+
+        try {
+          host.focus?.({ preventScroll: true })
+        } catch {
+          // ignore
+        }
+
+        cleanupDocDom(host)
+        syncBlocksFromDocDom(undefined)
+      }
+
       const replaceSelectionWithTopLevelBlock = (el, coalesceKey) => {
         if (!host) {
           insertBlockElement(el)
@@ -1682,9 +1775,71 @@ export default function RichTextEditor({
         return
       }
 
+      if (action === 'whatsapp') {
+        const waTitle = 'Grupo privado de WhatsApp'
+        const waBody = '¿Quieres recibir cada nuevo artículo y ejercicios breves?'
+        const waCta = 'Únete aquí'
+        const waUrl = 'https://wa.me/527228720520?text=Quiero%20recibir%20los%20art%C3%ADculos'
+
+        const card = document.createElement('div')
+        card.setAttribute('data-rte-type', 'whatsapp')
+        card.setAttribute('data-wa-title', waTitle)
+        card.setAttribute('data-wa-body', waBody)
+        card.setAttribute('data-wa-cta', waCta)
+        card.setAttribute('data-wa-url', waUrl)
+        card.className = 'my-12 relative bg-gradient-to-br from-emerald-500/10 to-green-500/10 border border-emerald-400/20 rounded-3xl p-8 overflow-hidden shadow-2xl shadow-black/30'
+
+        const orb = document.createElement('div')
+        orb.className = 'absolute -top-10 -right-10 w-40 h-40 bg-emerald-400/20 rounded-full blur-3xl'
+
+        const content = document.createElement('div')
+        content.className = 'relative z-10'
+
+        const header = document.createElement('div')
+        header.className = 'flex items-center gap-3 mb-4'
+
+        const iconWrap = document.createElement('div')
+        iconWrap.className = 'w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center'
+        const iconText = document.createElement('span')
+        iconText.className = 'text-emerald-300 text-xs font-bold'
+        iconText.textContent = 'WA'
+        iconWrap.appendChild(iconText)
+
+        const titleWrap = document.createElement('div')
+        const titleEl = document.createElement('p')
+        titleEl.className = 'text-xs uppercase tracking-widest text-emerald-300/80 font-semibold'
+        titleEl.textContent = waTitle
+        titleWrap.appendChild(titleEl)
+
+        header.appendChild(iconWrap)
+        header.appendChild(titleWrap)
+
+        const bodyEl = document.createElement('p')
+        bodyEl.className = 'text-lg text-white/80 leading-relaxed mb-5'
+        bodyEl.textContent = waBody
+
+        const cta = document.createElement('a')
+        cta.href = waUrl
+        cta.target = '_blank'
+        cta.rel = 'noopener noreferrer'
+        cta.className = 'inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-200 text-sm font-medium hover:bg-emerald-500/30 transition-all'
+        cta.textContent = waCta
+
+        content.appendChild(header)
+        content.appendChild(bodyEl)
+        content.appendChild(cta)
+
+        card.appendChild(orb)
+        card.appendChild(content)
+
+        insertAfterTopLevelBlock(card)
+        setShowFloatingToolbar(false)
+        return
+      }
+
       if (action === 'delete') {
         // "Eliminar" = quitar el formato del contenedor, dejando el texto normal.
-        const deletableTypes = new Set(['heading', 'highlight', 'questions', 'reflection', 'subsection'])
+        const deletableTypes = new Set(['heading', 'highlight', 'questions', 'reflection', 'subsection', 'whatsapp'])
 
         const isDeletableTopLevel = (n) => {
           if (!n || n.nodeType !== 1) return false
@@ -2543,6 +2698,7 @@ function FloatingFormatToolbar({ position, onClose, onFormat, onInteract }) {
     { icon: Italic, label: 'Cursiva', action: 'italic' },
     { icon: MousePointer, label: 'Sección', action: 'heading' },
     { icon: Hash, label: 'Tarjeta #', action: 'subsection' },
+    { icon: MessageCircle, label: 'WhatsApp', action: 'whatsapp' },
     { icon: LinkIcon, label: 'Enlace', action: 'link' },
     { icon: Trash2, label: 'Quitar formato', action: 'delete' },
   ]
