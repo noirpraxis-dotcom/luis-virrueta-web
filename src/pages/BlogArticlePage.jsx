@@ -2202,6 +2202,8 @@ const BlogArticlePage = () => {
       tags: row.tags || [],
       gradient: row.accent || row.gradient || 'from-purple-500 to-fuchsia-500',
       accent: row.accent, // Mantener para inferAccentKey
+      icon: row.icon || 'crown',
+      related_slugs: Array.isArray(row.related_slugs) ? row.related_slugs : [],
       // En artículos del CMS, usar la imagen principal también como hero
       heroImage: row.image_url || null,
       image: row.image_url || null,
