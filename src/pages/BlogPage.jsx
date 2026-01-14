@@ -6,7 +6,6 @@ import SEOHead from '../components/SEOHead'
 import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
 import AdminLogin from '../components/AdminLogin'
-import AdminBlogEditor from '../components/AdminBlogEditor'
 import DeleteConfirmModal from '../components/DeleteConfirmModal'
 import { getArticleContent } from '../data/blogArticlesContent'
 import { getLegacyBlogIndex } from '../data/blogIndex'
@@ -31,8 +30,6 @@ const BlogPage = () => {
   
   // Estados para admin
   const [showLogin, setShowLogin] = useState(false)
-  const [showEditor, setShowEditor] = useState(false)
-  const [editingArticle, setEditingArticle] = useState(null)
   const [deletingArticle, setDeletingArticle] = useState(null)
   const [isDeleting, setIsDeleting] = useState(false)
 
@@ -93,31 +90,10 @@ const BlogPage = () => {
     setDeletingArticle(post)
   }
 
-  // Función para editar artículo
+  // Función para editar artículo - ahora redirige a la página del artículo
   const handleEditClick = async (post) => {
-    try {
-      // Si el post viene de Supabase, cargar su data completa
-      if (post.id && typeof post.id === 'string' && post.id.includes('-')) {
-        const { data, error } = await supabase
-          .from('blog_articles')
-          .select('*')
-          .eq('id', post.id)
-          .single()
-        
-        if (error) throw error
-        
-        setEditingArticle(data)
-      } else {
-        // Si es un post hardcoded, no podemos editarlo
-        alert('Este artículo está hardcoded y no puede ser editado desde el CMS. Solo se pueden editar artículos creados en Supabase.')
-        return
-      }
-      
-      setShowEditor(true)
-    } catch (error) {
-      console.error('Error cargando artículo para editar:', error)
-      alert('Error al cargar el artículo: ' + error.message)
-    }
+    // Redirigir a la página del artículo con parámetro de edición
+    window.location.href = `/blog/${post.slug}?edit=true`
   }
 
   // Función para cancelar eliminación
@@ -435,8 +411,8 @@ const BlogPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => {
-                  setEditingArticle(null)
-                  setShowEditor(true)
+                  // Redirigir a un artículo nuevo en modo edición
+                  window.location.href = '/blog/nuevo?edit=true'
                 }}
                 className="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/10 to-fuchsia-500/10 backdrop-blur-lg border border-purple-500/30 hover:border-purple-400/60 rounded-full transition-all duration-300"
               >
@@ -614,34 +590,6 @@ const BlogPage = () => {
     <AnimatePresence>
       {showLogin && (
         <AdminLogin onClose={() => setShowLogin(false)} />
-      )}
-    </AnimatePresence>
-
-    {/* Editor Modal */}
-    <AnimatePresence>
-      {showEditor && (
-        <AdminBlogEditor
-          article={editingArticle}
-          onClose={() => {
-            setShowEditor(false)
-            setEditingArticle(null)
-          }}
-          onSave={(savedArticle) => {
-            console.log('Artículo guardado:', savedArticle)
-            const normalized = normalizeSavedArticleToPost(savedArticle)
-            if (!normalized) return
-
-            setBlogPosts((prev) => {
-              const index = prev.findIndex((p) => p.id === normalized.id)
-              if (index >= 0) {
-                const copy = [...prev]
-                copy[index] = { ...prev[index], ...normalized }
-                return copy
-              }
-              return [normalized, ...prev]
-            })
-          }}
-        />
       )}
     </AnimatePresence>
 

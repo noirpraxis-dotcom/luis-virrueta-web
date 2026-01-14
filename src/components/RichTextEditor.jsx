@@ -20,7 +20,8 @@ export default function RichTextEditor({
   mode = 'blocks',
   accent = 'purple',
   documentVariant = 'editor',
-  sectionIcon = 'crown'
+  sectionIcon = 'crown',
+  readOnly = false
 }) {
   const [blocks, setBlocks] = useState(initialContent)
   const [selectedBlockId, setSelectedBlockId] = useState(null)
@@ -117,6 +118,53 @@ export default function RichTextEditor({
     ],
     bookmark: [
       'M6 2h12v20l-6-4-6 4z'
+    ],
+    brain: [
+      'M9.5 2a5.5 5.5 0 0 1 5.5 5.5v2a5.5 5.5 0 1 1-11 0v-2A5.5 5.5 0 0 1 9.5 2z',
+      'M14.5 22a5.5 5.5 0 0 0 5.5-5.5v-2a5.5 5.5 0 1 0-11 0v2a5.5 5.5 0 0 0 5.5 5.5z'
+    ],
+    zap: [
+      'M13 2L3 14h8l-1 8 10-12h-8l1-8z'
+    ],
+    eye: [
+      'M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z',
+      'M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z'
+    ],
+    shield: [
+      'M12 2L4 5v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V5l-8-3z'
+    ],
+    'alert-circle': [
+      'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z',
+      'M12 8v4',
+      'M12 16h.01'
+    ],
+    check: [
+      'M20 6L9 17l-5-5'
+    ],
+    award: [
+      'M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14z',
+      'M8.2 13.9l-2.7 4.6L8 19.8l1.4 2.5 2.8-4.7',
+      'M15.8 13.9l2.7 4.6L16 19.8l-1.4 2.5-2.8-4.7'
+    ],
+    target: [
+      'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z',
+      'M12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12z',
+      'M12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z'
+    ],
+    compass: [
+      'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z',
+      'M8 12l4-4 4 4-4 4-4-4z'
+    ],
+    flame: [
+      'M12 2c-.5 0-1 .2-1.4.6C9.2 4 8 6 8 8.5c0 1.4.5 2.7 1.5 3.5-.5.5-1 1.3-1 2.5 0 2.2 1.8 4 4 4s4-1.8 4-4c0-1.2-.5-2-1-2.5 1-.8 1.5-2.1 1.5-3.5 0-2.5-1.2-4.5-2.6-5.9-.4-.4-.9-.6-1.4-.6z'
+    ],
+    heart: [
+      'M20.8 4.6c-1.6-1.6-4.2-1.6-5.8 0L12 7.6 9 4.6c-1.6-1.6-4.2-1.6-5.8 0s-1.6 4.2 0 5.8l8.8 8.8 8.8-8.8c1.6-1.6 1.6-4.2 0-5.8z'
+    ],
+    lightbulb: [
+      'M9 18h6',
+      'M10 22h4',
+      'M15 2a6 6 0 0 1 3 11.2V17H6v-3.8A6 6 0 1 1 15 2z'
     ]
   }
 
@@ -134,7 +182,15 @@ export default function RichTextEditor({
       '⟡': 'sparkles',
       '❖': 'diamond',
       '⬦': 'diamond',
-      '⬥': 'diamond'
+      '⬥': 'diamond',
+      '🧠': 'brain',
+      '⚡': 'zap',
+      '👁': 'eye',
+      '🛡': 'shield',
+      '⚠': 'alert-circle',
+      '✓': 'check',
+      '✔': 'check',
+      '🏆': 'award'
     }
 
     const key = migrate[t] || t
@@ -286,12 +342,13 @@ export default function RichTextEditor({
   // Cuando los bloques cambian, notificar al padre
   useEffect(() => {
     onChange?.(blocks)
-  }, [blocks, onChange])
+  }, [blocks])
 
   // Keep history in sync if parent provides different initialContent later
   useEffect(() => {
     historyRef.current = { stack: [initialContent], index: 0 }
     setBlocks(initialContent)
+    docSeededRef.current = false // Reset para que re-renderice en document mode
   }, [initialContent])
 
   // Undo/Redo (Ctrl/Cmd+Z / Ctrl+Y / Ctrl+Shift+Z)
@@ -481,6 +538,12 @@ export default function RichTextEditor({
 
   function blocksToHtml(blocksToRender) {
     const esc = (s) => String(s || '')
+      // Eliminar caracteres bidi que causan desplazamiento RTL/LTR
+      .replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069]/g, '')
+      // Eliminar otros caracteres de control problemáticos
+      .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '')
+      .replace(/[\u200B\u200C\u200D\uFEFF]/g, '')
+      .replace(/[\u00A0\u2007\u202F]/g, ' ')
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
@@ -538,7 +601,7 @@ export default function RichTextEditor({
         listItems.push(
           `<li class="flex gap-4 items-start">` +
           `<span class="mt-2.5 h-2.5 w-2.5 rounded-full bg-gradient-to-br ${accentPreset.questionsDot} flex-shrink-0 shadow-lg shadow-black/30"></span>` +
-          `<div class="text-white/80 text-lg leading-relaxed">${inline(content)}</div>` +
+          `<div class="text-white/80 text-lg leading-relaxed" dir="ltr" style="unicode-bidi: plaintext">${inline(content)}</div>` +
           `</li>`
         )
         continue
@@ -566,7 +629,7 @@ export default function RichTextEditor({
           `<span data-rte-role="section-icon" data-icon="${escAttr(iconKey)}" contenteditable="false" class="inline-flex items-center justify-center text-white/80">${sectionIconHtml(iconKey, escAttr)}</span>` +
           `<span data-rte-role="section-badge-text" contenteditable="false" class="text-xs font-mono ${accentPreset.badgeText} tracking-wider">SECCIÓN ${sectionNum}</span>` +
           `</div>` +
-          `<h2 class="text-3xl lg:text-4xl font-light text-white leading-tight">${inline(cleanedTitle)}</h2>` +
+          `<h2 class="text-3xl lg:text-4xl font-light text-white leading-tight" dir="ltr" style="unicode-bidi: plaintext">${inline(cleanedTitle)}</h2>` +
           `</div>`
         )
         continue
@@ -622,7 +685,7 @@ export default function RichTextEditor({
           .filter(Boolean)
 
         const li = items
-          .map((q) => `<li class="text-lg leading-relaxed text-white/85">${inline(q)}</li>`)
+          .map((q) => `<li class="text-lg leading-relaxed text-white/85" dir="ltr" style="unicode-bidi: plaintext">${inline(q)}</li>`)
           .join('')
 
         push(
@@ -676,7 +739,7 @@ export default function RichTextEditor({
       }
 
       // paragraph
-      push(`<p class="my-6 text-lg md:text-xl text-white/75 leading-relaxed tracking-wide">${inline(content)}</p>`)
+      push(`<p class="my-6 text-lg md:text-xl text-white/75 leading-relaxed tracking-wide" dir="ltr" style="unicode-bidi: plaintext">${inline(content)}</p>`)
     }
 
     flushList()
@@ -1096,6 +1159,20 @@ export default function RichTextEditor({
     })
   }
 
+  const updateSectionIconsInPlace = (root) => {
+    if (!root) return
+    const iconKey = normalizeSectionIconKey(sectionIcon)
+    
+    Array.from(root.querySelectorAll('[data-rte-role="section-icon"]')).forEach((iconSpan) => {
+      iconSpan.innerHTML = ''
+      try {
+        iconSpan.appendChild(createSectionIconSvgEl(iconKey))
+      } catch {
+        // ignore
+      }
+    })
+  }
+
   // Seed / update document editor HTML without clobbering the caret while typing.
   useEffect(() => {
     if (mode !== 'document') {
@@ -1120,13 +1197,16 @@ export default function RichTextEditor({
     const isFocused = isDocEditorFocused()
     if (!isFocused) {
       host.innerHTML = nextHtml
+      applyAccentClassesInPlace(host)
+      updateSectionIconsInPlace(host)
       return
     }
 
     // Si está enfocado, NO tocar el HTML para evitar perder el cursor.
     // Pero sí actualizar clases dependientes del tema.
     applyAccentClassesInPlace(host)
-  }, [mode, blocks, accent])
+    updateSectionIconsInPlace(host)
+  }, [mode, blocks, accent, sectionIcon])
 
   const handleDocInput = () => {
     const host = docEditorRef.current
@@ -1648,12 +1728,18 @@ export default function RichTextEditor({
             return
           }
 
-          // Section heading wrapper
+          // Section heading wrapper - extraer SOLO el texto del h2, sin badges
           if (el.hasAttribute?.('data-section')) {
             const h2 = el.querySelector('h2')
-            const p = makeParagraph()
-            p.textContent = String(h2?.textContent || el.textContent || '').trim()
-            el.replaceWith(p)
+            const text = String(h2?.textContent || '').trim()
+            if (text) {
+              const p = makeParagraph()
+              p.textContent = text
+              el.replaceWith(p)
+            } else {
+              // Si no hay texto, eliminar el elemento completo
+              el.remove()
+            }
             return
           }
 
@@ -1668,10 +1754,9 @@ export default function RichTextEditor({
           }
 
           if (rteType === 'questions') {
-            const title = String(el.querySelector('[data-rte-role="questions-title"]')?.textContent || '').trim()
+            // Extraer SOLO las preguntas, sin el título de la tarjeta
             const items = Array.from(el.querySelectorAll('li')).map((li) => String(li.textContent || '').trim()).filter(Boolean)
             const lines = []
-            if (title) lines.push(title)
             items.forEach((q) => lines.push(`- ${q}`))
             el.replaceWith(paragraphFromLines(lines.length ? lines : [String(el.textContent || '').trim()]))
             return
@@ -2086,7 +2171,7 @@ export default function RichTextEditor({
       {typeof document !== 'undefined' &&
         createPortal(
           <AnimatePresence>
-            {showFloatingToolbar && (
+            {!readOnly && showFloatingToolbar && (
               <FloatingFormatToolbar
                 position={toolbarPosition}
                 onClose={() => setShowFloatingToolbar(false)}
@@ -2177,65 +2262,23 @@ También puedes usar el botón + para agregar bloques específicos."
         <BlockTypeSelector onSelect={addBlock} />
       )}
 
-      {/* Modo documento (selección continua) */}
+      {/* Modo documento (sin contenedor, como artículo publicado) */}
       {mode === 'document' && (
-        <div className="rounded-3xl border-2 border-purple-500/20 bg-gradient-to-br from-gray-900/80 via-black/80 to-gray-900/80 backdrop-blur-xl shadow-2xl shadow-purple-500/10 overflow-hidden">
-          <div className="p-8 md:p-12">
-            <div className="mb-6 flex items-center justify-between pb-6 border-b border-purple-500/20">
-              <div className="flex items-center gap-3">
-                <Eye className="w-5 h-5 text-purple-400" />
-                <span className="text-purple-300 font-medium">Vista Previa en Vivo</span>
-                <span className="text-gray-500 text-sm hidden md:inline">- Se ve exactamente como el artículo final</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={undo}
-                  disabled={historyRef.current.index <= 0}
-                  title="Deshacer (Ctrl+Z)"
-                  className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                  </svg>
-                </button>
-                <button
-                  onClick={redo}
-                  disabled={historyRef.current.index >= historyRef.current.stack.length - 1}
-                  title="Rehacer (Ctrl+Y)"
-                  className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 10h-10a8 8 0 00-8 8v2m18-10l-6 6m6-6l-6-6" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-            <div
-              ref={docEditorRef}
-              contentEditable
-              suppressContentEditableWarning
-              onInput={handleDocInput}
-              onBeforeInput={handleDocBeforeInput}
-              onPaste={handleDocPaste}
-              onBlur={handleDocBlur}
-              onFocus={handleDocFocus}
-              onMouseUp={() => updateToolbarFromDocSelection(window.getSelection())}
-              onKeyUp={() => updateToolbarFromDocSelection(window.getSelection())}
-              onTouchEnd={() => updateToolbarFromDocSelection(window.getSelection())}
-              className="min-h-[500px] outline-none text-white selection:bg-purple-500/40 selection:text-white focus:ring-0 max-w-4xl mx-auto"
-              style={{
-                caretColor: '#a78bfa'
-              }}
-            />
-            <div className="mt-8 pt-6 border-t border-purple-500/20 flex items-start gap-3 text-sm text-gray-400">
-              <Sparkles className="w-4 h-4 text-purple-400 mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="mb-2"><strong className="text-purple-300">Tip:</strong> Selecciona texto para usar la barra de formato flotante</p>
-                <p className="text-xs text-gray-500">• Usa **texto** para negrita • Usa *texto* para cursiva • Los títulos y listas se detectan automáticamente</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div
+          ref={docEditorRef}
+          className="doc-editor outline-none min-h-screen"
+          contentEditable={!readOnly}
+          suppressContentEditableWarning
+          onInput={readOnly ? undefined : handleDocInput}
+          onBlur={readOnly ? undefined : handleDocBlur}
+          onMouseUp={readOnly ? undefined : () => updateToolbarFromDocSelection(window.getSelection())}
+          onKeyUp={readOnly ? undefined : () => updateToolbarFromDocSelection(window.getSelection())}
+          data-placeholder={readOnly ? '' : DOC_PLACEHOLDER_TEXT}
+          style={{
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word'
+          }}
+        />
       )}
     </div>
   )
@@ -2488,7 +2531,6 @@ function BlockTypeSelector({ onSelect }) {
  */
 function FloatingFormatToolbar({ position, onClose, onFormat, onInteract }) {
   const [showBlockMenu, setShowBlockMenu] = useState(false)
-  const [showHeadingMenu, setShowHeadingMenu] = useState(false)
 
   const formatOptions = [
     { icon: Bold, label: 'Negrita', action: 'bold' },
@@ -2512,53 +2554,11 @@ function FloatingFormatToolbar({ position, onClose, onFormat, onInteract }) {
         top: `${position.top}px`,
         left: `${position.left}px`,
         transform: 'translateX(-50%)',
-        zIndex: 99999  // Aumentado para asegurar que esté visible
+        zIndex: 99999
       }}
       className="bg-gray-900 border-2 border-purple-500 rounded-xl shadow-2xl shadow-purple-500/50 overflow-visible"
     >
       <div className="flex items-center gap-1 p-2">
-        <div className="relative">
-          <button
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={() => setShowHeadingMenu((v) => !v)}
-            title="Título / Subtítulo"
-            className="p-2.5 rounded-lg hover:bg-white/10 text-gray-300 hover:text-white transition-all group"
-          >
-            <Heading2 className="w-4 h-4" />
-          </button>
-
-          {showHeadingMenu && (
-            <div
-              onMouseDown={(e) => e.preventDefault()}
-              className="absolute left-0 top-full mt-2 w-52 rounded-lg border border-white/10 bg-gray-900 shadow-2xl overflow-hidden"
-              style={{ zIndex: 100000 }}
-            >
-              <button
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => {
-                  setShowHeadingMenu(false)
-                  onFormat?.('title')
-                }}
-                className="w-full px-3 py-2 text-left text-sm text-white/90 hover:bg-white/10 flex items-center gap-2"
-              >
-                <Heading1 className="w-4 h-4 text-purple-300" />
-                Título
-              </button>
-              <button
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => {
-                  setShowHeadingMenu(false)
-                  onFormat?.('subtitle')
-                }}
-                className="w-full px-3 py-2 text-left text-sm text-white/90 hover:bg-white/10 flex items-center gap-2"
-              >
-                <Heading2 className="w-4 h-4 text-purple-300" />
-                Subtítulo
-              </button>
-            </div>
-          )}
-        </div>
-
         <div className="relative">
           <button
             onMouseDown={(e) => e.preventDefault()}

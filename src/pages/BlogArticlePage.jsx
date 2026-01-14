@@ -1,8 +1,8 @@
 import { AnimatePresence, motion, useInView } from 'framer-motion'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { ACCENT_PRESETS } from '../utils/accentPresets'
 import { useParams, Link } from 'react-router-dom'
-import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles, Award, Check, Shield, AlertCircle, Copy } from 'lucide-react'
+import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles, Award, Check, Shield, AlertCircle, Copy, Crown, Moon, Star, Diamond, Bookmark, Target, Compass, Flame, Heart, Lightbulb } from 'lucide-react'
 import ReadingProgressBar from '../components/ReadingProgressBar'
 import { ChevronDown, Facebook, Linkedin, MessageCircle, Twitter } from 'lucide-react'
 import RelatedArticles from '../components/RelatedArticles'
@@ -37,7 +37,14 @@ const CATEGORY_LABELS = {
   consciousness: { es: 'Conciencia', en: 'Consciousness' },
   metaphysics: { es: 'Metafísica', en: 'Metaphysics' },
   reflections: { es: 'Reflexiones', en: 'Reflections' },
-  diary: { es: 'Diario', en: 'Diary' }
+  diary: { es: 'Diario', en: 'Diary' },
+  ethics: { es: 'Ética', en: 'Ethics' },
+  existence: { es: 'Existencia', en: 'Existence' },
+  epistemology: { es: 'Epistemología', en: 'Epistemology' },
+  ontology: { es: 'Ontología', en: 'Ontology' },
+  aesthetics: { es: 'Estética', en: 'Aesthetics' },
+  phenomenology: { es: 'Fenomenología', en: 'Phenomenology' },
+  hermeneutics: { es: 'Hermenéutica', en: 'Hermeneutics' }
 }
 
 const normalizeCategoryId = (raw) => {
@@ -76,14 +83,22 @@ const SUGGESTED_TAGS = [
   'percepción',
   'ética',
   'diario',
-  'reflexiones'
+  'reflexiones',
+  'mente',
+  'neurociencia',
+  'ensayo',
+  'amor',
+  'vida',
+  'muerte',
+  'existencia',
+  'identidad'
 ]
 
 const getCategoryLabel = (rawCategory, language) => {
   const id = normalizeCategoryId(rawCategory)
   const preset = CATEGORY_LABELS[id]
-  if (!preset) return String(rawCategory || '').trim() || (language === 'en' ? 'Article' : 'Artículo')
-  return language === 'en' ? preset.en : preset.es
+  if (!preset) return String(rawCategory || '').trim() || 'Artículo'
+  return preset.es
 }
 
 // Función para obtener el artículo basado en el slug
@@ -1844,8 +1859,12 @@ const BlogArticlePage = () => {
   const [showAdminLogin, setShowAdminLogin] = useState(false)
   const [draftTitle, setDraftTitle] = useState('')
   const [draftSubtitle, setDraftSubtitle] = useState('')
+  const [draftExcerpt, setDraftExcerpt] = useState('')
   const [draftAuthor, setDraftAuthor] = useState('')
   const [draftReadTime, setDraftReadTime] = useState('')
+  const [draftCategory, setDraftCategory] = useState('')
+  const [draftGradient, setDraftGradient] = useState('')
+  const [draftSectionIcon, setDraftSectionIcon] = useState('crown')
   const [draftTags, setDraftTags] = useState([])
   const [draftImageUrl, setDraftImageUrl] = useState('')
   const [draftPublishedAt, setDraftPublishedAt] = useState('')
@@ -1880,6 +1899,54 @@ const BlogArticlePage = () => {
       }
     }
 
+    // Si el slug es "nuevo", activar modo edición con plantilla vacía
+    if (slug === 'nuevo') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const shouldEdit = urlParams.get('edit') === 'true'
+      
+      if (shouldEdit && isAdmin) {
+        // Crear plantilla vacía
+        const emptyTemplate = {
+          title: '',
+          subtitle: '',
+          author: 'Luis Virrueta',
+          read_time: '',
+          category: 'philosophy',
+          tags: [],
+          image_url: '',
+          content: [
+            { type: 'title', content: '' },
+            { type: 'subtitle', content: '' },
+            { type: 'paragraph', content: '' }
+          ],
+          language: currentLanguage,
+          slug: 'nuevo',
+          is_published: false
+        }
+        
+        setCmsRow(emptyTemplate)
+        setCmsLoading(false)
+        
+        // Activar modo edición automáticamente
+        setTimeout(() => {
+          setIsEditMode(true)
+          setDraftTitle('')
+          setDraftSubtitle('')
+          setDraftExcerpt('')
+          setDraftAuthor('Luis Virrueta')
+          setDraftReadTime('')
+          setDraftCategory('philosophy')
+          setDraftGradient('from-purple-500 to-fuchsia-500')
+          setDraftSectionIcon('brain')
+          setDraftTags([])
+          setDraftImageUrl('')
+          setDraftBlocks(emptyTemplate.content)
+        }, 100)
+        
+        return () => { isCancelled = true }
+      }
+    }
+
     const loadFromSupabase = async () => {
       try {
         setCmsLoading(true)
@@ -1894,6 +1961,12 @@ const BlogArticlePage = () => {
         if (isCancelled) return
 
         setCmsRow(data || null)
+        
+        // Si hay parámetro ?edit=true, activar modo edición
+        const urlParams = new URLSearchParams(window.location.search)
+        if (urlParams.get('edit') === 'true' && isAdmin) {
+          setTimeout(() => setIsEditMode(true), 100)
+        }
       } catch (err) {
         console.warn('No se pudo cargar el artículo desde Supabase:', err)
         if (!isCancelled) setCmsRow(null)
@@ -1907,7 +1980,7 @@ const BlogArticlePage = () => {
     return () => {
       isCancelled = true
     }
-  }, [slug, currentLanguage])
+  }, [slug, currentLanguage, isAdmin])
 
   if (isHiddenSlug) {
     return (
@@ -2091,7 +2164,6 @@ const BlogArticlePage = () => {
       readTime: row.read_time || '—',
       category: row.category,
       tags: row.tags || [],
-      accent: row.accent || null,
       gradient: 'from-slate-600/20 to-zinc-700/20',
       // En artículos del CMS, usar la imagen principal también como hero
       heroImage: row.image_url || null,
@@ -2111,6 +2183,7 @@ const BlogArticlePage = () => {
     if (/\bamber\b|\bamber-/.test(g) || /\borange\b|\borange-/.test(g)) return 'amber'
     if (/\bindigo\b|\bindigo-/.test(g) || /\bviolet\b|\bviolet-/.test(g)) return 'indigo'
     if (/\bslate\b|\bslate-/.test(g) || /\bzinc\b|\bzinc-/.test(g) || /\bgray\b|\bgray-/.test(g)) return 'slate'
+    if (/\bblue\b|\bblue-/.test(g) || /\bcyan\b|\bcyan-/.test(g)) return 'blue'
     return 'purple'
   }
 
@@ -2134,7 +2207,32 @@ const BlogArticlePage = () => {
   console.log('🌐 Language:', currentLanguage, '| Slug:', slug, '| Found translation:', !!translatedArticle)
   const cmsArticle = normalizeCmsArticle(cmsRow)
   const baseArticle = translatedArticle || getArticleBySlug(slug)
+  
+  // Si slug es "nuevo", crear artículo base vacío
+  const newArticleTemplate = slug === 'nuevo' ? {
+    title: '',
+    subtitle: '',
+    author: 'Luis Virrueta',
+    date: new Date().toLocaleDateString(currentLanguage === 'en' ? 'en-US' : 'es-MX', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    }),
+    readTime: '',
+    category: 'philosophy',
+    tags: [],
+    gradient: 'from-purple-500 to-fuchsia-500',
+    heroImage: '/portada.webp',
+    image: '/portada.webp',
+    sections: []
+  } : null
+  
   const article = (() => {
+    // Si es slug "nuevo", usar la plantilla vacía
+    if (newArticleTemplate) {
+      return cmsArticle || newArticleTemplate
+    }
+    
     // Si existe artículo legacy (baseArticle), conservar su look (gradiente/categoría/tags)
     // pero permitir que Supabase reemplace el contenido y campos editables.
     if (cmsArticle && baseArticle) {
@@ -2161,9 +2259,7 @@ const BlogArticlePage = () => {
         tags: Array.isArray(cmsArticle.tags) ? cmsArticle.tags : [],
         // Imagen/hero: conservar legacy si existe; si no, permitir CMS.
         image: preferredImage || null,
-        heroImage: preferredImage || baseArticle.heroImage || null,
-        // Mantener accent legacy si existe; si no, usar el del CMS
-        accent: baseArticle.accent || cmsArticle.accent || null
+        heroImage: preferredImage || baseArticle.heroImage || null
       }
     }
 
@@ -2173,11 +2269,13 @@ const BlogArticlePage = () => {
   const editorSections = isEditMode ? cmsBlocksToSections(draftBlocks) : article.sections
   const tocSections = editorSections
 
-  const accentKey = inferAccentKey(article)
+  // En modo edición, usar draftGradient para calcular accentKey
+  const accentKey = isEditMode ? inferAccentKey({ gradient: draftGradient }) : inferAccentKey(article)
   const accent = ACCENT_PRESETS[accentKey] || ACCENT_PRESETS.purple
 
   const heroImageCandidates = useMemo(() => {
     const candidates = [
+      resolvePublicImageUrl(cmsRow?.image_url),
       resolvePublicImageUrl(article.heroImage),
       resolvePublicImageUrl(article.image),
       // Last resort: site cover
@@ -2192,7 +2290,7 @@ const BlogArticlePage = () => {
       seen.add(u)
       return true
     })
-  }, [article.heroImage, article.image])
+  }, [cmsRow?.image_url, article.heroImage, article.image])
 
   const [heroCandidateIndex, setHeroCandidateIndex] = useState(0)
   const heroBackgroundImage = (!isEditMode && cmsLoading) ? null : (heroImageCandidates[heroCandidateIndex] || null)
@@ -2231,8 +2329,12 @@ const BlogArticlePage = () => {
 
     setDraftTitle(String(row?.title || article.title || '').trim())
     setDraftSubtitle(String(row?.subtitle || article.subtitle || '').trim())
+    setDraftExcerpt(String(row?.excerpt || article.excerpt || '').trim())
     setDraftAuthor(String(row?.author || article.author || '').trim())
     setDraftReadTime(String(row?.read_time || row?.readTime || article.readTime || '').trim())
+    setDraftCategory(String(row?.category || article.category || 'philosophy').trim())
+    setDraftGradient(String(article.gradient || 'from-purple-500 to-fuchsia-500').trim())
+    setDraftSectionIcon(String(row?.icon || 'crown').trim())
     // Si existe fila CMS pero no hay tags, no heredar tags legacy
     setDraftTags(
       Array.isArray(row?.tags) && row.tags.length
@@ -2267,16 +2369,51 @@ const BlogArticlePage = () => {
       const finalTitle = toSentenceCase(metaTitle || draftTitle || article.title)
       const finalSubtitle = toSentenceCase(metaSubtitle || draftSubtitle || '')
 
+      // Validar que haya título
+      if (!finalTitle || finalTitle.trim().length === 0) {
+        setSaveError('El título es obligatorio')
+        setSaveStatus('')
+        setIsSaving(false)
+        return
+      }
+
+      // Si es artículo nuevo, generar slug desde el título
+      let finalSlug = slug
+      if (slug === 'nuevo') {
+        finalSlug = finalTitle.toLowerCase()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Eliminar acentos
+          .replace(/[^a-z0-9\s-]/g, '') // Solo letras, números, espacios y guiones
+          .trim()
+          .replace(/\s+/g, '-') // Espacios a guiones
+          .replace(/-+/g, '-') // Múltiples guiones a uno
+          .slice(0, 60) // Máximo 60 caracteres
+        
+        // Si después de la limpieza el slug está vacío, usar timestamp
+        if (!finalSlug || finalSlug.length === 0) {
+          finalSlug = `articulo-${Date.now()}`
+        }
+      }
+
+      // Generar excerpt automático desde el primer párrafo o usar el draft
+      const finalExcerpt = draftExcerpt.trim() || (() => {
+        const firstParagraph = body.find(b => b?.type === 'paragraph' && b?.content)
+        return firstParagraph 
+          ? String(firstParagraph.content).slice(0, 160).trim() + '...'
+          : finalSubtitle || finalTitle.slice(0, 100) + '...'
+      })()
+
       const updates = {
         title: finalTitle,
         subtitle: finalSubtitle,
+        excerpt: finalExcerpt,
         author: draftAuthor || article.author,
+        category: draftCategory || article.category || 'philosophy',
         read_time: draftReadTime || calculateReadTime(cmsBlocksToSections(body)),
         tags: Array.isArray(draftTags) ? draftTags.filter(Boolean) : [],
         image_url: draftImageUrl || null,
         content: body,
         language: currentLanguage,
-        slug,
+        slug: finalSlug,
         is_published: publish ? true : (cmsRow?.is_published ?? false),
         published_at: publish
           ? (cmsRow?.published_at || new Date().toISOString())
@@ -2285,17 +2422,21 @@ const BlogArticlePage = () => {
 
       const result = cmsRow?.id
         ? await updateBlogArticle(cmsRow.id, updates)
-        : await createBlogArticle({
-          ...updates,
-          category: cmsRow?.category || article.category || null,
-          accent: cmsRow?.accent || article.accent || null
-        })
+        : await createBlogArticle(updates)
 
       setCmsRow(result)
       setDraftTitle(result.title || finalTitle)
       setDraftSubtitle(result.subtitle || finalSubtitle)
       setIsDirty(false)
       if (!silent) setSaveStatus(publish ? 'Publicado' : 'Borrador guardado')
+
+      // Si era artículo nuevo, redirigir al slug correcto
+      if (slug === 'nuevo' && finalSlug !== 'nuevo') {
+        window.setTimeout(() => {
+          window.location.href = `/blog/${finalSlug}?edit=true`
+        }, 1000)
+        return
+      }
 
       if (!silent) {
         window.setTimeout(() => setSaveStatus(''), 1500)
@@ -2369,6 +2510,12 @@ const BlogArticlePage = () => {
 
   // Calcular tiempo de lectura dinámicamente
   const dynamicReadTime = calculateReadTime(editorSections)
+
+  // Callback estable para onChange del RichTextEditor
+  const handleBlocksChange = useCallback((next) => {
+    setDraftBlocks(next)
+    setIsDirty(true)
+  }, [])
 
   const shareUrl = `${window.location.origin}/blog/${slug}`
   const shareTitle = article.title
@@ -2646,7 +2793,7 @@ const BlogArticlePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-16 sm:pt-24 lg:pt-28 overflow-x-hidden">
       <SEOHead
         title={seoTitle}
         description={seoDescription}
@@ -2675,14 +2822,14 @@ const BlogArticlePage = () => {
       <TableOfContents sections={tocSections} />
 
       {/* Hero Image Section - SOLO LA IMAGEN */}
-      <section ref={heroRef} className="relative h-[36vh] sm:h-[50vh] lg:h-[70vh] overflow-hidden">
+      <section ref={heroRef} className="relative h-[36vh] sm:h-[50vh] lg:h-[80vh] overflow-hidden">
         {/* Background image (robusto con fallback) */}
         {effectiveHeroImage && (
           <div className="absolute inset-0 overflow-hidden">
             <img
               src={effectiveHeroImage}
               alt=""
-              className="absolute inset-0 w-full h-full object-cover object-center"
+              className="absolute inset-0 w-full h-full object-cover object-top"
               style={{ filter: 'saturate(1.05) contrast(1.06) brightness(1.14)' }}
               loading="eager"
               fetchpriority="high"
@@ -2729,7 +2876,7 @@ const BlogArticlePage = () => {
       </section>
 
       {/* Navigation bar - después de la imagen */}
-      <section className="relative py-6 px-4 sm:px-6 lg:px-20 border-b border-white/5">
+      <section className="relative py-3 sm:py-6 px-4 sm:px-6 lg:px-20 border-b border-white/5">
         {/* Gradiente superior para transición suave desde hero */}
         <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black via-black/60 to-transparent pointer-events-none" />
         
@@ -2820,7 +2967,7 @@ const BlogArticlePage = () => {
             className="inline-block px-4 py-2 border border-white/20 rounded-full backdrop-blur-sm bg-white/5 mb-6"
           >
             <span className="text-xs lg:text-sm text-white/80 font-light tracking-wider uppercase">
-              {getCategoryLabel(article.category, currentLanguage)}
+              {getCategoryLabel(isEditMode ? draftCategory : article.category, currentLanguage)}
             </span>
           </motion.div>
 
@@ -2836,25 +2983,20 @@ const BlogArticlePage = () => {
               <input
                 value={draftTitle}
                 onChange={(e) => {
-                  setDraftTitle(e.target.value)
+                  setDraftTitle(toSentenceCase(e.target.value))
                   setIsDirty(true)
                 }}
-                  onBlur={() => {
-                    const next = toSentenceCase(draftTitle)
-                    if (next !== draftTitle) {
-                      setDraftTitle(next)
-                      setIsDirty(true)
-                    }
-                  }}
-                className="w-full bg-transparent outline-none border-b border-white/10 focus:border-white/30"
+                placeholder="Escribe el título aquí..."
+                autoFocus
+                className="w-full bg-transparent outline-none border-b border-white/10 focus:border-white/30 placeholder:text-white/30"
               />
             ) : (
-              article.title
+              draftTitle || article.title
             )}
           </motion.h1>
 
           {/* Subtitle */}
-          {article.subtitle && (
+          {(article.subtitle || draftSubtitle || isEditMode) && (
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -2865,47 +3007,15 @@ const BlogArticlePage = () => {
                 <input
                   value={draftSubtitle}
                   onChange={(e) => {
-                    setDraftSubtitle(e.target.value)
+                    setDraftSubtitle(toSentenceCase(e.target.value))
                     setIsDirty(true)
                   }}
-                  onBlur={() => {
-                    const next = toSentenceCase(draftSubtitle)
-                    if (next !== draftSubtitle) {
-                      setDraftSubtitle(next)
-                      setIsDirty(true)
-                    }
-                  }}
-                  className="w-full bg-transparent outline-none border-b border-white/10 focus:border-white/30"
+                  placeholder="Escribe el subtítulo aquí..."
+                  className="w-full bg-transparent outline-none border-b border-white/10 focus:border-white/30 placeholder:text-white/40"
                 />
               ) : (
-                article.subtitle
+                draftSubtitle || article.subtitle
               )}
-            </motion.p>
-          )}
-
-          {isEditMode && !article.subtitle && (
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.4 }}
-              className="text-lg lg:text-xl text-white/70 mb-8 leading-relaxed font-light"
-            >
-              <input
-                value={draftSubtitle}
-                placeholder={currentLanguage === 'en' ? 'Subtitle…' : 'Subtítulo…'}
-                onChange={(e) => {
-                  setDraftSubtitle(e.target.value)
-                  setIsDirty(true)
-                }}
-                onBlur={() => {
-                  const next = toSentenceCase(draftSubtitle)
-                  if (next !== draftSubtitle) {
-                    setDraftSubtitle(next)
-                    setIsDirty(true)
-                  }
-                }}
-                className="w-full bg-transparent outline-none border-b border-white/10 focus:border-white/30"
-              />
             </motion.p>
           )}
 
@@ -2928,7 +3038,7 @@ const BlogArticlePage = () => {
                   className="text-sm bg-transparent outline-none border-b border-white/10 focus:border-white/30"
                 />
               ) : (
-                <span className="text-sm">{article.author}</span>
+                <span className="text-sm">{draftAuthor || article.author}</span>
               )}
             </div>
             <div className="flex items-center gap-2">
@@ -2949,19 +3059,7 @@ const BlogArticlePage = () => {
             </div>
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4" />
-              {isEditMode ? (
-                <input
-                  value={draftReadTime}
-                  onChange={(e) => {
-                    setDraftReadTime(e.target.value)
-                    setIsDirty(true)
-                  }}
-                  placeholder={dynamicReadTime}
-                  className="text-sm bg-transparent outline-none border-b border-white/10 focus:border-white/30"
-                />
-              ) : (
-                <span className="text-sm">{article.readTime}</span>
-              )}
+              <span className="text-sm">{dynamicReadTime || article.readTime}</span>
             </div>
           </motion.div>
 
@@ -3044,63 +3142,177 @@ const BlogArticlePage = () => {
       {/* Article Content */}
       <section className="relative py-12 px-6 sm:px-8 lg:px-20 text-left">
         <div className="max-w-3xl mx-auto w-full">
-          {isEditMode ? (
-            <RichTextEditor
-              initialContent={draftBlocks}
-              onChange={(next) => {
-                setDraftBlocks(next)
-                // Sincronizar título/subtítulo con los bloques del editor:
-                // Si existe bloque title/subtitle, reflejarlo arriba.
-                // Si se elimina o convierte, limpiar los campos superiores.
-                const { title: metaTitle, subtitle: metaSubtitle } = extractMetaFromBlocks(next)
-                const hasTitleBlock = Array.isArray(next) && next.some((b) => b?.type === 'title')
-                const hasSubtitleBlock = Array.isArray(next) && next.some((b) => b?.type === 'subtitle')
-                
-                if (hasTitleBlock) {
-                  setDraftTitle(String(metaTitle || '').trim())
-                } else {
-                  // Si ya no hay bloque title, limpiar el campo
-                  setDraftTitle('')
-                }
-                
-                if (hasSubtitleBlock) {
-                  setDraftSubtitle(String(metaSubtitle || '').trim())
-                } else {
-                  // Si ya no hay bloque subtitle, limpiar el campo
-                  setDraftSubtitle('')
-                }
-                
-                setIsDirty(true)
-              }}
-              mode="document"
-              documentVariant="article"
-              accent={accentKey}
-              showAddBlockButton={false}
-            />
-          ) : (
-            (() => {
-              let headingCount = 0
-              return article.sections.map((section, index) => {
-                let headingAnchorId = null
-                if (section.type === 'heading') {
-                  headingCount++
-                  headingAnchorId = `section-${headingCount - 1}`
-                }
-                return (
-                  <ArticleSection
-                    key={index}
-                    section={section}
-                    index={index}
-                    headingNumber={headingCount}
-                    headingAnchorId={headingAnchorId}
-                    accent={accent}
-                  />
-                )
-              })
-            })()
-          )}
+          <RichTextEditor
+            initialContent={isEditMode ? draftBlocks : sectionsToCmsBlocks(article.sections)}
+            onChange={isEditMode ? handleBlocksChange : undefined}
+            mode="document"
+            documentVariant="article"
+            accent={accentKey}
+            sectionIcon={isEditMode ? draftSectionIcon : (article.icon || 'crown')}
+            showAddBlockButton={false}
+            readOnly={!isEditMode}
+          />
         </div>
       </section>
+
+      {/* Sección de Edición - Al final del artículo, solo visible en modo edición */}
+      {isEditMode && (
+        <section className="relative py-12 px-6 sm:px-8 lg:px-20">
+          <div className="max-w-3xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="p-6 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl"
+            >
+              <h3 className="text-2xl font-light text-white mb-8 flex items-center gap-3">
+                <span className="w-1.5 h-8 bg-gradient-to-b from-purple-400 to-fuchsia-400 rounded-full"></span>
+                Configuración del Artículo
+              </h3>
+
+              <div className="space-y-8">
+                {/* Excerpt */}
+                <div>
+                  <label className="block text-sm font-medium text-white/80 mb-3">Excerpt (Resumen)</label>
+                  <textarea
+                    value={draftExcerpt}
+                    onChange={(e) => {
+                      setDraftExcerpt(e.target.value)
+                      setIsDirty(true)
+                    }}
+                    placeholder="Breve descripción del artículo (se usa en SEO y vista previa)..."
+                    rows={3}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white/90 placeholder:text-white/30 outline-none focus:border-white/30 resize-none"
+                  />
+                  <p className="mt-2 text-xs text-white/40">{draftExcerpt.length} caracteres (recomendado: 120-160)</p>
+                </div>
+
+                {/* Categoría */}
+                <div>
+                  <label className="block text-sm font-medium text-white/80 mb-3">Categoría</label>
+                  <select
+                    value={draftCategory}
+                    onChange={(e) => {
+                      setDraftCategory(e.target.value)
+                      setIsDirty(true)
+                    }}
+                    className="w-full px-4 py-3 bg-black/80 border border-white/20 rounded-xl text-white outline-none focus:border-white/40 cursor-pointer"
+                    style={{ color: 'white' }}
+                  >
+                    <option value="philosophy" style={{ backgroundColor: '#000', color: '#fff' }}>Filosofía</option>
+                    <option value="psychoanalysis" style={{ backgroundColor: '#000', color: '#fff' }}>Psicoanálisis</option>
+                    <option value="psychology" style={{ backgroundColor: '#000', color: '#fff' }}>Psicología</option>
+                    <option value="perception" style={{ backgroundColor: '#000', color: '#fff' }}>Percepción</option>
+                    <option value="consciousness" style={{ backgroundColor: '#000', color: '#fff' }}>Conciencia</option>
+                    <option value="metaphysics" style={{ backgroundColor: '#000', color: '#fff' }}>Metafísica</option>
+                    <option value="reflections" style={{ backgroundColor: '#000', color: '#fff' }}>Reflexiones</option>
+                    <option value="diary" style={{ backgroundColor: '#000', color: '#fff' }}>Diario</option>
+                    <option value="ethics" style={{ backgroundColor: '#000', color: '#fff' }}>Ética</option>
+                    <option value="existence" style={{ backgroundColor: '#000', color: '#fff' }}>Existencia</option>
+                    <option value="epistemology" style={{ backgroundColor: '#000', color: '#fff' }}>Epistemología</option>
+                    <option value="ontology" style={{ backgroundColor: '#000', color: '#fff' }}>Ontología</option>
+                    <option value="aesthetics" style={{ backgroundColor: '#000', color: '#fff' }}>Estética</option>
+                    <option value="phenomenology" style={{ backgroundColor: '#000', color: '#fff' }}>Fenomenología</option>
+                    <option value="hermeneutics" style={{ backgroundColor: '#000', color: '#fff' }}>Hermenéutica</option>
+                  </select>
+                </div>
+
+                {/* Gradiente */}
+                <div>
+                  <label className="block text-sm font-medium text-white/80 mb-3">Color / Gradiente</label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {[
+                      { label: 'Púrpura', value: 'from-purple-500 to-fuchsia-500', preview: 'bg-gradient-to-r from-purple-500 to-fuchsia-500' },
+                      { label: 'Azul', value: 'from-blue-500 to-cyan-500', preview: 'bg-gradient-to-r from-blue-500 to-cyan-500' },
+                      { label: 'Rojo', value: 'from-red-500 to-rose-500', preview: 'bg-gradient-to-r from-red-500 to-rose-500' },
+                      { label: 'Verde', value: 'from-emerald-500 to-teal-500', preview: 'bg-gradient-to-r from-emerald-500 to-teal-500' },
+                      { label: 'Ámbar', value: 'from-amber-500 to-orange-500', preview: 'bg-gradient-to-r from-amber-500 to-orange-500' },
+                      { label: 'Índigo', value: 'from-indigo-500 to-violet-500', preview: 'bg-gradient-to-r from-indigo-500 to-violet-500' },
+                      { label: 'Rosa', value: 'from-pink-500 to-rose-500', preview: 'bg-gradient-to-r from-pink-500 to-rose-500' },
+                      { label: 'Gris', value: 'from-slate-600 to-zinc-700', preview: 'bg-gradient-to-r from-slate-600 to-zinc-700' },
+                      { label: 'Naranja', value: 'from-orange-500 to-red-500', preview: 'bg-gradient-to-r from-orange-500 to-red-500' },
+                      { label: 'Teal', value: 'from-teal-500 to-cyan-500', preview: 'bg-gradient-to-r from-teal-500 to-cyan-500' },
+                      { label: 'Lima', value: 'from-lime-500 to-green-500', preview: 'bg-gradient-to-r from-lime-500 to-green-500' },
+                      { label: 'Violeta', value: 'from-violet-500 to-purple-500', preview: 'bg-gradient-to-r from-violet-500 to-purple-500' }
+                    ].map((grad) => (
+                      <button
+                        key={grad.value}
+                        type="button"
+                        onClick={() => {
+                          setDraftGradient(grad.value)
+                          setIsDirty(true)
+                        }}
+                        className={`p-3 rounded-xl border-2 transition-all ${
+                          draftGradient === grad.value
+                            ? 'border-white/40 bg-white/10'
+                            : 'border-white/10 hover:border-white/20 bg-white/5'
+                        }`}
+                      >
+                        <div className={`h-8 rounded-lg ${grad.preview}`}></div>
+                        <p className="mt-2 text-xs text-white/70">{grad.label}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Ícono de Sección */}
+                <div>
+                  <label className="block text-sm font-medium text-white/80 mb-3">Ícono para Secciones</label>
+                  <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
+                    {[
+                      { value: 'crown', Icon: Crown, label: 'Corona' },
+                      { value: 'moon', Icon: Moon, label: 'Luna' },
+                      { value: 'sparkles', Icon: Sparkles, label: 'Chispas' },
+                      { value: 'diamond', Icon: Diamond, label: 'Diamante' },
+                      { value: 'star', Icon: Star, label: 'Estrella' },
+                      { value: 'bookmark', Icon: Bookmark, label: 'Marca' },
+                      { value: 'brain', Icon: Brain, label: 'Cerebro' },
+                      { value: 'zap', Icon: Zap, label: 'Rayo' },
+                      { value: 'eye', Icon: Eye, label: 'Ojo' },
+                      { value: 'shield', Icon: Shield, label: 'Escudo' },
+                      { value: 'alert-circle', Icon: AlertCircle, label: 'Alerta' },
+                      { value: 'check', Icon: Check, label: 'Check' },
+                      { value: 'award', Icon: Award, label: 'Premio' },
+                      { value: 'target', Icon: Target, label: 'Diana' },
+                      { value: 'compass', Icon: Compass, label: 'Brújula' },
+                      { value: 'flame', Icon: Flame, label: 'Llama' },
+                      { value: 'heart', Icon: Heart, label: 'Corazón' },
+                      { value: 'lightbulb', Icon: Lightbulb, label: 'Bombilla' }
+                    ].map(({ value, Icon, label }) => (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() => {
+                          setDraftSectionIcon(value)
+                          setIsDirty(true)
+                        }}
+                        className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
+                          draftSectionIcon === value
+                            ? 'border-white/40 bg-white/10'
+                            : 'border-white/10 hover:border-white/20 bg-white/5'
+                        }`}
+                        title={label}
+                      >
+                        <Icon className="w-6 h-6 text-white/80" />
+                        <p className="text-[10px] text-white/60 text-center">{label}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Tiempo de lectura */}
+                <div>
+                  <label className="block text-sm font-medium text-white/80 mb-3">Tiempo de Lectura</label>
+                  <div className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white/60 text-sm">
+                    Calculado automáticamente: <span className="text-white/90 font-medium">{dynamicReadTime}</span>
+                  </div>
+                  <p className="mt-2 text-xs text-white/40">Se calcula según el contenido del artículo</p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
 
       <AnimatePresence>
         {showAdminLogin && (
@@ -3255,7 +3467,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
 
   // Unificar el “gutter” horizontal de TODO el texto para que
   // no haya bloques que queden más “adentro” que otros en móvil.
-  const BODY_GUTTER = '' // Empty: section wrapper already has px-4 sm:px-6 lg:px-20
+  const BODY_GUTTER = 'px-4 sm:px-6 lg:px-8'
 
   const renderInlineMarkdown = (input) => {
     const text = String(input ?? '')
@@ -3390,14 +3602,14 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.4, delay: index * 0.05 }}
-        className="mb-12 mt-16"
+        className="mb-12 mt-16 px-4 sm:px-6 lg:px-8"
         id={typeof headingAnchorId === 'string' && headingAnchorId ? headingAnchorId : `section-${index}`}
       >
         <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
           {/* Gradient accent top */}
           <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accent.headingTopBar}`} />
 
-          <div className={`${BODY_GUTTER} py-8`}>
+          <div className="px-6 sm:px-8 py-8">
             {/* Number badge */}
             {headingNumber > 0 && (
               <div className={`inline-flex items-center gap-2 mb-4 px-4 py-1.5 ${accent.badgeBg} border ${accent.badgeBorder} rounded-full`}>
