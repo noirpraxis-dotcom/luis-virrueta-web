@@ -3426,8 +3426,8 @@ const BlogArticlePage = () => {
       </section>
 
       {/* Article Content */}
-      <section ref={articleContentRef} className="relative py-12 px-6 sm:px-8 lg:px-20 text-left">
-        <div className="max-w-3xl mx-auto w-full">
+      <section className="relative py-12 px-6 sm:px-8 lg:px-20 text-left">
+        <div ref={articleContentRef} className="max-w-3xl mx-auto w-full">
           <RichTextEditor
             initialContent={isEditMode ? draftBlocks : sectionsToCmsBlocks(article.sections)}
             onChange={isEditMode ? handleBlocksChange : undefined}

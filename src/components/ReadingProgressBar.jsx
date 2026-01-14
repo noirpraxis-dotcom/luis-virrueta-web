@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 const ReadingProgressBar = ({ accentKey = 'purple', contentRef, onToggleTOC }) => {
   const { scrollYProgress } = useScroll({
     target: contentRef,
-    offset: ['start end', 'end start']
+    offset: ['start end', 'end end']
   })
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
