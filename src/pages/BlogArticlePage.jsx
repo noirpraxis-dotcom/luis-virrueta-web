@@ -3449,7 +3449,7 @@ const BlogArticlePage = () => {
         currentSlug={slug} 
         allArticles={getLegacyBlogIndex(currentLanguage)}
         isEditMode={isEditMode}
-        selectedSlugs={draftRelatedSlugs}
+        selectedSlugs={isEditMode ? draftRelatedSlugs : (article?.related_slugs || [])}
         onSelectArticles={(slugs) => {
           setDraftRelatedSlugs(slugs)
           setIsDirty(true)
