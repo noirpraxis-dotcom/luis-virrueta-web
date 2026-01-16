@@ -2,12 +2,14 @@ import { AnimatePresence, motion, useInView } from 'framer-motion'
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { ACCENT_PRESETS } from '../utils/accentPresets'
 import { useParams, Link } from 'react-router-dom'
-import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles, Award, Check, Shield, AlertCircle, Copy, Crown, Moon, Star, Diamond, Bookmark, Target, Compass, Flame, Heart, Lightbulb } from 'lucide-react'
+import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles, Award, Check, Shield, AlertCircle, Copy, Crown, Moon, Star, Diamond, Bookmark, Target, Compass, Flame, Heart, Lightbulb, FileDown } from 'lucide-react'
 import ReadingProgressBar from '../components/ReadingProgressBar'
 import { ChevronDown, Facebook, Linkedin, MessageCircle, Twitter } from 'lucide-react'
 import RelatedArticles from '../components/RelatedArticles'
 import NewsletterSignup from '../components/NewsletterSignup'
 import TableOfContents from '../components/TableOfContents'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 import ArticleSchema from '../components/ArticleSchema'
 import SEOHead from '../components/SEOHead'
 import { calculateReadTime, toISODate } from '../utils/blogHelpers'
@@ -1854,6 +1856,7 @@ const BlogArticlePage = () => {
 
   const [cmsRow, setCmsRow] = useState(null)
   const [cmsLoading, setCmsLoading] = useState(false)
+  const [allBlogArticles, setAllBlogArticles] = useState(() => getLegacyBlogIndex(currentLanguage))
 
   const [isEditMode, setIsEditMode] = useState(false)
   const [showAdminLogin, setShowAdminLogin] = useState(false)
@@ -1880,6 +1883,14 @@ const BlogArticlePage = () => {
   const [saveError, setSaveError] = useState('')
   const [tagInput, setTagInput] = useState('')
   const [tocOpen, setTocOpen] = useState(false)
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
+  const [showColorPicker, setShowColorPicker] = useState(false)
+  const [showIconPicker, setShowIconPicker] = useState(false)
+
+  // Sistema de undo/redo
+  const [history, setHistory] = useState([])
+  const [historyIndex, setHistoryIndex] = useState(-1)
+  const isUndoingRef = useRef(false)
 
   const heroFileInputRef = useRef(null)
   const publishDateInputRef = useRef(null)
@@ -1895,6 +1906,109 @@ const BlogArticlePage = () => {
       window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
     }
   }, [slug, currentLanguage])
+
+  // Cargar todos los artículos (legacy + Supabase) para el selector de relacionados
+  useEffect(() => {
+    let isCancelled = false
+
+    const loadAllArticles = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('blog_articles')
+          .select('*')
+          .eq('language', currentLanguage)
+          .order('published_at', { ascending: false, nullsFirst: false })
+          .order('created_at', { ascending: false })
+
+        if (error) throw error
+        if (isCancelled) return
+
+        const supabaseArticles = (data || []).map((row) => {
+          const bestDateIso = row.published_at || row.created_at
+          const formatDate = (iso) => {
+            if (!iso) return ''
+            try {
+              const d = new Date(iso)
+              if (Number.isNaN(d.getTime())) return ''
+              const day = String(d.getDate()).padStart(2, '0')
+              const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+              const month = months[d.getMonth()]
+              const year = d.getFullYear()
+              return `${day} ${month} ${year}`
+            } catch {
+              return ''
+            }
+          }
+          
+          const computedReadTime = (!row.read_time && Array.isArray(row.content) && row.content.length)
+            ? calculateReadTime(cmsBlocksToSections(row.content))
+            : ''
+
+          return {
+            id: row.id,
+            slug: row.slug,
+            title: row.title,
+            excerpt: row.excerpt,
+            category: row.category,
+            accent: row.accent,
+            author: row.author,
+            date: formatDate(bestDateIso) || 'Borrador',
+            readTime: row.read_time || computedReadTime || '—',
+            gradient: 'from-slate-600/20 to-zinc-700/20',
+            borderGradient: 'from-slate-600 to-zinc-700',
+            tags: row.tags || [],
+            image: row.image_url || '',
+            rating: row.rating,
+            featured: row.featured,
+            publishedAt: row.published_at,
+            createdAt: row.created_at,
+            isPublished: row.is_published,
+            sortTs: Number.isFinite(Date.parse(bestDateIso || '')) ? Date.parse(bestDateIso) : 0
+          }
+        })
+
+        // Merge con legacy
+        const legacyArticles = getLegacyBlogIndex(currentLanguage)
+        const merged = new Map()
+        
+        legacyArticles.forEach((article) => {
+          merged.set(article.slug, article)
+        })
+        
+        supabaseArticles.forEach((article) => {
+          const existing = merged.get(article.slug)
+          if (!existing) {
+            merged.set(article.slug, article)
+            return
+          }
+
+          const legacyImage = existing.image || existing.heroImage || existing.imageUrl || ''
+          const cmsImage = article.image || article.heroImage || article.imageUrl || article.image_url || ''
+
+          merged.set(article.slug, {
+            ...existing,
+            ...article,
+            image: cmsImage || legacyImage || '',
+            heroImage: article.heroImage || cmsImage || legacyImage || existing.heroImage || '',
+            imageUrl: article.imageUrl || cmsImage || legacyImage || existing.imageUrl || ''
+          })
+        })
+
+        const allArticles = Array.from(merged.values())
+        if (!isCancelled) {
+          setAllBlogArticles(allArticles)
+        }
+      } catch (err) {
+        console.warn('Error cargando artículos para selector de relacionados:', err)
+      }
+    }
+
+    loadAllArticles()
+
+    return () => {
+      isCancelled = true
+    }
+  }, [currentLanguage])
 
   useEffect(() => {
     let isCancelled = false
@@ -2221,7 +2335,9 @@ const BlogArticlePage = () => {
       excerpt: row.excerpt || '',
       author: row.author,
       date: displayDate,
-      readTime: row.read_time || '—',
+      readTime: row.read_time
+        || (Array.isArray(row.content) ? calculateReadTime(cmsBlocksToSections(row.content)) : '')
+        || '—',
       category: row.category,
       tags: row.tags || [],
       gradient: row.accent || row.gradient || 'from-purple-500 to-fuchsia-500',
@@ -2450,13 +2566,109 @@ const BlogArticlePage = () => {
     setSaveError('')
     setSaveStatus('')
     setIsEditMode(true)
+
+    // Inicializar historial con el estado inicial
+    const initialState = {
+      title: String(row?.title || article.title || '').trim(),
+      subtitle: String(row?.subtitle || article.subtitle || '').trim(),
+      blocks: initialBlocks
+    }
+    setHistory([initialState])
+    setHistoryIndex(0)
   }
 
   const stopEditMode = () => {
     setIsEditMode(false)
     setSaveError('')
     setSaveStatus('')
+    setHistory([])
+    setHistoryIndex(-1)
   }
+
+  // Guardar snapshot en el historial
+  const saveHistorySnapshot = () => {
+    if (isUndoingRef.current) return
+    
+    const snapshot = {
+      title: draftTitle,
+      subtitle: draftSubtitle,
+      blocks: JSON.parse(JSON.stringify(draftBlocks)) // Deep copy
+    }
+
+    setHistory(prev => {
+      const newHistory = prev.slice(0, historyIndex + 1)
+      newHistory.push(snapshot)
+      // Limitar historial a 50 estados
+      if (newHistory.length > 50) newHistory.shift()
+      return newHistory
+    })
+    
+    setHistoryIndex(prev => Math.min(prev + 1, 49))
+  }
+
+  // Undo
+  const undo = () => {
+    if (historyIndex <= 0) return
+    
+    isUndoingRef.current = true
+    const prevState = history[historyIndex - 1]
+    
+    setDraftTitle(prevState.title)
+    setDraftSubtitle(prevState.subtitle)
+    setDraftBlocks(JSON.parse(JSON.stringify(prevState.blocks)))
+    setHistoryIndex(prev => prev - 1)
+    setIsDirty(true)
+    
+    setTimeout(() => { isUndoingRef.current = false }, 100)
+  }
+
+  // Redo
+  const redo = () => {
+    if (historyIndex >= history.length - 1) return
+    
+    isUndoingRef.current = true
+    const nextState = history[historyIndex + 1]
+    
+    setDraftTitle(nextState.title)
+    setDraftSubtitle(nextState.subtitle)
+    setDraftBlocks(JSON.parse(JSON.stringify(nextState.blocks)))
+    setHistoryIndex(prev => prev + 1)
+    setIsDirty(true)
+    
+    setTimeout(() => { isUndoingRef.current = false }, 100)
+  }
+
+  // Capturar Ctrl+Z y Ctrl+Shift+Z
+  useEffect(() => {
+    if (!isEditMode) return
+
+    const handleKeyDown = (e) => {
+      // Ctrl+Z (o Cmd+Z en Mac)
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault()
+        undo()
+      }
+      // Ctrl+Shift+Z o Ctrl+Y (redo)
+      else if ((e.ctrlKey || e.metaKey) && (e.shiftKey && e.key === 'z' || e.key === 'y')) {
+        e.preventDefault()
+        redo()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isEditMode, historyIndex, history])
+
+  // Guardar snapshot cada vez que cambian título, subtítulo o bloques (con debounce)
+  useEffect(() => {
+    if (!isEditMode || isUndoingRef.current) return
+    
+    const timer = setTimeout(() => {
+      saveHistorySnapshot()
+    }, 500) // Esperar 500ms de inactividad antes de guardar snapshot
+
+    return () => clearTimeout(timer)
+  }, [draftTitle, draftSubtitle, draftBlocks, isEditMode])
 
   const saveToSupabase = async ({ publish = false, silent = false } = {}) => {
     if (!isAdmin) return
@@ -2510,7 +2722,7 @@ const BlogArticlePage = () => {
         excerpt: finalExcerpt,
         author: draftAuthor || article.author,
         category: draftCategory || article.category || 'philosophy',
-        read_time: draftReadTime || calculateReadTime(cmsBlocksToSections(body)),
+        read_time: calculateReadTime(cmsBlocksToSections(body)),
         tags: Array.isArray(draftTags) ? draftTags.filter(Boolean) : [],
         image_url: draftImageUrl || null,
         accent: draftGradient || 'from-purple-500 to-fuchsia-500',
@@ -2534,6 +2746,61 @@ const BlogArticlePage = () => {
       setDraftSubtitle(result.subtitle || finalSubtitle)
       setIsDirty(false)
       if (!silent) setSaveStatus(publish ? 'Publicado' : 'Borrador guardado')
+
+      // Recargar lista de artículos para actualizar relacionados
+      const { data: freshArticles } = await supabase
+        .from('blog_articles')
+        .select('id, slug, title, excerpt, category, accent, author, published_at, created_at, read_time, tags, image_url, rating, featured, language, is_published')
+        .eq('language', currentLanguage)
+        .order('published_at', { ascending: false, nullsFirst: false })
+      
+      if (freshArticles) {
+        const supabaseArticles = freshArticles.map((row) => {
+          const bestDateIso = row.published_at || row.created_at
+          const formatDate = (iso) => {
+            if (!iso) return ''
+            try {
+              const d = new Date(iso)
+              if (Number.isNaN(d.getTime())) return ''
+              const day = String(d.getDate()).padStart(2, '0')
+              const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+              const month = months[d.getMonth()]
+              const year = d.getFullYear()
+              return `${day} ${month} ${year}`
+            } catch {
+              return ''
+            }
+          }
+          
+          return {
+            id: row.id,
+            slug: row.slug,
+            title: row.title,
+            excerpt: row.excerpt,
+            category: row.category,
+            accent: row.accent,
+            author: row.author,
+            date: formatDate(bestDateIso) || 'Borrador',
+            readTime: row.read_time || '—',
+            gradient: 'from-slate-600/20 to-zinc-700/20',
+            borderGradient: 'from-slate-600 to-zinc-700',
+            tags: row.tags || [],
+            image: row.image_url || '',
+            rating: row.rating,
+            featured: row.featured,
+            publishedAt: row.published_at,
+            createdAt: row.created_at,
+            isPublished: row.is_published,
+            sortTs: Number.isFinite(Date.parse(bestDateIso || '')) ? Date.parse(bestDateIso) : 0
+          }
+        })
+
+        const legacyArticles = getLegacyBlogIndex(currentLanguage)
+        const merged = new Map()
+        legacyArticles.forEach((article) => merged.set(article.slug, article))
+        supabaseArticles.forEach((article) => merged.set(article.slug, article))
+        setAllBlogArticles(Array.from(merged.values()))
+      }
 
       // Si era artículo nuevo, redirigir al slug correcto
       if (slug === 'nuevo' && finalSlug !== 'nuevo') {
@@ -2646,12 +2913,19 @@ const BlogArticlePage = () => {
   // Para redes sin formato markdown
   const shareTextPlain = [shareTitle, shareSubtitle, shareExcerpt].filter(Boolean).join('\n\n')
   
-  // Asegurar que shareImage sea URL absoluta para compartir correctamente
+  // Asegurar que shareImage sea URL absoluta y preferir imagen del artículo
   const shareImage = (() => {
-    const img = heroBackgroundImage || effectiveHeroImage
-    if (!img) return `${window.location.origin}/portada.webp`
-    if (img.startsWith('http://') || img.startsWith('https://')) return img
-    return `${window.location.origin}${img.startsWith('/') ? img : `/${img}`}`
+    const preferredRaw = isEditMode
+      ? draftImageUrl
+      : (article.image || article.heroImage || cmsRow?.image_url)
+    const candidate =
+      resolvePublicImageUrl(preferredRaw) ||
+      resolvePublicImageUrl(effectiveHeroImage) ||
+      resolvePublicImageUrl(heroBackgroundImage) ||
+      '/portada.webp'
+
+    if (candidate.startsWith('http://') || candidate.startsWith('https://')) return candidate
+    return `${window.location.origin}${candidate.startsWith('/') ? candidate : `/${candidate}`}`
   })()
 
   // SEO description con contexto del sitio
@@ -2693,6 +2967,359 @@ const BlogArticlePage = () => {
         }
       } finally {
         setOpen(false)
+      }
+    }
+
+    const exportToPDF = async () => {
+      try {
+        setOpen(false)
+
+        const pdfTitle = (isEditMode ? (draftTitle || article.title) : article.title) || article.title
+        const pdfSubtitle = isEditMode ? (draftSubtitle || article.subtitle) : article.subtitle
+        const pdfExcerptSource = isEditMode
+          ? (draftExcerpt || article.excerpt || shareExcerptRaw)
+          : (article.excerpt || shareExcerptRaw)
+        const pdfExcerpt = String(pdfExcerptSource || '').trim()
+        const pdfSections = isEditMode ? cmsBlocksToSections(draftBlocks) : (article.sections || [])
+
+        const escapeHtml = (value) => String(value ?? '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;')
+
+        const inlineMdToHtml = (value) => {
+          const safe = escapeHtml(value)
+          return safe
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.+?)\*/g, '<em>$1</em>')
+            .replace(/\n/g, '<br />')
+        }
+
+        const renderListItems = (items = []) => items.map((item) => {
+          if (typeof item === 'string') {
+            return `<li>${inlineMdToHtml(item)}</li>`
+          }
+          const title = item?.title ? inlineMdToHtml(item.title) : ''
+          const description = item?.description ? inlineMdToHtml(item.description) : ''
+          const line = description ? `${title}: ${description}` : title
+          return line ? `<li>${line}</li>` : ''
+        }).filter(Boolean).join('')
+
+        const renderSection = (section) => {
+          if (!section || typeof section !== 'object') return ''
+
+          switch (section.type) {
+            case 'heading':
+              return section.title
+                ? `<h3 class="section-title">${inlineMdToHtml(section.title)}</h3>`
+                : ''
+            case 'intro':
+              return section.content
+                ? `<p class="paragraph intro">${inlineMdToHtml(section.content)}</p>`
+                : ''
+            case 'reflection':
+              return section.content
+                ? `<blockquote class="quote">${inlineMdToHtml(section.content)}</blockquote>`
+                : ''
+            case 'text':
+            case 'paragraph':
+              return section.content
+                ? `<p class="paragraph">${inlineMdToHtml(section.content)}</p>`
+                : ''
+            case 'highlight':
+              return section.content
+                ? `<blockquote class="highlight">${inlineMdToHtml(section.content)}${section.author ? `<span class="cite">— ${inlineMdToHtml(section.author)}</span>` : ''}</blockquote>`
+                : ''
+            case 'subsection': {
+              const number = section.number ? `<span class="sub-number">${inlineMdToHtml(section.number)}</span>` : ''
+              const title = section.title ? `<h4 class="sub-title">${inlineMdToHtml(section.title)}</h4>` : ''
+              const content = section.content ? `<p class="paragraph">${inlineMdToHtml(section.content)}</p>` : ''
+              return number || title || content
+                ? `<div class="subsection">${number}<div class="sub-body">${title}${content}</div></div>`
+                : ''
+            }
+            case 'questions': {
+              const items = Array.isArray(section.items)
+                ? section.items
+                : (String(section.content || '')
+                  .split('\n')
+                  .map((q) => q.trim())
+                  .filter(Boolean))
+              if (!items.length) return ''
+              return `
+                <div class="questions">
+                  <h4 class="questions-title">${inlineMdToHtml(section.title || 'Preguntas')}</h4>
+                  <ul class="list">${renderListItems(items)}</ul>
+                </div>
+              `
+            }
+            case 'list': {
+              const items = Array.isArray(section.items) ? section.items : []
+              if (!items.length) return ''
+              return `<ul class="list">${renderListItems(items)}</ul>`
+            }
+            case 'conclusion':
+              return section.content
+                ? `<div class="conclusion"><h3 class="section-title">Conclusión</h3><p class="paragraph">${inlineMdToHtml(section.content)}</p></div>`
+                : ''
+            case 'colorGrid':
+              return Array.isArray(section.colors)
+                ? `<div class="grid-block">
+                    <h4 class="section-title">${inlineMdToHtml(section.title || 'Colores')}</h4>
+                    <ul class="list">
+                      ${section.colors.map((c) => `<li>${inlineMdToHtml(c.name)} — ${inlineMdToHtml(c.emotion || '')} ${c.hex ? `(${inlineMdToHtml(c.hex)})` : ''}</li>`).join('')}
+                    </ul>
+                  </div>`
+                : ''
+            case 'statsGrid':
+              return Array.isArray(section.stats)
+                ? `<div class="grid-block">
+                    <h4 class="section-title">${inlineMdToHtml(section.title || 'Estadísticas')}</h4>
+                    <ul class="list">
+                      ${section.stats.map((s) => `<li>${inlineMdToHtml(s.metric)} — ${inlineMdToHtml(s.label || '')}${s.source ? ` (${inlineMdToHtml(s.source)})` : ''}</li>`).join('')}
+                    </ul>
+                  </div>`
+                : ''
+            case 'dataVisualization':
+              return Array.isArray(section.data)
+                ? `<div class="grid-block">
+                    <h4 class="section-title">${inlineMdToHtml(section.title || 'Comparativa')}</h4>
+                    <ul class="list">
+                      ${section.data.map((d) => `<li>${inlineMdToHtml(d.model)} — ${inlineMdToHtml(d.score)}${d.company ? ` (${inlineMdToHtml(d.company)})` : ''}</li>`).join('')}
+                    </ul>
+                  </div>`
+                : ''
+            case 'philosophicalAnalysis':
+              return Array.isArray(section.analyses)
+                ? `<div class="grid-block">
+                    <h4 class="section-title">${inlineMdToHtml(section.title || 'Análisis')}</h4>
+                    <ul class="list">
+                      ${section.analyses.map((a) => `<li>${inlineMdToHtml(a.company || '')}: ${inlineMdToHtml(a.approach || a.reasoning || '')}</li>`).join('')}
+                    </ul>
+                  </div>`
+                : ''
+            case 'externalFactors':
+              return Array.isArray(section.factors)
+                ? `<div class="grid-block">
+                    <h4 class="section-title">${inlineMdToHtml(section.title || 'Factores')}</h4>
+                    <ul class="list">
+                      ${section.factors.map((f) => `<li>${inlineMdToHtml(f.factor)} — ${inlineMdToHtml(f.impact || '')}</li>`).join('')}
+                    </ul>
+                  </div>`
+                : ''
+            case 'whatsapp':
+              return ''
+            default: {
+              if (section.title && !section.content) {
+                return `<h3 class="section-title">${inlineMdToHtml(section.title)}</h3>`
+              }
+              if (section.content) {
+                return `<p class="paragraph">${inlineMdToHtml(section.content)}</p>`
+              }
+              return ''
+            }
+          }
+        }
+        
+        // Crear un contenedor temporal para el PDF
+        const printContainer = document.createElement('div')
+        printContainer.style.cssText = `
+          position: absolute;
+          left: -9999px;
+          top: 0;
+          width: 210mm;
+          background: #0a0a0a;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: 'Outfit', system-ui, sans-serif;
+          color: #e5e7eb;
+        `
+        
+        // Construir el HTML del artículo
+        let htmlContent = `
+          <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            .pdf-content { padding: 12mm 16mm 24mm; }
+            .hero { width: 100%; height: 120mm; object-fit: cover; border-radius: 14px; margin-bottom: 18px; display: block; }
+            .title { font-family: 'Playfair Display', Georgia, serif; font-size: 34px; font-weight: 600; margin: 0 0 12px; color: #f9fafb; line-height: 1.2; }
+            .subtitle { font-size: 18px; color: #9ca3af; font-weight: 300; margin: 0 0 28px; line-height: 1.5; }
+            .excerpt { font-size: 14.5px; line-height: 1.85; margin: 0 0 22px; color: #cbd5f5; }
+            .section-title { font-family: 'Playfair Display', Georgia, serif; font-size: 22px; margin: 28px 0 12px; color: #f3f4f6; font-weight: 600; }
+            .paragraph { font-size: 14.5px; line-height: 1.85; margin: 0 0 14px; color: #d1d5db; }
+            .intro { font-style: italic; color: #e5e7eb; }
+            .quote { margin: 18px 0 20px; padding: 14px 18px; border-left: 3px solid #6b7280; background: #111827; color: #e5e7eb; font-style: italic; }
+            .highlight { margin: 22px 0; padding: 16px 18px; border: 1px solid #1f2937; border-radius: 12px; background: #0f172a; color: #f3f4f6; }
+            .cite { display: block; margin-top: 10px; font-size: 12px; color: #9ca3af; font-style: normal; }
+            .list { padding-left: 18px; margin: 0 0 16px; color: #d1d5db; }
+            .list li { margin: 0 0 8px; line-height: 1.7; }
+            .subsection { display: flex; gap: 12px; margin: 14px 0 18px; padding: 12px 14px; border: 1px solid #1f2937; border-radius: 12px; background: #0b0f19; }
+            .sub-number { font-family: 'Space Grotesk', 'Outfit', sans-serif; font-size: 26px; font-weight: 600; color: #6b7280; }
+            .sub-title { font-size: 16px; margin: 0 0 8px; color: #f3f4f6; font-weight: 600; }
+            .questions { margin: 18px 0 20px; padding: 14px 16px; border: 1px solid #1f2937; border-radius: 14px; background: #0b0f19; }
+            .questions-title { font-size: 16px; margin: 0 0 10px; color: #e5e7eb; font-weight: 600; }
+            .conclusion { margin-top: 26px; padding-top: 16px; border-top: 1px solid #1f2937; }
+            .grid-block { margin: 18px 0; padding: 12px 14px; border: 1px dashed #1f2937; border-radius: 12px; }
+            .footer { margin-top: 36px; padding-top: 16px; border-top: 1px solid #1f2937; text-align: center; }
+            .footer-title { font-size: 11px; color: #9ca3af; }
+            .footer-url { font-size: 10px; color: #6b7280; margin-top: 6px; }
+          </style>
+          <div class="pdf-content">
+            ${shareImage ? `<img class="hero" src="${shareImage}" alt="" />` : ''}
+            <div style="margin-bottom: 24px;">
+              <h1 class="title">${inlineMdToHtml(pdfTitle)}</h1>
+              ${pdfSubtitle ? `<h2 class="subtitle">${inlineMdToHtml(pdfSubtitle)}</h2>` : ''}
+              ${pdfExcerpt ? `<p class="excerpt">${inlineMdToHtml(pdfExcerpt)}</p>` : ''}
+          </div>
+        `
+        
+        // Agregar cada sección del artículo
+        pdfSections.forEach((section) => {
+          htmlContent += renderSection(section)
+        })
+        
+        // Agregar pie de página
+        htmlContent += `
+          <div class="footer">
+            <p class="footer-title">${inlineMdToHtml(pdfTitle)} — Luis Virrueta</p>
+            <p class="footer-url">${shareUrl}</p>
+          </div>
+          </div>
+        `
+        
+        printContainer.innerHTML = htmlContent
+        document.body.appendChild(printContainer)
+        
+        // Generar el PDF
+        const canvas = await html2canvas(printContainer, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#0a0a0a'
+        })
+        
+        document.body.removeChild(printContainer)
+        
+        const imgData = canvas.toDataURL('image/png')
+        const pdf = new jsPDF('p', 'mm', 'a4')
+        
+        const pdfWidth = pdf.internal.pageSize.getWidth()
+        const pdfHeight = pdf.internal.pageSize.getHeight()
+        const imgWidth = canvas.width
+        const imgHeight = canvas.height
+        const ratio = pdfWidth / imgWidth
+        const firstPageTopMargin = 0
+        const firstPageBottomMargin = 16
+        const otherPagesTopMargin = 16
+        const otherPagesBottomMargin = 16
+        const backgroundColor = { r: 10, g: 10, b: 10 }
+        let sourceY = 0
+        let pageIndex = 0
+
+        const isBlankRow = (data, start, samples) => {
+          const tolerance = 8
+          for (let i = 0; i < samples; i += 1) {
+            const idx = start + i * 4
+            const r = data[idx]
+            const g = data[idx + 1]
+            const b = data[idx + 2]
+            if (
+              Math.abs(r - backgroundColor.r) > tolerance
+              || Math.abs(g - backgroundColor.g) > tolerance
+              || Math.abs(b - backgroundColor.b) > tolerance
+            ) {
+              return false
+            }
+          }
+          return true
+        }
+
+        const findSplitHeight = (maxHeightPx) => {
+          const scanWindow = 90
+          const scanStepY = 2
+          const scanStepX = 16
+          const ctx = canvas.getContext('2d')
+          if (!ctx) return maxHeightPx
+
+          const startY = Math.max(sourceY + maxHeightPx - scanWindow, sourceY)
+          const endY = sourceY + maxHeightPx - 1
+          const width = imgWidth
+          for (let y = endY; y >= startY; y -= scanStepY) {
+            const row = ctx.getImageData(0, y, width, 1).data
+            const samples = Math.floor(width / scanStepX)
+            let blank = true
+            for (let i = 0; i < samples; i += 1) {
+              const idx = i * scanStepX * 4
+              if (!isBlankRow(row, idx, 1)) {
+                blank = false
+                break
+              }
+            }
+            if (blank) {
+              return y - sourceY
+            }
+          }
+
+          return maxHeightPx
+        }
+
+        while (sourceY < imgHeight) {
+          const topMargin = pageIndex === 0 ? firstPageTopMargin : otherPagesTopMargin
+          const bottomMargin = pageIndex === 0 ? firstPageBottomMargin : otherPagesBottomMargin
+          const pageHeightMm = pdfHeight - topMargin - bottomMargin
+          const pageHeightPx = Math.floor(pageHeightMm / ratio)
+          const remainingPx = imgHeight - sourceY
+          const baseHeightPx = Math.min(pageHeightPx, remainingPx)
+          const splitHeightPx = remainingPx > pageHeightPx
+            ? findSplitHeight(baseHeightPx)
+            : baseHeightPx
+          const sliceHeightPx = Math.min(splitHeightPx, remainingPx)
+          const pageCanvas = document.createElement('canvas')
+          pageCanvas.width = imgWidth
+          pageCanvas.height = sliceHeightPx
+
+          const pageCtx = pageCanvas.getContext('2d')
+          if (pageCtx) {
+            pageCtx.drawImage(
+              canvas,
+              0,
+              sourceY,
+              imgWidth,
+              sliceHeightPx,
+              0,
+              0,
+              imgWidth,
+              sliceHeightPx
+            )
+          }
+
+          const pageData = pageCanvas.toDataURL('image/png')
+          if (pageIndex > 0) pdf.addPage()
+
+          pdf.setFillColor(10, 10, 10)
+          pdf.rect(0, 0, pdfWidth, pdfHeight, 'F')
+
+          const renderHeightMm = sliceHeightPx * ratio
+          pdf.addImage(pageData, 'PNG', 0, topMargin, pdfWidth, renderHeightMm)
+
+          sourceY += sliceHeightPx
+          pageIndex += 1
+        }
+        
+        // Generar nombre de archivo seguro
+        const filename = article.title
+          .toLowerCase()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9\s-]/g, '')
+          .trim()
+          .replace(/\s+/g, '-')
+          .slice(0, 50) || 'articulo'
+        
+        pdf.save(`${filename}.pdf`)
+      } catch (error) {
+        console.error('Error al exportar PDF:', error)
+        alert('Hubo un error al exportar el PDF. Por favor, intenta de nuevo.')
       }
     }
 
@@ -2752,6 +3379,11 @@ const BlogArticlePage = () => {
         onClick: handleNativeShare,
         Icon: Share2
       }] : []),
+      {
+        label: 'PDF',
+        onClick: exportToPDF,
+        Icon: FileDown
+      },
       {
         label: 'WhatsApp',
         href: `https://wa.me/?text=${encodedTextWhatsApp}`,
@@ -3116,16 +3748,235 @@ const BlogArticlePage = () => {
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto">
-          {/* Category badge */}
+          {/* Category badge + quick controls */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.2 }}
-            className="inline-block px-4 py-2 border border-white/20 rounded-full backdrop-blur-sm bg-white/5 mb-6"
+            className="mb-6"
           >
-            <span className="text-xs lg:text-sm text-white/80 font-light tracking-wider uppercase">
-              {getCategoryLabel(isEditMode ? draftCategory : article.category, currentLanguage)}
-            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!isEditMode) return
+                    setShowCategoryDropdown((prev) => !prev)
+                    setShowColorPicker(false)
+                    setShowIconPicker(false)
+                  }}
+                  className="px-4 py-2 border border-white/20 rounded-full backdrop-blur-sm bg-white/5 text-xs lg:text-sm text-white/80 font-light tracking-wider uppercase"
+                >
+                  {getCategoryLabel(isEditMode ? draftCategory : article.category, currentLanguage)}
+                </button>
+
+                <AnimatePresence>
+                  {isEditMode && showCategoryDropdown && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute top-full mt-2 left-0 z-50 bg-zinc-900 border border-white/20 rounded-xl shadow-2xl overflow-hidden min-w-[220px]"
+                    >
+                      {[
+                        { value: 'philosophy', label: 'Filosofía' },
+                        { value: 'psychoanalysis', label: 'Psicoanálisis' },
+                        { value: 'psychology', label: 'Psicología' },
+                        { value: 'perception', label: 'Percepción' },
+                        { value: 'consciousness', label: 'Conciencia' },
+                        { value: 'metaphysics', label: 'Metafísica' },
+                        { value: 'reflections', label: 'Reflexiones' },
+                        { value: 'diary', label: 'Diario' },
+                        { value: 'ethics', label: 'Ética' },
+                        { value: 'existence', label: 'Existencia' },
+                        { value: 'epistemology', label: 'Epistemología' },
+                        { value: 'ontology', label: 'Ontología' },
+                        { value: 'aesthetics', label: 'Estética' },
+                        { value: 'phenomenology', label: 'Fenomenología' },
+                        { value: 'hermeneutics', label: 'Hermenéutica' }
+                      ].map((cat) => (
+                        <button
+                          key={cat.value}
+                          type="button"
+                          onClick={() => {
+                            setDraftCategory(cat.value)
+                            setIsDirty(true)
+                            setShowCategoryDropdown(false)
+                          }}
+                          className={`w-full px-4 py-2 text-left text-sm hover:bg-white/10 transition-colors ${
+                            draftCategory === cat.value ? 'bg-white/5 text-purple-400' : 'text-white/80'
+                          }`}
+                        >
+                          {cat.label}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Color picker button */}
+              {isEditMode && (
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowColorPicker((prev) => !prev)
+                      setShowCategoryDropdown(false)
+                      setShowIconPicker(false)
+                    }}
+                    className="w-8 h-8 rounded-full border-2 border-white/30 hover:scale-110 transition-transform"
+                  style={{
+                    background:
+                      draftGradient === 'from-purple-500 to-fuchsia-500' ? 'linear-gradient(to bottom right, rgb(168, 85, 247), rgb(217, 70, 239))' :
+                      draftGradient === 'from-blue-500 to-cyan-500' ? 'linear-gradient(to bottom right, rgb(59, 130, 246), rgb(6, 182, 212))' :
+                      draftGradient === 'from-red-500 to-rose-500' ? 'linear-gradient(to bottom right, rgb(239, 68, 68), rgb(244, 63, 94))' :
+                      draftGradient === 'from-emerald-500 to-teal-500' ? 'linear-gradient(to bottom right, rgb(16, 185, 129), rgb(20, 184, 166))' :
+                      draftGradient === 'from-amber-500 to-orange-500' ? 'linear-gradient(to bottom right, rgb(245, 158, 11), rgb(249, 115, 22))' :
+                      draftGradient === 'from-indigo-500 to-violet-500' ? 'linear-gradient(to bottom right, rgb(99, 102, 241), rgb(139, 92, 246))' :
+                      draftGradient === 'from-pink-500 to-rose-500' ? 'linear-gradient(to bottom right, rgb(236, 72, 153), rgb(244, 63, 94))' :
+                      draftGradient === 'from-slate-600 to-zinc-700' ? 'linear-gradient(to bottom right, rgb(71, 85, 105), rgb(63, 63, 70))' :
+                      draftGradient === 'from-orange-500 to-red-500' ? 'linear-gradient(to bottom right, rgb(249, 115, 22), rgb(239, 68, 68))' :
+                      draftGradient === 'from-teal-500 to-cyan-500' ? 'linear-gradient(to bottom right, rgb(20, 184, 166), rgb(6, 182, 212))' :
+                      draftGradient === 'from-lime-500 to-green-500' ? 'linear-gradient(to bottom right, rgb(132, 204, 22), rgb(34, 197, 94))' :
+                      'linear-gradient(to bottom right, rgb(139, 92, 246), rgb(168, 85, 247))'
+                  }}
+                />
+
+                <AnimatePresence>
+                  {isEditMode && showColorPicker && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute top-full mt-3 left-0 z-50 bg-zinc-900/95 border border-white/20 rounded-2xl shadow-2xl p-6 backdrop-blur min-w-[280px] sm:min-w-[360px]"
+                    >
+                      <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
+                        {[
+                          { label: 'Púrpura', value: 'from-purple-500 to-fuchsia-500', preview: 'bg-gradient-to-r from-purple-500 to-fuchsia-500' },
+                          { label: 'Azul', value: 'from-blue-500 to-cyan-500', preview: 'bg-gradient-to-r from-blue-500 to-cyan-500' },
+                          { label: 'Rojo', value: 'from-red-500 to-rose-500', preview: 'bg-gradient-to-r from-red-500 to-rose-500' },
+                          { label: 'Verde', value: 'from-emerald-500 to-teal-500', preview: 'bg-gradient-to-r from-emerald-500 to-teal-500' },
+                          { label: 'Ámbar', value: 'from-amber-500 to-orange-500', preview: 'bg-gradient-to-r from-amber-500 to-orange-500' },
+                          { label: 'Índigo', value: 'from-indigo-500 to-violet-500', preview: 'bg-gradient-to-r from-indigo-500 to-violet-500' },
+                          { label: 'Rosa', value: 'from-pink-500 to-rose-500', preview: 'bg-gradient-to-r from-pink-500 to-rose-500' },
+                          { label: 'Gris', value: 'from-slate-600 to-zinc-700', preview: 'bg-gradient-to-r from-slate-600 to-zinc-700' },
+                          { label: 'Naranja', value: 'from-orange-500 to-red-500', preview: 'bg-gradient-to-r from-orange-500 to-red-500' },
+                          { label: 'Teal', value: 'from-teal-500 to-cyan-500', preview: 'bg-gradient-to-r from-teal-500 to-cyan-500' },
+                          { label: 'Lima', value: 'from-lime-500 to-green-500', preview: 'bg-gradient-to-r from-lime-500 to-green-500' },
+                          { label: 'Violeta', value: 'from-violet-500 to-purple-500', preview: 'bg-gradient-to-r from-violet-500 to-purple-500' }
+                        ].map((grad) => (
+                          <button
+                            key={grad.value}
+                            type="button"
+                            onClick={() => {
+                              setDraftGradient(grad.value)
+                              setIsDirty(true)
+                              setShowColorPicker(false)
+                            }}
+                            className={`w-10 h-10 rounded-full border-2 transition-all ${
+                              draftGradient === grad.value
+                                ? 'border-white/60 ring-2 ring-white/30'
+                                : 'border-white/10 hover:border-white/30'
+                            }`}
+                            title={grad.label}
+                          >
+                            <div className={`w-full h-full rounded-full ${grad.preview}`}></div>
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                </div>
+              )}
+
+              {/* Icon picker button */}
+              {isEditMode && (
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowIconPicker((prev) => !prev)
+                      setShowCategoryDropdown(false)
+                      setShowColorPicker(false)
+                    }}
+                    className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-all border-2 border-white/30 flex items-center justify-center"
+                >
+                  {draftSectionIcon === 'crown' && <Crown className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'moon' && <Moon className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'sparkles' && <Sparkles className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'diamond' && <Diamond className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'star' && <Star className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'bookmark' && <Bookmark className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'brain' && <Brain className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'zap' && <Zap className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'eye' && <Eye className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'shield' && <Shield className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'alert-circle' && <AlertCircle className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'check' && <Check className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'award' && <Award className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'target' && <Target className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'compass' && <Compass className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'flame' && <Flame className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'heart' && <Heart className="w-4 h-4 text-white" />}
+                  {draftSectionIcon === 'lightbulb' && <Lightbulb className="w-4 h-4 text-white" />}
+                </button>
+
+                <AnimatePresence>
+                  {isEditMode && showIconPicker && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute top-full mt-3 left-0 z-50 bg-zinc-900/95 border border-white/20 rounded-2xl shadow-2xl p-6 backdrop-blur min-w-[280px] sm:min-w-[360px]"
+                    >
+                      <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
+                        {[
+                          { value: 'crown', Icon: Crown },
+                          { value: 'moon', Icon: Moon },
+                          { value: 'sparkles', Icon: Sparkles },
+                          { value: 'diamond', Icon: Diamond },
+                          { value: 'star', Icon: Star },
+                          { value: 'bookmark', Icon: Bookmark },
+                          { value: 'brain', Icon: Brain },
+                          { value: 'zap', Icon: Zap },
+                          { value: 'eye', Icon: Eye },
+                          { value: 'shield', Icon: Shield },
+                          { value: 'alert-circle', Icon: AlertCircle },
+                          { value: 'check', Icon: Check },
+                          { value: 'award', Icon: Award },
+                          { value: 'target', Icon: Target },
+                          { value: 'compass', Icon: Compass },
+                          { value: 'flame', Icon: Flame },
+                          { value: 'heart', Icon: Heart },
+                          { value: 'lightbulb', Icon: Lightbulb }
+                        ].map(({ value, Icon }) => (
+                          <button
+                            key={value}
+                            type="button"
+                            onClick={() => {
+                              setDraftSectionIcon(value)
+                              setIsDirty(true)
+                              setDraftBlocks((prev) => prev.map((block) =>
+                                block.type === 'heading' ? { ...block, icon: value } : block
+                              ))
+                              setShowIconPicker(false)
+                            }}
+                            className={`w-14 h-14 rounded-xl bg-white/10 hover:bg-white/20 transition-all flex items-center justify-center ${
+                              draftSectionIcon === value ? 'ring-2 ring-purple-500' : ''
+                            }`}
+                          >
+                            <Icon className="w-7 h-7 text-white" />
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                </div>
+              )}
+            </div>
           </motion.div>
 
           {/* Title */}
@@ -3345,132 +4196,6 @@ const BlogArticlePage = () => {
                       />
                       <p className="mt-2 text-xs text-white/40">{draftExcerpt.length} caracteres (recomendado: 120-160)</p>
                     </div>
-
-                    {/* Categoría */}
-                    <div>
-                      <label className="block text-sm font-medium text-white/80 mb-3">Categoría</label>
-                      <select
-                        value={draftCategory}
-                        onChange={(e) => {
-                          setDraftCategory(e.target.value)
-                          setIsDirty(true)
-                        }}
-                        className="w-full px-4 py-3 bg-black/80 border border-white/20 rounded-xl text-white outline-none focus:border-white/40 cursor-pointer"
-                        style={{ color: 'white' }}
-                      >
-                        <option value="philosophy" style={{ backgroundColor: '#000', color: '#fff' }}>Filosofía</option>
-                        <option value="psychoanalysis" style={{ backgroundColor: '#000', color: '#fff' }}>Psicoanálisis</option>
-                        <option value="psychology" style={{ backgroundColor: '#000', color: '#fff' }}>Psicología</option>
-                        <option value="perception" style={{ backgroundColor: '#000', color: '#fff' }}>Percepción</option>
-                        <option value="consciousness" style={{ backgroundColor: '#000', color: '#fff' }}>Conciencia</option>
-                        <option value="metaphysics" style={{ backgroundColor: '#000', color: '#fff' }}>Metafísica</option>
-                        <option value="reflections" style={{ backgroundColor: '#000', color: '#fff' }}>Reflexiones</option>
-                        <option value="diary" style={{ backgroundColor: '#000', color: '#fff' }}>Diario</option>
-                        <option value="ethics" style={{ backgroundColor: '#000', color: '#fff' }}>Ética</option>
-                        <option value="existence" style={{ backgroundColor: '#000', color: '#fff' }}>Existencia</option>
-                        <option value="epistemology" style={{ backgroundColor: '#000', color: '#fff' }}>Epistemología</option>
-                        <option value="ontology" style={{ backgroundColor: '#000', color: '#fff' }}>Ontología</option>
-                        <option value="aesthetics" style={{ backgroundColor: '#000', color: '#fff' }}>Estética</option>
-                        <option value="phenomenology" style={{ backgroundColor: '#000', color: '#fff' }}>Fenomenología</option>
-                        <option value="hermeneutics" style={{ backgroundColor: '#000', color: '#fff' }}>Hermenéutica</option>
-                      </select>
-                    </div>
-
-                    {/* Gradiente */}
-                    <div>
-                      <label className="block text-sm font-medium text-white/80 mb-3">Color / Gradiente</label>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        {[
-                          { label: 'Púrpura', value: 'from-purple-500 to-fuchsia-500', preview: 'bg-gradient-to-r from-purple-500 to-fuchsia-500' },
-                          { label: 'Azul', value: 'from-blue-500 to-cyan-500', preview: 'bg-gradient-to-r from-blue-500 to-cyan-500' },
-                          { label: 'Rojo', value: 'from-red-500 to-rose-500', preview: 'bg-gradient-to-r from-red-500 to-rose-500' },
-                          { label: 'Verde', value: 'from-emerald-500 to-teal-500', preview: 'bg-gradient-to-r from-emerald-500 to-teal-500' },
-                          { label: 'Ámbar', value: 'from-amber-500 to-orange-500', preview: 'bg-gradient-to-r from-amber-500 to-orange-500' },
-                          { label: 'Índigo', value: 'from-indigo-500 to-violet-500', preview: 'bg-gradient-to-r from-indigo-500 to-violet-500' },
-                          { label: 'Rosa', value: 'from-pink-500 to-rose-500', preview: 'bg-gradient-to-r from-pink-500 to-rose-500' },
-                          { label: 'Gris', value: 'from-slate-600 to-zinc-700', preview: 'bg-gradient-to-r from-slate-600 to-zinc-700' },
-                          { label: 'Naranja', value: 'from-orange-500 to-red-500', preview: 'bg-gradient-to-r from-orange-500 to-red-500' },
-                          { label: 'Teal', value: 'from-teal-500 to-cyan-500', preview: 'bg-gradient-to-r from-teal-500 to-cyan-500' },
-                          { label: 'Lima', value: 'from-lime-500 to-green-500', preview: 'bg-gradient-to-r from-lime-500 to-green-500' },
-                          { label: 'Violeta', value: 'from-violet-500 to-purple-500', preview: 'bg-gradient-to-r from-violet-500 to-purple-500' }
-                        ].map((grad) => (
-                          <button
-                            key={grad.value}
-                            type="button"
-                            onClick={() => {
-                              setDraftGradient(grad.value)
-                              setIsDirty(true)
-                            }}
-                            className={`p-3 rounded-xl border-2 transition-all ${
-                              draftGradient === grad.value
-                                ? 'border-white/40 bg-white/10'
-                                : 'border-white/10 hover:border-white/20 bg-white/5'
-                            }`}
-                          >
-                            <div className={`h-8 rounded-lg ${grad.preview}`}></div>
-                            <p className="mt-2 text-xs text-white/70">{grad.label}</p>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Ícono de Sección */}
-                    <div>
-                      <label className="block text-sm font-medium text-white/80 mb-3">Ícono para Secciones</label>
-                      <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
-                        {[
-                          { value: 'crown', Icon: Crown, label: 'Corona' },
-                          { value: 'moon', Icon: Moon, label: 'Luna' },
-                          { value: 'sparkles', Icon: Sparkles, label: 'Chispas' },
-                          { value: 'diamond', Icon: Diamond, label: 'Diamante' },
-                          { value: 'star', Icon: Star, label: 'Estrella' },
-                          { value: 'bookmark', Icon: Bookmark, label: 'Marca' },
-                          { value: 'brain', Icon: Brain, label: 'Cerebro' },
-                          { value: 'zap', Icon: Zap, label: 'Rayo' },
-                          { value: 'eye', Icon: Eye, label: 'Ojo' },
-                          { value: 'shield', Icon: Shield, label: 'Escudo' },
-                          { value: 'alert-circle', Icon: AlertCircle, label: 'Alerta' },
-                          { value: 'check', Icon: Check, label: 'Check' },
-                          { value: 'award', Icon: Award, label: 'Premio' },
-                          { value: 'target', Icon: Target, label: 'Diana' },
-                          { value: 'compass', Icon: Compass, label: 'Brújula' },
-                          { value: 'flame', Icon: Flame, label: 'Llama' },
-                          { value: 'heart', Icon: Heart, label: 'Corazón' },
-                          { value: 'lightbulb', Icon: Lightbulb, label: 'Bombilla' }
-                        ].map(({ value, Icon, label }) => (
-                          <button
-                            key={value}
-                            type="button"
-                            onClick={() => {
-                              setDraftSectionIcon(value)
-                              setIsDirty(true)
-                              // Actualizar íconos en todos los headings existentes
-                              setDraftBlocks(prev => prev.map(block => 
-                                block.type === 'heading' ? { ...block, icon: value } : block
-                              ))
-                            }}
-                            className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
-                              draftSectionIcon === value
-                                ? 'border-white/40 bg-white/10'
-                                : 'border-white/10 hover:border-white/20 bg-white/5'
-                            }`}
-                            title={label}
-                          >
-                            <Icon className="w-6 h-6 text-white/80" />
-                            <p className="text-[10px] text-white/60 text-center">{label}</p>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Tiempo de lectura */}
-                    <div>
-                      <label className="block text-sm font-medium text-white/80 mb-3">Tiempo de Lectura</label>
-                      <div className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white/60 text-sm">
-                        Calculado automáticamente: <span className="text-white/90 font-medium">{dynamicReadTime}</span>
-                      </div>
-                      <p className="mt-2 text-xs text-white/40">Se calcula según el contenido del artículo</p>
-                    </div>
                   </div>
                 </motion.div>
               </div>
@@ -3544,7 +4269,8 @@ const BlogArticlePage = () => {
       {/* Related Articles */}
       <RelatedArticles 
         currentSlug={slug} 
-        allArticles={getLegacyBlogIndex(currentLanguage)}
+        allArticles={allBlogArticles}
+        language={currentLanguage}
         isEditMode={isEditMode}
         selectedSlugs={isEditMode ? draftRelatedSlugs : (article?.related_slugs || [])}
         onSelectArticles={(slugs) => {

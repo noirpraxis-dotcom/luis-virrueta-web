@@ -1,25 +1,49 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Clock, TrendingUp, Plus, X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { getLegacyBlogIndex } from '../data/blogIndex'
 
-const RelatedArticles = ({ currentSlug, allArticles, isEditMode = false, selectedSlugs = [], onSelectArticles }) => {
+const RelatedArticles = ({ currentSlug, allArticles, language = 'es', isEditMode = false, selectedSlugs = [], onSelectArticles }) => {
   const [showSelector, setShowSelector] = useState(false)
   const [tempSelected, setTempSelected] = useState([])
+
+  const legacyImageBySlug = useMemo(() => {
+    const map = new Map()
+    const legacy = getLegacyBlogIndex(language)
+    legacy.forEach((item) => {
+      if (!item?.slug) return
+      const img = item.image || item.heroImage || item.imageUrl || ''
+      if (img) map.set(item.slug, img)
+    })
+    return map
+  }, [language])
 
   const resolveImageSrc = (raw) => {
     const v = typeof raw === 'string' ? raw.trim() : ''
     if (!v) return ''
     if (/^https?:\/\//i.test(v)) return v
-    try {
-      return encodeURI(v)
-    } catch {
-      return v
-    }
+    if (v.startsWith('/')) return encodeURI(v)
+    return encodeURI(`/IMAGENES BLOG/${v}`)
+  }
+
+  const getArticleImage = (article) => {
+    if (!article) return ''
+    return (
+      article.image
+      || article.heroImage
+      || article.imageUrl
+      || article.image_url
+      || legacyImageBySlug.get(article.slug)
+      || ''
+    )
   }
 
   const getSortTs = (post) => {
     if (!post) return 0
+
+    if (Number.isFinite(post.sortTs)) return post.sortTs
+    if (Number.isFinite(post.sort_ts)) return post.sort_ts
 
     const iso = post.publishedAt || post.published_at || post.createdAt || post.created_at || null
     if (iso) {
@@ -52,7 +76,7 @@ const RelatedArticles = ({ currentSlug, allArticles, isEditMode = false, selecte
   }
 
   const canon = Array.isArray(allArticles) ? allArticles : []
-  const ordered = canon
+  const baseOrdered = canon
     .filter((a) => a && typeof a.slug === 'string' && a.slug.trim())
     .slice()
     .sort((a, b) => {
@@ -61,6 +85,10 @@ const RelatedArticles = ({ currentSlug, allArticles, isEditMode = false, selecte
       if (tb !== ta) return tb - ta
       return String(a.slug).localeCompare(String(b.slug))
     })
+
+  const ordered = isEditMode
+    ? baseOrdered
+    : baseOrdered.filter((a) => a.isPublished !== false && a.is_published !== false)
 
   const currentIndex = ordered.findIndex((a) => a.slug === currentSlug)
 
@@ -74,30 +102,25 @@ const RelatedArticles = ({ currentSlug, allArticles, isEditMode = false, selecte
       .filter(Boolean)
       .slice(0, 3)
   } else if (!isEditMode) {
-    // Lógica automática solo si NO hay selección manual
-    // Spec original:
-    // - By default: show the 3 previous posts (older than current).
-    //   (List is newest -> oldest, so older are after the current index.)
-    // - If current is the oldest (no older posts exist): show the 2 newer (closer) posts.
-    if (currentIndex >= 0) {
-      const older = ordered.slice(currentIndex + 1, currentIndex + 4)
-      if (older.length > 0) {
-        related = older
-      } else {
-        // oldest: pick 2 newer
-        related = ordered.slice(Math.max(0, currentIndex - 2), currentIndex)
-      }
-    } else {
-      related = ordered.filter((a) => a.slug !== currentSlug).slice(0, 3)
-    }
-    
-    related = related.filter((a) => a.slug !== currentSlug).slice(0, 3)
+    // Por defecto: mostrar los 3 más recientes (excluyendo el actual)
+    related = ordered.filter((a) => a.slug !== currentSlug).slice(0, 3)
   }
 
   const openSelector = (index) => {
     setTempSelected(selectedSlugs || [])
     setShowSelector(index)
   }
+
+  const isSelectorOpen = showSelector !== false
+
+  useEffect(() => {
+    if (!isSelectorOpen) return
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = previous
+    }
+  }, [isSelectorOpen])
 
   const toggleArticle = (slug) => {
     if (tempSelected.includes(slug)) {
@@ -202,9 +225,9 @@ const RelatedArticles = ({ currentSlug, allArticles, isEditMode = false, selecte
 
                   {/* Image */}
                   <div className={`aspect-video bg-gradient-to-br ${article.gradient} relative overflow-hidden`}>
-                    {resolveImageSrc(article.image) && (
+                    {resolveImageSrc(getArticleImage(article)) && (
                       <img
-                        src={resolveImageSrc(article.image)}
+                        src={resolveImageSrc(getArticleImage(article))}
                         alt={article.title}
                         loading="lazy"
                         className="absolute inset-0 w-full h-full object-cover"
@@ -284,7 +307,11 @@ const RelatedArticles = ({ currentSlug, allArticles, isEditMode = false, selecte
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 overflow-y-auto p-6">
+                <div
+                  className="flex-1 overflow-y-auto p-6"
+                  onWheel={(e) => e.stopPropagation()}
+                  style={{ overscrollBehavior: 'contain' }}
+                >
                   <div className="grid md:grid-cols-3 gap-4">
                     {ordered
                       .filter(a => a.slug !== currentSlug)

@@ -33,10 +33,7 @@ export const calculateReadTime = (sections) => {
   list.forEach((section) => {
     if (!section) return
 
-    totalWords += addWords(section.title)
-    totalWords += addWords(section.subtitle)
     totalWords += addWords(section.content)
-    totalWords += addWords(section.author)
 
     if (Array.isArray(section.items)) {
       section.items.forEach((item) => {
@@ -64,6 +61,7 @@ export const calculateReadTime = (sections) => {
     }
   })
 
+  if (totalWords === 0) return ''
   const minutes = Math.max(1, Math.ceil(totalWords / wordsPerMinute))
   return `${minutes} min`
 }

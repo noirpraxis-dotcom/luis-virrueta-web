@@ -684,7 +684,7 @@ export default function RichTextEditor({
       }
 
       if (type === 'questions') {
-        const title = 'Preguntas'
+        const title = String(b?.title || 'Preguntas').trim() || 'Preguntas'
         const items = String(b?.content || '')
           .split('\n')
           .map((l) => String(l || '').trim())
@@ -700,7 +700,7 @@ export default function RichTextEditor({
           `<span data-rte-role="questions-icon-box" class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br ${accentPreset.questionsIconBg} border ${accentPreset.questionsIconBorder}">` +
           `<span data-rte-role="questions-icon" class="${accentPreset.questionsIcon} text-lg font-bold leading-none">?</span>` +
           `</span>` +
-          `<h3 class="text-2xl md:text-3xl font-bold bg-gradient-to-r ${accentPreset.questionsTitle} bg-clip-text text-transparent" data-rte-role="questions-title">${inline(title)}</h3>` +
+          `<h3 class="text-2xl md:text-3xl font-bold bg-gradient-to-r ${accentPreset.questionsTitle} bg-clip-text text-transparent" data-rte-role="questions-title" contenteditable="true" style="outline: none; display: inline-block;">${inline(title)}</h3>` +
           `</div>` +
           `<ul class="space-y-3 pl-6 list-disc ${QUESTIONS_MARKER_CLASS}" data-rte-role="questions-items">${li}</ul>` +
           `</section>`
@@ -942,7 +942,7 @@ export default function RichTextEditor({
 
       if (tag === 'section' && el.getAttribute('data-rte-type') === 'questions') {
         const titleEl = el.querySelector('[data-rte-role="questions-title"]')
-        const title = 'Preguntas'
+        const title = String(titleEl?.textContent || 'Preguntas').trim() || 'Preguntas'
         const liEls = Array.from(el.querySelectorAll('li'))
         const items = liEls.map((li) => String(li.textContent || '').trim()).filter(Boolean)
         if (items.length) {
@@ -1255,9 +1255,17 @@ export default function RichTextEditor({
     // Solo actualizar si viene de fuera (ej: cambiar de artículo)
     const isFocused = isDocEditorFocused()
     if (!isFocused) {
+      // Guardar posición del scroll antes de actualizar
+      const scrollTop = host.scrollTop
+      const scrollLeft = host.scrollLeft
+      
       host.innerHTML = nextHtml
       applyAccentClassesInPlace(host)
       updateSectionIconsInPlace(host)
+      
+      // Restaurar posición del scroll
+      host.scrollTop = scrollTop
+      host.scrollLeft = scrollLeft
       return
     }
 
@@ -2139,7 +2147,10 @@ export default function RichTextEditor({
 
         const title = document.createElement('h3')
         title.setAttribute('data-rte-role', 'questions-title')
+        title.setAttribute('contenteditable', 'true')
         title.className = `text-2xl md:text-3xl font-bold bg-gradient-to-r ${accentPreset.questionsTitle} bg-clip-text text-transparent`
+        title.style.outline = 'none'
+        title.style.display = 'inline-block'
         title.textContent = 'Preguntas'
 
         header.appendChild(iconBox)

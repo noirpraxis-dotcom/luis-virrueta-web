@@ -108,6 +108,11 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
   // Estado de publicación
   const [isPublished, setIsPublished] = useState(article?.isPublished ?? article?.is_published ?? false)
 
+  // Estados para dropdowns de badges
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
+  const [showColorPicker, setShowColorPicker] = useState(false)
+  const [showIconPicker, setShowIconPicker] = useState(false)
+
   // Fecha/hora de publicación (permite programar)
   const toLocalDateTimeInputValue = (isoString) => {
     if (!isoString) return ''
@@ -314,6 +319,21 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
       const resolvePublishedAtIso = () => {
         if (!finalIsPublished) return null
 
+        // IMPORTANTE: Si el artículo ya tenía fecha de publicación, mantenerla
+        // Solo cambiar si el usuario explícitamente modificó el campo de fecha
+        if (article?.published_at) {
+          // Verificar si el usuario modificó la fecha manualmente
+          const originalDate = toLocalDateTimeInputValue(article.published_at)
+          if (publishedAtLocal && publishedAtLocal !== originalDate) {
+            // Usuario cambió la fecha manualmente
+            const asDate = new Date(publishedAtLocal)
+            if (!Number.isNaN(asDate.getTime())) return asDate.toISOString()
+          }
+          // Mantener la fecha original
+          return article.published_at
+        }
+
+        // Para artículos nuevos o sin fecha previa
         if (publishedAtLocal) {
           const asDate = new Date(publishedAtLocal)
           if (!Number.isNaN(asDate.getTime())) return asDate.toISOString()
@@ -321,9 +341,6 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
 
         // Si se está publicando ahora y no se eligió fecha, usar ahora
         if (publish) return new Date().toISOString()
-
-        // Mantener el valor previo si venía del artículo
-        if (article?.published_at) return article.published_at
 
         return null
       }
@@ -655,215 +672,266 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
               />
             </div>
 
+            {/* Badges interactivos arriba del título */}
+            <div className="mb-6">
+              <div className="flex flex-wrap items-center gap-2">
+                {/* Badge de Categoría Clickeable */}
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setShowCategoryDropdown(!showCategoryDropdown)
+                      setShowColorPicker(false)
+                      setShowIconPicker(false)
+                    }}
+                    className="px-3 py-1.5 bg-black/60 backdrop-blur-md border border-white/20 rounded-full text-xs text-white/90 uppercase tracking-wider font-medium hover:bg-black/80 transition-all cursor-pointer"
+                  >
+                    {category === 'philosophy' && 'Filosofía'}
+                    {category === 'metaphysics' && 'Metafísica'}
+                    {category === 'ontology' && 'Ontología'}
+                    {category === 'reflections' && 'Reflexiones'}
+                    {category === 'diary' && 'Diario'}
+                    {category === 'psychology' && 'Psicología'}
+                    {category === 'psychoanalysis' && 'Psicoanálisis'}
+                    {category === 'spirituality' && 'Espiritualidad'}
+                    {category === 'poetry' && 'Poesía'}
+                    {category === 'consciousness' && 'Consciencia'}
+                    {category === 'perception' && 'Percepción'}
+                  </button>
+
+                  {/* Dropdown de categorías */}
+                  <AnimatePresence>
+                    {showCategoryDropdown && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute top-full mt-2 left-0 z-50 bg-zinc-900 border border-white/20 rounded-xl shadow-2xl overflow-hidden min-w-[200px]"
+                      >
+                        {[
+                          { value: 'philosophy', label: 'Filosofía' },
+                          { value: 'metaphysics', label: 'Metafísica' },
+                          { value: 'ontology', label: 'Ontología' },
+                          { value: 'reflections', label: 'Reflexiones' },
+                          { value: 'diary', label: 'Diario' },
+                          { value: 'psychology', label: 'Psicología' },
+                          { value: 'psychoanalysis', label: 'Psicoanálisis' },
+                          { value: 'spirituality', label: 'Espiritualidad' },
+                          { value: 'poetry', label: 'Poesía' },
+                          { value: 'consciousness', label: 'Consciencia' },
+                          { value: 'perception', label: 'Percepción' }
+                        ].map((cat) => (
+                          <button
+                            key={cat.value}
+                            onClick={() => {
+                              setCategory(cat.value)
+                              setShowCategoryDropdown(false)
+                            }}
+                            className={`w-full px-4 py-2 text-left text-sm hover:bg-white/10 transition-colors ${
+                              category === cat.value ? 'bg-white/5 text-purple-400' : 'text-white/80'
+                            }`}
+                          >
+                            {cat.label}
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Botón circular de Color */}
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setShowColorPicker(!showColorPicker)
+                      setShowCategoryDropdown(false)
+                      setShowIconPicker(false)
+                    }}
+                    className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-fuchsia-500 hover:scale-110 transition-transform border-2 border-white/30"
+                    style={{
+                      background: accent === 'purple' ? 'linear-gradient(to bottom right, rgb(168, 85, 247), rgb(217, 70, 239))' :
+                                  accent === 'red' ? 'linear-gradient(to bottom right, rgb(239, 68, 68), rgb(220, 38, 38))' :
+                                  accent === 'indigo' ? 'linear-gradient(to bottom right, rgb(99, 102, 241), rgb(79, 70, 229))' :
+                                  accent === 'emerald' ? 'linear-gradient(to bottom right, rgb(16, 185, 129), rgb(5, 150, 105))' :
+                                  accent === 'amber' ? 'linear-gradient(to bottom right, rgb(251, 191, 36), rgb(245, 158, 11))' :
+                                  accent === 'blue' ? 'linear-gradient(to bottom right, rgb(59, 130, 246), rgb(37, 99, 235))' :
+                                  accent === 'cyan' ? 'linear-gradient(to bottom right, rgb(6, 182, 212), rgb(14, 165, 233))' :
+                                  accent === 'pink' ? 'linear-gradient(to bottom right, rgb(236, 72, 153), rgb(219, 39, 119))' :
+                                  accent === 'orange' ? 'linear-gradient(to bottom right, rgb(249, 115, 22), rgb(234, 88, 12))' :
+                                  'linear-gradient(to bottom right, rgb(100, 116, 139), rgb(71, 85, 105))'
+                    }}
+                  />
+
+                  {/* Picker de colores */}
+                  <AnimatePresence>
+                    {showColorPicker && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute top-full mt-2 left-0 z-50 bg-zinc-900 border border-white/20 rounded-xl shadow-2xl p-5 min-w-[260px]"
+                      >
+                        <div className="grid grid-cols-3 gap-4">
+                          {[
+                            { value: 'purple', gradient: 'from-purple-500 to-fuchsia-500' },
+                            { value: 'red', gradient: 'from-red-500 to-red-600' },
+                            { value: 'indigo', gradient: 'from-indigo-500 to-indigo-600' },
+                            { value: 'emerald', gradient: 'from-emerald-500 to-emerald-600' },
+                            { value: 'amber', gradient: 'from-amber-400 to-amber-500' },
+                            { value: 'blue', gradient: 'from-blue-500 to-blue-600' },
+                            { value: 'cyan', gradient: 'from-cyan-500 to-sky-500' },
+                            { value: 'pink', gradient: 'from-pink-500 to-pink-600' },
+                            { value: 'orange', gradient: 'from-orange-500 to-orange-600' },
+                            { value: 'slate', gradient: 'from-slate-500 to-slate-600' }
+                          ].map((color) => (
+                            <button
+                              key={color.value}
+                              onClick={() => {
+                                setAccent(color.value)
+                                setShowColorPicker(false)
+                              }}
+                              className={`w-12 h-12 rounded-full bg-gradient-to-br ${color.gradient} hover:scale-110 transition-transform ${
+                                accent === color.value ? 'ring-2 ring-white ring-offset-2 ring-offset-zinc-900' : ''
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Botón circular de Ícono */}
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setShowIconPicker(!showIconPicker)
+                      setShowCategoryDropdown(false)
+                      setShowColorPicker(false)
+                    }}
+                    className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-all border-2 border-white/30 flex items-center justify-center"
+                  >
+                    {sectionIcon === 'crown' && <Crown className="w-4 h-4 text-white" />}
+                    {sectionIcon === 'moon' && <Moon className="w-4 h-4 text-white" />}
+                    {sectionIcon === 'sparkles' && <Sparkles className="w-4 h-4 text-white" />}
+                    {sectionIcon === 'diamond' && <Diamond className="w-4 h-4 text-white" />}
+                    {sectionIcon === 'star' && <Star className="w-4 h-4 text-white" />}
+                    {sectionIcon === 'bookmark' && <Bookmark className="w-4 h-4 text-white" />}
+                  </button>
+
+                  {/* Picker de íconos */}
+                  <AnimatePresence>
+                    {showIconPicker && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute top-full mt-2 left-0 z-50 bg-zinc-900 border border-white/20 rounded-xl shadow-2xl p-5 min-w-[220px]"
+                      >
+                        <div className="grid grid-cols-2 gap-4">
+                          {[
+                            { value: 'crown', icon: Crown },
+                            { value: 'moon', icon: Moon },
+                            { value: 'sparkles', icon: Sparkles },
+                            { value: 'diamond', icon: Diamond },
+                            { value: 'star', icon: Star },
+                            { value: 'bookmark', icon: Bookmark }
+                          ].map(({ value, icon: Icon }) => (
+                            <button
+                              key={value}
+                              onClick={() => {
+                                setSectionIcon(value)
+                                setShowIconPicker(false)
+                              }}
+                              className={`w-14 h-14 rounded-lg bg-white/10 hover:bg-white/20 transition-all flex items-center justify-center ${
+                                sectionIcon === value ? 'ring-2 ring-purple-500' : ''
+                              }`}
+                            >
+                              <Icon className="w-7 h-7 text-white" />
+                            </button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+            </div>
+
             {/* Metadatos principales */}
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Título *
                 </label>
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  onBlur={() => {
-                    const next = toSentenceCase(title)
-                    if (next !== title) setTitle(next)
+                <div
+                  contentEditable
+                  suppressContentEditableWarning
+                  onInput={(e) => {
+                    const text = e.currentTarget.textContent || ''
+                    setTitle(text)
                   }}
-                  placeholder="El título principal de tu artículo"
-                  className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white text-xl font-bold placeholder-gray-600 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
-                />
+                  onBlur={(e) => {
+                    const text = e.currentTarget.textContent || ''
+                    const next = toSentenceCase(text)
+                    if (next !== text) {
+                      setTitle(next)
+                      e.currentTarget.textContent = next
+                    }
+                  }}
+                  data-placeholder="El título principal de tu artículo"
+                  className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white text-xl font-bold focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all min-h-[3rem] empty:before:content-[attr(data-placeholder)] empty:before:text-gray-600"
+                >{title}</div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Subtítulo
                 </label>
-                <input
-                  type="text"
-                  value={subtitle}
-                  onChange={(e) => setSubtitle(e.target.value)}
-                  onBlur={() => {
-                    const next = toSentenceCase(subtitle)
-                    if (next !== subtitle) setSubtitle(next)
+                <div
+                  contentEditable
+                  suppressContentEditableWarning
+                  onInput={(e) => {
+                    const text = e.currentTarget.textContent || ''
+                    setSubtitle(text)
                   }}
-                  placeholder="Un subtítulo descriptivo (opcional)"
-                  className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Extracto/Descripción
-                </label>
-                <textarea
-                  value={excerpt}
-                  onChange={(e) => setExcerpt(e.target.value)}
-                  onBlur={() => {
-                    const next = toSentenceCase(excerpt)
-                    if (next !== excerpt) setExcerpt(next)
+                  onBlur={(e) => {
+                    const text = e.currentTarget.textContent || ''
+                    const next = toSentenceCase(text)
+                    if (next !== text) {
+                      setSubtitle(next)
+                      e.currentTarget.textContent = next
+                    }
                   }}
-                  placeholder="Breve descripción que aparecerá en la vista previa"
-                  rows={3}
-                  className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all resize-none"
-                />
+                  data-placeholder="Un subtítulo descriptivo (opcional)"
+                  className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all min-h-[3rem] empty:before:content-[attr(data-placeholder)] empty:before:text-gray-600"
+                >{subtitle}</div>
               </div>
+            </div>
 
-              {/* Grid de metadata */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Divisor */}
+            <div className="border-t border-gray-800 pt-8">
+              <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <Tag className="w-6 h-6 text-purple-400" />
+                Configuración del Artículo
+              </h3>
+              
+              <div className="space-y-4 max-w-2xl">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    <Calendar className="w-4 h-4 inline mr-2" />
-                    Fecha/Hora de Publicación
+                    Extracto/Descripción
                   </label>
-                  <input
-                    type="datetime-local"
-                    value={publishedAtLocal}
-                    onChange={(e) => setPublishedAtLocal(e.target.value)}
-                    className="w-full px-4 py-2 bg-white/5 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Si eliges una fecha futura, quedará programado.
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    <User className="w-4 h-4 inline mr-2" />
-                    Autor
-                  </label>
-                  <input
-                    type="text"
-                    value={author}
-                    onChange={(e) => setAuthor(e.target.value)}
-                    className="w-full px-4 py-2 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 transition-all"
+                  <textarea
+                    value={excerpt}
+                    onChange={(e) => setExcerpt(e.target.value)}
+                    onBlur={() => {
+                      const next = toSentenceCase(excerpt)
+                      if (next !== excerpt) setExcerpt(next)
+                    }}
+                    placeholder="Breve descripción que aparecerá en la vista previa"
+                    rows={3}
+                    className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all resize-none"
                   />
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    <Clock className="w-4 h-4 inline mr-2" />
-                    Tiempo de Lectura <span className="text-xs text-purple-400">(Automático)</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={readTime}
-                    readOnly
-                    placeholder="Se calcula automáticamente"
-                    className="w-full px-4 py-2 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-600 cursor-not-allowed opacity-70"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    <Tag className="w-4 h-4 inline mr-2" />
-                    Categoría
-                  </label>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all [&>option]:bg-gray-900 [&>option]:text-white"
-                  >
-                    <option value="philosophy">Filosofía</option>
-                    <option value="metaphysics">Metafísica</option>
-                    <option value="reflections">Reflexiones</option>
-                    <option value="diary">Diario</option>
-                    <option value="psychology">Psicología</option>
-                    <option value="psychoanalysis">Psicoanálisis</option>
-                    <option value="spirituality">Espiritualidad</option>
-                    <option value="consciousness">Consciencia</option>
-                    <option value="perception">Percepción</option>
-                    <option value="ai">Inteligencia Artificial</option>
-                    <option value="neuroscience">Neurociencia</option>
-                    <option value="branding">Branding</option>
-                    <option value="personal-development">Desarrollo Personal</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Color / Tema
-                  </label>
-                  <select
-                    value={accent}
-                    onChange={(e) => setAccent(e.target.value)}
-                    className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all [&>option]:bg-gray-900 [&>option]:text-white"
-                  >
-                    <option value="purple">🟣 Morado (SU·DO·KU)</option>
-                    <option value="red">🔴 Rojo (P.U.T.A.)</option>
-                    <option value="indigo">🔵 Índigo</option>
-                    <option value="emerald">🟢 Esmeralda</option>
-                    <option value="amber">🟡 Ámbar</option>
-                    <option value="blue">💙 Azul</option>
-                    <option value="cyan">🩵 Cian</option>
-                    <option value="pink">🩷 Rosa</option>
-                    <option value="waifu8">💖 Waifu 8</option>
-                    <option value="waifu9">💜 Waifu 9</option>
-                    <option value="orange">🟠 Naranja</option>
-                    <option value="slate">⚪ Neutro</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    <span className="inline-flex items-center gap-2">
-                      {sectionIcon === 'moon' ? (
-                        <Moon className="w-4 h-4 text-gray-200" />
-                      ) : sectionIcon === 'sparkles' ? (
-                        <Sparkles className="w-4 h-4 text-gray-200" />
-                      ) : sectionIcon === 'diamond' ? (
-                        <Diamond className="w-4 h-4 text-gray-200" />
-                      ) : sectionIcon === 'star' ? (
-                        <Star className="w-4 h-4 text-gray-200" />
-                      ) : sectionIcon === 'bookmark' ? (
-                        <Bookmark className="w-4 h-4 text-gray-200" />
-                      ) : (
-                        <Crown className="w-4 h-4 text-gray-200" />
-                      )}
-                      Ícono de Secciones
-                    </span>
-                  </label>
-                  <select
-                    value={sectionIcon}
-                    onChange={(e) => setSectionIcon(e.target.value)}
-                    className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all [&>option]:bg-gray-900 [&>option]:text-white"
-                  >
-                    <option value="crown">Corona</option>
-                    <option value="moon">Luna</option>
-                    <option value="sparkles">Brillo</option>
-                    <option value="diamond">Diamante</option>
-                    <option value="star">Estrella</option>
-                    <option value="bookmark">Marcador</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    <Globe className="w-4 h-4 inline mr-2" />
-                    Idioma
-                  </label>
-                  <select
-                    value={language}
-                    onChange={(e) => setLanguage(e.target.value)}
-                    className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-all [&>option]:bg-gray-900 [&>option]:text-white"
-                  >
-                    <option value="es">Español</option>
-                    <option value="en">English</option>
-                  </select>
-                </div>
-
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Tags (separados por comas)
-                </label>
-                <input
-                  type="text"
-                  value={tags}
-                  onChange={(e) => setTags(e.target.value)}
-                  placeholder="filosofía, mente, consciencia"
-                  className="w-full px-4 py-2 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 transition-all"
-                />
               </div>
             </div>
 

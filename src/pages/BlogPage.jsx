@@ -645,6 +645,7 @@ const BlogCard = ({ post, index, isAdmin, onDelete, onEdit }) => {
     'Ethics': currentLanguage === 'en' ? 'Ethics' : 'Ética',
     'Ética': currentLanguage === 'en' ? 'Ethics' : 'Ética',
     'Spirituality': currentLanguage === 'en' ? 'Spirituality' : 'Espiritualidad',
+    'spirituality': currentLanguage === 'en' ? 'Spirituality' : 'Espiritualidad',
     'Espiritualidad': currentLanguage === 'en' ? 'Spirituality' : 'Espiritualidad',
     'Identity': currentLanguage === 'en' ? 'Identity' : 'Identidad',
     'Identidad': currentLanguage === 'en' ? 'Identity' : 'Identidad',
@@ -661,7 +662,27 @@ const BlogCard = ({ post, index, isAdmin, onDelete, onEdit }) => {
     'Phenomenology': currentLanguage === 'en' ? 'Phenomenology' : 'Fenomenología',
     'Fenomenología': currentLanguage === 'en' ? 'Phenomenology' : 'Fenomenología',
     'Love & Relationships': currentLanguage === 'en' ? 'Love & Relationships' : 'Amor y Relaciones',
-    'Amor y Relaciones': currentLanguage === 'en' ? 'Love & Relationships' : 'Amor y Relaciones'
+    'Amor y Relaciones': currentLanguage === 'en' ? 'Love & Relationships' : 'Amor y Relaciones',
+    'Ontology': currentLanguage === 'en' ? 'Ontology' : 'Ontología',
+    'ontology': currentLanguage === 'en' ? 'Ontology' : 'Ontología',
+    'Ontología': currentLanguage === 'en' ? 'Ontology' : 'Ontología',
+    'ontología': currentLanguage === 'en' ? 'Ontology' : 'Ontología',
+    'Metaphysics': currentLanguage === 'en' ? 'Metaphysics' : 'Metafísica',
+    'metaphysics': currentLanguage === 'en' ? 'Metaphysics' : 'Metafísica',
+    'Metafísica': currentLanguage === 'en' ? 'Metaphysics' : 'Metafísica',
+    'metafísica': currentLanguage === 'en' ? 'Metaphysics' : 'Metafísica',
+    'Reflections': currentLanguage === 'en' ? 'Reflections' : 'Reflexiones',
+    'reflections': currentLanguage === 'en' ? 'Reflections' : 'Reflexiones',
+    'Reflexiones': currentLanguage === 'en' ? 'Reflections' : 'Reflexiones',
+    'reflexiones': currentLanguage === 'en' ? 'Reflections' : 'Reflexiones',
+    'Diary': currentLanguage === 'en' ? 'Diary' : 'Diario',
+    'diary': currentLanguage === 'en' ? 'Diary' : 'Diario',
+    'Diario': currentLanguage === 'en' ? 'Diary' : 'Diario',
+    'diario': currentLanguage === 'en' ? 'Diary' : 'Diario',
+    'Poetry': currentLanguage === 'en' ? 'Poetry' : 'Poesía',
+    'poetry': currentLanguage === 'en' ? 'Poetry' : 'Poesía',
+    'Poesía': currentLanguage === 'en' ? 'Poetry' : 'Poesía',
+    'poesía': currentLanguage === 'en' ? 'Poetry' : 'Poesía'
   }
 
   const categoryLabel = categoryLabels[post.category]
