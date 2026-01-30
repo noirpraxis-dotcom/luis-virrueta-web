@@ -4635,6 +4635,22 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
 
   // Questions - Para preguntas elegantes con items
   if (section.type === 'questions') {
+    // Detectar automáticamente si debe ser "Pregunta" o "Preguntas"
+    const getQuestionsTitle = () => {
+      // Si ya tiene un título personalizado diferente a los predeterminados, usarlo
+      const currentTitle = section.title || ''
+      if (currentTitle && currentTitle !== 'Preguntas' && currentTitle !== 'Pregunta') {
+        return currentTitle
+      }
+      
+      // Contar signos de interrogación en los items
+      const allText = (section.items || []).join(' ')
+      const questionMarks = (allText.match(/[¿?]/g) || []).length
+      
+      // Si hay más de 2 signos (indica al menos 2 preguntas), usar plural
+      return questionMarks > 2 ? 'Preguntas' : 'Pregunta'
+    }
+    
     return (
       <motion.div
         ref={ref}
@@ -4654,7 +4670,7 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
                 <AlertCircle className={`w-7 h-7 ${accent.questionsIcon}`} />
               </div>
               <h3 className={`text-2xl md:text-3xl font-bold bg-gradient-to-r ${accent.questionsTitle} bg-clip-text text-transparent`}>
-                {section.title}
+                {getQuestionsTitle()}
               </h3>
             </div>
             
