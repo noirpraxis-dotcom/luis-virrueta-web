@@ -2205,7 +2205,6 @@ const BlogArticlePage = () => {
 
       if (type === 'questions') {
         if (content) {
-          const title = 'Preguntas'
           // Auto-split by multiple question marks when on same line
           let rawLines = content.split('\n').map((l) => normalizeCmsText(l)).filter(Boolean)
           
@@ -2227,7 +2226,13 @@ const BlogArticlePage = () => {
             }
           }
 
-          if (items.length) sections.push({ type: 'questions', title, items })
+          if (items.length) {
+            // Detectar automáticamente singular/plural
+            const allText = items.join(' ')
+            const questionMarks = (allText.match(/[¿?]/g) || []).length
+            const title = questionMarks > 2 ? 'Preguntas' : 'Pregunta'
+            sections.push({ type: 'questions', title, items })
+          }
         }
         continue
       }
@@ -2277,7 +2282,12 @@ const BlogArticlePage = () => {
       if (section.type === 'questions') {
         const items = Array.isArray(section.items) ? section.items : []
         const content = items.map((i) => String(i || '').trim()).filter(Boolean).join('\n')
-        if (content) blocks.push({ type: 'questions', title: 'Preguntas', content })
+        if (content) {
+          // Detectar automáticamente singular/plural
+          const questionMarks = (content.match(/[¿?]/g) || []).length
+          const title = questionMarks > 2 ? 'Preguntas' : 'Pregunta'
+          blocks.push({ type: 'questions', title, content })
+        }
         continue
       }
       if (section.type === 'list') {
