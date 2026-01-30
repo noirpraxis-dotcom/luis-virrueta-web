@@ -10,6 +10,21 @@ import {
 import { getAccentPreset } from '../utils/accentPresets'
 
 /**
+ * Función auxiliar para detectar si debe usar "Pregunta" o "Preguntas"
+ * basándose en la cantidad de signos de interrogación en el contenido
+ */
+const getQuestionsTitle = (content) => {
+  const text = String(content || '').trim()
+  if (!text) return 'Pregunta'
+  
+  // Contar signos de interrogación (¿ y ?)
+  const questionMarks = (text.match(/[¿?]/g) || []).length
+  
+  // Si hay más de 2 signos (indica al menos 2 preguntas), usar plural
+  return questionMarks > 2 ? 'Preguntas' : 'Pregunta'
+}
+
+/**
  * RichTextEditor con detección automática de contenido de GPT
  * Permite pegar texto y automáticamente detecta títulos, párrafos, listas, etc.
  */
@@ -63,7 +78,8 @@ export default function RichTextEditor({
       const type = String(b?.type || '')
 
       if (type === 'questions') {
-        out.push({ ...b, title: 'Preguntas' })
+        const autoTitle = getQuestionsTitle(b?.content)
+        out.push({ ...b, title: autoTitle })
         continue
       }
 
@@ -80,11 +96,12 @@ export default function RichTextEditor({
           const qish = items.filter(isQuestionLikeLine).length
           const ratio = qish / items.length
           if (qish >= 2 && ratio >= 0.6) {
+            const content = items.join('\n')
             out.push({
               id: `block-${Date.now()}-${out.length}`,
               type: 'questions',
-              title: 'Preguntas',
-              content: items.join('\n')
+              title: getQuestionsTitle(content),
+              content
             })
             i = j - 1
             continue
@@ -684,7 +701,9 @@ export default function RichTextEditor({
       }
 
       if (type === 'questions') {
-        const title = String(b?.title || 'Preguntas').trim() || 'Preguntas'
+        // Detectar automáticamente si es singular o plural
+        const autoTitle = getQuestionsTitle(b?.content)
+        const title = String(b?.title || autoTitle).trim() || autoTitle
         const items = String(b?.content || '')
           .split('\n')
           .map((l) => String(l || '').trim())
@@ -1193,7 +1212,24 @@ export default function RichTextEditor({
     Array.from(root.querySelectorAll('[data-rte-type="questions"]')).forEach((qSection) => {
       qSection.className = `my-12 rounded-3xl border-2 ${accentPreset.questionsBorder} bg-gradient-to-br ${accentPreset.questionsBg} p-10 shadow-2xl shadow-black/30`
       const title = qSection.querySelector('[data-rte-role="questions-title"]')
-      if (title) title.className = `text-2xl md:text-3xl font-bold bg-gradient-to-r ${accentPreset.questionsTitle} bg-clip-text text-transparent`
+      
+      // Actualizar automáticamente el título basándose en el contenido
+      if (title) {
+        const items = qSection.querySelector('[data-rte-role="questions-items"]')
+        const content = items ? Array.from(items.querySelectorAll('li'))
+          .map(li => li.textContent || '')
+          .join('\n')
+          .trim() : ''
+        
+        // Si el título es el predeterminado o está vacío, actualizarlo automáticamente
+        const currentTitle = title.textContent?.trim() || ''
+        if (!currentTitle || currentTitle === 'Preguntas' || currentTitle === 'Pregunta') {
+          title.textContent = getQuestionsTitle(content)
+        }
+        
+        title.className = `text-2xl md:text-3xl font-bold bg-gradient-to-r ${accentPreset.questionsTitle} bg-clip-text text-transparent`
+      }
+      
       const iconBox = qSection.querySelector('[data-rte-role="questions-icon-box"]')
       if (iconBox) iconBox.className = `inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br ${accentPreset.questionsIconBg} border ${accentPreset.questionsIconBorder}`
       const icon = qSection.querySelector('[data-rte-role="questions-icon"]')
@@ -1478,7 +1514,7 @@ export default function RichTextEditor({
       id: `block-${Date.now()}`,
       type,
       content: '',
-      ...(type === 'questions' ? { title: 'Preguntas' } : null)
+      ...(type === 'questions' ? { title: 'Pregunta' } : null)
     }
     
     if (selectedBlockId) {
@@ -2151,7 +2187,7 @@ export default function RichTextEditor({
         title.className = `text-2xl md:text-3xl font-bold bg-gradient-to-r ${accentPreset.questionsTitle} bg-clip-text text-transparent`
         title.style.outline = 'none'
         title.style.display = 'inline-block'
-        title.textContent = 'Preguntas'
+        title.textContent = 'Pregunta'
 
         header.appendChild(iconBox)
         header.appendChild(title)
@@ -2306,7 +2342,14 @@ export default function RichTextEditor({
     }
 
     if (action === 'questions') {
-      const replacement = splitBlockBySelection(block, start, end, { type: 'questions', title: 'Preguntas' })
+      // Detectar cuántos signos de interrogación hay en el texto seleccionado
+      const selectedText = content.substring(start, end)
+      // Contar signos de interrogación de apertura (¿) o cierre (?)
+      const questionMarks = (selectedText.match(/[¿?]/g) || []).length
+      // Si hay más de 2 signos (al menos 2 preguntas con apertura y cierre), usar plural
+      const title = questionMarks > 2 ? 'Preguntas' : 'Pregunta'
+      
+      const replacement = splitBlockBySelection(block, start, end, { type: 'questions', title })
       const next = [...blocks.slice(0, index), ...replacement, ...blocks.slice(index + 1)]
       setBlocksWithHistory(next)
       setShowFloatingToolbar(false)

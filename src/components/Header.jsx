@@ -51,7 +51,7 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
               <div className="text-white/50 text-[0.5rem] md:text-[0.55rem] font-light uppercase mt-1"
                 style={{ letterSpacing: '0.25em' }}
               >
-                Psicólogo
+                Psicólogo y Psicoanalista
               </div>
             </motion.div>
           </Link>

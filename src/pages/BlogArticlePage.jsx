@@ -4,7 +4,7 @@ import { ACCENT_PRESETS } from '../utils/accentPresets'
 import { useParams, Link } from 'react-router-dom'
 import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles, Award, Check, Shield, AlertCircle, Copy, Crown, Moon, Star, Diamond, Bookmark, Target, Compass, Flame, Heart, Lightbulb, FileDown } from 'lucide-react'
 import ReadingProgressBar from '../components/ReadingProgressBar'
-import { ChevronDown, Facebook, Linkedin, MessageCircle, Twitter } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import RelatedArticles from '../components/RelatedArticles'
 import NewsletterSignup from '../components/NewsletterSignup'
 import TableOfContents from '../components/TableOfContents'
@@ -2903,15 +2903,19 @@ const BlogArticlePage = () => {
   const shareExcerptRaw = article.excerpt || article.extract || article.sections?.[0]?.content || ''
   const shareExcerpt = String(shareExcerptRaw).replace(/\s+/g, ' ').trim().slice(0, 300)
   
-  // Formato para WhatsApp: título en negritas, subtítulo en itálicas, excerpt normal
+  // Formato para compartir: título en negritas, subtítulo en itálicas, excerpt normal
   const shareTextFormatted = [
     `*${shareTitle}*`,
     shareSubtitle ? `_${shareSubtitle}_` : '',
     shareExcerpt
   ].filter(Boolean).join('\n\n')
   
-  // Para redes sin formato markdown
-  const shareTextPlain = [shareTitle, shareSubtitle, shareExcerpt].filter(Boolean).join('\n\n')
+  // Para redes sin formato markdown (mantener negritas y cursivas cuando sea posible)
+  const shareTextPlain = [
+    `*${shareTitle}*`,
+    shareSubtitle ? `_${shareSubtitle}_` : '',
+    shareExcerpt
+  ].filter(Boolean).join('\n\n')
   
   // Asegurar que shareImage sea URL absoluta y preferir imagen del artículo
   const shareImage = (() => {
@@ -2947,16 +2951,24 @@ const BlogArticlePage = () => {
       try {
         const shareData = {
           title: shareTitle,
-          text: shareTextPlain,
+          text: shareTextFormatted,
           url: shareUrl
         }
 
+        // Intentar incluir la imagen si está disponible
         if (shareImage) {
-          const res = await fetch(shareImage, { mode: 'cors' })
-          const blob = await res.blob()
-          const file = new File([blob], 'articulo.jpg', { type: blob.type || 'image/jpeg' })
-          if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            shareData.files = [file]
+          try {
+            const res = await fetch(shareImage, { mode: 'cors' })
+            const blob = await res.blob()
+            const file = new File([blob], 'articulo.jpg', { type: blob.type || 'image/jpeg' })
+            
+            // Verificar si el dispositivo puede compartir archivos
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              shareData.files = [file]
+            }
+          } catch (imageError) {
+            // Si falla la carga de la imagen, continuar sin ella
+            console.warn('No se pudo cargar la imagen para compartir:', imageError)
           }
         }
 
@@ -3325,11 +3337,14 @@ const BlogArticlePage = () => {
 
     const copyToClipboard = async () => {
       try {
-        await navigator.clipboard.writeText(shareUrl)
+        // Copiar el texto formateado completo (igual que cuando se comparte)
+        const textToCopy = `${shareTextFormatted}\n\n${shareUrl}`
+        await navigator.clipboard.writeText(textToCopy)
       } catch {
         // Fallback for older browsers / permissions
         const input = document.createElement('textarea')
-        input.value = shareUrl
+        const textToCopy = `${shareTextFormatted}\n\n${shareUrl}`
+        input.value = textToCopy
         input.setAttribute('readonly', 'true')
         input.style.position = 'fixed'
         input.style.top = '-1000px'
@@ -3367,11 +3382,18 @@ const BlogArticlePage = () => {
     }, [open])
 
     const encodedUrl = encodeURIComponent(shareUrl)
+    const encodedTitle = encodeURIComponent(shareTitle)
+    const encodedSubtitle = encodeURIComponent(shareSubtitle)
+    const encodedExcerpt = encodeURIComponent(shareExcerpt)
     // WhatsApp con formato markdown
     const encodedTextWhatsApp = encodeURIComponent(`${shareTextFormatted}\n\n${shareUrl}`)
     // Otras redes sin formato
     const encodedText = encodeURIComponent(`${shareTextPlain}\n\n${shareUrl}`)
     const encodedTweet = encodeURIComponent(`${shareTitle}${shareSubtitle ? ` — ${shareSubtitle}` : ''}\n\n${shareExcerpt}`)
+    // LinkedIn con título y resumen
+    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&title=${encodedTitle}&summary=${encodedExcerpt}`
+    // Facebook con quote
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedTitle}${shareSubtitle ? ` — ${encodedSubtitle}` : ''}. ${encodedExcerpt}`
 
     const items = [
       ...(navigator.share ? [{
@@ -3383,26 +3405,6 @@ const BlogArticlePage = () => {
         label: 'PDF',
         onClick: exportToPDF,
         Icon: FileDown
-      },
-      {
-        label: 'WhatsApp',
-        href: `https://wa.me/?text=${encodedTextWhatsApp}`,
-        Icon: MessageCircle
-      },
-      {
-        label: 'X',
-        href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(encodedTweet)}&url=${encodedUrl}`,
-        Icon: Twitter
-      },
-      {
-        label: 'LinkedIn',
-        href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
-        Icon: Linkedin
-      },
-      {
-        label: 'Facebook',
-        href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-        Icon: Facebook
       },
       {
         label: currentLanguage === 'en' ? 'Copy' : 'Copiar',

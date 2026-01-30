@@ -688,6 +688,11 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                     {category === 'philosophy' && 'Filosofía'}
                     {category === 'metaphysics' && 'Metafísica'}
                     {category === 'ontology' && 'Ontología'}
+                    {category === 'epistemology' && 'Epistemología'}
+                    {category === 'ethics' && 'Ética'}
+                    {category === 'phenomenology' && 'Fenomenología'}
+                    {category === 'hermeneutics' && 'Hermenéutica'}
+                    {category === 'aesthetics' && 'Estética'}
                     {category === 'reflections' && 'Reflexiones'}
                     {category === 'diary' && 'Diario'}
                     {category === 'psychology' && 'Psicología'}
@@ -696,6 +701,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                     {category === 'poetry' && 'Poesía'}
                     {category === 'consciousness' && 'Consciencia'}
                     {category === 'perception' && 'Percepción'}
+                    {category === 'existence' && 'Existencia'}
                   </button>
 
                   {/* Dropdown de categorías */}
@@ -711,6 +717,11 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                           { value: 'philosophy', label: 'Filosofía' },
                           { value: 'metaphysics', label: 'Metafísica' },
                           { value: 'ontology', label: 'Ontología' },
+                          { value: 'epistemology', label: 'Epistemología' },
+                          { value: 'ethics', label: 'Ética' },
+                          { value: 'phenomenology', label: 'Fenomenología' },
+                          { value: 'hermeneutics', label: 'Hermenéutica' },
+                          { value: 'aesthetics', label: 'Estética' },
                           { value: 'reflections', label: 'Reflexiones' },
                           { value: 'diary', label: 'Diario' },
                           { value: 'psychology', label: 'Psicología' },
@@ -718,7 +729,8 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                           { value: 'spirituality', label: 'Espiritualidad' },
                           { value: 'poetry', label: 'Poesía' },
                           { value: 'consciousness', label: 'Consciencia' },
-                          { value: 'perception', label: 'Percepción' }
+                          { value: 'perception', label: 'Percepción' },
+                          { value: 'existence', label: 'Existencia' }
                         ].map((cat) => (
                           <button
                             key={cat.value}
@@ -870,14 +882,6 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                     const text = e.currentTarget.textContent || ''
                     setTitle(text)
                   }}
-                  onBlur={(e) => {
-                    const text = e.currentTarget.textContent || ''
-                    const next = toSentenceCase(text)
-                    if (next !== text) {
-                      setTitle(next)
-                      e.currentTarget.textContent = next
-                    }
-                  }}
                   data-placeholder="El título principal de tu artículo"
                   className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white text-xl font-bold focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all min-h-[3rem] empty:before:content-[attr(data-placeholder)] empty:before:text-gray-600"
                 >{title}</div>
@@ -893,14 +897,6 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                   onInput={(e) => {
                     const text = e.currentTarget.textContent || ''
                     setSubtitle(text)
-                  }}
-                  onBlur={(e) => {
-                    const text = e.currentTarget.textContent || ''
-                    const next = toSentenceCase(text)
-                    if (next !== text) {
-                      setSubtitle(next)
-                      e.currentTarget.textContent = next
-                    }
                   }}
                   data-placeholder="Un subtítulo descriptivo (opcional)"
                   className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all min-h-[3rem] empty:before:content-[attr(data-placeholder)] empty:before:text-gray-600"
