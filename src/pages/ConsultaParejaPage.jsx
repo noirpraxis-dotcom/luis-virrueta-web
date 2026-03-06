@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Heart, MessageCircle, Shield, Target, Users, Brain, ArrowRight, ArrowLeft, Check, Clock, FileText, Mail, Send, Download, Sparkles, Eye, Lock, Star, Activity, BarChart3, ChevronDown } from 'lucide-react'
+import { Heart, MessageCircle, Shield, Target, Users, Brain, ArrowRight, ArrowLeft, Check, Clock, FileText, Mail, Send, Download, Sparkles, Eye, Lock, Star, Activity, BarChart3, ChevronDown, Zap, Layers } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 import jsPDF from 'jspdf'
 
@@ -17,36 +17,97 @@ const AREAS = [
   { key: 'autonomia', label: 'Autonomía', icon: Users, color: 'from-indigo-400 to-blue-400', desc: 'Equilibrio entre cercanía e independencia.' }
 ]
 
-// 20 preguntas psicológicamente diseñadas
-// inverted = true → mayor puntaje = peor (se invierte al calcular)
-const QUESTIONS = [
-  // Comunicación (3 preguntas)
+// 20 preguntas — Diagnóstico Rápido (~3 min)
+const QUESTIONS_QUICK = [
+  // Comunicación (3)
   { id: 1, text: 'En conversaciones importantes sentimos que realmente nos escuchamos.', area: 'comunicacion', inverted: false },
   { id: 2, text: 'A veces las pequeñas cosas del día a día generan más tensión de la que deberían.', area: 'comunicacion', inverted: true },
   { id: 3, text: 'Cuando hay un desacuerdo, podemos hablar sin que la conversación se convierta en pelea.', area: 'comunicacion', inverted: false },
-  // Intimidad (3 preguntas)
+  // Intimidad (3)
   { id: 4, text: 'En ocasiones siento que vivimos más como compañeros de piso que como pareja.', area: 'intimidad', inverted: true },
   { id: 5, text: 'Hay momentos donde siento una conexión profunda con mi pareja sin necesidad de palabras.', area: 'intimidad', inverted: false },
   { id: 6, text: 'Me resulta fácil mostrar vulnerabilidad emocional frente a mi pareja.', area: 'intimidad', inverted: false },
-  // Admiración (3 preguntas)
+  // Admiración (3)
   { id: 7, text: 'Cuando pienso en mi pareja, siento genuina admiración por quién es como persona.', area: 'admiracion', inverted: false },
   { id: 8, text: 'A veces siento que las cosas que hace mi pareja me irritan más de lo razonable.', area: 'admiracion', inverted: true },
   { id: 9, text: 'Me gusta contarle a otros las cosas buenas de mi pareja.', area: 'admiracion', inverted: false },
-  // Conflicto (3 preguntas)
+  // Conflicto (3)
   { id: 10, text: 'Hay temas que preferimos no tocar porque sabemos que terminarán mal.', area: 'conflicto', inverted: true },
   { id: 11, text: 'Siento que arrastramos discusiones del pasado que nunca terminamos de resolver.', area: 'conflicto', inverted: true },
   { id: 12, text: 'Cuando surgen problemas, tengo confianza de que encontraremos una solución juntos.', area: 'conflicto', inverted: false },
-  // Proyecto de vida (3 preguntas)
+  // Proyecto de vida (3)
   { id: 13, text: 'Cuando imaginamos el futuro, sentimos que vamos en la misma dirección.', area: 'proyecto', inverted: false },
   { id: 14, text: 'Hay decisiones importantes en las que noto que tenemos visiones muy diferentes.', area: 'proyecto', inverted: true },
   { id: 15, text: 'Compartimos al menos una meta importante que nos entusiasma a ambos.', area: 'proyecto', inverted: false },
-  // Seguridad emocional (2 preguntas)
+  // Seguridad emocional (2)
   { id: 16, text: 'En momentos importantes siento que mi pareja está de mi lado.', area: 'seguridad', inverted: false },
   { id: 17, text: 'A veces dudo si mi pareja realmente entiende lo que necesito emocionalmente.', area: 'seguridad', inverted: true },
-  // Autonomía (3 preguntas)
+  // Autonomía (3)
   { id: 18, text: 'Me siento cómodo siendo completamente yo mismo dentro de la relación.', area: 'autonomia', inverted: false },
   { id: 19, text: 'Siento que necesito pedir permiso o justificar mis decisiones personales.', area: 'autonomia', inverted: true },
   { id: 20, text: 'Podemos pasar tiempo separados sin que genere malestar o inseguridad.', area: 'autonomia', inverted: false }
+]
+
+// 45 preguntas — Diagnóstico Detallado (~10 min)
+const QUESTIONS_DETAILED = [
+  // ═══ Comunicación (7) ═══
+  { id: 101, text: 'En conversaciones importantes sentimos que realmente nos escuchamos.', area: 'comunicacion', inverted: false },
+  { id: 102, text: 'A veces las pequeñas cosas del día a día generan más tensión de la que deberían.', area: 'comunicacion', inverted: true },
+  { id: 103, text: 'Cuando hay un desacuerdo, podemos hablar sin que la conversación se convierta en pelea.', area: 'comunicacion', inverted: false },
+  { id: 104, text: 'Mi pareja me interrumpe antes de que termine de expresar lo que quiero decir.', area: 'comunicacion', inverted: true },
+  { id: 105, text: 'Nos resulta fácil hablar de cómo nos sentimos sin temor a ser juzgados.', area: 'comunicacion', inverted: false },
+  { id: 106, text: 'Cuando algo me molesta, prefiero callarme antes que generar un conflicto.', area: 'comunicacion', inverted: true },
+  { id: 107, text: 'Después de una conversación difícil, sentimos que llegamos a un mejor lugar.', area: 'comunicacion', inverted: false },
+
+  // ═══ Intimidad (7) ═══
+  { id: 201, text: 'En ocasiones siento que vivimos más como compañeros de piso que como pareja.', area: 'intimidad', inverted: true },
+  { id: 202, text: 'Hay momentos donde siento una conexión profunda con mi pareja sin necesidad de palabras.', area: 'intimidad', inverted: false },
+  { id: 203, text: 'Me resulta fácil mostrar vulnerabilidad emocional frente a mi pareja.', area: 'intimidad', inverted: false },
+  { id: 204, text: 'Nuestros momentos de intimidad física reflejan la conexión emocional que tenemos.', area: 'intimidad', inverted: false },
+  { id: 205, text: 'He dejado de compartir ciertos pensamientos o sentimientos con mi pareja.', area: 'intimidad', inverted: true },
+  { id: 206, text: 'Busco activamente crear momentos de cercanía y conexión con mi pareja.', area: 'intimidad', inverted: false },
+  { id: 207, text: 'Siento que la rutina ha ido apagando la chispa que teníamos al principio.', area: 'intimidad', inverted: true },
+
+  // ═══ Admiración (6) ═══
+  { id: 301, text: 'Cuando pienso en mi pareja, siento genuina admiración por quién es como persona.', area: 'admiracion', inverted: false },
+  { id: 302, text: 'A veces siento que las cosas que hace mi pareja me irritan más de lo razonable.', area: 'admiracion', inverted: true },
+  { id: 303, text: 'Me gusta contarle a otros las cosas buenas de mi pareja.', area: 'admiracion', inverted: false },
+  { id: 304, text: 'Reconozco y valoro los esfuerzos que mi pareja hace por la relación.', area: 'admiracion', inverted: false },
+  { id: 305, text: 'En momentos de frustración, me es difícil recordar qué me atrajo de mi pareja.', area: 'admiracion', inverted: true },
+  { id: 306, text: 'Admiro la forma en que mi pareja enfrenta los retos de la vida.', area: 'admiracion', inverted: false },
+
+  // ═══ Conflicto (7) ═══
+  { id: 401, text: 'Hay temas que preferimos no tocar porque sabemos que terminarán mal.', area: 'conflicto', inverted: true },
+  { id: 402, text: 'Siento que arrastramos discusiones del pasado que nunca terminamos de resolver.', area: 'conflicto', inverted: true },
+  { id: 403, text: 'Cuando surgen problemas, tengo confianza de que encontraremos una solución juntos.', area: 'conflicto', inverted: false },
+  { id: 404, text: 'Alguno de los dos tiende a cerrarse o alejarse cuando la tensión sube.', area: 'conflicto', inverted: true },
+  { id: 405, text: 'Las discusiones suelen terminar con alguien sintiéndose culpable o silenciado.', area: 'conflicto', inverted: true },
+  { id: 406, text: 'Podemos reparar los daños después de una pelea sin que queden resentimientos.', area: 'conflicto', inverted: false },
+  { id: 407, text: 'Siento que las mismas discusiones se repiten una y otra vez sin resolverse.', area: 'conflicto', inverted: true },
+
+  // ═══ Proyecto de vida (6) ═══
+  { id: 501, text: 'Cuando imaginamos el futuro, sentimos que vamos en la misma dirección.', area: 'proyecto', inverted: false },
+  { id: 502, text: 'Hay decisiones importantes en las que noto que tenemos visiones muy diferentes.', area: 'proyecto', inverted: true },
+  { id: 503, text: 'Compartimos al menos una meta importante que nos entusiasma a ambos.', area: 'proyecto', inverted: false },
+  { id: 504, text: 'Hemos hablado con claridad sobre lo que esperamos de la relación a largo plazo.', area: 'proyecto', inverted: false },
+  { id: 505, text: 'Siento que uno de los dos ha cambiado lo que quiere de la vida sin comunicarlo.', area: 'proyecto', inverted: true },
+  { id: 506, text: 'Tomamos decisiones importantes de manera conjunta, considerando el impacto en ambos.', area: 'proyecto', inverted: false },
+
+  // ═══ Seguridad emocional (6) ═══
+  { id: 601, text: 'En momentos importantes siento que mi pareja está de mi lado.', area: 'seguridad', inverted: false },
+  { id: 602, text: 'A veces dudo si mi pareja realmente entiende lo que necesito emocionalmente.', area: 'seguridad', inverted: true },
+  { id: 603, text: 'Me siento seguro/a de que mi pareja no haría algo que me lastimara a propósito.', area: 'seguridad', inverted: false },
+  { id: 604, text: 'Cuando estoy pasando por algo difícil, mi pareja es la primera persona a la que acudo.', area: 'seguridad', inverted: false },
+  { id: 605, text: 'He llegado a dudar de la sinceridad de mi pareja en algún aspecto importante.', area: 'seguridad', inverted: true },
+  { id: 606, text: 'Sé que puedo contar con mi pareja sin importar las circunstancias.', area: 'seguridad', inverted: false },
+
+  // ═══ Autonomía (6) ═══
+  { id: 701, text: 'Me siento cómodo siendo completamente yo mismo dentro de la relación.', area: 'autonomia', inverted: false },
+  { id: 702, text: 'Siento que necesito pedir permiso o justificar mis decisiones personales.', area: 'autonomia', inverted: true },
+  { id: 703, text: 'Podemos pasar tiempo separados sin que genere malestar o inseguridad.', area: 'autonomia', inverted: false },
+  { id: 704, text: 'He renunciado a actividades o amistades importantes por mantener la paz en la relación.', area: 'autonomia', inverted: true },
+  { id: 705, text: 'Respetamos los espacios individuales del otro sin interpretarlo como distancia.', area: 'autonomia', inverted: false },
+  { id: 706, text: 'A veces siento que pierdo mi identidad dentro de la relación.', area: 'autonomia', inverted: true }
 ]
 
 const ANSWER_OPTIONS = [
@@ -65,10 +126,10 @@ const RESPONDENT_OPTIONS = [
 
 // ─── FUNCIONES DE CÁLCULO ─────────────────────────────────────────
 
-function calculateScores(answers) {
+function calculateScores(answers, questions) {
   const areaScores = {}
   for (const area of AREAS) {
-    const areaQuestions = QUESTIONS.filter(q => q.area === area.key)
+    const areaQuestions = questions.filter(q => q.area === area.key)
     let total = 0
     let count = 0
     for (const q of areaQuestions) {
@@ -181,21 +242,25 @@ function generateInterpretation(areaScores) {
 
 // ─── GENERACIÓN DE PDF ────────────────────────────────────────────
 
-function generatePDF(result, areaScores, interpretation, openQuestion) {
+function generatePDF(result, areaScores, interpretation, openQuestion, mode) {
   const doc = new jsPDF()
   const pageWidth = doc.internal.pageSize.getWidth()
   const margin = 20
+  const modeLabel = mode === 'detailed' ? 'Diagnóstico Detallado' : 'Diagnóstico Rápido'
 
   // Header
   doc.setFillColor(10, 10, 15)
-  doc.rect(0, 0, pageWidth, 45, 'F')
+  doc.rect(0, 0, pageWidth, 50, 'F')
   doc.setTextColor(255, 255, 255)
   doc.setFontSize(22)
-  doc.text('Informe de Diagnóstico de Relación', pageWidth / 2, 22, { align: 'center' })
+  doc.text('Informe de Diagnóstico de Relación', pageWidth / 2, 18, { align: 'center' })
+  doc.setFontSize(11)
+  doc.setTextColor(220, 180, 220)
+  doc.text(modeLabel, pageWidth / 2, 28, { align: 'center' })
   doc.setFontSize(10)
   doc.setTextColor(180, 180, 180)
-  doc.text('Luis Virrueta — Psicólogo y Psicoanalista', pageWidth / 2, 32, { align: 'center' })
-  doc.text(new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }), pageWidth / 2, 38, { align: 'center' })
+  doc.text('Luis Virrueta — Psicólogo y Psicoanalista', pageWidth / 2, 36, { align: 'center' })
+  doc.text(new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }), pageWidth / 2, 43, { align: 'center' })
 
   let y = 55
 
@@ -333,7 +398,8 @@ function generatePDF(result, areaScores, interpretation, openQuestion) {
 
 const ConsultaParejaPage = () => {
   const navigate = useNavigate()
-  const [stage, setStage] = useState('hero') // hero | respondent | test | open-question | email | results | info
+  const [stage, setStage] = useState('hero') // hero | mode-select | respondent | test | open-question | email | results | info
+  const [mode, setMode] = useState(null) // 'quick' | 'detailed'
   const [respondent, setRespondent] = useState(null)
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [answers, setAnswers] = useState({})
@@ -347,17 +413,20 @@ const ConsultaParejaPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
+  // Preguntas activas según el modo
+  const questions = mode === 'detailed' ? QUESTIONS_DETAILED : QUESTIONS_QUICK
+
   // Cálculos memoizados
-  const areaScores = useMemo(() => calculateScores(answers), [answers])
+  const areaScores = useMemo(() => calculateScores(answers, questions), [answers, questions])
   const result = useMemo(() => getOverallResult(areaScores), [areaScores])
   const interpretation = useMemo(() => generateInterpretation(areaScores), [areaScores])
 
-  const progress = Math.round((Object.keys(answers).length / QUESTIONS.length) * 100)
+  const progress = Math.round((Object.keys(answers).length / questions.length) * 100)
 
   const handleAnswer = (value) => {
-    const q = QUESTIONS[currentQuestion]
+    const q = questions[currentQuestion]
     setAnswers(prev => ({ ...prev, [q.id]: value }))
-    if (currentQuestion < QUESTIONS.length - 1) {
+    if (currentQuestion < questions.length - 1) {
       setTimeout(() => setCurrentQuestion(prev => prev + 1), 300)
     } else {
       setTimeout(() => {
@@ -370,7 +439,7 @@ const ConsultaParejaPage = () => {
   const handleDownloadPDF = async () => {
     setPdfGenerating(true)
     try {
-      const doc = generatePDF(result, areaScores, interpretation, openQuestion)
+      const doc = generatePDF(result, areaScores, interpretation, openQuestion, mode)
       doc.save('Diagnostico-Relacion-LuisVirrueta.pdf')
     } finally {
       setPdfGenerating(false)
@@ -386,7 +455,7 @@ const ConsultaParejaPage = () => {
     <div ref={topRef} className="min-h-screen bg-[#0a0a0f]">
       <SEOHead
         title="Diagnóstico de Relación — Consulta de Pareja | Luis Virrueta"
-        description="Descubre el estado real de tu relación con este diagnóstico psicológico gratuito. 20 preguntas, resultado personalizado y perfil dinámico de relación."
+        description="Descubre el estado real de tu relación con este diagnóstico psicológico gratuito. Dos modalidades: rápido (20 preguntas, 3 min) o detallado (45 preguntas, 10 min). Resultado personalizado y perfil dinámico."
         url="/servicios/consulta-pareja"
         type="website"
         tags={['consulta de pareja', 'diagnóstico de relación', 'terapia de pareja', 'psicólogo', 'psicoanalista']}
@@ -445,7 +514,7 @@ const ConsultaParejaPage = () => {
                   transition={{ delay: 0.4 }}
                   className="text-lg lg:text-xl text-white/60 font-light leading-relaxed mb-10 tracking-wide"
                 >
-                  Descubre el estado real de tu relación en menos de 3 minutos.
+                  Descubre el estado real de tu relación con un diagnóstico psicológico profesional.
                 </motion.p>
 
                 {/* Body text */}
@@ -473,7 +542,7 @@ const ConsultaParejaPage = () => {
                   transition={{ delay: 0.8 }}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
-                  onClick={() => { setStage('respondent'); scrollToTop() }}
+                  onClick={() => { setStage('mode-select'); scrollToTop() }}
                   className="group relative px-10 py-4 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full text-white font-light text-sm uppercase tracking-[0.2em] overflow-hidden transition-shadow duration-300 hover:shadow-[0_0_40px_rgba(244,63,94,0.3)]"
                 >
                   <span className="relative z-10 flex items-center gap-3">
@@ -490,9 +559,9 @@ const ConsultaParejaPage = () => {
                   transition={{ delay: 1 }}
                   className="flex items-center justify-center gap-6 mt-8 text-white/30 text-xs tracking-wider"
                 >
-                  <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> 3 minutos</span>
+                  <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> 3 o 10 minutos</span>
                   <span className="w-px h-3 bg-white/20" />
-                  <span className="flex items-center gap-1.5"><FileText className="w-3.5 h-3.5" /> 20 preguntas</span>
+                  <span className="flex items-center gap-1.5"><FileText className="w-3.5 h-3.5" /> 2 modalidades</span>
                   <span className="w-px h-3 bg-white/20" />
                   <span className="flex items-center gap-1.5"><BarChart3 className="w-3.5 h-3.5" /> diagnóstico personalizado</span>
                 </motion.div>
@@ -535,6 +604,151 @@ const ConsultaParejaPage = () => {
                   ))}
                 </div>
               </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════
+            STAGE: MODE SELECT (Rápido vs Detallado)
+        ═══════════════════════════════════════════════════════════ */}
+        {stage === 'mode-select' && (
+          <motion.div
+            key="mode-select"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="min-h-screen flex items-center justify-center px-6 pt-28 pb-20"
+          >
+            <div className="max-w-2xl w-full">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 }}
+                className="text-center mb-12"
+              >
+                <div className="inline-flex items-center gap-2 px-4 py-2 border border-pink-500/20 rounded-full bg-pink-500/5 mb-8">
+                  <Clock className="w-3.5 h-3.5 text-pink-400/70" strokeWidth={1.5} />
+                  <span className="text-xs text-pink-300/70 font-light uppercase tracking-[0.2em]">Elige tu modalidad</span>
+                </div>
+
+                <h2 className="text-3xl lg:text-4xl font-light text-white mb-4 font-display tracking-wide">
+                  ¿De cuánto tiempo <span className="italic font-normal text-pink-300/90">dispones</span>?
+                </h2>
+                <p className="text-white/40 text-sm font-extralight leading-relaxed max-w-md mx-auto">
+                  Ambas opciones generan un diagnóstico profesional completo. La versión detallada profundiza más en cada área.
+                </p>
+              </motion.div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {/* Opción Rápido */}
+                <motion.button
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  whileHover={{ scale: 1.02, y: -4 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    setMode('quick')
+                    setStage('respondent')
+                    scrollToTop()
+                  }}
+                  className="group relative p-8 border border-white/10 rounded-2xl bg-white/[0.02] hover:border-pink-500/30 hover:bg-pink-500/[0.03] transition-all duration-500 text-left overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-pink-500/5 to-transparent rounded-bl-full" />
+                  
+                  <div className="relative z-10">
+                    <div className="inline-flex p-3 rounded-xl bg-gradient-to-br from-pink-400/10 to-rose-400/10 border border-pink-500/10 mb-5">
+                      <Zap className="w-5 h-5 text-pink-400/80" strokeWidth={1.5} />
+                    </div>
+
+                    <h3 className="text-xl text-white/90 font-light tracking-wide mb-2 font-display">
+                      Diagnóstico <span className="italic">Rápido</span>
+                    </h3>
+
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="flex items-center gap-1.5 text-white/40 text-xs">
+                        <Clock className="w-3 h-3" /> ~3 minutos
+                      </span>
+                      <span className="w-px h-3 bg-white/10" />
+                      <span className="flex items-center gap-1.5 text-white/40 text-xs">
+                        <FileText className="w-3 h-3" /> 20 preguntas
+                      </span>
+                    </div>
+
+                    <p className="text-white/35 text-xs font-extralight leading-relaxed mb-5">
+                      Una radiografía clara de tu relación. Ideal si quieres un primer acercamiento rápido y efectivo.
+                    </p>
+
+                    <div className="flex items-center gap-2 text-pink-400/60 text-xs font-light group-hover:text-pink-400/90 transition-colors">
+                      <span className="uppercase tracking-[0.15em]">Seleccionar</span>
+                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                    </div>
+                  </div>
+                </motion.button>
+
+                {/* Opción Detallado */}
+                <motion.button
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  whileHover={{ scale: 1.02, y: -4 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    setMode('detailed')
+                    setStage('respondent')
+                    scrollToTop()
+                  }}
+                  className="group relative p-8 border border-violet-500/20 rounded-2xl bg-gradient-to-br from-violet-500/[0.03] to-pink-500/[0.02] hover:border-violet-400/40 transition-all duration-500 text-left overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-violet-500/8 to-transparent rounded-bl-full" />
+                  
+                  {/* Premium badge */}
+                  <div className="absolute top-4 right-4">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-gradient-to-r from-violet-500/20 to-pink-500/20 border border-violet-400/20 rounded-full text-[10px] text-violet-300/80 font-light uppercase tracking-[0.15em]">
+                      <Sparkles className="w-2.5 h-2.5" /> Premium
+                    </span>
+                  </div>
+
+                  <div className="relative z-10">
+                    <div className="inline-flex p-3 rounded-xl bg-gradient-to-br from-violet-400/10 to-purple-400/10 border border-violet-500/10 mb-5">
+                      <Layers className="w-5 h-5 text-violet-400/80" strokeWidth={1.5} />
+                    </div>
+
+                    <h3 className="text-xl text-white/90 font-light tracking-wide mb-2 font-display">
+                      Diagnóstico <span className="italic">Detallado</span>
+                    </h3>
+
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="flex items-center gap-1.5 text-white/40 text-xs">
+                        <Clock className="w-3 h-3" /> ~10 minutos
+                      </span>
+                      <span className="w-px h-3 bg-white/10" />
+                      <span className="flex items-center gap-1.5 text-white/40 text-xs">
+                        <FileText className="w-3 h-3" /> 45 preguntas
+                      </span>
+                    </div>
+
+                    <p className="text-white/35 text-xs font-extralight leading-relaxed mb-5">
+                      Un análisis profundo que explora cada dimensión de tu relación con mayor precisión. Más preguntas por área, mayor confiabilidad.
+                    </p>
+
+                    <div className="flex items-center gap-2 text-violet-400/60 text-xs font-light group-hover:text-violet-400/90 transition-colors">
+                      <span className="uppercase tracking-[0.15em]">Seleccionar</span>
+                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                    </div>
+                  </div>
+                </motion.button>
+              </div>
+
+              {/* Nota al pie */}
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="text-center text-white/20 text-xs font-extralight mt-8 tracking-wide"
+              >
+                Ambos diagnósticos son gratuitos y generan un informe descargable.
+              </motion.p>
             </div>
           </motion.div>
         )}
@@ -622,7 +836,7 @@ const ConsultaParejaPage = () => {
               {/* Question counter */}
               <div className="flex items-center justify-between mb-6">
                 <span className="text-white/30 text-xs font-light tracking-wider">
-                  PREGUNTA {currentQuestion + 1} DE {QUESTIONS.length}
+                  PREGUNTA {currentQuestion + 1} DE {questions.length}
                 </span>
                 <span className="text-white/20 text-xs font-light tracking-wider">
                   {progress}%
@@ -641,7 +855,7 @@ const ConsultaParejaPage = () => {
                   {/* Area indicator */}
                   <div className="flex items-center gap-2 mb-6">
                     {(() => {
-                      const area = AREAS.find(a => a.key === QUESTIONS[currentQuestion].area)
+                      const area = AREAS.find(a => a.key === questions[currentQuestion].area)
                       return area ? (
                         <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-white/8 bg-white/[0.02]">
                           <area.icon className="w-3 h-3 text-white/40" strokeWidth={1.5} />
@@ -652,13 +866,13 @@ const ConsultaParejaPage = () => {
                   </div>
 
                   <h3 className="text-xl lg:text-2xl font-light text-white/90 leading-relaxed mb-10 tracking-wide font-display italic">
-                    "{QUESTIONS[currentQuestion].text}"
+                    "{questions[currentQuestion].text}"
                   </h3>
 
                   {/* Answer options */}
                   <div className="space-y-3">
                     {ANSWER_OPTIONS.map((opt, i) => {
-                      const isSelected = answers[QUESTIONS[currentQuestion].id] === opt.value
+                      const isSelected = answers[questions[currentQuestion].id] === opt.value
                       return (
                         <motion.button
                           key={opt.value}
@@ -697,7 +911,7 @@ const ConsultaParejaPage = () => {
                   <ArrowLeft className="w-3.5 h-3.5" /> ANTERIOR
                 </button>
 
-                {answers[QUESTIONS[currentQuestion]?.id] != null && currentQuestion < QUESTIONS.length - 1 && (
+                {answers[questions[currentQuestion]?.id] != null && currentQuestion < questions.length - 1 && (
                   <button
                     onClick={() => setCurrentQuestion(prev => prev + 1)}
                     className="flex items-center gap-2 text-white/30 hover:text-white/60 text-xs tracking-wider transition-colors"
@@ -862,7 +1076,9 @@ const ConsultaParejaPage = () => {
                 </motion.div>
 
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 border border-white/10 rounded-full bg-white/5 mb-6">
-                  <span className="text-xs text-white/50 font-light uppercase tracking-[0.15em]">Resultado del diagnóstico</span>
+                  <span className="text-xs text-white/50 font-light uppercase tracking-[0.15em]">
+                    {mode === 'detailed' ? 'Diagnóstico Detallado' : 'Diagnóstico Rápido'}
+                  </span>
                 </div>
 
                 <h2 className={`text-4xl lg:text-5xl font-light mb-6 font-display tracking-wide bg-gradient-to-r ${result.color} bg-clip-text text-transparent`}>

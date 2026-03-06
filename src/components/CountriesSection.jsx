@@ -1,32 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
-import { useLanguage } from '../context/LanguageContext'
 
 const CountriesSection = () => {
-  const { t, language } = useLanguage()
-  
-  const countriesData = {
-    en: [
-      'Mexico', 'Great Britain', 'Czechia', 'Slovakia', 'USA', 'Peru', 'Chile', 'Australia',
-      'Japan', 'Austria', 'Colombia', 'Bulgaria', 'Ecuador', 'Israel', 'France', 'Russia',
-      'Cuba', 'Ukraine', 'Iraq', 'Italy', 'Uruguay', 'Morocco', 'Spain', 'Taiwan',
-      'Emirates', 'Iran', 'Dominican Republic', 'Belize', 'Argentina', 'Germany', 'Canada', 'India'
-    ],
-    es: [
-      'México', 'Reino Unido', 'Chequia', 'Eslovaquia', 'EE. UU.', 'Perú', 'Chile', 'Australia',
-      'Japón', 'Austria', 'Colombia', 'Bulgaria', 'Ecuador', 'Israel', 'Francia', 'Rusia',
-      'Cuba', 'Ucrania', 'Irak', 'Italia', 'Uruguay', 'Marruecos', 'España', 'Taiwán',
-      'Emiratos', 'Irán', 'República Dominicana', 'Belice', 'Argentina', 'Alemania', 'Canadá', 'India'
-    ],
-    cz: [
-      'Mexika', 'Velké Británie', 'Česka', 'Slovenska', 'USA', 'Peru', 'Chile', 'Austrálie',
-      'Japonska', 'Rakouska', 'Kolumbie', 'Bulharska', 'Ekvádoru', 'Izraele', 'Francie', 'Ruska',
-      'Kuby', 'Ukrajiny', 'Iráku', 'Itálie', 'Uruguaye', 'Maroka', 'Španělska', 'Tchaj-wanu',
-      'Emirátů', 'Íránu', 'Dominikánské republiky', 'Belize', 'Argentiny', 'Německa', 'Kanady', 'Indie'
-    ]
-  }
-  
-  const countries = countriesData[language] || countriesData.en
+  const countries = [
+    'México', 'Reino Unido', 'Chequia', 'Eslovaquia', 'EE. UU.', 'Perú', 'Chile', 'Australia',
+    'Japón', 'Austria', 'Colombia', 'Bulgaria', 'Ecuador', 'Israel', 'Francia', 'Rusia',
+    'Cuba', 'Ucrania', 'Irak', 'Italia', 'Uruguay', 'Marruecos', 'España', 'Taiwán',
+    'Emiratos', 'Irán', 'República Dominicana', 'Belice', 'Argentina', 'Alemania', 'Canadá', 'India'
+  ]
 
   const [currentCountryIndex, setCurrentCountryIndex] = useState(0)
 

@@ -2332,7 +2332,7 @@ const BlogArticlePage = () => {
       if (!iso) return ''
       const d = new Date(iso)
       if (Number.isNaN(d.getTime())) return ''
-      return d.toLocaleDateString(currentLanguage === 'en' ? 'en-US' : 'es-MX', {
+      return d.toLocaleDateString('es-MX', {
         day: '2-digit',
         month: 'short',
         year: 'numeric'
@@ -2429,7 +2429,7 @@ const BlogArticlePage = () => {
     title: '',
     subtitle: '',
     author: 'Luis Virrueta',
-    date: new Date().toLocaleDateString(currentLanguage === 'en' ? 'en-US' : 'es-MX', {
+    date: new Date().toLocaleDateString('es-MX', {
       day: '2-digit',
       month: 'short',
       year: 'numeric'
@@ -3407,7 +3407,7 @@ const BlogArticlePage = () => {
 
     const items = [
       ...(navigator.share ? [{
-        label: currentLanguage === 'en' ? 'Share' : 'Compartir',
+        label: 'Compartir',
         onClick: handleNativeShare,
         Icon: Share2
       }] : []),
@@ -3417,7 +3417,7 @@ const BlogArticlePage = () => {
         Icon: FileDown
       },
       {
-        label: currentLanguage === 'en' ? 'Copy' : 'Copiar',
+        label: 'Copiar',
         onClick: copyToClipboard,
         Icon: Copy
       }
@@ -3694,7 +3694,7 @@ const BlogArticlePage = () => {
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span className="text-sm">
-                <span className="sm:hidden">{currentLanguage === 'en' ? 'Back' : 'Volver'}</span>
+                <span className="sm:hidden">Volver</span>
                 <span className="hidden sm:inline">{t('blogArticles.common.backToBlog')}</span>
               </span>
             </Link>
@@ -4142,7 +4142,7 @@ const BlogArticlePage = () => {
                     }
                   }}
                   onBlur={() => addTagFromInput()}
-                  placeholder={currentLanguage === 'en' ? '+ tag' : '+ tag'}
+                  placeholder="+ tag"
                   className="w-20 sm:w-28 bg-transparent outline-none"
                 />
               </span>

@@ -5,17 +5,17 @@ import { useState } from 'react'
 import { ChevronDown, Instagram, FileText, MessageCircle, Mail } from 'lucide-react'
 
 const Footer = () => {
-  const { t, currentLanguage } = useLanguage()
+  const { t } = useLanguage()
   const currentYear = new Date().getFullYear()
   const [legalOpen, setLegalOpen] = useState(false)
 
   const navigationLinks = [
-    { name: currentLanguage === 'es' ? 'Inicio' : currentLanguage === 'en' ? 'Home' : 'Domů', href: '/' },
-    { name: currentLanguage === 'es' ? 'Metodología' : currentLanguage === 'en' ? 'Method' : 'Metoda', href: '/metodo' },
-    { name: currentLanguage === 'es' ? 'Quién Soy' : currentLanguage === 'en' ? 'About Me' : 'O Mně', href: '/sobre-mi' },
-    { name: currentLanguage === 'es' ? 'Servicios' : currentLanguage === 'en' ? 'Services' : 'Služby', href: '/servicios' },
+    { name: 'Inicio', href: '/' },
+    { name: 'Metodología', href: '/metodo' },
+    { name: 'Quién Soy', href: '/sobre-mi' },
+    { name: 'Servicios', href: '/servicios' },
     { name: 'Blog', href: '/blog' },
-    { name: currentLanguage === 'es' ? 'Tienda' : currentLanguage === 'en' ? 'Store' : 'Obchod', href: '/tienda' }
+    { name: 'Tienda', href: '/tienda' }
   ]
 
   const legalLinks = [
@@ -131,7 +131,7 @@ const Footer = () => {
               className="w-full flex items-center justify-center gap-2 text-white/60 hover:text-white/80 transition-colors duration-300 py-2"
             >
               <span className="text-sm font-light tracking-wide" style={{ fontFamily: 'Gotham, sans-serif' }}>
-                {currentLanguage === 'es' ? 'Legal y Privacidad' : currentLanguage === 'en' ? 'Legal & Privacy' : 'Právní a Soukromí'}
+                Legal y Privacidad
               </span>
               <motion.div
                 animate={{ rotate: legalOpen ? 180 : 0 }}

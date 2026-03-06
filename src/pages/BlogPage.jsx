@@ -65,11 +65,11 @@ const BlogPage = () => {
   const [blogPosts, setBlogPosts] = useState([])
   const categories = [
     { id: 'all', label: t('blogPage.categories.all'), icon: BookOpen },
-    { id: 'philosophy', label: currentLanguage === 'en' ? 'Philosophy' : 'Filosofía', icon: Eye },
+    { id: 'philosophy', label: 'Filosofía', icon: Eye },
     { id: 'psychology', label: t('blogPage.categories.psychology'), icon: Brain },
-    { id: 'psychoanalysis', label: currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis', icon: Sparkles },
-    { id: 'perception', label: currentLanguage === 'en' ? 'Perception' : 'Percepción', icon: Zap },
-    { id: 'consciousness', label: currentLanguage === 'en' ? 'Consciousness' : 'Consciencia', icon: TrendingUp },
+    { id: 'psychoanalysis', label: 'Psicoanálisis', icon: Sparkles },
+    { id: 'perception', label: 'Percepción', icon: Zap },
+    { id: 'consciousness', label: 'Consciencia', icon: TrendingUp },
   ]
   // Helper function to get translated content
   const getPostContent = (slug) => {
@@ -145,7 +145,7 @@ const BlogPage = () => {
       if (!isoString) return ''
       const date = new Date(isoString)
       if (Number.isNaN(date.getTime())) return ''
-      return date.toLocaleDateString(currentLanguage === 'en' ? 'en-US' : 'es-MX', {
+      return date.toLocaleDateString('es-MX', {
         day: '2-digit',
         month: 'short',
         year: 'numeric'
@@ -264,7 +264,7 @@ const BlogPage = () => {
             category: row.category,
             accent: row.accent || null,
             author: row.author,
-            date: formatDateForCard(bestDateIso) || (currentLanguage === 'en' ? 'Draft' : 'Borrador'),
+            date: formatDateForCard(bestDateIso) || 'Borrador',
             readTime: row.read_time || '—',
             gradient: 'from-slate-600/20 to-zinc-700/20',
             borderGradient: 'from-slate-600 to-zinc-700',
@@ -323,7 +323,7 @@ const BlogPage = () => {
     const date = new Date(isoString)
     if (Number.isNaN(date.getTime())) return ''
     // Mantener estilo corto similar a los hardcodeados
-    return date.toLocaleDateString(currentLanguage === 'en' ? 'en-US' : 'es-MX', {
+    return date.toLocaleDateString('es-MX', {
       day: '2-digit',
       month: 'short',
       year: 'numeric'
@@ -343,7 +343,7 @@ const BlogPage = () => {
       excerpt: savedArticle.excerpt,
       category: savedArticle.category,
       author: savedArticle.author,
-      date: toCardDate(bestDateIso) || (currentLanguage === 'en' ? 'Draft' : 'Borrador'),
+      date: toCardDate(bestDateIso) || 'Borrador',
       readTime: savedArticle.read_time || savedArticle.readTime || '—',
       tags: savedArticle.tags || [],
       slug: savedArticle.slug,
@@ -483,7 +483,7 @@ const BlogPage = () => {
           >
             <div className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full backdrop-blur-sm bg-white/5">
               <span className="text-sm sm:text-base font-light text-white/70 tracking-wide">
-                {currentLanguage === 'en' ? 'Psychoanalysis · Philosophy · Unconscious' : 'Psicoanálisis · Filosofía · Inconsciente'}
+                Psicoanálisis · Filosofía · Inconsciente
               </span>
             </div>
           </motion.div>
@@ -501,7 +501,7 @@ const BlogPage = () => {
             >
               <Brain className="w-5 h-5 text-white/40" strokeWidth={1.5} />
               <span className="text-base sm:text-lg font-light text-white tracking-wide">
-                {currentLanguage === 'en' ? 'Psychology' : 'Psicología'}
+                Psicología
               </span>
             </motion.div>
             <div className="w-px h-6 bg-white/20" />
@@ -512,7 +512,7 @@ const BlogPage = () => {
             >
               <Eye className="w-5 h-5 text-white/40" strokeWidth={1.5} />
               <span className="text-base sm:text-lg font-light text-white tracking-wide">
-                {currentLanguage === 'en' ? 'Perception' : 'Percepción'}
+                Percepción
               </span>
             </motion.div>
           </motion.div>
@@ -523,9 +523,7 @@ const BlogPage = () => {
             transition={{ duration: 1, delay: 0.6 }}
             className="text-lg sm:text-xl text-white/60 text-center font-light italic mb-8"
           >
-            {currentLanguage === 'en' 
-              ? 'What if thinking isn\'t what you believe, but what you can\'t stop believing?' 
-              : '¿Y si pensar no es lo que crees, sino lo que no puedes dejar de creer?'}
+            ¿Y si pensar no es lo que crees, sino lo que no puedes dejar de creer?
           </motion.p>
           {/* Línea decorativa */}
           <motion.div
@@ -628,66 +626,66 @@ const BlogCard = ({ post, index, isAdmin, onDelete, onEdit }) => {
     setCardImageError(false)
   }, [resolvedImageSrc])
 
-  // Mapeo de categorías con traducciones
+  // Mapeo de categorías (solo español)
   const categoryLabels = {
     'all': t('blogPage.categories.all'),
     'design': t('blogPage.categories.design'),
     'branding': t('blogPage.categories.branding'),
     'psychology': t('blogPage.categories.psychology'),
     'trends': t('blogPage.categories.trends'),
-    'perception': currentLanguage === 'en' ? 'Perception' : 'Percepción',
-    'Philosophy': currentLanguage === 'en' ? 'Philosophy' : 'Filosofía',
-    'philosophy': currentLanguage === 'en' ? 'Philosophy' : 'Filosofía',
-    'Psychoanalysis': currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
-    'psychoanalysis': currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
-    'Psicoanálisis': currentLanguage === 'en' ? 'Psychoanalysis' : 'Psicoanálisis',
-    'Filosofía': currentLanguage === 'en' ? 'Philosophy' : 'Filosofía',
-    'Ethics': currentLanguage === 'en' ? 'Ethics' : 'Ética',
-    'Ética': currentLanguage === 'en' ? 'Ethics' : 'Ética',
-    'Spirituality': currentLanguage === 'en' ? 'Spirituality' : 'Espiritualidad',
-    'spirituality': currentLanguage === 'en' ? 'Spirituality' : 'Espiritualidad',
-    'Espiritualidad': currentLanguage === 'en' ? 'Spirituality' : 'Espiritualidad',
-    'Identity': currentLanguage === 'en' ? 'Identity' : 'Identidad',
-    'Identidad': currentLanguage === 'en' ? 'Identity' : 'Identidad',
-    'Existentialism': currentLanguage === 'en' ? 'Existentialism' : 'Existencialismo',
-    'Existencialismo': currentLanguage === 'en' ? 'Existentialism' : 'Existencialismo',
-    'Perception': currentLanguage === 'en' ? 'Perception' : 'Percepción',
-    'Percepción': currentLanguage === 'en' ? 'Perception' : 'Percepción',
-    'Consciousness': currentLanguage === 'en' ? 'Consciousness' : 'Consciencia',
-    'consciousness': currentLanguage === 'en' ? 'Consciousness' : 'Consciencia',
-    'Conciencia': currentLanguage === 'en' ? 'Consciousness' : 'Consciencia',
-    'Consciencia': currentLanguage === 'en' ? 'Consciousness' : 'Consciencia',
-    'Branding × Strategy': currentLanguage === 'en' ? 'Branding × Strategy' : 'Branding × Estrategia',
-    'Branding × Estrategia': currentLanguage === 'en' ? 'Branding × Strategy' : 'Branding × Estrategia',
-    'Phenomenology': currentLanguage === 'en' ? 'Phenomenology' : 'Fenomenología',
-    'Fenomenología': currentLanguage === 'en' ? 'Phenomenology' : 'Fenomenología',
-    'Love & Relationships': currentLanguage === 'en' ? 'Love & Relationships' : 'Amor y Relaciones',
-    'Amor y Relaciones': currentLanguage === 'en' ? 'Love & Relationships' : 'Amor y Relaciones',
-    'Ontology': currentLanguage === 'en' ? 'Ontology' : 'Ontología',
-    'ontology': currentLanguage === 'en' ? 'Ontology' : 'Ontología',
-    'Ontología': currentLanguage === 'en' ? 'Ontology' : 'Ontología',
-    'ontología': currentLanguage === 'en' ? 'Ontology' : 'Ontología',
-    'Metaphysics': currentLanguage === 'en' ? 'Metaphysics' : 'Metafísica',
-    'metaphysics': currentLanguage === 'en' ? 'Metaphysics' : 'Metafísica',
-    'Metafísica': currentLanguage === 'en' ? 'Metaphysics' : 'Metafísica',
-    'metafísica': currentLanguage === 'en' ? 'Metaphysics' : 'Metafísica',
-    'Reflections': currentLanguage === 'en' ? 'Reflections' : 'Reflexiones',
-    'reflections': currentLanguage === 'en' ? 'Reflections' : 'Reflexiones',
-    'Reflexiones': currentLanguage === 'en' ? 'Reflections' : 'Reflexiones',
-    'reflexiones': currentLanguage === 'en' ? 'Reflections' : 'Reflexiones',
-    'Diary': currentLanguage === 'en' ? 'Diary' : 'Diario',
-    'diary': currentLanguage === 'en' ? 'Diary' : 'Diario',
-    'Diario': currentLanguage === 'en' ? 'Diary' : 'Diario',
-    'diario': currentLanguage === 'en' ? 'Diary' : 'Diario',
-    'Poetry': currentLanguage === 'en' ? 'Poetry' : 'Poesía',
-    'poetry': currentLanguage === 'en' ? 'Poetry' : 'Poesía',
-    'Poesía': currentLanguage === 'en' ? 'Poetry' : 'Poesía',
-    'poesía': currentLanguage === 'en' ? 'Poetry' : 'Poesía'
+    'perception': 'Percepción',
+    'Philosophy': 'Filosofía',
+    'philosophy': 'Filosofía',
+    'Psychoanalysis': 'Psicoanálisis',
+    'psychoanalysis': 'Psicoanálisis',
+    'Psicoanálisis': 'Psicoanálisis',
+    'Filosofía': 'Filosofía',
+    'Ethics': 'Ética',
+    'Ética': 'Ética',
+    'Spirituality': 'Espiritualidad',
+    'spirituality': 'Espiritualidad',
+    'Espiritualidad': 'Espiritualidad',
+    'Identity': 'Identidad',
+    'Identidad': 'Identidad',
+    'Existentialism': 'Existencialismo',
+    'Existencialismo': 'Existencialismo',
+    'Perception': 'Percepción',
+    'Percepción': 'Percepción',
+    'Consciousness': 'Consciencia',
+    'consciousness': 'Consciencia',
+    'Conciencia': 'Consciencia',
+    'Consciencia': 'Consciencia',
+    'Branding × Strategy': 'Branding × Estrategia',
+    'Branding × Estrategia': 'Branding × Estrategia',
+    'Phenomenology': 'Fenomenología',
+    'Fenomenología': 'Fenomenología',
+    'Love & Relationships': 'Amor y Relaciones',
+    'Amor y Relaciones': 'Amor y Relaciones',
+    'Ontology': 'Ontología',
+    'ontology': 'Ontología',
+    'Ontología': 'Ontología',
+    'ontología': 'Ontología',
+    'Metaphysics': 'Metafísica',
+    'metaphysics': 'Metafísica',
+    'Metafísica': 'Metafísica',
+    'metafísica': 'Metafísica',
+    'Reflections': 'Reflexiones',
+    'reflections': 'Reflexiones',
+    'Reflexiones': 'Reflexiones',
+    'reflexiones': 'Reflexiones',
+    'Diary': 'Diario',
+    'diary': 'Diario',
+    'Diario': 'Diario',
+    'diario': 'Diario',
+    'Poetry': 'Poesía',
+    'poetry': 'Poesía',
+    'Poesía': 'Poesía',
+    'poesía': 'Poesía'
   }
 
   const categoryLabel = categoryLabels[post.category]
     || categoryLabels[String(post.category || '').toLowerCase()]
-    || (currentLanguage === 'en' ? 'Article' : 'Artículo')
+    || 'Artículo'
 
   return (
     <Link to={post.slug ? `/blog/${post.slug}` : '#'}>

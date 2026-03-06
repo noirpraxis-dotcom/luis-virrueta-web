@@ -1,39 +1,36 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Users, Heart, Brain, Mic, Baby, ExternalLink, ArrowRight } from 'lucide-react'
-import { useLanguage } from '../context/LanguageContext'
 
 const IndividualServices = () => {
-  const { t, currentLanguage } = useLanguage()
-  
   const services = [
     { 
-      name: currentLanguage === 'en' ? 'Individual Consultation' : 'Consulta Individual',
-      description: currentLanguage === 'en' ? 'Deep work from psychoanalysis to explore the unconscious structure that shapes your reality' : 'Trabajo profundo desde el psicoanálisis para explorar la estructura inconsciente que da forma a tu realidad',
+      name: 'Consulta Individual',
+      description: 'Trabajo profundo desde el psicoanálisis para explorar la estructura inconsciente que da forma a tu realidad',
       icon: Brain,
       color: "from-[#a855f7] to-[#7c3aed]"
     },
     { 
-      name: currentLanguage === 'en' ? 'Couple Consultation' : 'Consulta de Pareja',
-      description: currentLanguage === 'en' ? 'Not to complete each other, but to dismantle the illusions that prevent the encounter' : 'No para completarse, sino para desmontar las ilusiones que impiden el encuentro',
+      name: 'Consulta de Pareja',
+      description: 'No para completarse, sino para desmontar las ilusiones que impiden el encuentro',
       icon: Heart,
       color: "from-[#ec4899] to-[#db2777]"
     },
     { 
-      name: currentLanguage === 'en' ? 'Family Consultation' : 'Consulta Familiar',
-      description: currentLanguage === 'en' ? 'The patterns that repeat are not destiny, just structure not yet traversed' : 'Los patrones que se repiten no son destino, solo estructura aún no atravesada',
+      name: 'Consulta Familiar',
+      description: 'Los patrones que se repiten no son destino, solo estructura aún no atravesada',
       icon: Users,
       color: "from-[#06b6d4] to-[#0891b2]"
     },
     { 
-      name: currentLanguage === 'en' ? 'Psychoanalytic Consulting' : 'Consultoría Psicoanalítica',
-      description: currentLanguage === 'en' ? 'For organizations that want to understand the unconscious that governs their dynamics' : 'Para organizaciones que quieren comprender el inconsciente que gobierna sus dinámicas',
+      name: 'Consultoría Psicoanalítica',
+      description: 'Para organizaciones que quieren comprender el inconsciente que gobierna sus dinámicas',
       icon: Brain,
       color: "from-[#8b5cf6] to-[#7c3aed]"
     },
     { 
-      name: currentLanguage === 'en' ? 'Unconscious Reprogramming Audios' : 'Audios Reprogramables del Inconsciente',
-      description: currentLanguage === 'en' ? 'Not positive thinking, but a structural modification of how you perceive' : 'No pensamiento positivo, sino modificación estructural de cómo percibes',
+      name: 'Audios Reprogramables del Inconsciente',
+      description: 'No pensamiento positivo, sino modificación estructural de cómo percibes',
       icon: Mic,
       color: "from-[#f59e0b] to-[#d97706]"
     }
@@ -63,7 +60,7 @@ const IndividualServices = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-white/50 text-sm font-mono uppercase tracking-widest mb-4"
           >
-            {currentLanguage === 'en' ? 'WHAT I OFFER' : 'LO QUE OFREZCO'}
+            LO QUE OFREZCO
           </motion.p>
           
           <motion.h2
@@ -73,9 +70,9 @@ const IndividualServices = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-4xl lg:text-7xl font-light mb-6 font-display tracking-tight text-center"
           >
-            <span className="text-white">{currentLanguage === 'en' ? 'Paths ' : 'Caminos '}</span>
+            <span className="text-white">Caminos </span>
             <span className="text-white italic" style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 300 }}>
-              {currentLanguage === 'en' ? 'through the structure' : 'por la estructura'}
+              por la estructura
             </span>
           </motion.h2>
 
@@ -86,9 +83,7 @@ const IndividualServices = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-white/50 text-xl lg:text-2xl max-w-3xl mx-auto font-light leading-relaxed"
           >
-            {currentLanguage === 'en' 
-              ? 'Not methods to solve problems, but processes to transform the structure that produces them'
-              : 'No son métodos para resolver problemas, sino procesos para transformar la estructura que los produce'}
+            No son métodos para resolver problemas, sino procesos para transformar la estructura que los produce
           </motion.p>
         </motion.div>
 
@@ -192,17 +187,13 @@ const IndividualServices = () => {
           className="text-center mt-12 lg:mt-16"
         >
           <p className="text-white/60 text-base lg:text-lg mb-4">
-            {currentLanguage === 'en' 
-              ? 'Each path is unique. Each unconscious, singular.' 
-              : 'Cada camino es único. Cada inconsciente, singular.'}
+            Cada camino es único. Cada inconsciente, singular.
           </p>
           <p className="text-white text-lg lg:text-xl mb-6">
             <span className="text-[#a855f7] font-semibold">
-              {currentLanguage === 'en' ? 'Let\'s talk' : 'Conversemos'}
+              Conversemos
             </span> 
-            {currentLanguage === 'en' 
-              ? ' and explore together what you need to transform' 
-              : ' y exploremos juntos lo que necesitas transformar'}
+             y exploremos juntos lo que necesitas transformar
           </p>
           
           <motion.a

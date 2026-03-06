@@ -1,42 +1,23 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext } from 'react'
 import translationsES from '../translations/es.json'
 
 const LanguageContext = createContext()
 
-const translations = {
-  es: translationsES
-}
-
-// Función simplificada - siempre español
-const detectLanguage = () => {
-  return 'es'
-}
-
+// Idioma único: español. No se soportan otros idiomas.
 export const LanguageProvider = ({ children }) => {
-  const [currentLanguage, setCurrentLanguage] = useState('es')
-
-  const changeLanguage = (langCode) => {
-    setCurrentLanguage('es') // Siempre español
-  }
+  const currentLanguage = 'es'
 
   const t = (key) => {
     const keys = key.split('.')
-    let value = translations[currentLanguage]
-    
+    let value = translationsES
     for (const k of keys) {
       value = value?.[k]
     }
-    
     return value || key
   }
 
   return (
-    <LanguageContext.Provider value={{ 
-      currentLanguage, 
-      changeLanguage, 
-      t,
-      detectLanguage 
-    }}>
+    <LanguageContext.Provider value={{ currentLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   )

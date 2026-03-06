@@ -6,23 +6,6 @@ const CoursesPage = () => {
   const { t } = useLanguage()
 
   const courseLinks = {
-    en: [
-      {
-        language: 'English',
-        url: 'https://discoverhealing.com/product/the-emotion-code-certification-program/ref/p65hl/',
-        flag: '🇬🇧'
-      },
-      {
-        language: 'Spanish',
-        url: 'https://discoverhealing.com/es/product/the-emotion-code-certification-program/ref/p65hl/',
-        flag: '🇪🇸'
-      },
-      {
-        language: 'Czech',
-        url: 'https://myablefy.com/epl/SpJyVrJhMzhWVF_V5jxx',
-        flag: '🇨🇿'
-      }
-    ],
     es: [
       {
         language: 'Español',
@@ -39,32 +22,10 @@ const CoursesPage = () => {
         url: 'https://myablefy.com/epl/SpJyVrJhMzhWVF_V5jxx',
         flag: '🇨🇿'
       }
-    ],
-    cz: [
-      {
-        language: 'Čeština',
-        url: 'https://myablefy.com/epl/SpJyVrJhMzhWVF_V5jxx',
-        flag: '🇨🇿'
-      },
-      {
-        language: 'Angličtina',
-        url: 'https://discoverhealing.com/product/the-emotion-code-certification-program/ref/p65hl/',
-        flag: '🇬🇧'
-      },
-      {
-        language: 'Španělština',
-        url: 'https://discoverhealing.com/es/product/the-emotion-code-certification-program/ref/p65hl/',
-        flag: '🇪🇸'
-      }
     ]
   }
 
-  const getCurrentLanguage = () => {
-    const lang = t('lang') || 'en'
-    return lang === 'es' ? 'es' : lang === 'cz' ? 'cz' : 'en'
-  }
-
-  const currentLinks = courseLinks[getCurrentLanguage()]
+  const currentLinks = courseLinks['es']
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-stone-50 to-white">
