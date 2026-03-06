@@ -20,71 +20,71 @@ const AREAS = [
 ]
 
 // ─── PREGUNTAS: DIAGNÓSTICO GRATUITO (15 preguntas, ~3 min) ──────
-// Las 15 mejores del set premium — intención clínica oculta bajo observación cotidiana.
+// Las 15 mejores del set premium — directas, claras, fáciles de responder.
 
 const QUESTIONS_QUICK = [
   // Comunicación (2)
-  { id: 101, text: 'Cuando mi pareja me explica algo que le molestó, suelo entender a qué se refiere sin que tenga que explicármelo mucho.', area: 'comunicacion', inverted: false },
-  { id: 102, text: 'Hay temas que resuelvo mejor hablándolo primero con alguien más que con mi pareja.', area: 'comunicacion', inverted: true },
+  { id: 101, text: 'Mi pareja y yo nos entendemos bien sin necesitar largas explicaciones.', area: 'comunicacion', inverted: false, sampleValue: 3 },
+  { id: 102, text: 'Hay temas que prefiero no hablar con mi pareja porque sé que habrá conflicto.', area: 'comunicacion', inverted: true, sampleValue: 4 },
   // Intimidad (2)
-  { id: 201, text: 'A veces pienso que mi pareja y yo organizamos muy bien nuestra vida juntos.', area: 'intimidad', inverted: true },
-  { id: 203, text: 'El contacto físico entre nosotros sigue siendo algo que surge de forma espontánea.', area: 'intimidad', inverted: false },
+  { id: 201, text: 'Me siento emocionalmente cerca de mi pareja en el día a día.', area: 'intimidad', inverted: false, sampleValue: 3 },
+  { id: 203, text: 'El contacto físico con mi pareja sigue siendo natural y espontáneo.', area: 'intimidad', inverted: false, sampleValue: 3 },
   // Admiración (2)
-  { id: 301, text: 'Cuando mi pareja logra algo, lo que siento primero es genuino orgullo.', area: 'admiracion', inverted: false },
-  { id: 302, text: 'A veces pienso que funcionaría mejor en pareja con alguien que ve las cosas de otra manera.', area: 'admiracion', inverted: true },
+  { id: 301, text: 'Cuando mi pareja logra algo, siento orgullo genuino por ella/él.', area: 'admiracion', inverted: false, sampleValue: 4 },
+  { id: 302, text: 'A veces siento que estaría mejor con alguien que ve las cosas diferente.', area: 'admiracion', inverted: true, sampleValue: 3 },
   // Conflicto (2)
-  { id: 401, text: 'Hay temas que, con el tiempo, hemos ido dejando de intentar resolver.', area: 'conflicto', inverted: true },
-  { id: 403, text: 'Después de una discusión difícil, siento que entendí algo nuevo de mi pareja o de mí.', area: 'conflicto', inverted: false },
+  { id: 401, text: 'Hay temas que hemos dejado de discutir porque nunca llevan a nada.', area: 'conflicto', inverted: true, sampleValue: 4 },
+  { id: 403, text: 'Después de una pelea fuerte, entiendo mejor a mi pareja o algo de mí.', area: 'conflicto', inverted: false, sampleValue: 2 },
   // Proyecto de vida (1)
-  { id: 501, text: 'Cuando imagino mi vida dentro de 10 años, mi pareja ocupa un lugar central en esa imagen.', area: 'proyecto', inverted: false },
+  { id: 501, text: 'Cuando imagino mi vida en 10 años, mi pareja está ahí.', area: 'proyecto', inverted: false, sampleValue: 3 },
   // Seguridad emocional (2)
-  { id: 601, text: 'Puedo contarle a mi pareja mis inseguridades sin temer que las use en mi contra en algún momento.', area: 'seguridad', inverted: false },
-  { id: 602, text: 'A veces actúo de cierta manera con mi pareja pensando en cómo va a reaccionar, no en lo que quiero.', area: 'seguridad', inverted: true },
+  { id: 601, text: 'Puedo mostrarme vulnerable con mi pareja sin miedo a que lo use en mi contra.', area: 'seguridad', inverted: false, sampleValue: 2 },
+  { id: 602, text: 'A veces cambio cómo actúo dependiendo de cómo creo que mi pareja va a reaccionar.', area: 'seguridad', inverted: true, sampleValue: 4 },
   // Autonomía (2)
-  { id: 701, text: 'Me cuesta disfrutar algo plenamente si mi pareja no está enterada o no puede compartirlo.', area: 'autonomia', inverted: true },
-  { id: 703, text: 'Cuando estoy bien conmigo mismo/a, noto que mi relación también funciona mejor.', area: 'autonomia', inverted: false },
+  { id: 701, text: 'Me cuesta disfrutar algo si mi pareja no puede ser parte de ello.', area: 'autonomia', inverted: true, sampleValue: 4 },
+  { id: 703, text: 'Noto que cuando estoy bien conmigo mismo/a, mi relación también funciona mejor.', area: 'autonomia', inverted: false, sampleValue: 3 },
   // Idealización (2)
-  { id: 801, text: 'Si mi pareja cambiara significativamente como persona, no sé si seguiría siendo la misma relación.', area: 'idealizacion', inverted: true },
-  { id: 804, text: 'Hay momentos en que me pregunto si lo que siento es amor o necesidad de no estar solo/a.', area: 'idealizacion', inverted: true }
+  { id: 801, text: 'Si mi pareja cambiara mucho como persona, no sé si seguiría siendo la misma relación para mí.', area: 'idealizacion', inverted: true, sampleValue: 4 },
+  { id: 804, text: 'A veces me pregunto si lo que siento es amor o miedo a estar solo/a.', area: 'idealizacion', inverted: true, sampleValue: 4 }
 ]
 
 // ─── PREGUNTAS: DIAGNÓSTICO PREMIUM — CONFIRMATORIAS (25 preguntas, 3 por área) ───
-// Intención clínica oculta bajo observación cotidiana. El respondente no detecta qué mide cada ítem.
+// Directas y claras. Sin ambigüedad. La intención clínica está en la estructura, no en el enredo.
 
 const QUESTIONS_DETAILED = [
   // Comunicación (3)
-  { id: 101, text: 'Cuando mi pareja me explica algo que le molestó, suelo entender a qué se refiere sin que tenga que explicármelo mucho.', area: 'comunicacion', inverted: false },
-  { id: 102, text: 'Hay temas que resuelvo mejor hablándolo primero con alguien más que con mi pareja.', area: 'comunicacion', inverted: true },
-  { id: 103, text: 'Existen versiones de ciertos eventos pasados en las que simplemente nunca nos vamos a poner de acuerdo.', area: 'comunicacion', inverted: true },
+  { id: 101, text: 'Mi pareja y yo nos entendemos bien sin necesitar largas explicaciones.', area: 'comunicacion', inverted: false, sampleValue: 3 },
+  { id: 102, text: 'Hay temas que prefiero no hablar con mi pareja porque sé que habrá conflicto.', area: 'comunicacion', inverted: true, sampleValue: 4 },
+  { id: 103, text: 'Cuando tenemos una discusión, al final ambos entendemos qué pasó y por qué.', area: 'comunicacion', inverted: false, sampleValue: 2 },
   // Intimidad (3)
-  { id: 201, text: 'A veces pienso que mi pareja y yo organizamos muy bien nuestra vida juntos.', area: 'intimidad', inverted: true },
-  { id: 202, text: 'Hay cosas de lo que siento por dentro que he decidido mantener solo para mí.', area: 'intimidad', inverted: true },
-  { id: 203, text: 'El contacto físico entre nosotros sigue siendo algo que surge de forma espontánea.', area: 'intimidad', inverted: false },
+  { id: 201, text: 'Me siento emocionalmente cerca de mi pareja en el día a día.', area: 'intimidad', inverted: false, sampleValue: 3 },
+  { id: 202, text: 'Hay cosas de lo que siento que prefiero no compartir con mi pareja.', area: 'intimidad', inverted: true, sampleValue: 4 },
+  { id: 203, text: 'El contacto físico con mi pareja sigue siendo natural y espontáneo.', area: 'intimidad', inverted: false, sampleValue: 3 },
   // Admiración (3)
-  { id: 301, text: 'Cuando mi pareja logra algo, lo que siento primero es genuino orgullo.', area: 'admiracion', inverted: false },
-  { id: 302, text: 'A veces pienso que funcionaría mejor en pareja con alguien que ve las cosas de otra manera.', area: 'admiracion', inverted: true },
-  { id: 303, text: 'Lo que más me gusta de mi pareja es algo que percibo como genuinamente único en él/ella.', area: 'admiracion', inverted: false },
+  { id: 301, text: 'Cuando mi pareja logra algo, siento orgullo genuino por ella/él.', area: 'admiracion', inverted: false, sampleValue: 4 },
+  { id: 302, text: 'A veces siento que estaría mejor con alguien que ve las cosas diferente.', area: 'admiracion', inverted: true, sampleValue: 3 },
+  { id: 303, text: 'Hay algo en mi pareja que sigue pareciéndome genuinamente único y valioso.', area: 'admiracion', inverted: false, sampleValue: 4 },
   // Conflicto (3)
-  { id: 401, text: 'Hay temas que, con el tiempo, hemos ido dejando de intentar resolver.', area: 'conflicto', inverted: true },
-  { id: 402, text: 'Cuando discutimos, suelo reconocer el patrón porque ya lo hemos tenido antes.', area: 'conflicto', inverted: true },
-  { id: 403, text: 'Después de una discusión difícil, siento que entendí algo nuevo de mi pareja o de mí.', area: 'conflicto', inverted: false },
+  { id: 401, text: 'Hay temas que hemos dejado de discutir porque nunca llevan a nada.', area: 'conflicto', inverted: true, sampleValue: 4 },
+  { id: 402, text: 'Cuando peleamos, reconozco el patrón porque ya ha pasado antes de la misma manera.', area: 'conflicto', inverted: true, sampleValue: 4 },
+  { id: 403, text: 'Después de una pelea fuerte, entiendo mejor a mi pareja o algo de mí.', area: 'conflicto', inverted: false, sampleValue: 2 },
   // Proyecto de vida (3)
-  { id: 501, text: 'Cuando imagino mi vida dentro de 10 años, mi pareja ocupa un lugar central en esa imagen.', area: 'proyecto', inverted: false },
-  { id: 502, text: 'La dirección que quiero para mi vida y la que quiere mi pareja se complementan de forma natural.', area: 'proyecto', inverted: false },
-  { id: 503, text: 'Hay cosas que quiero para mi vida y que prefiero no hablar demasiado en la relación.', area: 'proyecto', inverted: true },
+  { id: 501, text: 'Cuando imagino mi vida en 10 años, mi pareja está ahí.', area: 'proyecto', inverted: false, sampleValue: 3 },
+  { id: 502, text: 'Lo que cada uno quiere para su vida encaja de forma natural.', area: 'proyecto', inverted: false, sampleValue: 3 },
+  { id: 503, text: 'Hay cosas que quiero para mi vida y que prefiero no mencionar mucho en la relación.', area: 'proyecto', inverted: true, sampleValue: 3 },
   // Seguridad emocional (3)
-  { id: 601, text: 'Puedo contarle a mi pareja mis inseguridades sin temer que las use en mi contra en algún momento.', area: 'seguridad', inverted: false },
-  { id: 602, text: 'A veces actúo de cierta manera con mi pareja pensando en cómo va a reaccionar, no en lo que quiero.', area: 'seguridad', inverted: true },
-  { id: 603, text: 'Hay cosas de mi historia pasada que prefiero que mi pareja no conozca demasiado.', area: 'seguridad', inverted: true },
+  { id: 601, text: 'Puedo mostrarme vulnerable con mi pareja sin miedo a que lo use en mi contra.', area: 'seguridad', inverted: false, sampleValue: 2 },
+  { id: 602, text: 'A veces cambio cómo actúo dependiendo de cómo creo que mi pareja va a reaccionar.', area: 'seguridad', inverted: true, sampleValue: 4 },
+  { id: 603, text: 'Hay partes de mi historia que prefiero que mi pareja no conozca demasiado bien.', area: 'seguridad', inverted: true, sampleValue: 3 },
   // Autonomía (3)
-  { id: 701, text: 'Me cuesta disfrutar algo plenamente si mi pareja no está enterada o no puede compartirlo.', area: 'autonomia', inverted: true },
-  { id: 702, text: 'Hay decisiones que tomé solo/a en el último año y que me hicieron sentir bien conmigo mismo/a.', area: 'autonomia', inverted: false },
-  { id: 703, text: 'Cuando estoy bien conmigo mismo/a, noto que mi relación también funciona mejor.', area: 'autonomia', inverted: false },
+  { id: 701, text: 'Me cuesta disfrutar algo si mi pareja no puede ser parte de ello.', area: 'autonomia', inverted: true, sampleValue: 4 },
+  { id: 702, text: 'Tomo decisiones importantes para mí sin necesitar primero la aprobación de mi pareja.', area: 'autonomia', inverted: false, sampleValue: 3 },
+  { id: 703, text: 'Noto que cuando estoy bien conmigo mismo/a, mi relación también funciona mejor.', area: 'autonomia', inverted: false, sampleValue: 3 },
   // Idealización (4 — área clave para análisis psicoanalítico)
-  { id: 801, text: 'Si mi pareja cambiara significativamente como persona, no sé si seguiría siendo la misma relación.', area: 'idealizacion', inverted: true },
-  { id: 802, text: 'Cuando algo me molesta de mi pareja, a veces prefiero recordar cómo son las cosas cuando todo va bien.', area: 'idealizacion', inverted: true },
-  { id: 803, text: 'En los momentos difíciles, tengo claro por qué elegí a esta persona.', area: 'idealizacion', inverted: false },
-  { id: 804, text: 'Hay momentos en que me pregunto si lo que siento es amor o necesidad de no estar solo/a.', area: 'idealizacion', inverted: true }
+  { id: 801, text: 'Si mi pareja cambiara mucho como persona, no sé si seguiría siendo la misma relación para mí.', area: 'idealizacion', inverted: true, sampleValue: 4 },
+  { id: 802, text: 'Cuando algo me molesta de mi pareja, prefiero recordar los momentos buenos en lugar de abordarlo.', area: 'idealizacion', inverted: true, sampleValue: 3 },
+  { id: 803, text: 'En los momentos difíciles, tengo claro por qué elegí a esta persona.', area: 'idealizacion', inverted: false, sampleValue: 3 },
+  { id: 804, text: 'A veces me pregunto si lo que siento es amor o miedo a estar solo/a.', area: 'idealizacion', inverted: true, sampleValue: 4 }
 ]
 
 // ─── PREGUNTAS ABIERTAS (Premium — corazón del diagnóstico) ───────────────
@@ -92,21 +92,21 @@ const QUESTIONS_DETAILED = [
 // Intención clínica real oculta bajo preguntas que suenan conversacionales.
 
 const PHILOSOPHICAL_QUESTIONS = [
-  { id: 'p1', text: 'Antes de empezar: descríbeme a tu pareja en tres palabras.' },
-  { id: 'p2', text: '¿Cómo supiste que esta persona era para ti? ¿Qué estaba pasando en tu vida en ese momento?' },
-  { id: 'p3', text: '¿Cuál fue el primer momento en que algo se sintió... raro? No tiene que ser un conflicto grande.' },
-  { id: 'p4', text: '¿Hay algo que haces diferente cuando tu pareja está triste o enojada contigo?' },
-  { id: 'p5', text: 'Si le pidieras algo a tu pareja y no te lo pudiera dar, ¿qué sería eso? No lo más obvio, sino lo más honesto.' },
-  { id: 'p6', text: '¿Qué cosas de ti han cambiado desde que están juntos? Las que agradeces y las que no tanto.' },
-  { id: 'p7', text: 'Cuéntame de un momento reciente en que te sentiste muy conectado/a con tu pareja. ¿Qué estaban haciendo?' },
-  { id: 'p8', text: '¿Y uno en que te sentiste completamente solo/a estando con él/ella?' },
-  { id: 'p9', text: 'Cuando imaginaste cómo sería tener pareja — antes de esta relación — ¿se parece a lo que tienes hoy?' },
-  { id: 'p10', text: '¿Hay algo que tu pareja hace que te mueve por dentro y no entiendes muy bien por qué te lo hace sentir?' },
-  { id: 'p11', text: 'Si le preguntara a tu pareja cómo estás tú en esta relación, ¿qué crees que diría?' },
-  { id: 'p12', text: '¿Hay alguien de tu historia pasada con quien tu pareja se parezca en algo — en la forma de ser, no en lo físico?' },
-  { id: 'p13', text: '¿Qué es lo más difícil de soltarte dentro de esta relación?' },
-  { id: 'p14', text: 'Si mañana supieras que esta relación va a terminar, ¿cuál sería tu mayor miedo? No el más obvio, sino el más honesto.' },
-  { id: 'p15', text: '¿Qué necesitarías saber de ti mismo/a para poder elegir mejor en esta relación?' }
+  { id: 'p1', text: 'Antes de empezar: descríbeme a tu pareja en tres palabras.', sample: 'Intensa, presente, complicada' },
+  { id: 'p2', text: '¿Cómo supiste que esta persona era para ti? ¿Qué estaba pasando en tu vida en ese momento?', sample: 'La conocí cuando estaba en un momento muy solitario, después de una ruptura difícil. Algo cuadró de inmediato.' },
+  { id: 'p3', text: '¿Cuál fue el primer momento en que algo se sintió... raro? No tiene que ser un conflicto grande.', sample: 'Cuando canceló algo importante para mí y no pareció importarle mucho. No fue grande, pero algo cambió.' },
+  { id: 'p4', text: '¿Hay algo que haces diferente cuando tu pareja está triste o enojada contigo?', sample: 'Me quedo callado. Trato de no añadir más tensión y espero a que pase.' },
+  { id: 'p5', text: 'Si le pidieras algo a tu pareja y no te lo pudiera dar, ¿qué sería eso? No lo más obvio, sino lo más honesto.', sample: 'Que me buscara de noche sin que yo tuviera que pedirlo.' },
+  { id: 'p6', text: '¿Qué cosas de ti han cambiado desde que están juntos? Las que agradeces y las que no tanto.', sample: 'Me volví más reflexivo, pero también más ansioso. Perdí algo de ligereza que tenía antes.' },
+  { id: 'p7', text: 'Cuéntame de un momento reciente en que te sentiste muy conectado/a con tu pareja. ¿Qué estaban haciendo?', sample: 'El domingo pasado. Cocinamos juntos en silencio y todo estaba tranquilo, del buen silencio.' },
+  { id: 'p8', text: '¿Y uno en que te sentiste completamente solo/a estando con él/ella?', sample: 'En una cena con sus amigos. Estaba ahí pero me sentí completamente invisible para ella.' },
+  { id: 'p9', text: 'Cuando imaginaste cómo sería tener pareja — antes de esta relación — ¿se parece a lo que tienes hoy?', sample: 'Para nada. Imaginé algo más calmado. Esto es más intenso y más confuso de lo que creía.' },
+  { id: 'p10', text: '¿Hay algo que tu pareja hace que te mueve por dentro y no entiendes muy bien por qué te lo hace sentir?', sample: 'Cuando me corrige directamente frente a otros. Me molesta más de lo que debería.' },
+  { id: 'p11', text: 'Si le preguntara a tu pareja cómo estás tú en esta relación, ¿qué crees que diría?', sample: 'Que la amo pero que a veces me cierro sin explicarle por qué.' },
+  { id: 'p12', text: '¿Hay alguien de tu historia pasada con quien tu pareja se parezca en algo — en la forma de ser, no en lo físico?', sample: 'Sí. Mi madre también era muy directa y fría cuando algo no le gustaba.' },
+  { id: 'p13', text: '¿Qué es lo más difícil de soltarte dentro de esta relación?', sample: 'El control. Necesito tener claridad de todo y en esta relación no siempre la tengo.' },
+  { id: 'p14', text: 'Si mañana supieras que esta relación va a terminar, ¿cuál sería tu mayor miedo? No el más obvio, sino el más honesto.', sample: 'Que no vuelva a encontrar esta profundidad intelectual con alguien más.' },
+  { id: 'p15', text: '¿Qué necesitarías saber de ti mismo/a para poder elegir mejor en esta relación?', sample: 'Por qué siempre elijo personas que de alguna forma no están del todo disponibles.' }
 ]
 
 // ─── PREGUNTAS FLASH (Premium — proyectivas, sin filtro racional) ─────────
@@ -114,11 +114,11 @@ const PHILOSOPHICAL_QUESTIONS = [
 // Respuestas en menos de 3 segundos: lo que sale sin pensar revela lo inconsciente.
 
 const FLASH_QUESTIONS = [
-  { id: 'f1', type: 'complete', stem: 'Cuando pienso en mi pareja, lo primero que siento es' },
-  { id: 'f2', type: 'complete', stem: 'Lo que más me da miedo en esta relación es' },
-  { id: 'f3', type: 'complete', stem: 'Cuando estamos bien juntos, yo soy' },
-  { id: 'f4', type: 'complete', stem: 'Sin mi pareja, yo sería' },
-  { id: 'f5', type: 'complete', stem: 'El amor debería ser ___, pero en mi relación es' },
+  { id: 'f1', type: 'complete', stem: 'Cuando pienso en mi pareja, lo primero que siento es', sample: 'calma mezclada con algo de inquietud' },
+  { id: 'f2', type: 'complete', stem: 'Lo que más me da miedo en esta relación es', sample: 'que se aburra de mí' },
+  { id: 'f3', type: 'complete', stem: 'Cuando estamos bien juntos, yo soy', sample: 'más yo mismo/a' },
+  { id: 'f4', type: 'complete', stem: 'Sin mi pareja, yo sería', sample: 'más libre pero más solo/a' },
+  { id: 'f5', type: 'complete', stem: 'El amor debería ser ___, pero en mi relación es', sample: 'tranquilo, pero en mi relación es impredecible' },
   { id: 'f6', type: 'choice', text: '¿Quién cede más en esta relación?', options: ['Yo', 'Mi pareja', 'Los dos igual'] },
   { id: 'f7', type: 'choice', text: '¿Antes de esta relación eras...?', options: ['Más feliz', 'Igual de feliz', 'Menos feliz'] },
   { id: 'f8', type: 'choice', text: '¿Sientes que tu pareja te conoce de verdad?', options: ['Sí', 'En parte', 'No del todo'] },
@@ -176,76 +176,174 @@ function MicButton({ onTranscript, onInterim }) {
   )
 }
 
-// ─── BARRA DE PROGRESO DEL ANÁLISIS ───────────────────────────────
+// ─── ANÁLISIS: LISTA DE TAREAS (estilo antivirus) ─────────────────
 
-const ANALYSIS_STAGES = [
-  { label: 'Leyendo tu narrativa personal', duration: 60000 },
-  { label: 'Identificando patrones en tu historia', duration: 60000 },
-  { label: 'Analizando los datos confirmatorios', duration: 60000 },
-  { label: 'Cruzando narrativa con datos', duration: 90000 },
-  { label: 'Preparando tu informe personalizado', duration: 90000 }
+const ANALYSIS_TASK_GROUPS = [
+  {
+    label: 'Leyendo tu historia',
+    color: 'violet',
+    tasks: [
+      { id: 1, text: 'Procesando lo que compartiste' },
+      { id: 2, text: 'Detectando patrones de apego' },
+      { id: 3, text: 'Analizando momentos clave que mencionaste' },
+      { id: 4, text: 'Leyendo lo que está entre líneas' },
+      { id: 5, text: 'Identificando mecanismos de defensa' },
+    ]
+  },
+  {
+    label: 'Analizando los datos',
+    color: 'blue',
+    tasks: [
+      { id: 6, text: 'Calculando perfil por dimensión' },
+      { id: 7, text: 'Buscando contradicciones y contrastes' },
+      { id: 8, text: 'Ponderando áreas de mayor riesgo' },
+      { id: 9, text: 'Confirmando lo que los números dicen' },
+    ]
+  },
+  {
+    label: 'Respuestas proyectivas',
+    color: 'fuchsia',
+    tasks: [
+      { id: 10, text: 'Interpretando respuestas sin filtro racional' },
+      { id: 11, text: 'Cruzando lo proyectivo con tu historia' },
+    ]
+  },
+  {
+    label: 'Construyendo tu diagnóstico',
+    color: 'pink',
+    tasks: [
+      { id: 12, text: 'Construyendo el perfil del vínculo' },
+      { id: 13, text: 'Redactando tu análisis personalizado' },
+      { id: 14, text: 'Verificando coherencia del diagnóstico' },
+      { id: 15, text: 'Preparando tu informe completo' },
+    ]
+  }
 ]
 
-function AnalyzingProgress({ philosophicalAnswers, philosophicalQuestions }) {
-  const [currentStage, setCurrentStage] = useState(0)
-  const [pct, setPct] = useState(0)
-  const [quote, setQuote] = useState(null)
-  const elapsedRef = useRef(0)
+const ALL_ANALYSIS_TASKS = ANALYSIS_TASK_GROUPS.flatMap(g => g.tasks)
+// Durations in ms for each task (normal pace ~90 seconds total)
+const TASK_DURATIONS_MS = [4800, 5200, 4600, 6200, 5400, 4300, 5900, 5100, 4700, 5600, 5200, 6100, 7200, 5000, 6300]
 
-  const pickQuote = useCallback(() => {
-    const entries = Object.entries(philosophicalAnswers || {}).filter(([, v]) => v && v.trim().length > 25)
-    if (!entries.length) return null
-    const [idx, text] = entries[Math.floor(Math.random() * entries.length)]
-    const q = philosophicalQuestions?.[parseInt(idx)]
-    const snippet = text.trim().length > 72 ? text.trim().slice(0, 72) + '...' : text.trim()
-    return { snippet, label: q?.text }
-  }, [philosophicalAnswers, philosophicalQuestions])
+function AnalyzingProgress({ isDone, onComplete }) {
+  const [completedCount, setCompletedCount] = useState(0)
+  const timeoutRef = useRef(null)
+  const isDoneRef = useRef(isDone)
+  isDoneRef.current = isDone
+  const completedCountRef = useRef(0)
+  const onCompleteRef = useRef(onComplete)
+  onCompleteRef.current = onComplete
+
+  const scheduleNext = useCallback(() => {
+    const idx = completedCountRef.current
+    if (idx >= ALL_ANALYSIS_TASKS.length) {
+      timeoutRef.current = setTimeout(() => { onCompleteRef.current?.() }, 600)
+      return
+    }
+    const delay = isDoneRef.current ? 160 : TASK_DURATIONS_MS[idx]
+    timeoutRef.current = setTimeout(() => {
+      completedCountRef.current = idx + 1
+      setCompletedCount(idx + 1)
+      scheduleNext()
+    }, delay)
+  }, [])
 
   useEffect(() => {
-    setQuote(pickQuote())
-    const TICK = 500
-    const TAU = 150000 // 150 s time constant — reaches ~82% at 5 min
-    const MAX_PCT = 88
-    const timer = setInterval(() => {
-      elapsedRef.current += TICK
-      const t = elapsedRef.current
-      setPct(Math.round(MAX_PCT * (1 - Math.exp(-t / TAU))))
-      let cumulative = 0
-      for (let i = 0; i < ANALYSIS_STAGES.length; i++) {
-        cumulative += ANALYSIS_STAGES[i].duration
-        if (t < cumulative) { setCurrentStage(i); break }
-        if (i === ANALYSIS_STAGES.length - 1) setCurrentStage(i)
+    scheduleNext()
+    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current) }
+  }, [scheduleNext])
+
+  // When isDone becomes true — cancel current long timer and drain remaining tasks fast
+  useEffect(() => {
+    if (!isDone) return
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    const fastDrain = () => {
+      const idx = completedCountRef.current
+      if (idx >= ALL_ANALYSIS_TASKS.length) {
+        timeoutRef.current = setTimeout(() => { onCompleteRef.current?.() }, 400)
+        return
       }
-    }, TICK)
-    const quoteTimer = setInterval(() => setQuote(pickQuote()), 18000)
-    return () => { clearInterval(timer); clearInterval(quoteTimer) }
-  }, [pickQuote])
+      completedCountRef.current = idx + 1
+      setCompletedCount(idx + 1)
+      timeoutRef.current = setTimeout(fastDrain, 160)
+    }
+    timeoutRef.current = setTimeout(fastDrain, 250)
+  }, [isDone])
+
+  const currentIdx = completedCount // tasks 0..completedCount-1 are done; completedCount is the one running now
 
   return (
-    <div>
-      <div className="h-2 bg-white/5 rounded-full overflow-hidden mb-3">
-        <motion.div className="h-full rounded-full bg-gradient-to-r from-violet-500 to-pink-400"
-          animate={{ width: `${pct}%` }} transition={{ duration: 0.5, ease: 'easeOut' }} />
-      </div>
-      <div className="flex items-center justify-between mb-4">
-        <AnimatePresence mode="wait">
-          <motion.span key={currentStage} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}
-            className="text-violet-300/50 text-xs font-light tracking-wide">
-            {ANALYSIS_STAGES[currentStage].label}...
-          </motion.span>
-        </AnimatePresence>
-        <span className="text-white/30 text-xs font-light tabular-nums">{pct}%</span>
-      </div>
-      {quote?.snippet && (
-        <AnimatePresence mode="wait">
-          <motion.div key={quote.snippet} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mt-3 p-4 rounded-xl border border-violet-500/10 bg-violet-500/[0.02] text-left">
-            <p className="text-violet-300/35 text-[10px] font-light uppercase tracking-[0.12em] mb-1.5">Leyendo lo que compartiste</p>
-            <p className="text-white/40 text-sm font-light italic leading-relaxed">&ldquo;{quote.snippet}&rdquo;</p>
+    <div className="space-y-4 text-left">
+      {ANALYSIS_TASK_GROUPS.map(group => {
+        const firstIdx = ALL_ANALYSIS_TASKS.findIndex(t => t.id === group.tasks[0].id)
+        const lastIdx = ALL_ANALYSIS_TASKS.findIndex(t => t.id === group.tasks[group.tasks.length - 1].id)
+        const allGroupDone = completedCount > lastIdx
+        const isGroupActive = !allGroupDone && completedCount >= firstIdx
+
+        const colorStyles = {
+          violet: { border: 'border-violet-500/15', label: 'text-violet-300/55', dot: 'bg-violet-400/70', spinner: 'border-t-violet-300/80 border-violet-400/20' },
+          blue: { border: 'border-blue-500/15', label: 'text-blue-300/55', dot: 'bg-blue-400/70', spinner: 'border-t-blue-300/80 border-blue-400/20' },
+          fuchsia: { border: 'border-fuchsia-500/15', label: 'text-fuchsia-300/55', dot: 'bg-fuchsia-400/70', spinner: 'border-t-fuchsia-300/80 border-fuchsia-400/20' },
+          pink: { border: 'border-pink-500/15', label: 'text-pink-300/55', dot: 'bg-pink-400/70', spinner: 'border-t-pink-300/80 border-pink-400/20' },
+        }
+        const c = colorStyles[group.color]
+
+        return (
+          <motion.div key={group.label}
+            initial={{ opacity: 0.4 }}
+            animate={{ opacity: allGroupDone || isGroupActive ? 1 : 0.35 }}
+            transition={{ duration: 0.4 }}
+            className={`p-5 rounded-2xl border ${allGroupDone ? 'border-emerald-500/15 bg-emerald-500/[0.02]' : isGroupActive ? `${c.border} bg-white/[0.015]` : 'border-white/5 bg-transparent'}`}>
+            {/* Group header */}
+            <div className="flex items-center gap-2.5 mb-3">
+              {allGroupDone ? (
+                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300 }}>
+                  <Check className="w-3.5 h-3.5 text-emerald-400/70" strokeWidth={2.5} />
+                </motion.div>
+              ) : isGroupActive ? (
+                <motion.div className={`w-2.5 h-2.5 rounded-full ${c.dot}`}
+                  animate={{ scale: [1, 1.5, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 1.2, repeat: Infinity }} />
+              ) : (
+                <div className="w-2.5 h-2.5 rounded-full bg-white/12" />
+              )}
+              <span className={`text-[10px] font-light uppercase tracking-[0.18em] ${allGroupDone ? 'text-emerald-400/60' : isGroupActive ? c.label : 'text-white/20'}`}>
+                {group.label}
+              </span>
+            </div>
+            {/* Tasks */}
+            <ul className="space-y-2">
+              {group.tasks.map(task => {
+                const taskGlobalIdx = ALL_ANALYSIS_TASKS.findIndex(t => t.id === task.id)
+                const isTaskDone = taskGlobalIdx < completedCount
+                const isTaskCurrent = taskGlobalIdx === completedCount
+
+                return (
+                  <motion.li key={task.id}
+                    animate={{ opacity: isTaskDone ? 1 : isTaskCurrent ? 0.9 : 0.3 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex items-center gap-3">
+                    <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
+                      {isTaskDone ? (
+                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 350, delay: 0.05 }}>
+                          <Check className="w-3.5 h-3.5 text-emerald-400" strokeWidth={2.5} />
+                        </motion.div>
+                      ) : isTaskCurrent ? (
+                        <motion.div
+                          className={`w-3.5 h-3.5 rounded-full border-2 ${c.spinner}`}
+                          animate={{ rotate: 360 }} transition={{ duration: 0.9, repeat: Infinity, ease: 'linear' }} />
+                      ) : (
+                        <div className="w-2 h-2 rounded-full bg-white/12 mx-auto" />
+                      )}
+                    </div>
+                    <span className={`text-sm font-light leading-snug ${isTaskDone ? 'text-white/65' : isTaskCurrent ? 'text-white/88' : 'text-white/28'}`}>
+                      {task.text}
+                    </span>
+                  </motion.li>
+                )
+              })}
+            </ul>
           </motion.div>
-        </AnimatePresence>
-      )}
+        )
+      })}
     </div>
   )
 }
@@ -379,26 +477,27 @@ function getOverallResult(areaScores) {
     totalWeight += w
   }
   const avg = totalWeight > 0 ? weightedSum / totalWeight : 0
+  const score = Math.round(((avg - 1) / 4) * 100)
   if (avg >= 3.8) return {
-    key: 'solida', title: 'Relación Sólida', emoji: '🟢',
+    key: 'solida', title: 'Relación Sólida', emoji: '🟢', score,
     color: 'from-emerald-500 to-green-500', textColor: 'text-emerald-400',
     description: 'Existe una base emocional estable, aunque siempre hay aspectos que pueden fortalecerse.',
     detail: 'Tu relación muestra indicadores saludables en la mayoría de las áreas evaluadas. Esto no significa que no existan desafíos, sino que cuentan con recursos emocionales sólidos para enfrentarlos.'
   }
   if (avg >= 3.0) return {
-    key: 'desgaste', title: 'Relación en Desgaste', emoji: '🟠',
+    key: 'desgaste', title: 'Relación en Desgaste', emoji: '🟠', score,
     color: 'from-amber-500 to-orange-500', textColor: 'text-amber-400',
     description: 'El vínculo existe, pero algunos patrones están debilitando la conexión.',
     detail: 'La relación conserva elementos positivos importantes, pero hay áreas donde el desgaste está afectando la calidad del vínculo. Identificar estos patrones a tiempo puede prevenir un deterioro mayor.'
   }
   if (avg >= 2.2) return {
-    key: 'riesgo', title: 'Relación en Riesgo', emoji: '🔴',
+    key: 'riesgo', title: 'Relación en Riesgo', emoji: '🔴', score,
     color: 'from-red-500 to-rose-500', textColor: 'text-red-400',
     description: 'Los conflictos acumulados están afectando seriamente la relación.',
     detail: 'Varios indicadores muestran que la relación está atravesando una etapa difícil. Los patrones actuales, si no se abordan, tienden a profundizarse con el tiempo. La buena noticia es que identificarlos es el primer paso para transformarlos.'
   }
   return {
-    key: 'critica', title: 'Relación Crítica', emoji: '⚫',
+    key: 'critica', title: 'Relación Crítica', emoji: '⚫', score,
     color: 'from-gray-500 to-zinc-500', textColor: 'text-gray-400',
     description: 'Los patrones actuales pueden llevar a ruptura si no se intervienen.',
     detail: 'La relación muestra señales importantes de agotamiento en múltiples áreas. Esto no significa que no tenga solución, pero sí indica que se necesita intervención profesional para poder reconstruir el vínculo desde bases más sólidas.'
@@ -731,6 +830,7 @@ const ConsultaParejaPage = () => {
   // AI analysis (premium)
   const [aiAnalysis, setAiAnalysis] = useState(null)
   const [aiLoading, setAiLoading] = useState(false)
+  const [aiReady, setAiReady] = useState(false)
 
   const topRef = useRef(null)
 
@@ -861,6 +961,7 @@ const ConsultaParejaPage = () => {
 
   const handleRunAIAnalysis = async () => {
     setAiLoading(true)
+    setAiReady(false)
     setStage('analyzing')
     scrollToTop()
     try {
@@ -881,8 +982,8 @@ const ConsultaParejaPage = () => {
       console.error('AI analysis error:', e)
     }
     setAiLoading(false)
-    setStage('results')
-    scrollToTop()
+    // Signal to AnalyzingProgress that AI is done; it will call onComplete to transition to results
+    setAiReady(true)
   }
 
   const togglePhilMic = useCallback(() => {
@@ -930,6 +1031,9 @@ const ConsultaParejaPage = () => {
       setPdfGenerating(false)
     }
   }
+
+  // Test mode: enables quick-fill sample answers per question
+  const isTestMode = import.meta.env.DEV || new URLSearchParams(window.location.search).get('test') === 'true'
 
   const whatsappMessage = encodeURIComponent('Hola, acabo de realizar el diagnóstico de relación en tu página y me gustaría recibir más información sobre la consulta de pareja.')
   const whatsappAgendarMessage = encodeURIComponent('Hola, me gustaría agendar una sesión de diagnóstico de pareja.')
@@ -1514,7 +1618,18 @@ const ConsultaParejaPage = () => {
                 </motion.div>
               </AnimatePresence>
 
-              <div className="flex items-center justify-between mt-10 pt-6 border-t border-white/5">
+              {/* Quick-fill test button for Likert */}
+              {isTestMode && (
+                <div className="mt-6 text-center">
+                  <button
+                    onClick={() => handleAnswer(questions[currentQuestion].sampleValue || 3)}
+                    className="text-amber-400/45 text-[10px] hover:text-amber-400/75 tracking-wider transition-colors border border-amber-400/18 rounded-full px-3 py-1.5 hover:border-amber-400/35">
+                    ► Respuesta de muestra
+                  </button>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/5">
                 <button onClick={() => setCurrentQuestion(prev => Math.max(0, prev - 1))} disabled={currentQuestion === 0}
                   className="flex items-center gap-2 text-white/30 hover:text-white/60 text-xs tracking-wider disabled:opacity-20 disabled:cursor-not-allowed transition-colors">
                   <ArrowLeft className="w-3.5 h-3.5" /> ANTERIOR
@@ -1642,14 +1757,31 @@ const ConsultaParejaPage = () => {
 
                       {/* Skip (only when no text) */}
                       {!philosophicalAnswers[currentPhilosophical]?.trim() && !philRecording && (
-                        <button onClick={() => {
-                          if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
-                            setCurrentPhilosophical(prev => prev + 1)
-                          } else { setStage('test'); scrollToTop() }
-                        }}
-                          className="mt-4 text-white/20 text-xs hover:text-white/40 tracking-wider transition-colors">
-                          OMITIR
-                        </button>
+                        <div className="flex items-center gap-4 mt-4">
+                          <button onClick={() => {
+                            if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
+                              setCurrentPhilosophical(prev => prev + 1)
+                            } else { setStage('test'); scrollToTop() }
+                          }}
+                            className="text-white/20 text-xs hover:text-white/40 tracking-wider transition-colors">
+                            OMITIR
+                          </button>
+                          {isTestMode && PHILOSOPHICAL_QUESTIONS[currentPhilosophical].sample && (
+                            <button
+                              onClick={() => {
+                                const sample = PHILOSOPHICAL_QUESTIONS[currentPhilosophical].sample
+                                setPhilosophicalAnswers(prev => ({ ...prev, [currentPhilosophical]: sample }))
+                                setTimeout(() => {
+                                  if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
+                                    setCurrentPhilosophical(prev => prev + 1); scrollToTop()
+                                  } else { setStage('test'); scrollToTop() }
+                                }, 350)
+                              }}
+                              className="flex items-center gap-1.5 text-amber-400/50 text-[10px] hover:text-amber-400/80 tracking-wider transition-colors border border-amber-400/20 rounded-full px-2.5 py-1 hover:border-amber-400/40">
+                              ► Muestra
+                            </button>
+                          )}
+                        </div>
                       )}
 
                       {/* Fallback to text */}
@@ -1671,10 +1803,21 @@ const ConsultaParejaPage = () => {
                         className="w-full h-40 p-5 bg-white/[0.03] border border-violet-500/15 rounded-2xl text-white/85 text-base font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none resize-none transition-colors leading-relaxed"
                       />
                       <div className="flex items-center justify-between mt-2">
-                        <button onClick={() => setPhilUIMode('voice')}
-                          className="flex items-center gap-1.5 text-violet-300/40 text-xs hover:text-violet-300/70 transition-colors">
-                          <Mic className="w-3 h-3" /> Usar micrófono
-                        </button>
+                        <div className="flex items-center gap-3">
+                          <button onClick={() => setPhilUIMode('voice')}
+                            className="flex items-center gap-1.5 text-violet-300/40 text-xs hover:text-violet-300/70 transition-colors">
+                            <Mic className="w-3 h-3" /> Usar micrófono
+                          </button>
+                          {isTestMode && PHILOSOPHICAL_QUESTIONS[currentPhilosophical].sample && !(philosophicalAnswers[currentPhilosophical] || '').trim() && (
+                            <button
+                              onClick={() => {
+                                setPhilosophicalAnswers(prev => ({ ...prev, [currentPhilosophical]: PHILOSOPHICAL_QUESTIONS[currentPhilosophical].sample }))
+                              }}
+                              className="text-amber-400/50 text-[10px] hover:text-amber-400/80 transition-colors border border-amber-400/20 rounded-full px-2.5 py-1 hover:border-amber-400/40">
+                              ► Muestra
+                            </button>
+                          )}
+                        </div>
                         <span className="text-white/15 text-[10px] font-extralight">
                           {(philosophicalAnswers[currentPhilosophical] || '').length}/800
                         </span>
@@ -1769,12 +1912,21 @@ const ConsultaParejaPage = () => {
                         className="w-full p-4 bg-white/[0.03] border border-fuchsia-500/15 rounded-2xl text-white/85 text-base font-light placeholder:text-white/20 focus:border-fuchsia-400/30 focus:outline-none resize-none transition-colors leading-relaxed"
                       />
                       <div className="flex items-center justify-between mt-4">
-                        <button onClick={() => {
-                          if (currentFlash < FLASH_QUESTIONS.length - 1) { setCurrentFlash(prev => prev + 1); scrollToTop() }
-                          else { setStage('email'); scrollToTop() }
-                        }} className="text-white/25 text-xs hover:text-white/45 tracking-wider transition-colors">
-                          OMITIR
-                        </button>
+                        <div className="flex items-center gap-3">
+                          <button onClick={() => {
+                            if (currentFlash < FLASH_QUESTIONS.length - 1) { setCurrentFlash(prev => prev + 1); scrollToTop() }
+                            else { setStage('email'); scrollToTop() }
+                          }} className="text-white/25 text-xs hover:text-white/45 tracking-wider transition-colors">
+                            OMITIR
+                          </button>
+                          {isTestMode && FLASH_QUESTIONS[currentFlash].sample && !(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '').trim() && (
+                            <button
+                              onClick={() => setFlashAnswers(prev => ({ ...prev, [FLASH_QUESTIONS[currentFlash].id]: FLASH_QUESTIONS[currentFlash].sample }))}
+                              className="text-amber-400/45 text-[10px] hover:text-amber-400/75 transition-colors border border-amber-400/18 rounded-full px-2.5 py-1 hover:border-amber-400/35">
+                              ► Muestra
+                            </button>
+                          )}
+                        </div>
                         {(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '').trim().length > 0 && (
                           <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                             whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
@@ -1910,17 +2062,16 @@ const ConsultaParejaPage = () => {
         ═══════════════════════════════════════════════════════════ */}
         {stage === 'analyzing' && (
           <motion.div key="analyzing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="min-h-screen flex items-center justify-center px-6">
-            <div className="max-w-md w-full text-center">
-              <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }} className="mx-auto mb-8">
-                <Loader2 className="w-12 h-12 text-violet-400/60" strokeWidth={1.5} />
-              </motion.div>
-              <h2 className="text-2xl font-light text-white mb-4 font-display tracking-wide">Analizando tu relación</h2>
-              <p className="text-white/50 text-sm font-light mb-2">Estamos procesando tu narrativa y cruzándola con los datos...</p>
-              <p className="text-white/30 text-xs font-light mb-8">Correlacionando lo que nos contaste con las afirmaciones confirmatorias</p>
-
-              {/* Progress bar with stages */}
-              <AnalyzingProgress philosophicalAnswers={philosophicalAnswers} philosophicalQuestions={PHILOSOPHICAL_QUESTIONS} />
+            className="min-h-screen flex items-center justify-center px-6 py-32">
+            <div className="max-w-md w-full">
+              <div className="text-center mb-10">
+                <h2 className="text-2xl font-light text-white mb-3 font-display tracking-wide">Analizando tu relación</h2>
+                <p className="text-white/40 text-sm font-light">Cruzando tu historia con los datos — esto puede tardar un poco.</p>
+              </div>
+              <AnalyzingProgress
+                isDone={aiReady}
+                onComplete={() => { setStage('results'); scrollToTop() }}
+              />
             </div>
           </motion.div>
         )}
@@ -1937,82 +2088,18 @@ const ConsultaParejaPage = () => {
             </div>
 
             <div className="max-w-3xl mx-auto relative z-10">
-              {/* ─── HEADER: Two profile cards (Premium) or classic header (Free) ─── */}
+              {/* ─── HEADER: Clean diagnostic title ─── */}
               {isPremiumUnlocked && aiAnalysis ? (
-                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
-                  className="mb-14">
-                  {/* Badge + emoji */}
-                  <div className="text-center mb-8">
-                    <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 150, delay: 0.2 }}
-                      className="text-4xl mb-4">{result.emoji}</motion.div>
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 border border-violet-500/20 rounded-full bg-violet-500/5 mb-3">
-                      <Sparkles className="w-3 h-3 text-violet-400/60" strokeWidth={1.5} />
-                      <span className="text-xs text-violet-300/60 font-light uppercase tracking-[0.15em]">Diagnóstico Premium</span>
-                    </div>
-                    <h2 className={`text-2xl lg:text-3xl font-light font-display tracking-wide bg-gradient-to-r ${result.color} bg-clip-text text-transparent`}>
-                      {result.title}
-                    </h2>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}
+                  className="text-center mb-14">
+                  <div className="inline-flex items-center gap-2 px-5 py-2 border border-white/8 rounded-full bg-white/[0.02] mb-5">
+                    <Sparkles className="w-3.5 h-3.5 text-violet-400/50" strokeWidth={1.5} />
+                    <span className="text-xs text-white/35 font-light uppercase tracking-[0.2em]">Diagnóstico Premium</span>
                   </div>
-
-                  {/* Two profile cards */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-10">
-                    {/* Card: Tu perfil individual */}
-                    <div className="p-6 border border-violet-500/15 rounded-2xl bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02]">
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-400/20 to-fuchsia-400/20 border border-violet-400/20 flex items-center justify-center flex-shrink-0">
-                          <Brain className="w-3.5 h-3.5 text-violet-300/70" strokeWidth={1.5} />
-                        </div>
-                        <span className="text-violet-300/60 text-[10px] font-light uppercase tracking-[0.18em]">Tu perfil</span>
-                      </div>
-                      <div className="flex items-end gap-3 mb-4">
-                        <span className={`text-3xl font-light tabular-nums ${
-                          getPercent(areaScores.autonomia) >= 60 ? 'text-emerald-400' : getPercent(areaScores.autonomia) >= 40 ? 'text-amber-400' : 'text-red-400'
-                        }`}>{getPercent(areaScores.autonomia)}%</span>
-                        <span className="text-white/35 text-xs font-light mb-1">autonomía</span>
-                      </div>
-                      {aiAnalysis.perfilIndividual ? (
-                        <p className="text-white/55 text-xs font-light leading-relaxed line-clamp-4">
-                          {aiAnalysis.perfilIndividual.split('\n\n')[0].replace(/\*\*/g, '')}
-                        </p>
-                      ) : (
-                        <p className="text-white/40 text-xs font-light leading-relaxed">Análisis del patrón que traes a la relación.</p>
-                      )}
-                    </div>
-
-                    {/* Card: El vínculo */}
-                    <div className="p-6 border border-pink-500/15 rounded-2xl bg-gradient-to-br from-pink-500/[0.04] to-rose-500/[0.02]">
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-pink-400/20 to-rose-400/20 border border-pink-400/20 flex items-center justify-center flex-shrink-0">
-                          <Heart className="w-3.5 h-3.5 text-pink-300/70" strokeWidth={1.5} />
-                        </div>
-                        <span className="text-pink-300/60 text-[10px] font-light uppercase tracking-[0.18em]">El vínculo</span>
-                      </div>
-                      <div className="flex items-end gap-3 mb-4">
-                        <span className={`text-3xl font-light tabular-nums ${
-                          result.score >= 60 ? 'text-emerald-400' : result.score >= 40 ? 'text-amber-400' : 'text-red-400'
-                        }`}>{result.score}%</span>
-                        <span className="text-white/35 text-xs font-light mb-1">índice general</span>
-                      </div>
-                      {aiAnalysis.perfilVinculo ? (
-                        <p className="text-white/55 text-xs font-light leading-relaxed line-clamp-4">
-                          {aiAnalysis.perfilVinculo.split('\n\n')[0].replace(/\*\*/g, '')}
-                        </p>
-                      ) : (
-                        <p className="text-white/40 text-xs font-light leading-relaxed">La dinámica entre los dos y el ciclo que han construido juntos.</p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* diagnosticoNarrado below the cards */}
-                  {aiAnalysis.diagnosticoNarrado && (
-                    <div className="max-w-2xl mx-auto">
-                      {aiAnalysis.diagnosticoNarrado.split('\n\n').map((p, i) => (
-                        <p key={i} className="text-white/68 text-base lg:text-[17px] font-light leading-[1.95] tracking-wide mb-5 last:mb-0">
-                          {renderBold(p)}
-                        </p>
-                      ))}
-                    </div>
-                  )}
+                  <h2 className={`text-3xl lg:text-4xl font-light mb-3 font-display tracking-wide bg-gradient-to-r ${result.color} bg-clip-text text-transparent`}>
+                    {result.title}
+                  </h2>
+                  <p className="text-white/45 text-sm font-light leading-relaxed max-w-md mx-auto">{result.description}</p>
                 </motion.div>
               ) : (
                 /* Classic header for free users */
@@ -2030,70 +2117,10 @@ const ConsultaParejaPage = () => {
                 </motion.div>
               )}
 
-              {/* ─── APERTURA EMPÁTICA (Premium — first thing shown) ─── */}
-              {isPremiumUnlocked && aiAnalysis?.aperturaEmpatica && (
-                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
-                  className="mb-10 p-8 border border-violet-500/20 rounded-2xl bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02]">
-                  <div className="flex items-center gap-3 mb-6">
-                    <Heart className="w-5 h-5 text-violet-400/70" strokeWidth={1.5} />
-                    <h3 className="text-lg font-semibold text-white tracking-wide font-display">Lo que tu historia reveló</h3>
-                  </div>
-                  {aiAnalysis.aperturaEmpaticaPuntos?.length > 0 ? (
-                    <div className="space-y-5">
-                      {aiAnalysis.aperturaEmpaticaPuntos.map((punto, i) => (
-                        <div key={i} className="flex items-start gap-4">
-                          <span className="w-1.5 h-1.5 rounded-full bg-violet-400/60 mt-2 flex-shrink-0" />
-                          <div className="flex-1">
-                            <span className="text-white/90 text-sm font-semibold tracking-wide">{punto.titulo}</span>
-                            <span className="text-white/45 text-sm"> — </span>
-                            <span className="text-white/65 text-sm font-light leading-relaxed">{renderBold(punto.texto)}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    (aiAnalysis.aperturaEmpatica || '').split('\n\n').map((p, i) => (
-                      <p key={i} className="text-white/72 text-base font-light leading-[1.95] tracking-wide mb-4 last:mb-0">
-                        {renderBold(p)}
-                      </p>
-                    ))
-                  )}
-                </motion.div>
-              )}
-
-              {/* ─── PERFIL INDIVIDUAL + VÍNCULO (Premium — full text) ─── */}
-              {isPremiumUnlocked && aiAnalysis && (aiAnalysis.perfilIndividual || aiAnalysis.perfilVinculo) && (
-                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }}
-                  className="mb-10 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  {aiAnalysis.perfilIndividual && (
-                    <div className="p-7 border border-violet-500/15 rounded-2xl bg-gradient-to-br from-violet-500/[0.03] to-transparent">
-                      <div className="flex items-center gap-2 mb-4">
-                        <Brain className="w-4 h-4 text-violet-400/60" strokeWidth={1.5} />
-                        <h4 className="text-violet-300/60 text-[10px] font-light uppercase tracking-[0.18em]">Tu perfil</h4>
-                      </div>
-                      {aiAnalysis.perfilIndividual.split('\n\n').map((p, i) => (
-                        <p key={i} className="text-white/62 text-sm font-light leading-[1.85] mb-3 last:mb-0">{renderBold(p)}</p>
-                      ))}
-                    </div>
-                  )}
-                  {aiAnalysis.perfilVinculo && (
-                    <div className="p-7 border border-pink-500/15 rounded-2xl bg-gradient-to-br from-pink-500/[0.03] to-transparent">
-                      <div className="flex items-center gap-2 mb-4">
-                        <Heart className="w-4 h-4 text-pink-400/60" strokeWidth={1.5} />
-                        <h4 className="text-pink-300/60 text-[10px] font-light uppercase tracking-[0.18em]">El vínculo</h4>
-                      </div>
-                      {aiAnalysis.perfilVinculo.split('\n\n').map((p, i) => (
-                        <p key={i} className="text-white/62 text-sm font-light leading-[1.85] mb-3 last:mb-0">{renderBold(p)}</p>
-                      ))}
-                    </div>
-                  )}
-                </motion.div>
-              )}
-
-              {/* ─── RADAR CHART (Premium) ─── */}
+              {/* ─── RADAR CHART (Premium) — PRIMERO: mapa de la relación ─── */}
               {isPremiumUnlocked && (
-                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-                  className="mb-16 p-8 border border-violet-500/10 rounded-2xl bg-gradient-to-br from-violet-500/[0.02] to-transparent">
+                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+                  className="mb-10 p-8 border border-violet-500/10 rounded-2xl bg-gradient-to-br from-violet-500/[0.02] to-transparent">
                   <div className="flex items-center gap-3 mb-6">
                     <BarChart3 className="w-5 h-5 text-violet-400/60" strokeWidth={1.5} />
                     <h3 className="text-lg font-light text-white tracking-wide font-display">Mapa de tu relación</h3>
@@ -2102,8 +2129,8 @@ const ConsultaParejaPage = () => {
                 </motion.div>
               )}
 
-              {/* ─── AREA BARS (clean — no inline correlations) ─── */}
-              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mb-4">
+              {/* ─── AREA BARS (Perfil de la relación) ─── */}
+              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mb-4">
                 <div className="flex items-center gap-3 mb-8">
                   <BarChart3 className="w-5 h-5 text-pink-400/60" strokeWidth={1.5} />
                   <h3 className="text-xl font-light text-white tracking-wide font-display">Perfil de tu relación</h3>
@@ -2115,7 +2142,7 @@ const ConsultaParejaPage = () => {
                     const level = getLevel(score)
                     return (
                       <motion.div key={area.key} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.5 + i * 0.08 }}>
+                        transition={{ delay: 0.4 + i * 0.08 }}>
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2.5">
                             <area.icon className="w-4 h-4 text-white/40" strokeWidth={1.5} />
@@ -2128,30 +2155,161 @@ const ConsultaParejaPage = () => {
                         </div>
                         <div className="h-2 bg-white/5 rounded-full overflow-hidden">
                           <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }}
-                            transition={{ duration: 1, delay: 0.6 + i * 0.08, ease: 'easeOut' }}
+                            transition={{ duration: 1, delay: 0.5 + i * 0.08, ease: 'easeOut' }}
                             className={`h-full rounded-full bg-gradient-to-r ${area.color}`} />
                         </div>
                       </motion.div>
                     )
                   })}
                 </div>
+              </motion.div>
 
-                {/* Correlaciones principales (Premium) */}
-                {isPremiumUnlocked && aiAnalysis?.correlacionesPrincipales?.length > 0 && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2 }}
-                    className="mt-8 pt-7 border-t border-white/6">
-                    <p className="text-white/28 text-[10px] font-light uppercase tracking-[0.18em] mb-4">Conexiones detectadas</p>
-                    <div className="space-y-3">
-                      {aiAnalysis.correlacionesPrincipales.map((insight, i) => (
-                        <div key={i} className="flex items-start gap-3 p-4 rounded-xl border border-white/5 bg-white/[0.01]">
-                          <span className="w-1 h-1 rounded-full bg-pink-400/50 mt-2 flex-shrink-0" />
-                          <p className="text-white/55 text-sm font-light leading-relaxed">{renderBold(insight)}</p>
+              {/* ─── CONEXIONES DETECTADAS (Premium — sección propia, más prominente) ─── */}
+              {isPremiumUnlocked && aiAnalysis?.correlacionesPrincipales?.length > 0 && (
+                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+                  className="mt-10 mb-4 p-8 border border-white/8 rounded-2xl bg-white/[0.02]">
+                  <div className="flex items-center gap-3 mb-6">
+                    <Layers className="w-5 h-5 text-amber-400/60" strokeWidth={1.5} />
+                    <h3 className="text-lg font-light text-white tracking-wide font-display">Conexiones detectadas</h3>
+                  </div>
+                  <div className="space-y-4">
+                    {aiAnalysis.correlacionesPrincipales.map((insight, i) => (
+                      <div key={i} className="flex items-start gap-4 p-5 rounded-xl border border-amber-500/8 bg-amber-500/[0.02]">
+                        <div className="w-6 h-6 rounded-full bg-amber-500/15 border border-amber-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-amber-400/80 text-[10px] font-medium">{i + 1}</span>
+                        </div>
+                        <p className="text-white/70 text-sm font-light leading-relaxed">{renderBold(insight)}</p>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+
+              {/* ─── APERTURA EMPÁTICA (Premium — lo que tu historia reveló) ─── */}
+              {isPremiumUnlocked && aiAnalysis?.aperturaEmpatica && (
+                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}
+                  className="mt-10 mb-4 p-8 border border-violet-500/15 rounded-2xl bg-gradient-to-br from-violet-500/[0.03] to-fuchsia-500/[0.01]">
+                  <div className="flex items-center gap-3 mb-6">
+                    <Brain className="w-5 h-5 text-violet-400/60" strokeWidth={1.5} />
+                    <h3 className="text-lg font-light text-white tracking-wide font-display">Lo que tu historia reveló</h3>
+                  </div>
+                  {aiAnalysis.aperturaEmpaticaPuntos?.length > 0 ? (
+                    <div className="space-y-5">
+                      {aiAnalysis.aperturaEmpaticaPuntos.map((punto, i) => (
+                        <div key={i} className="flex items-start gap-4">
+                          <span className="w-1.5 h-1.5 rounded-full bg-violet-400/60 mt-2 flex-shrink-0" />
+                          <div className="flex-1">
+                            <span className="text-white/85 text-sm font-semibold tracking-wide">{punto.titulo}</span>
+                            <span className="text-white/40 text-sm"> — </span>
+                            <span className="text-white/62 text-sm font-light leading-relaxed">{renderBold(punto.texto)}</span>
+                          </div>
                         </div>
                       ))}
                     </div>
-                  </motion.div>
-                )}
-              </motion.div>
+                  ) : (
+                    (aiAnalysis.aperturaEmpatica || '').split('\n\n').map((p, i) => (
+                      <p key={i} className="text-white/68 text-sm font-light leading-[1.9] tracking-wide mb-4 last:mb-0">
+                        {renderBold(p)}
+                      </p>
+                    ))
+                  )}
+                </motion.div>
+              )}
+
+              {/* ─── PERFIL INDIVIDUAL + VÍNCULO (con bullet points + porcentajes) ─── */}
+              {isPremiumUnlocked && aiAnalysis && (aiAnalysis.perfilIndividual || aiAnalysis.perfilVinculo) && (
+                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.58 }}
+                  className="mt-10 mb-4 grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+                  {/* Tu perfil individual */}
+                  {aiAnalysis.perfilIndividual && (
+                    <div className="p-7 border border-violet-500/15 rounded-2xl bg-gradient-to-br from-violet-500/[0.04] to-transparent">
+                      <div className="flex items-center gap-2 mb-5">
+                        <Brain className="w-4 h-4 text-violet-400/60" strokeWidth={1.5} />
+                        <h4 className="text-violet-300/60 text-[10px] font-light uppercase tracking-[0.18em]">Tu perfil individual</h4>
+                      </div>
+                      {/* Key area metrics */}
+                      <div className="grid grid-cols-3 gap-2 mb-5">
+                        {[
+                          { area: 'autonomia', label: 'Autonomía' },
+                          { area: 'seguridad', label: 'Seguridad' },
+                          { area: 'idealizacion', label: 'Idealización' },
+                        ].map(({ area, label }) => {
+                          const pct = getPercent(areaScores[area])
+                          const lvl = getLevel(areaScores[area])
+                          return (
+                            <div key={area} className="text-center p-2.5 rounded-xl bg-white/[0.02] border border-white/5">
+                              <span className={`text-lg font-light tabular-nums block ${lvl.color}`}>{pct}%</span>
+                              <span className="text-white/30 text-[9px] leading-tight block">{label}</span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                      {/* Bullet points from AI text */}
+                      <ul className="space-y-3">
+                        {aiAnalysis.perfilIndividual
+                          .replace(/\*\*/g, '')
+                          .split(/(?<=[.!?])\s+/)
+                          .filter(s => s.trim().length > 20)
+                          .slice(0, 5)
+                          .map((sentence, i) => (
+                            <li key={i} className="flex items-start gap-2.5">
+                              <span className="w-1 h-1 rounded-full bg-violet-400/50 mt-2 flex-shrink-0" />
+                              <span className="text-white/60 text-xs font-light leading-relaxed">{sentence.trim()}</span>
+                            </li>
+                          ))
+                        }
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* El vínculo */}
+                  {aiAnalysis.perfilVinculo && (
+                    <div className="p-7 border border-pink-500/15 rounded-2xl bg-gradient-to-br from-pink-500/[0.04] to-transparent">
+                      <div className="flex items-center gap-2 mb-5">
+                        <Heart className="w-4 h-4 text-pink-400/60" strokeWidth={1.5} />
+                        <h4 className="text-pink-300/60 text-[10px] font-light uppercase tracking-[0.18em]">El vínculo</h4>
+                      </div>
+                      {/* Key area metrics */}
+                      <div className="grid grid-cols-3 gap-2 mb-5">
+                        {[
+                          { area: 'comunicacion', label: 'Comm.' },
+                          { area: 'intimidad', label: 'Intimidad' },
+                          { area: 'conflicto', label: 'Conflictos' },
+                        ].map(({ area, label }) => {
+                          const pct = getPercent(areaScores[area])
+                          const lvl = getLevel(areaScores[area])
+                          return (
+                            <div key={area} className="text-center p-2.5 rounded-xl bg-white/[0.02] border border-white/5">
+                              <span className={`text-lg font-light tabular-nums block ${lvl.color}`}>{pct}%</span>
+                              <span className="text-white/30 text-[9px] leading-tight block">{label}</span>
+                            </div>
+                          )
+                        })}
+                        <div className="col-span-3 text-center p-2.5 rounded-xl bg-white/[0.02] border border-white/5 mt-1">
+                          <span className={`text-lg font-light tabular-nums ${result.score >= 60 ? 'text-emerald-400' : result.score >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{result.score}%</span>
+                          <span className="text-white/30 text-[9px] ml-2">índice general</span>
+                        </div>
+                      </div>
+                      {/* Bullet points from AI text */}
+                      <ul className="space-y-3">
+                        {aiAnalysis.perfilVinculo
+                          .replace(/\*\*/g, '')
+                          .split(/(?<=[.!?])\s+/)
+                          .filter(s => s.trim().length > 20)
+                          .slice(0, 5)
+                          .map((sentence, i) => (
+                            <li key={i} className="flex items-start gap-2.5">
+                              <span className="w-1 h-1 rounded-full bg-pink-400/50 mt-2 flex-shrink-0" />
+                              <span className="text-white/60 text-xs font-light leading-relaxed">{sentence.trim()}</span>
+                            </li>
+                          ))
+                        }
+                      </ul>
+                    </div>
+                  )}
+                </motion.div>
+              )}
 
               {/* ─── IDEALIZATION GAUGE (Premium) ─── */}
               {isPremiumUnlocked && aiAnalysis && (
