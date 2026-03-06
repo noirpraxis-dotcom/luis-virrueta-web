@@ -7,33 +7,64 @@ const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions'
 
 const SYSTEM_PROMPT = `Eres un psicoanalista experto con formación lacaniana, especializado en relaciones de pareja y dinámica vincular.
 
-Tu tarea es generar TRES LECTURAS SEPARADAS a partir de un diagnóstico de relación:
+Tu tarea es generar un DIAGNÓSTICO INTEGRAL cruzando dos fuentes de datos:
 
-LECTURA 1 — PERFIL DEL CUESTIONARIO: Análisis de las puntuaciones cuantitativas en 8 áreas psicológicas (comunicación, intimidad, admiración, conflictos, proyecto de vida, seguridad emocional, autonomía, idealización). Interpreta qué revelan los números sobre la dinámica vincular real: áreas fuertes, áreas en riesgo, combinaciones problemáticas, y qué patrones se pueden inferir solo de los datos cuantitativos.
-
-LECTURA 2 — PERFIL DE PATRONES INCONSCIENTES: Análisis de las respuestas abiertas/conversacionales. Las preguntas están formuladas de forma casual ("como si hablaras con un amigo"), así que la persona revela patrones sin saber que los está mostrando. Tu trabajo es extraer lo profundo de lo aparentemente simple. Busca:
-- Idealización (describir al otro en términos absolutos/perfectos)
+FUENTE PRIMARIA — NARRATIVA ABIERTA (15 preguntas conversacionales):
+Las preguntas abiertas son el CORAZÓN del diagnóstico. La persona habló como si le platicara a un amigo, revelando patrones sin darse cuenta. Tu trabajo es extraer lo profundo de lo aparentemente simple. Busca:
+- Estructura del deseo: ¿qué desea realmente esta persona? ¿Qué le falta?
+- Idealización: describir al otro en términos absolutos/perfectos
 - Dependencia disfrazada de amor ("sin él/ella no soy nada")
-- Proyección (depositar en el otro lo que falta en uno)
-- Demanda imposible (pedir lo que nadie puede dar)
-- Mecanismos de defensa (racionalización, negación, evitación, intelectualización)
-- Patrones de repetición (recrear dinámicas problemáticas aprendidas)
-- La relación con la falta (según Lacan, "amar es dar lo que no se tiene a quien no se es")
+- Proyección: depositar en el otro lo que falta en uno
+- Demanda imposible: pedir lo que nadie puede dar
+- Mecanismos de defensa: racionalización, negación, evitación, intelectualización, humor defensivo
+- Pérdida de autonomía: señales de que se ha desdibujado como individuo
+- Patrones de repetición: recrear dinámicas de familia de origen
+- Relación con la falta (Lacan: "amar es dar lo que no se tiene a quien no se es")
+- Alexitimia/evitación: "no sé" como dato significativo — indica dificultad para conectar con emociones
 
-LECTURA 3 — LECTURA INTEGRAL: Cruce de ambas fuentes. Conecta lo que dicen los números con lo que revelan las palabras. ¿Son coherentes o hay contradicciones reveladoras? Si se proporcionan inconsistencias detectadas en las respuestas cuantitativas, analiza qué revelan esas contradicciones sobre lo que la persona dice vs. lo que realmente experimenta.
+FUENTE CONFIRMATORIA — DATOS CUANTITATIVOS (25 afirmaciones Likert):
+Los datos cuantitativos CORROBORAN o CONTRADICEN lo que la narrativa reveló. Tu trabajo es cruzar:
+- Si la narrativa dice "todo está bien" pero los números muestran áreas bajas → detectar defensa/negación
+- Si la narrativa muestra sufrimiento pero los números son altos → posible racionalización o desconexión
+- Si ambos coinciden → mayor confianza en el patrón detectado
+
+Genera TRES LECTURAS SEPARADAS más correlaciones por área:
+
+LECTURA 1 — ANÁLISIS NARRATIVO (fuente primaria): Qué revelan las palabras de la persona. Estructura del deseo, patrones inconscientes, mecanismos de defensa extraídos de sus respuestas conversacionales.
+
+LECTURA 2 — PERFIL CUANTITATIVO (fuente confirmatoria): Qué dicen los números. Pero siempre en relación con la narrativa: "los datos corroboran que..." o "los datos contradicen lo que la persona expresó en..."
+
+LECTURA 3 — LECTURA INTEGRAL (cruce): Donde ambas fuentes se encuentran. Coherencias, contradicciones reveladoras, la historia profunda que emerge al cruzar lo dicho con lo medido.
 
 Principios:
+- La narrativa es la fuente PRIMARIA, los datos son CONFIRMATORIOS
 - Detectar patrones de idealización, necesidad vs. deseo, búsqueda de completud
-- Identificar mecanismos de defensa específicos que opera cada miembro
+- Identificar mecanismos de defensa específicos
 - Señalar patrones inconscientes (demanda, goce, repetición)
+- Resolver hacia la SUBJETIVIDAD, no hacia el diagnóstico frío
 - Ser empático pero honesto, sin juicio moral
 - Usar lenguaje accesible pero con profundidad psicoanalítica
 - NO dar diagnósticos clínicos, esto es orientativo
+- Para cada área del radar, explicar POR QUÉ tiene esa puntuación citando evidencia narrativa + cuantitativa
 
 IMPORTANTE: Responde EXCLUSIVAMENTE en formato JSON válido con la estructura solicitada.`
 
 function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophicalQuestions, inconsistencies) {
-  let prompt = '## RESULTADOS CUANTITATIVOS (escala 1-5, donde 5 es óptimo):\n\n'
+  // NARRATIVE FIRST — primary source
+  let prompt = '## FUENTE PRIMARIA: RESPUESTAS NARRATIVAS\n'
+  prompt += '(La persona las contó "como si le platicara a un amigo". Aquí está la verdadera información.)\n\n'
+
+  for (let i = 0; i < philosophicalQuestions.length; i++) {
+    const answer = philosophicalAnswers[i]
+    if (answer && answer.trim()) {
+      prompt += `**Pregunta:** "${philosophicalQuestions[i].text}"\n**Respuesta:** "${answer.trim()}"\n\n`
+    } else {
+      prompt += `**Pregunta:** "${philosophicalQuestions[i].text}"\n**Respuesta:** (no contestó / omitió — esto también es dato significativo)\n\n`
+    }
+  }
+
+  // QUANTITATIVE DATA — confirmatory source
+  prompt += '\n## FUENTE CONFIRMATORIA: DATOS CUANTITATIVOS (escala 1-5, donde 5 es óptimo)\n\n'
 
   for (const [key, score] of Object.entries(areaScores)) {
     const label = areaLabels[key] || key
@@ -42,7 +73,7 @@ function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophical
   }
 
   if (inconsistencies && inconsistencies.length > 0) {
-    prompt += '\n## INCONSISTENCIAS DETECTADAS EN RESPUESTAS:\n\n'
+    prompt += '\n## INCONSISTENCIAS EN RESPUESTAS CUANTITATIVAS:\n\n'
     for (const inc of inconsistencies) {
       prompt += `⚠️ En ${inc.area} (significancia ${inc.significance}):\n`
       prompt += `  - "${inc.q1}" → respondió ${inc.q1_answer}/5\n`
@@ -51,28 +82,25 @@ function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophical
     }
   }
 
-  prompt += '\n## RESPUESTAS CONVERSACIONALES (la persona las contó "como a un amigo"):\n\n'
-
-  for (let i = 0; i < philosophicalQuestions.length; i++) {
-    const answer = philosophicalAnswers[i]
-    if (answer && answer.trim()) {
-      prompt += `**Pregunta:** "${philosophicalQuestions[i].text}"\n**Respuesta:** "${answer.trim()}"\n\n`
-    }
-  }
+  const areaKeys = Object.keys(areaScores)
+  const areaCorrelationsSchema = areaKeys.map(k => `"${k}": "(1-2 párrafos: por qué esta área tiene esta puntuación. Cita evidencia CONCRETA de las respuestas narrativas + datos cuantitativos. Ejemplo: 'En comunicación obtuviste 45% porque mencionaste que evitas ciertos temas, y los datos confirman...')"`).join(',\n    ')
 
   prompt += `\nGenera tu análisis psicoanalítico en el siguiente formato JSON exacto:
 {
-  "lecturaCuestionario": "(3-4 párrafos: análisis profundo de lo que revelan las puntuaciones cuantitativas. Interpreta cada área relevante, señala combinaciones problemáticas, identifica fortalezas y riesgos)",
-  "lecturaInconsciente": "(3-4 párrafos: análisis de las respuestas conversacionales. Extrae los patrones profundos de lo aparentemente simple. Detecta idealización, dependencia, proyección, mecanismos de defensa. Referencia las respuestas específicas)",
-  "lecturaIntegral": "(3-4 párrafos: cruce de ambas fuentes. Conecta lo cuantitativo con lo cualitativo. Si hay inconsistencias, analiza qué revelan. Señala coherencias, contradicciones reveladoras, y la historia profunda que emerge)",
+  "lecturaNarrativa": "(3-4 párrafos: análisis PROFUNDO de las respuestas narrativas. Esta es la lectura PRIMARIA. Extrae estructura del deseo, mecanismos de defensa, patrones de repetición, idealización, pérdida de autonomía. Referencia las respuestas específicas de la persona)",
+  "lecturaCuestionario": "(2-3 párrafos: qué dicen los datos cuantitativos, SIEMPRE en relación con la narrativa. Usa frases como 'los datos corroboran que...', 'esto confirma lo que expresó cuando dijo...', o 'contradice lo que mencionó sobre...')",
+  "lecturaIntegral": "(3-4 párrafos: cruce de ambas fuentes. Coherencias y contradicciones reveladoras. La historia profunda que emerge. Si la persona dijo 'todo está bien' pero los números muestran otra cosa, analiza la defensa)",
+  "areaCorrelations": {
+    ${areaCorrelationsSchema}
+  },
   "idealizationLevel": "alto" o "medio" o "bajo",
   "idealizationScore": (número entero 0-100 donde 100 = máxima idealización problemática),
   "unconsciousPatterns": ["patrón 1", "patrón 2", "patrón 3", "patrón 4"],
   "defenseMechanisms": ["mecanismo de defensa 1 detectado con breve explicación", "mecanismo 2", "mecanismo 3"],
   "strengthsFound": ["fortaleza 1", "fortaleza 2", "fortaleza 3"],
   "riskAreas": ["área de riesgo 1 con breve explicación", "área de riesgo 2"],
-  "keyInsight": "(1 párrafo con la observación psicoanalítica más reveladora de todo el análisis)",
-  "recommendation": "(1-2 párrafos con recomendación profesional personalizada)",
+  "keyInsight": "(1 párrafo con la observación psicoanalítica más reveladora — debe conectar narrativa con datos)",
+  "recommendation": "(1-2 párrafos con recomendación profesional personalizada basada en lo que la persona contó)",
   "existentialReflection": "(1 párrafo poético/filosófico sobre el amor y el deseo en esta relación específica)"
 }`
 
@@ -103,7 +131,7 @@ export async function analyzeRelationship({ areaScores, areaLabels, philosophica
           { role: 'user', content: prompt }
         ],
         temperature: 0.7,
-        max_tokens: 3500,
+        max_tokens: 5000,
         response_format: { type: 'json_object' }
       })
     })
@@ -148,11 +176,13 @@ function generateFallbackAnalysis(areaScores) {
   if (areaScores.idealizacion >= 3.5) strengths.push('Capacidad de amar al otro real, no al idealizado')
   if (strengths.length === 0) strengths.push('Disposición para explorar la relación a mayor profundidad')
 
-  // Generar las 3 lecturas basadas en reglas
+  // Generar las lecturas basadas en reglas
   const areaNames = { comunicacion: 'Comunicación', intimidad: 'Intimidad', admiracion: 'Admiración', conflicto: 'Conflictos', proyecto: 'Proyecto de vida', seguridad: 'Seguridad emocional', autonomia: 'Autonomía', idealizacion: 'Idealización' }
   const sorted = Object.entries(areaScores).sort((a, b) => b[1] - a[1])
   const strongest = sorted[0]
   const weakest = sorted[sorted.length - 1]
+
+  let lecturaNarrativa = 'No fue posible procesar las respuestas narrativas con la inteligencia artificial en este momento. Sin embargo, los datos cuantitativos nos permiten generar un perfil orientativo de la relación.\n\nLas respuestas abiertas que compartiste contienen información valiosa sobre tus patrones vinculares, mecanismos de defensa y estructura del deseo. En una sesión profesional, estos elementos se analizan en profundidad para revelar lo que opera debajo de lo consciente.'
 
   let lecturaCuestionario = `El área más sólida de la relación es ${areaNames[strongest[0]]} (${Math.round(((strongest[1]-1)/4)*100)}%), lo cual funciona como factor protector del vínculo. `
   if (weakest[1] <= 2.5) {
@@ -168,12 +198,6 @@ function generateFallbackAnalysis(areaScores) {
   }
   lecturaCuestionario += 'Los números son un punto de partida. Revelan tendencias y patrones, pero el significado profundo de cada respuesta solo emerge cuando se contextualiza dentro de la historia singular de cada pareja.'
 
-  let lecturaInconsciente = actualIdealLevel === 'alto'
-    ? 'Las reflexiones filosóficas revelan un nivel significativo de idealización. Se percibe al otro como fuente de completud, como aquello que podría resolver una falta que, desde la perspectiva psicoanalítica, es constitutiva del sujeto. La idealización opera como un velo que impide ver al otro en su dimensión real.\n\nLa distinción entre necesidad y deseo es fundamental aquí. Cuando predomina la necesidad, el vínculo se convierte en dependencia disfrazada de amor. El verdadero acto de amor no es necesitar al otro, sino poder estar sin él y aún así elegirlo.\n\nSe detectan indicios de búsqueda de completud: la expectativa de que el otro llene vacíos que son anteriores a la relación misma. Reconocer esta falta no como un problema sino como aquello que posibilita el deseo genuino puede transformar radicalmente la experiencia vincular.'
-    : actualIdealLevel === 'medio'
-      ? 'Las respuestas revelan una tensión interesante entre la conciencia de que el otro es una persona real (con limitaciones) y una esperanza subterránea de que la relación resuelva algo más profundo. Este nivel de idealización es habitual y no necesariamente patológico.\n\nLa pregunta central que emerge es: ¿qué parte de lo que busco en mi pareja tiene que ver con ella, y qué parte tiene que ver con lo que me falta a mí? Esta distinción es la llave para transitar de una relación basada en la demanda a una basada en el deseo.\n\nExiste espacio para fortalecer la capacidad de sostener la falta sin depositarla en el otro, lo cual es la base del amor genuino según la perspectiva lacaniana.'
-      : 'Las respuestas muestran una relación relativamente madura con la falta. Hay conciencia de que el otro no es responsable de completar lo que falta en uno mismo, lo cual es un fundamento sólido.\n\nEsto sugiere una capacidad de amar desde la elección consciente más que desde la necesidad, lo cual permite un vínculo más libre y menos cargado de demandas imposibles.\n\nEl trabajo futuro podría centrarse en profundizar esta conciencia y explorar los momentos donde, inevitablemente, la idealización reaparece — porque nunca desaparece del todo.'
-
   const lecturaIntegral = `Al cruzar los datos cuantitativos con las reflexiones personales, emerge un perfil más completo de la dinámica vincular. ${
     areaScores.idealizacion <= 2.5 && areaScores.seguridad <= 3.0
       ? 'La combinación de idealización elevada y seguridad emocional frágil es reveladora: sugiere un patrón donde se busca en el otro aquello que se necesita para sentirse seguro, creando un ciclo de dependencia y frustración.'
@@ -185,9 +209,19 @@ function generateFallbackAnalysis(areaScores) {
   return {
     idealizationLevel: actualIdealLevel,
     idealizationScore: actualIdealScore,
+    lecturaNarrativa: lecturaNarrativa,
     lecturaCuestionario,
-    lecturaInconsciente,
     lecturaIntegral,
+    areaCorrelations: Object.fromEntries(
+      Object.entries(areaScores).map(([key, score]) => {
+        const pct = Math.round(((score - 1) / 4) * 100)
+        const name = areaNames[key]
+        const msg = pct >= 60
+          ? `${name} muestra un nivel saludable (${pct}%). Los datos cuantitativos sugieren que esta es un área de fortaleza en el vínculo.`
+          : `${name} obtiene ${pct}%, lo cual indica patrones que merecen atención. En una sesión profesional se puede explorar qué opera debajo de estos indicadores.`
+        return [key, msg]
+      })
+    ),
     unconsciousPatterns: patterns,
     defenseMechanisms: [
       areaScores.conflicto <= 2.5 ? 'Evitación: se eluden temas difíciles como mecanismo para mantener una falsa armonía' : null,

@@ -55,70 +55,66 @@ const QUESTIONS_QUICK = [
   { id: 23, text: 'Espero que mi pareja llene vacíos que siento en mi propia vida.', area: 'idealizacion', inverted: true }
 ]
 
-// ─── PREGUNTAS: DIAGNÓSTICO PREMIUM (40 preguntas, 5 por área) ───
+// ─── PREGUNTAS: DIAGNÓSTICO PREMIUM — CONFIRMATORIAS (25 preguntas, 3 por área) ───
+// Estas preguntas validan/corroboran lo que las preguntas abiertas ya revelaron.
 
 const QUESTIONS_DETAILED = [
-  // Comunicación (5)
+  // Comunicación (3)
   { id: 101, text: 'Cuando hablamos de algo importante, siento que nos escuchamos de verdad.', area: 'comunicacion', inverted: false },
   { id: 102, text: 'Las cosas pequeñas del día a día terminan generando tensión entre nosotros.', area: 'comunicacion', inverted: true },
-  { id: 103, text: 'Logramos hablar de nuestros desacuerdos sin que se convierta en pelea.', area: 'comunicacion', inverted: false },
-  { id: 105, text: 'Puedo hablar de lo que siento sin miedo a que me juzguen.', area: 'comunicacion', inverted: false },
   { id: 107, text: 'Después de una conversación difícil, siento que llegamos a un mejor lugar.', area: 'comunicacion', inverted: false },
-  // Intimidad (5)
+  // Intimidad (3)
   { id: 201, text: 'Convivimos más como compañeros de cuarto que como pareja.', area: 'intimidad', inverted: true },
   { id: 202, text: 'Siento una conexión profunda con mi pareja, incluso sin necesidad de palabras.', area: 'intimidad', inverted: false },
   { id: 203, text: 'Me resulta fácil mostrarme vulnerable emocionalmente con mi pareja.', area: 'intimidad', inverted: false },
-  { id: 204, text: 'Nuestra intimidad física refleja la conexión emocional que tenemos.', area: 'intimidad', inverted: false },
-  { id: 205, text: 'Hay cosas que prefiero ya no compartir con mi pareja.', area: 'intimidad', inverted: true },
-  // Admiración (5)
+  // Admiración (3)
   { id: 301, text: 'Siento genuina admiración por la persona que es mi pareja.', area: 'admiracion', inverted: false },
   { id: 302, text: 'Lo que hace mi pareja me irrita más de lo que debería.', area: 'admiracion', inverted: true },
-  { id: 304, text: 'Valoro los esfuerzos que mi pareja hace por nuestra relación.', area: 'admiracion', inverted: false },
-  { id: 305, text: 'Cuando estoy frustrado/a, me cuesta recordar por qué me enamoré.', area: 'admiracion', inverted: true },
   { id: 306, text: 'Admiro cómo mi pareja enfrenta los retos de la vida.', area: 'admiracion', inverted: false },
-  // Conflicto (5)
+  // Conflicto (3)
   { id: 401, text: 'Evitamos ciertos temas porque sabemos que terminarán en conflicto.', area: 'conflicto', inverted: true },
   { id: 402, text: 'Arrastramos discusiones del pasado que nunca terminamos de resolver.', area: 'conflicto', inverted: true },
-  { id: 403, text: 'Confío en que cuando surja un problema, lo resolveremos juntos.', area: 'conflicto', inverted: false },
-  { id: 404, text: 'Cuando la tensión sube, alguno de los dos se cierra o se aleja.', area: 'conflicto', inverted: true },
   { id: 406, text: 'Después de una pelea, logramos reparar las cosas sin guardar rencor.', area: 'conflicto', inverted: false },
-  // Proyecto de vida (5)
+  // Proyecto de vida (3)
   { id: 501, text: 'Sentimos que vamos en la misma dirección cuando pensamos en el futuro.', area: 'proyecto', inverted: false },
   { id: 503, text: 'Tenemos metas en común que nos entusiasman a los dos.', area: 'proyecto', inverted: false },
-  { id: 504, text: 'Tenemos claro lo que ambos esperamos de la relación a largo plazo.', area: 'proyecto', inverted: false },
-  { id: 505, text: 'Lo que queremos de la vida ha dejado de estar alineado como pareja.', area: 'proyecto', inverted: true },
   { id: 506, text: 'Las decisiones importantes las tomamos juntos, pensando en los dos.', area: 'proyecto', inverted: false },
-  // Seguridad emocional (5)
+  // Seguridad emocional (3)
   { id: 601, text: 'Siento que mi pareja está de mi lado cuando más lo necesito.', area: 'seguridad', inverted: false },
   { id: 602, text: 'Dudo que mi pareja entienda lo que realmente necesito emocionalmente.', area: 'seguridad', inverted: true },
   { id: 603, text: 'Confío en que mi pareja no haría algo que me lastimara a propósito.', area: 'seguridad', inverted: false },
-  { id: 604, text: 'Mi pareja es la primera persona a quien acudo cuando estoy pasando por algo difícil.', area: 'seguridad', inverted: false },
-  { id: 606, text: 'Puedo contar con mi pareja sin importar las circunstancias.', area: 'seguridad', inverted: false },
-  // Autonomía (5)
+  // Autonomía (3)
   { id: 701, text: 'Puedo ser completamente yo mismo/a dentro de la relación.', area: 'autonomia', inverted: false },
   { id: 702, text: 'Siento que necesito pedir permiso o justificar mis decisiones personales.', area: 'autonomia', inverted: true },
-  { id: 703, text: 'Pasar tiempo separados no genera malestar ni inseguridad en nuestra relación.', area: 'autonomia', inverted: false },
-  { id: 705, text: 'Respetamos los espacios individuales del otro sin tomarlo como distancia.', area: 'autonomia', inverted: false },
   { id: 706, text: 'Siento que pierdo parte de quien soy dentro de esta relación.', area: 'autonomia', inverted: true },
-  // Idealización (5)
+  // Idealización (4 — área clave para análisis psicoanalítico)
   { id: 801, text: 'Necesito a mi pareja para sentirme completo/a como persona.', area: 'idealizacion', inverted: true },
   { id: 802, text: 'Acepto los defectos de mi pareja sin intentar cambiarlos.', area: 'idealizacion', inverted: false },
-  { id: 804, text: 'Veo a mi pareja tal como es, no como me gustaría que fuera.', area: 'idealizacion', inverted: false },
   { id: 805, text: 'Si mi relación terminara, sentiría que pierdo una parte esencial de mí.', area: 'idealizacion', inverted: true },
   { id: 806, text: 'Lo que siento por mi pareja tiene que ver con quién es, no con lo que me da.', area: 'idealizacion', inverted: false }
 ]
 
-// ─── PREGUNTAS ABIERTAS (Premium — análisis de patrones inconscientes) ────
-// Conversacionales, como si hablaras con un amigo. DeepSeek extrae los patrones.
+// ─── PREGUNTAS ABIERTAS (Premium — corazón del diagnóstico) ───────────────
+// Son la fuente PRIMARIA de análisis. Diseñadas para que la persona hable con libertad
+// sin darse cuenta de lo que está revelando. DeepSeek extrae patrones inconscientes,
+// mecanismos de defensa, estructura del deseo, idealización y pérdida de autonomía.
 
 const PHILOSOPHICAL_QUESTIONS = [
-  { id: 'p1', text: 'Si le contaras a un amigo cercano lo que más te gusta de tu relación, ¿qué le dirías?' },
-  { id: 'p2', text: '¿Hay algo que últimamente te cueste decirle a tu pareja? Cuéntamelo con confianza.' },
-  { id: 'p3', text: 'Imagina que hoy despiertas y tu pareja ya no está. ¿Qué es lo primero que sentirías o pensarías?' },
-  { id: 'p4', text: '¿Alguna vez has sentido que das más de lo que recibes? Cuéntame cómo es eso para ti.' },
-  { id: 'p5', text: 'Si pudieras cambiar una sola cosa de cómo se llevan día a día, ¿qué cambiarías?' },
-  { id: 'p6', text: '¿Qué es lo que más te cuesta aceptar de tu pareja — eso que a veces te frustra aunque la quieras?' },
-  { id: 'p7', text: 'En tus propias palabras, ¿qué significa para ti estar bien en pareja?' }
+  { id: 'p1', text: 'Cuéntame, ¿qué te trajo hasta aquí? ¿Qué fue lo que te hizo querer explorar cómo está tu relación?' },
+  { id: 'p2', text: 'Si le contaras la historia de tu relación a alguien que no la conoce — desde el principio hasta hoy — ¿cómo se la contarías?' },
+  { id: 'p3', text: '¿Qué es lo que más disfrutas de estar con tu pareja? Cuéntamelo como si le platicaras a un amigo cercano.' },
+  { id: 'p4', text: '¿Cómo es un día normal entre ustedes? Desde que se levantan hasta que se van a dormir... platícame cómo fluye.' },
+  { id: 'p5', text: '¿Hay algo que últimamente traes guardado y no has podido decirle a tu pareja? Aquí puedes soltarlo con confianza.' },
+  { id: 'p6', text: 'Imagina que mañana despiertas y tu pareja ya no está. No se fue enojada, simplemente ya no está. ¿Qué es lo primero que sentirías?' },
+  { id: 'p7', text: '¿Sientes que das y recibes en equilibrio, o hay algo que se siente desparejo? Cuéntame cómo lo vives tú.' },
+  { id: 'p8', text: 'Cuando se pelean o tienen un desacuerdo fuerte, ¿qué pasa? Platícame la película completa: quién dice qué, quién se cierra, cómo termina.' },
+  { id: 'p9', text: '¿Qué es lo que más te cuesta aceptar de tu pareja — eso que te mueve por dentro aunque la quieras mucho?' },
+  { id: 'p10', text: '¿Qué necesitarías de tu pareja que sientes que hoy no estás recibiendo? No lo que "debería" ser, sino lo que tú realmente necesitas.' },
+  { id: 'p11', text: '¿Tu relación se parece en algo a la de tus papás, o sientes que es completamente diferente? Cuéntame qué ves.' },
+  { id: 'p12', text: '¿Sientes que sigues siendo tú mismo/a dentro de la relación, o hay partes de ti que se han ido quedando en el camino?' },
+  { id: 'p13', text: 'En tus propias palabras — sin pensarlo mucho — ¿qué significa para ti estar bien en pareja?' },
+  { id: 'p14', text: 'Si pudieras ver tu relación dentro de cinco años y todo hubiera salido bien, ¿qué sería diferente a hoy?' },
+  { id: 'p15', text: '¿Hay algo más que sientas que es importante y que no te pregunté? Algo que traes y quieras soltar.' }
 ]
 
 // ─── MICRÓFONO (Web Speech API) ───────────────────────────────────
@@ -166,10 +162,10 @@ function MicButton({ onTranscript }) {
 // ─── BARRA DE PROGRESO DEL ANÁLISIS ───────────────────────────────
 
 const ANALYSIS_STAGES = [
-  { label: 'Procesando cuestionario', duration: 3000 },
-  { label: 'Leyendo tus reflexiones', duration: 4000 },
-  { label: 'Detectando patrones inconscientes', duration: 5000 },
-  { label: 'Cruzando datos cuantitativos y cualitativos', duration: 4000 },
+  { label: 'Leyendo tu narrativa personal', duration: 4000 },
+  { label: 'Extrayendo patrones inconscientes', duration: 5000 },
+  { label: 'Procesando datos confirmatorios', duration: 3000 },
+  { label: 'Correlacionando narrativa con datos', duration: 4000 },
   { label: 'Preparando tu informe personalizado', duration: 3000 }
 ]
 
@@ -224,9 +220,9 @@ const ANSWER_OPTIONS = [
 ]
 
 const RESPONDENT_OPTIONS = [
-  { label: 'Yo', value: 'yo', desc: 'Respondo desde mi perspectiva individual' },
-  { label: 'Mi pareja', value: 'pareja', desc: 'Mi pareja lo está respondiendo' },
-  { label: 'Ambos juntos', value: 'ambos', desc: 'Lo respondemos en equipo' }
+  { label: 'A solas', value: 'yo', desc: 'Estoy respondiendo desde mi perspectiva' },
+  { label: 'Con mi pareja presente', value: 'pareja', desc: 'Mi pareja está aquí conmigo' },
+  { label: 'Lo respondemos juntos', value: 'ambos', desc: 'Estamos contestando en equipo' }
 ]
 
 // ─── CÓDIGOS DE DESCUENTO ─────────────────────────────────────────
@@ -518,9 +514,9 @@ function generatePDF(result, areaScores, interpretation, openQuestion, isPremium
     doc.text('Análisis Psicoanalítico Profundo', m, y); y += 8
 
     const sections = [
-      { title: '— Lectura del Cuestionario —', text: aiAnalysis.lecturaCuestionario },
-      { title: '— Perfil Inconsciente —', text: aiAnalysis.lecturaInconsciente },
-      { title: '— Lectura Integral —', text: aiAnalysis.lecturaIntegral },
+      { title: '— Análisis Narrativo (Fuente Primaria) —', text: aiAnalysis.lecturaNarrativa },
+      { title: '— Perfil Cuantitativo (Fuente Confirmatoria) —', text: aiAnalysis.lecturaCuestionario },
+      { title: '— Lectura Integral (Cruce) —', text: aiAnalysis.lecturaIntegral },
       { title: 'Insight Principal', text: aiAnalysis.keyInsight },
       { title: 'Reflexión Existencial', text: aiAnalysis.existentialReflection }
     ]
@@ -634,7 +630,9 @@ const ConsultaParejaPage = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
 
-  // Stages: hero | mode-select | checkout | respondent | test | open-question | philosophical | email | analyzing | results | info
+  // Stages: hero | mode-select | checkout | instructions | respondent | philosophical | test | open-question | email | analyzing | results | info
+  // Premium flow: hero → mode-select → checkout → instructions → respondent → philosophical (15 open) → test (25 Likert) → email → analyzing → results
+  // Free flow: hero → mode-select → respondent → test (23 Likert) → open-question → email → results
   const [stage, setStage] = useState('hero')
   const [mode, setMode] = useState(null) // 'free' | 'premium'
   const [isPremiumUnlocked, setIsPremiumUnlocked] = useState(false)
@@ -670,7 +668,7 @@ const ConsultaParejaPage = () => {
     if (searchParams.get('premium') === 'success') {
       setIsPremiumUnlocked(true)
       setMode('premium')
-      setStage('respondent')
+      setStage('instructions')
     }
   }, [searchParams])
 
@@ -710,7 +708,7 @@ const ConsultaParejaPage = () => {
   const handleCheckoutComplete = () => {
     setIsPremiumUnlocked(true)
     sessionStorage.setItem('diagnostico_premium', 'true')
-    setStage('respondent')
+    setStage('instructions')
     scrollToTop()
   }
 
@@ -722,7 +720,8 @@ const ConsultaParejaPage = () => {
     } else {
       setTimeout(() => {
         if (mode === 'premium') {
-          setStage('philosophical')
+          // Premium: open Qs already done → go to email/analyzing
+          setStage('email')
         } else {
           setStage('open-question')
         }
@@ -946,15 +945,15 @@ const ConsultaParejaPage = () => {
                       Diagnóstico <span className="italic">Premium</span>
                     </h3>
                     <div className="flex items-center gap-3 mb-5">
-                      <span className="flex items-center gap-1.5 text-white/40 text-xs"><Clock className="w-3 h-3" /> ~15-20 min</span>
+                      <span className="flex items-center gap-1.5 text-white/40 text-xs"><Clock className="w-3 h-3" /> ~18 min</span>
                       <span className="w-px h-3 bg-white/10" />
                       <span className="text-violet-300/70 text-xs font-light">${PREMIUM_PRICE} MXN</span>
                     </div>
                     <ul className="space-y-2.5 mb-6 text-white/40 text-xs font-extralight">
-                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Todo lo gratuito, desbloqueado</li>
+                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> 15 preguntas abiertas + 25 confirmatorias</li>
                       <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Gráfica radar de 8 dimensiones</li>
-                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Perfil de patrones inconscientes</li>
-                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Lectura integral completa</li>
+                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Correlación narrativa ↔ datos cuantitativos</li>
+                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Patrones inconscientes y mecanismos de defensa</li>
                       <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Informe PDF profesional</li>
                     </ul>
                     <div className="flex items-center gap-2 text-violet-400/60 text-xs font-light group-hover:text-violet-400/90 transition-colors">
@@ -1068,6 +1067,95 @@ const ConsultaParejaPage = () => {
         )}
 
         {/* ═══════════════════════════════════════════════════════════
+            STAGE: INSTRUCTIONS (Premium — antes de empezar)
+        ═══════════════════════════════════════════════════════════ */}
+        {stage === 'instructions' && (
+          <motion.div key="instructions" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+            className="min-h-screen flex items-center justify-center px-6 pt-28">
+            <div className="max-w-lg w-full">
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
+                className="text-center mb-10">
+                <div className="inline-flex items-center gap-2 px-4 py-2 border border-violet-500/15 rounded-full bg-violet-500/5 mb-6">
+                  <Brain className="w-3.5 h-3.5 text-violet-400/60" strokeWidth={1.5} />
+                  <span className="text-xs text-violet-300/50 font-light uppercase tracking-[0.15em]">Antes de empezar</span>
+                </div>
+                <h2 className="text-3xl lg:text-4xl font-light text-white mb-4 font-display tracking-wide">
+                  Cómo funciona este <span className="italic font-normal">diagnóstico</span>
+                </h2>
+              </motion.div>
+
+              <div className="space-y-5 mb-10">
+                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}
+                  className="flex items-start gap-4 p-5 border border-white/8 rounded-xl bg-white/[0.02]">
+                  <div className="w-8 h-8 rounded-full bg-pink-500/10 border border-pink-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-pink-400/80 text-xs font-light">1</span>
+                  </div>
+                  <div>
+                    <p className="text-white/80 text-sm font-light mb-1">Primero, unas preguntas para platicar</p>
+                    <p className="text-white/40 text-xs font-extralight leading-relaxed">
+                      Vamos a hacerte 15 preguntas abiertas. Contéstalas como si le platicaras a un amigo cercano — no hay respuestas correctas ni incorrectas. 
+                      <span className="text-violet-300/60"> Entre más compartas, más preciso y profundo será tu análisis.</span>
+                    </p>
+                  </div>
+                </motion.div>
+
+                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}
+                  className="flex items-start gap-4 p-5 border border-white/8 rounded-xl bg-white/[0.02]">
+                  <div className="w-8 h-8 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-violet-400/80 text-xs font-light">2</span>
+                  </div>
+                  <div>
+                    <p className="text-white/80 text-sm font-light mb-1">Después, unas afirmaciones rápidas</p>
+                    <p className="text-white/40 text-xs font-extralight leading-relaxed">
+                      25 frases cortas donde solo eliges qué tan cierto es cada una para ti. Esto nos ayuda a confirmar los patrones que ya nos contaste.
+                    </p>
+                  </div>
+                </motion.div>
+
+                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}
+                  className="flex items-start gap-4 p-5 border border-white/8 rounded-xl bg-white/[0.02]">
+                  <div className="w-8 h-8 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-fuchsia-400/80 text-xs font-light">3</span>
+                  </div>
+                  <div>
+                    <p className="text-white/80 text-sm font-light mb-1">La IA cruza todo y genera tu diagnóstico</p>
+                    <p className="text-white/40 text-xs font-extralight leading-relaxed">
+                      Tu análisis cruza lo que nos platicaste con los datos cuantitativos para detectar patrones profundos, mecanismos de defensa y fortalezas reales.
+                    </p>
+                  </div>
+                </motion.div>
+              </div>
+
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
+                className="p-4 border border-violet-500/10 rounded-xl bg-violet-500/[0.02] mb-10">
+                <div className="flex flex-wrap items-center justify-center gap-6 text-center">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-3.5 h-3.5 text-white/30" strokeWidth={1.5} />
+                    <span className="text-white/40 text-xs font-light">~18 minutos</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Mic className="w-3.5 h-3.5 text-white/30" strokeWidth={1.5} />
+                    <span className="text-white/40 text-xs font-light">Puedes dictar con voz</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Shield className="w-3.5 h-3.5 text-white/30" strokeWidth={1.5} />
+                    <span className="text-white/40 text-xs font-light">"No sé" es válido</span>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }} className="text-center">
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  onClick={() => { setStage('respondent'); scrollToTop() }}
+                  className="px-10 py-4 bg-gradient-to-r from-violet-500 to-pink-500 rounded-full text-white font-light text-sm uppercase tracking-[0.15em] hover:shadow-[0_0_30px_rgba(139,92,246,0.25)] transition-shadow">
+                  Comenzar diagnóstico
+                </motion.button>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════
             STAGE: RESPONDENT SELECTION
         ═══════════════════════════════════════════════════════════ */}
         {stage === 'respondent' && (
@@ -1081,7 +1169,7 @@ const ConsultaParejaPage = () => {
               </motion.div>
 
               <h2 className="text-3xl lg:text-4xl font-light text-white mb-4 font-display tracking-wide">
-                ¿Quién está respondiendo este diagnóstico?
+                ¿Estás respondiendo a solas o <span className="italic font-normal">acompañado/a</span>?
               </h2>
               <p className="text-white/40 text-sm font-extralight mb-12">Esto nos ayuda a personalizar tu resultado.</p>
 
@@ -1089,7 +1177,7 @@ const ConsultaParejaPage = () => {
                 {RESPONDENT_OPTIONS.map((opt, i) => (
                   <motion.button key={opt.value} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.3 + i * 0.1 }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    onClick={() => { setRespondent(opt.value); setStage('test'); scrollToTop() }}
+                    onClick={() => { setRespondent(opt.value); setStage(mode === 'premium' ? 'philosophical' : 'test'); scrollToTop() }}
                     className="w-full group flex items-center gap-4 p-5 border border-white/10 rounded-2xl bg-white/[0.02] hover:border-pink-500/30 hover:bg-pink-500/[0.03] transition-all duration-300">
                     <div className="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center group-hover:border-pink-400/40 transition-colors">
                       <span className="text-white/70 text-sm font-light">{opt.label.charAt(0)}</span>
@@ -1118,6 +1206,14 @@ const ConsultaParejaPage = () => {
             </div>
 
             <div className="max-w-2xl mx-auto w-full flex-1 flex flex-col justify-center">
+              {mode === 'premium' && currentQuestion === 0 && (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                  className="mb-6 p-4 border border-violet-500/10 rounded-xl bg-violet-500/[0.02]">
+                  <p className="text-violet-200/60 text-xs font-light leading-relaxed">
+                    Ahora unas afirmaciones rápidas para confirmar lo que nos contaste. Solo elige qué tan cierto es cada una para ti.
+                  </p>
+                </motion.div>
+              )}
               <div className="flex items-center justify-between mb-6">
                 <span className="text-white/30 text-xs font-light tracking-wider">
                   PREGUNTA {currentQuestion + 1} DE {questions.length}
@@ -1193,7 +1289,8 @@ const ConsultaParejaPage = () => {
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   className="mb-8 p-5 border border-violet-500/15 rounded-xl bg-violet-500/[0.03]">
                   <p className="text-violet-200/70 text-sm font-light leading-relaxed">
-                    Ahora viene la parte más personal. Cuéntamelo como si fuera un amigo — no necesitas tener la mejor ortografía, solo sé honesto/a. También puedes usar el micrófono para dictar.
+                    Cuéntamelo como si fuera un amigo — no hay respuestas correctas ni incorrectas, y no necesitas la mejor ortografía. 
+                    <span className="text-violet-300/70 font-normal"> Entre más compartas, mejor será tu análisis.</span> También puedes usar el micrófono para dictar, o escribir "no sé" si algo no te queda claro.
                   </p>
                 </motion.div>
               )}
@@ -1201,7 +1298,7 @@ const ConsultaParejaPage = () => {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/15 bg-violet-500/5">
                   <Brain className="w-3 h-3 text-violet-400/60" strokeWidth={1.5} />
-                  <span className="text-violet-300/50 text-[10px] font-light uppercase tracking-[0.15em]">Reflexión personal</span>
+                  <span className="text-violet-300/50 text-[10px] font-light uppercase tracking-[0.15em]">Platícame de tu relación</span>
                 </div>
                 <span className="text-white/25 text-xs font-light tracking-wider">
                   {currentPhilosophical + 1} / {PHILOSOPHICAL_QUESTIONS.length}
@@ -1254,7 +1351,7 @@ const ConsultaParejaPage = () => {
                         if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
                           setCurrentPhilosophical(prev => prev + 1)
                         } else {
-                          setStage('open-question'); scrollToTop()
+                          setStage('test'); scrollToTop()
                         }
                       }}
                       className="text-white/20 text-xs hover:text-white/40 tracking-wider transition-colors">
@@ -1266,7 +1363,7 @@ const ConsultaParejaPage = () => {
                       if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
                         setCurrentPhilosophical(prev => prev + 1)
                       } else {
-                        setStage('open-question'); scrollToTop()
+                        setStage('test'); scrollToTop()
                       }
                     }}
                     className="flex items-center gap-2 text-violet-300/60 hover:text-violet-300/90 text-xs tracking-wider transition-colors">
@@ -1376,8 +1473,8 @@ const ConsultaParejaPage = () => {
                 <Loader2 className="w-12 h-12 text-violet-400/60" strokeWidth={1.5} />
               </motion.div>
               <h2 className="text-2xl font-light text-white mb-4 font-display tracking-wide">Analizando tu relación</h2>
-              <p className="text-white/50 text-sm font-light mb-2">Estamos procesando tus respuestas en profundidad...</p>
-              <p className="text-white/30 text-xs font-light mb-8">Cruzando datos cuantitativos con tus reflexiones personales</p>
+              <p className="text-white/50 text-sm font-light mb-2">Estamos procesando tu narrativa y cruzándola con los datos...</p>
+              <p className="text-white/30 text-xs font-light mb-8">Correlacionando lo que nos contaste con las afirmaciones confirmatorias</p>
 
               {/* Progress bar with stages */}
               <AnalyzingProgress />
@@ -1425,7 +1522,7 @@ const ConsultaParejaPage = () => {
                 </motion.div>
               )}
 
-              {/* ─── AREA BARS ─── */}
+              {/* ─── AREA BARS (con correlaciones del análisis IA) ─── */}
               <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mb-16">
                 <div className="flex items-center gap-3 mb-8">
                   <BarChart3 className="w-5 h-5 text-pink-400/60" strokeWidth={1.5} />
@@ -1436,6 +1533,7 @@ const ConsultaParejaPage = () => {
                     const score = areaScores[area.key]
                     const pct = getPercent(score)
                     const level = getLevel(score)
+                    const correlation = isPremiumUnlocked && aiAnalysis?.areaCorrelations?.[area.key]
                     return (
                       <motion.div key={area.key} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.5 + i * 0.08 }}>
@@ -1454,6 +1552,12 @@ const ConsultaParejaPage = () => {
                             transition={{ duration: 1, delay: 0.6 + i * 0.08, ease: 'easeOut' }}
                             className={`h-full rounded-full bg-gradient-to-r ${area.color}`} />
                         </div>
+                        {correlation && (
+                          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 + i * 0.08 }}
+                            className="text-white/40 text-xs font-extralight leading-relaxed mt-2 pl-6 border-l border-white/5">
+                            {correlation}
+                          </motion.p>
+                        )}
                       </motion.div>
                     )
                   })}
@@ -1649,30 +1753,30 @@ const ConsultaParejaPage = () => {
                     </div>
                   </motion.div>
 
-                  {/* LECTURA 1: Perfil del Cuestionario */}
+                  {/* LECTURA 1: Análisis Narrativo (PRIMARIA) */}
                   <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.0 }}
-                    className="mb-8 p-8 border border-blue-500/10 rounded-2xl bg-gradient-to-br from-blue-500/[0.02] to-transparent">
+                    className="mb-8 p-8 border border-violet-500/10 rounded-2xl bg-gradient-to-br from-violet-500/[0.02] to-transparent">
                     <div className="flex items-center gap-3 mb-2">
-                      <BarChart3 className="w-5 h-5 text-blue-400/60" strokeWidth={1.5} />
-                      <h3 className="text-lg font-light text-white tracking-wide font-display">Lectura del Cuestionario</h3>
-                      <span className="text-[10px] text-blue-300/30 font-light px-2 py-0.5 border border-blue-500/10 rounded-full ml-auto">1 de 3</span>
+                      <Eye className="w-5 h-5 text-violet-400/60" strokeWidth={1.5} />
+                      <h3 className="text-lg font-light text-white tracking-wide font-display">Análisis Narrativo</h3>
+                      <span className="text-[10px] text-violet-300/30 font-light px-2 py-0.5 border border-violet-500/10 rounded-full ml-auto">1 de 3 · Primaria</span>
                     </div>
-                    <p className="text-white/40 text-xs font-light mb-6">Qué revelan los datos cuantitativos sobre tu dinámica vincular</p>
-                    {(aiAnalysis.lecturaCuestionario || '').split('\n\n').map((p, i) => (
+                    <p className="text-white/40 text-xs font-light mb-6">Lo que tus palabras revelaron — patrones extraídos de lo que nos platicaste</p>
+                    {(aiAnalysis.lecturaNarrativa || '').split('\n\n').map((p, i) => (
                       <p key={i} className="text-white/65 text-sm font-light leading-[1.9] tracking-wide mb-3">{p}</p>
                     ))}
                   </motion.div>
 
-                  {/* LECTURA 2: Perfil Inconsciente */}
+                  {/* LECTURA 2: Perfil Cuantitativo (CONFIRMATORIA) */}
                   <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1 }}
-                    className="mb-8 p-8 border border-violet-500/10 rounded-2xl bg-gradient-to-br from-violet-500/[0.02] to-transparent">
+                    className="mb-8 p-8 border border-blue-500/10 rounded-2xl bg-gradient-to-br from-blue-500/[0.02] to-transparent">
                     <div className="flex items-center gap-3 mb-2">
-                      <Eye className="w-5 h-5 text-violet-400/60" strokeWidth={1.5} />
-                      <h3 className="text-lg font-light text-white tracking-wide font-display">Perfil Inconsciente</h3>
-                      <span className="text-[10px] text-violet-300/30 font-light px-2 py-0.5 border border-violet-500/10 rounded-full ml-auto">2 de 3</span>
+                      <BarChart3 className="w-5 h-5 text-blue-400/60" strokeWidth={1.5} />
+                      <h3 className="text-lg font-light text-white tracking-wide font-display">Perfil Cuantitativo</h3>
+                      <span className="text-[10px] text-blue-300/30 font-light px-2 py-0.5 border border-blue-500/10 rounded-full ml-auto">2 de 3 · Confirmatoria</span>
                     </div>
-                    <p className="text-white/40 text-xs font-light mb-6">Patrones profundos detectados en tus reflexiones personales</p>
-                    {(aiAnalysis.lecturaInconsciente || '').split('\n\n').map((p, i) => (
+                    <p className="text-white/40 text-xs font-light mb-6">Lo que los datos numéricos corroboran o contradicen de tu narrativa</p>
+                    {(aiAnalysis.lecturaCuestionario || '').split('\n\n').map((p, i) => (
                       <p key={i} className="text-white/65 text-sm font-light leading-[1.9] tracking-wide mb-3">{p}</p>
                     ))}
                   </motion.div>
@@ -1685,7 +1789,7 @@ const ConsultaParejaPage = () => {
                       <h3 className="text-lg font-light text-white tracking-wide font-display">Lectura Integral</h3>
                       <span className="text-[10px] text-pink-300/30 font-light px-2 py-0.5 border border-pink-500/10 rounded-full ml-auto">3 de 3</span>
                     </div>
-                    <p className="text-white/40 text-xs font-light mb-6">Cruce de datos cuantitativos con tus reflexiones: la historia completa</p>
+                    <p className="text-white/40 text-xs font-light mb-6">Donde tus palabras y los datos se encuentran: coherencias, contradicciones y la historia profunda</p>
                     {(aiAnalysis.lecturaIntegral || '').split('\n\n').map((p, i) => (
                       <p key={i} className="text-white/65 text-sm font-light leading-[1.9] tracking-wide mb-3">{p}</p>
                     ))}
