@@ -9,24 +9,30 @@ const SYSTEM_PROMPT = `Eres un psicoanalista experto con formación lacaniana, e
 
 Tu tarea es generar TRES LECTURAS SEPARADAS a partir de un diagnóstico de relación:
 
-LECTURA 1 — PERFIL DEL CUESTIONARIO: Análisis de las puntuaciones cuantitativas en 8 áreas psicológicas. Interpreta qué revelan los números sobre la dinámica vincular real: áreas fuertes, áreas en riesgo, combinaciones problemáticas, y qué patrones se pueden inferir solo de los datos cuantitativos.
+LECTURA 1 — PERFIL DEL CUESTIONARIO: Análisis de las puntuaciones cuantitativas en 8 áreas psicológicas (comunicación, intimidad, admiración, conflictos, proyecto de vida, seguridad emocional, autonomía, idealización). Interpreta qué revelan los números sobre la dinámica vincular real: áreas fuertes, áreas en riesgo, combinaciones problemáticas, y qué patrones se pueden inferir solo de los datos cuantitativos.
 
-LECTURA 2 — PERFIL INCONSCIENTE: Análisis de las respuestas abiertas/filosóficas. Aquí es donde detectas los patrones profundos: idealización, necesidad vs. deseo, búsqueda de completud, proyección, demanda, goce, repetición. Recuerda que según Lacan, "amar es dar lo que no se tiene a quien no se es": el amor auténtico opera desde la falta asumida, no desde la demanda de completud.
+LECTURA 2 — PERFIL DE PATRONES INCONSCIENTES: Análisis de las respuestas abiertas/conversacionales. Las preguntas están formuladas de forma casual ("como si hablaras con un amigo"), así que la persona revela patrones sin saber que los está mostrando. Tu trabajo es extraer lo profundo de lo aparentemente simple. Busca:
+- Idealización (describir al otro en términos absolutos/perfectos)
+- Dependencia disfrazada de amor ("sin él/ella no soy nada")
+- Proyección (depositar en el otro lo que falta en uno)
+- Demanda imposible (pedir lo que nadie puede dar)
+- Mecanismos de defensa (racionalización, negación, evitación, intelectualización)
+- Patrones de repetición (recrear dinámicas problemáticas aprendidas)
+- La relación con la falta (según Lacan, "amar es dar lo que no se tiene a quien no se es")
 
-LECTURA 3 — LECTURA INTEGRAL: Cruce de ambas fuentes. Conecta lo que dicen los números con lo que revelan las palabras. ¿Son coherentes o hay contradicciones reveladoras? ¿Qué historia emerge cuando se leen los datos junto con las reflexiones personales?
+LECTURA 3 — LECTURA INTEGRAL: Cruce de ambas fuentes. Conecta lo que dicen los números con lo que revelan las palabras. ¿Son coherentes o hay contradicciones reveladoras? Si se proporcionan inconsistencias detectadas en las respuestas cuantitativas, analiza qué revelan esas contradicciones sobre lo que la persona dice vs. lo que realmente experimenta.
 
 Principios:
-- Detectar patrones de idealización (esperar que el otro te complete, proyectar cualidades fantaseadas)
-- Distinguir entre necesidad y deseo genuino
-- Identificar si se busca en el otro aquello que falta en uno mismo
-- Señalar patrones inconscientes que operan en la relación (demanda, goce, repetición)
+- Detectar patrones de idealización, necesidad vs. deseo, búsqueda de completud
+- Identificar mecanismos de defensa específicos que opera cada miembro
+- Señalar patrones inconscientes (demanda, goce, repetición)
 - Ser empático pero honesto, sin juicio moral
 - Usar lenguaje accesible pero con profundidad psicoanalítica
 - NO dar diagnósticos clínicos, esto es orientativo
 
 IMPORTANTE: Responde EXCLUSIVAMENTE en formato JSON válido con la estructura solicitada.`
 
-function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophicalQuestions) {
+function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophicalQuestions, inconsistencies) {
   let prompt = '## RESULTADOS CUANTITATIVOS (escala 1-5, donde 5 es óptimo):\n\n'
 
   for (const [key, score] of Object.entries(areaScores)) {
@@ -35,7 +41,17 @@ function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophical
     prompt += `- ${label}: ${score.toFixed(1)}/5 (${pct}%)\n`
   }
 
-  prompt += '\n## RESPUESTAS A PREGUNTAS FILOSÓFICAS PROFUNDAS:\n\n'
+  if (inconsistencies && inconsistencies.length > 0) {
+    prompt += '\n## INCONSISTENCIAS DETECTADAS EN RESPUESTAS:\n\n'
+    for (const inc of inconsistencies) {
+      prompt += `⚠️ En ${inc.area} (significancia ${inc.significance}):\n`
+      prompt += `  - "${inc.q1}" → respondió ${inc.q1_answer}/5\n`
+      prompt += `  - "${inc.q2}" → respondió ${inc.q2_answer}/5\n`
+      prompt += `  Estas respuestas se contradicen. Analiza qué revela esta contradicción.\n\n`
+    }
+  }
+
+  prompt += '\n## RESPUESTAS CONVERSACIONALES (la persona las contó "como a un amigo"):\n\n'
 
   for (let i = 0; i < philosophicalQuestions.length; i++) {
     const answer = philosophicalAnswers[i]
@@ -47,12 +63,14 @@ function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophical
   prompt += `\nGenera tu análisis psicoanalítico en el siguiente formato JSON exacto:
 {
   "lecturaCuestionario": "(3-4 párrafos: análisis profundo de lo que revelan las puntuaciones cuantitativas. Interpreta cada área relevante, señala combinaciones problemáticas, identifica fortalezas y riesgos)",
-  "lecturaInconsciente": "(3-4 párrafos: análisis de las respuestas filosóficas. Detecta los patrones de idealización, necesidad vs deseo, completud, proyección. Referencia las respuestas específicas del usuario)",
-  "lecturaIntegral": "(3-4 párrafos: cruce de ambas fuentes. Conecta lo cuantitativo con lo cualitativo. Señala coherencias, contradicciones reveladoras, y la historia profunda que emerge al leer todo junto)",
+  "lecturaInconsciente": "(3-4 párrafos: análisis de las respuestas conversacionales. Extrae los patrones profundos de lo aparentemente simple. Detecta idealización, dependencia, proyección, mecanismos de defensa. Referencia las respuestas específicas)",
+  "lecturaIntegral": "(3-4 párrafos: cruce de ambas fuentes. Conecta lo cuantitativo con lo cualitativo. Si hay inconsistencias, analiza qué revelan. Señala coherencias, contradicciones reveladoras, y la historia profunda que emerge)",
   "idealizationLevel": "alto" o "medio" o "bajo",
   "idealizationScore": (número entero 0-100 donde 100 = máxima idealización problemática),
   "unconsciousPatterns": ["patrón 1", "patrón 2", "patrón 3", "patrón 4"],
+  "defenseMechanisms": ["mecanismo de defensa 1 detectado con breve explicación", "mecanismo 2", "mecanismo 3"],
   "strengthsFound": ["fortaleza 1", "fortaleza 2", "fortaleza 3"],
+  "riskAreas": ["área de riesgo 1 con breve explicación", "área de riesgo 2"],
   "keyInsight": "(1 párrafo con la observación psicoanalítica más reveladora de todo el análisis)",
   "recommendation": "(1-2 párrafos con recomendación profesional personalizada)",
   "existentialReflection": "(1 párrafo poético/filosófico sobre el amor y el deseo en esta relación específica)"
@@ -61,7 +79,7 @@ function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophical
   return prompt
 }
 
-export async function analyzeRelationship({ areaScores, areaLabels, philosophicalAnswers, philosophicalQuestions }) {
+export async function analyzeRelationship({ areaScores, areaLabels, philosophicalAnswers, philosophicalQuestions, inconsistencies }) {
   const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY
 
   if (!apiKey) {
@@ -69,7 +87,7 @@ export async function analyzeRelationship({ areaScores, areaLabels, philosophica
     return generateFallbackAnalysis(areaScores)
   }
 
-  const prompt = buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophicalQuestions)
+  const prompt = buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophicalQuestions, inconsistencies)
 
   try {
     const response = await fetch(DEEPSEEK_API_URL, {
@@ -85,7 +103,7 @@ export async function analyzeRelationship({ areaScores, areaLabels, philosophica
           { role: 'user', content: prompt }
         ],
         temperature: 0.7,
-        max_tokens: 2500,
+        max_tokens: 3500,
         response_format: { type: 'json_object' }
       })
     })
@@ -171,6 +189,15 @@ function generateFallbackAnalysis(areaScores) {
     lecturaInconsciente,
     lecturaIntegral,
     unconsciousPatterns: patterns,
+    defenseMechanisms: [
+      areaScores.conflicto <= 2.5 ? 'Evitación: se eluden temas difíciles como mecanismo para mantener una falsa armonía' : null,
+      areaScores.comunicacion <= 2.5 ? 'Supresión emocional: se callan sentimientos para no generar conflicto' : null,
+      areaScores.idealizacion <= 2.5 ? 'Idealización: se mantiene una imagen fantaseada del otro para evitar la desilusión' : null,
+      'Racionalización: se buscan explicaciones lógicas para justificar dinámicas emocionales'
+    ].filter(Boolean).slice(0, 3),
+    riskAreas: Object.entries(areaScores)
+      .filter(([, s]) => s <= 2.5)
+      .map(([key, s]) => `${areaNames[key]} (${Math.round(((s-1)/4)*100)}%): requiere atención profesional`),
     strengthsFound: strengths,
     keyInsight: 'El patrón general sugiere que la relación opera con dinámicas que merecen ser exploradas con mayor profundidad. Los números revelan tendencias; las reflexiones revelan deseos y temores. La sesión profesional es donde ambas dimensiones se encuentran y revelan su significado singular.',
     recommendation: 'Se recomienda una sesión profesional de diagnóstico de pareja para explorar en profundidad los patrones detectados. La sesión permite ir más allá de lo cuantitativo y trabajar con la experiencia subjetiva de cada uno, que es donde realmente operan los cambios.\n\nUn espacio psicoanalítico puede ayudar a distinguir entre lo que se demanda del otro (y que nunca será suficiente) y lo que genuinamente se desea construir juntos.',
