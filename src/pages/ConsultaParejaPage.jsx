@@ -119,7 +119,7 @@ const PHILOSOPHICAL_QUESTIONS = [
 
 // ─── MICRÓFONO (Web Speech API) ───────────────────────────────────
 
-function MicButton({ onTranscript }) {
+function MicButton({ onTranscript, onInterim }) {
   const [listening, setListening] = useState(false)
   const recognitionRef = useRef(null)
 
@@ -127,6 +127,7 @@ function MicButton({ onTranscript }) {
     if (listening) {
       recognitionRef.current?.stop()
       setListening(false)
+      onInterim?.('')
       return
     }
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition
@@ -134,17 +135,24 @@ function MicButton({ onTranscript }) {
     const recognition = new SR()
     recognition.lang = 'es-MX'
     recognition.continuous = true
-    recognition.interimResults = false
+    recognition.interimResults = true
     recognition.onresult = (e) => {
-      const last = e.results[e.results.length - 1]
-      if (last.isFinal) onTranscript(last[0].transcript)
+      let interim = ''
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) {
+          onTranscript?.(e.results[i][0].transcript)
+        } else {
+          interim += e.results[i][0].transcript
+        }
+      }
+      onInterim?.(interim)
     }
-    recognition.onerror = () => setListening(false)
-    recognition.onend = () => setListening(false)
+    recognition.onerror = () => { setListening(false); onInterim?.('') }
+    recognition.onend = () => { setListening(false); onInterim?.('') }
     recognitionRef.current = recognition
     recognition.start()
     setListening(true)
-  }, [listening, onTranscript])
+  }, [listening, onTranscript, onInterim])
 
   return (
     <button type="button" onClick={toggle}
@@ -162,41 +170,55 @@ function MicButton({ onTranscript }) {
 // ─── BARRA DE PROGRESO DEL ANÁLISIS ───────────────────────────────
 
 const ANALYSIS_STAGES = [
-  { label: 'Leyendo tu narrativa personal', duration: 4000 },
-  { label: 'Extrayendo patrones inconscientes', duration: 5000 },
-  { label: 'Procesando datos confirmatorios', duration: 3000 },
-  { label: 'Correlacionando narrativa con datos', duration: 4000 },
-  { label: 'Preparando tu informe personalizado', duration: 3000 }
+  { label: 'Leyendo tu narrativa personal', duration: 60000 },
+  { label: 'Identificando patrones en tu historia', duration: 60000 },
+  { label: 'Analizando los datos confirmatorios', duration: 60000 },
+  { label: 'Cruzando narrativa con datos', duration: 90000 },
+  { label: 'Preparando tu informe personalizado', duration: 90000 }
 ]
 
-function AnalyzingProgress() {
+function AnalyzingProgress({ philosophicalAnswers, philosophicalQuestions }) {
   const [currentStage, setCurrentStage] = useState(0)
   const [pct, setPct] = useState(0)
+  const [quote, setQuote] = useState(null)
+  const elapsedRef = useRef(0)
+
+  const pickQuote = useCallback(() => {
+    const entries = Object.entries(philosophicalAnswers || {}).filter(([, v]) => v && v.trim().length > 25)
+    if (!entries.length) return null
+    const [idx, text] = entries[Math.floor(Math.random() * entries.length)]
+    const q = philosophicalQuestions?.[parseInt(idx)]
+    const snippet = text.trim().length > 72 ? text.trim().slice(0, 72) + '...' : text.trim()
+    return { snippet, label: q?.text }
+  }, [philosophicalAnswers, philosophicalQuestions])
 
   useEffect(() => {
-    const totalDuration = ANALYSIS_STAGES.reduce((a, s) => a + s.duration, 0)
-    let elapsed = 0
-    const interval = setInterval(() => {
-      elapsed += 100
-      const rawPct = Math.min(95, (elapsed / totalDuration) * 100)
-      setPct(Math.round(rawPct))
+    setQuote(pickQuote())
+    const TICK = 500
+    const TAU = 150000 // 150 s time constant — reaches ~82% at 5 min
+    const MAX_PCT = 88
+    const timer = setInterval(() => {
+      elapsedRef.current += TICK
+      const t = elapsedRef.current
+      setPct(Math.round(MAX_PCT * (1 - Math.exp(-t / TAU))))
       let cumulative = 0
       for (let i = 0; i < ANALYSIS_STAGES.length; i++) {
         cumulative += ANALYSIS_STAGES[i].duration
-        if (elapsed < cumulative) { setCurrentStage(i); break }
+        if (t < cumulative) { setCurrentStage(i); break }
         if (i === ANALYSIS_STAGES.length - 1) setCurrentStage(i)
       }
-    }, 100)
-    return () => clearInterval(interval)
-  }, [])
+    }, TICK)
+    const quoteTimer = setInterval(() => setQuote(pickQuote()), 18000)
+    return () => { clearInterval(timer); clearInterval(quoteTimer) }
+  }, [pickQuote])
 
   return (
     <div>
       <div className="h-2 bg-white/5 rounded-full overflow-hidden mb-3">
         <motion.div className="h-full rounded-full bg-gradient-to-r from-violet-500 to-pink-400"
-          animate={{ width: `${pct}%` }} transition={{ duration: 0.3, ease: 'easeOut' }} />
+          animate={{ width: `${pct}%` }} transition={{ duration: 0.5, ease: 'easeOut' }} />
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-4">
         <AnimatePresence mode="wait">
           <motion.span key={currentStage} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}
             className="text-violet-300/50 text-xs font-light tracking-wide">
@@ -205,7 +227,24 @@ function AnalyzingProgress() {
         </AnimatePresence>
         <span className="text-white/30 text-xs font-light tabular-nums">{pct}%</span>
       </div>
+      {quote?.snippet && (
+        <AnimatePresence mode="wait">
+          <motion.div key={quote.snippet} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mt-3 p-4 rounded-xl border border-violet-500/10 bg-violet-500/[0.02] text-left">
+            <p className="text-violet-300/35 text-[10px] font-light uppercase tracking-[0.12em] mb-1.5">Leyendo lo que compartiste</p>
+            <p className="text-white/40 text-sm font-light italic leading-relaxed">&ldquo;{quote.snippet}&rdquo;</p>
+          </motion.div>
+        </AnimatePresence>
+      )}
     </div>
+  )
+}
+
+function renderBold(text) {
+  if (!text) return null
+  return text.split(/\*\*(.*?)\*\*/g).map((part, i) =>
+    i % 2 === 1 ? <strong key={i} className="font-semibold text-white/85">{part}</strong> : part
   )
 }
 
@@ -659,6 +698,13 @@ const ConsultaParejaPage = () => {
 
   const topRef = useRef(null)
 
+  // Voice UI state for philosophical questions
+  const [philUIMode, setPhilUIMode] = useState('voice')
+  const [philInterim, setPhilInterim] = useState('')
+  const [philRecording, setPhilRecording] = useState(false)
+  const philRecognitionRef = useRef(null)
+  const [resumeDraft, setResumeDraft] = useState(null)
+
   const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
@@ -677,6 +723,44 @@ const ConsultaParejaPage = () => {
     if (sessionStorage.getItem('diagnostico_premium') === 'true') {
       setIsPremiumUnlocked(true)
     }
+  }, [])
+
+  // Reset voice state when philosophical question changes
+  useEffect(() => {
+    setPhilInterim('')
+    if (philRecording) {
+      philRecognitionRef.current?.stop()
+      setPhilRecording(false)
+    }
+  }, [currentPhilosophical]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // localStorage auto-save (saves on every meaningful state change)
+  useEffect(() => {
+    if (stage === 'hero' || stage === 'results' || stage === 'analyzing') return
+    try {
+      localStorage.setItem('diagnostico_pareja_draft', JSON.stringify({
+        stage, mode, answers, philosophicalAnswers, currentQuestion, currentPhilosophical, savedAt: Date.now()
+      }))
+    } catch {}
+  }, [stage, mode, answers, philosophicalAnswers, currentQuestion, currentPhilosophical])
+
+  // Clear draft on completion
+  useEffect(() => {
+    if (stage === 'results') {
+      try { localStorage.removeItem('diagnostico_pareja_draft') } catch {}
+    }
+  }, [stage])
+
+  // Load draft on mount
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('diagnostico_pareja_draft')
+      if (!raw) return
+      const draft = JSON.parse(raw)
+      if (!draft.savedAt || Date.now() - draft.savedAt > 24 * 60 * 60 * 1000) return
+      if (!draft.stage || draft.stage === 'hero' || draft.stage === 'results') return
+      setResumeDraft(draft)
+    } catch {}
   }, [])
 
   // Active questions based on mode
@@ -753,6 +837,42 @@ const ConsultaParejaPage = () => {
     setStage('results')
     scrollToTop()
   }
+
+  const togglePhilMic = useCallback(() => {
+    if (philRecording) {
+      philRecognitionRef.current?.stop()
+      setPhilRecording(false)
+      setPhilInterim('')
+      return
+    }
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SR) { setPhilUIMode('text'); return }
+    const recognition = new SR()
+    recognition.lang = 'es-MX'
+    recognition.continuous = true
+    recognition.interimResults = true
+    recognition.onresult = (e) => {
+      let interim = ''
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) {
+          const finalText = e.results[i][0].transcript
+          setPhilosophicalAnswers(prev => ({
+            ...prev,
+            [currentPhilosophical]: (prev[currentPhilosophical] ? prev[currentPhilosophical] + ' ' : '') + finalText
+          }))
+          setPhilInterim('')
+        } else {
+          interim += e.results[i][0].transcript
+        }
+      }
+      if (interim) setPhilInterim(interim)
+    }
+    recognition.onerror = () => { setPhilRecording(false); setPhilInterim('') }
+    recognition.onend = () => { setPhilRecording(false); setPhilInterim('') }
+    philRecognitionRef.current = recognition
+    recognition.start()
+    setPhilRecording(true)
+  }, [philRecording, currentPhilosophical])
 
   const handleDownloadPDF = async () => {
     setPdfGenerating(true)
@@ -843,6 +963,30 @@ const ConsultaParejaPage = () => {
                   <span className="w-px h-3 bg-white/20" />
                   <span className="flex items-center gap-1.5"><BarChart3 className="w-3.5 h-3.5" /> Gráficas profesionales</span>
                 </motion.div>
+
+                {resumeDraft && (
+                  <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3 }}
+                    className="mt-8 flex items-center justify-center gap-3">
+                    <button
+                      onClick={() => {
+                        setStage(resumeDraft.stage)
+                        setMode(resumeDraft.mode)
+                        setAnswers(resumeDraft.answers || {})
+                        setPhilosophicalAnswers(resumeDraft.philosophicalAnswers || {})
+                        setCurrentQuestion(resumeDraft.currentQuestion || 0)
+                        setCurrentPhilosophical(resumeDraft.currentPhilosophical || 0)
+                        if (resumeDraft.mode === 'premium') setIsPremiumUnlocked(true)
+                        setResumeDraft(null)
+                      }}
+                      className="flex items-center gap-2 px-4 py-2 rounded-full border border-violet-500/25 bg-violet-500/[0.06] text-violet-300/70 text-xs font-light hover:border-violet-400/40 hover:text-violet-300 transition-all">
+                      <ArrowRight className="w-3 h-3" /> Continuar diagnóstico anterior
+                    </button>
+                    <button onClick={() => { try { localStorage.removeItem('diagnostico_pareja_draft') } catch {} setResumeDraft(null) }}
+                      className="text-white/20 text-xs hover:text-white/40 transition-colors">
+                      Descartar
+                    </button>
+                  </motion.div>
+                )}
               </motion.div>
             </div>
 
@@ -1288,19 +1432,20 @@ const ConsultaParejaPage = () => {
               {currentPhilosophical === 0 && (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   className="mb-8 p-5 border border-violet-500/15 rounded-xl bg-violet-500/[0.03]">
-                  <p className="text-violet-200/70 text-sm font-light leading-relaxed">
-                    Cuéntamelo como si fuera un amigo — no hay respuestas correctas ni incorrectas, y no necesitas la mejor ortografía. 
-                    <span className="text-violet-300/70 font-normal"> Entre más compartas, mejor será tu análisis.</span> También puedes usar el micrófono para dictar, o escribir "no sé" si algo no te queda claro.
+                  <p className="text-violet-200/70 text-base font-light leading-relaxed">
+                    Cuéntamelo como si fuera un amigo — no hay respuestas correctas ni incorrectas.
+                    <span className="text-violet-300/80 font-normal"> Entre más compartas, mejor será tu análisis.</span>{' '}
+                    Puedes hablar o escribir, como prefieras.
                   </p>
                 </motion.div>
               )}
 
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/15 bg-violet-500/5">
                   <Brain className="w-3 h-3 text-violet-400/60" strokeWidth={1.5} />
                   <span className="text-violet-300/50 text-[10px] font-light uppercase tracking-[0.15em]">Platícame de tu relación</span>
                 </div>
-                <span className="text-white/25 text-xs font-light tracking-wider">
+                <span className="text-white/25 text-sm font-light tracking-wider">
                   {currentPhilosophical + 1} / {PHILOSOPHICAL_QUESTIONS.length}
                 </span>
               </div>
@@ -1308,34 +1453,119 @@ const ConsultaParejaPage = () => {
               <AnimatePresence mode="wait">
                 <motion.div key={currentPhilosophical} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
-                  <h3 className="text-xl lg:text-2xl font-light text-white/90 leading-relaxed mb-8 tracking-wide font-display">
+
+                  <h3 className="text-2xl lg:text-3xl font-light text-white/90 leading-relaxed mb-8 tracking-wide font-display">
                     {PHILOSOPHICAL_QUESTIONS[currentPhilosophical].text}
                   </h3>
 
-                  <div className="relative">
-                    <textarea
-                      value={philosophicalAnswers[currentPhilosophical] || ''}
-                      onChange={(e) => setPhilosophicalAnswers(prev => ({ ...prev, [currentPhilosophical]: e.target.value }))}
-                      placeholder="Escribe aquí con libertad... no hay respuestas correctas ni incorrectas."
-                      maxLength={800}
-                      className="w-full h-36 p-5 pr-14 bg-white/[0.03] border border-violet-500/15 rounded-2xl text-white/80 text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none resize-none transition-colors"
-                    />
-                    {/* Microphone button — Web Speech API */}
-                    {typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) && (
-                      <MicButton
-                        onTranscript={(text) => setPhilosophicalAnswers(prev => ({
-                          ...prev,
-                          [currentPhilosophical]: (prev[currentPhilosophical] || '') + (prev[currentPhilosophical] ? ' ' : '') + text
-                        }))}
+                  {/* ── VOICE MODE ────────────────────────────── */}
+                  {philUIMode === 'voice' && (
+                    <div className="flex flex-col items-center py-2">
+                      {/* Large centered mic button */}
+                      <motion.button
+                        type="button"
+                        onClick={togglePhilMic}
+                        whileHover={{ scale: 1.06 }}
+                        whileTap={{ scale: 0.94 }}
+                        className={`relative w-20 h-20 rounded-full border-2 flex items-center justify-center transition-all duration-300 mb-4 ${
+                          philRecording
+                            ? 'border-red-400/50 bg-red-500/15 text-red-300'
+                            : 'border-violet-500/40 bg-violet-500/10 text-violet-300 hover:border-violet-400/60 hover:bg-violet-500/20'
+                        }`}>
+                        {philRecording && (
+                          <motion.div className="absolute inset-0 rounded-full border border-red-400/20"
+                            animate={{ scale: [1, 1.35, 1], opacity: [0.4, 0, 0.4] }}
+                            transition={{ duration: 1.5, repeat: Infinity }} />
+                        )}
+                        {philRecording ? <MicOff className="w-8 h-8" strokeWidth={1.5} /> : <Mic className="w-8 h-8" strokeWidth={1.5} />}
+                      </motion.button>
+
+                      {/* Status label */}
+                      {!philRecording && !philosophicalAnswers[currentPhilosophical]?.trim() && (
+                        <p className="text-white/35 text-sm font-light text-center mb-2">Toca el micrófono para hablar</p>
+                      )}
+                      {philRecording && (
+                        <p className="text-red-300/60 text-sm font-light animate-pulse text-center mb-2">
+                          Escuchando... toca para pausar
+                        </p>
+                      )}
+
+                      {/* Live transcript (confirmed + interim) */}
+                      {(philosophicalAnswers[currentPhilosophical]?.trim() || philInterim) && (
+                        <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
+                          className="w-full mt-4 p-5 rounded-2xl border border-white/8 bg-white/[0.02] text-left">
+                          <p className="text-white/82 text-lg font-light leading-relaxed">
+                            {philosophicalAnswers[currentPhilosophical] || ''}
+                            {philInterim && <span className="text-white/30 italic"> {philInterim}</span>}
+                          </p>
+                        </motion.div>
+                      )}
+
+                      {/* Action buttons after having confirmed text */}
+                      {philosophicalAnswers[currentPhilosophical]?.trim() && !philRecording && (
+                        <div className="flex items-center gap-3 mt-5">
+                          <button onClick={togglePhilMic}
+                            className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-violet-500/20 text-violet-300/60 text-xs uppercase tracking-wider hover:border-violet-400/35 hover:text-violet-300/90 transition-all">
+                            <Mic className="w-3 h-3" /> Agregar más
+                          </button>
+                          <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                            onClick={() => {
+                              if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
+                                setCurrentPhilosophical(prev => prev + 1); scrollToTop()
+                              } else { setStage('test'); scrollToTop() }
+                            }}
+                            className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-violet-500/80 to-fuchsia-500/80 text-white text-xs uppercase tracking-wider hover:from-violet-500 hover:to-fuchsia-500 transition-all">
+                            {currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1 ? 'Siguiente' : 'Continuar'}
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </motion.button>
+                        </div>
+                      )}
+
+                      {/* Skip (only when no text) */}
+                      {!philosophicalAnswers[currentPhilosophical]?.trim() && !philRecording && (
+                        <button onClick={() => {
+                          if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
+                            setCurrentPhilosophical(prev => prev + 1)
+                          } else { setStage('test'); scrollToTop() }
+                        }}
+                          className="mt-4 text-white/20 text-xs hover:text-white/40 tracking-wider transition-colors">
+                          OMITIR
+                        </button>
+                      )}
+
+                      {/* Fallback to text */}
+                      <button onClick={() => setPhilUIMode('text')}
+                        className="mt-5 text-white/22 text-xs hover:text-white/50 transition-colors underline underline-offset-4">
+                        Prefiero escribir
+                      </button>
+                    </div>
+                  )}
+
+                  {/* ── TEXT MODE ────────────────────────────── */}
+                  {philUIMode === 'text' && (
+                    <div>
+                      <textarea
+                        value={philosophicalAnswers[currentPhilosophical] || ''}
+                        onChange={(e) => setPhilosophicalAnswers(prev => ({ ...prev, [currentPhilosophical]: e.target.value }))}
+                        placeholder="Escribe aquí con libertad..."
+                        maxLength={800}
+                        className="w-full h-40 p-5 bg-white/[0.03] border border-violet-500/15 rounded-2xl text-white/85 text-base font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none resize-none transition-colors leading-relaxed"
                       />
-                    )}
-                  </div>
-                  <p className="text-white/15 text-[10px] font-extralight mt-2 text-right">
-                    {(philosophicalAnswers[currentPhilosophical] || '').length}/800
-                  </p>
+                      <div className="flex items-center justify-between mt-2">
+                        <button onClick={() => setPhilUIMode('voice')}
+                          className="flex items-center gap-1.5 text-violet-300/40 text-xs hover:text-violet-300/70 transition-colors">
+                          <Mic className="w-3 h-3" /> Usar micrófono
+                        </button>
+                        <span className="text-white/15 text-[10px] font-extralight">
+                          {(philosophicalAnswers[currentPhilosophical] || '').length}/800
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </motion.div>
               </AnimatePresence>
 
+              {/* Navigation row */}
               <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/5">
                 <button
                   onClick={() => { if (currentPhilosophical > 0) setCurrentPhilosophical(prev => prev - 1) }}
@@ -1343,34 +1573,18 @@ const ConsultaParejaPage = () => {
                   className="flex items-center gap-2 text-white/30 hover:text-white/60 text-xs tracking-wider disabled:opacity-20 disabled:cursor-not-allowed transition-colors">
                   <ArrowLeft className="w-3.5 h-3.5" /> ANTERIOR
                 </button>
-
-                <div className="flex items-center gap-3">
-                  {!philosophicalAnswers[currentPhilosophical]?.trim() && (
-                    <button
-                      onClick={() => {
-                        if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
-                          setCurrentPhilosophical(prev => prev + 1)
-                        } else {
-                          setStage('test'); scrollToTop()
-                        }
-                      }}
-                      className="text-white/20 text-xs hover:text-white/40 tracking-wider transition-colors">
-                      OMITIR
-                    </button>
-                  )}
+                {philUIMode === 'text' && (
                   <button
                     onClick={() => {
                       if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
                         setCurrentPhilosophical(prev => prev + 1)
-                      } else {
-                        setStage('test'); scrollToTop()
-                      }
+                      } else { setStage('test'); scrollToTop() }
                     }}
                     className="flex items-center gap-2 text-violet-300/60 hover:text-violet-300/90 text-xs tracking-wider transition-colors">
                     {currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1 ? 'SIGUIENTE' : 'CONTINUAR'}
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
-                </div>
+                )}
               </div>
             </div>
           </motion.div>
@@ -1477,7 +1691,7 @@ const ConsultaParejaPage = () => {
               <p className="text-white/30 text-xs font-light mb-8">Correlacionando lo que nos contaste con las afirmaciones confirmatorias</p>
 
               {/* Progress bar with stages */}
-              <AnalyzingProgress />
+              <AnalyzingProgress philosophicalAnswers={philosophicalAnswers} philosophicalQuestions={PHILOSOPHICAL_QUESTIONS} />
             </div>
           </motion.div>
         )}
@@ -1509,6 +1723,22 @@ const ConsultaParejaPage = () => {
                 <p className="text-white/60 text-base lg:text-lg font-light leading-relaxed max-w-xl mx-auto mb-4">{result.description}</p>
                 <p className="text-white/50 text-sm font-light leading-relaxed max-w-xl mx-auto">{result.detail}</p>
               </motion.div>
+
+              {/* ─── APERTURA EMPÁTICA (Premium — first thing shown) ─── */}
+              {isPremiumUnlocked && aiAnalysis?.aperturaEmpatica && (
+                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
+                  className="mb-10 p-8 border border-violet-500/20 rounded-2xl bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02]">
+                  <div className="flex items-center gap-3 mb-5">
+                    <Heart className="w-5 h-5 text-violet-400/70" strokeWidth={1.5} />
+                    <h3 className="text-lg font-semibold text-white tracking-wide font-display">Lo que tu historia reveló</h3>
+                  </div>
+                  {(aiAnalysis.aperturaEmpatica || '').split('\n\n').map((p, i) => (
+                    <p key={i} className="text-white/72 text-base font-light leading-[1.95] tracking-wide mb-4 last:mb-0">
+                      {renderBold(p)}
+                    </p>
+                  ))}
+                </motion.div>
+              )}
 
               {/* ─── RADAR CHART (Premium) ─── */}
               {isPremiumUnlocked && (
@@ -1554,8 +1784,8 @@ const ConsultaParejaPage = () => {
                         </div>
                         {correlation && (
                           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 + i * 0.08 }}
-                            className="text-white/40 text-xs font-extralight leading-relaxed mt-2 pl-6 border-l border-white/5">
-                            {correlation}
+                            className="text-white/45 text-sm font-light leading-relaxed mt-2.5 pl-6 border-l border-white/5">
+                            {renderBold(correlation)}
                           </motion.p>
                         )}
                       </motion.div>
@@ -1634,15 +1864,6 @@ const ConsultaParejaPage = () => {
               {/* ─── PREMIUM ANALYSIS ─── */}
               {isPremiumUnlocked && aiAnalysis && (
                 <>
-                  {/* Key Insight (first - the most impactful takeaway) */}
-                  {aiAnalysis.keyInsight && (
-                    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
-                      className="mb-8 p-8 border border-amber-500/10 rounded-2xl bg-amber-500/[0.02]">
-                      <h4 className="text-white/70 text-xs font-light uppercase tracking-[0.15em] mb-3">Insight Principal</h4>
-                      <p className="text-white/60 text-base font-light leading-[1.9] tracking-wide italic">{aiAnalysis.keyInsight}</p>
-                    </motion.div>
-                  )}
-
                   {/* Patrones + Fortalezas (quick overview before deep readings) */}
                   <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
                     className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
@@ -1753,55 +1974,60 @@ const ConsultaParejaPage = () => {
                     </div>
                   </motion.div>
 
-                  {/* LECTURA 1: Análisis Narrativo (PRIMARIA) */}
+                  {/* LECTURA 1: Análisis de tu relato (PRIMARIA) */}
                   <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.0 }}
                     className="mb-8 p-8 border border-violet-500/10 rounded-2xl bg-gradient-to-br from-violet-500/[0.02] to-transparent">
-                    <div className="flex items-center gap-3 mb-2">
+                    <div className="flex items-center gap-3 mb-5">
                       <Eye className="w-5 h-5 text-violet-400/60" strokeWidth={1.5} />
-                      <h3 className="text-lg font-light text-white tracking-wide font-display">Análisis Narrativo</h3>
-                      <span className="text-[10px] text-violet-300/30 font-light px-2 py-0.5 border border-violet-500/10 rounded-full ml-auto">1 de 3 · Primaria</span>
+                      <h3 className="text-lg font-semibold text-white tracking-wide font-display">Análisis de tu relato</h3>
                     </div>
-                    <p className="text-white/40 text-xs font-light mb-6">Lo que tus palabras revelaron — patrones extraídos de lo que nos platicaste</p>
                     {(aiAnalysis.lecturaNarrativa || '').split('\n\n').map((p, i) => (
-                      <p key={i} className="text-white/65 text-sm font-light leading-[1.9] tracking-wide mb-3">{p}</p>
+                      <p key={i} className="text-white/65 text-sm font-light leading-[1.9] tracking-wide mb-4 last:mb-0">{renderBold(p)}</p>
                     ))}
                   </motion.div>
 
-                  {/* LECTURA 2: Perfil Cuantitativo (CONFIRMATORIA) */}
+                  {/* LECTURA 2: Lo que los datos confirman (CONFIRMATORIA) */}
                   <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1 }}
                     className="mb-8 p-8 border border-blue-500/10 rounded-2xl bg-gradient-to-br from-blue-500/[0.02] to-transparent">
-                    <div className="flex items-center gap-3 mb-2">
+                    <div className="flex items-center gap-3 mb-5">
                       <BarChart3 className="w-5 h-5 text-blue-400/60" strokeWidth={1.5} />
-                      <h3 className="text-lg font-light text-white tracking-wide font-display">Perfil Cuantitativo</h3>
-                      <span className="text-[10px] text-blue-300/30 font-light px-2 py-0.5 border border-blue-500/10 rounded-full ml-auto">2 de 3 · Confirmatoria</span>
+                      <h3 className="text-lg font-semibold text-white tracking-wide font-display">Lo que los datos confirman</h3>
                     </div>
-                    <p className="text-white/40 text-xs font-light mb-6">Lo que los datos numéricos corroboran o contradicen de tu narrativa</p>
                     {(aiAnalysis.lecturaCuestionario || '').split('\n\n').map((p, i) => (
-                      <p key={i} className="text-white/65 text-sm font-light leading-[1.9] tracking-wide mb-3">{p}</p>
+                      <p key={i} className="text-white/65 text-sm font-light leading-[1.9] tracking-wide mb-4 last:mb-0">{renderBold(p)}</p>
                     ))}
                   </motion.div>
 
-                  {/* LECTURA 3: Lectura Integral */}
+                  {/* LECTURA 3: Recomendación Profesional */}
                   <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2 }}
                     className="mb-8 p-8 border border-pink-500/10 rounded-2xl bg-gradient-to-br from-pink-500/[0.02] to-fuchsia-500/[0.01]">
-                    <div className="flex items-center gap-3 mb-2">
+                    <div className="flex items-center gap-3 mb-5">
                       <Layers className="w-5 h-5 text-pink-400/60" strokeWidth={1.5} />
-                      <h3 className="text-lg font-light text-white tracking-wide font-display">Lectura Integral</h3>
-                      <span className="text-[10px] text-pink-300/30 font-light px-2 py-0.5 border border-pink-500/10 rounded-full ml-auto">3 de 3</span>
+                      <h3 className="text-lg font-semibold text-white tracking-wide font-display">Recomendación Profesional</h3>
                     </div>
-                    <p className="text-white/40 text-xs font-light mb-6">Donde tus palabras y los datos se encuentran: coherencias, contradicciones y la historia profunda</p>
                     {(aiAnalysis.lecturaIntegral || '').split('\n\n').map((p, i) => (
-                      <p key={i} className="text-white/65 text-sm font-light leading-[1.9] tracking-wide mb-3">{p}</p>
+                      <p key={i} className="text-white/65 text-sm font-light leading-[1.9] tracking-wide mb-4 last:mb-0">{renderBold(p)}</p>
                     ))}
                   </motion.div>
 
-                  {/* Existential Reflection */}
-                  {aiAnalysis.existentialReflection && (
+                  {/* SESSION WORK ITEMS — Lo que trabajaremos en sesión */}
+                  {aiAnalysis.sessionWorkItems && aiAnalysis.sessionWorkItems.length > 0 && (
                     <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3 }}
-                      className="mb-16 p-8 border border-white/5 rounded-2xl bg-white/[0.01] text-center">
-                      <p className="text-white/45 text-base font-light leading-[2] tracking-wide italic font-display max-w-lg mx-auto">
-                        &ldquo;{aiAnalysis.existentialReflection}&rdquo;
-                      </p>
+                      className="mb-10 p-8 border border-emerald-500/15 rounded-2xl bg-gradient-to-br from-emerald-500/[0.03] to-transparent">
+                      <div className="flex items-center gap-3 mb-5">
+                        <Sparkles className="w-5 h-5 text-emerald-400/60" strokeWidth={1.5} />
+                        <h3 className="text-lg font-semibold text-white tracking-wide font-display">Lo que trabajaremos en sesión</h3>
+                      </div>
+                      <ul className="space-y-3">
+                        {aiAnalysis.sessionWorkItems.map((item, i) => (
+                          <li key={i} className="flex items-start gap-3">
+                            <span className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <span className="text-emerald-400/80 text-[10px] font-medium">{i + 1}</span>
+                            </span>
+                            <span className="text-white/65 text-sm font-light leading-relaxed">{renderBold(item)}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </motion.div>
                   )}
                 </>
@@ -1821,22 +2047,33 @@ const ConsultaParejaPage = () => {
                 </motion.div>
               )}
 
-              {/* ─── PROFESSIONAL RECOMMENDATION ─── */}
-              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: isPremiumUnlocked ? 1.2 : 0.8 }}
-                className="mb-16 p-8 border border-pink-500/15 rounded-2xl bg-gradient-to-br from-pink-500/[0.03] to-transparent">
-                <h3 className="text-lg font-light text-white mb-3 tracking-wide font-display">Recomendación profesional</h3>
-                <p className="text-white/60 text-sm font-light leading-relaxed mb-6">
-                  {isPremiumUnlocked && aiAnalysis?.recommendation
-                    ? aiAnalysis.recommendation.replace(/\n/g, ' ')
-                    : 'Los resultados sugieren que la relación podría beneficiarse mucho de una conversación guiada que permita identificar los patrones invisibles que están generando estos resultados.'
-                  }
-                </p>
-                <motion.a href={`https://wa.me/527228720520?text=${whatsappAgendarMessage}`} target="_blank" rel="noopener noreferrer"
-                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                  className="inline-flex items-center gap-3 px-8 py-3.5 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full text-white font-light text-sm uppercase tracking-[0.15em] hover:shadow-[0_0_30px_rgba(244,63,94,0.25)] transition-shadow">
-                  Agendar sesión de diagnóstico <ArrowRight className="w-4 h-4" />
-                </motion.a>
-              </motion.div>
+              {/* ─── PROFESSIONAL RECOMMENDATION (free users only) ─── */}
+              {!isPremiumUnlocked && (
+                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
+                  className="mb-16 p-8 border border-pink-500/15 rounded-2xl bg-gradient-to-br from-pink-500/[0.03] to-transparent">
+                  <h3 className="text-lg font-semibold text-white mb-3 tracking-wide font-display">Recomendación profesional</h3>
+                  <p className="text-white/60 text-sm font-light leading-relaxed mb-6">
+                    Los resultados sugieren que la relación podría beneficiarse mucho de una conversación guiada que permita identificar los patrones invisibles que están generando estos resultados.
+                  </p>
+                  <motion.a href={`https://wa.me/527228720520?text=${whatsappAgendarMessage}`} target="_blank" rel="noopener noreferrer"
+                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center gap-3 px-8 py-3.5 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full text-white font-light text-sm uppercase tracking-[0.15em] hover:shadow-[0_0_30px_rgba(244,63,94,0.25)] transition-shadow">
+                    Agendar sesión de diagnóstico <ArrowRight className="w-4 h-4" />
+                  </motion.a>
+                </motion.div>
+              )}
+
+              {/* ─── CTA for premium users ─── */}
+              {isPremiumUnlocked && aiAnalysis && (
+                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4 }}
+                  className="mb-16 text-center">
+                  <motion.a href={`https://wa.me/527228720520?text=${whatsappAgendarMessage}`} target="_blank" rel="noopener noreferrer"
+                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full text-white font-light text-sm uppercase tracking-[0.15em] hover:shadow-[0_0_30px_rgba(244,63,94,0.25)] transition-shadow">
+                    Agendar mi sesión con Luis <ArrowRight className="w-4 h-4" />
+                  </motion.a>
+                </motion.div>
+              )}
 
               {/* ─── ACTION BUTTONS ─── */}
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: isPremiumUnlocked ? 1.3 : 0.9 }}

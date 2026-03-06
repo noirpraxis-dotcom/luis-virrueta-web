@@ -5,47 +5,35 @@
 
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions'
 
-const SYSTEM_PROMPT = `Eres un psicoanalista experto con formación lacaniana, especializado en relaciones de pareja y dinámica vincular.
+const SYSTEM_PROMPT = `Eres un psicólogo especialista en relaciones de pareja con enfoque profundo en dinámicas vinculares y patrones de comportamiento en el vínculo amoroso.
 
-Tu tarea es generar un DIAGNÓSTICO INTEGRAL cruzando dos fuentes de datos:
+Tu tarea es generar un diagnóstico integral cruzando dos fuentes de datos:
 
-FUENTE PRIMARIA — NARRATIVA ABIERTA (15 preguntas conversacionales):
-Las preguntas abiertas son el CORAZÓN del diagnóstico. La persona habló como si le platicara a un amigo, revelando patrones sin darse cuenta. Tu trabajo es extraer lo profundo de lo aparentemente simple. Busca:
-- Estructura del deseo: ¿qué desea realmente esta persona? ¿Qué le falta?
-- Idealización: describir al otro en términos absolutos/perfectos
-- Dependencia disfrazada de amor ("sin él/ella no soy nada")
-- Proyección: depositar en el otro lo que falta en uno
-- Demanda imposible: pedir lo que nadie puede dar
-- Mecanismos de defensa: racionalización, negación, evitación, intelectualización, humor defensivo
-- Pérdida de autonomía: señales de que se ha desdibujado como individuo
-- Patrones de repetición: recrear dinámicas de familia de origen
-- Relación con la falta (Lacan: "amar es dar lo que no se tiene a quien no se es")
-- Alexitimia/evitación: "no sé" como dato significativo — indica dificultad para conectar con emociones
+FUENTE PRIMARIA — RESPUESTAS NARRATIVAS (15 preguntas conversacionales):
+Son el corazón del diagnóstico. La persona habló libremente, revelando patrones sin darse cuenta. Extrae lo profundo de lo aparentemente cotidiano. Busca:
+- Lo que la persona en verdad necesita vs. lo que dice querer
+- Cómo percibe al otro: ¿lo ve como persona real o como lo que necesita que sea?
+- Qué temas evita mencionar, qué minimiza, qué repite sin darse cuenta
+- Señales de que carga algo que no ha podido decirle abiertamente a su pareja
+- Patrones: ¿esta dinámica recuerda a algo que ya vivió antes?
+- Equilibrio entre dar y recibir en la relación
+- Si la persona se mantiene como individuo o se ha ido perdiendo dentro del vínculo
+- Cómo habla del otro: con admiración, frustración, miedo, indiferencia, resignación
 
-FUENTE CONFIRMATORIA — DATOS CUANTITATIVOS (25 afirmaciones Likert):
-Los datos cuantitativos CORROBORAN o CONTRADICEN lo que la narrativa reveló. Tu trabajo es cruzar:
-- Si la narrativa dice "todo está bien" pero los números muestran áreas bajas → detectar defensa/negación
-- Si la narrativa muestra sufrimiento pero los números son altos → posible racionalización o desconexión
-- Si ambos coinciden → mayor confianza en el patrón detectado
+FUENTE CONFIRMATORIA — AFIRMACIONES CUANTITATIVAS (25 reactivos Likert):
+Los datos corroboran o contradicen lo que la narrativa reveló. Cruza:
+- Si la narrativa dice "todo está bien" pero los números muestran áreas débiles: detectar evasión o disociación
+- Si la narrativa muestra sufrimiento pero los números son altos: posible minimización
+- Si coinciden: mayor confianza en el patrón detectado
 
-Genera TRES LECTURAS SEPARADAS más correlaciones por área:
+INSTRUCCIONES CRÍTICAS:
+1. CITA PALABRAS EXACTAS: siempre que puedas, incluye frases literales de las respuestas entre comillas. Ej: «cuando dijiste "no sé cómo explicarlo pero algo cambió"...»
+2. USA **NEGRITA**: marca con **dobles asteriscos** los conceptos clave y observaciones centrales para destacarlos visualmente.
+3. LENGUAJE ACCESIBLE: cálido, humano, sin jerga técnica ni términos académicos. Escribe como un psicólogo que habla directamente con la persona, no como un manual clínico.
+4. SÉ ESPECÍFICO: cada observación debe poder ser reconocida como "esto es exactamente lo que yo dije y lo que yo vivo".
+5. APERTURA EMPÁTICA PRIMERO: lo primero que la persona leerá debe hacerla sentir profundamente comprendida — valida su experiencia, cita sus palabras, ve el ser humano antes que el patrón.
 
-LECTURA 1 — ANÁLISIS NARRATIVO (fuente primaria): Qué revelan las palabras de la persona. Estructura del deseo, patrones inconscientes, mecanismos de defensa extraídos de sus respuestas conversacionales.
-
-LECTURA 2 — PERFIL CUANTITATIVO (fuente confirmatoria): Qué dicen los números. Pero siempre en relación con la narrativa: "los datos corroboran que..." o "los datos contradicen lo que la persona expresó en..."
-
-LECTURA 3 — LECTURA INTEGRAL (cruce): Donde ambas fuentes se encuentran. Coherencias, contradicciones reveladoras, la historia profunda que emerge al cruzar lo dicho con lo medido.
-
-Principios:
-- La narrativa es la fuente PRIMARIA, los datos son CONFIRMATORIOS
-- Detectar patrones de idealización, necesidad vs. deseo, búsqueda de completud
-- Identificar mecanismos de defensa específicos
-- Señalar patrones inconscientes (demanda, goce, repetición)
-- Resolver hacia la SUBJETIVIDAD, no hacia el diagnóstico frío
-- Ser empático pero honesto, sin juicio moral
-- Usar lenguaje accesible pero con profundidad psicoanalítica
-- NO dar diagnósticos clínicos, esto es orientativo
-- Para cada área del radar, explicar POR QUÉ tiene esa puntuación citando evidencia narrativa + cuantitativa
+Para cada área del diagnóstico, explica POR QUÉ tiene esa puntuación citando evidencia concreta de las respuestas.
 
 IMPORTANTE: Responde EXCLUSIVAMENTE en formato JSON válido con la estructura solicitada.`
 
@@ -83,25 +71,26 @@ function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophical
   }
 
   const areaKeys = Object.keys(areaScores)
-  const areaCorrelationsSchema = areaKeys.map(k => `"${k}": "(1-2 párrafos: por qué esta área tiene esta puntuación. Cita evidencia CONCRETA de las respuestas narrativas + datos cuantitativos. Ejemplo: 'En comunicación obtuviste 45% porque mencionaste que evitas ciertos temas, y los datos confirman...')"`).join(',\n    ')
+  const areaCorrelationsSchema = areaKeys.map(k => `"${k}": "(1-2 párrafos profundos. Explica POR QUÉ esta área tiene esa puntuación. CITA PALABRAS EXACTAS de las respuestas entre comillas. Ej: 'En comunicación obtuviste 45% — cuando dijiste \\"hay temas que simplemente no tocamos\\" quedó claro que existe un acuerdo silencioso de evitar ciertos conflictos que se sienten peligrosos. Los datos confirman...')"`).join(',\n    ')
 
-  prompt += `\nGenera tu análisis psicoanalítico en el siguiente formato JSON exacto:
+  prompt += `\nGenera tu análisis psicológico en el siguiente formato JSON exacto:
 {
-  "lecturaNarrativa": "(3-4 párrafos: análisis PROFUNDO de las respuestas narrativas. Esta es la lectura PRIMARIA. Extrae estructura del deseo, mecanismos de defensa, patrones de repetición, idealización, pérdida de autonomía. Referencia las respuestas específicas de la persona)",
-  "lecturaCuestionario": "(2-3 párrafos: qué dicen los datos cuantitativos, SIEMPRE en relación con la narrativa. Usa frases como 'los datos corroboran que...', 'esto confirma lo que expresó cuando dijo...', o 'contradice lo que mencionó sobre...')",
-  "lecturaIntegral": "(3-4 párrafos: cruce de ambas fuentes. Coherencias y contradicciones reveladoras. La historia profunda que emerge. Si la persona dijo 'todo está bien' pero los números muestran otra cosa, analiza la defensa)",
+  "aperturaEmpatica": "(2-3 párrafos. Haz que la persona se sienta profundamente escuchada ANTES de cualquier análisis. CITA sus palabras exactas entre comillas en la primera propuesta. Ejemplo de inicio: 'Algo que compartiste resonó especialmente: cuando dijiste \\"[cita exacta]\\" había mucho más de lo que parece a primera vista...' Introduce la observación principal de forma cálida. **Usa negrita** para los conceptos más importantes. Sin tecnicismos. Este es lo primero que leerá.)",
+  "lecturaNarrativa": "(3-4 párrafos: análisis PROFUNDO de las respuestas narrativas. Extrae patrones de comportamiento, tendencias relacionales, pérdida de autonomía. **Cita palabras exactas** entre comillas donde sea posible. **Usa negrita** para conceptos clave. Evita jerga técnica.)",
+  "lecturaCuestionario": "(2-3 párrafos: qué dicen los datos cuantitativos, SIEMPRE en relación con la narrativa. Usa frases como 'los datos corroboran que...', 'esto confirma lo que dijiste cuando mencionaste que...', o 'llama la atención que los números muestren algo distinto a lo que expresaste sobre...')",
+  "lecturaIntegral": "(3-4 párrafos: síntesis de ambas fuentes. La historia que emerge al cruzar lo dicho con lo medido. Escrito como recomendación profesional directa hacia la persona. **Usa negrita** en las observaciones más importantes. Cierra con una frase que oriente hacia la sesión.)",
   "areaCorrelations": {
     ${areaCorrelationsSchema}
   },
   "idealizationLevel": "alto" o "medio" o "bajo",
   "idealizationScore": (número entero 0-100 donde 100 = máxima idealización problemática),
-  "unconsciousPatterns": ["patrón 1", "patrón 2", "patrón 3", "patrón 4"],
-  "defenseMechanisms": ["mecanismo de defensa 1 detectado con breve explicación", "mecanismo 2", "mecanismo 3"],
-  "strengthsFound": ["fortaleza 1", "fortaleza 2", "fortaleza 3"],
-  "riskAreas": ["área de riesgo 1 con breve explicación", "área de riesgo 2"],
-  "keyInsight": "(1 párrafo con la observación psicoanalítica más reveladora — debe conectar narrativa con datos)",
+  "unconsciousPatterns": ["patrón 1 descrito en lenguaje accesible y específico", "patrón 2", "patrón 3", "patrón 4"],
+  "defenseMechanisms": ["nombre del mecanismo + cómo aparece específicamente en esta persona según sus respuestas", "mecanismo 2", "mecanismo 3"],
+  "strengthsFound": ["fortaleza 1 específica de esta persona basada en lo que dijo", "fortaleza 2", "fortaleza 3"],
+  "riskAreas": ["área de riesgo 1 con explicación accesible", "área de riesgo 2"],
+  "keyInsight": "(1 párrafo con la observación más reveladora)",
   "recommendation": "(1-2 párrafos con recomendación profesional personalizada basada en lo que la persona contó)",
-  "existentialReflection": "(1 párrafo poético/filosófico sobre el amor y el deseo en esta relación específica)"
+  "sessionWorkItems": ["Tema 1 concreto y específico para explorar en sesión — basado en algo que ESTA persona dijo, no genérico", "Tema 2", "Tema 3", "Tema 4 (opcional)"]
 }`
 
   return prompt
@@ -159,14 +148,23 @@ function generateFallbackAnalysis(areaScores) {
   const actualIdealScore = 100 - idealPct
   const actualIdealLevel = idealPct <= 33 ? 'alto' : idealPct <= 66 ? 'medio' : 'bajo'
 
+  const sessionItemsFallback = []
+  if (areaScores.comunicacion <= 3.0) sessionItemsFallback.push('Explorar qué temas se evitan en la conversación y por qué esos temas se sienten peligrosos de abordar')
+  if (areaScores.intimidad <= 3.0) sessionItemsFallback.push('Identificar en qué momento y por qué se fue interrumpiendo la conexión emocional profunda')
+  if (areaScores.conflicto <= 2.5) sessionItemsFallback.push('Revisar los conflictos que siguen pendientes y el costo silencioso que tiene esa deuda no resuelta')
+  if (areaScores.autonomia <= 3.0) sessionItemsFallback.push('Explorar cómo se mantiene (o se ha ido perdiendo) la identidad individual dentro de la relación')
+  if (areaScores.seguridad <= 3.0) sessionItemsFallback.push('Trabajar en los patrones de confianza y seguridad emocional que sostienen el vínculo')
+  if (sessionItemsFallback.length < 2) sessionItemsFallback.push('Profundizar en los patrones que operan por debajo de lo visible en esta relación')
+  if (sessionItemsFallback.length < 3) sessionItemsFallback.push('Construir herramientas concretas para la comunicación en los momentos más difíciles')
+
   const patterns = []
   if (areaScores.comunicacion <= 2.5) patterns.push('Dificultad para expresar necesidades emocionales profundas')
   if (areaScores.intimidad <= 2.5) patterns.push('Distanciamiento emocional como mecanismo de protección')
   if (areaScores.conflicto <= 2.5) patterns.push('Evitación de conflictos que genera acumulación de resentimiento')
-  if (areaScores.idealizacion <= 2.5) patterns.push('Tendencia a idealizar al otro como fuente de completud')
-  if (areaScores.autonomia <= 2.5) patterns.push('Desdibujamiento de límites individuales dentro de la relación')
-  if (areaScores.seguridad <= 2.5) patterns.push('Inseguridad vincular que genera demanda excesiva')
-  if (patterns.length === 0) patterns.push('Patrones vinculares relativamente saludables con espacio para profundizar')
+  if (areaScores.idealizacion <= 2.5) patterns.push('Expectativas muy elevadas puestas en el otro que generan frustración recurrente')
+  if (areaScores.autonomia <= 2.5) patterns.push('Pérdida gradual de la identidad individual dentro de la relación')
+  if (areaScores.seguridad <= 2.5) patterns.push('Búsqueda de seguridad en el otro que genera dependencia emocional')
+  if (patterns.length === 0) patterns.push('Patrones relacionales relativamente saludables con espacio para profundizar')
 
   const strengths = []
   if (areaScores.comunicacion >= 3.5) strengths.push('Capacidad de diálogo y escucha activa')
@@ -207,6 +205,8 @@ function generateFallbackAnalysis(areaScores) {
   }\n\nLo que emerge al integrar ambas lecturas es que los patrones detectados no son defectos a corregir, sino dinámicas a comprender. Cada relación construye su propio lenguaje inconsciente, y descifrarlo es el primer paso para transformarlo.\n\nLa pregunta más importante no es "¿funciona esta relación?" sino "¿qué tipo de relación con el deseo opera en cada uno de ustedes?" Los números muestran tendencias; las reflexiones muestran subjetividad. La sesión profesional es donde ambas dimensiones se encuentran y revelan su significado singular.`
 
   return {
+    aperturaEmpatica: 'Gracias por compartir lo que traes. Aunque no fue posible generar el análisis completo con inteligencia artificial en este momento, lo que describes merece una exploración cuidadosa.\n\nLos patrones que surgen en tus respuestas — tanto en lo que compartiste como en lo que insinuaste sin profundizar — apuntan a dinámicas que vale la pena explorar con cuidado. **Cada relación tiene su propio lenguaje invisible**, y entenderlo es el primer paso para poder elegir de manera más consciente.\n\nEste perfil es una brújula, no un diagnóstico definitivo. Lo que leerás a continuación te dará un primer mapa de tu relación.',
+    sessionWorkItems: sessionItemsFallback.slice(0, 4),
     idealizationLevel: actualIdealLevel,
     idealizationScore: actualIdealScore,
     lecturaNarrativa: lecturaNarrativa,
