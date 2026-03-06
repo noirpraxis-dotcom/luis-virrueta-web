@@ -248,6 +248,14 @@ function renderBold(text) {
   )
 }
 
+// Extrae {title, description} de items con formato "**Título**: descripción"
+function parseItemTitle(text) {
+  if (!text) return { title: null, description: text }
+  const match = text.match(/^\*\*(.+?)\*\*:?\s*(.*)$/s)
+  if (match) return { title: match[1], description: match[2] }
+  return { title: null, description: text }
+}
+
 // ─── OPCIONES ─────────────────────────────────────────────────────
 
 const ANSWER_OPTIONS = [
@@ -427,7 +435,7 @@ function generateInterpretation(areaScores) {
 
 // ─── RADAR CHART SVG ──────────────────────────────────────────────
 
-function RadarChart({ data, size = 280 }) {
+function RadarChart({ data, size = 320 }) {
   const cx = size / 2
   const cy = size / 2
   const r = size * 0.32
@@ -447,37 +455,52 @@ function RadarChart({ data, size = 280 }) {
   }
 
   const grid = [25, 50, 75, 100]
+  const sorted = [...data].sort((a, b) => b.value - a.value)
 
   return (
-    <svg viewBox={`0 0 ${size} ${size}`} className="w-full max-w-[300px] mx-auto">
-      {grid.map(level => (
-        <polygon key={level}
-          points={data.map((_, i) => pt(i, level).join(',')).join(' ')}
-          fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="0.5"
+    <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
+      <svg viewBox={`0 0 ${size} ${size}`} className="w-full max-w-[320px] flex-shrink-0">
+        {grid.map(level => (
+          <polygon key={level}
+            points={data.map((_, i) => pt(i, level).join(',')).join(' ')}
+            fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="0.5"
+          />
+        ))}
+        {data.map((_, i) => (
+          <line key={`ax-${i}`} x1={cx} y1={cy} x2={pt(i, 100)[0]} y2={pt(i, 100)[1]}
+            stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />
+        ))}
+        <polygon
+          points={data.map((d, i) => pt(i, d.value).join(',')).join(' ')}
+          fill="rgba(236,72,153,0.12)" stroke="rgba(236,72,153,0.7)" strokeWidth="1.5"
         />
-      ))}
-      {data.map((_, i) => (
-        <line key={`ax-${i}`} x1={cx} y1={cy} x2={pt(i, 100)[0]} y2={pt(i, 100)[1]}
-          stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />
-      ))}
-      <polygon
-        points={data.map((d, i) => pt(i, d.value).join(',')).join(' ')}
-        fill="rgba(236,72,153,0.12)" stroke="rgba(236,72,153,0.7)" strokeWidth="1.5"
-      />
-      {data.map((d, i) => (
-        <circle key={`pt-${i}`} cx={pt(i, d.value)[0]} cy={pt(i, d.value)[1]} r="3.5"
-          fill="rgb(236,72,153)" stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
-      ))}
-      {data.map((d, i) => {
-        const [lx, ly] = labelPt(i)
-        return (
-          <text key={`lb-${i}`} x={lx} y={ly} textAnchor="middle" dominantBaseline="middle"
-            fill="rgba(255,255,255,0.45)" fontSize="7.5" fontFamily="Outfit, sans-serif" fontWeight="300">
-            {d.label}
-          </text>
-        )
-      })}
-    </svg>
+        {data.map((d, i) => (
+          <circle key={`pt-${i}`} cx={pt(i, d.value)[0]} cy={pt(i, d.value)[1]} r="3.5"
+            fill="rgb(236,72,153)" stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
+        ))}
+        {data.map((d, i) => {
+          const [lx, ly] = labelPt(i)
+          return (
+            <text key={`lb-${i}`} x={lx} y={ly} textAnchor="middle" dominantBaseline="middle"
+              fill="rgba(255,255,255,0.45)" fontSize="8" fontFamily="Outfit, sans-serif" fontWeight="300">
+              {d.label}
+            </text>
+          )
+        })}
+      </svg>
+      <div className="flex-1 w-full sm:w-auto">
+        <p className="text-white/25 text-[10px] font-light uppercase tracking-[0.18em] mb-3">Puntuaciones por área</p>
+        <div className="space-y-3">
+          {sorted.map((d, i) => (
+            <div key={i} className="flex items-center gap-3">
+              <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${d.value >= 60 ? 'bg-emerald-400/70' : d.value >= 40 ? 'bg-amber-400/70' : 'bg-red-400/60'}`} />
+              <span className="text-white/55 text-xs font-light flex-1 leading-none">{d.label}</span>
+              <span className={`text-xs font-light tabular-nums ${d.value >= 60 ? 'text-emerald-400' : d.value >= 40 ? 'text-amber-400' : 'text-red-400/80'}`}>{d.value}%</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -886,6 +909,8 @@ const ConsultaParejaPage = () => {
 
   const whatsappMessage = encodeURIComponent('Hola, acabo de realizar el diagnóstico de relación en tu página y me gustaría recibir más información sobre la consulta de pareja.')
   const whatsappAgendarMessage = encodeURIComponent('Hola, me gustaría agendar una sesión de diagnóstico de pareja.')
+  const whatsappIndividualMessage = encodeURIComponent('Hola, me gustaría agendar una sesión individual de diagnóstico de relación.')
+  const whatsappParejaMessage = encodeURIComponent('Hola, me gustaría agendar una sesión de diagnóstico de pareja para los dos.')
 
   // Areas for display (free hides idealización)
   const displayAreas = mode === 'premium' ? AREAS : AREAS.filter(a => a.key !== 'idealizacion')
@@ -1711,32 +1736,59 @@ const ConsultaParejaPage = () => {
               {/* Result Header */}
               <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center mb-16">
                 <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 150, delay: 0.2 }}
-                  className="text-5xl mb-6">{result.emoji}</motion.div>
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 border border-white/10 rounded-full bg-white/5 mb-6">
+                  className="text-4xl mb-5">{result.emoji}</motion.div>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 border border-white/10 rounded-full bg-white/5 mb-4">
                   <span className="text-xs text-white/50 font-light uppercase tracking-[0.15em]">
                     {isPremiumUnlocked ? 'Diagnóstico Premium' : 'Diagnóstico Gratuito'}
                   </span>
                 </div>
-                <h2 className={`text-4xl lg:text-5xl font-light mb-6 font-display tracking-wide bg-gradient-to-r ${result.color} bg-clip-text text-transparent`}>
+                <h2 className={`text-2xl lg:text-3xl font-light mb-8 font-display tracking-wide bg-gradient-to-r ${result.color} bg-clip-text text-transparent`}>
                   {result.title}
                 </h2>
-                <p className="text-white/60 text-base lg:text-lg font-light leading-relaxed max-w-xl mx-auto mb-4">{result.description}</p>
-                <p className="text-white/50 text-sm font-light leading-relaxed max-w-xl mx-auto">{result.detail}</p>
+                {isPremiumUnlocked && aiAnalysis?.diagnosticoNarrado ? (
+                  <div className="text-left max-w-2xl mx-auto">
+                    {aiAnalysis.diagnosticoNarrado.split('\n\n').map((p, i) => (
+                      <p key={i} className="text-white/68 text-base lg:text-[17px] font-light leading-[1.95] tracking-wide mb-5 last:mb-0">
+                        {renderBold(p)}
+                      </p>
+                    ))}
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-white/60 text-base lg:text-lg font-light leading-relaxed max-w-xl mx-auto mb-4">{result.description}</p>
+                    <p className="text-white/50 text-sm font-light leading-relaxed max-w-xl mx-auto">{result.detail}</p>
+                  </>
+                )}
               </motion.div>
 
               {/* ─── APERTURA EMPÁTICA (Premium — first thing shown) ─── */}
               {isPremiumUnlocked && aiAnalysis?.aperturaEmpatica && (
                 <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
                   className="mb-10 p-8 border border-violet-500/20 rounded-2xl bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02]">
-                  <div className="flex items-center gap-3 mb-5">
+                  <div className="flex items-center gap-3 mb-6">
                     <Heart className="w-5 h-5 text-violet-400/70" strokeWidth={1.5} />
                     <h3 className="text-lg font-semibold text-white tracking-wide font-display">Lo que tu historia reveló</h3>
                   </div>
-                  {(aiAnalysis.aperturaEmpatica || '').split('\n\n').map((p, i) => (
-                    <p key={i} className="text-white/72 text-base font-light leading-[1.95] tracking-wide mb-4 last:mb-0">
-                      {renderBold(p)}
-                    </p>
-                  ))}
+                  {aiAnalysis.aperturaEmpaticaPuntos?.length > 0 ? (
+                    <div className="space-y-5">
+                      {aiAnalysis.aperturaEmpaticaPuntos.map((punto, i) => (
+                        <div key={i} className="flex items-start gap-4">
+                          <span className="w-1.5 h-1.5 rounded-full bg-violet-400/60 mt-2 flex-shrink-0" />
+                          <div className="flex-1">
+                            <span className="text-white/90 text-sm font-semibold tracking-wide">{punto.titulo}</span>
+                            <span className="text-white/45 text-sm"> — </span>
+                            <span className="text-white/65 text-sm font-light leading-relaxed">{renderBold(punto.texto)}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    (aiAnalysis.aperturaEmpatica || '').split('\n\n').map((p, i) => (
+                      <p key={i} className="text-white/72 text-base font-light leading-[1.95] tracking-wide mb-4 last:mb-0">
+                        {renderBold(p)}
+                      </p>
+                    ))
+                  )}
                 </motion.div>
               )}
 
@@ -1752,8 +1804,8 @@ const ConsultaParejaPage = () => {
                 </motion.div>
               )}
 
-              {/* ─── AREA BARS (con correlaciones del análisis IA) ─── */}
-              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mb-16">
+              {/* ─── AREA BARS (clean — no inline correlations) ─── */}
+              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mb-4">
                 <div className="flex items-center gap-3 mb-8">
                   <BarChart3 className="w-5 h-5 text-pink-400/60" strokeWidth={1.5} />
                   <h3 className="text-xl font-light text-white tracking-wide font-display">Perfil de tu relación</h3>
@@ -1763,7 +1815,6 @@ const ConsultaParejaPage = () => {
                     const score = areaScores[area.key]
                     const pct = getPercent(score)
                     const level = getLevel(score)
-                    const correlation = isPremiumUnlocked && aiAnalysis?.areaCorrelations?.[area.key]
                     return (
                       <motion.div key={area.key} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.5 + i * 0.08 }}>
@@ -1782,22 +1833,32 @@ const ConsultaParejaPage = () => {
                             transition={{ duration: 1, delay: 0.6 + i * 0.08, ease: 'easeOut' }}
                             className={`h-full rounded-full bg-gradient-to-r ${area.color}`} />
                         </div>
-                        {correlation && (
-                          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 + i * 0.08 }}
-                            className="text-white/45 text-sm font-light leading-relaxed mt-2.5 pl-6 border-l border-white/5">
-                            {renderBold(correlation)}
-                          </motion.p>
-                        )}
                       </motion.div>
                     )
                   })}
                 </div>
+
+                {/* Correlaciones principales (Premium) */}
+                {isPremiumUnlocked && aiAnalysis?.correlacionesPrincipales?.length > 0 && (
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2 }}
+                    className="mt-8 pt-7 border-t border-white/6">
+                    <p className="text-white/28 text-[10px] font-light uppercase tracking-[0.18em] mb-4">Conexiones detectadas</p>
+                    <div className="space-y-3">
+                      {aiAnalysis.correlacionesPrincipales.map((insight, i) => (
+                        <div key={i} className="flex items-start gap-3 p-4 rounded-xl border border-white/5 bg-white/[0.01]">
+                          <span className="w-1 h-1 rounded-full bg-pink-400/50 mt-2 flex-shrink-0" />
+                          <p className="text-white/55 text-sm font-light leading-relaxed">{renderBold(insight)}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
               </motion.div>
 
               {/* ─── IDEALIZATION GAUGE (Premium) ─── */}
               {isPremiumUnlocked && aiAnalysis && (
                 <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
-                  className="mb-16 p-8 border border-fuchsia-500/10 rounded-2xl bg-gradient-to-br from-fuchsia-500/[0.02] to-transparent">
+                  className="mt-10 mb-4 p-8 border border-fuchsia-500/10 rounded-2xl bg-gradient-to-br from-fuchsia-500/[0.02] to-transparent">
                   <div className="flex items-center gap-3 mb-6">
                     <Eye className="w-5 h-5 text-fuchsia-400/60" strokeWidth={1.5} />
                     <h3 className="text-lg font-light text-white tracking-wide font-display">Nivel de Idealización</h3>
@@ -1823,8 +1884,60 @@ const ConsultaParejaPage = () => {
                       <span className="text-white/30 text-lg font-light tabular-nums">{aiAnalysis.idealizationScore}%</span>
                     </div>
                   </div>
+                  {aiAnalysis.idealizationExplanation && (
+                    <div className="mt-6 pt-6 border-t border-white/6">
+                      {aiAnalysis.idealizationExplanation.split('\n\n').map((p, i) => (
+                        <p key={i} className="text-white/60 text-sm font-light leading-[1.9] mb-3 last:mb-0">{renderBold(p)}</p>
+                      ))}
+                    </div>
+                  )}
                 </motion.div>
               )}
+
+              {/* ─── BALANCE DE LA RELACIÓN — visible para todos ─── */}
+              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
+                className="mt-10 mb-4 p-8 border border-white/8 rounded-2xl bg-white/[0.02]">
+                <div className="flex items-center gap-3 mb-6">
+                  <TrendingUp className="w-5 h-5 text-emerald-400/60" strokeWidth={1.5} />
+                  <h3 className="text-lg font-light text-white tracking-wide font-display">Balance de la relación</h3>
+                </div>
+                <div className="space-y-3">
+                  {AREAS.map(area => {
+                    const score = areaScores[area.key]
+                    const pct = getPercent(score)
+                    const isStrength = pct >= 60
+                    return (
+                      <div key={area.key} className="flex items-center gap-3">
+                        <span className="text-white/50 text-xs font-light w-28 text-right truncate">{area.label}</span>
+                        <div className="flex-1 flex items-center">
+                          <div className="w-1/2 flex justify-end">
+                            {!isStrength && (
+                              <div className="h-3 rounded-l-full bg-gradient-to-l from-red-500/60 to-red-500/20"
+                                style={{ width: `${Math.max(5, (100 - pct))}%` }} />
+                            )}
+                          </div>
+                          <div className="w-px h-5 bg-white/20 flex-shrink-0" />
+                          <div className="w-1/2">
+                            {isStrength && (
+                              <div className="h-3 rounded-r-full bg-gradient-to-r from-emerald-500/60 to-emerald-500/20"
+                                style={{ width: `${Math.max(5, pct)}%` }} />
+                            )}
+                          </div>
+                        </div>
+                        <span className="text-white/40 text-xs font-light w-10 tabular-nums">{pct}%</span>
+                      </div>
+                    )
+                  })}
+                  <div className="flex items-center gap-3 mt-2">
+                    <span className="w-28" />
+                    <div className="flex-1 flex items-center justify-between text-[10px] text-white/30 font-light">
+                      <span>← Riesgo</span>
+                      <span>Fortaleza →</span>
+                    </div>
+                    <span className="w-10" />
+                  </div>
+                </div>
+              </motion.div>
 
               {/* ─── LOCKED PAYWALL (Free users) ─── */}
               {!isPremiumUnlocked && (
@@ -1867,26 +1980,38 @@ const ConsultaParejaPage = () => {
                   {/* Patrones + Fortalezas (quick overview before deep readings) */}
                   <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
                     className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
-                    <div className="p-6 border border-red-500/10 rounded-2xl bg-red-500/[0.02]">
-                      <h4 className="text-white/70 text-xs font-light uppercase tracking-[0.15em] mb-4">Patrones Inconscientes</h4>
-                      <ul className="space-y-2.5">
-                        {(aiAnalysis.unconsciousPatterns || []).map((p, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <span className="w-1 h-1 rounded-full bg-red-400/50 mt-2 flex-shrink-0" />
-                            <span className="text-white/55 text-xs font-light leading-relaxed">{p}</span>
-                          </li>
-                        ))}
+                    <div className="p-6 border border-red-500/12 rounded-2xl bg-red-500/[0.02]">
+                      <h4 className="text-red-300/60 text-[10px] font-light uppercase tracking-[0.18em] mb-5">Patrones Inconscientes</h4>
+                      <ul className="space-y-4">
+                        {(aiAnalysis.unconsciousPatterns || []).map((p, i) => {
+                          const { title, description } = parseItemTitle(p)
+                          return (
+                            <li key={i} className="flex items-start gap-2.5">
+                              <span className="w-1 h-1 rounded-full bg-red-400/50 mt-2 flex-shrink-0" />
+                              <div>
+                                {title && <span className="text-white/85 text-xs font-semibold block mb-0.5">{title}</span>}
+                                <span className="text-white/50 text-xs font-light leading-relaxed">{description || p}</span>
+                              </div>
+                            </li>
+                          )
+                        })}
                       </ul>
                     </div>
-                    <div className="p-6 border border-emerald-500/10 rounded-2xl bg-emerald-500/[0.02]">
-                      <h4 className="text-white/70 text-xs font-light uppercase tracking-[0.15em] mb-4">Fortalezas Encontradas</h4>
-                      <ul className="space-y-2.5">
-                        {(aiAnalysis.strengthsFound || []).map((s, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <span className="w-1 h-1 rounded-full bg-emerald-400/50 mt-2 flex-shrink-0" />
-                            <span className="text-white/55 text-xs font-light leading-relaxed">{s}</span>
-                          </li>
-                        ))}
+                    <div className="p-6 border border-emerald-500/12 rounded-2xl bg-emerald-500/[0.02]">
+                      <h4 className="text-emerald-300/60 text-[10px] font-light uppercase tracking-[0.18em] mb-5">Fortalezas Encontradas</h4>
+                      <ul className="space-y-4">
+                        {(aiAnalysis.strengthsFound || []).map((s, i) => {
+                          const { title, description } = parseItemTitle(s)
+                          return (
+                            <li key={i} className="flex items-start gap-2.5">
+                              <span className="w-1 h-1 rounded-full bg-emerald-400/50 mt-2 flex-shrink-0" />
+                              <div>
+                                {title && <span className="text-white/85 text-xs font-semibold block mb-0.5">{title}</span>}
+                                <span className="text-white/50 text-xs font-light leading-relaxed">{description || s}</span>
+                              </div>
+                            </li>
+                          )
+                        })}
                       </ul>
                     </div>
                   </motion.div>
@@ -1900,12 +2025,15 @@ const ConsultaParejaPage = () => {
                         <h3 className="text-lg font-light text-white tracking-wide font-display">Mecanismos de Defensa Detectados</h3>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {aiAnalysis.defenseMechanisms.map((m, i) => (
-                          <div key={i} className="flex items-start gap-3 p-3 rounded-xl border border-orange-500/8 bg-orange-500/[0.02]">
-                            <span className="w-2 h-2 rounded-full bg-orange-400/40 mt-1.5 flex-shrink-0" />
-                            <span className="text-white/55 text-sm font-light leading-relaxed">{m}</span>
-                          </div>
-                        ))}
+                        {aiAnalysis.defenseMechanisms.map((m, i) => {
+                          const { title, description } = parseItemTitle(m)
+                          return (
+                            <div key={i} className="p-4 rounded-xl border border-orange-500/10 bg-orange-500/[0.02]">
+                              {title && <p className="text-orange-300/80 text-xs font-semibold uppercase tracking-[0.1em] mb-1">{title}</p>}
+                              <p className="text-white/55 text-xs font-light leading-relaxed">{description || m}</p>
+                            </div>
+                          )
+                        })}
                       </div>
                     </motion.div>
                   )}
@@ -1918,61 +2046,19 @@ const ConsultaParejaPage = () => {
                         <TrendingDown className="w-5 h-5 text-red-400/60" strokeWidth={1.5} />
                         <h3 className="text-lg font-light text-white tracking-wide font-display">Áreas de Riesgo</h3>
                       </div>
-                      <div className="space-y-3">
-                        {aiAnalysis.riskAreas.map((r, i) => (
-                          <div key={i} className="flex items-center gap-3 p-3 rounded-xl border border-red-500/8 bg-red-500/[0.02]">
-                            <span className="w-2 h-2 rounded-full bg-red-400/50 flex-shrink-0" />
-                            <span className="text-white/55 text-sm font-light leading-relaxed">{r}</span>
-                          </div>
-                        ))}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {aiAnalysis.riskAreas.map((r, i) => {
+                          const { title, description } = parseItemTitle(r)
+                          return (
+                            <div key={i} className="p-4 rounded-xl border border-red-500/10 bg-red-500/[0.02]">
+                              {title && <p className="text-red-300/80 text-xs font-semibold uppercase tracking-[0.1em] mb-1">{title}</p>}
+                              <p className="text-white/55 text-xs font-light leading-relaxed">{description || renderBold(r)}</p>
+                            </div>
+                          )
+                        })}
                       </div>
                     </motion.div>
                   )}
-
-                  {/* Fortalezas vs Riesgos Chart */}
-                  <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.95 }}
-                    className="mb-8 p-8 border border-white/8 rounded-2xl bg-white/[0.02]">
-                    <div className="flex items-center gap-3 mb-6">
-                      <TrendingUp className="w-5 h-5 text-emerald-400/60" strokeWidth={1.5} />
-                      <h3 className="text-lg font-light text-white tracking-wide font-display">Balance de la Relación</h3>
-                    </div>
-                    <div className="space-y-3">
-                      {AREAS.map(area => {
-                        const score = areaScores[area.key]
-                        const pct = getPercent(score)
-                        const isStrength = pct >= 60
-                        return (
-                          <div key={area.key} className="flex items-center gap-3">
-                            <span className="text-white/50 text-xs font-light w-28 text-right truncate">{area.label}</span>
-                            <div className="flex-1 flex items-center">
-                              <div className="w-1/2 flex justify-end">
-                                {!isStrength && (
-                                  <div className="h-3 rounded-l-full bg-gradient-to-l from-red-500/60 to-red-500/20"
-                                    style={{ width: `${Math.max(5, (100 - pct))}%` }} />
-                                )}
-                              </div>
-                              <div className="w-px h-5 bg-white/20 flex-shrink-0" />
-                              <div className="w-1/2">
-                                {isStrength && (
-                                  <div className="h-3 rounded-r-full bg-gradient-to-r from-emerald-500/60 to-emerald-500/20"
-                                    style={{ width: `${Math.max(5, pct)}%` }} />
-                                )}
-                              </div>
-                            </div>
-                            <span className="text-white/40 text-xs font-light w-10 tabular-nums">{pct}%</span>
-                          </div>
-                        )
-                      })}
-                      <div className="flex items-center gap-3 mt-2">
-                        <span className="w-28" />
-                        <div className="flex-1 flex items-center justify-between text-[10px] text-white/30 font-light">
-                          <span>← Riesgo</span>
-                          <span>Fortaleza →</span>
-                        </div>
-                        <span className="w-10" />
-                      </div>
-                    </div>
-                  </motion.div>
 
                   {/* LECTURA 1: Análisis de tu relato (PRIMARIA) */}
                   <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.0 }}
@@ -2010,24 +2096,72 @@ const ConsultaParejaPage = () => {
                     ))}
                   </motion.div>
 
-                  {/* SESSION WORK ITEMS — Lo que trabajaremos en sesión */}
+                  {/* SESSION WORK ITEMS — individual + pareja */}
                   {aiAnalysis.sessionWorkItems && aiAnalysis.sessionWorkItems.length > 0 && (
                     <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3 }}
-                      className="mb-10 p-8 border border-emerald-500/15 rounded-2xl bg-gradient-to-br from-emerald-500/[0.03] to-transparent">
-                      <div className="flex items-center gap-3 mb-5">
+                      className="mb-10">
+                      <div className="flex items-center gap-3 mb-6">
                         <Sparkles className="w-5 h-5 text-emerald-400/60" strokeWidth={1.5} />
                         <h3 className="text-lg font-semibold text-white tracking-wide font-display">Lo que trabajaremos en sesión</h3>
                       </div>
-                      <ul className="space-y-3">
-                        {aiAnalysis.sessionWorkItems.map((item, i) => (
-                          <li key={i} className="flex items-start gap-3">
-                            <span className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-                              <span className="text-emerald-400/80 text-[10px] font-medium">{i + 1}</span>
-                            </span>
-                            <span className="text-white/65 text-sm font-light leading-relaxed">{renderBold(item)}</span>
-                          </li>
-                        ))}
-                      </ul>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
+                        {/* Individual */}
+                        <div className="p-6 border border-emerald-500/15 rounded-2xl bg-gradient-to-br from-emerald-500/[0.03] to-transparent">
+                          <p className="text-emerald-300/60 text-[10px] font-light uppercase tracking-[0.18em] mb-5">Si vienes tú solo/a</p>
+                          <ul className="space-y-4">
+                            {aiAnalysis.sessionWorkItems.map((item, i) => {
+                              const { title, description } = parseItemTitle(item)
+                              return (
+                                <li key={i} className="flex items-start gap-3">
+                                  <span className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <span className="text-emerald-400/80 text-[10px] font-medium">{i + 1}</span>
+                                  </span>
+                                  <div>
+                                    {title && <span className="text-white/85 text-xs font-semibold block mb-0.5">{title}</span>}
+                                    <span className="text-white/55 text-xs font-light leading-relaxed">{description || renderBold(item)}</span>
+                                  </div>
+                                </li>
+                              )
+                            })}
+                          </ul>
+                        </div>
+
+                        {/* Pareja */}
+                        <div className="p-6 border border-blue-500/15 rounded-2xl bg-gradient-to-br from-blue-500/[0.03] to-transparent">
+                          <p className="text-blue-300/60 text-[10px] font-light uppercase tracking-[0.18em] mb-5">Si vienen como pareja</p>
+                          <ul className="space-y-4">
+                            {(aiAnalysis.sessionWorkItemsPareja || aiAnalysis.sessionWorkItems).map((item, i) => {
+                              const { title, description } = parseItemTitle(item)
+                              return (
+                                <li key={i} className="flex items-start gap-3">
+                                  <span className="w-5 h-5 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <span className="text-blue-400/80 text-[10px] font-medium">{i + 1}</span>
+                                  </span>
+                                  <div>
+                                    {title && <span className="text-white/85 text-xs font-semibold block mb-0.5">{title}</span>}
+                                    <span className="text-white/55 text-xs font-light leading-relaxed">{description || renderBold(item)}</span>
+                                  </div>
+                                </li>
+                              )
+                            })}
+                          </ul>
+                        </div>
+                      </div>
+
+                      {/* Dos CTAs */}
+                      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <motion.a href={`https://wa.me/527228720520?text=${whatsappIndividualMessage}`} target="_blank" rel="noopener noreferrer"
+                          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                          className="inline-flex items-center justify-center gap-3 px-7 py-3.5 border border-emerald-500/30 rounded-full text-emerald-300/90 font-light text-xs uppercase tracking-[0.15em] hover:bg-emerald-500/8 hover:border-emerald-400/50 transition-all">
+                          Agendar sesión individual <ArrowRight className="w-3.5 h-3.5" />
+                        </motion.a>
+                        <motion.a href={`https://wa.me/527228720520?text=${whatsappParejaMessage}`} target="_blank" rel="noopener noreferrer"
+                          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                          className="inline-flex items-center justify-center gap-3 px-7 py-3.5 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full text-white font-light text-xs uppercase tracking-[0.15em] hover:shadow-[0_0_30px_rgba(244,63,94,0.25)] transition-shadow">
+                          Agendar sesión de pareja <ArrowRight className="w-3.5 h-3.5" />
+                        </motion.a>
+                      </div>
                     </motion.div>
                   )}
                 </>
@@ -2059,18 +2193,6 @@ const ConsultaParejaPage = () => {
                     whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     className="inline-flex items-center gap-3 px-8 py-3.5 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full text-white font-light text-sm uppercase tracking-[0.15em] hover:shadow-[0_0_30px_rgba(244,63,94,0.25)] transition-shadow">
                     Agendar sesión de diagnóstico <ArrowRight className="w-4 h-4" />
-                  </motion.a>
-                </motion.div>
-              )}
-
-              {/* ─── CTA for premium users ─── */}
-              {isPremiumUnlocked && aiAnalysis && (
-                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4 }}
-                  className="mb-16 text-center">
-                  <motion.a href={`https://wa.me/527228720520?text=${whatsappAgendarMessage}`} target="_blank" rel="noopener noreferrer"
-                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full text-white font-light text-sm uppercase tracking-[0.15em] hover:shadow-[0_0_30px_rgba(244,63,94,0.25)] transition-shadow">
-                    Agendar mi sesión con Luis <ArrowRight className="w-4 h-4" />
                   </motion.a>
                 </motion.div>
               )}
@@ -2142,37 +2264,72 @@ const ConsultaParejaPage = () => {
               </motion.div>
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-                className="p-8 border border-white/8 rounded-2xl bg-white/[0.02] mb-8">
+                className="p-8 border border-white/8 rounded-2xl bg-white/[0.02] mb-6">
                 <h3 className="text-white/90 text-sm font-light uppercase tracking-[0.2em] mb-8">Qué incluye la sesión</h3>
                 <div className="space-y-5">
-                  {['Análisis de dinámica de pareja', 'Identificación de patrones inconscientes', 'Herramientas prácticas de comunicación', 'Claridad sobre el futuro de la relación'].map((item, i) => (
+                  {[
+                    { label: 'Análisis de dinámica de pareja', desc: 'Exploramos qué patrones vinculares operan en la relación y de dónde provienen.' },
+                    { label: 'Lectura del diagnóstico juntos', desc: 'Revisamos los resultados de este cuestionario como punto de partida de la conversación.' },
+                    { label: 'Identificación de patrones inconscientes', desc: 'Aquello que se repite sin que ninguno lo elija conscientemente — y que suele ser la clave del malestar.' },
+                    { label: 'Espacio para lo que no se ha podido decir', desc: 'La sesión crea las condiciones para abordar lo que en el día a día se evita o se dice mal.' },
+                    { label: 'Claridad sobre el camino a seguir', desc: 'Al finalizar, habrá mayor comprensión de qué está ocurriendo y qué tipo de trabajo puede ayudar.' }
+                  ].map((item, i) => (
                     <div key={i} className="flex items-start gap-3">
                       <Check className="w-4 h-4 text-pink-400/60 mt-0.5 flex-shrink-0" strokeWidth={2} />
-                      <span className="text-white/60 text-sm font-light leading-relaxed">{item}</span>
+                      <div>
+                        <span className="text-white/80 text-sm font-light">{item.label}</span>
+                        <p className="text-white/40 text-xs font-light leading-relaxed mt-0.5">{item.desc}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
               </motion.div>
 
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-                className="grid grid-cols-2 gap-4 mb-12">
-                <div className="p-6 border border-white/8 rounded-2xl bg-white/[0.02] text-center">
-                  <Clock className="w-5 h-5 text-white/30 mx-auto mb-3" strokeWidth={1.5} />
-                  <span className="text-white/40 text-xs uppercase tracking-[0.15em] block mb-1">Duración</span>
-                  <span className="text-white/80 text-lg font-light">60 minutos</span>
-                </div>
-                <div className="p-6 border border-white/8 rounded-2xl bg-white/[0.02] text-center">
-                  <Eye className="w-5 h-5 text-white/30 mx-auto mb-3" strokeWidth={1.5} />
-                  <span className="text-white/40 text-xs uppercase tracking-[0.15em] block mb-1">Modalidad</span>
-                  <span className="text-white/80 text-lg font-light">Online</span>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
+                className="p-8 border border-violet-500/10 rounded-2xl bg-violet-500/[0.02] mb-6">
+                <h3 className="text-white/90 text-sm font-light uppercase tracking-[0.2em] mb-6">Cómo trabajo</h3>
+                <div className="space-y-4">
+                  <p className="text-white/55 text-sm font-light leading-[1.9]">
+                    Mi enfoque es <strong className="text-white/80 font-semibold">psicoanalítico y relacional</strong>. No doy consejos ni recetas. En cambio, ayudo a que cada persona — o cada pareja — pueda ver con mayor claridad lo que en la relación opera por debajo de lo consciente.
+                  </p>
+                  <p className="text-white/55 text-sm font-light leading-[1.9]">
+                    La sesión de diagnóstico no es terapia — es un <strong className="text-white/80 font-semibold">espacio de exploración inicial</strong> donde tomamos distancia de la urgencia del conflicto para ver la estructura de lo que está ocurriendo.
+                  </p>
+                  <p className="text-white/55 text-sm font-light leading-[1.9]">
+                    Puedes venir <strong className="text-white/80 font-semibold">solo/a o con tu pareja</strong>. Ambos formatos tienen valor: la perspectiva individual revela lo que a veces no se puede decir en pareja, y la sesión conjunta permite trabajar en tiempo real la dinámica del vínculo.
+                  </p>
                 </div>
               </motion.div>
 
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="text-center">
-                <motion.a href={`https://wa.me/527228720520?text=${whatsappAgendarMessage}`} target="_blank" rel="noopener noreferrer"
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+                className="grid grid-cols-3 gap-4 mb-10">
+                <div className="p-5 border border-white/8 rounded-2xl bg-white/[0.02] text-center">
+                  <Clock className="w-5 h-5 text-white/30 mx-auto mb-3" strokeWidth={1.5} />
+                  <span className="text-white/40 text-[10px] uppercase tracking-[0.15em] block mb-1">Duración</span>
+                  <span className="text-white/80 text-base font-light">60 min</span>
+                </div>
+                <div className="p-5 border border-white/8 rounded-2xl bg-white/[0.02] text-center">
+                  <Eye className="w-5 h-5 text-white/30 mx-auto mb-3" strokeWidth={1.5} />
+                  <span className="text-white/40 text-[10px] uppercase tracking-[0.15em] block mb-1">Modalidad</span>
+                  <span className="text-white/80 text-base font-light">Online</span>
+                </div>
+                <div className="p-5 border border-white/8 rounded-2xl bg-white/[0.02] text-center">
+                  <Heart className="w-5 h-5 text-white/30 mx-auto mb-3" strokeWidth={1.5} />
+                  <span className="text-white/40 text-[10px] uppercase tracking-[0.15em] block mb-1">Formato</span>
+                  <span className="text-white/80 text-base font-light">Individual o pareja</span>
+                </div>
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="flex flex-col sm:flex-row gap-4 justify-center">
+                <motion.a href={`https://wa.me/527228720520?text=${whatsappIndividualMessage}`} target="_blank" rel="noopener noreferrer"
                   whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full text-white font-light text-sm uppercase tracking-[0.2em] hover:shadow-[0_0_40px_rgba(244,63,94,0.3)] transition-shadow">
-                  AGENDAR SESIÓN <ArrowRight className="w-4 h-4" />
+                  className="inline-flex items-center justify-center gap-3 px-8 py-3.5 border border-white/20 rounded-full text-white/80 font-light text-xs uppercase tracking-[0.15em] hover:border-white/40 hover:bg-white/5 transition-all">
+                  Agendar individual <ArrowRight className="w-3.5 h-3.5" />
+                </motion.a>
+                <motion.a href={`https://wa.me/527228720520?text=${whatsappParejaMessage}`} target="_blank" rel="noopener noreferrer"
+                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full text-white font-light text-sm uppercase tracking-[0.2em] hover:shadow-[0_0_40px_rgba(244,63,94,0.3)] transition-shadow">
+                  Agendar en pareja <ArrowRight className="w-4 h-4" />
                 </motion.a>
               </motion.div>
             </div>
