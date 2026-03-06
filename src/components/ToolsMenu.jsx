@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react'
-import { Wrench, Calendar, Target, Quote, Map, Beaker, X } from 'lucide-react'
+import { Wrench, Calendar, Target, Quote, Map, Beaker, X, Heart } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const ToolsMenu = ({ isMobile = false }) => {
@@ -8,7 +8,8 @@ const ToolsMenu = ({ isMobile = false }) => {
   const menuRef = useRef(null)
 
   const tools = [
-    { name: 'Test Vocacional', icon: Target, href: '/test-vocacional', highlight: true },
+    { name: 'Diagnóstico de Pareja', icon: Heart, href: '/servicios/consulta-pareja', highlight: true },
+    { name: 'Test Vocacional', icon: Target, href: '/test-vocacional' },
     { name: 'Frase del día', icon: Quote, href: '/frase-del-dia' },
     { name: 'Laboratorio Ético', icon: Beaker, href: '/laboratorio-etico' },
     { name: 'Atlas de la Humanidad', icon: Map, href: '/atlas-humanidad' },
