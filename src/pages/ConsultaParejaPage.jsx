@@ -940,8 +940,8 @@ const ConsultaParejaPage = () => {
     } else {
       setTimeout(() => {
         if (mode === 'premium') {
-          // Premium: after Likert → flash projective questions
-          setStage('flash')
+          // Premium: last Likert → email capture
+          setStage('email')
         } else {
           setStage('open-question')
         }
@@ -955,7 +955,7 @@ const ConsultaParejaPage = () => {
     if (currentFlash < FLASH_QUESTIONS.length - 1) {
       setTimeout(() => { setCurrentFlash(prev => prev + 1); scrollToTop() }, 350)
     } else {
-      setTimeout(() => { setStage('email'); scrollToTop() }, 400)
+      setTimeout(() => { setStage('test'); scrollToTop() }, 400)
     }
   }
 
@@ -1472,9 +1472,9 @@ const ConsultaParejaPage = () => {
                     <span className="text-violet-400/80 text-xs font-light">2</span>
                   </div>
                   <div>
-                    <p className="text-white/80 text-sm font-light mb-1">Después, unas afirmaciones rápidas</p>
+                    <p className="text-white/80 text-sm font-light mb-1">Después, reacciones rápidas y afirmaciones</p>
                     <p className="text-white/40 text-xs font-extralight leading-relaxed">
-                      25 frases cortas donde solo eliges qué tan cierto es cada una para ti. Esto nos ayuda a confirmar los patrones que ya nos contaste.
+                      10 respuestas proyectivas para captar lo intuitivo, seguidas de 25 afirmaciones breves para confirmar los patrones.
                     </p>
                   </div>
                 </motion.div>
@@ -1592,12 +1592,12 @@ const ConsultaParejaPage = () => {
                 <motion.div key={currentQuestion} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
                   <h3 className="text-xl lg:text-2xl font-light text-white/90 leading-relaxed mb-10 tracking-wide font-display italic">
-                    &ldquo;{questions[currentQuestion].text}&rdquo;
+                    &ldquo;{questions[currentQuestion]?.text ?? ''}&rdquo;
                   </h3>
 
                   <div className="space-y-3">
                     {ANSWER_OPTIONS.map((opt, i) => {
-                      const isSelected = answers[questions[currentQuestion].id] === opt.value
+                      const isSelected = answers[questions[currentQuestion]?.id] === opt.value
                       return (
                         <motion.button key={opt.value} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: i * 0.05 }} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
@@ -1622,7 +1622,7 @@ const ConsultaParejaPage = () => {
               {isTestMode && (
                 <div className="mt-6 text-center">
                   <button
-                    onClick={() => handleAnswer(questions[currentQuestion].sampleValue || 3)}
+                    onClick={() => handleAnswer(questions[currentQuestion]?.sampleValue || 3)}
                     className="text-amber-400/45 text-[10px] hover:text-amber-400/75 tracking-wider transition-colors border border-amber-400/18 rounded-full px-3 py-1.5 hover:border-amber-400/35">
                     ► Respuesta de muestra
                   </button>
@@ -1746,7 +1746,7 @@ const ConsultaParejaPage = () => {
                             onClick={() => {
                               if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
                                 setCurrentPhilosophical(prev => prev + 1); scrollToTop()
-                              } else { setStage('test'); scrollToTop() }
+                              } else { setStage('flash'); scrollToTop() }
                             }}
                             className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-violet-500/80 to-fuchsia-500/80 text-white text-xs uppercase tracking-wider hover:from-violet-500 hover:to-fuchsia-500 transition-all">
                             {currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1 ? 'Siguiente' : 'Continuar'}
@@ -1761,7 +1761,7 @@ const ConsultaParejaPage = () => {
                           <button onClick={() => {
                             if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
                               setCurrentPhilosophical(prev => prev + 1)
-                            } else { setStage('test'); scrollToTop() }
+                            } else { setStage('flash'); scrollToTop() }
                           }}
                             className="text-white/20 text-xs hover:text-white/40 tracking-wider transition-colors">
                             OMITIR
@@ -1774,7 +1774,7 @@ const ConsultaParejaPage = () => {
                                 setTimeout(() => {
                                   if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
                                     setCurrentPhilosophical(prev => prev + 1); scrollToTop()
-                                  } else { setStage('test'); scrollToTop() }
+                                  } else { setStage('flash'); scrollToTop() }
                                 }, 350)
                               }}
                               className="flex items-center gap-1.5 text-amber-400/50 text-[10px] hover:text-amber-400/80 tracking-wider transition-colors border border-amber-400/20 rounded-full px-2.5 py-1 hover:border-amber-400/40">
@@ -1840,7 +1840,7 @@ const ConsultaParejaPage = () => {
                     onClick={() => {
                       if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
                         setCurrentPhilosophical(prev => prev + 1)
-                      } else { setStage('test'); scrollToTop() }
+                      } else { setStage('flash'); scrollToTop() }
                     }}
                     className="flex items-center gap-2 text-violet-300/60 hover:text-violet-300/90 text-xs tracking-wider transition-colors">
                     {currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1 ? 'SIGUIENTE' : 'CONTINUAR'}
@@ -1874,7 +1874,7 @@ const ConsultaParejaPage = () => {
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   className="mb-8 p-5 border border-fuchsia-500/15 rounded-xl bg-fuchsia-500/[0.03]">
                   <p className="text-fuchsia-200/70 text-base font-light leading-relaxed">
-                    Una última ronda — <span className="text-fuchsia-300/90 font-normal">responde lo primero que se te venga.</span>{' '}
+                    Segunda ronda — <span className="text-fuchsia-300/90 font-normal">responde lo primero que se te venga.</span>{' '}
                     Sin pensarlo mucho. Eso es exactamente lo que buscamos.
                   </p>
                 </motion.div>
@@ -1915,7 +1915,7 @@ const ConsultaParejaPage = () => {
                         <div className="flex items-center gap-3">
                           <button onClick={() => {
                             if (currentFlash < FLASH_QUESTIONS.length - 1) { setCurrentFlash(prev => prev + 1); scrollToTop() }
-                            else { setStage('email'); scrollToTop() }
+                            else { setStage('test'); scrollToTop() }
                           }} className="text-white/25 text-xs hover:text-white/45 tracking-wider transition-colors">
                             OMITIR
                           </button>
