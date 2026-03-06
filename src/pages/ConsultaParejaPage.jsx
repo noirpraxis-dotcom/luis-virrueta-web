@@ -23,35 +23,35 @@ const AREAS = [
 
 const QUESTIONS_QUICK = [
   // Comunicación (3)
-  { id: 1, text: 'En conversaciones importantes sentimos que realmente nos escuchamos.', area: 'comunicacion', inverted: false },
-  { id: 2, text: 'A veces las pequeñas cosas del día a día generan más tensión de la que deberían.', area: 'comunicacion', inverted: true },
-  { id: 3, text: 'Cuando hay un desacuerdo, podemos hablar sin que la conversación se convierta en pelea.', area: 'comunicacion', inverted: false },
+  { id: 1, text: 'Cuando hablamos de algo importante, siento que nos escuchamos de verdad.', area: 'comunicacion', inverted: false },
+  { id: 2, text: 'Las cosas pequeñas del día a día terminan generando tensión entre nosotros.', area: 'comunicacion', inverted: true },
+  { id: 3, text: 'Logramos hablar de nuestros desacuerdos sin que se convierta en pelea.', area: 'comunicacion', inverted: false },
   // Intimidad (3)
-  { id: 4, text: 'En ocasiones siento que vivimos más como compañeros de piso que como pareja.', area: 'intimidad', inverted: true },
-  { id: 5, text: 'Hay momentos donde siento una conexión profunda con mi pareja sin necesidad de palabras.', area: 'intimidad', inverted: false },
-  { id: 6, text: 'Me resulta fácil mostrar vulnerabilidad emocional frente a mi pareja.', area: 'intimidad', inverted: false },
+  { id: 4, text: 'Convivimos más como compañeros de cuarto que como pareja.', area: 'intimidad', inverted: true },
+  { id: 5, text: 'Siento una conexión profunda con mi pareja, incluso sin necesidad de palabras.', area: 'intimidad', inverted: false },
+  { id: 6, text: 'Me resulta fácil mostrarme vulnerable emocionalmente con mi pareja.', area: 'intimidad', inverted: false },
   // Admiración (3)
-  { id: 7, text: 'Cuando pienso en mi pareja, siento genuina admiración por quién es como persona.', area: 'admiracion', inverted: false },
-  { id: 8, text: 'A veces siento que las cosas que hace mi pareja me irritan más de lo razonable.', area: 'admiracion', inverted: true },
-  { id: 9, text: 'Me gusta contarle a otros las cosas buenas de mi pareja.', area: 'admiracion', inverted: false },
+  { id: 7, text: 'Siento genuina admiración por la persona que es mi pareja.', area: 'admiracion', inverted: false },
+  { id: 8, text: 'Lo que hace mi pareja me irrita más de lo que debería.', area: 'admiracion', inverted: true },
+  { id: 9, text: 'Disfruto contarle a otros las cualidades de mi pareja.', area: 'admiracion', inverted: false },
   // Conflicto (3)
-  { id: 10, text: 'Hay temas que preferimos no tocar porque sabemos que terminarán mal.', area: 'conflicto', inverted: true },
-  { id: 11, text: 'Siento que arrastramos discusiones del pasado que nunca terminamos de resolver.', area: 'conflicto', inverted: true },
-  { id: 12, text: 'Cuando surgen problemas, tengo confianza de que encontraremos una solución juntos.', area: 'conflicto', inverted: false },
+  { id: 10, text: 'Evitamos ciertos temas porque sabemos que terminarán en conflicto.', area: 'conflicto', inverted: true },
+  { id: 11, text: 'Arrastramos discusiones del pasado que nunca terminamos de resolver.', area: 'conflicto', inverted: true },
+  { id: 12, text: 'Confío en que cuando surja un problema, lo resolveremos juntos.', area: 'conflicto', inverted: false },
   // Proyecto de vida (3)
-  { id: 13, text: 'Cuando imaginamos el futuro, sentimos que vamos en la misma dirección.', area: 'proyecto', inverted: false },
-  { id: 14, text: 'Hay decisiones importantes en las que noto que tenemos visiones muy diferentes.', area: 'proyecto', inverted: true },
-  { id: 15, text: 'Compartimos al menos una meta importante que nos entusiasma a ambos.', area: 'proyecto', inverted: false },
+  { id: 13, text: 'Sentimos que vamos en la misma dirección cuando pensamos en el futuro.', area: 'proyecto', inverted: false },
+  { id: 14, text: 'En decisiones importantes, noto que tenemos visiones muy diferentes.', area: 'proyecto', inverted: true },
+  { id: 15, text: 'Tenemos metas en común que nos entusiasman a los dos.', area: 'proyecto', inverted: false },
   // Seguridad emocional (2)
-  { id: 16, text: 'En momentos importantes siento que mi pareja está de mi lado.', area: 'seguridad', inverted: false },
-  { id: 17, text: 'A veces dudo si mi pareja realmente entiende lo que necesito emocionalmente.', area: 'seguridad', inverted: true },
+  { id: 16, text: 'Siento que mi pareja está de mi lado cuando más lo necesito.', area: 'seguridad', inverted: false },
+  { id: 17, text: 'Dudo que mi pareja entienda lo que realmente necesito emocionalmente.', area: 'seguridad', inverted: true },
   // Autonomía (3)
-  { id: 18, text: 'Me siento cómodo siendo completamente yo mismo dentro de la relación.', area: 'autonomia', inverted: false },
+  { id: 18, text: 'Puedo ser completamente yo mismo/a dentro de la relación.', area: 'autonomia', inverted: false },
   { id: 19, text: 'Siento que necesito pedir permiso o justificar mis decisiones personales.', area: 'autonomia', inverted: true },
-  { id: 20, text: 'Podemos pasar tiempo separados sin que genere malestar o inseguridad.', area: 'autonomia', inverted: false },
+  { id: 20, text: 'Pasar tiempo separados no genera malestar ni inseguridad en nuestra relación.', area: 'autonomia', inverted: false },
   // Idealización (3)
-  { id: 21, text: 'A veces siento que necesito a mi pareja para sentirme completo/a.', area: 'idealizacion', inverted: true },
-  { id: 22, text: 'Reconozco que mi pareja tiene defectos importantes y los acepto sin intentar cambiarlos.', area: 'idealizacion', inverted: false },
+  { id: 21, text: 'Necesito a mi pareja para sentirme completo/a como persona.', area: 'idealizacion', inverted: true },
+  { id: 22, text: 'Acepto los defectos de mi pareja sin intentar cambiarlos.', area: 'idealizacion', inverted: false },
   { id: 23, text: 'Espero que mi pareja llene vacíos que siento en mi propia vida.', area: 'idealizacion', inverted: true }
 ]
 
@@ -59,53 +59,53 @@ const QUESTIONS_QUICK = [
 
 const QUESTIONS_DETAILED = [
   // Comunicación (5)
-  { id: 101, text: 'En conversaciones importantes sentimos que realmente nos escuchamos.', area: 'comunicacion', inverted: false },
-  { id: 102, text: 'A veces las pequeñas cosas del día a día generan más tensión de la que deberían.', area: 'comunicacion', inverted: true },
-  { id: 103, text: 'Cuando hay un desacuerdo, podemos hablar sin que la conversación se convierta en pelea.', area: 'comunicacion', inverted: false },
-  { id: 105, text: 'Nos resulta fácil hablar de cómo nos sentimos sin temor a ser juzgados.', area: 'comunicacion', inverted: false },
-  { id: 107, text: 'Después de una conversación difícil, sentimos que llegamos a un mejor lugar.', area: 'comunicacion', inverted: false },
+  { id: 101, text: 'Cuando hablamos de algo importante, siento que nos escuchamos de verdad.', area: 'comunicacion', inverted: false },
+  { id: 102, text: 'Las cosas pequeñas del día a día terminan generando tensión entre nosotros.', area: 'comunicacion', inverted: true },
+  { id: 103, text: 'Logramos hablar de nuestros desacuerdos sin que se convierta en pelea.', area: 'comunicacion', inverted: false },
+  { id: 105, text: 'Puedo hablar de lo que siento sin miedo a que me juzguen.', area: 'comunicacion', inverted: false },
+  { id: 107, text: 'Después de una conversación difícil, siento que llegamos a un mejor lugar.', area: 'comunicacion', inverted: false },
   // Intimidad (5)
-  { id: 201, text: 'En ocasiones siento que vivimos más como compañeros de piso que como pareja.', area: 'intimidad', inverted: true },
-  { id: 202, text: 'Hay momentos donde siento una conexión profunda con mi pareja sin necesidad de palabras.', area: 'intimidad', inverted: false },
-  { id: 203, text: 'Me resulta fácil mostrar vulnerabilidad emocional frente a mi pareja.', area: 'intimidad', inverted: false },
-  { id: 204, text: 'Nuestros momentos de intimidad física reflejan la conexión emocional que tenemos.', area: 'intimidad', inverted: false },
-  { id: 205, text: 'He dejado de compartir ciertos pensamientos o sentimientos con mi pareja.', area: 'intimidad', inverted: true },
+  { id: 201, text: 'Convivimos más como compañeros de cuarto que como pareja.', area: 'intimidad', inverted: true },
+  { id: 202, text: 'Siento una conexión profunda con mi pareja, incluso sin necesidad de palabras.', area: 'intimidad', inverted: false },
+  { id: 203, text: 'Me resulta fácil mostrarme vulnerable emocionalmente con mi pareja.', area: 'intimidad', inverted: false },
+  { id: 204, text: 'Nuestra intimidad física refleja la conexión emocional que tenemos.', area: 'intimidad', inverted: false },
+  { id: 205, text: 'Hay cosas que prefiero ya no compartir con mi pareja.', area: 'intimidad', inverted: true },
   // Admiración (5)
-  { id: 301, text: 'Cuando pienso en mi pareja, siento genuina admiración por quién es como persona.', area: 'admiracion', inverted: false },
-  { id: 302, text: 'A veces siento que las cosas que hace mi pareja me irritan más de lo razonable.', area: 'admiracion', inverted: true },
-  { id: 304, text: 'Reconozco y valoro los esfuerzos que mi pareja hace por la relación.', area: 'admiracion', inverted: false },
-  { id: 305, text: 'En momentos de frustración, me es difícil recordar qué me atrajo de mi pareja.', area: 'admiracion', inverted: true },
-  { id: 306, text: 'Admiro la forma en que mi pareja enfrenta los retos de la vida.', area: 'admiracion', inverted: false },
+  { id: 301, text: 'Siento genuina admiración por la persona que es mi pareja.', area: 'admiracion', inverted: false },
+  { id: 302, text: 'Lo que hace mi pareja me irrita más de lo que debería.', area: 'admiracion', inverted: true },
+  { id: 304, text: 'Valoro los esfuerzos que mi pareja hace por nuestra relación.', area: 'admiracion', inverted: false },
+  { id: 305, text: 'Cuando estoy frustrado/a, me cuesta recordar por qué me enamoré.', area: 'admiracion', inverted: true },
+  { id: 306, text: 'Admiro cómo mi pareja enfrenta los retos de la vida.', area: 'admiracion', inverted: false },
   // Conflicto (5)
-  { id: 401, text: 'Hay temas que preferimos no tocar porque sabemos que terminarán mal.', area: 'conflicto', inverted: true },
-  { id: 402, text: 'Siento que arrastramos discusiones del pasado que nunca terminamos de resolver.', area: 'conflicto', inverted: true },
-  { id: 403, text: 'Cuando surgen problemas, tengo confianza de que encontraremos una solución juntos.', area: 'conflicto', inverted: false },
-  { id: 404, text: 'Alguno de los dos tiende a cerrarse o alejarse cuando la tensión sube.', area: 'conflicto', inverted: true },
-  { id: 406, text: 'Podemos reparar los daños después de una pelea sin que queden resentimientos.', area: 'conflicto', inverted: false },
+  { id: 401, text: 'Evitamos ciertos temas porque sabemos que terminarán en conflicto.', area: 'conflicto', inverted: true },
+  { id: 402, text: 'Arrastramos discusiones del pasado que nunca terminamos de resolver.', area: 'conflicto', inverted: true },
+  { id: 403, text: 'Confío en que cuando surja un problema, lo resolveremos juntos.', area: 'conflicto', inverted: false },
+  { id: 404, text: 'Cuando la tensión sube, alguno de los dos se cierra o se aleja.', area: 'conflicto', inverted: true },
+  { id: 406, text: 'Después de una pelea, logramos reparar las cosas sin guardar rencor.', area: 'conflicto', inverted: false },
   // Proyecto de vida (5)
-  { id: 501, text: 'Cuando imaginamos el futuro, sentimos que vamos en la misma dirección.', area: 'proyecto', inverted: false },
-  { id: 503, text: 'Compartimos al menos una meta importante que nos entusiasma a ambos.', area: 'proyecto', inverted: false },
-  { id: 504, text: 'Hemos hablado con claridad sobre lo que esperamos de la relación a largo plazo.', area: 'proyecto', inverted: false },
-  { id: 505, text: 'Siento que uno de los dos ha cambiado lo que quiere de la vida sin comunicarlo.', area: 'proyecto', inverted: true },
-  { id: 506, text: 'Tomamos decisiones importantes de manera conjunta, considerando el impacto en ambos.', area: 'proyecto', inverted: false },
+  { id: 501, text: 'Sentimos que vamos en la misma dirección cuando pensamos en el futuro.', area: 'proyecto', inverted: false },
+  { id: 503, text: 'Tenemos metas en común que nos entusiasman a los dos.', area: 'proyecto', inverted: false },
+  { id: 504, text: 'Tenemos claro lo que ambos esperamos de la relación a largo plazo.', area: 'proyecto', inverted: false },
+  { id: 505, text: 'Lo que queremos de la vida ha dejado de estar alineado como pareja.', area: 'proyecto', inverted: true },
+  { id: 506, text: 'Las decisiones importantes las tomamos juntos, pensando en los dos.', area: 'proyecto', inverted: false },
   // Seguridad emocional (5)
-  { id: 601, text: 'En momentos importantes siento que mi pareja está de mi lado.', area: 'seguridad', inverted: false },
-  { id: 602, text: 'A veces dudo si mi pareja realmente entiende lo que necesito emocionalmente.', area: 'seguridad', inverted: true },
-  { id: 603, text: 'Me siento seguro/a de que mi pareja no haría algo que me lastimara a propósito.', area: 'seguridad', inverted: false },
-  { id: 604, text: 'Cuando estoy pasando por algo difícil, mi pareja es la primera persona a la que acudo.', area: 'seguridad', inverted: false },
-  { id: 606, text: 'Sé que puedo contar con mi pareja sin importar las circunstancias.', area: 'seguridad', inverted: false },
+  { id: 601, text: 'Siento que mi pareja está de mi lado cuando más lo necesito.', area: 'seguridad', inverted: false },
+  { id: 602, text: 'Dudo que mi pareja entienda lo que realmente necesito emocionalmente.', area: 'seguridad', inverted: true },
+  { id: 603, text: 'Confío en que mi pareja no haría algo que me lastimara a propósito.', area: 'seguridad', inverted: false },
+  { id: 604, text: 'Mi pareja es la primera persona a quien acudo cuando estoy pasando por algo difícil.', area: 'seguridad', inverted: false },
+  { id: 606, text: 'Puedo contar con mi pareja sin importar las circunstancias.', area: 'seguridad', inverted: false },
   // Autonomía (5)
-  { id: 701, text: 'Me siento cómodo siendo completamente yo mismo dentro de la relación.', area: 'autonomia', inverted: false },
+  { id: 701, text: 'Puedo ser completamente yo mismo/a dentro de la relación.', area: 'autonomia', inverted: false },
   { id: 702, text: 'Siento que necesito pedir permiso o justificar mis decisiones personales.', area: 'autonomia', inverted: true },
-  { id: 703, text: 'Podemos pasar tiempo separados sin que genere malestar o inseguridad.', area: 'autonomia', inverted: false },
-  { id: 705, text: 'Respetamos los espacios individuales del otro sin interpretarlo como distancia.', area: 'autonomia', inverted: false },
-  { id: 706, text: 'A veces siento que pierdo mi identidad dentro de la relación.', area: 'autonomia', inverted: true },
+  { id: 703, text: 'Pasar tiempo separados no genera malestar ni inseguridad en nuestra relación.', area: 'autonomia', inverted: false },
+  { id: 705, text: 'Respetamos los espacios individuales del otro sin tomarlo como distancia.', area: 'autonomia', inverted: false },
+  { id: 706, text: 'Siento que pierdo parte de quien soy dentro de esta relación.', area: 'autonomia', inverted: true },
   // Idealización (5)
-  { id: 801, text: 'A veces siento que necesito a mi pareja para sentirme completo/a.', area: 'idealizacion', inverted: true },
-  { id: 802, text: 'Reconozco que mi pareja tiene defectos importantes y los acepto sin intentar cambiarlos.', area: 'idealizacion', inverted: false },
-  { id: 804, text: 'La imagen que tengo de mi pareja corresponde con quién es realmente, no con quién deseo que sea.', area: 'idealizacion', inverted: false },
-  { id: 805, text: 'Si mi relación terminara mañana, sentiría que pierdo una parte esencial de mí mismo/a.', area: 'idealizacion', inverted: true },
-  { id: 806, text: 'Amo a mi pareja por quién es, no por lo que representa o lo que me da.', area: 'idealizacion', inverted: false }
+  { id: 801, text: 'Necesito a mi pareja para sentirme completo/a como persona.', area: 'idealizacion', inverted: true },
+  { id: 802, text: 'Acepto los defectos de mi pareja sin intentar cambiarlos.', area: 'idealizacion', inverted: false },
+  { id: 804, text: 'Veo a mi pareja tal como es, no como me gustaría que fuera.', area: 'idealizacion', inverted: false },
+  { id: 805, text: 'Si mi relación terminara, sentiría que pierdo una parte esencial de mí.', area: 'idealizacion', inverted: true },
+  { id: 806, text: 'Lo que siento por mi pareja tiene que ver con quién es, no con lo que me da.', area: 'idealizacion', inverted: false }
 ]
 
 // ─── PREGUNTAS ABIERTAS (Premium — análisis de patrones inconscientes) ────
@@ -216,11 +216,11 @@ function AnalyzingProgress() {
 // ─── OPCIONES ─────────────────────────────────────────────────────
 
 const ANSWER_OPTIONS = [
-  { label: 'Nunca', value: 1 },
-  { label: 'Rara vez', value: 2 },
-  { label: 'A veces', value: 3 },
-  { label: 'Frecuentemente', value: 4 },
-  { label: 'Siempre', value: 5 }
+  { label: 'Nada cierto para mí', value: 1 },
+  { label: 'Poco cierto', value: 2 },
+  { label: 'Algo cierto', value: 3 },
+  { label: 'Bastante cierto', value: 4 },
+  { label: 'Totalmente cierto', value: 5 }
 ]
 
 const RESPONDENT_OPTIONS = [
