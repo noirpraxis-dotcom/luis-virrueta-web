@@ -7,7 +7,7 @@ const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions'
 
 const SYSTEM_PROMPT = `Eres un psicólogo especialista en relaciones de pareja con enfoque profundo en dinámicas vinculares y patrones de comportamiento en el vínculo amoroso.
 
-Tu tarea es generar un diagnóstico integral cruzando dos fuentes de datos:
+Tu tarea es generar un diagnóstico integral cruzando TRES fuentes de datos:
 
 FUENTE PRIMARIA — RESPUESTAS NARRATIVAS (15 preguntas conversacionales):
 Son el corazón del diagnóstico. La persona habló libremente, revelando patrones sin darse cuenta. Extrae lo profundo de lo aparentemente cotidiano. Busca:
@@ -26,6 +26,13 @@ Los datos corroboran o contradicen lo que la narrativa reveló. Cruza:
 - Si la narrativa muestra sufrimiento pero los números son altos: posible minimización
 - Si coinciden: mayor confianza en el patrón detectado
 
+FUENTE PROYECTIVA — RESPUESTAS FLASH (10 preguntas sin filtro racional):
+Frases completadas en segundos + elecciones forzadas. Aquí aparece lo inconsciente sin censura.
+- Interpreta las frases completadas de forma proyectiva: el sujeto proyecta su mundo interno
+- Las elecciones forzadas revelan la estructura real del vínculo (quién cede, qué prefiere, qué teme)
+- Busca coherencia o contradicción con las otras dos fuentes
+- SIEMPRE cita las frases completadas textualmente entre comillas en lecturaFlash
+
 INSTRUCCIONES CRÍTICAS:
 1. CITA PALABRAS EXACTAS: siempre que puedas, incluye frases literales de las respuestas entre comillas. Ej: «cuando dijiste "no sé cómo explicarlo pero algo cambió"...»
 2. USA **NEGRITA**: marca con **dobles asteriscos** los conceptos clave y observaciones centrales para destacarlos visualmente.
@@ -37,7 +44,7 @@ Para cada área del diagnóstico, explica POR QUÉ tiene esa puntuación citando
 
 IMPORTANTE: Responde EXCLUSIVAMENTE en formato JSON válido con la estructura solicitada.`
 
-function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophicalQuestions, inconsistencies) {
+function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophicalQuestions, flashAnswers, flashQuestions, inconsistencies) {
   // NARRATIVE FIRST — primary source
   let prompt = '## FUENTE PRIMARIA: RESPUESTAS NARRATIVAS\n'
   prompt += '(La persona las contó "como si le platicara a un amigo". Aquí está la verdadera información.)\n\n'
@@ -70,38 +77,73 @@ function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophical
     }
   }
 
+  // FLASH PROJECTIVE DATA — third source
+  if (flashQuestions && flashQuestions.length > 0 && flashAnswers && Object.keys(flashAnswers).length > 0) {
+    prompt += '\n## FUENTE PROYECTIVA: RESPUESTAS FLASH\n'
+    prompt += '(Respondidas en segundos, sin filtro racional. Aquí aparece lo inconsciente sin censura.)\n\n'
+
+    const complete = flashQuestions.filter(q => q.type === 'complete')
+    const choice = flashQuestions.filter(q => q.type === 'choice')
+
+    if (complete.length > 0) {
+      prompt += 'Completar frases:\n'
+      for (const q of complete) {
+        const answer = flashAnswers[q.id]
+        if (answer && answer.trim()) {
+          prompt += `- "${q.stem}..." → "${answer.trim()}"\n`
+        } else {
+          prompt += `- "${q.stem}..." → (no completó)\n`
+        }
+      }
+      prompt += '\n'
+    }
+
+    if (choice.length > 0) {
+      prompt += 'Elecciones:\n'
+      for (const q of choice) {
+        const answer = flashAnswers[q.id]
+        prompt += `- ${q.text} → ${answer ? `"${answer}"` : '(no respondió)'}\n`
+      }
+      prompt += '\n'
+    }
+  }
+
   const areaKeys = Object.keys(areaScores)
-  const areaCorrelationsSchema = areaKeys.map(k => `"${k}": "(1-2 párrafos profundos. Explica POR QUÉ esta área tiene esa puntuación. CITA PALABRAS EXACTAS de las respuestas entre comillas. Ej: 'En comunicación obtuviste 45% — cuando dijiste \\"hay temas que simplemente no tocamos\\" quedó claro que existe un acuerdo silencioso de evitar ciertos conflictos que se sienten peligrosos. Los datos confirman...')"`).join(',\n    ')
+  const areaCorrelationsSchema = areaKeys.map(k => `"${k}": "(1-2 párrafos profundos. Explica POR QUÉ esta área tiene esa puntuación. CITA PALABRAS EXACTAS de las respuestas donde sea posible.)"`).join(',\n    ')
 
   prompt += `\nGenera tu análisis psicológico en el siguiente formato JSON exacto:
 {
-  "diagnosticoNarrado": "(2-3 párrafos. Captura el núcleo del conflicto tal como apareció en sus respuestas. Habla directamente a la persona: cálido, íntimo, sin términos clínicos. CITA sus palabras exactas entre comillas. **Usa negrita** en las frases más importantes. Cierra con una oración que presenta lo que se desglosará a continuación. Nunca uses el término diagnóstico. Ejemplo: 'Hay algo que atraviesa todo lo que compartiste...' o 'Lo que describes tiene una lógica más profunda de lo que parece...')",
-  "aperturaEmpatica": "(2-3 párrafos. Haz que la persona se sienta profundamente escuchada ANTES de cualquier análisis. CITA sus palabras exactas entre comillas en la primera propuesta. Ejemplo de inicio: 'Algo que compartiste resonó especialmente: cuando dijiste \\"[cita exacta]\\" había mucho más de lo que parece a primera vista...' Introduce la observación principal de forma cálida. **Usa negrita** para los conceptos más importantes. Sin tecnicismos. Este es lo primero que leerá.)",
-  "aperturaEmpaticaPuntos": [{"titulo": "Palabra o frase clave (3-6 palabras)", "texto": "1-2 oraciones que exploran este hallazgo específico, citando las palabras exactas de la persona cuando sea posible."}, {"titulo": "Segundo hallazgo clave", "texto": "descripción..."}, {"titulo": "Tercer hallazgo", "texto": "descripción..."}, {"titulo": "Cuarto hallazgo (opcional)", "texto": "descripción..."}],
-  "lecturaNarrativa": "(3-4 párrafos: análisis PROFUNDO de las respuestas narrativas. Extrae patrones de comportamiento, tendencias relacionales, pérdida de autonomía. **Cita palabras exactas** entre comillas donde sea posible. **Usa negrita** para conceptos clave. Evita jerga técnica.)",
+  "diagnosticoNarrado": "(2-3 párrafos. Captura el núcleo del conflicto. Habla directamente a la persona: cálido, íntimo, sin términos clínicos. CITA sus palabras exactas entre comillas. **Usa negrita** en frases importantes. Nunca uses el término diagnóstico.)",
+  "aperturaEmpatica": "(2-3 párrafos. Haz que la persona se sienta profundamente escuchada ANTES de cualquier análisis. CITA sus palabras exactas en la primera frase. **Usa negrita** para conceptos importantes. Sin tecnicismos.)",
+  "aperturaEmpaticaPuntos": [{"titulo": "Palabra o frase clave (3-6 palabras)", "texto": "1-2 oraciones explorando este hallazgo, citando palabras exactas."}, {"titulo": "Segundo hallazgo clave", "texto": "descripción..."}, {"titulo": "Tercer hallazgo", "texto": "descripción..."}, {"titulo": "Cuarto hallazgo (opcional)", "texto": "descripción..."}],
+  "perfilIndividual": "(2 párrafos enfocados en LA PERSONA, no en la pareja. Qué patrones trae ELLA a la relación, qué busca en el otro que en realidad necesita encontrar en sí misma. Comienza con algo como 'Algo que aparece claramente en todo lo que compartiste es...' o 'Independientemente de cómo sea tu pareja...'. Cita sus palabras. **Usa negrita**. Sin tecnicismos.)",
+  "perfilVinculo": "(2 párrafos sobre la DINÁMICA ENTRE LOS DOS. La interacción que emerge. Cómo se retroalimentan mutuamente estos patrones. Qué ciclo han creado juntos. Cita evidencia concreta de las respuestas. **Usa negrita**.)",
+  "configuracionDeseo": "(1-2 párrafos en lenguaje muy accesible: qué tipo de amor/vínculo busca esta persona específica. Qué necesidad emocional fundamental opera detrás de su elección amorosa. Sin términos técnicos — es la lectura más personal y directa del análisis. Ej: 'Lo que buscas en una relación es...' o 'Debajo de lo que describes hay una necesidad de...')",
+  "lecturaFlash": "(2 párrafos. Análisis de las respuestas proyectivas flash. Cita las frases completadas textualmente entre comillas. Interpreta las elecciones en contexto del perfil completo. Busca la coherencia o contradicción con lo que dijo en las narrativas. Ej: 'Lo primero que dijiste sin pensar fue \\"[frase]\\" — eso tiene más información de lo que parece...')",
+  "lecturaNarrativa": "(3-4 párrafos: análisis PROFUNDO de las respuestas narrativas. Extrae patrones de comportamiento, tendencias relacionales, pérdida de autonomía. **Cita palabras exactas** entre comillas. **Usa negrita** para conceptos clave. Evita jerga técnica.)",
   "lecturaCuestionario": "(2-3 párrafos: qué dicen los datos cuantitativos, SIEMPRE en relación con la narrativa. Usa frases como 'los datos corroboran que...', 'esto confirma lo que dijiste cuando mencionaste que...', o 'llama la atención que los números muestren algo distinto a lo que expresaste sobre...')",
-  "lecturaIntegral": "(3-4 párrafos: síntesis de ambas fuentes. La historia que emerge al cruzar lo dicho con lo medido. Escrito como recomendación profesional directa hacia la persona. **Usa negrita** en las observaciones más importantes. Cierra con una frase que oriente hacia la sesión.)",
+  "lecturaIntegral": "(3-4 párrafos: síntesis de las tres fuentes. La historia que emerge al cruzar lo dicho, lo medido y lo proyectado. Escrito como recomendación profesional directa. **Usa negrita** en las observaciones más importantes. Cierra con una frase que oriente hacia la sesión.)",
   "areaCorrelations": {
     ${areaCorrelationsSchema}
   },
-  "correlacionesPrincipales": ["(1-2 oraciones: la conexión más reveladora entre dos o más áreas. **Usa negrita** para los nombres de áreas. Ej: 'La baja **Comunicación** y los **Conflictos acumulados** forman un ciclo cerrado...')", "(segunda conexión importante)", "(tercera — opcional)"],
+  "correlacionesPrincipales": ["(1-2 oraciones: la conexión más reveladora entre dos o más áreas. **Usa negrita** para nombres de áreas.)", "(segunda conexión importante)", "(tercera — opcional)"],
   "idealizationLevel": "alto" o "medio" o "bajo",
   "idealizationScore": (número entero 0-100 donde 100 = máxima idealización problemática),
-  "idealizationExplanation": "(2 párrafos específicos sobre POR QUÉ esta persona tiene ESTE nivel de idealización. Cita sus palabras exactas. NO genérico — basado enteramente en lo que esta persona respondió. Explica qué necesidad emocional opera detrás de esta dinámica.)",
-  "unconsciousPatterns": ["**PatrónClave**: descripción accesible y específica de cómo aparece en esta persona según sus respuestas", "**Patrón2**: descripción", "**Patrón3**: descripción", "**Patrón4 (opcional)**: descripción"],
-  "defenseMechanisms": ["**NombreMecanismo**: descripción de cómo aparece específicamente en esta persona según lo que dijo", "**Mecanismo2**: descripción", "**Mecanismo3 (opcional)**: descripción"],
-  "strengthsFound": ["**NombreFortaleza**: descripción específica basada en lo que la persona dijo y demostró en sus respuestas", "**Fortaleza2**: descripción", "**Fortaleza3**: descripción"],
-  "riskAreas": ["**ÁreaEnRiesgo**: explicación accesible y específica de por qué representa un riesgo en este caso concreto", "**Riesgo2**: descripción"],
+  "idealizationExplanation": "(2 párrafos sobre POR QUÉ esta persona tiene ESTE nivel de idealización. Cita sus palabras exactas. NO genérico. Explica qué necesidad emocional opera detrás.)",
+  "unconsciousPatterns": ["**PatrónClave**: descripción accesible y específica de cómo aparece en esta persona", "**Patrón2**: descripción", "**Patrón3**: descripción", "**Patrón4 (opcional)**: descripción"],
+  "defenseMechanisms": ["**NombreMecanismo**: descripción de cómo aparece específicamente en esta persona", "**Mecanismo2**: descripción", "**Mecanismo3 (opcional)**: descripción"],
+  "strengthsFound": ["**NombreFortaleza**: descripción específica basada en lo que la persona dijo", "**Fortaleza2**: descripción", "**Fortaleza3**: descripción"],
+  "riskAreas": ["**ÁreaEnRiesgo**: explicación accesible de por qué representa un riesgo en este caso", "**Riesgo2**: descripción"],
   "keyInsight": "(1 párrafo con la observación más reveladora)",
-  "recommendation": "(1-2 párrafos con recomendación profesional personalizada basada en lo que la persona contó)",
-  "sessionWorkItems": ["**TemaIndividual1**: descripción concreta y específica para sesión individual — basado en algo que ESTA persona dijo, no genérico", "**Tema2**: descripción", "**Tema3**: descripción", "**Tema4 (opcional)**: descripción"],
-  "sessionWorkItemsPareja": ["**TemaPareja1**: descripción concreta de lo que se trabajaría si la pareja viene junta — específico a la dinámica detectada", "**Tema2**: descripción", "**Tema3 (opcional)**: descripción"]
+  "recommendation": "(1-2 párrafos con recomendación profesional personalizada)",
+  "sessionWorkItems": ["**TemaIndividual1**: descripción concreta y específica para sesión individual — basado en algo que ESTA persona dijo", "**Tema2**: descripción", "**Tema3**: descripción", "**Tema4 (opcional)**: descripción"],
+  "sessionWorkItemsPareja": ["**TemaPareja1**: descripción concreta de lo que se trabajaría si la pareja viene junta", "**Tema2**: descripción", "**Tema3 (opcional)**: descripción"]
 }`
 
   return prompt
 }
 
-export async function analyzeRelationship({ areaScores, areaLabels, philosophicalAnswers, philosophicalQuestions, inconsistencies }) {
+export async function analyzeRelationship({ areaScores, areaLabels, philosophicalAnswers, philosophicalQuestions, flashAnswers, flashQuestions, inconsistencies }) {
   const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY
 
   if (!apiKey) {
@@ -109,7 +151,7 @@ export async function analyzeRelationship({ areaScores, areaLabels, philosophica
     return generateFallbackAnalysis(areaScores)
   }
 
-  const prompt = buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophicalQuestions, inconsistencies)
+  const prompt = buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophicalQuestions, flashAnswers || {}, flashQuestions || [], inconsistencies)
 
   try {
     const response = await fetch(DEEPSEEK_API_URL, {
@@ -125,7 +167,7 @@ export async function analyzeRelationship({ areaScores, areaLabels, philosophica
           { role: 'user', content: prompt }
         ],
         temperature: 0.7,
-        max_tokens: 6000,
+        max_tokens: 8000,
         response_format: { type: 'json_object' }
       })
     })
@@ -217,6 +259,10 @@ function generateFallbackAnalysis(areaScores) {
       { titulo: 'Comunicación que necesita profundidad', texto: 'Hay temas que se evitan o se tratan de forma superficial, generando una distancia emocional progresiva.' },
       { titulo: 'Fortalezas reales que sostienen', texto: 'A pesar de los desafíos, existen elementos genuinos de conexión que vale la pena identificar y fortalecer.' }
     ],
+    perfilIndividual: 'Independientemente de cómo sea tu pareja, lo que tus respuestas revelan es un patrón que tú traes a la relación: **una tendencia a buscar en el vínculo amoroso algo que va más allá del amor mismo**. La relación funciona como un espacio donde se procesan necesidades emocionales profundas — de reconocimiento, de seguridad, de completud — que no siempre son visibles para quien las vive.\n\nEsto no es un defecto. Es una estructura muy humana. Pero cuando no se ve, suele generar ciclos difíciles de romper: se pide al otro lo que el otro no puede dar, y ese ciclo se repite con mayor intensidad.',
+    perfilVinculo: 'La dinámica entre los dos tiene su propia lógica, independiente de los defectos o virtudes de cada uno. Lo que emerge es un **patrón relacional donde las necesidades emocionales de cada uno no siempre coinciden**, generando momentos de conexión genuina alternados con distancia o tensión.\n\nEste ciclo no se resuelve con más esfuerzo ni con mejor comunicación únicamente. Requiere entender qué función cumple cada uno en la dinámica del otro — y eso es exactamente lo que se explora en una sesión profesional.',
+    configuracionDeseo: 'Lo que buscas en una relación es, fundamentalmente, **un lugar donde ser visto y elegido tal como eres**. Debajo de lo que describes hay una necesidad de amor que no ponga condiciones — un vínculo donde no tengas que demostrar constantemente que mereces estar ahí.\n\nEsa búsqueda es legítima y profundamente humana. La pregunta que vale la pena explorar es: ¿en qué momento ese deseo de ser elegido se convierte en una dependencia de la validación del otro?',
+    lecturaFlash: 'Las respuestas instantáneas — las que más revelan porque salen sin pasar por el filtro racional — confirman una parte de lo que ya aparecía en las preguntas abiertas: **hay una tensión entre lo que quieres que sea la relación y lo que la relación realmente es**.\n\nLas elecciones que hiciste, leídas en contexto, apuntan hacia una estructura donde el miedo a la pérdida o al abandono opera silenciosamente detrás de muchas decisiones cotidianas. Este es uno de los patrones más importantes a explorar en sesión.',
     sessionWorkItems: sessionItemsFallback.slice(0, 4),
     sessionWorkItemsPareja: [
       'Mapear cómo cada uno percibe los conflictos no resueltos y qué impide abordarlos juntos',
