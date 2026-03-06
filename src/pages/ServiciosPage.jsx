@@ -1,5 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 import SEOHead from '../components/SEOHead'
 import { 
@@ -363,6 +364,33 @@ const ServiciosPage = () => {
   )
 }
 
+const ServiceCTALink = ({ to, label, isInView }) => {
+  const navigate = useNavigate()
+  return (
+    <motion.button
+      onClick={() => navigate(to)}
+      initial={{ opacity: 0, y: 10 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay: 0.3 }}
+      className="group relative inline-flex items-center gap-3 overflow-hidden"
+    >
+      <motion.div
+        className="h-px bg-gradient-to-r from-pink-400 to-rose-400 transition-all duration-500 group-hover:w-24"
+        style={{ width: '48px' }}
+      />
+      <span className="text-sm font-light text-white uppercase tracking-[0.25em] transition-all duration-300 group-hover:tracking-[0.3em]">
+        {label}
+      </span>
+      <motion.div
+        animate={{ x: [0, 5, 0] }}
+        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <ArrowRight className="w-4 h-4 text-pink-400/80" strokeWidth={1.5} />
+      </motion.div>
+    </motion.button>
+  )
+}
+
 const ServiceDetail = ({ service, index }) => {
   const { t } = useLanguage()
   const ref = useRef(null)
@@ -421,8 +449,15 @@ const ServiceDetail = ({ service, index }) => {
               <span className="text-base lg:text-lg font-light text-white/90 tracking-wide">{serviceData.duration}</span>
             </div>
 
-            {/* CTA WhatsApp */}
-            <motion.a
+            {/* CTA */}
+            {service.key === 'pareja' ? (
+              <ServiceCTALink
+                to="/servicios/consulta-pareja"
+                label="Diagnóstico Gratuito"
+                isInView={isInView}
+              />
+            ) : (
+              <motion.a
                 href={`https://wa.me/527228720520?text=${encodeURIComponent(`Hola, me interesa ${serviceData.title}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -431,18 +466,13 @@ const ServiceDetail = ({ service, index }) => {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="group relative inline-flex items-center gap-3 overflow-hidden"
               >
-                {/* Línea animada */}
                 <motion.div
                   className="h-px bg-white/60 transition-all duration-500 group-hover:w-24"
                   style={{ width: '48px' }}
                 />
-                
-                {/* Texto del botón */}
                 <span className="text-sm font-light text-white uppercase tracking-[0.25em] transition-all duration-300 group-hover:tracking-[0.3em]">
-                  {service.key === 'individual' || service.key === 'pareja' || service.key === 'familiar' ? 'Iniciar Consulta' : service.key === 'consultoria' ? 'Consultar' : 'Iniciar Proceso'}
+                  {service.key === 'individual' || service.key === 'familiar' ? 'Iniciar Consulta' : service.key === 'consultoria' ? 'Consultar' : 'Iniciar Proceso'}
                 </span>
-                
-                {/* Ícono con animación */}
                 <motion.div
                   animate={{ x: [0, 5, 0] }}
                   transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
@@ -450,6 +480,7 @@ const ServiceDetail = ({ service, index }) => {
                   <ArrowRight className="w-4 h-4 text-white/80" strokeWidth={1.5} />
                 </motion.div>
               </motion.a>
+            )}
           </div>
         </div>
 

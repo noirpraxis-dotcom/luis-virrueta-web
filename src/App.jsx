@@ -22,6 +22,7 @@ const AppsPremiumPage = lazy(() => import('./pages/AppsPremiumPage'))
 const ContenidoDigitalPage = lazy(() => import('./pages/ContenidoDigitalPage'))
 const AvataresIAPage = lazy(() => import('./pages/AvataresIAPage'))
 const ConsultoriaPsicologicaPage = lazy(() => import('./pages/ConsultoriaPsicologicaPage'))
+const ConsultaParejaPage = lazy(() => import('./pages/ConsultaParejaPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
 const MetodoPage = lazy(() => import('./pages/MetodoPage'))
 const FasesPage = lazy(() => import('./pages/FasesPage'))
@@ -125,6 +126,10 @@ const AppContent = () => {
 
               <Route path="/servicios/consultoria-psicologica" element={
                 <ConsultoriaPsicologicaPage />
+              } />
+
+              <Route path="/servicios/consulta-pareja" element={
+                <ConsultaParejaPage />
               } />
 
               {/* Página Sobre Mí: Historia completa de Luis Virrueta */}
