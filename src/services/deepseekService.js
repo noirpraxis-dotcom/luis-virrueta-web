@@ -7,13 +7,17 @@ const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions'
 
 const SYSTEM_PROMPT = `Eres un psicoanalista experto con formación lacaniana, especializado en relaciones de pareja y dinámica vincular.
 
-Tu tarea es analizar los resultados de un diagnóstico de relación que incluye:
-1. Puntuaciones cuantitativas en 8 áreas psicológicas
-2. Respuestas a preguntas filosóficas profundas sobre el amor, el deseo y la falta
+Tu tarea es generar TRES LECTURAS SEPARADAS a partir de un diagnóstico de relación:
 
-Tu análisis debe:
+LECTURA 1 — PERFIL DEL CUESTIONARIO: Análisis de las puntuaciones cuantitativas en 8 áreas psicológicas. Interpreta qué revelan los números sobre la dinámica vincular real: áreas fuertes, áreas en riesgo, combinaciones problemáticas, y qué patrones se pueden inferir solo de los datos cuantitativos.
+
+LECTURA 2 — PERFIL INCONSCIENTE: Análisis de las respuestas abiertas/filosóficas. Aquí es donde detectas los patrones profundos: idealización, necesidad vs. deseo, búsqueda de completud, proyección, demanda, goce, repetición. Recuerda que según Lacan, "amar es dar lo que no se tiene a quien no se es": el amor auténtico opera desde la falta asumida, no desde la demanda de completud.
+
+LECTURA 3 — LECTURA INTEGRAL: Cruce de ambas fuentes. Conecta lo que dicen los números con lo que revelan las palabras. ¿Son coherentes o hay contradicciones reveladoras? ¿Qué historia emerge cuando se leen los datos junto con las reflexiones personales?
+
+Principios:
 - Detectar patrones de idealización (esperar que el otro te complete, proyectar cualidades fantaseadas)
-- Distinguir entre necesidad y deseo genuino. Recordar que según Lacan, "amar es dar lo que no se tiene a quien no se es": el amor auténtico opera desde la falta asumida, no desde la demanda de completud.
+- Distinguir entre necesidad y deseo genuino
 - Identificar si se busca en el otro aquello que falta en uno mismo
 - Señalar patrones inconscientes que operan en la relación (demanda, goce, repetición)
 - Ser empático pero honesto, sin juicio moral
@@ -42,14 +46,14 @@ function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophical
 
   prompt += `\nGenera tu análisis psicoanalítico en el siguiente formato JSON exacto:
 {
+  "lecturaCuestionario": "(3-4 párrafos: análisis profundo de lo que revelan las puntuaciones cuantitativas. Interpreta cada área relevante, señala combinaciones problemáticas, identifica fortalezas y riesgos)",
+  "lecturaInconsciente": "(3-4 párrafos: análisis de las respuestas filosóficas. Detecta los patrones de idealización, necesidad vs deseo, completud, proyección. Referencia las respuestas específicas del usuario)",
+  "lecturaIntegral": "(3-4 párrafos: cruce de ambas fuentes. Conecta lo cuantitativo con lo cualitativo. Señala coherencias, contradicciones reveladoras, y la historia profunda que emerge al leer todo junto)",
   "idealizationLevel": "alto" o "medio" o "bajo",
   "idealizationScore": (número entero 0-100 donde 100 = máxima idealización problemática),
-  "idealizationAnalysis": "(2-3 párrafos analizando el nivel de idealización detectado, con referencias a patrones específicos de las respuestas)",
-  "needVsDesire": "(2 párrafos sobre la dinámica necesidad vs deseo en esta relación específica)",
-  "completionSeeking": "(1-2 párrafos sobre si se busca completud en el otro y cómo se manifiesta)",
-  "unconsciousPatterns": ["patrón 1", "patrón 2", "patrón 3"],
-  "strengthsFound": ["fortaleza 1", "fortaleza 2"],
-  "keyInsight": "(1 párrafo con la observación psicoanalítica más reveladora)",
+  "unconsciousPatterns": ["patrón 1", "patrón 2", "patrón 3", "patrón 4"],
+  "strengthsFound": ["fortaleza 1", "fortaleza 2", "fortaleza 3"],
+  "keyInsight": "(1 párrafo con la observación psicoanalítica más reveladora de todo el análisis)",
   "recommendation": "(1-2 párrafos con recomendación profesional personalizada)",
   "existentialReflection": "(1 párrafo poético/filosófico sobre el amor y el deseo en esta relación específica)"
 }`
@@ -106,7 +110,6 @@ export async function analyzeRelationship({ areaScores, areaLabels, philosophica
 function generateFallbackAnalysis(areaScores) {
   const idealScore = areaScores.idealizacion || 3
   const idealPct = Math.round(((idealScore - 1) / 4) * 100)
-  // Score alto = sano (poca idealización). Invertimos para display: bajo idealPct = alta idealización
   const actualIdealScore = 100 - idealPct
   const actualIdealLevel = idealPct <= 33 ? 'alto' : idealPct <= 66 ? 'medio' : 'bajo'
 
@@ -127,21 +130,49 @@ function generateFallbackAnalysis(areaScores) {
   if (areaScores.idealizacion >= 3.5) strengths.push('Capacidad de amar al otro real, no al idealizado')
   if (strengths.length === 0) strengths.push('Disposición para explorar la relación a mayor profundidad')
 
+  // Generar las 3 lecturas basadas en reglas
+  const areaNames = { comunicacion: 'Comunicación', intimidad: 'Intimidad', admiracion: 'Admiración', conflicto: 'Conflictos', proyecto: 'Proyecto de vida', seguridad: 'Seguridad emocional', autonomia: 'Autonomía', idealizacion: 'Idealización' }
+  const sorted = Object.entries(areaScores).sort((a, b) => b[1] - a[1])
+  const strongest = sorted[0]
+  const weakest = sorted[sorted.length - 1]
+
+  let lecturaCuestionario = `El área más sólida de la relación es ${areaNames[strongest[0]]} (${Math.round(((strongest[1]-1)/4)*100)}%), lo cual funciona como factor protector del vínculo. `
+  if (weakest[1] <= 2.5) {
+    lecturaCuestionario += `Sin embargo, ${areaNames[weakest[0]]} muestra indicadores preocupantes (${Math.round(((weakest[1]-1)/4)*100)}%) que sugieren un patrón que, de no abordarse, tiende a profundizarse con el tiempo.\n\n`
+  } else {
+    lecturaCuestionario += `Las áreas evaluadas muestran un perfil relativamente equilibrado, aunque siempre hay espacio para el crecimiento.\n\n`
+  }
+  if (areaScores.comunicacion <= 3.0 && areaScores.conflicto <= 3.0) {
+    lecturaCuestionario += 'La combinación de dificultades en comunicación y conflicto acumulado es uno de los patrones más frecuentes en relaciones que se deterioran silenciosamente. Los temas no hablados no desaparecen: se transforman en distancia emocional.\n\n'
+  }
+  if (areaScores.intimidad <= 2.5 && areaScores.proyecto >= 3.5) {
+    lecturaCuestionario += 'Es revelador que compartan visión de futuro pero la conexión íntima esté debilitada. Esto sugiere una relación que funciona bien en lo racional-práctico pero necesita reconectar en lo emocional-corporal.\n\n'
+  }
+  lecturaCuestionario += 'Los números son un punto de partida. Revelan tendencias y patrones, pero el significado profundo de cada respuesta solo emerge cuando se contextualiza dentro de la historia singular de cada pareja.'
+
+  let lecturaInconsciente = actualIdealLevel === 'alto'
+    ? 'Las reflexiones filosóficas revelan un nivel significativo de idealización. Se percibe al otro como fuente de completud, como aquello que podría resolver una falta que, desde la perspectiva psicoanalítica, es constitutiva del sujeto. La idealización opera como un velo que impide ver al otro en su dimensión real.\n\nLa distinción entre necesidad y deseo es fundamental aquí. Cuando predomina la necesidad, el vínculo se convierte en dependencia disfrazada de amor. El verdadero acto de amor no es necesitar al otro, sino poder estar sin él y aún así elegirlo.\n\nSe detectan indicios de búsqueda de completud: la expectativa de que el otro llene vacíos que son anteriores a la relación misma. Reconocer esta falta no como un problema sino como aquello que posibilita el deseo genuino puede transformar radicalmente la experiencia vincular.'
+    : actualIdealLevel === 'medio'
+      ? 'Las respuestas revelan una tensión interesante entre la conciencia de que el otro es una persona real (con limitaciones) y una esperanza subterránea de que la relación resuelva algo más profundo. Este nivel de idealización es habitual y no necesariamente patológico.\n\nLa pregunta central que emerge es: ¿qué parte de lo que busco en mi pareja tiene que ver con ella, y qué parte tiene que ver con lo que me falta a mí? Esta distinción es la llave para transitar de una relación basada en la demanda a una basada en el deseo.\n\nExiste espacio para fortalecer la capacidad de sostener la falta sin depositarla en el otro, lo cual es la base del amor genuino según la perspectiva lacaniana.'
+      : 'Las respuestas muestran una relación relativamente madura con la falta. Hay conciencia de que el otro no es responsable de completar lo que falta en uno mismo, lo cual es un fundamento sólido.\n\nEsto sugiere una capacidad de amar desde la elección consciente más que desde la necesidad, lo cual permite un vínculo más libre y menos cargado de demandas imposibles.\n\nEl trabajo futuro podría centrarse en profundizar esta conciencia y explorar los momentos donde, inevitablemente, la idealización reaparece — porque nunca desaparece del todo.'
+
+  const lecturaIntegral = `Al cruzar los datos cuantitativos con las reflexiones personales, emerge un perfil más completo de la dinámica vincular. ${
+    areaScores.idealizacion <= 2.5 && areaScores.seguridad <= 3.0
+      ? 'La combinación de idealización elevada y seguridad emocional frágil es reveladora: sugiere un patrón donde se busca en el otro aquello que se necesita para sentirse seguro, creando un ciclo de dependencia y frustración.'
+      : areaScores.comunicacion >= 3.5 && actualIdealLevel !== 'bajo'
+        ? 'Es interesante que la comunicación sea relativamente funcional mientras persisten patrones de idealización. Esto sugiere que se puede hablar del vínculo, pero quizás no de lo que realmente opera debajo: la relación con la propia falta.'
+        : 'Los números y las palabras cuentan historias complementarias que invitan a una exploración más profunda de los patrones vinculares.'
+  }\n\nLo que emerge al integrar ambas lecturas es que los patrones detectados no son defectos a corregir, sino dinámicas a comprender. Cada relación construye su propio lenguaje inconsciente, y descifrarlo es el primer paso para transformarlo.\n\nLa pregunta más importante no es "¿funciona esta relación?" sino "¿qué tipo de relación con el deseo opera en cada uno de ustedes?" Los números muestran tendencias; las reflexiones muestran subjetividad. La sesión profesional es donde ambas dimensiones se encuentran y revelan su significado singular.`
+
   return {
     idealizationLevel: actualIdealLevel,
     idealizationScore: actualIdealScore,
-    idealizationAnalysis: actualIdealLevel === 'alto'
-      ? 'Los resultados sugieren un nivel significativo de idealización en la relación. Esto puede manifestarse como la expectativa de que la pareja complete aquello que se percibe como faltante en uno mismo. Desde una perspectiva psicoanalítica, esta dinámica revela una relación con la "falta" que busca resolverse en el otro, en lugar de ser reconocida como parte constitutiva del sujeto.\n\nLa idealización opera como un velo que impide ver al otro en su dimensión real. Cuando ese velo inevitablemente cae — y siempre cae — la desilusión puede ser devastadora, no porque el otro haya fallado, sino porque la imagen proyectada era insostenible desde el inicio.'
-      : actualIdealLevel === 'medio'
-        ? 'Se detecta un nivel moderado de idealización. Existe cierta tendencia a proyectar expectativas en la pareja, aunque también hay conciencia de que el otro es una persona real con sus propias limitaciones. El trabajo consistiría en distinguir más claramente entre lo que se desea y lo que se necesita.\n\nEste nivel de idealización es común y no necesariamente patológico, pero invita a preguntarse: ¿qué parte de lo que busco en mi pareja tiene que ver con ella, y qué parte tiene que ver con lo que me falta a mí?'
-        : 'Los indicadores muestran un nivel saludable de aceptación del otro tal como es. La relación parece basarse más en la elección consciente que en la idealización, lo cual es un fundamento sólido para el vínculo.\n\nEsto sugiere una capacidad de sostener la falta sin depositarla en el otro, lo cual, desde la perspectiva lacaniana, es la base del amor genuino.',
-    needVsDesire: 'La distinción entre necesitar y desear al otro es fundamental en toda relación. Cuando predomina la necesidad, el vínculo se convierte en dependencia disfrazada de amor; cuando predomina el deseo, el amor es una elección renovada que no busca completar sino acompañar.\n\nComo señala Lacan, el deseo siempre apunta más allá de cualquier objeto concreto. La pregunta no es si necesitas a tu pareja, sino si puedes estar sin ella y aún así elegirla.',
-    completionSeeking: areaScores.idealizacion <= 3.0
-      ? 'Se detectan indicios de búsqueda de completud en el otro. El sujeto siempre está marcado por una falta constitutiva que ninguna relación puede resolver. Reconocer esta falta no como un problema sino como aquello que posibilita el deseo genuino puede transformar radicalmente la experiencia vincular.\n\nBuscar que el otro te complete es, paradójicamente, la mejor manera de garantizar la frustración. Porque el otro también tiene su propia falta, y dos vacíos no suman plenitud.'
-      : 'La relación muestra señales de madurez respecto a la aceptación de que el otro no es responsable de completar lo que falta. Esto permite un vínculo basado en el deseo más que en la carencia.',
+    lecturaCuestionario,
+    lecturaInconsciente,
+    lecturaIntegral,
     unconsciousPatterns: patterns,
     strengthsFound: strengths,
-    keyInsight: 'El patrón general sugiere que la relación opera con dinámicas que merecen ser exploradas con mayor profundidad. Los números revelan tendencias; una conversación psicoanalítica revelaría su significado singular. La pregunta más importante no es "¿funciona esta relación?" sino "¿qué tipo de relación con el deseo opera en cada uno de ustedes?"',
+    keyInsight: 'El patrón general sugiere que la relación opera con dinámicas que merecen ser exploradas con mayor profundidad. Los números revelan tendencias; las reflexiones revelan deseos y temores. La sesión profesional es donde ambas dimensiones se encuentran y revelan su significado singular.',
     recommendation: 'Se recomienda una sesión profesional de diagnóstico de pareja para explorar en profundidad los patrones detectados. La sesión permite ir más allá de lo cuantitativo y trabajar con la experiencia subjetiva de cada uno, que es donde realmente operan los cambios.\n\nUn espacio psicoanalítico puede ayudar a distinguir entre lo que se demanda del otro (y que nunca será suficiente) y lo que genuinamente se desea construir juntos.',
     existentialReflection: 'Amar no es encontrar al otro perfecto, sino elegir al otro real — con su falta, con su misterio, con aquello que nunca terminaremos de conocer. El verdadero desafío del amor no es sostener la ilusión, sino sostener la verdad. Y la verdad es que nadie nos completa, nadie nos salva, nadie resuelve nuestra falta. Pero alguien, desde su propia incompletud, puede elegir caminar junto a la nuestra.'
   }

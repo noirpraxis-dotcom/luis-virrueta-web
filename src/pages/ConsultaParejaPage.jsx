@@ -384,12 +384,12 @@ function generatePDF(result, areaScores, interpretation, openQuestion, isPremium
     if (y > 180) { doc.addPage(); y = 20 }
     doc.setFontSize(13)
     doc.setTextColor(40, 40, 40)
-    doc.text('Análisis Psicoanalítico (IA)', m, y); y += 8
+    doc.text('Análisis Psicoanalítico Profundo', m, y); y += 8
 
     const sections = [
-      { title: 'Nivel de Idealización', text: aiAnalysis.idealizationAnalysis },
-      { title: 'Necesidad vs. Deseo', text: aiAnalysis.needVsDesire },
-      { title: 'Búsqueda de Completud', text: aiAnalysis.completionSeeking },
+      { title: '— Lectura del Cuestionario —', text: aiAnalysis.lecturaCuestionario },
+      { title: '— Perfil Inconsciente —', text: aiAnalysis.lecturaInconsciente },
+      { title: '— Lectura Integral —', text: aiAnalysis.lecturaIntegral },
       { title: 'Insight Principal', text: aiAnalysis.keyInsight },
       { title: 'Reflexión Existencial', text: aiAnalysis.existentialReflection }
     ]
@@ -614,7 +614,7 @@ const ConsultaParejaPage = () => {
     <div ref={topRef} className="min-h-screen bg-[#0a0a0f]">
       <SEOHead
         title="Diagnóstico de Relación — Consulta de Pareja | Luis Virrueta"
-        description="Descubre el estado real de tu relación con un diagnóstico psicológico profesional. Versión gratuita y premium con análisis psicoanalítico profundo con IA."
+        description="Descubre el estado real de tu relación con un diagnóstico psicológico profesional. Versión gratuita y premium con análisis psicoanalítico profundo."
         url="/servicios/consulta-pareja"
         type="website"
         tags={['consulta de pareja', 'diagnóstico de relación', 'terapia de pareja', 'psicólogo', 'psicoanalista']}
@@ -677,7 +677,7 @@ const ConsultaParejaPage = () => {
                   className="flex items-center justify-center gap-6 mt-8 text-white/30 text-xs tracking-wider">
                   <span className="flex items-center gap-1.5"><Zap className="w-3.5 h-3.5" /> Gratuito + Premium</span>
                   <span className="w-px h-3 bg-white/20" />
-                  <span className="flex items-center gap-1.5"><Brain className="w-3.5 h-3.5" /> Análisis con IA</span>
+                  <span className="flex items-center gap-1.5"><Brain className="w-3.5 h-3.5" /> Análisis profundo</span>
                   <span className="w-px h-3 bg-white/20" />
                   <span className="flex items-center gap-1.5"><BarChart3 className="w-3.5 h-3.5" /> Gráficas profesionales</span>
                 </motion.div>
@@ -768,7 +768,7 @@ const ConsultaParejaPage = () => {
                 <motion.button initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
                   whileHover={{ scale: 1.02, y: -4 }} whileTap={{ scale: 0.98 }}
                   onClick={() => { setMode('premium'); setStage('checkout'); scrollToTop() }}
-                  className="group relative p-8 border border-violet-500/20 rounded-2xl bg-gradient-to-br from-violet-500/[0.03] to-pink-500/[0.02] hover:border-violet-400/40 transition-all duration-500 text-left overflow-hidden">
+                  className="group relative p-8 pb-6 border border-violet-500/20 rounded-2xl bg-gradient-to-br from-violet-500/[0.03] to-pink-500/[0.02] hover:border-violet-400/40 transition-all duration-500 text-left overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-violet-500/8 to-transparent rounded-bl-full" />
                   <div className="absolute top-4 right-4">
                     <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-gradient-to-r from-violet-500/20 to-pink-500/20 border border-violet-400/20 rounded-full text-[10px] text-violet-300/80 font-light uppercase tracking-[0.15em]">
@@ -779,22 +779,20 @@ const ConsultaParejaPage = () => {
                     <div className="inline-flex p-3 rounded-xl bg-gradient-to-br from-violet-400/10 to-purple-400/10 border border-violet-500/10 mb-5">
                       <Brain className="w-5 h-5 text-violet-400/80" strokeWidth={1.5} />
                     </div>
-                    <h3 className="text-xl text-white/90 font-light tracking-wide mb-2 font-display">
+                    <h3 className="text-xl text-white/90 font-light tracking-wide mb-3 font-display">
                       Diagnóstico <span className="italic">Premium</span>
                     </h3>
-                    <div className="flex items-center gap-3 mb-4">
+                    <div className="flex items-center gap-3 mb-5">
                       <span className="flex items-center gap-1.5 text-white/40 text-xs"><Clock className="w-3 h-3" /> ~15 min</span>
-                      <span className="w-px h-3 bg-white/10" />
-                      <span className="flex items-center gap-1.5 text-white/40 text-xs"><FileText className="w-3 h-3" /> 51 + 10 preguntas</span>
                       <span className="w-px h-3 bg-white/10" />
                       <span className="text-violet-300/70 text-xs font-light">${PREMIUM_PRICE} MXN</span>
                     </div>
-                    <ul className="space-y-2 mb-5 text-white/35 text-xs font-extralight">
-                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Todo lo del gratuito, desbloqueado</li>
-                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Gráfica radar de 8 áreas + idealización</li>
-                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> 10 preguntas filosóficas profundas</li>
-                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Análisis psicoanalítico con IA</li>
-                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> PDF profesional descargable</li>
+                    <ul className="space-y-2.5 mb-6 text-white/40 text-xs font-extralight">
+                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Todo lo gratuito, desbloqueado</li>
+                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Gráfica radar de 8 dimensiones</li>
+                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Perfil de patrones inconscientes</li>
+                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Lectura integral completa</li>
+                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Informe PDF profesional</li>
                     </ul>
                     <div className="flex items-center gap-2 text-violet-400/60 text-xs font-light group-hover:text-violet-400/90 transition-colors">
                       <span className="uppercase tracking-[0.15em]">Acceder</span>
@@ -828,7 +826,7 @@ const ConsultaParejaPage = () => {
                   </div>
                   <div>
                     <h3 className="text-lg text-white/90 font-light tracking-wide font-display">Diagnóstico Premium</h3>
-                    <p className="text-white/30 text-xs font-extralight">Análisis psicoanalítico profundo con IA</p>
+                    <p className="text-white/30 text-xs font-extralight">Análisis psicoanalítico profundo</p>
                   </div>
                 </div>
 
@@ -847,7 +845,7 @@ const ConsultaParejaPage = () => {
 
                 {/* Features list */}
                 <div className="space-y-2.5 mb-8">
-                  {['51 preguntas psicológicas profundas', '10 preguntas filosóficas sobre el deseo y la falta', 'Análisis de idealización y patrones inconscientes', 'Interpretación psicoanalítica con inteligencia artificial', 'Gráfica radar profesional de 8 dimensiones', 'PDF descargable con informe completo'].map((feat, i) => (
+                  {['Cuestionario psicológico profundo (61 preguntas)', 'Perfil de patrones inconscientes', 'Lectura psicoanalítica del cuestionario', 'Lectura integral: cruce de datos + reflexiones', 'Gráfica radar profesional de 8 dimensiones', 'Informe PDF profesional descargable'].map((feat, i) => (
                     <div key={i} className="flex items-start gap-2.5">
                       <Check className="w-3.5 h-3.5 text-violet-400/60 mt-0.5 flex-shrink-0" strokeWidth={2} />
                       <span className="text-white/50 text-xs font-light leading-relaxed">{feat}</span>
@@ -1207,8 +1205,8 @@ const ConsultaParejaPage = () => {
                 <Loader2 className="w-12 h-12 text-violet-400/60" strokeWidth={1.5} />
               </motion.div>
               <h2 className="text-2xl font-light text-white mb-4 font-display tracking-wide">Analizando tu relación</h2>
-              <p className="text-white/40 text-sm font-extralight mb-2">La inteligencia artificial está procesando tus respuestas...</p>
-              <p className="text-white/25 text-xs font-extralight">Cruzando datos cuantitativos con tus reflexiones filosóficas</p>
+              <p className="text-white/40 text-sm font-extralight mb-2">Estamos procesando tus respuestas en profundidad...</p>
+              <p className="text-white/25 text-xs font-extralight">Cruzando datos cuantitativos con tus reflexiones personales</p>
 
               <div className="mt-10 flex items-center justify-center gap-2">
                 {['Comunicación', 'Intimidad', 'Idealización', 'Deseo', 'Patrones'].map((label, i) => (
@@ -1355,7 +1353,7 @@ const ConsultaParejaPage = () => {
                       <Lock className="w-8 h-8 text-white/30 mb-4" strokeWidth={1.5} />
                       <p className="text-white/70 text-sm font-light mb-1">Contenido Premium</p>
                       <p className="text-white/30 text-xs font-extralight mb-6 text-center max-w-xs px-4">
-                        Gráfica radar, análisis de idealización, interpretación psicoanalítica con IA, PDF profesional y más
+                        Gráfica radar, perfil de patrones inconscientes, lectura integral completa, informe PDF profesional y más
                       </p>
                       <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                         onClick={() => { setMode('premium'); setStage('checkout'); scrollToTop() }}
@@ -1367,45 +1365,53 @@ const ConsultaParejaPage = () => {
                 </motion.div>
               )}
 
-              {/* ─── AI ANALYSIS (Premium) ─── */}
+              {/* ─── PREMIUM ANALYSIS (3 Lecturas) ─── */}
               {isPremiumUnlocked && aiAnalysis && (
                 <>
-                  {/* Interpretación Psicoanalítica con IA */}
+                  {/* LECTURA 1: Perfil del Cuestionario */}
                   <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
-                    className="mb-8 p-8 border border-violet-500/10 rounded-2xl bg-gradient-to-br from-violet-500/[0.02] to-transparent">
-                    <div className="flex items-center gap-3 mb-6">
-                      <Brain className="w-5 h-5 text-violet-400/60" strokeWidth={1.5} />
-                      <h3 className="text-lg font-light text-white tracking-wide font-display">Análisis Psicoanalítico</h3>
-                      <span className="text-[10px] text-violet-300/40 font-light px-2 py-0.5 border border-violet-500/15 rounded-full ml-auto">IA</span>
+                    className="mb-8 p-8 border border-blue-500/10 rounded-2xl bg-gradient-to-br from-blue-500/[0.02] to-transparent">
+                    <div className="flex items-center gap-3 mb-2">
+                      <BarChart3 className="w-5 h-5 text-blue-400/60" strokeWidth={1.5} />
+                      <h3 className="text-lg font-light text-white tracking-wide font-display">Lectura del Cuestionario</h3>
+                      <span className="text-[10px] text-blue-300/30 font-light px-2 py-0.5 border border-blue-500/10 rounded-full ml-auto">1 de 3</span>
                     </div>
-                    {aiAnalysis.idealizationAnalysis && (
-                      <div className="mb-6">
-                        <h4 className="text-white/60 text-xs font-light uppercase tracking-[0.15em] mb-3">Idealización y Proyección</h4>
-                        {aiAnalysis.idealizationAnalysis.split('\n\n').map((p, i) => (
-                          <p key={i} className="text-white/45 text-sm font-extralight leading-[1.9] tracking-wide mb-3">{p}</p>
-                        ))}
-                      </div>
-                    )}
-                    {aiAnalysis.needVsDesire && (
-                      <div className="mb-6">
-                        <h4 className="text-white/60 text-xs font-light uppercase tracking-[0.15em] mb-3">Necesidad vs. Deseo</h4>
-                        {aiAnalysis.needVsDesire.split('\n\n').map((p, i) => (
-                          <p key={i} className="text-white/45 text-sm font-extralight leading-[1.9] tracking-wide mb-3">{p}</p>
-                        ))}
-                      </div>
-                    )}
-                    {aiAnalysis.completionSeeking && (
-                      <div className="mb-6">
-                        <h4 className="text-white/60 text-xs font-light uppercase tracking-[0.15em] mb-3">Búsqueda de Completud</h4>
-                        {aiAnalysis.completionSeeking.split('\n\n').map((p, i) => (
-                          <p key={i} className="text-white/45 text-sm font-extralight leading-[1.9] tracking-wide mb-3">{p}</p>
-                        ))}
-                      </div>
-                    )}
+                    <p className="text-white/25 text-xs font-extralight mb-6">Qué revelan los datos cuantitativos sobre tu dinámica vincular</p>
+                    {(aiAnalysis.lecturaCuestionario || '').split('\n\n').map((p, i) => (
+                      <p key={i} className="text-white/45 text-sm font-extralight leading-[1.9] tracking-wide mb-3">{p}</p>
+                    ))}
+                  </motion.div>
+
+                  {/* LECTURA 2: Perfil Inconsciente */}
+                  <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
+                    className="mb-8 p-8 border border-violet-500/10 rounded-2xl bg-gradient-to-br from-violet-500/[0.02] to-transparent">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Eye className="w-5 h-5 text-violet-400/60" strokeWidth={1.5} />
+                      <h3 className="text-lg font-light text-white tracking-wide font-display">Perfil Inconsciente</h3>
+                      <span className="text-[10px] text-violet-300/30 font-light px-2 py-0.5 border border-violet-500/10 rounded-full ml-auto">2 de 3</span>
+                    </div>
+                    <p className="text-white/25 text-xs font-extralight mb-6">Patrones profundos detectados en tus reflexiones personales</p>
+                    {(aiAnalysis.lecturaInconsciente || '').split('\n\n').map((p, i) => (
+                      <p key={i} className="text-white/45 text-sm font-extralight leading-[1.9] tracking-wide mb-3">{p}</p>
+                    ))}
+                  </motion.div>
+
+                  {/* LECTURA 3: Lectura Integral */}
+                  <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}
+                    className="mb-8 p-8 border border-pink-500/10 rounded-2xl bg-gradient-to-br from-pink-500/[0.02] to-fuchsia-500/[0.01]">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Layers className="w-5 h-5 text-pink-400/60" strokeWidth={1.5} />
+                      <h3 className="text-lg font-light text-white tracking-wide font-display">Lectura Integral</h3>
+                      <span className="text-[10px] text-pink-300/30 font-light px-2 py-0.5 border border-pink-500/10 rounded-full ml-auto">3 de 3</span>
+                    </div>
+                    <p className="text-white/25 text-xs font-extralight mb-6">Cruce de datos cuantitativos con tus reflexiones: la historia completa</p>
+                    {(aiAnalysis.lecturaIntegral || '').split('\n\n').map((p, i) => (
+                      <p key={i} className="text-white/45 text-sm font-extralight leading-[1.9] tracking-wide mb-3">{p}</p>
+                    ))}
                   </motion.div>
 
                   {/* Patrones + Fortalezas */}
-                  <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
+                  <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.0 }}
                     className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
                     <div className="p-6 border border-red-500/10 rounded-2xl bg-red-500/[0.02]">
                       <h4 className="text-white/60 text-xs font-light uppercase tracking-[0.15em] mb-4">Patrones Inconscientes</h4>
@@ -1433,7 +1439,7 @@ const ConsultaParejaPage = () => {
 
                   {/* Key Insight */}
                   {aiAnalysis.keyInsight && (
-                    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}
+                    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1 }}
                       className="mb-8 p-8 border border-amber-500/10 rounded-2xl bg-amber-500/[0.02]">
                       <h4 className="text-white/60 text-xs font-light uppercase tracking-[0.15em] mb-3">Insight Principal</h4>
                       <p className="text-white/50 text-sm font-extralight leading-[1.9] tracking-wide italic">{aiAnalysis.keyInsight}</p>
@@ -1442,7 +1448,7 @@ const ConsultaParejaPage = () => {
 
                   {/* Existential Reflection */}
                   {aiAnalysis.existentialReflection && (
-                    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}
+                    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2 }}
                       className="mb-16 p-8 border border-white/5 rounded-2xl bg-white/[0.01] text-center">
                       <p className="text-white/35 text-base font-extralight leading-[2] tracking-wide italic font-display max-w-lg mx-auto">
                         &ldquo;{aiAnalysis.existentialReflection}&rdquo;
