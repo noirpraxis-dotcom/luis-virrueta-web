@@ -110,7 +110,7 @@ const PHILOSOPHICAL_QUESTIONS = [
 ]
 
 // ─── PREGUNTAS FLASH (Premium — proyectivas, sin filtro racional) ─────────
-// 5 frases para completar + 5 elecciones forzadas.
+// 8 frases para completar + 7 elecciones forzadas = 15 total.
 // Respuestas en menos de 3 segundos: lo que sale sin pensar revela lo inconsciente.
 
 const FLASH_QUESTIONS = [
@@ -123,7 +123,12 @@ const FLASH_QUESTIONS = [
   { id: 'f7', type: 'choice', text: '¿Antes de esta relación eras...?', options: ['Más feliz', 'Igual de feliz', 'Menos feliz'] },
   { id: 'f8', type: 'choice', text: '¿Sientes que tu pareja te conoce de verdad?', options: ['Sí', 'En parte', 'No del todo'] },
   { id: 'f9', type: 'choice', text: '¿Prefieres que tu pareja te...?', options: ['Necesite', 'Elija'] },
-  { id: 'f10', type: 'choice', text: '¿Estarías con tu pareja si supieras que nunca va a cambiar?', options: ['Sí', 'No sé', 'No'] }
+  { id: 'f10', type: 'choice', text: '¿Estarías con tu pareja si supieras que nunca va a cambiar?', options: ['Sí', 'No sé', 'No'] },
+  { id: 'f11', type: 'complete', stem: 'Si pudiera cambiar una sola cosa de mi relación, sería', sample: 'la forma en que discutimos' },
+  { id: 'f12', type: 'complete', stem: 'Cuando mi pareja se aleja, yo', sample: 'siento un vacío que no puedo ignorar' },
+  { id: 'f13', type: 'complete', stem: 'Lo que nunca le he dicho a mi pareja es', sample: 'que a veces me siento solo/a incluso estando juntos' },
+  { id: 'f14', type: 'choice', text: '¿Cuándo te sientes más tú en la relación?', options: ['Cuando estamos juntos', 'Cuando estoy solo/a', 'Da igual'] },
+  { id: 'f15', type: 'choice', text: '¿Tu relación se parece más a...?', options: ['Un refugio', 'Una montaña rusa', 'Una costumbre'] }
 ]
 
 // ─── PERFILES MOCK (DEV) ──────────────────────────────────────────
@@ -148,7 +153,7 @@ const MOCK_PROFILES = [
       13: 'Quedarme solo otra vez.',
       14: 'Entender por qué me engancho tanto con personas que no están del todo disponibles.'
     },
-    flash: { f1: 'ansiedad mezclada con ternura', f2: 'que se aburra de mí', f3: 'más yo mismo', f4: 'más libre pero más solo', f5: 'ser calma, pero en mi relación es incertidumbre', f6: 'Yo', f7: 'Igual de feliz', f8: 'En parte', f9: 'Elija', f10: 'No sé' },
+    flash: { f1: 'ansiedad mezclada con ternura', f2: 'que se aburra de mí', f3: 'más yo mismo', f4: 'más libre pero más solo', f5: 'ser calma, pero en mi relación es incertidumbre', f6: 'Yo', f7: 'Igual de feliz', f8: 'En parte', f9: 'Elija', f10: 'No sé', f11: 'que dejara de dudar de lo nuestro', f12: 'me lleno de ansiedad y busco contacto', f13: 'que a veces me siento invisible', f14: 'Cuando estamos juntos', f15: 'Una montaña rusa' },
     answers: { 101: 3, 102: 4, 103: 2, 201: 4, 202: 4, 203: 3, 301: 4, 302: 3, 303: 4, 401: 4, 402: 4, 403: 2, 501: 3, 502: 3, 503: 3, 601: 2, 602: 4, 603: 3, 701: 4, 702: 2, 703: 3, 801: 4, 802: 3, 803: 3, 804: 4 }
   },
   {
@@ -171,7 +176,7 @@ const MOCK_PROFILES = [
       13: 'Perderme a mí mismo en algo que se siente como una obligación constante.',
       14: 'Por qué me cuesta tanto conectar emocionalmente aunque sé que debería.'
     },
-    flash: { f1: 'tranquilidad', f2: 'que me absorba', f3: 'igual que siempre', f4: 'más tranquilo', f5: 'algo sencillo, pero en mi relación es algo complicado', f6: 'Mi pareja', f7: 'Igual de feliz', f8: 'No del todo', f9: 'Elija', f10: 'Sí' },
+    flash: { f1: 'tranquilidad', f2: 'que me absorba', f3: 'igual que siempre', f4: 'más tranquilo', f5: 'algo sencillo, pero en mi relación es algo complicado', f6: 'Mi pareja', f7: 'Igual de feliz', f8: 'No del todo', f9: 'Elija', f10: 'Sí', f11: 'nada, está bien así', f12: 'me siento aliviado honestamente', f13: 'que a veces no siento nada y me preocupa', f14: 'Cuando estoy solo/a', f15: 'Una costumbre' },
     answers: { 101: 3, 102: 3, 103: 3, 201: 2, 202: 2, 203: 2, 301: 3, 302: 3, 303: 3, 401: 3, 402: 3, 403: 3, 501: 4, 502: 4, 503: 2, 601: 3, 602: 2, 603: 2, 701: 1, 702: 5, 703: 4, 801: 3, 802: 2, 803: 4, 804: 2 }
   },
   {
@@ -194,7 +199,7 @@ const MOCK_PROFILES = [
       13: 'Conformarme con algo que ya no crece.',
       14: 'Aprender a dejar de controlar todo para sentirme segura.'
     },
-    flash: { f1: 'cariño y algo de costumbre', f2: 'que nos estanquemos', f3: 'más ligera y más graciosa', f4: 'más sola, pero capaz', f5: 'ser crecimiento, y en mi relación a veces lo es', f6: 'Los dos igual', f7: 'Igual de feliz', f8: 'Sí', f9: 'Elija', f10: 'Sí' },
+    flash: { f1: 'cariño y algo de costumbre', f2: 'que nos estanquemos', f3: 'más ligera y más graciosa', f4: 'más sola, pero capaz', f5: 'ser crecimiento, y en mi relación a veces lo es', f6: 'Los dos igual', f7: 'Igual de feliz', f8: 'Sí', f9: 'Elija', f10: 'Sí', f11: 'cómo manejamos el estrés juntos', f12: 'lo noto y se lo digo cuando puedo', f13: 'que a veces quisiera más espontaneidad', f14: 'Cuando estamos juntos', f15: 'Un refugio' },
     answers: { 101: 4, 102: 2, 103: 4, 201: 4, 202: 2, 203: 4, 301: 5, 302: 2, 303: 5, 401: 2, 402: 3, 403: 4, 501: 5, 502: 4, 503: 2, 601: 4, 602: 2, 603: 2, 701: 2, 702: 4, 703: 5, 801: 2, 802: 2, 803: 5, 804: 1 }
   },
   {
@@ -217,7 +222,7 @@ const MOCK_PROFILES = [
       13: 'Estar sola. Siempre. Sola de verdad.',
       14: 'Por qué necesito tanto a alguien para sentirme completa.'
     },
-    flash: { f1: 'necesidad absoluta', f2: 'que me abandone', f3: 'nadie, me pierdo en el otro', f4: 'vacía, como si no existiera', f5: 'fusión total, y en mi relación lo es pero duele', f6: 'Yo', f7: 'Menos feliz', f8: 'Sí', f9: 'Necesite', f10: 'Sí' },
+    flash: { f1: 'necesidad absoluta', f2: 'que me abandone', f3: 'nadie, me pierdo en el otro', f4: 'vacía, como si no existiera', f5: 'fusión total, y en mi relación lo es pero duele', f6: 'Yo', f7: 'Menos feliz', f8: 'Sí', f9: 'Necesite', f10: 'Sí', f11: 'que me demostrara que no me va a dejar', f12: 'entro en pánico y le llamo veinte veces', f13: 'que sin esta persona no sé quién soy', f14: 'Cuando estamos juntos', f15: 'Una montaña rusa' },
     answers: { 101: 4, 102: 4, 103: 3, 201: 5, 202: 4, 203: 5, 301: 5, 302: 1, 303: 5, 401: 4, 402: 4, 403: 2, 501: 5, 502: 4, 503: 1, 601: 3, 602: 5, 603: 4, 701: 5, 702: 1, 703: 2, 801: 5, 802: 5, 803: 5, 804: 5 }
   }
 ]
@@ -328,11 +333,20 @@ function AnalyzingProgress({ isDone, onComplete }) {
   const completedCountRef = useRef(0)
   const onCompleteRef = useRef(onComplete)
   onCompleteRef.current = onComplete
+  const allTasksDoneRef = useRef(false)
+
+  const tryComplete = useCallback(() => {
+    // Solo transicionar cuando AMBAS condiciones se cumplan: todas las tareas animadas Y la IA terminó
+    if (allTasksDoneRef.current && isDoneRef.current) {
+      timeoutRef.current = setTimeout(() => { onCompleteRef.current?.() }, 400)
+    }
+  }, [])
 
   const scheduleNext = useCallback(() => {
     const idx = completedCountRef.current
     if (idx >= ALL_ANALYSIS_TASKS.length) {
-      timeoutRef.current = setTimeout(() => { onCompleteRef.current?.() }, 600)
+      allTasksDoneRef.current = true
+      tryComplete()
       return
     }
     const delay = isDoneRef.current ? 160 : TASK_DURATIONS_MS[idx]
@@ -341,20 +355,27 @@ function AnalyzingProgress({ isDone, onComplete }) {
       setCompletedCount(idx + 1)
       scheduleNext()
     }, delay)
-  }, [])
+  }, [tryComplete])
 
   useEffect(() => {
     scheduleNext()
     return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current) }
   }, [scheduleNext])
 
-  // When isDone becomes true — cancel current long timer and drain remaining tasks fast
+  // Cuando isDone se vuelve true — drenar tareas restantes rápido Y luego transicionar
   useEffect(() => {
     if (!isDone) return
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    // Si ya se completaron todas las tareas, transicionar inmediatamente
+    if (allTasksDoneRef.current) {
+      timeoutRef.current = setTimeout(() => { onCompleteRef.current?.() }, 400)
+      return
+    }
+    // Si no, drenar las restantes rápido
     const fastDrain = () => {
       const idx = completedCountRef.current
       if (idx >= ALL_ANALYSIS_TASKS.length) {
+        allTasksDoneRef.current = true
         timeoutRef.current = setTimeout(() => { onCompleteRef.current?.() }, 400)
         return
       }
@@ -937,6 +958,7 @@ const ConsultaParejaPage = () => {
   const philRecognitionRef = useRef(null)
 
   // Voice UI state for flash questions
+  const [flashUIMode, setFlashUIMode] = useState('voice')
   const [flashInterim, setFlashInterim] = useState('')
   const [flashRecording, setFlashRecording] = useState(false)
   const flashRecognitionRef = useRef(null)
@@ -1155,7 +1177,7 @@ const ConsultaParejaPage = () => {
       return
     }
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition
-    if (!SR) return
+    if (!SR) { setFlashUIMode('text'); return }
     const fq = FLASH_QUESTIONS[currentFlash]
     if (!fq || fq.type !== 'complete') return
     const recognition = new SR()
@@ -1587,80 +1609,44 @@ const ConsultaParejaPage = () => {
         ═══════════════════════════════════════════════════════════ */}
         {stage === 'instructions' && (
           <motion.div key="instructions" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-            className="min-h-screen flex items-center justify-center px-6 pt-28">
-            <div className="max-w-lg w-full">
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
-                className="text-center mb-10">
-                <div className="inline-flex items-center gap-2 px-4 py-2 border border-violet-500/15 rounded-full bg-violet-500/5 mb-6">
-                  <Brain className="w-3.5 h-3.5 text-violet-400/60" strokeWidth={1.5} />
-                  <span className="text-xs text-violet-300/50 font-light uppercase tracking-[0.15em]">Antes de empezar</span>
+            className="min-h-screen flex items-center justify-center px-6 pt-28 pb-20">
+            <div className="max-w-lg w-full text-center">
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}>
+                <div className="inline-flex items-center gap-2 px-5 py-2 border border-violet-500/15 rounded-full bg-violet-500/5 mb-8">
+                  <Sparkles className="w-3.5 h-3.5 text-violet-400/60" strokeWidth={1.5} />
+                  <span className="text-xs text-violet-300/50 font-light uppercase tracking-[0.2em]">Diagnóstico Premium</span>
                 </div>
-                <h2 className="text-3xl lg:text-4xl font-light text-white mb-4 font-display tracking-wide">
-                  Cómo funciona este <span className="italic font-normal">diagnóstico</span>
-                </h2>
               </motion.div>
 
-              <div className="space-y-5 mb-10">
-                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}
-                  className="flex items-start gap-4 p-5 border border-white/8 rounded-xl bg-white/[0.02]">
-                  <div className="w-8 h-8 rounded-full bg-pink-500/10 border border-pink-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-pink-400/80 text-xs font-light">1</span>
-                  </div>
-                  <div>
-                    <p className="text-white/80 text-sm font-light mb-1">Primero, unas preguntas para platicar</p>
-                    <p className="text-white/40 text-xs font-extralight leading-relaxed">
-                      Vamos a hacerte 15 preguntas abiertas. Contéstalas como si le platicaras a un amigo cercano — no hay respuestas correctas ni incorrectas. 
-                      <span className="text-violet-300/60"> Entre más compartas, más preciso y profundo será tu análisis.</span>
-                    </p>
-                  </div>
-                </motion.div>
+              <motion.h2 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+                className="text-3xl lg:text-4xl font-light text-white mb-5 font-display tracking-wide">
+                Cuéntamelo como si fuera <span className="italic font-normal">un amigo</span>
+              </motion.h2>
 
-                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}
-                  className="flex items-start gap-4 p-5 border border-white/8 rounded-xl bg-white/[0.02]">
-                  <div className="w-8 h-8 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-violet-400/80 text-xs font-light">2</span>
-                  </div>
-                  <div>
-                    <p className="text-white/80 text-sm font-light mb-1">Después, reacciones rápidas y afirmaciones</p>
-                    <p className="text-white/40 text-xs font-extralight leading-relaxed">
-                      10 respuestas proyectivas para captar lo intuitivo, seguidas de 25 afirmaciones breves para confirmar los patrones.
-                    </p>
-                  </div>
-                </motion.div>
+              <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+                className="text-white/50 text-base font-light leading-relaxed max-w-md mx-auto mb-10">
+                No hay respuestas correctas ni incorrectas. <span className="text-violet-300/70 font-normal">Entre más compartas, más profundo será tu análisis.</span> Puedes hablar o escribir, como prefieras.
+              </motion.p>
 
-                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}
-                  className="flex items-start gap-4 p-5 border border-white/8 rounded-xl bg-white/[0.02]">
-                  <div className="w-8 h-8 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-fuchsia-400/80 text-xs font-light">3</span>
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+                className="p-6 border border-white/8 rounded-2xl bg-white/[0.02] mb-10">
+                <div className="flex flex-wrap items-center justify-center gap-8">
+                  <div className="flex items-center gap-2.5">
+                    <Clock className="w-4 h-4 text-violet-400/40" strokeWidth={1.5} />
+                    <span className="text-white/50 text-sm font-light">20 – 25 minutos</span>
                   </div>
-                  <div>
-                    <p className="text-white/80 text-sm font-light mb-1">La IA cruza todo y genera tu diagnóstico</p>
-                    <p className="text-white/40 text-xs font-extralight leading-relaxed">
-                      Tu análisis cruza lo que nos platicaste con los datos cuantitativos para detectar patrones profundos, mecanismos de defensa y fortalezas reales.
-                    </p>
+                  <div className="flex items-center gap-2.5">
+                    <Mic className="w-4 h-4 text-violet-400/40" strokeWidth={1.5} />
+                    <span className="text-white/50 text-sm font-light">Voz o texto</span>
                   </div>
-                </motion.div>
-              </div>
-
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
-                className="p-4 border border-violet-500/10 rounded-xl bg-violet-500/[0.02] mb-10">
-                <div className="flex flex-wrap items-center justify-center gap-6 text-center">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-3.5 h-3.5 text-white/30" strokeWidth={1.5} />
-                    <span className="text-white/40 text-xs font-light">~18 minutos</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Mic className="w-3.5 h-3.5 text-white/30" strokeWidth={1.5} />
-                    <span className="text-white/40 text-xs font-light">Puedes dictar con voz</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Shield className="w-3.5 h-3.5 text-white/30" strokeWidth={1.5} />
-                    <span className="text-white/40 text-xs font-light">"No sé" es válido</span>
+                  <div className="flex items-center gap-2.5">
+                    <Shield className="w-4 h-4 text-violet-400/40" strokeWidth={1.5} />
+                    <span className="text-white/50 text-sm font-light">Omitir es válido</span>
                   </div>
                 </div>
               </motion.div>
 
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }} className="text-center">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
                 <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                   onClick={() => { setStage('respondent'); scrollToTop() }}
                   className="px-10 py-4 bg-gradient-to-r from-violet-500 to-pink-500 rounded-full text-white font-light text-sm uppercase tracking-[0.15em] hover:shadow-[0_0_30px_rgba(139,92,246,0.25)] transition-shadow">
@@ -1668,9 +1654,9 @@ const ConsultaParejaPage = () => {
                 </motion.button>
               </motion.div>
 
-              {/* DEV: Quick-fill with mock profiles for testing AI analysis */}
+              {/* DEV: Quick-fill con perfiles mock para testing */}
               {isTestMode && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
                   className="mt-8 relative">
                   <div className="text-center mb-3">
                     <span className="text-amber-400/40 text-[10px] uppercase tracking-[0.2em]">Test rápido — rellenar y analizar</span>
@@ -1831,19 +1817,8 @@ const ConsultaParejaPage = () => {
             </div>
 
             <div className="max-w-2xl mx-auto w-full flex-1 flex flex-col justify-center relative z-10">
-              {currentPhilosophical === 0 && (
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                  className="mb-8 p-5 border border-violet-500/15 rounded-xl bg-violet-500/[0.03]">
-                  <p className="text-violet-200/70 text-base font-light leading-relaxed">
-                    Cuéntamelo como si fuera un amigo — no hay respuestas correctas ni incorrectas.
-                    <span className="text-violet-300/80 font-normal"> Entre más compartas, mejor será tu análisis.</span>{' '}
-                    Puedes hablar o escribir, como prefieras.
-                  </p>
-                </motion.div>
-              )}
-
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/15 bg-violet-500/5">
+              <div className="flex flex-col items-center mb-6">
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/15 bg-violet-500/5 mb-2">
                   <Brain className="w-3 h-3 text-violet-400/60" strokeWidth={1.5} />
                   <span className="text-violet-300/50 text-[10px] font-light uppercase tracking-[0.15em]">Platícame de tu relación</span>
                 </div>
@@ -1914,7 +1889,7 @@ const ConsultaParejaPage = () => {
                             onClick={() => {
                               if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
                                 setCurrentPhilosophical(prev => prev + 1); scrollToTop()
-                              } else { setStage('flash'); scrollToTop() }
+                              } else { setStage('flash-intro'); scrollToTop() }
                             }}
                             className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-violet-500/80 to-fuchsia-500/80 text-white text-xs uppercase tracking-wider hover:from-violet-500 hover:to-fuchsia-500 transition-all">
                             {currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1 ? 'Siguiente' : 'Continuar'}
@@ -1929,7 +1904,7 @@ const ConsultaParejaPage = () => {
                           <button onClick={() => {
                             if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
                               setCurrentPhilosophical(prev => prev + 1)
-                            } else { setStage('flash'); scrollToTop() }
+                            } else { setStage('flash-intro'); scrollToTop() }
                           }}
                             className="text-white/20 text-xs hover:text-white/40 tracking-wider transition-colors">
                             OMITIR
@@ -1942,7 +1917,7 @@ const ConsultaParejaPage = () => {
                                 setTimeout(() => {
                                   if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
                                     setCurrentPhilosophical(prev => prev + 1); scrollToTop()
-                                  } else { setStage('flash'); scrollToTop() }
+                                  } else { setStage('flash-intro'); scrollToTop() }
                                 }, 350)
                               }}
                               className="flex items-center gap-1.5 text-amber-400/50 text-[10px] hover:text-amber-400/80 tracking-wider transition-colors border border-amber-400/20 rounded-full px-2.5 py-1 hover:border-amber-400/40">
@@ -2008,7 +1983,7 @@ const ConsultaParejaPage = () => {
                     onClick={() => {
                       if (currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1) {
                         setCurrentPhilosophical(prev => prev + 1)
-                      } else { setStage('flash'); scrollToTop() }
+                      } else { setStage('flash-intro'); scrollToTop() }
                     }}
                     className="flex items-center gap-2 text-violet-300/60 hover:text-violet-300/90 text-xs tracking-wider transition-colors">
                     {currentPhilosophical < PHILOSOPHICAL_QUESTIONS.length - 1 ? 'SIGUIENTE' : 'CONTINUAR'}
@@ -2021,6 +1996,52 @@ const ConsultaParejaPage = () => {
         )}
 
         {/* ═══════════════════════════════════════════════════════════
+            STAGE: FLASH-INTRO (Transición filosóficas → flash)
+        ═══════════════════════════════════════════════════════════ */}
+        {stage === 'flash-intro' && (
+          <motion.div key="flash-intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="min-h-screen flex flex-col items-center justify-center px-6 relative">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-fuchsia-600/8 rounded-full blur-3xl animate-pulse" />
+              <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-amber-500/6 rounded-full blur-3xl animate-pulse" />
+            </div>
+
+            <div className="relative z-10 max-w-lg text-center space-y-8">
+              {/* Ícono de rayo */}
+              <div className="mx-auto w-20 h-20 rounded-full bg-gradient-to-br from-amber-400/20 to-fuchsia-500/20 border border-amber-400/30 flex items-center justify-center">
+                <svg className="w-10 h-10 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                </svg>
+              </div>
+
+              <div className="space-y-4">
+                <h2 className="text-3xl md:text-4xl font-light text-white/90 tracking-wide">
+                  Ahora, responde rápido
+                </h2>
+                <p className="text-lg text-white/50 font-light leading-relaxed">
+                  Lo primero que se te venga a la mente.<br />
+                  No pienses demasiado — confía en tu instinto.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-center gap-6 text-white/30 text-xs tracking-widest uppercase">
+                <span>15 preguntas</span>
+                <span className="w-1 h-1 rounded-full bg-white/20" />
+                <span>~3 minutos</span>
+              </div>
+
+              <button
+                onClick={() => { setStage('flash'); scrollToTop() }}
+                className="mx-auto mt-4 px-10 py-3.5 rounded-full bg-gradient-to-r from-amber-500/80 to-fuchsia-500/80
+                  text-white text-sm uppercase tracking-widest hover:from-amber-500 hover:to-fuchsia-500
+                  transition-all duration-300 shadow-lg shadow-fuchsia-500/20">
+                Comenzar
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════
             STAGE: FLASH QUESTIONS (Premium — proyectivas)
         ═══════════════════════════════════════════════════════════ */}
         {stage === 'flash' && (
@@ -2028,28 +2049,19 @@ const ConsultaParejaPage = () => {
             className="min-h-screen flex flex-col pt-24 lg:pt-28 pb-20 px-6">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-fuchsia-600/5 rounded-full blur-3xl" />
-              <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-pink-600/5 rounded-full blur-3xl" />
+              <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-amber-600/5 rounded-full blur-3xl" />
             </div>
 
             <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-white/5">
-              <motion.div className="h-full bg-gradient-to-r from-fuchsia-500 to-pink-400"
+              <motion.div className="h-full bg-gradient-to-r from-fuchsia-500 to-amber-400"
                 initial={{ width: 0 }} animate={{ width: `${Math.round(((currentFlash + 1) / FLASH_QUESTIONS.length) * 100)}%` }}
                 transition={{ duration: 0.4, ease: 'easeOut' }} />
             </div>
 
-            <div className="max-w-xl mx-auto w-full flex-1 flex flex-col justify-center relative z-10">
-              {currentFlash === 0 && (
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                  className="mb-8 p-5 border border-fuchsia-500/15 rounded-xl bg-fuchsia-500/[0.03]">
-                  <p className="text-fuchsia-200/70 text-base font-light leading-relaxed">
-                    Segunda ronda — <span className="text-fuchsia-300/90 font-normal">responde lo primero que se te venga.</span>{' '}
-                    Sin pensarlo mucho. Eso es exactamente lo que buscamos.
-                  </p>
-                </motion.div>
-              )}
-
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-fuchsia-500/15 bg-fuchsia-500/5">
+            <div className="max-w-2xl mx-auto w-full flex-1 flex flex-col justify-center relative z-10">
+              {/* Badge centrado */}
+              <div className="flex flex-col items-center mb-6">
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-fuchsia-500/15 bg-fuchsia-500/5 mb-2">
                   <Zap className="w-3 h-3 text-fuchsia-400/60" strokeWidth={1.5} />
                   <span className="text-fuchsia-300/50 text-[10px] font-light uppercase tracking-[0.15em]">Respuestas rápidas</span>
                 </div>
@@ -2063,78 +2075,150 @@ const ConsultaParejaPage = () => {
                   exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.35 }}>
 
                   {FLASH_QUESTIONS[currentFlash].type === 'complete' ? (
-                    /* ── COMPLETAR FRASE ── */
+                    /* ── COMPLETAR FRASE (voice-first, como filosóficas) ── */
                     <div>
-                      <p className="text-white/40 text-[11px] font-light uppercase tracking-[0.18em] mb-4">Completa la frase</p>
-                      <h3 className="text-2xl lg:text-3xl font-light text-white/90 leading-relaxed mb-6 tracking-wide font-display italic">
-                        "{FLASH_QUESTIONS[currentFlash].stem}..."
+                      <p className="text-white/40 text-[11px] font-light uppercase tracking-[0.18em] mb-4 text-center">Completa la frase</p>
+                      <h3 className="text-2xl lg:text-3xl font-light text-white/90 leading-relaxed mb-8 tracking-wide font-display italic text-center">
+                        &ldquo;{FLASH_QUESTIONS[currentFlash].stem}...&rdquo;
                       </h3>
 
-                      {/* Mic button for flash */}
-                      <div className="flex items-center gap-3 mb-4">
-                        <motion.button type="button" onClick={toggleFlashMic}
-                          whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }}
-                          className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all duration-300 flex-shrink-0 ${
-                            flashRecording
-                              ? 'border-red-400/50 bg-red-500/15 text-red-300'
-                              : 'border-fuchsia-500/40 bg-fuchsia-500/10 text-fuchsia-300 hover:border-fuchsia-400/60 hover:bg-fuchsia-500/20'
-                          }`}>
-                          {flashRecording && (
-                            <motion.div className="absolute inset-0 rounded-full border border-red-400/20"
-                              animate={{ scale: [1, 1.35, 1], opacity: [0.4, 0, 0.4] }}
-                              transition={{ duration: 1.5, repeat: Infinity }} />
-                          )}
-                          {flashRecording ? <MicOff className="w-5 h-5" strokeWidth={1.5} /> : <Mic className="w-5 h-5" strokeWidth={1.5} />}
-                        </motion.button>
-                        {flashRecording && (
-                          <span className="text-red-300/60 text-xs font-light animate-pulse">Escuchando...</span>
-                        )}
-                        {!flashRecording && !(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '').trim() && (
-                          <span className="text-white/25 text-xs font-light">Toca el mic o escribe</span>
-                        )}
-                      </div>
-
-                      <textarea
-                        key={`flash-input-${currentFlash}`}
-                        autoFocus={!flashRecording}
-                        value={(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '') + (flashInterim ? ' ' + flashInterim : '')}
-                        onChange={(e) => { if (!flashRecording) setFlashAnswers(prev => ({ ...prev, [FLASH_QUESTIONS[currentFlash].id]: e.target.value })) }}
-                        placeholder="Lo primero que se te venga..."
-                        maxLength={200}
-                        rows={2}
-                        className="w-full p-4 bg-white/[0.03] border border-fuchsia-500/15 rounded-2xl text-white/85 text-base font-light placeholder:text-white/20 focus:border-fuchsia-400/30 focus:outline-none resize-none transition-colors leading-relaxed"
-                      />
-                      <div className="flex items-center justify-between mt-4">
-                        <div className="flex items-center gap-3">
-                          <button onClick={() => {
-                            if (currentFlash < FLASH_QUESTIONS.length - 1) { setCurrentFlash(prev => prev + 1); scrollToTop() }
-                            else { setStage('test'); scrollToTop() }
-                          }} className="text-white/25 text-xs hover:text-white/45 tracking-wider transition-colors">
-                            OMITIR
-                          </button>
-                          {isTestMode && FLASH_QUESTIONS[currentFlash].sample && !(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '').trim() && (
-                            <button
-                              onClick={() => setFlashAnswers(prev => ({ ...prev, [FLASH_QUESTIONS[currentFlash].id]: FLASH_QUESTIONS[currentFlash].sample }))}
-                              className="text-amber-400/45 text-[10px] hover:text-amber-400/75 transition-colors border border-amber-400/18 rounded-full px-2.5 py-1 hover:border-amber-400/35">
-                              ► Muestra
-                            </button>
-                          )}
-                        </div>
-                        {(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '').trim().length > 0 && !flashRecording && (
-                          <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                            whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                            onClick={() => handleFlashAnswer(FLASH_QUESTIONS[currentFlash].id, flashAnswers[FLASH_QUESTIONS[currentFlash].id])}
-                            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-fuchsia-500/80 to-pink-500/80 text-white text-xs uppercase tracking-wider hover:from-fuchsia-500 hover:to-pink-500 transition-all">
-                            Continuar <ArrowRight className="w-3.5 h-3.5" />
+                      {/* ── VOICE MODE (flash) ── */}
+                      {flashUIMode === 'voice' && (
+                        <div className="flex flex-col items-center py-2">
+                          <motion.button type="button" onClick={toggleFlashMic}
+                            whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }}
+                            className={`relative w-20 h-20 rounded-full border-2 flex items-center justify-center transition-all duration-300 mb-4 ${
+                              flashRecording
+                                ? 'border-red-400/50 bg-red-500/15 text-red-300'
+                                : 'border-fuchsia-500/40 bg-fuchsia-500/10 text-fuchsia-300 hover:border-fuchsia-400/60 hover:bg-fuchsia-500/20'
+                            }`}>
+                            {flashRecording && (
+                              <motion.div className="absolute inset-0 rounded-full border border-red-400/20"
+                                animate={{ scale: [1, 1.35, 1], opacity: [0.4, 0, 0.4] }}
+                                transition={{ duration: 1.5, repeat: Infinity }} />
+                            )}
+                            {flashRecording ? <MicOff className="w-8 h-8" strokeWidth={1.5} /> : <Mic className="w-8 h-8" strokeWidth={1.5} />}
                           </motion.button>
-                        )}
-                      </div>
+
+                          {!flashRecording && !(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '').trim() && (
+                            <p className="text-white/35 text-sm font-light text-center mb-2">Toca el micrófono para hablar</p>
+                          )}
+                          {flashRecording && (
+                            <p className="text-red-300/60 text-sm font-light animate-pulse text-center mb-2">Escuchando... toca para pausar</p>
+                          )}
+
+                          {((flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '').trim() || flashInterim) && (
+                            <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
+                              className="w-full mt-4 p-5 rounded-2xl border border-white/8 bg-white/[0.02] text-left">
+                              <p className="text-white/82 text-lg font-light leading-relaxed">
+                                {flashAnswers[FLASH_QUESTIONS[currentFlash].id] || ''}
+                                {flashInterim && <span className="text-white/30 italic"> {flashInterim}</span>}
+                              </p>
+                            </motion.div>
+                          )}
+
+                          {(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '').trim() && !flashRecording && (
+                            <div className="flex items-center gap-3 mt-5">
+                              <button onClick={toggleFlashMic}
+                                className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-fuchsia-500/20 text-fuchsia-300/60 text-xs uppercase tracking-wider hover:border-fuchsia-400/35 hover:text-fuchsia-300/90 transition-all">
+                                <Mic className="w-3 h-3" /> Agregar más
+                              </button>
+                              <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                                onClick={() => handleFlashAnswer(FLASH_QUESTIONS[currentFlash].id, flashAnswers[FLASH_QUESTIONS[currentFlash].id])}
+                                className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-fuchsia-500/80 to-amber-500/80 text-white text-xs uppercase tracking-wider hover:from-fuchsia-500 hover:to-amber-500 transition-all">
+                                {currentFlash < FLASH_QUESTIONS.length - 1 ? 'Siguiente' : 'Continuar'} <ArrowRight className="w-3.5 h-3.5" />
+                              </motion.button>
+                            </div>
+                          )}
+
+                          {!(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '').trim() && !flashRecording && (
+                            <div className="flex items-center gap-4 mt-4">
+                              <button onClick={() => {
+                                if (currentFlash < FLASH_QUESTIONS.length - 1) { setCurrentFlash(prev => prev + 1); scrollToTop() }
+                                else { setStage('test'); scrollToTop() }
+                              }} className="text-white/20 text-xs hover:text-white/40 tracking-wider transition-colors">
+                                OMITIR
+                              </button>
+                              {isTestMode && FLASH_QUESTIONS[currentFlash].sample && (
+                                <button
+                                  onClick={() => {
+                                    const sample = FLASH_QUESTIONS[currentFlash].sample
+                                    setFlashAnswers(prev => ({ ...prev, [FLASH_QUESTIONS[currentFlash].id]: sample }))
+                                    setTimeout(() => handleFlashAnswer(FLASH_QUESTIONS[currentFlash].id, sample), 350)
+                                  }}
+                                  className="flex items-center gap-1.5 text-amber-400/50 text-[10px] hover:text-amber-400/80 tracking-wider transition-colors border border-amber-400/20 rounded-full px-2.5 py-1 hover:border-amber-400/40">
+                                  ► Muestra
+                                </button>
+                              )}
+                            </div>
+                          )}
+
+                          <button onClick={() => setFlashUIMode('text')}
+                            className="mt-5 text-white/22 text-xs hover:text-white/50 transition-colors underline underline-offset-4">
+                            Prefiero escribir
+                          </button>
+                        </div>
+                      )}
+
+                      {/* ── TEXT MODE (flash) ── */}
+                      {flashUIMode === 'text' && (
+                        <div>
+                          <textarea
+                            key={`flash-input-${currentFlash}`}
+                            autoFocus={!flashRecording}
+                            value={(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '') + (flashInterim ? ' ' + flashInterim : '')}
+                            onChange={(e) => { if (!flashRecording) setFlashAnswers(prev => ({ ...prev, [FLASH_QUESTIONS[currentFlash].id]: e.target.value })) }}
+                            placeholder="Lo primero que se te venga..."
+                            maxLength={200}
+                            rows={2}
+                            className="w-full p-4 bg-white/[0.03] border border-fuchsia-500/15 rounded-2xl text-white/85 text-base font-light placeholder:text-white/20 focus:border-fuchsia-400/30 focus:outline-none resize-none transition-colors leading-relaxed"
+                          />
+                          <div className="flex items-center justify-between mt-2">
+                            <div className="flex items-center gap-3">
+                              <button onClick={() => setFlashUIMode('voice')}
+                                className="flex items-center gap-1.5 text-fuchsia-300/40 text-xs hover:text-fuchsia-300/70 transition-colors">
+                                <Mic className="w-3 h-3" /> Usar micrófono
+                              </button>
+                              {isTestMode && FLASH_QUESTIONS[currentFlash].sample && !(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '').trim() && (
+                                <button
+                                  onClick={() => {
+                                    const sample = FLASH_QUESTIONS[currentFlash].sample
+                                    setFlashAnswers(prev => ({ ...prev, [FLASH_QUESTIONS[currentFlash].id]: sample }))
+                                    setTimeout(() => handleFlashAnswer(FLASH_QUESTIONS[currentFlash].id, sample), 350)
+                                  }}
+                                  className="text-amber-400/50 text-[10px] hover:text-amber-400/80 transition-colors border border-amber-400/20 rounded-full px-2.5 py-1 hover:border-amber-400/40">
+                                  ► Muestra
+                                </button>
+                              )}
+                            </div>
+                            <span className="text-white/15 text-[10px] font-extralight">
+                              {(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '').length}/200
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between mt-4">
+                            <button onClick={() => {
+                              if (currentFlash < FLASH_QUESTIONS.length - 1) { setCurrentFlash(prev => prev + 1); scrollToTop() }
+                              else { setStage('test'); scrollToTop() }
+                            }} className="text-white/25 text-xs hover:text-white/45 tracking-wider transition-colors">
+                              OMITIR
+                            </button>
+                            {(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '').trim().length > 0 && !flashRecording && (
+                              <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                                whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                                onClick={() => handleFlashAnswer(FLASH_QUESTIONS[currentFlash].id, flashAnswers[FLASH_QUESTIONS[currentFlash].id])}
+                                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-fuchsia-500/80 to-amber-500/80 text-white text-xs uppercase tracking-wider hover:from-fuchsia-500 hover:to-amber-500 transition-all">
+                                Continuar <ArrowRight className="w-3.5 h-3.5" />
+                              </motion.button>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     /* ── ELECCIÓN FORZADA ── */
                     <div>
-                      <p className="text-white/40 text-[11px] font-light uppercase tracking-[0.18em] mb-4">Elige una</p>
-                      <h3 className="text-2xl lg:text-3xl font-light text-white/90 leading-relaxed mb-8 tracking-wide font-display">
+                      <p className="text-white/40 text-[11px] font-light uppercase tracking-[0.18em] mb-4 text-center">Elige una</p>
+                      <h3 className="text-2xl lg:text-3xl font-light text-white/90 leading-relaxed mb-8 tracking-wide font-display text-center">
                         {FLASH_QUESTIONS[currentFlash].text}
                       </h3>
                       <div className="flex flex-wrap gap-3 justify-center">
@@ -2152,13 +2236,24 @@ const ConsultaParejaPage = () => {
                 </motion.div>
               </AnimatePresence>
 
-              <div className="flex items-center justify-start mt-8 pt-6 border-t border-white/5">
+              {/* Navegación */}
+              <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/5">
                 <button
                   onClick={() => setCurrentFlash(prev => Math.max(0, prev - 1))}
                   disabled={currentFlash === 0}
                   className="flex items-center gap-2 text-white/30 hover:text-white/60 text-xs tracking-wider disabled:opacity-20 disabled:cursor-not-allowed transition-colors">
                   <ArrowLeft className="w-3.5 h-3.5" /> ANTERIOR
                 </button>
+                {flashUIMode === 'text' && FLASH_QUESTIONS[currentFlash].type === 'complete' && (
+                  <button
+                    onClick={() => {
+                      if (currentFlash < FLASH_QUESTIONS.length - 1) { setCurrentFlash(prev => prev + 1); scrollToTop() }
+                      else { setStage('test'); scrollToTop() }
+                    }}
+                    className="flex items-center gap-2 text-fuchsia-300/60 hover:text-fuchsia-300/90 text-xs tracking-wider transition-colors">
+                    {currentFlash < FLASH_QUESTIONS.length - 1 ? 'SIGUIENTE' : 'CONTINUAR'} <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                )}
               </div>
             </div>
           </motion.div>
