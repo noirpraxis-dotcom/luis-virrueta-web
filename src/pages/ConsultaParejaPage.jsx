@@ -941,10 +941,8 @@ const ConsultaParejaPage = () => {
   const [flashRecording, setFlashRecording] = useState(false)
   const flashRecognitionRef = useRef(null)
 
-  // DEV: mock profile menu
-  const [showMockMenu, setShowMockMenu] = useState(false)
+  // DEV: mock profile trigger
   const [mockTriggerAnalysis, setMockTriggerAnalysis] = useState(false)
-  const mockLongPressRef = useRef(null)
 
   const [resumeDraft, setResumeDraft] = useState(null)
 
@@ -1202,11 +1200,11 @@ const ConsultaParejaPage = () => {
     setPhilosophicalAnswers(profile.philosophical)
     setFlashAnswers(profile.flash)
     setAnswers(profile.answers)
-    setShowMockMenu(false)
+    setStage('analyzing')
     // Use requestAnimationFrame + setTimeout to ensure React has rendered with new state
     // before triggering the analysis (avoids stale closure on areaScores)
     requestAnimationFrame(() => {
-      setTimeout(() => setMockTriggerAnalysis(true), 50)
+      setTimeout(() => setMockTriggerAnalysis(true), 100)
     })
   }, [])
 
@@ -1331,54 +1329,7 @@ const ConsultaParejaPage = () => {
                   </motion.div>
                 )}
 
-                {/* DEV mock buttons */}
-                {import.meta.env.DEV && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
-                    className="mt-6 flex items-center justify-center gap-3 relative">
-                    <div className="relative">
-                      <button
-                        onClick={() => loadMockProfile(MOCK_PROFILES[0])}
-                        onPointerDown={() => { mockLongPressRef.current = setTimeout(() => setShowMockMenu(true), 500) }}
-                        onPointerUp={() => clearTimeout(mockLongPressRef.current)}
-                        onPointerLeave={() => clearTimeout(mockLongPressRef.current)}
-                        className="px-4 py-2 rounded-full border border-amber-500/30 bg-amber-500/[0.06] text-amber-400/70 text-xs font-light hover:border-amber-400/50 hover:text-amber-400 transition-all">
-                        DEV: Cargar mock premium
-                      </button>
-                      <AnimatePresence>
-                        {showMockMenu && (
-                          <motion.div initial={{ opacity: 0, y: 8, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: 8, scale: 0.95 }} transition={{ duration: 0.15 }}
-                            className="absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50 w-64 rounded-xl border border-amber-500/25 bg-[#0d0d10] shadow-2xl overflow-hidden">
-                            <div className="p-2 border-b border-amber-500/10">
-                              <span className="text-amber-400/50 text-[10px] uppercase tracking-[0.15em] px-2">Perfiles de prueba</span>
-                            </div>
-                            {MOCK_PROFILES.map((p, i) => (
-                              <button key={i} onClick={() => loadMockProfile(p)}
-                                className="w-full text-left px-3 py-2.5 hover:bg-amber-500/[0.08] transition-colors border-b last:border-b-0 border-amber-500/5">
-                                <span className="text-amber-300/80 text-xs font-light block">{p.name}</span>
-                                <span className="text-white/30 text-[10px] font-extralight">{p.desc}</span>
-                              </button>
-                            ))}
-                            <button onClick={() => setShowMockMenu(false)}
-                              className="w-full text-center py-1.5 text-white/20 text-[10px] hover:text-white/40 transition-colors">
-                              cerrar
-                            </button>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setMode('premium')
-                        setIsPremiumUnlocked(true)
-                        setStage('philosophical')
-                        scrollToTop()
-                      }}
-                      className="px-4 py-2 rounded-full border border-sky-500/30 bg-sky-500/[0.06] text-sky-400/70 text-xs font-light hover:border-sky-400/50 hover:text-sky-400 transition-all">
-                      DEV: Skip → Premium flow
-                    </button>
-                  </motion.div>
-                )}
+
               </motion.div>
             </div>
 
@@ -1687,6 +1638,25 @@ const ConsultaParejaPage = () => {
                   Comenzar diagnóstico
                 </motion.button>
               </motion.div>
+
+              {/* DEV: Quick-fill with mock profiles for testing AI analysis */}
+              {isTestMode && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}
+                  className="mt-8 relative">
+                  <div className="text-center mb-3">
+                    <span className="text-amber-400/40 text-[10px] uppercase tracking-[0.2em]">Test rápido — rellenar y analizar</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {MOCK_PROFILES.map((p, i) => (
+                      <button key={i} onClick={() => loadMockProfile(p)}
+                        className="flex flex-col items-start p-3 rounded-xl border border-amber-500/20 bg-amber-500/[0.03] hover:border-amber-400/40 hover:bg-amber-500/[0.07] transition-all text-left">
+                        <span className="text-amber-300/80 text-xs font-light">{p.name}</span>
+                        <span className="text-white/25 text-[10px] font-extralight leading-tight mt-0.5">{p.desc}</span>
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
             </div>
           </motion.div>
         )}
