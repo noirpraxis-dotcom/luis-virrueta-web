@@ -941,9 +941,6 @@ const ConsultaParejaPage = () => {
   const [flashRecording, setFlashRecording] = useState(false)
   const flashRecognitionRef = useRef(null)
 
-  // DEV: mock profile trigger
-  const [mockTriggerAnalysis, setMockTriggerAnalysis] = useState(false)
-
   const [resumeDraft, setResumeDraft] = useState(null)
 
   const scrollToTop = useCallback(() => {
@@ -983,14 +980,6 @@ const ConsultaParejaPage = () => {
       setFlashRecording(false)
     }
   }, [currentFlash]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // DEV: trigger AI analysis after mock data is loaded (avoids stale closure)
-  useEffect(() => {
-    if (mockTriggerAnalysis) {
-      setMockTriggerAnalysis(false)
-      handleRunAIAnalysis()
-    }
-  }, [mockTriggerAnalysis]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // localStorage auto-save (saves on every meaningful state change)
   useEffect(() => {
@@ -1112,6 +1101,9 @@ const ConsultaParejaPage = () => {
       setAiAnalysis(result)
     } catch (e) {
       console.error('AI analysis error:', e)
+      // Ensure fallback analysis is always set so results page renders premium sections
+      const fallbackScores = calculateScores(answers, questions)
+      setAiAnalysis({ diagnosticoNarrado: 'No fue posible conectar con la inteligencia artificial en este momento. A continuación se muestra un perfil basado en los datos cuantitativos.', aperturaEmpatica: 'Gracias por compartir. Aunque el análisis profundo no estuvo disponible, tus respuestas revelan patrones importantes.', areaCorrelations: Object.fromEntries(Object.entries(fallbackScores).map(([k, s]) => [k, `Puntuación: ${Math.round(((s-1)/4)*100)}%`])) })
     }
     setAiLoading(false)
     // Signal to AnalyzingProgress that AI is done; it will call onComplete to transition to results
@@ -1192,8 +1184,8 @@ const ConsultaParejaPage = () => {
     setFlashRecording(true)
   }, [flashRecording, currentFlash])
 
-  // DEV: load a mock profile and trigger AI analysis
-  const loadMockProfile = useCallback((profile) => {
+  // DEV: load a mock profile and call DeepSeek directly with profile data (no closure dependency)
+  const loadMockProfile = useCallback(async (profile) => {
     setMode('premium')
     setIsPremiumUnlocked(true)
     setRespondent('yo')
@@ -1201,12 +1193,46 @@ const ConsultaParejaPage = () => {
     setFlashAnswers(profile.flash)
     setAnswers(profile.answers)
     setStage('analyzing')
-    // Use requestAnimationFrame + setTimeout to ensure React has rendered with new state
-    // before triggering the analysis (avoids stale closure on areaScores)
-    requestAnimationFrame(() => {
-      setTimeout(() => setMockTriggerAnalysis(true), 100)
-    })
-  }, [])
+    setAiLoading(true)
+    setAiReady(false)
+    scrollToTop()
+
+    // Compute scores directly from profile data (bypasses useMemo closure)
+    const scores = calculateScores(profile.answers, QUESTIONS_DETAILED)
+
+    try {
+      const areaLabels = {}
+      for (const a of AREAS) areaLabels[a.key] = a.label
+      const inconsistencies = detectInconsistencies(profile.answers, QUESTIONS_DETAILED)
+
+      if (import.meta.env.DEV) {
+        console.log('[MOCK→AI] Sending to DeepSeek:', {
+          scores,
+          philosophicalCount: Object.keys(profile.philosophical).length,
+          flashCount: Object.keys(profile.flash).length,
+          answersCount: Object.keys(profile.answers).length,
+          inconsistencies: inconsistencies.length
+        })
+      }
+
+      const result = await analyzeRelationship({
+        areaScores: scores,
+        areaLabels,
+        philosophicalAnswers: profile.philosophical,
+        philosophicalQuestions: PHILOSOPHICAL_QUESTIONS,
+        flashAnswers: profile.flash,
+        flashQuestions: FLASH_QUESTIONS,
+        inconsistencies
+      })
+
+      if (import.meta.env.DEV) console.log('[MOCK→AI] Result keys:', Object.keys(result || {}))
+      setAiAnalysis(result)
+    } catch (e) {
+      console.error('[MOCK→AI] Error:', e)
+    }
+    setAiLoading(false)
+    setAiReady(true)
+  }, [scrollToTop])
 
   const handleDownloadPDF = async () => {
     setPdfGenerating(true)
