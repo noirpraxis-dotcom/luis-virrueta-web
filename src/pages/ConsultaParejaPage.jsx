@@ -1045,6 +1045,7 @@ const ConsultaParejaPage = () => {
 
   const handleAnswer = (value) => {
     const q = questions[currentQuestion]
+    if (!q) return
     setAnswers(prev => ({ ...prev, [q.id]: value }))
     if (currentQuestion < questions.length - 1) {
       setTimeout(() => setCurrentQuestion(prev => prev + 1), 300)
@@ -1229,6 +1230,8 @@ const ConsultaParejaPage = () => {
       setAiAnalysis(result)
     } catch (e) {
       console.error('[MOCK→AI] Error:', e)
+      // Fallback so results page still renders premium sections
+      setAiAnalysis({ diagnosticoNarrado: 'No fue posible conectar con la inteligencia artificial en este momento. A continuación se muestra un perfil basado en los datos cuantitativos.', aperturaEmpatica: 'Gracias por compartir. Aunque el análisis profundo no estuvo disponible, tus respuestas revelan patrones importantes.', areaCorrelations: Object.fromEntries(Object.entries(scores).map(([k, s]) => [k, `Puntuación: ${Math.round(((s-1)/4)*100)}%`])) })
     }
     setAiLoading(false)
     setAiReady(true)
