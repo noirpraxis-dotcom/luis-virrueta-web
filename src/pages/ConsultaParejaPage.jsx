@@ -126,6 +126,102 @@ const FLASH_QUESTIONS = [
   { id: 'f10', type: 'choice', text: '¿Estarías con tu pareja si supieras que nunca va a cambiar?', options: ['Sí', 'No sé', 'No'] }
 ]
 
+// ─── PERFILES MOCK (DEV) ──────────────────────────────────────────
+const MOCK_PROFILES = [
+  {
+    name: '😰 Apego Ansioso',
+    desc: 'Alta dependencia, miedo al abandono, idealización',
+    philosophical: {
+      0: 'Intensa, presente, complicada',
+      1: 'La conocí cuando estaba pasando por un momento de mucha soledad después de una ruptura difícil. Sentí que llenó un vacío muy grande.',
+      2: 'Creo que fue cuando empezó a contradecirme en cosas pequeñas que antes aceptaba. Nada grave, pero algo cambió.',
+      3: 'Me pongo muy callado. Me retiro para que no se moleste más.',
+      4: 'Que me escuche de verdad cuando estoy mal, sin darme consejos de inmediato.',
+      5: 'Me he vuelto más ansioso. Antes era más independiente.',
+      6: 'El fin de semana pasado vimos una película juntos y fue muy tranquilo y bonito.',
+      7: 'En una cena familiar. Estaba ahí pero yo me sentí invisible para ella.',
+      8: 'Pensé que sería más fácil. Que habría más complicidad.',
+      9: 'Cuando se ríe de cierta manera. No sé por qué me afecta tanto.',
+      10: 'Creo que diría que estoy bien pero que a veces me cierro.',
+      11: 'Sí, en cómo evita los conflictos directo. Mi mamá hacía lo mismo.',
+      12: 'El miedo a no volver a sentir esto con alguien más.',
+      13: 'Quedarme solo otra vez.',
+      14: 'Entender por qué me engancho tanto con personas que no están del todo disponibles.'
+    },
+    flash: { f1: 'ansiedad mezclada con ternura', f2: 'que se aburra de mí', f3: 'más yo mismo', f4: 'más libre pero más solo', f5: 'ser calma, pero en mi relación es incertidumbre', f6: 'Yo', f7: 'Igual de feliz', f8: 'En parte', f9: 'Elija', f10: 'No sé' },
+    answers: { 101: 3, 102: 4, 103: 2, 201: 4, 202: 4, 203: 3, 301: 4, 302: 3, 303: 4, 401: 4, 402: 4, 403: 2, 501: 3, 502: 3, 503: 3, 601: 2, 602: 4, 603: 3, 701: 4, 702: 2, 703: 3, 801: 4, 802: 3, 803: 3, 804: 4 }
+  },
+  {
+    name: '🧊 Evitativo',
+    desc: 'Distancia emocional, hiperautonomía, intimidad baja',
+    philosophical: {
+      0: 'Estable. Funcional. No sé si eso es suficiente.',
+      1: 'No recuerdo un momento exacto. Fue gradual, práctico. Coincidimos en muchas cosas.',
+      2: 'No sabría ubicar un momento. Quizá cuando empezó a pedirme más cercanía de la que puedo dar.',
+      3: 'Lo resuelvo solo, necesito estar tranquilo para pensar. Prefiero no hablar hasta que se me pase.',
+      4: 'Honestamente, que me deje en paz cuando necesito mi espacio sin tomárselo personal.',
+      5: 'Me he distanciado un poco. Pero creo que así funciono mejor.',
+      6: 'No se me ocurre un momento especial reciente. Pero tampoco ha habido problemas graves.',
+      7: 'Cuando insistió en que le contara algo personal y yo simplemente no quería hacerlo.',
+      8: 'Pensé que sería más tranquilo. Menos demandante emocionalmente.',
+      9: 'Nada en particular. Quizá cuando las cosas fluyen sin mucha complicación.',
+      10: 'Diría que soy frío, pero yo creo que simplemente soy reservado.',
+      11: 'Mi papá era igual. No hablaba de sus cosas y la casa funcionaba bien así.',
+      12: 'Creo que a perder mi independencia. A que la relación me consuma.',
+      13: 'Perderme a mí mismo en algo que se siente como una obligación constante.',
+      14: 'Por qué me cuesta tanto conectar emocionalmente aunque sé que debería.'
+    },
+    flash: { f1: 'tranquilidad', f2: 'que me absorba', f3: 'igual que siempre', f4: 'más tranquilo', f5: 'algo sencillo, pero en mi relación es algo complicado', f6: 'Mi pareja', f7: 'Igual de feliz', f8: 'No del todo', f9: 'Elija', f10: 'Sí' },
+    answers: { 101: 3, 102: 3, 103: 3, 201: 2, 202: 2, 203: 2, 301: 3, 302: 3, 303: 3, 401: 3, 402: 3, 403: 3, 501: 4, 502: 4, 503: 2, 601: 3, 602: 2, 603: 2, 701: 1, 702: 5, 703: 4, 801: 3, 802: 2, 803: 4, 804: 2 }
+  },
+  {
+    name: '💚 Saludable con roces',
+    desc: 'Buena base, conflictos normales, comunicación decente',
+    philosophical: {
+      0: 'Bonita. Imperfecta. Pero algo que elijo cada día.',
+      1: 'Nos conocimos por amigos en común. Me gustó cómo me hacía reír y me sentí segura desde el inicio.',
+      2: 'Cuando tuvimos nuestro primer desacuerdo fuerte sobre algo importante. Me di cuenta de que no estaba de acuerdo en todo.',
+      3: 'Intento decir lo que me pasa aunque me cueste. A veces me tardo, pero lo digo.',
+      4: 'Que me vea como soy ahora, no como era al principio.',
+      5: 'Más paciente. También más consciente de mis propias limitaciones.',
+      6: 'Ayer cocinamos juntos y nos estuvimos riendo de una tontería como media hora.',
+      7: 'Cuando se olvidó de algo que para mí era importante. No fue adrede pero me dolió.',
+      8: 'Pensé que nunca pelearíamos. Ahora sé que pelear bien es parte del proceso.',
+      9: 'Cuando me abraza sin razón. Es como si todo estuviera en su lugar.',
+      10: 'Que soy buena compañera pero a veces demasiado exigente.',
+      11: 'Algo sí. Mi mamá era muy exigente con mi papá y yo a veces me veo haciéndolo.',
+      12: 'A que la rutina mate lo que hemos construido.',
+      13: 'Conformarme con algo que ya no crece.',
+      14: 'Aprender a dejar de controlar todo para sentirme segura.'
+    },
+    flash: { f1: 'cariño y algo de costumbre', f2: 'que nos estanquemos', f3: 'más ligera y más graciosa', f4: 'más sola, pero capaz', f5: 'ser crecimiento, y en mi relación a veces lo es', f6: 'Los dos igual', f7: 'Igual de feliz', f8: 'Sí', f9: 'Elija', f10: 'Sí' },
+    answers: { 101: 4, 102: 2, 103: 4, 201: 4, 202: 2, 203: 4, 301: 5, 302: 2, 303: 5, 401: 2, 402: 3, 403: 4, 501: 5, 502: 4, 503: 2, 601: 4, 602: 2, 603: 2, 701: 2, 702: 4, 703: 5, 801: 2, 802: 2, 803: 5, 804: 1 }
+  },
+  {
+    name: '🔗 Codependiente',
+    desc: 'Fusión, sin límites, pérdida de identidad',
+    philosophical: {
+      0: 'Es todo. Sin esta relación no sé quién soy.',
+      1: 'Llegó cuando yo estaba destruida emocionalmente. Fue como un salvavidas. Le debo mucho.',
+      2: 'Cuando me di cuenta de que ya no hacía nada sin consultarle primero. Pero tampoco es que me moleste.',
+      3: 'Le pido perdón aunque no sepa qué hice mal. Lo importante es que no se enoje.',
+      4: 'Que nunca me deje. Que siempre esté. Que sea mi todo.',
+      5: 'Ya no sé dónde empieza mi pareja y dónde termino yo. Supongo que eso es amor.',
+      6: 'Cada vez que estamos juntos es bueno. No me gusta cuando no está.',
+      7: 'Cuando salió con sus amigos sin mí. No me dijo nada malo pero me sentí vacía.',
+      8: 'Que seríamos inseparables. Y lo somos. Pero a veces se siente pesado.',
+      9: 'Cuando me dice que me necesita. Eso me hace sentir que existo.',
+      10: 'Que soy intensa. Pero yo creo que simplemente amo con todo.',
+      11: 'Mi mamá vivía por mi papá. Cuando él se fue, ella se apagó. No quiero que eso me pase.',
+      12: 'Que me deje. No sabría qué hacer conmigo misma.',
+      13: 'Estar sola. Siempre. Sola de verdad.',
+      14: 'Por qué necesito tanto a alguien para sentirme completa.'
+    },
+    flash: { f1: 'necesidad absoluta', f2: 'que me abandone', f3: 'nadie, me pierdo en el otro', f4: 'vacía, como si no existiera', f5: 'fusión total, y en mi relación lo es pero duele', f6: 'Yo', f7: 'Menos feliz', f8: 'Sí', f9: 'Necesite', f10: 'Sí' },
+    answers: { 101: 4, 102: 4, 103: 3, 201: 5, 202: 4, 203: 5, 301: 5, 302: 1, 303: 5, 401: 4, 402: 4, 403: 2, 501: 5, 502: 4, 503: 1, 601: 3, 602: 5, 603: 4, 701: 5, 702: 1, 703: 2, 801: 5, 802: 5, 803: 5, 804: 5 }
+  }
+]
+
 // ─── MICRÓFONO (Web Speech API) ───────────────────────────────────
 
 function MicButton({ onTranscript, onInterim }) {
@@ -839,6 +935,17 @@ const ConsultaParejaPage = () => {
   const [philInterim, setPhilInterim] = useState('')
   const [philRecording, setPhilRecording] = useState(false)
   const philRecognitionRef = useRef(null)
+
+  // Voice UI state for flash questions
+  const [flashInterim, setFlashInterim] = useState('')
+  const [flashRecording, setFlashRecording] = useState(false)
+  const flashRecognitionRef = useRef(null)
+
+  // DEV: mock profile menu
+  const [showMockMenu, setShowMockMenu] = useState(false)
+  const [mockTriggerAnalysis, setMockTriggerAnalysis] = useState(false)
+  const mockLongPressRef = useRef(null)
+
   const [resumeDraft, setResumeDraft] = useState(null)
 
   const scrollToTop = useCallback(() => {
@@ -869,6 +976,23 @@ const ConsultaParejaPage = () => {
       setPhilRecording(false)
     }
   }, [currentPhilosophical]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Reset flash voice state when flash question changes
+  useEffect(() => {
+    setFlashInterim('')
+    if (flashRecording) {
+      flashRecognitionRef.current?.stop()
+      setFlashRecording(false)
+    }
+  }, [currentFlash]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // DEV: trigger AI analysis after mock data is loaded (avoids stale closure)
+  useEffect(() => {
+    if (mockTriggerAnalysis) {
+      setMockTriggerAnalysis(false)
+      handleRunAIAnalysis()
+    }
+  }, [mockTriggerAnalysis]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // localStorage auto-save (saves on every meaningful state change)
   useEffect(() => {
@@ -968,6 +1092,15 @@ const ConsultaParejaPage = () => {
       const areaLabels = {}
       for (const a of AREAS) areaLabels[a.key] = a.label
       const inconsistencies = detectInconsistencies(answers, questions)
+      if (import.meta.env.DEV) {
+        console.log('[AI] Sending to DeepSeek:', {
+          areaScores,
+          philosophicalCount: Object.keys(philosophicalAnswers).length,
+          flashCount: Object.keys(flashAnswers).length,
+          answersCount: Object.keys(answers).length,
+          inconsistencies: inconsistencies.length
+        })
+      }
       const result = await analyzeRelationship({
         areaScores,
         areaLabels,
@@ -977,6 +1110,7 @@ const ConsultaParejaPage = () => {
         flashQuestions: FLASH_QUESTIONS,
         inconsistencies
       })
+      if (import.meta.env.DEV) console.log('[AI] Result keys:', Object.keys(result || {}))
       setAiAnalysis(result)
     } catch (e) {
       console.error('AI analysis error:', e)
@@ -1021,6 +1155,60 @@ const ConsultaParejaPage = () => {
     recognition.start()
     setPhilRecording(true)
   }, [philRecording, currentPhilosophical])
+
+  const toggleFlashMic = useCallback(() => {
+    if (flashRecording) {
+      flashRecognitionRef.current?.stop()
+      setFlashRecording(false)
+      setFlashInterim('')
+      return
+    }
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SR) return
+    const fq = FLASH_QUESTIONS[currentFlash]
+    if (!fq || fq.type !== 'complete') return
+    const recognition = new SR()
+    recognition.lang = 'es-MX'
+    recognition.continuous = true
+    recognition.interimResults = true
+    recognition.onresult = (e) => {
+      let interim = ''
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) {
+          const finalText = e.results[i][0].transcript
+          setFlashAnswers(prev => ({
+            ...prev,
+            [fq.id]: (prev[fq.id] ? prev[fq.id] + ' ' : '') + finalText
+          }))
+          setFlashInterim('')
+        } else {
+          interim += e.results[i][0].transcript
+        }
+      }
+      if (interim) setFlashInterim(interim)
+    }
+    recognition.onerror = () => { setFlashRecording(false); setFlashInterim('') }
+    recognition.onend = () => { setFlashRecording(false); setFlashInterim('') }
+    flashRecognitionRef.current = recognition
+    recognition.start()
+    setFlashRecording(true)
+  }, [flashRecording, currentFlash])
+
+  // DEV: load a mock profile and trigger AI analysis
+  const loadMockProfile = useCallback((profile) => {
+    setMode('premium')
+    setIsPremiumUnlocked(true)
+    setRespondent('yo')
+    setPhilosophicalAnswers(profile.philosophical)
+    setFlashAnswers(profile.flash)
+    setAnswers(profile.answers)
+    setShowMockMenu(false)
+    // Use requestAnimationFrame + setTimeout to ensure React has rendered with new state
+    // before triggering the analysis (avoids stale closure on areaScores)
+    requestAnimationFrame(() => {
+      setTimeout(() => setMockTriggerAnalysis(true), 50)
+    })
+  }, [])
 
   const handleDownloadPDF = async () => {
     setPdfGenerating(true)
@@ -1143,61 +1331,42 @@ const ConsultaParejaPage = () => {
                   </motion.div>
                 )}
 
-                {/* DEV mock button */}
+                {/* DEV mock buttons */}
                 {import.meta.env.DEV && (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
-                    className="mt-6 flex items-center justify-center gap-3">
-                    <button
-                      onClick={() => {
-                        const mockPhilosophical = {
-                          0: 'Intensa, presente, complicada',
-                          1: 'La conocí cuando estaba pasando por un momento de mucha soledad después de una ruptura difícil. Sentí que llenó un vacío muy grande.',
-                          2: 'Creo que fue cuando empezó a contradecirme en cosas pequeñas que antes aceptaba. Nada grave, pero algo cambió.',
-                          3: 'Me pongo muy callado. Me retiro para que no se moleste más.',
-                          4: 'Que me escuche de verdad cuando estoy mal, sin darme consejos de inmediato.',
-                          5: 'Me he vuelto más ansioso. Antes era más independiente.',
-                          6: 'El fin de semana pasado vimos una película juntos y fue muy tranquilo y bonito.',
-                          7: 'En una cena familiar. Estaba ahí pero yo me sentí invisible para ella.',
-                          8: 'Pensé que sería más fácil. Que habría más complicidad.',
-                          9: 'Cuando se ríe de cierta manera. No sé por qué me afecta tanto.',
-                          10: 'Creo que diría que estoy bien pero que a veces me cierro.',
-                          11: 'Sí, en cómo evita los conflictos directo. Mi mamá hacía lo mismo.',
-                          12: 'El miedo a no volver a sentir esto con alguien más.',
-                          13: 'Quedarme solo otra vez.',
-                          14: 'Entender por qué me engancho tanto con personas que no están del todo disponibles.'
-                        }
-                        const mockFlash = {
-                          f1: 'ansiedad mezclada con ternura',
-                          f2: 'que se aburra de mí',
-                          f3: 'más yo mismo',
-                          f4: 'más libre pero más solo',
-                          f5: 'ser calma, pero en mi relación es incertidumbre',
-                          f6: 'Yo',
-                          f7: 'Igual de feliz',
-                          f8: 'En parte',
-                          f9: 'Elija',
-                          f10: 'No sé'
-                        }
-                        const mockAnswers = {
-                          101: 3, 102: 4, 103: 4,
-                          201: 4, 202: 4, 203: 3,
-                          301: 4, 302: 3, 303: 4,
-                          401: 4, 402: 4, 403: 2,
-                          501: 3, 502: 3, 503: 3,
-                          601: 2, 602: 4, 603: 3,
-                          701: 4, 702: 3, 703: 3,
-                          801: 4, 802: 3, 803: 3, 804: 4
-                        }
-                        setMode('premium')
-                        setIsPremiumUnlocked(true)
-                        setPhilosophicalAnswers(mockPhilosophical)
-                        setFlashAnswers(mockFlash)
-                        setAnswers(mockAnswers)
-                        setTimeout(() => { setStage('email'); scrollToTop() }, 50)
-                      }}
-                      className="px-4 py-2 rounded-full border border-amber-500/30 bg-amber-500/[0.06] text-amber-400/70 text-xs font-light hover:border-amber-400/50 hover:text-amber-400 transition-all">
-                      DEV: Cargar mock premium
-                    </button>
+                    className="mt-6 flex items-center justify-center gap-3 relative">
+                    <div className="relative">
+                      <button
+                        onClick={() => loadMockProfile(MOCK_PROFILES[0])}
+                        onPointerDown={() => { mockLongPressRef.current = setTimeout(() => setShowMockMenu(true), 500) }}
+                        onPointerUp={() => clearTimeout(mockLongPressRef.current)}
+                        onPointerLeave={() => clearTimeout(mockLongPressRef.current)}
+                        className="px-4 py-2 rounded-full border border-amber-500/30 bg-amber-500/[0.06] text-amber-400/70 text-xs font-light hover:border-amber-400/50 hover:text-amber-400 transition-all">
+                        DEV: Cargar mock premium
+                      </button>
+                      <AnimatePresence>
+                        {showMockMenu && (
+                          <motion.div initial={{ opacity: 0, y: 8, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 8, scale: 0.95 }} transition={{ duration: 0.15 }}
+                            className="absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50 w-64 rounded-xl border border-amber-500/25 bg-[#0d0d10] shadow-2xl overflow-hidden">
+                            <div className="p-2 border-b border-amber-500/10">
+                              <span className="text-amber-400/50 text-[10px] uppercase tracking-[0.15em] px-2">Perfiles de prueba</span>
+                            </div>
+                            {MOCK_PROFILES.map((p, i) => (
+                              <button key={i} onClick={() => loadMockProfile(p)}
+                                className="w-full text-left px-3 py-2.5 hover:bg-amber-500/[0.08] transition-colors border-b last:border-b-0 border-amber-500/5">
+                                <span className="text-amber-300/80 text-xs font-light block">{p.name}</span>
+                                <span className="text-white/30 text-[10px] font-extralight">{p.desc}</span>
+                              </button>
+                            ))}
+                            <button onClick={() => setShowMockMenu(false)}
+                              className="w-full text-center py-1.5 text-white/20 text-[10px] hover:text-white/40 transition-colors">
+                              cerrar
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                     <button
                       onClick={() => {
                         setMode('premium')
@@ -1901,11 +2070,36 @@ const ConsultaParejaPage = () => {
                       <h3 className="text-2xl lg:text-3xl font-light text-white/90 leading-relaxed mb-6 tracking-wide font-display italic">
                         "{FLASH_QUESTIONS[currentFlash].stem}..."
                       </h3>
+
+                      {/* Mic button for flash */}
+                      <div className="flex items-center gap-3 mb-4">
+                        <motion.button type="button" onClick={toggleFlashMic}
+                          whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }}
+                          className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all duration-300 flex-shrink-0 ${
+                            flashRecording
+                              ? 'border-red-400/50 bg-red-500/15 text-red-300'
+                              : 'border-fuchsia-500/40 bg-fuchsia-500/10 text-fuchsia-300 hover:border-fuchsia-400/60 hover:bg-fuchsia-500/20'
+                          }`}>
+                          {flashRecording && (
+                            <motion.div className="absolute inset-0 rounded-full border border-red-400/20"
+                              animate={{ scale: [1, 1.35, 1], opacity: [0.4, 0, 0.4] }}
+                              transition={{ duration: 1.5, repeat: Infinity }} />
+                          )}
+                          {flashRecording ? <MicOff className="w-5 h-5" strokeWidth={1.5} /> : <Mic className="w-5 h-5" strokeWidth={1.5} />}
+                        </motion.button>
+                        {flashRecording && (
+                          <span className="text-red-300/60 text-xs font-light animate-pulse">Escuchando...</span>
+                        )}
+                        {!flashRecording && !(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '').trim() && (
+                          <span className="text-white/25 text-xs font-light">Toca el mic o escribe</span>
+                        )}
+                      </div>
+
                       <textarea
                         key={`flash-input-${currentFlash}`}
-                        autoFocus
-                        value={flashAnswers[FLASH_QUESTIONS[currentFlash].id] || ''}
-                        onChange={(e) => setFlashAnswers(prev => ({ ...prev, [FLASH_QUESTIONS[currentFlash].id]: e.target.value }))}
+                        autoFocus={!flashRecording}
+                        value={(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '') + (flashInterim ? ' ' + flashInterim : '')}
+                        onChange={(e) => { if (!flashRecording) setFlashAnswers(prev => ({ ...prev, [FLASH_QUESTIONS[currentFlash].id]: e.target.value })) }}
                         placeholder="Lo primero que se te venga..."
                         maxLength={200}
                         rows={2}
@@ -1927,7 +2121,7 @@ const ConsultaParejaPage = () => {
                             </button>
                           )}
                         </div>
-                        {(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '').trim().length > 0 && (
+                        {(flashAnswers[FLASH_QUESTIONS[currentFlash].id] || '').trim().length > 0 && !flashRecording && (
                           <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                             whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                             onClick={() => handleFlashAnswer(FLASH_QUESTIONS[currentFlash].id, flashAnswers[FLASH_QUESTIONS[currentFlash].id])}
