@@ -44,7 +44,7 @@ Para cada área del diagnóstico, explica POR QUÉ tiene esa puntuación citando
 
 IMPORTANTE: Responde EXCLUSIVAMENTE en formato JSON válido con la estructura solicitada.`
 
-function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophicalQuestions, flashAnswers, flashQuestions, inconsistencies) {
+function buildPrompt(areaLabels, philosophicalAnswers, philosophicalQuestions, flashAnswers, flashQuestions) {
   // NARRATIVE FIRST — primary source
   let prompt = '## FUENTE PRIMARIA: RESPUESTAS NARRATIVAS\n'
   prompt += '(La persona las contó "como si le platicara a un amigo". Aquí está la verdadera información.)\n\n'
@@ -58,26 +58,7 @@ function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophical
     }
   }
 
-  // QUANTITATIVE DATA — confirmatory source
-  prompt += '\n## FUENTE CONFIRMATORIA: DATOS CUANTITATIVOS (escala 1-5, donde 5 es óptimo)\n\n'
-
-  for (const [key, score] of Object.entries(areaScores)) {
-    const label = areaLabels[key] || key
-    const pct = Math.round(((score - 1) / 4) * 100)
-    prompt += `- ${label}: ${score.toFixed(1)}/5 (${pct}%)\n`
-  }
-
-  if (inconsistencies && inconsistencies.length > 0) {
-    prompt += '\n## INCONSISTENCIAS EN RESPUESTAS CUANTITATIVAS:\n\n'
-    for (const inc of inconsistencies) {
-      prompt += `⚠️ En ${inc.area} (significancia ${inc.significance}):\n`
-      prompt += `  - "${inc.q1}" → respondió ${inc.q1_answer}/5\n`
-      prompt += `  - "${inc.q2}" → respondió ${inc.q2_answer}/5\n`
-      prompt += `  Estas respuestas se contradicen. Analiza qué revela esta contradicción.\n\n`
-    }
-  }
-
-  // FLASH PROJECTIVE DATA — third source
+  // FLASH PROJECTIVE DATA — second source
   if (flashQuestions && flashQuestions.length > 0 && flashAnswers && Object.keys(flashAnswers).length > 0) {
     prompt += '\n## FUENTE PROYECTIVA: RESPUESTAS FLASH\n'
     prompt += '(Respondidas en segundos, sin filtro racional. Aquí aparece lo inconsciente sin censura.)\n\n'
@@ -108,11 +89,15 @@ function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophical
     }
   }
 
-  const areaKeys = Object.keys(areaScores)
+  const areaKeys = Object.keys(areaLabels)
   const areaCorrelationsSchema = areaKeys.map(k => `"${k}": "(1-2 párrafos profundos. Explica POR QUÉ esta área tiene esa puntuación. CITA PALABRAS EXACTAS de las respuestas donde sea posible.)"`).join(',\n    ')
+  const dimensionScoresSchema = areaKeys.map(k => `"${k}": "(número entero 0-100)"`).join(',\n    ')
 
   prompt += `\nGenera tu análisis psicológico en el siguiente formato JSON exacto:
 {
+  "dimensionScores": {
+    ${dimensionScoresSchema}
+  },
   "diagnosticoNarrado": "(2-3 párrafos. Captura el núcleo del conflicto. Habla directamente a la persona: cálido, íntimo, sin términos clínicos. CITA sus palabras exactas entre comillas. **Usa negrita** en frases importantes. Nunca uses el término diagnóstico.)",
   "aperturaEmpatica": "(2-3 párrafos. Haz que la persona se sienta profundamente escuchada ANTES de cualquier análisis. CITA sus palabras exactas en la primera frase. **Usa negrita** para conceptos importantes. Sin tecnicismos.)",
   "aperturaEmpaticaPuntos": [{"titulo": "Palabra o frase clave (3-6 palabras)", "texto": "1-2 oraciones explorando este hallazgo, citando palabras exactas."}, {"titulo": "Segundo hallazgo clave", "texto": "descripción..."}, {"titulo": "Tercer hallazgo", "texto": "descripción..."}, {"titulo": "Cuarto hallazgo (opcional)", "texto": "descripción..."}],
@@ -121,8 +106,7 @@ function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophical
   "configuracionDeseo": "(1-2 párrafos en lenguaje muy accesible: qué tipo de amor/vínculo busca esta persona específica. Qué necesidad emocional fundamental opera detrás de su elección amorosa. Sin términos técnicos — es la lectura más personal y directa del análisis. Ej: 'Lo que buscas en una relación es...' o 'Debajo de lo que describes hay una necesidad de...')",
   "lecturaFlash": "(2 párrafos. Análisis de las respuestas proyectivas flash. Cita las frases completadas textualmente entre comillas. Interpreta las elecciones en contexto del perfil completo. Busca la coherencia o contradicción con lo que dijo en las narrativas. Ej: 'Lo primero que dijiste sin pensar fue \\"[frase]\\" — eso tiene más información de lo que parece...')",
   "lecturaNarrativa": "(3-4 párrafos: análisis PROFUNDO de las respuestas narrativas. Extrae patrones de comportamiento, tendencias relacionales, pérdida de autonomía. **Cita palabras exactas** entre comillas. **Usa negrita** para conceptos clave. Evita jerga técnica.)",
-  "lecturaCuestionario": "(2-3 párrafos: qué dicen los datos cuantitativos, SIEMPRE en relación con la narrativa. Usa frases como 'los datos corroboran que...', 'esto confirma lo que dijiste cuando mencionaste que...', o 'llama la atención que los números muestren algo distinto a lo que expresaste sobre...')",
-  "lecturaIntegral": "(3-4 párrafos: síntesis de las tres fuentes. La historia que emerge al cruzar lo dicho, lo medido y lo proyectado. Escrito como recomendación profesional directa. **Usa negrita** en las observaciones más importantes. Cierra con una frase que oriente hacia la sesión.)",
+  "lecturaIntegral": "(3-4 párrafos: síntesis de ambas fuentes. La historia que emerge al cruzar lo dicho y lo proyectado. Escrito como recomendación profesional directa. **Usa negrita** en las observaciones más importantes. Cierra con una frase que oriente hacia la sesión.)",
   "areaCorrelations": {
     ${areaCorrelationsSchema}
   },
@@ -143,15 +127,15 @@ function buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophical
   return prompt
 }
 
-export async function analyzeRelationship({ areaScores, areaLabels, philosophicalAnswers, philosophicalQuestions, flashAnswers, flashQuestions, inconsistencies }) {
+export async function analyzeRelationship({ areaLabels, philosophicalAnswers, philosophicalQuestions, flashAnswers, flashQuestions }) {
   const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY
 
   if (!apiKey) {
     console.warn('⚠️ VITE_DEEPSEEK_API_KEY no configurada. Usando análisis de respaldo.')
-    return generateFallbackAnalysis(areaScores)
+    return generateFallbackAnalysis()
   }
 
-  const prompt = buildPrompt(areaScores, areaLabels, philosophicalAnswers, philosophicalQuestions, flashAnswers || {}, flashQuestions || [], inconsistencies)
+  const prompt = buildPrompt(areaLabels, philosophicalAnswers, philosophicalQuestions, flashAnswers || {}, flashQuestions || [])
 
   try {
     const response = await fetch(DEEPSEEK_API_URL, {
@@ -185,133 +169,74 @@ export async function analyzeRelationship({ areaScores, areaLabels, philosophica
     return JSON.parse(content)
   } catch (error) {
     console.error('DeepSeek analysis failed:', error)
-    return generateFallbackAnalysis(areaScores)
+    return generateFallbackAnalysis()
   }
 }
 
-function generateFallbackAnalysis(areaScores) {
-  const idealScore = areaScores.idealizacion || 3
-  const idealPct = Math.round(((idealScore - 1) / 4) * 100)
-  const actualIdealScore = 100 - idealPct
-  const actualIdealLevel = idealPct <= 33 ? 'alto' : idealPct <= 66 ? 'medio' : 'bajo'
-
-  const sessionItemsFallback = []
-  if (areaScores.comunicacion <= 3.0) sessionItemsFallback.push('Explorar qué temas se evitan en la conversación y por qué esos temas se sienten peligrosos de abordar')
-  if (areaScores.intimidad <= 3.0) sessionItemsFallback.push('Identificar en qué momento y por qué se fue interrumpiendo la conexión emocional profunda')
-  if (areaScores.conflicto <= 2.5) sessionItemsFallback.push('Revisar los conflictos que siguen pendientes y el costo silencioso que tiene esa deuda no resuelta')
-  if (areaScores.autonomia <= 3.0) sessionItemsFallback.push('Explorar cómo se mantiene (o se ha ido perdiendo) la identidad individual dentro de la relación')
-  if (areaScores.seguridad <= 3.0) sessionItemsFallback.push('Trabajar en los patrones de confianza y seguridad emocional que sostienen el vínculo')
-  if (sessionItemsFallback.length < 2) sessionItemsFallback.push('Profundizar en los patrones que operan por debajo de lo visible en esta relación')
-  if (sessionItemsFallback.length < 3) sessionItemsFallback.push('Construir herramientas concretas para la comunicación en los momentos más difíciles')
-
-  const patterns = []
-  if (areaScores.comunicacion <= 2.5) patterns.push('**Evitación emocional**: dificultad para expresar necesidades profundas sin que se convierta en conflicto')
-  if (areaScores.intimidad <= 2.5) patterns.push('**Distanciamiento reactivo**: alejamiento emocional como mecanismo de protección ante la vulnerabilidad')
-  if (areaScores.conflicto <= 2.5) patterns.push('**Conflicto latente**: evitación de enfrentamientos que genera acumulación silenciosa de resentimiento')
-  if (areaScores.idealizacion <= 2.5) patterns.push('**Expectativa proyectada**: se coloca en el otro una imagen idealizada que genera frustración recurrente')
-  if (areaScores.autonomia <= 2.5) patterns.push('**Fusión vincular**: pérdida gradual de la identidad individual dentro de la relación')
-  if (areaScores.seguridad <= 2.5) patterns.push('**Dependencia emocional**: búsqueda de seguridad en el otro que limita la autonomía personal')
-  if (patterns.length === 0) patterns.push('**Patrones relacionales saludables**: el vínculo muestra recursos emocionales sólidos con espacio para profundizar')
-
-  const strengths = []
-  if (areaScores.comunicacion >= 3.5) strengths.push('**Diálogo activo**: capacidad de escucha y conversación genuina como base del vínculo')
-  if (areaScores.admiracion >= 3.5) strengths.push('**Reconocimiento mutuo**: reconocimiento genuino del valor y las cualidades del otro')
-  if (areaScores.proyecto >= 3.5) strengths.push('**Visión compartida**: proyecto y horizonte común que sostiene la dirección de la relación')
-  if (areaScores.autonomia >= 3.5) strengths.push('**Individualidad respetada**: respeto por la identidad propia dentro del vínculo')
-  if (areaScores.idealizacion >= 3.5) strengths.push('**Amor al otro real**: capacidad de amar al otro con su falta, no al otro idealizado')
-  if (strengths.length === 0) strengths.push('**Disposición al trabajo**: apertura para explorar la relación a mayor profundidad')
-
-  // Generar las lecturas basadas en reglas
+function generateFallbackAnalysis() {
+  const defaultScores = { comunicacion: 55, intimidad: 50, admiracion: 60, conflicto: 45, proyecto: 55, seguridad: 50, autonomia: 60, idealizacion: 45 }
   const areaNames = { comunicacion: 'Comunicación', intimidad: 'Intimidad', admiracion: 'Admiración', conflicto: 'Conflictos', proyecto: 'Proyecto de vida', seguridad: 'Seguridad emocional', autonomia: 'Autonomía', idealizacion: 'Idealización' }
-  const sorted = Object.entries(areaScores).sort((a, b) => b[1] - a[1])
-  const strongest = sorted[0]
-  const weakest = sorted[sorted.length - 1]
-
-  let lecturaNarrativa = 'No fue posible procesar las respuestas narrativas con la inteligencia artificial en este momento. Sin embargo, los datos cuantitativos nos permiten generar un perfil orientativo de la relación.\n\nLas respuestas abiertas que compartiste contienen información valiosa sobre tus patrones vinculares, mecanismos de defensa y estructura del deseo. En una sesión profesional, estos elementos se analizan en profundidad para revelar lo que opera debajo de lo consciente.'
-
-  let lecturaCuestionario = `El área más sólida de la relación es ${areaNames[strongest[0]]} (${Math.round(((strongest[1]-1)/4)*100)}%), lo cual funciona como factor protector del vínculo. `
-  if (weakest[1] <= 2.5) {
-    lecturaCuestionario += `Sin embargo, ${areaNames[weakest[0]]} muestra indicadores preocupantes (${Math.round(((weakest[1]-1)/4)*100)}%) que sugieren un patrón que, de no abordarse, tiende a profundizarse con el tiempo.\n\n`
-  } else {
-    lecturaCuestionario += `Las áreas evaluadas muestran un perfil relativamente equilibrado, aunque siempre hay espacio para el crecimiento.\n\n`
-  }
-  if (areaScores.comunicacion <= 3.0 && areaScores.conflicto <= 3.0) {
-    lecturaCuestionario += 'La combinación de dificultades en comunicación y conflicto acumulado es uno de los patrones más frecuentes en relaciones que se deterioran silenciosamente. Los temas no hablados no desaparecen: se transforman en distancia emocional.\n\n'
-  }
-  if (areaScores.intimidad <= 2.5 && areaScores.proyecto >= 3.5) {
-    lecturaCuestionario += 'Es revelador que compartan visión de futuro pero la conexión íntima esté debilitada. Esto sugiere una relación que funciona bien en lo racional-práctico pero necesita reconectar en lo emocional-corporal.\n\n'
-  }
-  lecturaCuestionario += 'Los números son un punto de partida. Revelan tendencias y patrones, pero el significado profundo de cada respuesta solo emerge cuando se contextualiza dentro de la historia singular de cada pareja.'
-
-  const lecturaIntegral = `Al cruzar los datos cuantitativos con las reflexiones personales, emerge un perfil más completo de la dinámica vincular. ${
-    areaScores.idealizacion <= 2.5 && areaScores.seguridad <= 3.0
-      ? 'La combinación de idealización elevada y seguridad emocional frágil es reveladora: sugiere un patrón donde se busca en el otro aquello que se necesita para sentirse seguro, creando un ciclo de dependencia y frustración.'
-      : areaScores.comunicacion >= 3.5 && actualIdealLevel !== 'bajo'
-        ? 'Es interesante que la comunicación sea relativamente funcional mientras persisten patrones de idealización. Esto sugiere que se puede hablar del vínculo, pero quizás no de lo que realmente opera debajo: la relación con la propia falta.'
-        : 'Los números y las palabras cuentan historias complementarias que invitan a una exploración más profunda de los patrones vinculares.'
-  }\n\nLo que emerge al integrar ambas lecturas es que los patrones detectados no son defectos a corregir, sino dinámicas a comprender. Cada relación construye su propio lenguaje inconsciente, y descifrarlo es el primer paso para transformarlo.\n\nLa pregunta más importante no es "¿funciona esta relación?" sino "¿qué tipo de relación con el deseo opera en cada uno de ustedes?" Los números muestran tendencias; las reflexiones muestran subjetividad. La sesión profesional es donde ambas dimensiones se encuentran y revelan su significado singular.`
 
   return {
-    diagnosticoNarrado: 'Hay algo que se percibe con claridad entre todo lo que compartiste: **una relación que atraviesa un momento de tensión**, donde ciertas dinámicas llevan tiempo operando sin ser nombradas.\n\nLo que describes no es solo un conjunto de problemas a resolver — es un patrón vincular que tiene su propia lógica, su propio lenguaje. Y entenderlo cambia completamente la forma en que se puede intervenir.\n\nA continuación encontrarás un perfil detallado de lo que los datos y tu relato revelan juntos. Cada sección ilumina un aspecto distinto de lo que está ocurriendo en esta relación.',
-    aperturaEmpatica: 'Gracias por compartir lo que traes. Aunque no fue posible generar el análisis completo con inteligencia artificial en este momento, lo que describes merece una exploración cuidadosa.\n\nLos patrones que surgen en tus respuestas — tanto en lo que compartiste como en lo que insinuaste sin profundizar — apuntan a dinámicas que vale la pena explorar con cuidado. **Cada relación tiene su propio lenguaje invisible**, y entenderlo es el primer paso para poder elegir de manera más consciente.\n\nEste perfil es una brújula, no un diagnóstico definitivo. Lo que leerás a continuación te dará un primer mapa de tu relación.',
+    dimensionScores: defaultScores,
+    diagnosticoNarrado: 'Hay algo que se percibe con claridad entre todo lo que compartiste: **una relación que atraviesa un momento de tensión**, donde ciertas dinámicas llevan tiempo operando sin ser nombradas.\n\nLo que describes no es solo un conjunto de problemas a resolver — es un patrón vincular que tiene su propia lógica, su propio lenguaje. Y entenderlo cambia completamente la forma en que se puede intervenir.',
+    aperturaEmpatica: 'Gracias por compartir lo que traes. Aunque no fue posible generar el análisis completo con inteligencia artificial en este momento, lo que describes merece una exploración cuidadosa.\n\n**Cada relación tiene su propio lenguaje invisible**, y entenderlo es el primer paso para poder elegir de manera más consciente.\n\nEste perfil es una brújula, no un diagnóstico definitivo.',
     aperturaEmpaticaPuntos: [
       { titulo: 'Un vínculo bajo presión', texto: 'Las respuestas revelan patrones de tensión acumulada que operan por debajo de lo visible en esta relación.' },
       { titulo: 'Comunicación que necesita profundidad', texto: 'Hay temas que se evitan o se tratan de forma superficial, generando una distancia emocional progresiva.' },
       { titulo: 'Fortalezas reales que sostienen', texto: 'A pesar de los desafíos, existen elementos genuinos de conexión que vale la pena identificar y fortalecer.' }
     ],
-    perfilIndividual: 'Independientemente de cómo sea tu pareja, lo que tus respuestas revelan es un patrón que tú traes a la relación: **una tendencia a buscar en el vínculo amoroso algo que va más allá del amor mismo**. La relación funciona como un espacio donde se procesan necesidades emocionales profundas — de reconocimiento, de seguridad, de completud — que no siempre son visibles para quien las vive.\n\nEsto no es un defecto. Es una estructura muy humana. Pero cuando no se ve, suele generar ciclos difíciles de romper: se pide al otro lo que el otro no puede dar, y ese ciclo se repite con mayor intensidad.',
-    perfilVinculo: 'La dinámica entre los dos tiene su propia lógica, independiente de los defectos o virtudes de cada uno. Lo que emerge es un **patrón relacional donde las necesidades emocionales de cada uno no siempre coinciden**, generando momentos de conexión genuina alternados con distancia o tensión.\n\nEste ciclo no se resuelve con más esfuerzo ni con mejor comunicación únicamente. Requiere entender qué función cumple cada uno en la dinámica del otro — y eso es exactamente lo que se explora en una sesión profesional.',
-    configuracionDeseo: 'Lo que buscas en una relación es, fundamentalmente, **un lugar donde ser visto y elegido tal como eres**. Debajo de lo que describes hay una necesidad de amor que no ponga condiciones — un vínculo donde no tengas que demostrar constantemente que mereces estar ahí.\n\nEsa búsqueda es legítima y profundamente humana. La pregunta que vale la pena explorar es: ¿en qué momento ese deseo de ser elegido se convierte en una dependencia de la validación del otro?',
-    lecturaFlash: 'Las respuestas instantáneas — las que más revelan porque salen sin pasar por el filtro racional — confirman una parte de lo que ya aparecía en las preguntas abiertas: **hay una tensión entre lo que quieres que sea la relación y lo que la relación realmente es**.\n\nLas elecciones que hiciste, leídas en contexto, apuntan hacia una estructura donde el miedo a la pérdida o al abandono opera silenciosamente detrás de muchas decisiones cotidianas. Este es uno de los patrones más importantes a explorar en sesión.',
-    sessionWorkItems: sessionItemsFallback.slice(0, 4),
+    perfilIndividual: 'Independientemente de cómo sea tu pareja, lo que tus respuestas revelan es un patrón que tú traes a la relación: **una tendencia a buscar en el vínculo amoroso algo que va más allá del amor mismo**.\n\nEsto no es un defecto. Es una estructura muy humana. Pero cuando no se ve, suele generar ciclos difíciles de romper.',
+    perfilVinculo: 'La dinámica entre los dos tiene su propia lógica. Lo que emerge es un **patrón relacional donde las necesidades emocionales de cada uno no siempre coinciden**, generando momentos de conexión genuina alternados con distancia o tensión.\n\nEste ciclo requiere entender qué función cumple cada uno en la dinámica del otro — y eso es exactamente lo que se explora en una sesión profesional.',
+    configuracionDeseo: 'Lo que buscas en una relación es, fundamentalmente, **un lugar donde ser visto y elegido tal como eres**. Debajo de lo que describes hay una necesidad de amor que no ponga condiciones.\n\nLa pregunta que vale la pena explorar es: ¿en qué momento ese deseo de ser elegido se convierte en una dependencia de la validación del otro?',
+    lecturaFlash: 'Las respuestas instantáneas confirman una parte de lo que ya aparecía en las preguntas abiertas: **hay una tensión entre lo que quieres que sea la relación y lo que la relación realmente es**.\n\nLas elecciones que hiciste apuntan hacia una estructura donde el miedo a la pérdida opera silenciosamente detrás de muchas decisiones cotidianas.',
+    lecturaNarrativa: 'No fue posible procesar las respuestas narrativas con la inteligencia artificial en este momento.\n\nLas respuestas abiertas que compartiste contienen información valiosa sobre tus patrones vinculares, mecanismos de defensa y estructura del deseo. En una sesión profesional, estos elementos se analizan en profundidad.',
+    lecturaIntegral: 'Los patrones detectados no son defectos a corregir, sino dinámicas a comprender. Cada relación construye su propio lenguaje inconsciente, y descifrarlo es el primer paso para transformarlo.\n\nLa pregunta más importante no es "¿funciona esta relación?" sino "¿qué tipo de relación con el deseo opera en cada uno de ustedes?" La sesión profesional es donde estas dimensiones se encuentran y revelan su significado singular.',
+    sessionWorkItems: [
+      'Explorar qué temas se evitan en la conversación y por qué se sienten peligrosos',
+      'Identificar en qué momento se fue interrumpiendo la conexión emocional profunda',
+      'Explorar cómo se mantiene (o se ha ido perdiendo) la identidad individual dentro de la relación'
+    ],
     sessionWorkItemsPareja: [
       'Mapear cómo cada uno percibe los conflictos no resueltos y qué impide abordarlos juntos',
       'Explorar qué necesita cada uno del otro y si esas necesidades han sido expresadas con claridad',
       'Identificar los patrones de comunicación que se activan en los momentos de mayor tensión'
     ],
-    idealizationLevel: actualIdealLevel,
-    idealizationScore: actualIdealScore,
-    idealizationExplanation: `El nivel de idealización detectado refleja una tendencia a proyectar expectativas elevadas en la pareja o en la relación misma. Este patrón suele surgir cuando se busca en el otro una fuente de completud emocional.\n\nTrabajarlo en sesión permite distinguir entre el amor al otro real — con sus límites y su falta — y el amor al otro idealizado, que inevitablemente genera frustración crónica cuando la realidad no coincide con la imagen proyectada.`,
-    lecturaNarrativa: lecturaNarrativa,
-    lecturaCuestionario,
-    lecturaIntegral,
+    idealizationLevel: 'medio',
+    idealizationScore: 55,
+    idealizationExplanation: 'El nivel de idealización detectado refleja una tendencia a proyectar expectativas elevadas en la pareja o en la relación misma.\n\nTrabajarlo en sesión permite distinguir entre el amor al otro real — con sus límites y su falta — y el amor al otro idealizado.',
     areaCorrelations: Object.fromEntries(
-      Object.entries(areaScores).map(([key, score]) => {
-        const pct = Math.round(((score - 1) / 4) * 100)
+      Object.entries(defaultScores).map(([key, score]) => {
         const name = areaNames[key]
-        const msg = pct >= 60
-          ? `**${name}** muestra un nivel saludable (${pct}%). Los datos sugieren que esta es un área de fortaleza en el vínculo.`
-          : `**${name}** obtiene ${pct}%, lo cual indica patrones que merecen atención. En una sesión se puede explorar qué opera detrás de estos indicadores.`
+        const msg = score >= 60
+          ? `**${name}** muestra un nivel saludable (${score}%). Los datos sugieren que esta es un área de fortaleza en el vínculo.`
+          : `**${name}** obtiene ${score}%, lo cual indica patrones que merecen atención.`
         return [key, msg]
       })
     ),
-    correlacionesPrincipales: (() => {
-      const s = Object.entries(areaScores).sort((a, b) => b[1] - a[1])
-      const top = s[0]; const bot = s[s.length - 1]
-      const insights = []
-      if (areaScores.comunicacion <= 3.0 && areaScores.conflicto <= 3.0)
-        insights.push(`La baja **Comunicación** (${getPercent(areaScores.comunicacion)}%) y los **Conflictos acumulados** (${getPercent(areaScores.conflicto)}%) forman un ciclo que, sin intervención, tiende a profundizarse.`)
-      if (areaScores.intimidad <= 2.5 && areaScores.proyecto >= 3.5)
-        insights.push(`Que compartan **Proyecto de vida** (${getPercent(areaScores.proyecto)}%) pero la **Intimidad** esté débil (${getPercent(areaScores.intimidad)}%) revela una relación que funciona en lo racional pero necesita reconectar en lo emocional.`)
-      if (areaScores.idealizacion <= 2.5 && areaScores.seguridad <= 3.0)
-        insights.push(`La alta **Idealización** combinada con baja **Seguridad emocional** (${getPercent(areaScores.seguridad)}%) sugiere que se busca en el otro aquello que se necesita para sentirse completo.`)
-      if (insights.length === 0)
-        insights.push(`**${areaNames[top[0]]}** (${getPercent(top[1])}%) actúa como factor protector, mientras que **${areaNames[bot[0]]}** (${getPercent(bot[1])}%) es el área que más requiere atención.`)
-      return insights.slice(0, 3)
-    })(),
-    unconsciousPatterns: patterns,
+    correlacionesPrincipales: [
+      'La **Comunicación** y los **Conflictos** forman un ciclo que, sin intervención, tiende a profundizarse.',
+      'La **Idealización** combinada con la **Seguridad emocional** sugiere que se busca en el otro aquello que se necesita para sentirse completo.'
+    ],
+    unconsciousPatterns: [
+      '**Evitación emocional**: dificultad para expresar necesidades profundas sin que se convierta en conflicto',
+      '**Conflicto latente**: evitación de enfrentamientos que genera acumulación silenciosa de resentimiento',
+      '**Expectativa proyectada**: se coloca en el otro una imagen idealizada que genera frustración recurrente'
+    ],
     defenseMechanisms: [
-      areaScores.conflicto <= 2.5 ? '**Evitación**: se eluden los temas difíciles como mecanismo para mantener una falsa armonía' : null,
-      areaScores.comunicacion <= 2.5 ? '**Supresión emocional**: se callan sentimientos para no generar conflicto ni mostrar vulnerabilidad' : null,
-      areaScores.idealizacion <= 2.5 ? '**Idealización**: se mantiene una imagen fantaseada del otro para evitar la desilusión' : null,
+      '**Evitación**: se eluden los temas difíciles como mecanismo para mantener una falsa armonía',
       '**Racionalización**: se buscan explicaciones lógicas para justificar dinámicas que son esencialmente emocionales'
-    ].filter(Boolean).slice(0, 3),
-    riskAreas: Object.entries(areaScores)
-      .filter(([, s]) => s <= 2.5)
-      .map(([key, s]) => `**${areaNames[key]}** (${Math.round(((s-1)/4)*100)}%): requiere exploración profesional prioritaria`),
-    strengthsFound: strengths,
-    keyInsight: 'El patrón general sugiere que la relación opera con dinámicas que merecen ser exploradas con mayor profundidad. Los números revelan tendencias; las reflexiones revelan deseos y temores. La sesión profesional es donde ambas dimensiones se encuentran y revelan su significado singular.',
-    recommendation: 'Se recomienda una sesión profesional de diagnóstico de pareja para explorar en profundidad los patrones detectados. La sesión permite ir más allá de lo cuantitativo y trabajar con la experiencia subjetiva de cada uno, que es donde realmente operan los cambios.\n\nUn espacio psicoanalítico puede ayudar a distinguir entre lo que se demanda del otro (y que nunca será suficiente) y lo que genuinamente se desea construir juntos.',
-    existentialReflection: 'Amar no es encontrar al otro perfecto, sino elegir al otro real — con su falta, con su misterio, con aquello que nunca terminaremos de conocer. El verdadero desafío del amor no es sostener la ilusión, sino sostener la verdad. Y la verdad es que nadie nos completa, nadie nos salva, nadie resuelve nuestra falta. Pero alguien, desde su propia incompletud, puede elegir caminar junto a la nuestra.'
+    ],
+    riskAreas: [
+      '**Conflictos** (45%): requiere exploración profesional prioritaria',
+      '**Idealización** (45%): requiere exploración profesional prioritaria'
+    ],
+    strengthsFound: [
+      '**Disposición al trabajo**: apertura para explorar la relación a mayor profundidad',
+      '**Individualidad respetada**: respeto por la identidad propia dentro del vínculo'
+    ],
+    keyInsight: 'El patrón general sugiere que la relación opera con dinámicas que merecen ser exploradas con mayor profundidad.',
+    recommendation: 'Se recomienda una sesión profesional de diagnóstico de pareja para explorar en profundidad los patrones detectados.\n\nUn espacio psicoanalítico puede ayudar a distinguir entre lo que se demanda del otro y lo que genuinamente se desea construir juntos.',
+    existentialReflection: 'Amar no es encontrar al otro perfecto, sino elegir al otro real — con su falta, con su misterio, con aquello que nunca terminaremos de conocer. El verdadero desafío del amor no es sostener la ilusión, sino sostener la verdad.'
   }
 }

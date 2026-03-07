@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useMemo, useCallback, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Heart, MessageCircle, Shield, Target, Users, Brain, ArrowRight, ArrowLeft, Check, Clock, FileText, Mail, Send, Download, Sparkles, Eye, Lock, Star, Activity, BarChart3, Zap, Layers, CreditCard, Loader2, Tag, Mic, MicOff, TrendingUp, TrendingDown, AlertTriangle } from 'lucide-react'
+import { Heart, MessageCircle, Shield, Target, Users, Brain, ArrowRight, ArrowLeft, Check, CheckCircle, Clock, FileText, Mail, Send, Download, Sparkles, Eye, Lock, Star, Activity, BarChart3, Zap, Layers, CreditCard, Loader2, Tag, Mic, MicOff, TrendingUp, TrendingDown, AlertTriangle } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 import jsPDF from 'jspdf'
 import { analyzeRelationship } from '../services/deepseekService'
@@ -87,48 +87,74 @@ const QUESTIONS_DETAILED = [
   { id: 804, text: 'A veces me pregunto si lo que siento es amor o miedo a estar solo/a.', area: 'idealizacion', inverted: true, sampleValue: 4 }
 ]
 
-// ─── PREGUNTAS ABIERTAS (Premium — corazón del diagnóstico) ───────────────
-// Diseñadas para que la persona hable sin darse cuenta de lo que revela.
-// Intención clínica real oculta bajo preguntas que suenan conversacionales.
+// ─── PREGUNTAS ABIERTAS (Premium — 25 preguntas profundas) ──────────────────
+// Diseñadas para extraer patrones de apego, conflicto, idealización y dinámica
+// del vínculo sin que la persona se dé cuenta de lo que está revelando.
 
 const PHILOSOPHICAL_QUESTIONS = [
-  { id: 'p1', text: 'Antes de empezar: descríbeme a tu pareja en tres palabras.', sample: 'Intensa, presente, complicada' },
-  { id: 'p2', text: '¿Cómo supiste que esta persona era para ti? ¿Qué estaba pasando en tu vida en ese momento?', sample: 'La conocí cuando estaba en un momento muy solitario, después de una ruptura difícil. Algo cuadró de inmediato.' },
-  { id: 'p3', text: '¿Cuál fue el primer momento en que algo se sintió... raro? No tiene que ser un conflicto grande.', sample: 'Cuando canceló algo importante para mí y no pareció importarle mucho. No fue grande, pero algo cambió.' },
-  { id: 'p4', text: '¿Hay algo que haces diferente cuando tu pareja está triste o enojada contigo?', sample: 'Me quedo callado. Trato de no añadir más tensión y espero a que pase.' },
-  { id: 'p5', text: 'Si le pidieras algo a tu pareja y no te lo pudiera dar, ¿qué sería eso? No lo más obvio, sino lo más honesto.', sample: 'Que me buscara de noche sin que yo tuviera que pedirlo.' },
-  { id: 'p6', text: '¿Qué cosas de ti han cambiado desde que están juntos? Las que agradeces y las que no tanto.', sample: 'Me volví más reflexivo, pero también más ansioso. Perdí algo de ligereza que tenía antes.' },
-  { id: 'p7', text: 'Cuéntame de un momento reciente en que te sentiste muy conectado/a con tu pareja. ¿Qué estaban haciendo?', sample: 'El domingo pasado. Cocinamos juntos en silencio y todo estaba tranquilo, del buen silencio.' },
-  { id: 'p8', text: '¿Y uno en que te sentiste completamente solo/a estando con él/ella?', sample: 'En una cena con sus amigos. Estaba ahí pero me sentí completamente invisible para ella.' },
-  { id: 'p9', text: 'Cuando imaginaste cómo sería tener pareja — antes de esta relación — ¿se parece a lo que tienes hoy?', sample: 'Para nada. Imaginé algo más calmado. Esto es más intenso y más confuso de lo que creía.' },
-  { id: 'p10', text: '¿Hay algo que tu pareja hace que te mueve por dentro y no entiendes muy bien por qué te lo hace sentir?', sample: 'Cuando me corrige directamente frente a otros. Me molesta más de lo que debería.' },
-  { id: 'p11', text: 'Si le preguntara a tu pareja cómo estás tú en esta relación, ¿qué crees que diría?', sample: 'Que la amo pero que a veces me cierro sin explicarle por qué.' },
-  { id: 'p12', text: '¿Hay alguien de tu historia pasada con quien tu pareja se parezca en algo — en la forma de ser, no en lo físico?', sample: 'Sí. Mi madre también era muy directa y fría cuando algo no le gustaba.' },
-  { id: 'p13', text: '¿Qué es lo más difícil de soltarte dentro de esta relación?', sample: 'El control. Necesito tener claridad de todo y en esta relación no siempre la tengo.' },
-  { id: 'p14', text: 'Si mañana supieras que esta relación va a terminar, ¿cuál sería tu mayor miedo? No el más obvio, sino el más honesto.', sample: 'Que no vuelva a encontrar esta profundidad intelectual con alguien más.' },
-  { id: 'p15', text: '¿Qué necesitarías saber de ti mismo/a para poder elegir mejor en esta relación?', sample: 'Por qué siempre elijo personas que de alguna forma no están del todo disponibles.' }
+  // Fase 1 — "Cuéntame de ustedes" (conexión, baja la guardia)
+  { id: 'p1', text: 'Si alguien los observara durante una semana normal, ¿cómo describiría la forma en que interactúan?', sample: 'Somos cariñosos pero a veces hay tensión que no se dice. Como que todo parece bien pero hay algo debajo.' },
+  { id: 'p2', text: '¿Qué cosas pequeñas hace tu pareja que cambian tu estado de ánimo, para bien o para mal?', sample: 'Cuando me pregunta cómo estoy de verdad me llena. Pero cuando mira el teléfono mientras le hablo, me apago.' },
+  { id: 'p3', text: 'Cuéntame de un momento reciente en que te sentiste muy conectado/a con tu pareja. ¿Qué estaban haciendo?', sample: 'El domingo pasado. Cocinamos juntos en silencio y todo estaba tranquilo, del buen silencio.' },
+  { id: 'p4', text: '¿En qué momentos sientes que tú y tu pareja están realmente "en la misma sintonía"?', sample: 'Cuando planeamos algo juntos o cuando nos reímos de algo que solo nosotros entendemos.' },
+  { id: 'p5', text: '¿Y en qué momentos sientes que hablan pero no se están entendiendo de verdad?', sample: 'Cuando intento explicarle cómo me siento y responde con soluciones en lugar de solo escuchar.' },
+  { id: 'p6', text: 'Cuando pasan tiempo juntos sin obligaciones ni estrés, ¿cómo suele sentirse el ambiente entre ustedes?', sample: 'A veces muy bien, pero otras se siente como que no sabemos qué hacer sin la rutina.' },
+  { id: 'p7', text: 'Si alguien escuchara una conversación normal entre ustedes, ¿cómo describiría la forma en que se hablan?', sample: 'Probablemente diría que somos amables pero que a veces uno interrumpe al otro.' },
+  { id: 'p8', text: '¿Qué sientes que TÚ aportas a la relación que quizás tu pareja no siempre nota?', sample: 'La estabilidad emocional. Siempre estoy ahí cuando necesita hablar, pero no sé si lo valora.' },
+  // Fase 2 — "Cuando las cosas se complican" (conflicto, defensa, apego)
+  { id: 'p9', text: 'Cuando surge un desacuerdo, ¿qué suele ocurrir primero? No el tema — sino qué pasa entre ustedes.', sample: 'Yo empiezo a hablar más rápido y ella se cierra. Siempre es la misma danza.' },
+  { id: 'p10', text: '¿Hay situaciones pequeñas que suelen escalar más de lo que deberían? Cuéntame una.', sample: 'El otro día discutimos por quién debía recoger algo y terminamos sacando cosas de hace meses.' },
+  { id: 'p11', text: 'Cuando tu pareja está molesta contigo, ¿cómo lo notas antes de que lo diga?', sample: 'Su tono cambia. Se vuelve cortante y monosilábica. Pero si le pregunto, dice que no pasa nada.' },
+  { id: 'p12', text: 'Cuando tú estás herido/a o molesto/a, ¿qué haces normalmente primero — antes de hablar?', sample: 'Me quedo callado. Me encierro en mí mismo esperando que se me pase.' },
+  { id: 'p13', text: 'Después de un conflicto fuerte, ¿qué suele pasar entre ustedes en las horas siguientes?', sample: 'Silencio incómodo. A veces uno se acerca después, pero nunca hablamos de lo que realmente pasó.' },
+  { id: 'p14', text: '¿Hay temas que parecen volver una y otra vez, como si fueran la misma discusión con diferente cara?', sample: 'Sí, siempre volvemos al tema de que yo no expreso lo que siento y eso la frustra.' },
+  { id: 'p15', text: 'Si recordaras la última discusión que tuvieron, ¿qué la inició realmente? No el tema visible — lo de fondo.', sample: 'Ella dijo algo sobre mis amigos pero creo que en realidad estaba molesta porque no le di prioridad ese fin de semana.' },
+  { id: 'p16', text: 'Cuando hay silencio entre ustedes después de un conflicto, ¿cómo se siente ese silencio?', sample: 'Pesado. Como si los dos estuviéramos esperando que el otro dé el primer paso.' },
+  // Fase 3 — "Lo que no se dice" (inconsciente, proyección, vulnerabilidad)
+  { id: 'p17', text: '¿Qué crees que tu pareja desearía que cambiaras, pero no siempre te lo dice directamente?', sample: 'Que sea más expresivo. Que le diga lo que siento sin que tenga que sacármelo con preguntas.' },
+  { id: 'p18', text: '¿Qué cosas te resulta más difícil decir dentro de la relación, aunque sepas que deberías?', sample: 'Que a veces me siento solo incluso cuando estamos juntos. No sé cómo decirlo sin que suene a reproche.' },
+  { id: 'p19', text: 'Si uno de ustedes tiene un problema personal fuerte, ¿cómo suele reaccionar el otro?', sample: 'Ella se preocupa y quiere ayudar. Yo tiendo a darle su espacio, pero a veces creo que eso la hace sentir que no me importa.' },
+  { id: 'p20', text: '¿Qué te hace sentir más seguro/a dentro de la relación?', sample: 'Cuando me dice que me elige. No por necesidad, sino porque quiere estar conmigo.' },
+  { id: 'p21', text: '¿Y qué te hace sentir más vulnerable?', sample: 'Cuando siento que las cosas entre nosotros dependen de mi esfuerzo solamente.' },
+  { id: 'p22', text: '¿Hay algo de tu historia personal — antes de esta relación — que sientes que se repite en cómo te relacionas ahora?', sample: 'Sí. Mi madre también era muy directa y fría cuando algo no le gustaba. A veces siento que repito ese patrón.' },
+  { id: 'p23', text: 'Si le preguntaras a tu pareja "¿cómo estoy yo en esta relación?", ¿qué crees que diría?', sample: 'Que la amo pero que a veces me cierro sin explicarle por qué.' },
+  // Fase 4 — "Lo que viene" (futuro, esperanza, reconexión)
+  { id: 'p24', text: 'Si la relación mejorara mucho en los próximos meses, ¿qué sería diferente en el día a día?', sample: 'Hablaríamos más de lo que sentimos. Habría menos silencios incómodos y más complicidad.' },
+  { id: 'p25', text: 'Si pudieras decirle algo importante a tu pareja sabiendo que no va a reaccionar mal — algo que necesitas que sepa — ¿qué sería?', sample: 'Que a veces tengo miedo de que un día te canses de tener que adivinar lo que siento.' }
 ]
 
 // ─── PREGUNTAS FLASH (Premium — proyectivas, sin filtro racional) ─────────
-// 8 frases para completar + 7 elecciones forzadas = 15 total.
+// 15 frases para completar + 10 elecciones forzadas = 25 total.
 // Respuestas en menos de 3 segundos: lo que sale sin pensar revela lo inconsciente.
 
 const FLASH_QUESTIONS = [
+  // Completar frase (15)
   { id: 'f1', type: 'complete', stem: 'Cuando pienso en mi pareja, lo primero que siento es', sample: 'calma mezclada con algo de inquietud' },
   { id: 'f2', type: 'complete', stem: 'Lo que más me da miedo en esta relación es', sample: 'que se aburra de mí' },
   { id: 'f3', type: 'complete', stem: 'Cuando estamos bien juntos, yo soy', sample: 'más yo mismo/a' },
   { id: 'f4', type: 'complete', stem: 'Sin mi pareja, yo sería', sample: 'más libre pero más solo/a' },
   { id: 'f5', type: 'complete', stem: 'El amor debería ser ___, pero en mi relación es', sample: 'tranquilo, pero en mi relación es impredecible' },
-  { id: 'f6', type: 'choice', text: '¿Quién cede más en esta relación?', options: ['Yo', 'Mi pareja', 'Los dos igual'] },
-  { id: 'f7', type: 'choice', text: '¿Antes de esta relación eras...?', options: ['Más feliz', 'Igual de feliz', 'Menos feliz'] },
-  { id: 'f8', type: 'choice', text: '¿Sientes que tu pareja te conoce de verdad?', options: ['Sí', 'En parte', 'No del todo'] },
-  { id: 'f9', type: 'choice', text: '¿Prefieres que tu pareja te...?', options: ['Necesite', 'Elija'] },
-  { id: 'f10', type: 'choice', text: '¿Estarías con tu pareja si supieras que nunca va a cambiar?', options: ['Sí', 'No sé', 'No'] },
-  { id: 'f11', type: 'complete', stem: 'Si pudiera cambiar una sola cosa de mi relación, sería', sample: 'la forma en que discutimos' },
-  { id: 'f12', type: 'complete', stem: 'Cuando mi pareja se aleja, yo', sample: 'siento un vacío que no puedo ignorar' },
-  { id: 'f13', type: 'complete', stem: 'Lo que nunca le he dicho a mi pareja es', sample: 'que a veces me siento solo/a incluso estando juntos' },
-  { id: 'f14', type: 'choice', text: '¿Cuándo te sientes más tú en la relación?', options: ['Cuando estamos juntos', 'Cuando estoy solo/a', 'Da igual'] },
-  { id: 'f15', type: 'choice', text: '¿Tu relación se parece más a...?', options: ['Un refugio', 'Una montaña rusa', 'Una costumbre'] }
+  { id: 'f6', type: 'complete', stem: 'Cuando mi pareja se aleja, yo', sample: 'siento un vacío que no puedo ignorar' },
+  { id: 'f7', type: 'complete', stem: 'Lo que nunca le he dicho a mi pareja es', sample: 'que a veces me siento solo/a incluso estando juntos' },
+  { id: 'f8', type: 'complete', stem: 'Si pudiera cambiar una sola cosa de nosotros, sería', sample: 'la forma en que discutimos' },
+  { id: 'f9', type: 'complete', stem: 'Lo que más extraño de nosotros es', sample: 'la ligereza que teníamos al principio' },
+  { id: 'f10', type: 'complete', stem: 'Lo que más nos une es', sample: 'que nos entendemos sin palabras cuando estamos bien' },
+  { id: 'f11', type: 'complete', stem: 'Cuando discutimos, yo termino sintiéndome', sample: 'invisible, como si no importara lo que digo' },
+  { id: 'f12', type: 'complete', stem: 'Lo que mi pareja no sabe de mí es', sample: 'cuánto me esfuerzo por mantener todo en calma' },
+  { id: 'f13', type: 'complete', stem: 'Lo que más admiro de mi pareja es', sample: 'su fortaleza, aunque a veces la confundo con frialdad' },
+  { id: 'f14', type: 'complete', stem: 'Si esta relación terminara mañana, lo que más me dolería es', sample: 'darme cuenta de que no lo intenté todo' },
+  { id: 'f15', type: 'complete', stem: 'Lo que necesito para sentirme realmente amado/a es', sample: 'que me busquen sin que yo tenga que pedir' },
+  // Elección forzada (10)
+  { id: 'f16', type: 'choice', text: '¿Quién cede más en esta relación?', options: ['Yo', 'Mi pareja', 'Los dos igual'] },
+  { id: 'f17', type: 'choice', text: '¿Tu relación se parece más a...?', options: ['Un refugio', 'Una montaña rusa', 'Una costumbre'] },
+  { id: 'f18', type: 'choice', text: '¿Prefieres que tu pareja te...?', options: ['Necesite', 'Elija', 'Admire'] },
+  { id: 'f19', type: 'choice', text: '¿Cuándo te sientes más tú en la relación?', options: ['Juntos', 'Solo/a', 'Da igual'] },
+  { id: 'f20', type: 'choice', text: 'Cuando hay un problema, ¿tú tiendes a...?', options: ['Acercarte', 'Alejarte', 'Esperar'] },
+  { id: 'f21', type: 'choice', text: '¿Sientes que tu pareja te conoce de verdad?', options: ['Sí', 'En parte', 'No del todo'] },
+  { id: 'f22', type: 'choice', text: '¿Estarías con tu pareja si supieras que nunca va a cambiar?', options: ['Sí', 'No sé', 'No'] },
+  { id: 'f23', type: 'choice', text: '¿Lo que sienten es amor, costumbre o necesidad?', options: ['Amor', 'Costumbre', 'Necesidad', 'Mezcla'] },
+  { id: 'f24', type: 'choice', text: '¿Antes de esta relación eras...?', options: ['Más feliz', 'Igual', 'Menos feliz'] },
+  { id: 'f25', type: 'choice', text: '¿Qué le falta más a tu relación?', options: ['Pasión', 'Comunicación', 'Confianza', 'Diversión'] }
 ]
 
 // ─── PERFILES MOCK (DEV) ──────────────────────────────────────────
@@ -137,93 +163,129 @@ const MOCK_PROFILES = [
     name: '😰 Apego Ansioso',
     desc: 'Alta dependencia, miedo al abandono, idealización',
     philosophical: {
-      0: 'Intensa, presente, complicada',
-      1: 'La conocí cuando estaba pasando por un momento de mucha soledad después de una ruptura difícil. Sentí que llenó un vacío muy grande.',
-      2: 'Creo que fue cuando empezó a contradecirme en cosas pequeñas que antes aceptaba. Nada grave, pero algo cambió.',
-      3: 'Me pongo muy callado. Me retiro para que no se moleste más.',
-      4: 'Que me escuche de verdad cuando estoy mal, sin darme consejos de inmediato.',
-      5: 'Me he vuelto más ansioso. Antes era más independiente.',
-      6: 'El fin de semana pasado vimos una película juntos y fue muy tranquilo y bonito.',
-      7: 'En una cena familiar. Estaba ahí pero yo me sentí invisible para ella.',
-      8: 'Pensé que sería más fácil. Que habría más complicidad.',
-      9: 'Cuando se ríe de cierta manera. No sé por qué me afecta tanto.',
-      10: 'Creo que diría que estoy bien pero que a veces me cierro.',
-      11: 'Sí, en cómo evita los conflictos directo. Mi mamá hacía lo mismo.',
-      12: 'El miedo a no volver a sentir esto con alguien más.',
-      13: 'Quedarme solo otra vez.',
-      14: 'Entender por qué me engancho tanto con personas que no están del todo disponibles.'
+      0: 'Somos cariñosos pero hay momentos de tensión que no sé de dónde vienen. Como si todo pudiera romperse.',
+      1: 'Cuando me pregunta cómo estoy de verdad me llena. Pero cuando no contesta un mensaje, todo se derrumba.',
+      2: 'El fin de semana pasado nos quedamos en la cama platicando de todo. De los dos, del futuro.',
+      3: 'Cuando planeamos algo juntos me siento en sintonía. Ahí siento que vamos hacia lo mismo.',
+      4: 'Cuando le intento explicar mi inseguridad y me dice que exagero. Ahí no me entiende.',
+      5: 'A veces bien, pero si hay un silencio largo me empiezo a preocupar de que algo está mal.',
+      6: 'Diría que hablamos normal, pero que a veces yo hago preguntas que suenan a reclamo.',
+      7: 'Que siempre estoy pendiente de cómo se siente. Soy el que pone la alarma emocional.',
+      8: 'Yo empiezo a preguntar qué pasa y ella se cierra. Y mientras más insisto, más se aleja.',
+      9: 'Sí. El otro día discutimos por un mensaje y terminamos hablando de si me quiere de verdad.',
+      10: 'Se pone fría. El tono cambia, los mensajes son cortos. Aunque diga que no pasa nada, yo lo siento.',
+      11: 'Me quedo pensando en qué hice mal. Reviso todo lo que dije buscando el error.',
+      12: 'Silencio. Yo intento acercarme pero ella necesita espacio. Y eso me mata.',
+      13: 'Sí. Siempre volvemos al tema de que yo soy muy intenso y ella necesita más aire.',
+      14: 'Ella dijo algo sobre querer estar sola un rato, pero creo que el fondo es que le agobio.',
+      15: 'Pesado. Como si estuviera a punto de perderla.',
+      16: 'Que no sea tan inseguro. Que confíe más en lo nuestro.',
+      17: 'Que a veces me da miedo que un día se vaya y yo no lo vea venir.',
+      18: 'Ella se preocupa de verdad. Yo intento hacerme el fuerte aunque por dentro me esté muriendo.',
+      19: 'Cuando me dice que me quiere sin que yo le pregunte.',
+      20: 'Cuando siento que tiene opciones y que puede elegir a alguien mejor.',
+      21: 'Mi mamá era impredecible. Un día te quería, otro te ignoraba. Creo que busco eso sin darme cuenta.',
+      22: 'Que me ama pero que le agota tener que estar demostrándolo todo el tiempo.',
+      23: 'Habría más tranquilidad. Yo no estaría revisando todo el tiempo si estamos bien.',
+      24: 'Que me da miedo que un día te canses de tener que demostrarme que me quieres.'
     },
-    flash: { f1: 'ansiedad mezclada con ternura', f2: 'que se aburra de mí', f3: 'más yo mismo', f4: 'más libre pero más solo', f5: 'ser calma, pero en mi relación es incertidumbre', f6: 'Yo', f7: 'Igual de feliz', f8: 'En parte', f9: 'Elija', f10: 'No sé', f11: 'que dejara de dudar de lo nuestro', f12: 'me lleno de ansiedad y busco contacto', f13: 'que a veces me siento invisible', f14: 'Cuando estamos juntos', f15: 'Una montaña rusa' },
-    answers: { 101: 3, 102: 4, 103: 2, 201: 4, 202: 4, 203: 3, 301: 4, 302: 3, 303: 4, 401: 4, 402: 4, 403: 2, 501: 3, 502: 3, 503: 3, 601: 2, 602: 4, 603: 3, 701: 4, 702: 2, 703: 3, 801: 4, 802: 3, 803: 3, 804: 4 }
+    flash: { f1: 'ansiedad mezclada con ternura', f2: 'que se aburra de mí', f3: 'más yo mismo', f4: 'más libre pero más solo', f5: 'ser calma, pero en mi relación es incertidumbre', f6: 'siento un vacío que no puedo ignorar', f7: 'que a veces me siento invisible', f8: 'que dejara de dudar de lo nuestro', f9: 'la seguridad que teníamos al principio', f10: 'que nos entendemos sin palabras cuando estamos bien', f11: 'invisible, como si no importara', f12: 'cuánto me esfuerzo por mantener todo en calma', f13: 'su fortaleza aunque a veces la confundo con frialdad', f14: 'darme cuenta de que no lo intenté todo', f15: 'que me busquen sin que yo tenga que pedir', f16: 'Yo', f17: 'Una montaña rusa', f18: 'Necesite', f19: 'Juntos', f20: 'Acercarte', f21: 'En parte', f22: 'No sé', f23: 'Mezcla', f24: 'Menos feliz', f25: 'Confianza' }
   },
   {
     name: '🧊 Evitativo',
     desc: 'Distancia emocional, hiperautonomía, intimidad baja',
     philosophical: {
-      0: 'Estable. Funcional. No sé si eso es suficiente.',
-      1: 'No recuerdo un momento exacto. Fue gradual, práctico. Coincidimos en muchas cosas.',
-      2: 'No sabría ubicar un momento. Quizá cuando empezó a pedirme más cercanía de la que puedo dar.',
-      3: 'Lo resuelvo solo, necesito estar tranquilo para pensar. Prefiero no hablar hasta que se me pase.',
-      4: 'Honestamente, que me deje en paz cuando necesito mi espacio sin tomárselo personal.',
-      5: 'Me he distanciado un poco. Pero creo que así funciono mejor.',
-      6: 'No se me ocurre un momento especial reciente. Pero tampoco ha habido problemas graves.',
-      7: 'Cuando insistió en que le contara algo personal y yo simplemente no quería hacerlo.',
-      8: 'Pensé que sería más tranquilo. Menos demandante emocionalmente.',
-      9: 'Nada en particular. Quizá cuando las cosas fluyen sin mucha complicación.',
-      10: 'Diría que soy frío, pero yo creo que simplemente soy reservado.',
-      11: 'Mi papá era igual. No hablaba de sus cosas y la casa funcionaba bien así.',
-      12: 'Creo que a perder mi independencia. A que la relación me consuma.',
-      13: 'Perderme a mí mismo en algo que se siente como una obligación constante.',
-      14: 'Por qué me cuesta tanto conectar emocionalmente aunque sé que debería.'
+      0: 'Funcional. Estable. Cada quien en lo suyo. No necesitamos drama.',
+      1: 'No sé, nada en especial. Tampoco me molesta nada en especial.',
+      2: 'Honestamente no recuerdo un momento así recientemente.',
+      3: 'Cuando hacemos cosas prácticas juntos. Proyectos, logística.',
+      4: 'Cuando me habla de emociones que yo no sé cómo procesar.',
+      5: 'Normal. Tranquilo. Aunque a veces ella dice que me siente lejos.',
+      6: 'Diría que cada quien habla de lo suyo. No hay grandes dramas.',
+      7: 'Mantener las cosas en orden. Que todo funcione. Pero eso no se ve sexy.',
+      8: 'Yo me callo. Espero a que se le pase. Prefiero no meter más leña.',
+      9: 'No que yo recuerde. Las cosas se resuelven solas si les das tiempo.',
+      10: 'No sé. No le presto tanta atención a esas señales.',
+      11: 'Me alejo. Necesito pensar solo antes de hablar.',
+      12: 'Cada quien se va a su lado. Después de unas horas todo vuelve a la normalidad.',
+      13: 'Ella dice que "nunca hablamos de nada". Pero yo creo que no todo se tiene que hablar.',
+      14: 'No fue nada importante. A veces las discusiones pasan sin razón clara.',
+      15: 'Cómodo, sinceramente. Me gusta el silencio.',
+      16: 'Que le dé más. Más palabras, más contacto, más... todo.',
+      17: 'Que a veces no sé si lo que siento por ella es amor o costumbre.',
+      18: 'Le doy espacio. Lo cual es lo que yo querría que hicieran conmigo.',
+      19: 'Cuando no me pide nada y simplemente estamos tranquilos.',
+      20: 'Cuando me pide que me abra emocionalmente. No sé cómo hacer eso.',
+      21: 'Mi papá era igual. No hablaba de sus cosas. Y la casa funcionaba bien.',
+      22: 'Que soy frío. Pero yo creo que simplemente no soy dramático.',
+      23: 'Más comunicación quizá. Pero honestamente no sé qué cambiaría yo.',
+      24: 'Que a veces me pregunto si te quiero como deberías ser querida.'
     },
-    flash: { f1: 'tranquilidad', f2: 'que me absorba', f3: 'igual que siempre', f4: 'más tranquilo', f5: 'algo sencillo, pero en mi relación es algo complicado', f6: 'Mi pareja', f7: 'Igual de feliz', f8: 'No del todo', f9: 'Elija', f10: 'Sí', f11: 'nada, está bien así', f12: 'me siento aliviado honestamente', f13: 'que a veces no siento nada y me preocupa', f14: 'Cuando estoy solo/a', f15: 'Una costumbre' },
-    answers: { 101: 3, 102: 3, 103: 3, 201: 2, 202: 2, 203: 2, 301: 3, 302: 3, 303: 3, 401: 3, 402: 3, 403: 3, 501: 4, 502: 4, 503: 2, 601: 3, 602: 2, 603: 2, 701: 1, 702: 5, 703: 4, 801: 3, 802: 2, 803: 4, 804: 2 }
+    flash: { f1: 'tranquilidad', f2: 'que me absorba', f3: 'igual que siempre', f4: 'más tranquilo', f5: 'algo sencillo, pero en mi relación es complicado', f6: 'me siento aliviado honestamente', f7: 'que a veces no siento nada y me preocupa', f8: 'la presión de tener que sentir cosas', f9: 'cuando no había tanta presión', f10: 'que no nos estorbamos', f11: 'cansado de tener que explicarme', f12: 'cuántas veces finjo interés por mantener la paz', f13: 'que resuelve todo sin drama', f14: 'nada, creo que estaría bien', f15: 'que me dejen en paz cuando lo necesito', f16: 'Mi pareja', f17: 'Una costumbre', f18: 'Elija', f19: 'Solo/a', f20: 'Alejarte', f21: 'No del todo', f22: 'Sí', f23: 'Costumbre', f24: 'Igual', f25: 'Pasión' }
   },
   {
     name: '💚 Saludable con roces',
     desc: 'Buena base, conflictos normales, comunicación decente',
     philosophical: {
-      0: 'Bonita. Imperfecta. Pero algo que elijo cada día.',
-      1: 'Nos conocimos por amigos en común. Me gustó cómo me hacía reír y me sentí segura desde el inicio.',
-      2: 'Cuando tuvimos nuestro primer desacuerdo fuerte sobre algo importante. Me di cuenta de que no estaba de acuerdo en todo.',
-      3: 'Intento decir lo que me pasa aunque me cueste. A veces me tardo, pero lo digo.',
-      4: 'Que me vea como soy ahora, no como era al principio.',
-      5: 'Más paciente. También más consciente de mis propias limitaciones.',
-      6: 'Ayer cocinamos juntos y nos estuvimos riendo de una tontería como media hora.',
-      7: 'Cuando se olvidó de algo que para mí era importante. No fue adrede pero me dolió.',
-      8: 'Pensé que nunca pelearíamos. Ahora sé que pelear bien es parte del proceso.',
-      9: 'Cuando me abraza sin razón. Es como si todo estuviera en su lugar.',
-      10: 'Que soy buena compañera pero a veces demasiado exigente.',
-      11: 'Algo sí. Mi mamá era muy exigente con mi papá y yo a veces me veo haciéndolo.',
-      12: 'A que la rutina mate lo que hemos construido.',
-      13: 'Conformarme con algo que ya no crece.',
-      14: 'Aprender a dejar de controlar todo para sentirme segura.'
+      0: 'Somos un buen equipo. A veces nos peleamos por tonterías pero nos queremos.',
+      1: 'Cuando me trae un café sin que se lo pida me hace el día. Pero cuando cancela planes se me baja todo.',
+      2: 'Ayer cocinamos juntos y nos estuvimos riendo como media hora.',
+      3: 'Cuando hablamos de lo que nos importa sin prisa. En esos momentos fluye todo.',
+      4: 'Cuando yo digo que algo me molestó y ella lo toma como ataque. Ahí nos desconectamos.',
+      5: 'Tranquilo y rico. Nos gusta estar juntos sin hacer nada especial.',
+      6: 'Diría que nos hablamos con cariño. A veces sarcástico, pero cariño al fin.',
+      7: 'La estabilidad. Soy la que mantiene la calma cuando todo se desordena.',
+      8: 'Los dos nos ponemos a la defensiva. Pero después de un rato se nos pasa.',
+      9: 'Sí, las finanzas. Siempre termina en lo mismo aunque el tema empiece diferente.',
+      10: 'Se pone más callada de lo normal. Y cuando le pregunto dice "nada".',
+      11: 'Me pongo a hacer cosas. Limpio, ordeno. Como para procesar.',
+      12: 'Uno de los dos se acerca. A veces con humor. Y se va desarmando.',
+      13: 'Sí, la organización de la casa. Pero creo que el fondo es sobre roles y expectativas.',
+      14: 'Empezó por los trastes pero en realidad era sobre quién hace más en la casa.',
+      15: 'Un poco incómodo pero no pesado. Sabemos que se va a resolver.',
+      16: 'Que sea menos perfeccionista. Que no tome todo tan en serio.',
+      17: 'Que a veces me siento sola aunque estemos en la misma casa.',
+      18: 'Nos apoyamos bastante bien. Los dos nos escuchamos.',
+      19: 'Cuando hacemos planes juntos. Me encanta que tengamos un proyecto.',
+      20: 'Cuando siento que la rutina nos está ganando.',
+      21: 'Algo sí. Mi mamá era muy exigente con mi papá y yo a veces hago lo mismo.',
+      22: 'Que soy buena compañera pero a veces demasiado exigente.',
+      23: 'Habría más diversión. Menos estrés por el día a día. Más risas.',
+      24: 'Que necesito que me busques más. No esperar a que yo organice todo.'
     },
-    flash: { f1: 'cariño y algo de costumbre', f2: 'que nos estanquemos', f3: 'más ligera y más graciosa', f4: 'más sola, pero capaz', f5: 'ser crecimiento, y en mi relación a veces lo es', f6: 'Los dos igual', f7: 'Igual de feliz', f8: 'Sí', f9: 'Elija', f10: 'Sí', f11: 'cómo manejamos el estrés juntos', f12: 'lo noto y se lo digo cuando puedo', f13: 'que a veces quisiera más espontaneidad', f14: 'Cuando estamos juntos', f15: 'Un refugio' },
-    answers: { 101: 4, 102: 2, 103: 4, 201: 4, 202: 2, 203: 4, 301: 5, 302: 2, 303: 5, 401: 2, 402: 3, 403: 4, 501: 5, 502: 4, 503: 2, 601: 4, 602: 2, 603: 2, 701: 2, 702: 4, 703: 5, 801: 2, 802: 2, 803: 5, 804: 1 }
+    flash: { f1: 'cariño y algo de costumbre', f2: 'que nos estanquemos', f3: 'más ligera y más graciosa', f4: 'más sola, pero capaz', f5: 'ser crecimiento, y en mi relación a veces lo es', f6: 'lo noto y se lo digo cuando puedo', f7: 'que a veces quisiera más espontaneidad', f8: 'cómo manejamos el estrés juntos', f9: 'la ligereza que teníamos al principio', f10: 'que nos reímos de las mismas cosas', f11: 'frustrada pero no destruida', f12: 'que a veces necesito más de lo que pido', f13: 'su paciencia conmigo', f14: 'no haber disfrutado más los momentos buenos', f15: 'que me elijan sin condiciones', f16: 'Los dos igual', f17: 'Un refugio', f18: 'Elija', f19: 'Juntos', f20: 'Acercarte', f21: 'Sí', f22: 'Sí', f23: 'Amor', f24: 'Igual', f25: 'Diversión' }
   },
   {
     name: '🔗 Codependiente',
     desc: 'Fusión, sin límites, pérdida de identidad',
     philosophical: {
-      0: 'Es todo. Sin esta relación no sé quién soy.',
-      1: 'Llegó cuando yo estaba destruida emocionalmente. Fue como un salvavidas. Le debo mucho.',
-      2: 'Cuando me di cuenta de que ya no hacía nada sin consultarle primero. Pero tampoco es que me moleste.',
-      3: 'Le pido perdón aunque no sepa qué hice mal. Lo importante es que no se enoje.',
-      4: 'Que nunca me deje. Que siempre esté. Que sea mi todo.',
-      5: 'Ya no sé dónde empieza mi pareja y dónde termino yo. Supongo que eso es amor.',
-      6: 'Cada vez que estamos juntos es bueno. No me gusta cuando no está.',
-      7: 'Cuando salió con sus amigos sin mí. No me dijo nada malo pero me sentí vacía.',
-      8: 'Que seríamos inseparables. Y lo somos. Pero a veces se siente pesado.',
-      9: 'Cuando me dice que me necesita. Eso me hace sentir que existo.',
-      10: 'Que soy intensa. Pero yo creo que simplemente amo con todo.',
-      11: 'Mi mamá vivía por mi papá. Cuando él se fue, ella se apagó. No quiero que eso me pase.',
-      12: 'Que me deje. No sabría qué hacer conmigo misma.',
-      13: 'Estar sola. Siempre. Sola de verdad.',
-      14: 'Por qué necesito tanto a alguien para sentirme completa.'
+      0: 'Somos inseparables. Hacemos todo juntos. La gente dice que somos muy unidos.',
+      1: 'Todo lo que hace me afecta. Si está feliz yo estoy feliz. Si se aleja me derrumbo.',
+      2: 'Cada vez que estamos juntos es bueno. No me gusta cuando no está.',
+      3: 'Siempre. Somos como un solo ser.',
+      4: 'Nunca. Siempre nos entendemos. Bueno, casi siempre.',
+      5: 'Si estamos juntos, cualquier momento es bueno. Sin ella no sé qué hacer conmigo misma.',
+      6: 'Diría que nos hablamos todo el tiempo. Siempre estamos comunicados.',
+      7: 'Me entrego completa. Mi vida gira en torno a que estemos bien.',
+      8: 'Le pido perdón although no sepa qué hice mal. Lo importante es que no se enoje.',
+      9: 'Cuando sale con sus amigos sin mí. No me dice nada malo pero me siento vacía.',
+      10: 'La siento diferente. Y me pongo a revisar todo lo que hice para ver qué salió mal.',
+      11: 'Le pregunto mil veces si está bien. Si está molesta conmigo. Si me quiere todavía.',
+      12: 'Le llamo. Le escribo. No puedo estar tranquila hasta que me diga que todo está bien.',
+      13: 'Sí, siempre sobre los celos y el espacio. Pero yo creo que si te amo es normal querer estar juntos.',
+      14: 'Dijo que quería ver a sus amigos y yo sentí que me estaba dejando de lado.',
+      15: 'Aterrador. Como si se fuera a ir y nunca volver.',
+      16: 'Que sea menos intensa. Pero yo creo que simplemente amo con todo.',
+      17: 'Que no sabría qué hacer sin ella.',
+      18: 'Dejo todo por ayudarla. Mi trabajo, mis planes, todo.',
+      19: 'Cuando me dice que me necesita. Eso me hace sentir que existo.',
+      20: 'Cuando hace cosas sin mí. Me siento abandonada.',
+      21: 'Mi mamá vivía por mi papá. Cuando él se fue, ella se apagó.',
+      22: 'Que soy intensa. Pero yo creo que amo con todo.',
+      23: 'No tendría que mejorar. Solo que estuviéramos más juntos.',
+      24: 'Que sin ti no sé quién soy. Y eso a veces me asusta.'
     },
-    flash: { f1: 'necesidad absoluta', f2: 'que me abandone', f3: 'nadie, me pierdo en el otro', f4: 'vacía, como si no existiera', f5: 'fusión total, y en mi relación lo es pero duele', f6: 'Yo', f7: 'Menos feliz', f8: 'Sí', f9: 'Necesite', f10: 'Sí', f11: 'que me demostrara que no me va a dejar', f12: 'entro en pánico y le llamo veinte veces', f13: 'que sin esta persona no sé quién soy', f14: 'Cuando estamos juntos', f15: 'Una montaña rusa' },
-    answers: { 101: 4, 102: 4, 103: 3, 201: 5, 202: 4, 203: 5, 301: 5, 302: 1, 303: 5, 401: 4, 402: 4, 403: 2, 501: 5, 502: 4, 503: 1, 601: 3, 602: 5, 603: 4, 701: 5, 702: 1, 703: 2, 801: 5, 802: 5, 803: 5, 804: 5 }
+    flash: { f1: 'necesidad absoluta', f2: 'que me abandone', f3: 'nadie, me pierdo en el otro', f4: 'vacía, como si no existiera', f5: 'fusión total, y en mi relación lo es pero duele', f6: 'entro en pánico y le llamo veinte veces', f7: 'que sin esta persona no sé quién soy', f8: 'que nunca estuviéramos separados', f9: 'cuando éramos más intensos', f10: 'que me necesita tanto como yo a ella', f11: 'destruida, como si no existiera', f12: 'lo mucho que sufro cuando no está', f13: 'que me hace sentir que existo', f14: 'perder a la única persona que me entiende', f15: 'que me demuestren que nunca me van a dejar', f16: 'Yo', f17: 'Una montaña rusa', f18: 'Necesite', f19: 'Juntos', f20: 'Acercarte', f21: 'Sí', f22: 'Sí', f23: 'Necesidad', f24: 'Menos feliz', f25: 'Confianza' }
   }
 ]
 
@@ -277,53 +339,54 @@ function MicButton({ onTranscript, onInterim }) {
   )
 }
 
-// ─── ANÁLISIS: LISTA DE TAREAS (estilo antivirus) ─────────────────
+// ─── ANÁLISIS: LISTA DE TAREAS (secuencia emocional tipo Netflix/OpenAI) ───
 
 const ANALYSIS_TASK_GROUPS = [
   {
-    label: 'Leyendo tu historia',
+    label: 'Escuchando tu historia',
     color: 'violet',
     tasks: [
-      { id: 1, text: 'Procesando lo que compartiste' },
-      { id: 2, text: 'Detectando patrones de apego' },
-      { id: 3, text: 'Analizando momentos clave que mencionaste' },
-      { id: 4, text: 'Leyendo lo que está entre líneas' },
-      { id: 5, text: 'Identificando mecanismos de defensa' },
+      { id: 1, text: 'Integrando lo que compartiste' },
+      { id: 2, text: 'Reconstruyendo momentos clave de la relación' },
+      { id: 3, text: 'Detectando emociones que aparecen entre líneas' },
+      { id: 4, text: 'Identificando lo que realmente necesitas' },
     ]
   },
   {
-    label: 'Analizando los datos',
+    label: 'Detectando los patrones del vínculo',
     color: 'blue',
     tasks: [
-      { id: 6, text: 'Calculando perfil por dimensión' },
-      { id: 7, text: 'Buscando contradicciones y contrastes' },
-      { id: 8, text: 'Ponderando áreas de mayor riesgo' },
-      { id: 9, text: 'Confirmando lo que los números dicen' },
+      { id: 5, text: 'Analizando compatibilidad emocional' },
+      { id: 6, text: 'Identificando patrones inconscientes en la relación' },
+      { id: 7, text: 'Detectando ciclos de conflicto que se repiten' },
+      { id: 8, text: 'Analizando cómo reaccionan bajo tensión' },
     ]
   },
   {
-    label: 'Respuestas proyectivas',
+    label: 'Encontrando las dinámicas ocultas',
     color: 'fuchsia',
     tasks: [
-      { id: 10, text: 'Interpretando respuestas sin filtro racional' },
-      { id: 11, text: 'Cruzando lo proyectivo con tu historia' },
+      { id: 9, text: 'Interpretando señales emocionales entre líneas' },
+      { id: 10, text: 'Reconstruyendo la dinámica del vínculo' },
+      { id: 11, text: 'Detectando puntos de distanciamiento emocional' },
+      { id: 12, text: 'Buscando señales de reconexión posible' },
     ]
   },
   {
     label: 'Construyendo tu diagnóstico',
     color: 'pink',
     tasks: [
-      { id: 12, text: 'Construyendo el perfil del vínculo' },
-      { id: 13, text: 'Redactando tu análisis personalizado' },
-      { id: 14, text: 'Verificando coherencia del diagnóstico' },
-      { id: 15, text: 'Preparando tu informe completo' },
+      { id: 13, text: 'Evaluando estabilidad del vínculo' },
+      { id: 14, text: 'Calculando índice de sincronía emocional' },
+      { id: 15, text: 'Detectando puntos de ruptura invisibles' },
+      { id: 16, text: 'Preparando tu diagnóstico personalizado' },
     ]
   }
 ]
 
 const ALL_ANALYSIS_TASKS = ANALYSIS_TASK_GROUPS.flatMap(g => g.tasks)
 // Durations in ms for each task (normal pace ~90 seconds total)
-const TASK_DURATIONS_MS = [4800, 5200, 4600, 6200, 5400, 4300, 5900, 5100, 4700, 5600, 5200, 6100, 7200, 5000, 6300]
+const TASK_DURATIONS_MS = [5200, 5400, 4800, 6000, 5600, 5000, 6200, 5400, 4600, 5800, 5200, 6100, 5400, 7000, 5200, 6300]
 
 function AnalyzingProgress({ isDone, onComplete }) {
   const [completedCount, setCompletedCount] = useState(0)
@@ -580,6 +643,14 @@ function getLevel(score) {
   return { label: 'Muy alto', color: 'text-cyan-400' }
 }
 
+function getLevelPct(pct) {
+  if (pct <= 25) return { label: 'Muy bajo', color: 'text-red-400' }
+  if (pct <= 45) return { label: 'Bajo', color: 'text-orange-400' }
+  if (pct <= 65) return { label: 'Medio', color: 'text-yellow-400' }
+  if (pct <= 80) return { label: 'Alto', color: 'text-emerald-400' }
+  return { label: 'Muy alto', color: 'text-cyan-400' }
+}
+
 function getPercent(score) {
   return Math.round(((score - 1) / 4) * 100)
 }
@@ -802,7 +873,6 @@ function generatePDF(result, areaScores, interpretation, openQuestion, isPremium
 
     const sections = [
       { title: '— Análisis Narrativo (Fuente Primaria) —', text: aiAnalysis.lecturaNarrativa },
-      { title: '— Perfil Cuantitativo (Fuente Confirmatoria) —', text: aiAnalysis.lecturaCuestionario },
       { title: '— Lectura Integral (Cruce) —', text: aiAnalysis.lecturaIntegral },
       { title: 'Insight Principal', text: aiAnalysis.keyInsight },
       { title: 'Reflexión Existencial', text: aiAnalysis.existentialReflection }
@@ -1037,6 +1107,19 @@ const ConsultaParejaPage = () => {
 
   // Calculations
   const areaScores = useMemo(() => calculateScores(answers, questions), [answers, questions])
+
+  // For premium: use DeepSeek dimension scores (0-100). For free: convert Likert (1-5) to 0-100
+  const displayScores = useMemo(() => {
+    if (isPremiumUnlocked && aiAnalysis?.dimensionScores) {
+      return aiAnalysis.dimensionScores
+    }
+    const scores = {}
+    for (const a of AREAS) {
+      scores[a.key] = getPercent(areaScores[a.key] || 1)
+    }
+    return scores
+  }, [isPremiumUnlocked, aiAnalysis, areaScores])
+
   const result = useMemo(() => getOverallResult(areaScores), [areaScores])
   const interpretation = useMemo(() => generateInterpretation(areaScores), [areaScores])
   const progress = Math.round((Object.keys(answers).length / questions.length) * 100)
@@ -1089,7 +1172,7 @@ const ConsultaParejaPage = () => {
     if (currentFlash < FLASH_QUESTIONS.length - 1) {
       setTimeout(() => { setCurrentFlash(prev => prev + 1); scrollToTop() }, 350)
     } else {
-      setTimeout(() => { setStage('test'); scrollToTop() }, 400)
+      setTimeout(() => { setStage('email'); scrollToTop() }, 400)
     }
   }
 
@@ -1101,32 +1184,31 @@ const ConsultaParejaPage = () => {
     try {
       const areaLabels = {}
       for (const a of AREAS) areaLabels[a.key] = a.label
-      const inconsistencies = detectInconsistencies(answers, questions)
       if (import.meta.env.DEV) {
         console.log('[AI] Sending to DeepSeek:', {
-          areaScores,
           philosophicalCount: Object.keys(philosophicalAnswers).length,
           flashCount: Object.keys(flashAnswers).length,
-          answersCount: Object.keys(answers).length,
-          inconsistencies: inconsistencies.length
         })
       }
       const result = await analyzeRelationship({
-        areaScores,
         areaLabels,
         philosophicalAnswers,
         philosophicalQuestions: PHILOSOPHICAL_QUESTIONS,
         flashAnswers,
         flashQuestions: FLASH_QUESTIONS,
-        inconsistencies
       })
       if (import.meta.env.DEV) console.log('[AI] Result keys:', Object.keys(result || {}))
       setAiAnalysis(result)
     } catch (e) {
       console.error('AI analysis error:', e)
-      // Ensure fallback analysis is always set so results page renders premium sections
-      const fallbackScores = calculateScores(answers, questions)
-      setAiAnalysis({ diagnosticoNarrado: 'No fue posible conectar con la inteligencia artificial en este momento. A continuación se muestra un perfil basado en los datos cuantitativos.', aperturaEmpatica: 'Gracias por compartir. Aunque el análisis profundo no estuvo disponible, tus respuestas revelan patrones importantes.', areaCorrelations: Object.fromEntries(Object.entries(fallbackScores).map(([k, s]) => [k, `Puntuación: ${Math.round(((s-1)/4)*100)}%`])) })
+      // Fallback: provide default dimension scores so radar chart still renders
+      const defaultScores = Object.fromEntries(AREAS.map(a => [a.key, 50]))
+      setAiAnalysis({
+        diagnosticoNarrado: 'No fue posible conectar con la inteligencia artificial en este momento. Se muestran resultados estimados.',
+        aperturaEmpatica: 'Gracias por compartir. Aunque el análisis profundo no estuvo disponible, tus respuestas revelan patrones importantes.',
+        dimensionScores: defaultScores,
+        areaCorrelations: Object.fromEntries(AREAS.map(a => [a.key, 'Análisis no disponible']))
+      })
     }
     setAiLoading(false)
     // Signal to AnalyzingProgress that AI is done; it will call onComplete to transition to results
@@ -1214,46 +1296,41 @@ const ConsultaParejaPage = () => {
     setRespondent('yo')
     setPhilosophicalAnswers(profile.philosophical)
     setFlashAnswers(profile.flash)
-    setAnswers(profile.answers)
     setStage('analyzing')
     setAiLoading(true)
     setAiReady(false)
     scrollToTop()
 
-    // Compute scores directly from profile data (bypasses useMemo closure)
-    const scores = calculateScores(profile.answers, QUESTIONS_DETAILED)
-
     try {
       const areaLabels = {}
       for (const a of AREAS) areaLabels[a.key] = a.label
-      const inconsistencies = detectInconsistencies(profile.answers, QUESTIONS_DETAILED)
 
       if (import.meta.env.DEV) {
         console.log('[MOCK→AI] Sending to DeepSeek:', {
-          scores,
           philosophicalCount: Object.keys(profile.philosophical).length,
           flashCount: Object.keys(profile.flash).length,
-          answersCount: Object.keys(profile.answers).length,
-          inconsistencies: inconsistencies.length
         })
       }
 
       const result = await analyzeRelationship({
-        areaScores: scores,
         areaLabels,
         philosophicalAnswers: profile.philosophical,
         philosophicalQuestions: PHILOSOPHICAL_QUESTIONS,
         flashAnswers: profile.flash,
         flashQuestions: FLASH_QUESTIONS,
-        inconsistencies
       })
 
       if (import.meta.env.DEV) console.log('[MOCK→AI] Result keys:', Object.keys(result || {}))
       setAiAnalysis(result)
     } catch (e) {
       console.error('[MOCK→AI] Error:', e)
-      // Fallback so results page still renders premium sections
-      setAiAnalysis({ diagnosticoNarrado: 'No fue posible conectar con la inteligencia artificial en este momento. A continuación se muestra un perfil basado en los datos cuantitativos.', aperturaEmpatica: 'Gracias por compartir. Aunque el análisis profundo no estuvo disponible, tus respuestas revelan patrones importantes.', areaCorrelations: Object.fromEntries(Object.entries(scores).map(([k, s]) => [k, `Puntuación: ${Math.round(((s-1)/4)*100)}%`])) })
+      const defaultScores = Object.fromEntries(AREAS.map(a => [a.key, 50]))
+      setAiAnalysis({
+        diagnosticoNarrado: 'No fue posible conectar con la inteligencia artificial en este momento.',
+        aperturaEmpatica: 'Gracias por compartir. Tus respuestas revelan patrones importantes.',
+        dimensionScores: defaultScores,
+        areaCorrelations: Object.fromEntries(AREAS.map(a => [a.key, 'Análisis no disponible']))
+      })
     }
     setAiLoading(false)
     setAiReady(true)
@@ -1320,18 +1397,18 @@ const ConsultaParejaPage = () => {
 
                 <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
                   className="text-lg lg:text-xl text-white/60 font-light leading-relaxed mb-10 tracking-wide">
-                  Descubre el estado real de tu relación con un diagnóstico psicológico profesional.
+                  Un análisis profundo con inteligencia artificial para entender la dinámica real de tu vínculo.
                 </motion.p>
 
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="space-y-4 mb-12">
                   <p className="text-base lg:text-lg text-white/50 font-extralight leading-relaxed">
-                    Muchas relaciones no se rompen por falta de amor.
+                    La mayoría de los conflictos en la pareja no vienen de lo que se dice.
                   </p>
                   <p className="text-base lg:text-lg text-white/50 font-extralight leading-relaxed">
-                    Se rompen por <span className="text-white/70 italic">patrones invisibles</span> que nadie les enseñó a detectar.
+                    Vienen de <span className="text-white/70 italic">patrones inconscientes</span> que se repiten sin que nadie los vea.
                   </p>
                   <p className="text-base lg:text-lg text-white/40 font-extralight leading-relaxed mt-6">
-                    Este diagnóstico analiza áreas psicológicas clave — incluyendo idealización, necesidad y deseo — para entender la dinámica real de tu relación.
+                    Este diagnóstico cruza 50 preguntas con IA para detectar patrones de apego, idealización, conflicto y conexión emocional.
                   </p>
                 </motion.div>
 
@@ -1346,10 +1423,10 @@ const ConsultaParejaPage = () => {
                 </motion.button>
 
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}
-                  className="flex items-center justify-center gap-6 mt-8 text-white/30 text-xs tracking-wider">
-                  <span className="flex items-center gap-1.5"><Zap className="w-3.5 h-3.5" /> Gratuito + Premium</span>
+                  className="flex items-center justify-center gap-6 mt-8 text-white/30 text-xs tracking-wider flex-wrap">
+                  <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> ~25 minutos</span>
                   <span className="w-px h-3 bg-white/20" />
-                  <span className="flex items-center gap-1.5"><Brain className="w-3.5 h-3.5" /> Análisis profundo</span>
+                  <span className="flex items-center gap-1.5"><Brain className="w-3.5 h-3.5" /> 50 preguntas + IA</span>
                   <span className="w-px h-3 bg-white/20" />
                   <span className="flex items-center gap-1.5"><BarChart3 className="w-3.5 h-3.5" /> Gráficas profesionales</span>
                 </motion.div>
@@ -1633,7 +1710,7 @@ const ConsultaParejaPage = () => {
                 <div className="flex flex-wrap items-center justify-center gap-8">
                   <div className="flex items-center gap-2.5">
                     <Clock className="w-4 h-4 text-violet-400/40" strokeWidth={1.5} />
-                    <span className="text-white/50 text-sm font-light">20 – 25 minutos</span>
+                    <span className="text-white/50 text-sm font-light">25 – 30 minutos</span>
                   </div>
                   <div className="flex items-center gap-2.5">
                     <Mic className="w-4 h-4 text-violet-400/40" strokeWidth={1.5} />
@@ -2135,7 +2212,7 @@ const ConsultaParejaPage = () => {
                             <div className="flex items-center gap-4 mt-4">
                               <button onClick={() => {
                                 if (currentFlash < FLASH_QUESTIONS.length - 1) { setCurrentFlash(prev => prev + 1); scrollToTop() }
-                                else { setStage('test'); scrollToTop() }
+                                else { setStage('email'); scrollToTop() }
                               }} className="text-white/20 text-xs hover:text-white/40 tracking-wider transition-colors">
                                 OMITIR
                               </button>
@@ -2198,7 +2275,7 @@ const ConsultaParejaPage = () => {
                           <div className="flex items-center justify-between mt-4">
                             <button onClick={() => {
                               if (currentFlash < FLASH_QUESTIONS.length - 1) { setCurrentFlash(prev => prev + 1); scrollToTop() }
-                              else { setStage('test'); scrollToTop() }
+                              else { setStage('email'); scrollToTop() }
                             }} className="text-white/25 text-xs hover:text-white/45 tracking-wider transition-colors">
                               OMITIR
                             </button>
@@ -2248,7 +2325,7 @@ const ConsultaParejaPage = () => {
                   <button
                     onClick={() => {
                       if (currentFlash < FLASH_QUESTIONS.length - 1) { setCurrentFlash(prev => prev + 1); scrollToTop() }
-                      else { setStage('test'); scrollToTop() }
+                      else { setStage('email'); scrollToTop() }
                     }}
                     className="flex items-center gap-2 text-fuchsia-300/60 hover:text-fuchsia-300/90 text-xs tracking-wider transition-colors">
                     {currentFlash < FLASH_QUESTIONS.length - 1 ? 'SIGUIENTE' : 'CONTINUAR'} <ArrowRight className="w-3.5 h-3.5" />
@@ -2358,8 +2435,53 @@ const ConsultaParejaPage = () => {
               </div>
               <AnalyzingProgress
                 isDone={aiReady}
-                onComplete={() => { setStage('results'); scrollToTop() }}
+                onComplete={() => { setStage('engagement'); scrollToTop() }}
               />
+            </div>
+          </motion.div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════
+            STAGE: ENGAGEMENT (pre-results hook)
+        ═══════════════════════════════════════════════════════════ */}
+        {stage === 'engagement' && (
+          <motion.div key="engagement" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="min-h-screen flex items-center justify-center px-6 py-32">
+            <div className="max-w-lg w-full text-center">
+              <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.6, ease: 'easeOut' }}>
+                <div className="w-16 h-16 mx-auto mb-8 rounded-2xl bg-gradient-to-br from-violet-500/20 to-pink-500/20 border border-white/10 flex items-center justify-center">
+                  <Sparkles className="w-7 h-7 text-violet-300/70" strokeWidth={1.5} />
+                </div>
+              </motion.div>
+              <motion.h2 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+                className="text-2xl lg:text-3xl font-light text-white mb-4 font-display tracking-wide">
+                Hemos encontrado varios patrones<br/>importantes en tu relación
+              </motion.h2>
+              <motion.p initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+                className="text-white/45 text-sm font-light leading-relaxed max-w-sm mx-auto mb-4">
+                Lo que compartiste revela dinámicas que merecen una lectura cuidadosa.
+              </motion.p>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
+                className="space-y-3 mb-10 max-w-xs mx-auto text-left">
+                {[
+                  'Patrones de comunicación y conflicto',
+                  'Dinámicas de apego e idealización',
+                  'Señales de conexión y distanciamiento',
+                  'Mecanismos de defensa activos',
+                ].map((item, i) => (
+                  <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.0 + i * 0.15 }}
+                    className="flex items-center gap-3">
+                    <CheckCircle className="w-4 h-4 text-emerald-400/60 flex-shrink-0" strokeWidth={1.5} />
+                    <span className="text-white/50 text-xs font-light">{item}</span>
+                  </motion.div>
+                ))}
+              </motion.div>
+              <motion.button initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.8 }}
+                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                onClick={() => { setStage('results'); scrollToTop() }}
+                className="px-8 py-3 rounded-full bg-gradient-to-r from-violet-500/80 to-pink-500/80 text-white text-sm font-light tracking-wider hover:from-violet-500 hover:to-pink-500 transition-all">
+                Ver mi diagnóstico completo
+              </motion.button>
             </div>
           </motion.div>
         )}
@@ -2405,6 +2527,38 @@ const ConsultaParejaPage = () => {
                 </motion.div>
               )}
 
+              {/* ─── CHECKPOINTS ✓/✗ (Premium — resumen visual rápido) ─── */}
+              {isPremiumUnlocked && aiAnalysis && (
+                <motion.div initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
+                  className="mb-10 p-7 border border-white/8 rounded-2xl bg-white/[0.02]">
+                  <div className="flex items-center gap-3 mb-5">
+                    <Activity className="w-5 h-5 text-white/40" strokeWidth={1.5} />
+                    <h3 className="text-sm font-light text-white/50 uppercase tracking-[0.15em]">Resumen rápido</h3>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {AREAS.map((area) => {
+                      const pct = displayScores[area.key] ?? 50
+                      const isOk = pct >= 55
+                      return (
+                        <div key={area.key} className="flex items-center gap-3 py-2">
+                          {isOk ? (
+                            <CheckCircle className="w-4.5 h-4.5 text-emerald-400/70 flex-shrink-0" strokeWidth={1.5} />
+                          ) : (
+                            <AlertTriangle className="w-4.5 h-4.5 text-amber-400/70 flex-shrink-0" strokeWidth={1.5} />
+                          )}
+                          <span className={`text-sm font-light ${isOk ? 'text-white/55' : 'text-white/65'}`}>
+                            {area.label}
+                          </span>
+                          <span className={`ml-auto text-xs font-light tabular-nums ${isOk ? 'text-emerald-400/50' : 'text-amber-400/50'}`}>
+                            {pct}%
+                          </span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </motion.div>
+              )}
+
               {/* ─── RADAR CHART (Premium) — PRIMERO: mapa de la relación ─── */}
               {isPremiumUnlocked && (
                 <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
@@ -2413,7 +2567,7 @@ const ConsultaParejaPage = () => {
                     <BarChart3 className="w-5 h-5 text-violet-400/60" strokeWidth={1.5} />
                     <h3 className="text-lg font-light text-white tracking-wide font-display">Mapa de tu relación</h3>
                   </div>
-                  <RadarChart data={AREAS.map(a => ({ label: a.label, value: getPercent(areaScores[a.key]) }))} />
+                  <RadarChart data={AREAS.map(a => ({ label: a.label, value: displayScores[a.key] ?? 50 }))} />
                 </motion.div>
               )}
 
@@ -2425,9 +2579,8 @@ const ConsultaParejaPage = () => {
                 </div>
                 <div className="space-y-5">
                   {displayAreas.map((area, i) => {
-                    const score = areaScores[area.key]
-                    const pct = getPercent(score)
-                    const level = getLevel(score)
+                    const pct = displayScores[area.key] ?? 50
+                    const level = getLevelPct(pct)
                     return (
                       <motion.div key={area.key} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 + i * 0.08 }}>
@@ -2523,8 +2676,8 @@ const ConsultaParejaPage = () => {
                           { area: 'seguridad', label: 'Seguridad' },
                           { area: 'idealizacion', label: 'Idealización' },
                         ].map(({ area, label }) => {
-                          const pct = getPercent(areaScores[area])
-                          const lvl = getLevel(areaScores[area])
+                          const pct = displayScores[area] ?? 50
+                          const lvl = getLevelPct(pct)
                           return (
                             <div key={area} className="text-center p-2.5 rounded-xl bg-white/[0.02] border border-white/5">
                               <span className={`text-lg font-light tabular-nums block ${lvl.color}`}>{pct}%</span>
@@ -2565,8 +2718,8 @@ const ConsultaParejaPage = () => {
                           { area: 'intimidad', label: 'Intimidad' },
                           { area: 'conflicto', label: 'Conflictos' },
                         ].map(({ area, label }) => {
-                          const pct = getPercent(areaScores[area])
-                          const lvl = getLevel(areaScores[area])
+                          const pct = displayScores[area] ?? 50
+                          const lvl = getLevelPct(pct)
                           return (
                             <div key={area} className="text-center p-2.5 rounded-xl bg-white/[0.02] border border-white/5">
                               <span className={`text-lg font-light tabular-nums block ${lvl.color}`}>{pct}%</span>
@@ -2661,8 +2814,7 @@ const ConsultaParejaPage = () => {
                 </div>
                 <div className="space-y-3">
                   {AREAS.map(area => {
-                    const score = areaScores[area.key]
-                    const pct = getPercent(score)
+                    const pct = displayScores[area.key] ?? 50
                     const isStrength = pct >= 60
                     return (
                       <div key={area.key} className="flex items-center gap-3">
@@ -2844,19 +2996,7 @@ const ConsultaParejaPage = () => {
                     ))}
                   </motion.div>
 
-                  {/* LECTURA 2: Lo que los datos confirman (CONFIRMATORIA) */}
-                  <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1 }}
-                    className="mb-8 p-8 border border-blue-500/10 rounded-2xl bg-gradient-to-br from-blue-500/[0.02] to-transparent">
-                    <div className="flex items-center gap-3 mb-5">
-                      <BarChart3 className="w-5 h-5 text-blue-400/60" strokeWidth={1.5} />
-                      <h3 className="text-lg font-semibold text-white tracking-wide font-display">Lo que los datos confirman</h3>
-                    </div>
-                    {(aiAnalysis.lecturaCuestionario || '').split('\n\n').map((p, i) => (
-                      <p key={i} className="text-white/65 text-sm font-light leading-[1.9] tracking-wide mb-4 last:mb-0">{renderBold(p)}</p>
-                    ))}
-                  </motion.div>
-
-                  {/* LECTURA 3: Recomendación Profesional */}
+                  {/* LECTURA 2: Recomendación Profesional */}
                   <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2 }}
                     className="mb-8 p-8 border border-pink-500/10 rounded-2xl bg-gradient-to-br from-pink-500/[0.02] to-fuchsia-500/[0.01]">
                     <div className="flex items-center gap-3 mb-5">
