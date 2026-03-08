@@ -21,7 +21,7 @@ const StorePage = () => {
       price: '$349 MXN',
       duration: '~30 min',
       image: '/pareja imagen.jpg',
-      description: 'Descubre los patrones invisibles que sostienen tu relación. 34 preguntas por voz, análisis profundo y reporte descargable.',
+      description: 'Descubre los patrones invisibles que sostienen tu relación. 42 preguntas por voz, análisis profundo y reporte descargable.',
       shortDesc: 'Lo que tu relación no te dice, pero tú ya sientes',
       benefits: [
         'Detecta ciclos emocionales repetitivos',
