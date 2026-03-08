@@ -39,6 +39,7 @@ const VocationalTestPage = lazy(() => import('./pages/VocationalTestPage'))
 const FraseDelDiaPage = lazy(() => import('./pages/FraseDelDiaPage'))
 const AtlasHumanidadPage = lazy(() => import('./pages/AtlasHumanidadPage'))
 const LaboratorioEticoPage = lazy(() => import('./pages/LaboratorioEticoPage'))
+const DiagnosticoRelacionalPage = lazy(() => import('./pages/DiagnosticoRelacionalPage'))
 
 // Loading component
 const PageLoader = () => (
@@ -186,6 +187,11 @@ const AppContent = () => {
               {/* Página Tienda: Productos y servicios */}
               <Route path="/tienda" element={
                 <StorePage />
+              } />
+
+              {/* Diagnóstico Relacional */}
+              <Route path="/tienda/diagnostico-relacional" element={
+                <DiagnosticoRelacionalPage />
               } />
 
               {/* Página Detalle de Producto */}

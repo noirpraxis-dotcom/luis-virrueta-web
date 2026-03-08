@@ -123,6 +123,26 @@ const StorePage = () => {
       ],
       gradient: 'from-amber-600/20 to-orange-600/20',
       borderGradient: 'from-amber-500 to-orange-500'
+    },
+    {
+      id: 7,
+      name: 'Diagnóstico Relacional',
+      category: 'Evaluación con IA',
+      price: '$349 MXN',
+      duration: '~30 min',
+      image: '/pareja imagen.jpg',
+      description: '34 preguntas por voz analizadas con inteligencia artificial. Radar, barras y perfil descargable.',
+      shortDesc: 'Mapa completo de tu relación con IA',
+      benefits: [
+        '34 preguntas por voz',
+        'Análisis con inteligencia artificial',
+        'Radar + barras + perfil emocional',
+        'Reporte PDF descargable'
+      ],
+      gradient: 'from-violet-600/20 to-fuchsia-600/20',
+      borderGradient: 'from-violet-500 to-fuchsia-500',
+      popular: true,
+      isDiagnostic: true
     }
   ]
 
@@ -248,7 +268,7 @@ const StorePage = () => {
                 initial={{ opacity: 0, y: 50 }}
                 animate={isProductsInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                onClick={() => navigate(`/tienda/${product.id}`)}
+                onClick={() => navigate(product.isDiagnostic ? '/tienda/diagnostico-relacional' : `/tienda/${product.id}`)}
                 className="group relative bg-zinc-900/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 hover:border-white/20 transition-all duration-500 cursor-pointer"
               >
                 {/* Popular badge */}
