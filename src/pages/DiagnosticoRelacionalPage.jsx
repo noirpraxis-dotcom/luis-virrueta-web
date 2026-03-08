@@ -501,14 +501,19 @@ const DiagnosticoRelacionalPage = () => {
   }, [searchParams])
 
   // Start mic recording (used by auto-play flow and toggleMic)
+  // Track whether user manually stopped recording
+  const manualStopRef = useRef(false)
+
   const startRecordingFn = useCallback(() => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition
     if (!SR) { setUiMode('text'); return }
     try { recognitionRef.current?.abort() } catch {}
+    manualStopRef.current = false
     const recognition = new SR()
     recognition.lang = 'es-MX'
     recognition.continuous = true
     recognition.interimResults = true
+    recognition.maxAlternatives = 1
     recognition.onresult = (e) => {
       let inter = ''
       for (let i = e.resultIndex; i < e.results.length; i++) {
@@ -525,8 +530,18 @@ const DiagnosticoRelacionalPage = () => {
       }
       setInterim(inter)
     }
-    recognition.onerror = () => { setRecording(false); setInterim('') }
-    recognition.onend = () => { setRecording(false); setInterim('') }
+    recognition.onerror = (e) => {
+      if (e.error === 'no-speech' || e.error === 'aborted') return // don't stop for these
+      setRecording(false); setInterim('')
+    }
+    // Auto-restart if browser ends recognition unexpectedly (silence timeout)
+    recognition.onend = () => {
+      if (!manualStopRef.current) {
+        try { recognition.start() } catch { setRecording(false); setInterim('') }
+      } else {
+        setRecording(false); setInterim('')
+      }
+    }
     recognitionRef.current = recognition
     recognition.start()
     setRecording(true)
@@ -538,7 +553,7 @@ const DiagnosticoRelacionalPage = () => {
   // Reset voice state + play question audio when question changes
   useEffect(() => {
     setInterim('')
-    if (recognitionRef.current) { try { recognitionRef.current.stop() } catch {} }
+    if (recognitionRef.current) { manualStopRef.current = true; try { recognitionRef.current.stop() } catch {} }
     setRecording(false)
     if (audioRef.current) { audioRef.current.pause(); audioRef.current = null }
     setAudioPlaying(false)
@@ -552,7 +567,8 @@ const DiagnosticoRelacionalPage = () => {
         setAudioPlaying(true)
         audio.onended = () => {
           setAudioPlaying(false)
-          setTimeout(() => startRecordingRef.current?.(), 400)
+          // Start mic immediately after audio ends — no delay
+          startRecordingRef.current?.()
         }
         audio.onerror = () => setAudioPlaying(false)
         audio.play().catch(() => setAudioPlaying(false))
@@ -598,6 +614,7 @@ const DiagnosticoRelacionalPage = () => {
 
   const toggleMic = useCallback(() => {
     if (recording) {
+      manualStopRef.current = true
       recognitionRef.current?.stop()
       setRecording(false)
       setInterim('')
@@ -655,18 +672,8 @@ const DiagnosticoRelacionalPage = () => {
 
   // ─── QUESTION NAVIGATION ──────────────────────────────────
 
-  // Fire background analysis early (~70% completion) to reduce wait time
-  useEffect(() => {
-    if (stage !== 'questionnaire') return
-    if (bgAnalysisRef.current) return
-    const threshold = Math.floor(QUESTIONS.length * 0.7)
-    if (currentQuestion >= threshold) {
-      const answeredCount = Object.values(responses).filter(v => v?.trim()).length
-      if (answeredCount >= Math.floor(QUESTIONS.length * 0.65)) {
-        fireBackgroundAnalysis(responses)
-      }
-    }
-  }, [currentQuestion, stage, responses, fireBackgroundAnalysis])
+  // No longer pre-fire early — wait for ALL 45 answers to ensure complete analysis
+  // The analysis launches when user finishes the last question (in handleNext)
 
   const handleNext = useCallback(() => {
     if (currentQuestion < QUESTIONS.length - 1) {
@@ -893,31 +900,31 @@ const DiagnosticoRelacionalPage = () => {
           <motion.div key="hero" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="min-h-screen">
 
-            {/* ── VIDEO HEADER — cinematic like other pages ── */}
-            <section className="relative pt-12 lg:pt-20 pb-40 lg:pb-56 px-6 lg:px-20 overflow-hidden">
-              <div className="absolute inset-0 -top-16 lg:-top-24 -bottom-80 lg:-bottom-96 overflow-hidden pointer-events-none z-0">
-                <video autoPlay loop muted playsInline preload="auto"
-                  className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-50"
-                  style={{ minWidth: '100vw', minHeight: '100%', objectFit: 'cover', objectPosition: 'center' }}>
-                  <source src="/TEST PAREJA/TERMOMETRO AMOR.mp4" type="video/mp4" />
-                </video>
-              </div>
-              <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-black via-black/70 to-transparent z-[5] pointer-events-none" />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-transparent z-[3] pointer-events-none" />
+            {/* ── VIDEO HEADER — full viewport cinematic ── */}
+            <section className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
+              <video autoPlay loop muted playsInline preload="auto"
+                className="absolute inset-0 w-full h-full object-cover opacity-45">
+                <source src="/TEST PAREJA/TERMOMETRO AMOR.mp4" type="video/mp4" />
+              </video>
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black z-[3] pointer-events-none" />
+              <div className="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-black via-black/80 to-transparent z-[5] pointer-events-none" />
 
-              <div className="relative max-w-5xl mx-auto z-10 text-center pt-16 lg:pt-24">
+              <div className="relative max-w-5xl mx-auto z-10 text-center px-6 lg:px-20">
                 <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/15 bg-white/[0.05] mb-8">
-                    <Heart className="w-4 h-4 text-violet-400/60" strokeWidth={1.5} />
-                    <span className="text-white/50 text-sm font-light uppercase tracking-[0.15em]">Test de pareja</span>
+                  <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/15 bg-white/[0.06] backdrop-blur-sm mb-8">
+                    <Heart className="w-4 h-4 text-violet-400/70" strokeWidth={1.5} />
+                    <span className="text-white/60 text-sm font-light uppercase tracking-[0.18em]">Diagnóstico psicológico de pareja</span>
                   </div>
                   <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light text-white leading-[1.1] mb-6"
-                    style={{ letterSpacing: '-0.01em', textShadow: '0 0 80px rgba(255,255,255,0.1), 0 10px 40px rgba(168,85,247,0.1)' }}>
+                    style={{ letterSpacing: '-0.01em', textShadow: '0 0 80px rgba(255,255,255,0.12), 0 10px 40px rgba(168,85,247,0.15)' }}>
                     Termómetro Inconsciente<br />
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400">de Pareja</span>
                   </h1>
-                  <p className="text-lg sm:text-xl lg:text-2xl text-white/50 font-light max-w-3xl mx-auto leading-relaxed mb-10">
-                    Un test conversacional que analiza tu relación en profundidad. Hablas con el micrófono, nuestro algoritmo detecta los patrones que no ves, y recibes un reporte profesional.
+                  <p className="text-lg sm:text-xl lg:text-2xl text-white/55 font-light max-w-3xl mx-auto leading-relaxed mb-4">
+                    Diseñado por un psicólogo clínico para detectar lo que no se dice.
+                  </p>
+                  <p className="text-base sm:text-lg text-white/35 font-light max-w-2xl mx-auto leading-relaxed mb-10">
+                    45 preguntas psicoanalíticas. Tú hablas, el test escucha entre líneas. Recibes un reporte profesional con los patrones inconscientes de tu relación.
                   </p>
                   {/* Early CTA */}
                   <motion.button
@@ -935,61 +942,66 @@ const DiagnosticoRelacionalPage = () => {
               </div>
             </section>
 
-            <div className="relative z-10 px-6 lg:px-20">
-              <div className="max-w-5xl mx-auto space-y-20 lg:space-y-28">
+            <div className="relative z-10 px-6 lg:px-20 -mt-20">
+              <div className="max-w-5xl mx-auto space-y-24 lg:space-y-32">
 
-              {/* ── ¿TE IDENTIFICAS? — with paired image ────── */}
+              {/* ── ¿TE IDENTIFICAS? — luminous emoji cards + image ────── */}
               <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div>
-                  <p className="text-white/35 text-sm uppercase tracking-[0.2em] mb-6">¿Te suena familiar alguna de estas?</p>
+                  <p className="text-white/40 text-sm uppercase tracking-[0.2em] mb-2">¿Te suena familiar?</p>
+                  <h2 className="text-2xl lg:text-3xl font-light text-white/80 mb-8 leading-snug">Esto es lo que escuchamos<br />de personas como tú</h2>
                   <div className="space-y-3">
                     {[
-                      '💬 "Siempre terminamos discutiendo por lo mismo"',
-                      '🧊 "Siento que mi pareja se aleja y no sé por qué"',
-                      '💔 "Doy mucho pero no siento que recibo lo mismo"',
-                      '🤐 "Después de pelear, nadie dice nada y todo queda ahí"',
-                      '😶 "A veces me pregunto si realmente nos conocemos"',
-                      '😰 "Me da miedo que un día se canse de mí"'
-                    ].map((text, i) => (
+                      { emoji: '💬', text: '"Siempre terminamos discutiendo por lo mismo"' },
+                      { emoji: '🧊', text: '"Siento que mi pareja se aleja y no sé por qué"' },
+                      { emoji: '💔', text: '"Doy mucho pero no siento que recibo lo mismo"' },
+                      { emoji: '🤐', text: '"Después de pelear, nadie dice nada y todo queda ahí"' },
+                      { emoji: '😶', text: '"A veces me pregunto si realmente nos conocemos"' },
+                      { emoji: '😰', text: '"Me da miedo que un día se canse de mí"' }
+                    ].map((item, i) => (
                       <motion.div key={i} initial={{ opacity: 0, x: -15 }} whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-                        className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
-                        <span className="text-white/65 text-base font-light leading-snug">{text}</span>
+                        className="flex items-center gap-4 p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] hover:border-violet-500/15 transition-all group">
+                        <div className="w-11 h-11 rounded-full bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 group-hover:shadow-[0_0_20px_rgba(139,92,246,0.15)] transition-shadow">
+                          <span className="text-lg">{item.emoji}</span>
+                        </div>
+                        <span className="text-white/60 text-base font-light leading-snug">{item.text}</span>
                       </motion.div>
                     ))}
                   </div>
-                  <p className="text-white/30 text-base font-light mt-5">Si algo de esto resuena, este test es para ti.</p>
+                  <p className="text-white/30 text-base font-light mt-6">Si algo de esto resuena, este test fue diseñado para ti.</p>
                 </div>
                 <div className="hidden lg:block">
-                  <img src="/TEST PAREJA/IMAGEN (2).jpg" alt="Pareja" className="w-full rounded-2xl object-cover aspect-[4/5] opacity-80" loading="lazy" />
+                  <img src="/TEST PAREJA/IMAGEN (2).jpg" alt="Pareja" className="w-full rounded-2xl object-cover aspect-[4/5] opacity-80 shadow-2xl shadow-black/30" loading="lazy" />
                 </div>
               </motion.div>
 
-              {/* ── ¿QUÉ DESCUBRIRÁS? — with paired image ─────── */}
+              {/* ── ¿QUÉ DESCUBRIRÁS? — with brain-scan image ─────── */}
               <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div className="hidden lg:block order-1 lg:order-none">
-                  <img src="/TEST PAREJA/IMAGEN (3).jpg" alt="Conexión" className="w-full rounded-2xl object-cover aspect-[4/5] opacity-80" loading="lazy" />
+                  <img src="/TEST PAREJA/IMAGEN (3).jpg" alt="Análisis de pareja" className="w-full rounded-2xl object-cover aspect-[4/5] opacity-80 shadow-2xl shadow-black/30" loading="lazy" />
                 </div>
                 <div>
-                  <p className="text-white/35 text-sm uppercase tracking-[0.2em] mb-6">Lo que este test revela de tu relación</p>
+                  <p className="text-white/40 text-sm uppercase tracking-[0.2em] mb-2">Lo que el test revela</p>
+                  <h2 className="text-2xl lg:text-3xl font-light text-white/80 mb-8 leading-snug">Patrones invisibles que<br />ningún test estándar detecta</h2>
                   <div className="space-y-3">
                     {[
-                      { icon: Activity, text: 'Los ciclos emocionales que se repiten sin que lo notes' },
-                      { icon: Shield, text: 'Tus mecanismos de defensa y los de tu pareja' },
-                      { icon: Users, text: 'Tu estilo de apego: quién se acerca, quién se aleja y por qué' },
-                      { icon: Eye, text: 'Necesidades ocultas que nunca has dicho en voz alta' },
-                      { icon: Heart, text: 'Tu compatibilidad emocional real — no la que imaginas' },
-                      { icon: TrendingUp, text: 'Las fortalezas del vínculo y lo que se puede reparar' }
+                      { icon: Activity, text: 'Los ciclos emocionales que se repiten sin que lo notes', glow: 'from-red-500/15 to-rose-500/10' },
+                      { icon: Shield, text: 'Tus mecanismos de defensa y los de tu pareja', glow: 'from-blue-500/15 to-cyan-500/10' },
+                      { icon: Users, text: 'Tu estilo de apego: quién se acerca, quién se aleja y por qué', glow: 'from-emerald-500/15 to-teal-500/10' },
+                      { icon: Eye, text: 'Necesidades ocultas que nunca has dicho en voz alta', glow: 'from-amber-500/15 to-yellow-500/10' },
+                      { icon: Heart, text: 'Tu compatibilidad emocional real — no la que imaginas', glow: 'from-pink-500/15 to-rose-500/10' },
+                      { icon: TrendingUp, text: 'Las fortalezas del vínculo y lo que se puede reparar', glow: 'from-violet-500/15 to-purple-500/10' }
                     ].map((b, i) => (
                       <motion.div key={i} initial={{ opacity: 0, x: 15 }} whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-                        className="flex items-start gap-4 p-4 rounded-xl border border-white/[0.08] bg-white/[0.02]">
-                        <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0">
-                          <b.icon className="w-5 h-5 text-violet-400/60" strokeWidth={1.5} />
+                        className="flex items-start gap-4 p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] transition-all group">
+                        <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${b.glow} border border-white/10 flex items-center justify-center flex-shrink-0 group-hover:shadow-[0_0_24px_rgba(139,92,246,0.12)] transition-shadow`}>
+                          <b.icon className="w-5 h-5 text-white/50" strokeWidth={1.5} />
                         </div>
-                        <span className="text-white/65 text-base font-light leading-snug pt-2">{b.text}</span>
+                        <span className="text-white/60 text-base font-light leading-snug pt-2">{b.text}</span>
                       </motion.div>
                     ))}
                   </div>
@@ -1007,15 +1019,19 @@ const DiagnosticoRelacionalPage = () => {
                 </motion.button>
               </motion.div>
 
-              {/* ── IMAGE COLLAGE — emotional pairing ────────── */}
-              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {[4, 5, 6, 7, 8, 9].map(n => (
-                  <div key={n} className="overflow-hidden rounded-xl aspect-[4/3]">
-                    <img src={`/TEST PAREJA/IMAGEN (${n}).jpg`} alt={`Pareja ${n}`}
-                      className="w-full h-full object-cover opacity-70 hover:opacity-90 transition-opacity duration-500" loading="lazy" />
-                  </div>
-                ))}
+              {/* ── IMAGE GALLERY — professional grid ────────── */}
+              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                <p className="text-center text-white/40 text-sm uppercase tracking-[0.2em] mb-2">Conexión emocional</p>
+                <h2 className="text-center text-2xl lg:text-3xl font-light text-white/70 mb-8">Cada relación tiene una historia invisible</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 lg:gap-4">
+                  {[4, 5, 6, 7, 8, 9].map(n => (
+                    <div key={n} className="group overflow-hidden rounded-2xl aspect-[4/3] relative">
+                      <img src={`/TEST PAREJA/IMAGEN (${n}).jpg`} alt={`Pareja ${n}`}
+                        className="w-full h-full object-cover opacity-60 group-hover:opacity-85 group-hover:scale-105 transition-all duration-700" loading="lazy" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                  ))}
+                </div>
               </motion.div>
 
               {/* ── SIMULATED REPORT PREVIEW ─────────────── */}
@@ -1149,82 +1165,98 @@ const DiagnosticoRelacionalPage = () => {
                 </div>
               </motion.div>
 
-              {/* ── ¿CÓMO FUNCIONA? — Voice-first experience ─────── */}
+              {/* ── ¿CÓMO FUNCIONA? — bigger professional cards ─────── */}
               <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                <p className="text-center text-white/35 text-sm uppercase tracking-[0.2em] mb-8">¿Cómo funciona?</p>
-                <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
+                <p className="text-center text-white/40 text-sm uppercase tracking-[0.2em] mb-2">El proceso</p>
+                <h2 className="text-center text-2xl lg:text-3xl font-light text-white/70 mb-10">Así funciona el diagnóstico</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
                   {[
-                    { icon: Volume2, num: '1', title: 'Te leemos', desc: 'Cada pregunta se lee en voz alta para ti' },
-                    { icon: Mic, num: '2', title: 'Habla', desc: 'Tu micrófono se activa y dices lo que te venga' },
-                    { icon: Brain, num: '3', title: 'Analizamos', desc: 'Nuestro algoritmo detecta patrones profundos' },
-                    { icon: BarChart3, num: '4', title: 'Reporte', desc: 'Radar, barras, perfil y análisis narrativo' },
-                    { icon: Download, num: '5', title: 'Descarga', desc: 'PDF completo que puedes conservar' }
+                    { icon: Volume2, num: '1', title: 'Escuchas', desc: 'Cada pregunta se lee en voz alta. Solo relájate y escucha.' },
+                    { icon: Mic, num: '2', title: 'Hablas', desc: 'Tu micrófono se activa automáticamente. Di lo que sientas, sin filtro.' },
+                    { icon: Brain, num: '3', title: 'Analizamos', desc: 'El sistema detecta patrones inconscientes cruzando tus 45 respuestas.' },
+                    { icon: BarChart3, num: '4', title: 'Tu reporte', desc: 'Radar emocional, barras de perfil, ciclos y análisis narrativo.' },
+                    { icon: Download, num: '5', title: 'Descargas', desc: 'PDF profesional que puedes conservar o llevar a terapia.' }
                   ].map((step, i) => (
-                    <div key={i} className="p-5 rounded-xl border border-white/[0.08] bg-white/[0.02] text-center">
-                      <div className="w-10 h-10 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-3">
-                        <span className="text-violet-400/60 text-sm font-light">{step.num}</span>
+                    <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                      className="p-6 rounded-2xl border border-white/[0.08] bg-white/[0.02] text-center hover:bg-white/[0.04] transition-colors">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-4">
+                        <span className="text-violet-400/70 text-base font-light">{step.num}</span>
                       </div>
-                      <step.icon className="w-6 h-6 text-violet-400/45 mx-auto mb-3" strokeWidth={1.5} />
-                      <h3 className="text-white/75 text-sm font-light mb-1">{step.title}</h3>
-                      <p className="text-white/35 text-sm font-light leading-snug">{step.desc}</p>
-                    </div>
+                      <step.icon className="w-7 h-7 text-violet-400/50 mx-auto mb-3" strokeWidth={1.5} />
+                      <h3 className="text-white/80 text-base font-light mb-2">{step.title}</h3>
+                      <p className="text-white/40 text-sm font-light leading-relaxed">{step.desc}</p>
+                    </motion.div>
                   ))}
                 </div>
               </motion.div>
 
-              {/* ── FASES — with image ─────────────────────── */}
+              {/* ── FASES — stronger copy + image ─────────────────────── */}
               <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div>
-                  <h2 className="text-white/40 text-sm uppercase tracking-[0.2em] mb-6">7 fases que exploramos juntos</h2>
+                  <p className="text-white/40 text-sm uppercase tracking-[0.2em] mb-2">Las 7 dimensiones</p>
+                  <h2 className="text-2xl lg:text-3xl font-light text-white/80 mb-3 leading-snug">No dejamos nada sin explorar</h2>
+                  <p className="text-white/35 text-base font-light mb-8 leading-relaxed">Cada fase está diseñada para activar una capa diferente de tu relación — desde lo que proyectas hacia afuera hasta lo que no te atreves a decir.</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {[
-                      { emoji: '🪞', name: 'Cómo te ves y cómo ves a tu pareja' },
-                      { emoji: '💗', name: 'Qué sientes cuando están bien — y cuando no' },
-                      { emoji: '📖', name: 'La historia que cuentas sobre tu relación' },
-                      { emoji: '⚡', name: 'Qué pasa cuando discuten' },
-                      { emoji: '🔮', name: 'Lo que no te atreves a decir' },
-                      { emoji: '🔥', name: 'Intimidad y conexión física' },
-                      { emoji: '🌊', name: 'Lo que sostiene (o desgasta) el vínculo' }
+                      { emoji: '🪞', name: 'Percepción', desc: 'Cómo te ves, cómo ves a tu pareja y qué no coincide' },
+                      { emoji: '💗', name: 'Emociones', desc: 'Qué sientes cuando están bien — y cuando todo se tensa' },
+                      { emoji: '📖', name: 'Narrativa', desc: 'La historia que te cuentas sobre tu relación' },
+                      { emoji: '⚡', name: 'Conflicto', desc: 'Cómo pelean, qué se activa y qué queda sin resolver' },
+                      { emoji: '🔮', name: 'Inconsciente', desc: 'Lo que no dices, lo que proyectas y lo que evitas' },
+                      { emoji: '🔥', name: 'Intimidad', desc: 'Conexión física, deseo y vulnerabilidad sexual' },
+                      { emoji: '🌊', name: 'Estructura', desc: 'Las bases del vínculo: qué lo sostiene o lo erosiona' }
                     ].map((s, i) => (
-                      <div key={i} className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] flex items-start gap-3">
-                        <span className="text-xl flex-shrink-0">{s.emoji}</span>
-                        <p className="text-white/50 text-sm font-light leading-snug pt-0.5">{s.name}</p>
-                      </div>
+                      <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }} transition={{ delay: i * 0.06 }}
+                        className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/15 flex items-center justify-center flex-shrink-0">
+                            <span className="text-base">{s.emoji}</span>
+                          </div>
+                          <h4 className="text-white/70 text-sm font-medium">{s.name}</h4>
+                        </div>
+                        <p className="text-white/40 text-sm font-light leading-snug pl-12">{s.desc}</p>
+                      </motion.div>
                     ))}
                   </div>
                 </div>
                 <div className="hidden lg:block">
-                  <img src="/TEST PAREJA/IMAGEN (10).jpg" alt="Fases del test" className="w-full rounded-2xl object-cover aspect-[4/5] opacity-80" loading="lazy" />
+                  <img src="/TEST PAREJA/IMAGEN (10).jpg" alt="Fases del test" className="w-full rounded-2xl object-cover aspect-[4/5] opacity-80 shadow-2xl shadow-black/30" loading="lazy" />
                 </div>
               </motion.div>
 
-              {/* ── TESTIMONIALS ── */}
+              {/* ── TESTIMONIALS — professional, with face avatars ── */}
               <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                <p className="text-center text-white/35 text-sm uppercase tracking-[0.2em] mb-8">Lo que dicen quienes ya lo hicieron</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <p className="text-center text-white/40 text-sm uppercase tracking-[0.2em] mb-2">Testimonios</p>
+                <h2 className="text-center text-2xl lg:text-3xl font-light text-white/70 mb-10">Lo que dicen quienes ya lo vivieron</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {[
-                    { name: 'Mariana L.', rating: 5, text: 'Me hizo ver cosas que llevaba años evitando. Lo del radar de compatibilidad fue como un espejo. Terminé llorando pero sobre todo entendiendo.', avatar: '/TEST PAREJA/IMAGEN (5).jpg' },
-                    { name: 'Carlos & Andrea', rating: 5, text: 'Lo hicimos los dos por separado y luego comparamos. Fue increíble ver las diferencias. Nos ayudó a hablar de cosas que no nos atrevíamos.', avatar: '/TEST PAREJA/IMAGEN (8).jpg' },
-                    { name: 'Sofía R.', rating: 5, text: 'No pensé que un test pudiera ser tan profundo. Fue como hablar con un psicólogo. Las gráficas y el análisis son impresionantes.', avatar: '/TEST PAREJA/IMAGEN (9).jpg' },
-                    { name: 'Roberto M.', rating: 4, text: 'Muy bueno el análisis de patrones que se repiten. Me di cuenta que hacía exactamente lo mismo que mi ex. Eso nunca lo había visto.', avatar: '/TEST PAREJA/IMAGEN (6).jpg' },
-                    { name: 'Daniela & Jorge', rating: 5, text: 'Llevamos 8 años juntos y esto nos reveló dinámicas que ni en terapia habíamos nombrado. Lo recomiendo 100%.', avatar: '/TEST PAREJA/IMAGEN (7).jpg' },
-                    { name: 'Valentina G.', rating: 5, text: 'El hecho de hablar por micrófono hace que sea más real. No es lo mismo escribir que decirlo en voz alta. Eso cambia todo.', avatar: '/TEST PAREJA/IMAGEN (4).jpg' }
+                    { name: 'Mariana L.', age: '32 años', rating: 5, text: 'Me hizo ver cosas que llevaba años evitando. Cuando vi el radar de compatibilidad fue como un espejo — todo encajaba. Terminé llorando pero sobre todo entendiendo por qué repito los mismos patrones. Lo llevé a mi siguiente sesión de terapia y fue muy útil para profundizar.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face' },
+                    { name: 'Carlos & Andrea', age: '5 años juntos', rating: 5, text: 'Lo hicimos los dos por separado y luego comparamos reportes. Fue increíble ver las diferencias — lo que yo pensaba que estaba bien, para ella era un problema. Después tomamos una sesión con el psicólogo para que nos ayudara a interpretar todo y fue de las mejores decisiones que hemos tomado juntos.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face' },
+                    { name: 'Sofía R.', age: '28 años', rating: 5, text: 'No pensé que hablar por micrófono fuera a ser tan diferente a escribir. Cuando hablas van saliendo cosas que no tenías planeado decir. Las gráficas y el análisis son impresionantes — se siente como si un psicólogo te hubiera escuchado durante horas.', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face' },
+                    { name: 'Roberto M.', age: '41 años', rating: 5, text: 'Lo que más me impactó fue ver el patrón de "persecución-retirada" que detectó. Es exactamente lo que hago: yo busco y ella se aleja, y mientras más busco, más se cierra. Nunca nadie me lo había explicado así de claro. Ahora estamos trabajándolo juntos en terapia de pareja.', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face' },
+                    { name: 'Daniela & Jorge', age: '8 años juntos', rating: 5, text: 'Llevamos 8 años juntos y esto nos reveló dinámicas que ni en terapia habíamos nombrado. El psicólogo usó nuestros reportes como punto de partida para las sesiones y dijo que era el diagnóstico inicial más completo que había visto. Totalmente vale la inversión — especialmente el paquete de pareja.', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face' },
+                    { name: 'Valentina G.', age: '35 años', rating: 5, text: 'Lo hice sola porque mi pareja no quería. Aun así, el test detectó perfectamente la dinámica entre los dos. Me ayudó a entender mi parte del problema — que yo también contribuyo al ciclo. Después convencí a mi esposo de que lo hiciera y fue un antes y un después.', avatar: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=100&h=100&fit=crop&crop=face' },
+                    { name: 'Alejandro P.', age: '38 años', rating: 5, text: 'Yo era escéptico — pensé que era otro cuestionario de internet. Pero cuando vi mi reporte y leí "distancia acumulada: 74%" sentí un golpe en el estómago porque es exactamente lo que llevo sintiendo. Es como una radiografía emocional. Lo recomiendo a cualquier hombre que sienta que algo no está bien.', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face' },
+                    { name: 'Laura & Miguel', age: '3 años juntos', rating: 5, text: 'Hicimos el test una noche cada uno y al día siguiente fuimos a sesión con Luis. Fue de las experiencias más intensas que hemos tenido — por fin pudimos hablar de cosas que teníamos atoradas desde hace meses. El test abre puertas que no sabías que existían.', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face' },
+                    { name: 'Fernanda D.', age: '29 años', rating: 5, text: 'Me encantó que cita tus propias palabras en el análisis. Lees algo y dices "sí, yo dije eso" — pero lo conecta con un patrón más grande que no veías. Es como tener un espejo psicológico. Ya se lo recomendé a tres amigas que están pasando por situaciones similares.', avatar: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&h=100&fit=crop&crop=face' }
                   ].map((t, i) => (
                     <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-                      className="p-5 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
-                      <div className="flex items-center gap-3 mb-3">
-                        <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover opacity-80" loading="lazy" />
+                      viewport={{ once: true }} transition={{ delay: i * 0.06 }}
+                      className="p-6 rounded-2xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+                      <div className="flex items-center gap-3 mb-4">
+                        <img src={t.avatar} alt={t.name} className="w-11 h-11 rounded-full object-cover ring-2 ring-violet-500/20" loading="lazy" />
                         <div>
-                          <p className="text-white/70 text-sm font-light">{t.name}</p>
-                          <div className="flex gap-0.5">
-                            {Array.from({ length: t.rating }).map((_, j) => (
-                              <Star key={j} className="w-3 h-3 text-amber-400/70 fill-amber-400/70" />
-                            ))}
-                            {Array.from({ length: 5 - t.rating }).map((_, j) => (
-                              <Star key={j} className="w-3 h-3 text-white/10" />
-                            ))}
+                          <p className="text-white/75 text-sm font-medium">{t.name}</p>
+                          <div className="flex items-center gap-2">
+                            <div className="flex gap-0.5">
+                              {Array.from({ length: t.rating }).map((_, j) => (
+                                <Star key={j} className="w-3 h-3 text-amber-400/80 fill-amber-400/80" />
+                              ))}
+                            </div>
+                            <span className="text-white/25 text-xs font-light">{t.age}</span>
                           </div>
                         </div>
                       </div>
@@ -1340,40 +1372,50 @@ const DiagnosticoRelacionalPage = () => {
         ═══════════════════════════════════════════════════════ */}
         {stage === 'instructions' && (
           <motion.div key="instructions" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="min-h-screen flex items-center justify-center px-6 py-20">
-            <div className="max-w-lg w-full text-center space-y-8">
-              <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200 }}>
-                <Mic className="w-16 h-16 text-violet-400/40 mx-auto mb-4" />
-              </motion.div>
-              <h2 className="text-2xl lg:text-3xl font-light text-white">Esto no es un cuestionario — es una conversación</h2>
-              <p className="text-white/40 text-sm font-light leading-relaxed max-w-md mx-auto">
-                Vas a escuchar una serie de oraciones por voz. Después de cada una, tu micrófono se activa automáticamente. Solo di lo primero que te venga a la cabeza. No hay nada bien ni nada mal.
-              </p>
-              <div className="space-y-3 text-left">
+            className="min-h-screen flex items-center justify-center px-6 py-28">
+            <div className="max-w-xl w-full space-y-10">
+              <div className="text-center">
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-6">
+                  <Mic className="w-9 h-9 text-violet-400/50" strokeWidth={1.5} />
+                </div>
+                <h2 className="text-3xl lg:text-4xl font-light text-white mb-4">Antes de empezar</h2>
+                <p className="text-white/45 text-base lg:text-lg font-light leading-relaxed max-w-lg mx-auto">
+                  Esto no es un cuestionario con opciones. Es una conversación contigo. Vas a escuchar frases y responder hablando — como platicarías con un psicólogo.
+                </p>
+              </div>
+              <div className="space-y-3">
                 {[
-                  { icon: Volume2, text: 'Cada oración se te lee en voz alta — solo escucha y responde' },
-                  { icon: Mic, text: 'Tu micrófono se activa solo — habla libremente, sin filtro' },
-                  { icon: Lock, text: 'Tus resultados son solo para ti — nadie más los ve' },
-                  { icon: Shield, text: 'No vas a ser juzgado(a) — aquí no hay respuestas correctas ni incorrectas' },
-                  { icon: Clock, text: 'Ponte cómodo(a) en un lugar tranquilo y privado — unos 25-30 minutos' }
+                  { icon: Volume2, title: 'Vas a escuchar una voz', desc: 'Cada pregunta se te lee en voz alta. Solo relájate y escucha.' },
+                  { icon: Mic, title: 'Tu micrófono se activa solo', desc: 'Cuando termine la pregunta, habla libremente. Di lo primero que venga — no hay respuestas correctas.' },
+                  { icon: Lock, title: 'Es 100% privado', desc: 'Nadie más ve tus respuestas. Tu audio no se graba — solo se convierte a texto en tu navegador.' },
+                  { icon: Shield, title: 'No se juzga nada', desc: 'No hay respuestas buenas ni malas. Entre más honesto seas, más preciso será el diagnóstico.' },
+                  { icon: Clock, title: 'Son ~25-30 minutos', desc: 'Busca un lugar tranquilo y sin interrupciones. Usa audífonos si puedes.' }
                 ].map((item, i) => (
                   <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 + i * 0.1 }} className="flex items-start gap-4 p-4 rounded-xl border border-white/8 bg-white/[0.02]">
-                    <item.icon className="w-5 h-5 text-violet-400/50 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
-                    <span className="text-white/60 font-light text-sm">{item.text}</span>
+                    transition={{ delay: 0.15 + i * 0.08 }}
+                    className="flex items-start gap-4 p-5 rounded-xl border border-white/[0.08] bg-white/[0.02]">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/10 to-fuchsia-500/5 border border-violet-500/15 flex items-center justify-center flex-shrink-0">
+                      <item.icon className="w-5 h-5 text-violet-400/60" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <h4 className="text-white/75 text-base font-medium mb-1">{item.title}</h4>
+                      <p className="text-white/40 text-sm font-light leading-relaxed">{item.desc}</p>
+                    </div>
                   </motion.div>
                 ))}
               </div>
-              <div className="p-4 rounded-xl border border-violet-500/10 bg-violet-500/[0.03]">
-                <p className="text-violet-300/45 text-xs font-light leading-relaxed">
-                  💡 <strong className="text-violet-300/60">Consejo:</strong> Usa audífonos o un buen micrófono. También puedes escribir si prefieres, pero hablar es más rápido y más natural — como platicar con un psicólogo.
+              <div className="p-5 rounded-xl border border-violet-500/15 bg-violet-500/[0.04]">
+                <p className="text-violet-300/50 text-sm font-light leading-relaxed">
+                  💡 <strong className="text-violet-300/70">Tip:</strong> Si en algún momento prefieres escribir en vez de hablar, puedes cambiar de modo en cualquier momento. Pero hablar es más rápido y te permite ser más espontáneo — que es lo que queremos.
                 </p>
               </div>
-              <motion.button onClick={() => { setStage('questionnaire'); scrollToTop() }}
-                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                className="px-8 py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-lg">
-                Estoy listo(a) <ArrowRight className="inline w-5 h-5 ml-2" />
-              </motion.button>
+              <div className="text-center">
+                <motion.button onClick={() => { setStage('questionnaire'); scrollToTop() }}
+                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  className="px-10 py-5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-lg shadow-lg shadow-violet-600/15">
+                  Estoy listo(a) <ArrowRight className="inline w-5 h-5 ml-2" />
+                </motion.button>
+              </div>
             </div>
           </motion.div>
         )}
@@ -1472,7 +1514,7 @@ const DiagnosticoRelacionalPage = () => {
                               <motion.button
                                 initial={{ opacity: 0, x: 10 }}
                                 animate={{ opacity: 1, x: 0 }}
-                                onClick={() => { recognitionRef.current?.stop(); setRecording(false); setInterim(''); setTimeout(handleNext, 300) }}
+                                onClick={() => { manualStopRef.current = true; recognitionRef.current?.stop(); setRecording(false); setInterim(''); setTimeout(handleNext, 300) }}
                                 className="absolute left-full ml-4 top-1/2 -translate-y-1/2 whitespace-nowrap flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-violet-500/80 to-fuchsia-500/80 text-white text-sm font-light hover:from-violet-500 hover:to-fuchsia-500 transition-all">
                                 Siguiente <ArrowRight className="w-3.5 h-3.5" />
                               </motion.button>

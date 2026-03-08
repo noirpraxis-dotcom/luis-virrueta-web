@@ -16,18 +16,19 @@ const StorePage = () => {
   const products = [
     {
       id: 7,
-      name: 'Test: ¿Cómo está tu relación realmente?',
-      category: 'Psicología de Pareja',
-      price: '$349 MXN',
+      name: 'Termómetro Inconsciente de Pareja',
+      category: 'Diagnóstico Psicológico',
+      price: 'Desde $349 MXN',
       duration: '~30 min',
-      image: '/TEST PAREJA/IMAGEN (1).jpg',
-      description: 'Habla libremente por micrófono. Nuestro algoritmo analiza tus palabras y genera un reporte profundo con gráficas, patrones invisibles y recomendaciones personalizadas.',
-      shortDesc: 'Descubre los patrones que se repiten sin que lo notes — y por qué sigues sintiéndote igual.',
+      image: '/TEST PAREJA/TERMOMETRO AMOR.jpg',
+      description: 'Test psicológico conversacional diseñado por un psicólogo clínico. Hablas por micrófono, el sistema analiza tus patrones inconscientes y recibes un reporte profesional con gráficas, ciclos emocionales y recomendaciones.',
+      shortDesc: '45 preguntas psicoanalíticas que detectan los patrones invisibles de tu relación — lo que no se dice pero se siente.',
       benefits: [
+        'Individual ($349) o en Pareja ($499) — cada quien por separado',
         'Habla por micrófono — como platicar con un psicólogo',
-        'Detecta ciclos emocionales que se repiten sin que lo notes',
-        'Identifica tu estilo de apego y mecanismos de defensa',
-        'Reporte visual: radar, barras, análisis y PDF descargable'
+        'Detecta ciclos, apego, defensa y patrones inconscientes',
+        'Reporte visual: radar, barras, análisis narrativo y PDF',
+        'Opción: sesión con el psicólogo para interpretar resultados'
       ],
       gradient: 'from-violet-600/20 to-fuchsia-600/20',
       borderGradient: 'from-violet-500 to-fuchsia-500',
@@ -315,7 +316,7 @@ const StorePage = () => {
 
                   {/* Benefits preview */}
                   <div className="space-y-2">
-                    {product.benefits.slice(0, product.isDiagnostic ? 4 : 2).map((benefit, i) => (
+                    {product.benefits.slice(0, product.isDiagnostic ? 5 : 2).map((benefit, i) => (
                       <div key={i} className="flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4 text-violet-400 flex-shrink-0" />
                         <span className="text-xs text-white/50 font-light">{benefit}</span>
