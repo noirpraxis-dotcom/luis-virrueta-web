@@ -12,7 +12,7 @@ import SEOHead from '../components/SEOHead'
 import jsPDF from 'jspdf'
 import { analyzeDiagnostic } from '../services/diagnosticRelacionalService'
 
-// ─── CUESTIONARIO: 42 PREGUNTAS EN 6 FASES ────────────────────
+// ─── CUESTIONARIO: 45 PREGUNTAS EN 7 FASES ────────────────────
 
 const QUESTIONS = [
   // PHASE 0 — IDENTIDAD Y PERCEPCIÓN DE LA RELACIÓN (Q1-Q14)
@@ -63,7 +63,12 @@ const QUESTIONS = [
   { id: 'Q37', section: 'Proyección inconsciente', text: 'Si pudiera cambiar una sola cosa de nosotros, sería...', sample: 'La forma en que nos quedamos callados después de un problema. Ese silencio pesa más que la pelea.' },
   { id: 'Q38', section: 'Proyección inconsciente', text: 'Lo que más extraño de nosotros es...', sample: 'Cuando nos reíamos de todo. Cuando no había tantas cosas no dichas entre nosotros.' },
 
-  // PHASE 5 — ESTRUCTURA PROFUNDA (Q39-Q42)
+  // PHASE 5 — INTIMIDAD Y CONEXIÓN FÍSICA (Q43-Q45)
+  { id: 'Q43', section: 'Intimidad y conexión', text: 'En nuestra intimidad física, yo me siento...', sample: 'A veces me siento muy conectada, pero otras es más mecánico. Como que falta ese deseo real, esa conexión más allá de lo físico.' },
+  { id: 'Q44', section: 'Intimidad y conexión', text: 'Hay algo en nuestra vida sexual que me gustaría que fuera diferente, como...', sample: 'Me gustaría que fuera más espontáneo. Que no fuera siempre igual. Que hubiera más juego, más exploración.' },
+  { id: 'Q45', section: 'Intimidad y conexión', text: 'Si pudiera expresar un deseo o fantasía sin ser juzgado(a), diría que...', sample: 'Me gustaría explorar cosas nuevas juntos. Pero me da miedo que piense algo raro o que se aleje.' },
+
+  // PHASE 6 — ESTRUCTURA PROFUNDA (Q39-Q42)
   { id: 'Q39', section: 'Estructura profunda', text: 'Si esta relación terminara mañana, lo que más me dolería sería...', sample: 'Darme cuenta de que no dije todo lo que sentía cuando tuve la oportunidad.' },
   { id: 'Q40', section: 'Estructura profunda', text: 'Si hay algo que siento que se repite una y otra vez entre nosotros es...', sample: 'Que uno se acerca y el otro se aleja. Nunca estamos los dos abiertos al mismo tiempo.' },
   { id: 'Q41', section: 'Estructura profunda', text: 'Cuando nuestra relación está en su mejor momento es porque...', sample: 'No hay presión externa. Cuando somos solo nosotros dos sin estrés ni obligaciones.' },
@@ -77,6 +82,7 @@ const SECTIONS = [
   { name: 'Narrativa de la relación', icon: MessageCircle, color: 'blue', count: 6 },
   { name: 'Dinámica de conflicto', icon: Activity, color: 'red', count: 6 },
   { name: 'Proyección inconsciente', icon: Eye, color: 'fuchsia', count: 6 },
+  { name: 'Intimidad y conexión', icon: Heart, color: 'pink', count: 3 },
   { name: 'Estructura profunda', icon: Layers, color: 'amber', count: 4 }
 ]
 
@@ -350,7 +356,7 @@ function AnalyzingProgress({ isDone, onComplete }) {
               <span className="text-violet-300/60 text-sm font-light">Finalizando tu diagnóstico profundo…</span>
             </motion.div>
             <p className="text-white/20 text-[10px] font-light mt-2">
-              El análisis narrativo de 42 respuestas requiere unos momentos adicionales
+              El análisis narrativo de 45 respuestas requiere unos momentos adicionales
             </p>
           </motion.div>
         )}
@@ -472,6 +478,8 @@ const DiagnosticoRelacionalPage = () => {
   const bgAnalysisRef = useRef(null)
 
   const [pdfGenerating, setPdfGenerating] = useState(false)
+  const [expandedInsights, setExpandedInsights] = useState({})
+  const toggleInsight = useCallback((key) => setExpandedInsights(prev => ({ ...prev, [key]: !prev[key] })), [])
   const [resumeDraft, setResumeDraft] = useState(null)
 
   // Test/dev mode: URL param OR LUISPRO discount
@@ -647,6 +655,19 @@ const DiagnosticoRelacionalPage = () => {
 
   // ─── QUESTION NAVIGATION ──────────────────────────────────
 
+  // Fire background analysis early (~70% completion) to reduce wait time
+  useEffect(() => {
+    if (stage !== 'questionnaire') return
+    if (bgAnalysisRef.current) return
+    const threshold = Math.floor(QUESTIONS.length * 0.7)
+    if (currentQuestion >= threshold) {
+      const answeredCount = Object.values(responses).filter(v => v?.trim()).length
+      if (answeredCount >= Math.floor(QUESTIONS.length * 0.65)) {
+        fireBackgroundAnalysis(responses)
+      }
+    }
+  }, [currentQuestion, stage, responses, fireBackgroundAnalysis])
+
   const handleNext = useCallback(() => {
     if (currentQuestion < QUESTIONS.length - 1) {
       setCurrentQuestion(prev => prev + 1)
@@ -692,7 +713,7 @@ const DiagnosticoRelacionalPage = () => {
       doc.setFontSize(20); doc.setTextColor(40, 40, 40)
       doc.text('Diagnóstico Relacional', pw / 2, y, { align: 'center' }); y += 6
       doc.setFontSize(9); doc.setTextColor(120, 120, 120)
-      doc.text('Generado a partir de 42 respuestas en 6 fases psicológicas', pw / 2, y, { align: 'center' }); y += 12
+      doc.text('Generado a partir de 45 respuestas en 7 fases psicológicas', pw / 2, y, { align: 'center' }); y += 12
 
       // Relationship type
       if (aiAnalysis.relationship_type) {
@@ -858,8 +879,8 @@ const DiagnosticoRelacionalPage = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       <SEOHead
-        title="Diagnóstico Relacional Profundo - Luis Virrueta"
-        description="Descubre los patrones invisibles de tu relación. 42 preguntas por voz, análisis psicológico profundo y reporte completo con gráficas."
+        title="Test de Pareja: Descubre los patrones invisibles de tu relación - Luis Virrueta"
+        description="¿Sientes que algo no funciona pero no sabes qué? Habla por micrófono, nuestro algoritmo analiza tus patrones y recibes un reporte profundo con gráficas."
         url="/tienda/diagnostico-relacional"
       />
 
@@ -883,32 +904,56 @@ const DiagnosticoRelacionalPage = () => {
                 className="text-center mb-10 lg:mb-14">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/[0.03] mb-6">
                   <Heart className="w-3.5 h-3.5 text-violet-400/50" strokeWidth={1.5} />
-                  <span className="text-white/40 text-[11px] font-light uppercase tracking-[0.15em]">Psicología de pareja</span>
+                  <span className="text-white/40 text-[11px] font-light uppercase tracking-[0.15em]">Test de pareja</span>
                 </div>
                 <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-light text-white leading-[1.15] mb-5"
                   style={{ letterSpacing: '-0.01em' }}>
-                  Lo que tu relación no te dice,<br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400">pero tú ya sientes</span>
+                  ¿Sientes que algo no funciona<br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400">pero no logras entender qué?</span>
                 </h1>
-                <p className="text-base sm:text-lg text-white/45 font-light max-w-xl mx-auto leading-relaxed">
-                  42 preguntas por voz que revelan los patrones invisibles de tu relación. Recibes un reporte profesional con gráficas, indicadores y análisis descargable.
+                <p className="text-base sm:text-lg text-white/45 font-light max-w-2xl mx-auto leading-relaxed">
+                  Un test conversacional que analiza tu relación en profundidad. Hablas con el micrófono, nuestro algoritmo detecta los patrones que no ves, y recibes un reporte profesional con gráficas y recomendaciones.
                 </p>
               </motion.div>
 
-              {/* ── IMPACT BULLETS ─────────────────────────── */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+              {/* ── ¿TE IDENTIFICAS? ─────────────────────────── */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
+                className="max-w-3xl mx-auto mb-10">
+                <p className="text-center text-white/25 text-[10px] uppercase tracking-[0.2em] mb-5">¿Te suena familiar alguna de estas?</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {[
+                    '💬 "Siempre terminamos discutiendo por lo mismo"',
+                    '🧊 "Siento que mi pareja se aleja y no sé por qué"',
+                    '💔 "Doy mucho pero no siento que recibo lo mismo"',
+                    '🤐 "Después de pelear, nadie dice nada y todo queda ahí"',
+                    '😶 "A veces me pregunto si realmente nos conocemos"',
+                    '😰 "Me da miedo que un día se canse de mí"'
+                  ].map((text, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.25 + i * 0.06 }}
+                      className="p-3 rounded-xl border border-white/[0.06] bg-white/[0.015]">
+                      <span className="text-white/55 text-sm font-light leading-snug">{text}</span>
+                    </motion.div>
+                  ))}
+                </div>
+                <p className="text-center text-white/25 text-xs font-light mt-4">Si algo de esto resuena, este test es para ti.</p>
+              </motion.div>
+
+              {/* ── ¿QUÉ DESCUBRIRÁS? ─────────────────────────── */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
                 className="max-w-3xl mx-auto mb-14">
+                <p className="text-center text-white/25 text-[10px] uppercase tracking-[0.2em] mb-5">Lo que este test revela de tu relación</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {[
-                    { icon: Activity, text: 'Detecta ciclos de conflicto que se repiten sin que lo notes' },
-                    { icon: Shield, text: 'Identifica qué mecanismos de defensa están activos en tu relación' },
-                    { icon: Users, text: 'Revela patrones de apego: quién se acerca, quién se aleja y por qué' },
-                    { icon: Eye, text: 'Muestra lo que no se dice: necesidades ocultas, miedos y proyecciones' },
-                    { icon: Heart, text: 'Mide la compatibilidad emocional real, no la percibida' },
-                    { icon: TrendingUp, text: 'Evalúa el potencial de reconexión y las fortalezas del vínculo' }
+                    { icon: Activity, text: 'Los ciclos emocionales que se repiten sin que lo notes' },
+                    { icon: Shield, text: 'Tus mecanismos de defensa y los de tu pareja' },
+                    { icon: Users, text: 'Tu estilo de apego: quién se acerca, quién se aleja y por qué' },
+                    { icon: Eye, text: 'Necesidades ocultas que nunca has dicho en voz alta' },
+                    { icon: Heart, text: 'Tu compatibilidad emocional real — no la que imaginas' },
+                    { icon: TrendingUp, text: 'Las fortalezas del vínculo y lo que se puede reparar' }
                   ].map((b, i) => (
                     <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3 + i * 0.06 }}
+                      transition={{ delay: 0.4 + i * 0.06 }}
                       className="flex items-start gap-3 p-3.5 rounded-xl border border-white/[0.06] bg-white/[0.015]">
                       <b.icon className="w-4 h-4 text-violet-400/50 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
                       <span className="text-white/55 text-sm font-light leading-snug">{b.text}</span>
@@ -1049,38 +1094,49 @@ const DiagnosticoRelacionalPage = () => {
                 </div>
               </motion.div>
 
-              {/* ── WHAT YOU GET ─────────────────────────── */}
+              {/* ── ¿CÓMO FUNCIONA? — Voice-first experience ─────── */}
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
                 className="max-w-3xl mx-auto mb-16">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <p className="text-center text-white/25 text-[10px] uppercase tracking-[0.2em] mb-5">¿Cómo funciona?</p>
+                <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
                   {[
-                    { icon: Mic, title: 'Responde con voz', desc: '42 preguntas abiertas. Habla con libertad, sin opciones limitadas.' },
-                    { icon: BarChart3, title: 'Reporte visual completo', desc: 'Radar, barras, indicadores y análisis narrativo de cada dimensión.' },
-                    { icon: Download, title: 'PDF descargable', desc: 'Tu diagnóstico completo en un documento que puedes conservar.' }
-                  ].map((item, i) => (
-                    <div key={i} className="p-5 rounded-xl border border-white/[0.06] bg-white/[0.015] text-center">
-                      <item.icon className="w-6 h-6 text-violet-400/40 mx-auto mb-3" strokeWidth={1.5} />
-                      <h3 className="text-white/70 text-sm font-light mb-1.5">{item.title}</h3>
-                      <p className="text-white/35 text-xs font-light leading-relaxed">{item.desc}</p>
+                    { icon: Volume2, num: '1', title: 'Te leemos', desc: 'Cada pregunta se lee en voz alta para ti' },
+                    { icon: Mic, num: '2', title: 'Habla', desc: 'Tu micrófono se activa y dices lo que te venga' },
+                    { icon: Brain, num: '3', title: 'Analizamos', desc: 'Nuestro algoritmo detecta patrones profundos' },
+                    { icon: BarChart3, num: '4', title: 'Reporte', desc: 'Radar, barras, perfil y análisis narrativo' },
+                    { icon: Download, num: '5', title: 'Descarga', desc: 'PDF completo que puedes conservar' }
+                  ].map((step, i) => (
+                    <div key={i} className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.015] text-center">
+                      <div className="w-8 h-8 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-2">
+                        <span className="text-violet-400/60 text-xs font-light">{step.num}</span>
+                      </div>
+                      <step.icon className="w-5 h-5 text-violet-400/40 mx-auto mb-2" strokeWidth={1.5} />
+                      <h3 className="text-white/70 text-xs font-light mb-1">{step.title}</h3>
+                      <p className="text-white/30 text-[10px] font-light leading-snug">{step.desc}</p>
                     </div>
                   ))}
                 </div>
               </motion.div>
 
-              {/* ── 6 PHASES ─────────────────────────── */}
+              {/* ── FASES — More connecting descriptions ─────── */}
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
                 className="max-w-4xl mx-auto mb-16">
-                <h2 className="text-center text-white/30 text-[10px] uppercase tracking-[0.2em] mb-5">6 fases psicológicas que exploramos</h2>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {SECTIONS.map((s, i) => {
-                    const Icon = s.icon
-                    return (
-                      <div key={i} className="p-3 rounded-lg border border-white/[0.05] bg-white/[0.01] text-center">
-                        <Icon className="w-4 h-4 text-white/20 mx-auto mb-1.5" strokeWidth={1.5} />
-                        <p className="text-white/40 text-[10px] font-light leading-tight">{s.name}</p>
-                      </div>
-                    )
-                  })}
+                <h2 className="text-center text-white/30 text-[10px] uppercase tracking-[0.2em] mb-5">7 fases que exploramos juntos</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {[
+                    { emoji: '🪞', name: 'Cómo te ves y cómo ves a tu pareja' },
+                    { emoji: '💗', name: 'Qué sientes cuando están bien — y cuando no' },
+                    { emoji: '📖', name: 'La historia que cuentas sobre tu relación' },
+                    { emoji: '⚡', name: 'Qué pasa cuando discuten' },
+                    { emoji: '🔮', name: 'Lo que no te atreves a decir' },
+                    { emoji: '🔥', name: 'Intimidad y conexión física' },
+                    { emoji: '🌊', name: 'Lo que sostiene (o desgasta) el vínculo' }
+                  ].map((s, i) => (
+                    <div key={i} className="p-3 rounded-lg border border-white/[0.05] bg-white/[0.01] text-center">
+                      <span className="text-lg mb-1 block">{s.emoji}</span>
+                      <p className="text-white/40 text-[10px] font-light leading-tight">{s.name}</p>
+                    </div>
+                  ))}
                 </div>
               </motion.div>
 
@@ -1090,7 +1146,7 @@ const DiagnosticoRelacionalPage = () => {
                 <div className="inline-block max-w-md w-full p-8 rounded-2xl border border-white/[0.08] bg-zinc-950/60">
                   <p className="text-white/25 text-[10px] uppercase tracking-[0.15em] mb-3">Acceso inmediato</p>
                   <p className="text-3xl font-light text-white mb-1">${PRODUCT_PRICE} <span className="text-lg text-white/35">MXN</span></p>
-                  <p className="text-white/30 text-xs font-light mb-6">~30 min · Reporte completo · PDF descargable</p>
+                  <p className="text-white/30 text-xs font-light mb-6">~30 min · Habla por micrófono · Reporte completo · PDF</p>
                   <motion.button
                     onClick={() => { setStage('checkout'); scrollToTop() }}
                     whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
@@ -1119,7 +1175,7 @@ const DiagnosticoRelacionalPage = () => {
               <div className="text-center">
                 <CreditCard className="w-10 h-10 text-violet-400/50 mx-auto mb-4" />
                 <h2 className="text-2xl font-light text-white mb-2">Accede a tu diagnóstico</h2>
-                <p className="text-white/40 text-sm font-light">42 preguntas · Análisis psicológico profundo · Reporte descargable</p>
+                <p className="text-white/40 text-sm font-light">45 preguntas · Análisis psicológico profundo · Reporte descargable</p>
               </div>
 
               {/* Discount code */}
@@ -1192,14 +1248,17 @@ const DiagnosticoRelacionalPage = () => {
               <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200 }}>
                 <Mic className="w-16 h-16 text-violet-400/40 mx-auto mb-4" />
               </motion.div>
-              <h2 className="text-2xl lg:text-3xl font-light text-white">Antes de empezar</h2>
-              <div className="space-y-4 text-left">
+              <h2 className="text-2xl lg:text-3xl font-light text-white">Esto no es un cuestionario — es una conversación</h2>
+              <p className="text-white/40 text-sm font-light leading-relaxed max-w-md mx-auto">
+                Vas a escuchar una serie de oraciones por voz. Después de cada una, tu micrófono se activa automáticamente. Solo di lo primero que te venga a la cabeza. No hay nada bien ni nada mal.
+              </p>
+              <div className="space-y-3 text-left">
                 {[
-                  { icon: Mic, text: 'Responde con el micrófono (o escribe si prefieres)' },
-                  { icon: Clock, text: '42 preguntas en 6 fases · ~30 minutos' },
-                  { icon: Brain, text: 'No hay respuestas correctas — habla con libertad' },
-                  { icon: Shield, text: 'Tus respuestas son confidenciales y nunca se comparten' },
-                  { icon: FileText, text: 'Al final recibirás un reporte completo descargable' }
+                  { icon: Volume2, text: 'Cada oración se te lee en voz alta — solo escucha y responde' },
+                  { icon: Mic, text: 'Tu micrófono se activa solo — habla libremente, sin filtro' },
+                  { icon: Lock, text: 'Tus resultados son solo para ti — nadie más los ve' },
+                  { icon: Shield, text: 'No vas a ser juzgado(a) — aquí no hay respuestas correctas ni incorrectas' },
+                  { icon: Clock, text: 'Ponte cómodo(a) en un lugar tranquilo y privado — unos 25-30 minutos' }
                 ].map((item, i) => (
                   <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.2 + i * 0.1 }} className="flex items-start gap-4 p-4 rounded-xl border border-white/8 bg-white/[0.02]">
@@ -1208,17 +1267,22 @@ const DiagnosticoRelacionalPage = () => {
                   </motion.div>
                 ))}
               </div>
+              <div className="p-4 rounded-xl border border-violet-500/10 bg-violet-500/[0.03]">
+                <p className="text-violet-300/45 text-xs font-light leading-relaxed">
+                  💡 <strong className="text-violet-300/60">Consejo:</strong> Usa audífonos o un buen micrófono. También puedes escribir si prefieres, pero hablar es más rápido y más natural — como platicar con un psicólogo.
+                </p>
+              </div>
               <motion.button onClick={() => { setStage('questionnaire'); scrollToTop() }}
                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                 className="px-8 py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-lg">
-                Comenzar <ArrowRight className="inline w-5 h-5 ml-2" />
+                Estoy listo(a) <ArrowRight className="inline w-5 h-5 ml-2" />
               </motion.button>
             </div>
           </motion.div>
         )}
 
         {/* ═══════════════════════════════════════════════════════
-            STAGE: QUESTIONNAIRE (42 voice-first questions)
+            STAGE: QUESTIONNAIRE (45 voice-first questions)
         ═══════════════════════════════════════════════════════ */}
         {stage === 'questionnaire' && (
           <motion.div key="questionnaire" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -1282,36 +1346,65 @@ const DiagnosticoRelacionalPage = () => {
                       {/* Mic area (hidden while audio plays) */}
                       {!audioPlaying && (
                         <>
-                          <motion.button type="button" onClick={toggleMic}
-                            whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }}
-                            className={`relative w-20 h-20 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
-                              recording
-                                ? 'border-red-400/50 bg-red-500/15 text-red-300'
-                                : 'border-violet-500/40 bg-violet-500/10 text-violet-300 hover:border-violet-400/60 hover:bg-violet-500/20'
-                            }`}>
-                            {recording && (
-                              <motion.div className="absolute inset-0 rounded-full border border-red-400/20"
-                                animate={{ scale: [1, 1.35, 1], opacity: [0.4, 0, 0.4] }}
-                                transition={{ duration: 1.5, repeat: Infinity }} />
-                            )}
-                            {recording ? <MicOff className="w-8 h-8" strokeWidth={1.5} /> : <Mic className="w-8 h-8" strokeWidth={1.5} />}
-                          </motion.button>
+                          {/* Mic button with reactive gradient effect */}
+                          <div className="relative">
+                            <motion.button type="button" onClick={toggleMic}
+                              whileHover={recording ? {} : { scale: 1.06 }} whileTap={{ scale: 0.94 }}
+                              className={`relative w-20 h-20 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                                recording
+                                  ? 'border-red-400/50 bg-red-500/15 text-red-300'
+                                  : 'border-violet-500/40 bg-violet-500/10 text-violet-300 hover:border-violet-400/60 hover:bg-violet-500/20'
+                              }`}>
+                              {/* Reactive pulse — only when detecting speech (interim has content) */}
+                              {recording && interim && (
+                                <motion.div className="absolute inset-[-6px] rounded-full bg-gradient-to-br from-red-500/20 via-fuchsia-500/15 to-violet-500/20"
+                                  animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0.3, 0.6] }}
+                                  transition={{ duration: 0.6, repeat: Infinity, ease: 'easeInOut' }} />
+                              )}
+                              {/* Static subtle ring when recording but NOT speaking */}
+                              {recording && !interim && (
+                                <motion.div className="absolute inset-[-4px] rounded-full border border-red-400/15"
+                                  animate={{ opacity: [0.3, 0.6, 0.3] }}
+                                  transition={{ duration: 2, repeat: Infinity }} />
+                              )}
+                              {recording ? <MicOff className="w-8 h-8 relative z-10" strokeWidth={1.5} /> : <Mic className="w-8 h-8" strokeWidth={1.5} />}
+                            </motion.button>
 
-                          {/* Wave animation while recording */}
+                            {/* "Terminar y continuar" button — visible while recording, next to mic */}
+                            {recording && responses[currentQ?.id]?.trim() && (
+                              <motion.button
+                                initial={{ opacity: 0, x: 10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                onClick={() => { recognitionRef.current?.stop(); setRecording(false); setInterim(''); setTimeout(handleNext, 300) }}
+                                className="absolute left-full ml-4 top-1/2 -translate-y-1/2 whitespace-nowrap flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-violet-500/80 to-fuchsia-500/80 text-white text-sm font-light hover:from-violet-500 hover:to-fuchsia-500 transition-all">
+                                Siguiente <ArrowRight className="w-3.5 h-3.5" />
+                              </motion.button>
+                            )}
+                          </div>
+
+                          {/* Reactive wave bars — only animate when speech detected */}
                           {recording && (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-3">
                               <div className="flex items-center justify-center gap-1.5 h-8 mb-2">
                                 {[0, 1, 2, 3, 4, 5, 6].map(i => (
-                                  <motion.div key={i} className="w-1 bg-red-400/50 rounded-full"
-                                    animate={{ height: ['4px', `${14 + (i % 3) * 6}px`, '4px'] }}
-                                    transition={{ duration: 0.6 + (i % 2) * 0.3, repeat: Infinity, delay: i * 0.09, ease: 'easeInOut' }} />
+                                  <motion.div key={i} className={`w-1 rounded-full ${interim ? 'bg-red-400/50' : 'bg-red-400/20'}`}
+                                    animate={interim
+                                      ? { height: ['4px', `${14 + (i % 3) * 6}px`, '4px'] }
+                                      : { height: '4px' }
+                                    }
+                                    transition={interim
+                                      ? { duration: 0.6 + (i % 2) * 0.3, repeat: Infinity, delay: i * 0.09, ease: 'easeInOut' }
+                                      : { duration: 0.3 }
+                                    } />
                                 ))}
                               </div>
-                              <p className="text-red-300/45 text-sm font-light animate-pulse text-center">Grabando... toca para detener</p>
+                              <p className={`text-sm font-light text-center ${interim ? 'text-red-300/50 animate-pulse' : 'text-white/25'}`}>
+                                {interim ? 'Escuchando...' : 'Esperando tu voz...'}
+                              </p>
                             </motion.div>
                           )}
 
-                          {/* Response captured + Siguiente */}
+                          {/* Response captured + Siguiente (when not recording) */}
                           {!recording && responses[currentQ?.id]?.trim() && (
                             <div className="flex items-center gap-4 mt-4">
                               <div className="flex items-center gap-1.5 text-emerald-400/60 text-sm font-light">
@@ -1509,7 +1602,7 @@ const DiagnosticoRelacionalPage = () => {
               <div>
                 <h3 className="text-2xl font-light text-white mb-3">Tu diagnóstico está listo</h3>
                 <p className="text-white/40 text-sm font-light leading-relaxed">
-                  Hemos cruzado tus 42 respuestas para construir un mapa completo de tu relación.
+                  Hemos cruzado tus 45 respuestas para construir un mapa completo de tu relación.
                 </p>
               </div>
               <motion.button onClick={() => { setStage('results'); scrollToTop() }}
@@ -1531,8 +1624,8 @@ const DiagnosticoRelacionalPage = () => {
 
               {/* Header */}
               <div className="text-center">
-                <h1 className="text-3xl lg:text-4xl font-light text-white mb-3">Tu Diagnóstico Relacional</h1>
-                <p className="text-white/40 text-sm font-light">Generado a partir de tus 42 respuestas en 6 fases psicológicas</p>
+                <h1 className="text-3xl lg:text-4xl font-light text-white mb-3">🔬 Tu Diagnóstico Relacional</h1>
+                <p className="text-white/40 text-sm font-light">Generado a partir de tus 45 respuestas en 7 fases psicológicas</p>
               </div>
 
               {/* ── RELATIONSHIP TYPE ── */}
@@ -1563,7 +1656,7 @@ const DiagnosticoRelacionalPage = () => {
               {/* ── CORE SCORES ── */}
               {aiAnalysis.core_scores && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">Indicadores Principales</h2>
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">🎯 Indicadores Principales</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {Object.entries(CORE_LABELS).map(([key, meta]) => {
                       const val = aiAnalysis.core_scores[key] ?? 0
@@ -1593,7 +1686,7 @@ const DiagnosticoRelacionalPage = () => {
               {/* ── RADAR CHART (colored) ── */}
               {aiAnalysis.radar_scores && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">Radar Relacional</h2>
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">📊 Radar Relacional</h2>
                   <div className="p-6 rounded-2xl border border-white/8 bg-white/[0.02]">
                     <RadarChart scores={aiAnalysis.radar_scores} />
                   </div>
@@ -1603,7 +1696,7 @@ const DiagnosticoRelacionalPage = () => {
               {/* ── PROFILE BARS (fixed: raw values + health indicators) ── */}
               {aiAnalysis.profile_scores && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">Perfil Emocional</h2>
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">📈 Perfil Emocional</h2>
                   <div className="space-y-4">
                     {Object.entries(PROFILE_LABELS).map(([key, meta]) => {
                       const val = aiAnalysis.profile_scores[key] ?? 0
@@ -1647,7 +1740,7 @@ const DiagnosticoRelacionalPage = () => {
                     <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center">
                       <Sparkles className="w-5 h-5 text-violet-400/50" strokeWidth={1.5} />
                     </div>
-                    <h2 className="text-xl font-light text-white/70">Lo que tu historia reveló</h2>
+                    <h2 className="text-xl font-light text-white/70">✨ Lo que tu historia reveló</h2>
                   </div>
                   <div className="space-y-3">
                     {aiAnalysis.empathic_opening.split('\n\n').map((p, i) => {
@@ -1674,18 +1767,18 @@ const DiagnosticoRelacionalPage = () => {
               {/* ── INDIVIDUAL INSIGHTS (premium cards) ── */}
               {aiAnalysis.individual_insights && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">Tu Perfil Relacional</h2>
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">🔍 Tu Perfil Relacional</h2>
                   <div className="space-y-4">
                     {[
-                      { key: 'emotional_style', label: 'Estilo emocional', icon: Heart, accent: 'violet' },
-                      { key: 'attachment_patterns', label: 'Patrones de apego', icon: Users, accent: 'blue' },
-                      { key: 'defense_mechanisms', label: 'Mecanismos de defensa', icon: Shield, accent: 'amber' },
-                      { key: 'what_they_seek_in_love', label: 'Lo que buscas en el amor', icon: Sparkles, accent: 'pink' },
-                      { key: 'emotional_triggers', label: 'Detonantes emocionales', icon: Zap, accent: 'red' },
-                      { key: 'repeating_patterns', label: 'Patrones que se repiten', icon: Activity, accent: 'fuchsia' },
-                      { key: 'hidden_needs', label: 'Necesidades ocultas', icon: Eye, accent: 'indigo' },
-                      { key: 'role_in_relationship', label: 'Tu rol en la relación', icon: Target, accent: 'emerald' },
-                      { key: 'likely_relational_attractor', label: 'Atractor relacional', icon: Brain, accent: 'cyan' }
+                      { key: 'emotional_style', label: '🎭 Estilo emocional', icon: Heart, accent: 'violet' },
+                      { key: 'attachment_patterns', label: '🔗 Patrones de apego', icon: Users, accent: 'blue' },
+                      { key: 'defense_mechanisms', label: '🛡️ Mecanismos de defensa', icon: Shield, accent: 'amber' },
+                      { key: 'what_they_seek_in_love', label: '💕 Lo que buscas en el amor', icon: Sparkles, accent: 'pink' },
+                      { key: 'emotional_triggers', label: '⚡ Detonantes emocionales', icon: Zap, accent: 'red' },
+                      { key: 'repeating_patterns', label: '🔄 Patrones que se repiten', icon: Activity, accent: 'fuchsia' },
+                      { key: 'hidden_needs', label: '🔮 Necesidades ocultas', icon: Eye, accent: 'indigo' },
+                      { key: 'role_in_relationship', label: '👤 Tu rol en la relación', icon: Target, accent: 'emerald' },
+                      { key: 'likely_relational_attractor', label: '🧲 Atractor relacional', icon: Brain, accent: 'cyan' }
                     ].map(({ key, label, icon: Icon, accent }) => {
                       const text = aiAnalysis.individual_insights[key]
                       if (!text) return null
@@ -1701,23 +1794,33 @@ const DiagnosticoRelacionalPage = () => {
                         cyan: { bg: 'bg-cyan-500/10', border: 'border-cyan-500/15', line: 'from-cyan-500/30 to-cyan-400/10', icon: 'text-cyan-400/60', dot: 'text-cyan-400/40' }
                       }
                       const a = accentClasses[accent]
+                      const paragraphs = text.split('\n\n')
+                      const isExpanded = expandedInsights[key]
+                      const visibleParagraphs = isExpanded ? paragraphs : paragraphs.slice(0, 1)
                       return (
-                        <div key={key} className="p-5 rounded-2xl border border-white/8 bg-gradient-to-br from-white/[0.02] to-transparent overflow-hidden relative">
+                        <div key={key} className="p-5 rounded-2xl border border-white/8 bg-gradient-to-br from-white/[0.02] to-transparent overflow-hidden relative cursor-pointer group"
+                          onClick={() => toggleInsight(key)}>
                           <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${a.line}`} />
                           <div className="flex items-center gap-3 mb-3">
                             <div className={`w-8 h-8 rounded-lg ${a.bg} border ${a.border} flex items-center justify-center`}>
                               <Icon className={`w-4 h-4 ${a.icon}`} strokeWidth={1.5} />
                             </div>
-                            <h3 className="text-white/80 font-light">{label}</h3>
+                            <h3 className="text-white/80 font-light flex-1">{label}</h3>
+                            {paragraphs.length > 1 && (
+                              <ChevronDown className={`w-4 h-4 text-white/30 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} strokeWidth={1.5} />
+                            )}
                           </div>
                           <div className="text-white/55 text-sm font-light leading-relaxed space-y-2">
-                            {text.split('\n\n').map((p, i) => (
+                            {visibleParagraphs.map((p, i) => (
                               <div key={i} className="flex items-start gap-2">
                                 <span className={`${a.dot} mt-1.5 text-[6px]`}>●</span>
                                 <p>{renderBold(p)}</p>
                               </div>
                             ))}
                           </div>
+                          {paragraphs.length > 1 && !isExpanded && (
+                            <p className={`text-xs mt-2 ${a.icon} opacity-60`}>Toca para ver más →</p>
+                          )}
                         </div>
                       )
                     })}
@@ -1728,37 +1831,58 @@ const DiagnosticoRelacionalPage = () => {
               {/* ── COUPLE INSIGHTS (premium) ── */}
               {aiAnalysis.couple_insights && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">Dinámica de Pareja</h2>
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">👥 Dinámica de Pareja</h2>
                   <div className="space-y-4">
                     {[
-                      { key: 'real_relationship_dynamic', label: 'Dinámica real de la relación', icon: Activity },
-                      { key: 'unconscious_patterns', label: 'Patrones inconscientes', icon: Brain },
-                      { key: 'conflict_and_defense', label: 'Conflicto y defensa', icon: Shield },
-                      { key: 'distancing_dynamics', label: 'Dinámica de distanciamiento', icon: TrendingDown },
-                      { key: 'attachment_and_support', label: 'Apego y apoyo', icon: Heart },
-                      { key: 'strengths_of_the_relationship', label: 'Fortalezas de la relación', icon: Star },
-                      { key: 'critical_moments_of_the_bond', label: 'Momentos críticos del vínculo', icon: Zap },
-                      { key: 'global_relationship_diagnosis', label: 'Diagnóstico global', icon: Target }
-                    ].map(({ key, label, icon: Icon }) => {
+                      { key: 'real_relationship_dynamic', label: '🔄 Dinámica real de la relación', icon: Activity, accent: 'violet' },
+                      { key: 'unconscious_patterns', label: '🧩 Patrones inconscientes', icon: Brain, accent: 'indigo' },
+                      { key: 'conflict_and_defense', label: '⚔️ Conflicto y defensa', icon: Shield, accent: 'red' },
+                      { key: 'distancing_dynamics', label: '📏 Dinámica de distanciamiento', icon: TrendingDown, accent: 'amber' },
+                      { key: 'attachment_and_support', label: '🤝 Apego y apoyo', icon: Heart, accent: 'emerald' },
+                      { key: 'strengths_of_the_relationship', label: '💪 Fortalezas de la relación', icon: Star, accent: 'cyan' },
+                      { key: 'critical_moments_of_the_bond', label: '⚡ Momentos críticos del vínculo', icon: Zap, accent: 'fuchsia' },
+                      { key: 'global_relationship_diagnosis', label: '🩺 Diagnóstico global', icon: Target, accent: 'pink' }
+                    ].map(({ key, label, icon: Icon, accent }) => {
                       const text = aiAnalysis.couple_insights[key]
                       if (!text) return null
+                      const accentMap = {
+                        violet: { bg: 'bg-violet-500/10', border: 'border-violet-500/15', line: 'from-violet-500/20 to-violet-400/10', icon: 'text-violet-400/60', dot: 'text-violet-400/30' },
+                        indigo: { bg: 'bg-indigo-500/10', border: 'border-indigo-500/15', line: 'from-indigo-500/20 to-indigo-400/10', icon: 'text-indigo-400/60', dot: 'text-indigo-400/30' },
+                        red: { bg: 'bg-red-500/10', border: 'border-red-500/15', line: 'from-red-500/20 to-red-400/10', icon: 'text-red-400/60', dot: 'text-red-400/30' },
+                        amber: { bg: 'bg-amber-500/10', border: 'border-amber-500/15', line: 'from-amber-500/20 to-amber-400/10', icon: 'text-amber-400/60', dot: 'text-amber-400/30' },
+                        emerald: { bg: 'bg-emerald-500/10', border: 'border-emerald-500/15', line: 'from-emerald-500/20 to-emerald-400/10', icon: 'text-emerald-400/60', dot: 'text-emerald-400/30' },
+                        cyan: { bg: 'bg-cyan-500/10', border: 'border-cyan-500/15', line: 'from-cyan-500/20 to-cyan-400/10', icon: 'text-cyan-400/60', dot: 'text-cyan-400/30' },
+                        fuchsia: { bg: 'bg-fuchsia-500/10', border: 'border-fuchsia-500/15', line: 'from-fuchsia-500/20 to-fuchsia-400/10', icon: 'text-fuchsia-400/60', dot: 'text-fuchsia-400/30' },
+                        pink: { bg: 'bg-pink-500/10', border: 'border-pink-500/15', line: 'from-pink-500/20 to-pink-400/10', icon: 'text-pink-400/60', dot: 'text-pink-400/30' }
+                      }
+                      const a = accentMap[accent]
+                      const paragraphs = text.split('\n\n')
+                      const isExpanded = expandedInsights[`couple_${key}`]
+                      const visibleParagraphs = isExpanded ? paragraphs : paragraphs.slice(0, 1)
                       return (
-                        <div key={key} className="p-5 rounded-2xl border border-white/8 bg-gradient-to-br from-white/[0.02] to-transparent overflow-hidden relative">
-                          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-pink-500/20 to-violet-500/20" />
+                        <div key={key} className="p-5 rounded-2xl border border-white/8 bg-gradient-to-br from-white/[0.02] to-transparent overflow-hidden relative cursor-pointer group"
+                          onClick={() => toggleInsight(`couple_${key}`)}>
+                          <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${a.line}`} />
                           <div className="flex items-center gap-3 mb-3">
-                            <div className="w-8 h-8 rounded-lg bg-pink-500/10 border border-pink-500/15 flex items-center justify-center">
-                              <Icon className="w-4 h-4 text-pink-400/60" strokeWidth={1.5} />
+                            <div className={`w-8 h-8 rounded-lg ${a.bg} border ${a.border} flex items-center justify-center`}>
+                              <Icon className={`w-4 h-4 ${a.icon}`} strokeWidth={1.5} />
                             </div>
-                            <h3 className="text-white/80 font-light">{label}</h3>
+                            <h3 className="text-white/80 font-light flex-1">{label}</h3>
+                            {paragraphs.length > 1 && (
+                              <ChevronDown className={`w-4 h-4 text-white/30 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} strokeWidth={1.5} />
+                            )}
                           </div>
                           <div className="text-white/55 text-sm font-light leading-relaxed space-y-2">
-                            {text.split('\n\n').map((p, i) => (
+                            {visibleParagraphs.map((p, i) => (
                               <div key={i} className="flex items-start gap-2">
-                                <span className="text-pink-400/30 mt-1.5 text-[6px]">●</span>
+                                <span className={`${a.dot} mt-1.5 text-[6px]`}>●</span>
                                 <p>{renderBold(p)}</p>
                               </div>
                             ))}
                           </div>
+                          {paragraphs.length > 1 && !isExpanded && (
+                            <p className={`text-xs mt-2 ${a.icon} opacity-60`}>Toca para ver más →</p>
+                          )}
                         </div>
                       )
                     })}
@@ -1769,17 +1893,34 @@ const DiagnosticoRelacionalPage = () => {
               {/* ── DOMINANT CYCLES (premium) ── */}
               {aiAnalysis.dominant_cycles?.length > 0 && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">Ciclos Relacionales Dominantes</h2>
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">🔄 Ciclos Relacionales Dominantes</h2>
                   <div className="space-y-4">
                     {aiAnalysis.dominant_cycles.map((cycle, i) => (
                       <div key={i} className="p-5 rounded-2xl border border-amber-500/15 bg-gradient-to-br from-amber-500/[0.03] to-transparent relative overflow-hidden">
                         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-500/30 to-orange-500/30" />
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/15 flex items-center justify-center">
-                            <Activity className="w-4 h-4 text-amber-400/60" strokeWidth={1.5} />
+                        {/* Cycle name as visual badge */}
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+                            <span className="text-lg">🔁</span>
                           </div>
-                          <h3 className="text-amber-300/80 font-light">{cycle.name}</h3>
+                          <div>
+                            <h3 className="text-amber-300/80 font-medium">{cycle.name}</h3>
+                            <p className="text-white/30 text-xs">Ciclo {i + 1} detectado</p>
+                          </div>
                         </div>
+                        {/* Visual cycle flow arrow */}
+                        {cycle.name && (
+                          <div className="flex items-center justify-center gap-2 mb-4 py-3 px-4 rounded-xl bg-amber-500/[0.05] border border-amber-500/10">
+                            {cycle.name.split(/[-–→]/g).map((step, si, arr) => (
+                              <span key={si} className="flex items-center gap-2">
+                                <span className="text-amber-300/70 text-sm font-light">{step.trim()}</span>
+                                {si < arr.length - 1 && <ArrowRight className="w-3.5 h-3.5 text-amber-400/40" />}
+                              </span>
+                            ))}
+                            <ArrowRight className="w-3.5 h-3.5 text-amber-400/40" />
+                            <span className="text-amber-400/50 text-[10px]">↻</span>
+                          </div>
+                        )}
                         <div className="text-white/55 text-sm font-light leading-relaxed space-y-2">
                           {(cycle.explanation || '').split('\n\n').map((p, j) => (
                             <div key={j} className="flex items-start gap-2">
@@ -1797,20 +1938,28 @@ const DiagnosticoRelacionalPage = () => {
               {/* ── EMOTIONAL SENSITIVITIES (premium) ── */}
               {aiAnalysis.activated_emotional_sensitivities?.length > 0 && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">Sensibilidades Emocionales Activadas</h2>
-                  <div className="space-y-4">
-                    {aiAnalysis.activated_emotional_sensitivities.map((sens, i) => (
-                      <div key={i} className="p-5 rounded-2xl border border-rose-500/15 bg-gradient-to-br from-rose-500/[0.03] to-transparent relative overflow-hidden">
-                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-rose-500/30 to-pink-500/30" />
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="w-8 h-8 rounded-lg bg-rose-500/10 border border-rose-500/15 flex items-center justify-center">
-                            <AlertTriangle className="w-4 h-4 text-rose-400/60" strokeWidth={1.5} />
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">💔 Sensibilidades Emocionales Activadas</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {aiAnalysis.activated_emotional_sensitivities.map((sens, i) => {
+                      const sensEmojis = ['😰', '😢', '😔', '🥺', '😶', '💫']
+                      return (
+                        <div key={i} className="p-5 rounded-2xl border border-rose-500/15 bg-gradient-to-br from-rose-500/[0.03] to-transparent relative overflow-hidden">
+                          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-rose-500/30 to-pink-500/30" />
+                          <div className="flex items-center gap-3 mb-3">
+                            <span className="text-xl">{sensEmojis[i % sensEmojis.length]}</span>
+                            <h3 className="text-rose-300/80 font-light flex-1">{sens.name}</h3>
                           </div>
-                          <h3 className="text-rose-300/80 font-light">{sens.name}</h3>
+                          {/* Severity indicator */}
+                          <div className="flex items-center gap-1.5 mb-3">
+                            {[1, 2, 3].map(dot => (
+                              <div key={dot} className={`w-2 h-2 rounded-full ${dot <= 2 ? 'bg-rose-400/50' : 'bg-white/10'}`} />
+                            ))}
+                            <span className="text-rose-400/40 text-[10px] ml-1">activada</span>
+                          </div>
+                          <p className="text-white/55 text-sm font-light leading-relaxed">{renderBold(sens.description)}</p>
                         </div>
-                        <p className="text-white/55 text-sm font-light leading-relaxed">{renderBold(sens.description)}</p>
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 </motion.div>
               )}
@@ -1824,7 +1973,7 @@ const DiagnosticoRelacionalPage = () => {
                     <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/15 flex items-center justify-center">
                       <Zap className="w-5 h-5 text-cyan-400/50" strokeWidth={1.5} />
                     </div>
-                    <h2 className="text-xl font-light text-white/70">Observación Clave</h2>
+                    <h2 className="text-xl font-light text-white/70">💡 Observación Clave</h2>
                   </div>
                   <p className="text-white/60 text-sm font-light leading-relaxed">{renderBold(aiAnalysis.key_insight)}</p>
                 </motion.div>
@@ -1839,7 +1988,7 @@ const DiagnosticoRelacionalPage = () => {
                     <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center">
                       <Star className="w-5 h-5 text-emerald-400/50" strokeWidth={1.5} />
                     </div>
-                    <h2 className="text-xl font-light text-white/70">Recomendación Profesional</h2>
+                    <h2 className="text-xl font-light text-white/70">🌟 Recomendación Profesional</h2>
                   </div>
                   <div className="text-white/60 text-sm font-light leading-relaxed space-y-3">
                     {aiAnalysis.recommendation.split('\n\n').map((p, i) => (
@@ -1855,7 +2004,7 @@ const DiagnosticoRelacionalPage = () => {
               {/* ── SESSION WORK ITEMS (premium) ── */}
               {aiAnalysis.session_work_items?.length > 0 && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2 }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">Temas para Sesión</h2>
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">📋 Temas para Sesión</h2>
                   <div className="space-y-3">
                     {aiAnalysis.session_work_items.map((item, i) => {
                       const { title, description } = parseItemTitle(item)

@@ -1,12 +1,12 @@
-// Script para pre-generar los 42 audios de las preguntas del diagnóstico relacional
-// Usa ElevenLabs API con voz Bella (multilingual v2)
+// Script para pre-generar los 45 audios de las preguntas del diagnóstico relacional
+// Usa ElevenLabs API con voz Nicole (multilingual v2) — whispery, intimate, Latin feel
 // Se ejecuta UNA VEZ y los MP3 se guardan como archivos estáticos
 
 const fs = require('fs')
 const path = require('path')
 
 const API_KEY = 'sk_77f6a31d112e8138e7d05a41f45466a6e72f556097aba8a7'
-const VOICE_ID = 'EXAVITQu4vr4xnSDxMaL' // Bella - soft, warm female
+const VOICE_ID = 'piTKgcLEGmPE4e6mEKli' // Nicole - whispery, intimate, hypnotic
 const MODEL = 'eleven_multilingual_v2'
 const OUTPUT_DIR = path.join(__dirname, 'public', 'audio', 'diagnostico')
 
@@ -49,6 +49,9 @@ const QUESTIONS = [
   { id: 'Q36', text: 'Hay partes de mí que mi pareja todavía no conoce, como por ejemplo...' },
   { id: 'Q37', text: 'Si pudiera cambiar una sola cosa de nosotros, sería...' },
   { id: 'Q38', text: 'Lo que más extraño de nosotros es...' },
+  { id: 'Q43', text: 'En nuestra intimidad física, yo me siento...' },
+  { id: 'Q44', text: 'Hay algo en nuestra vida sexual que me gustaría que fuera diferente, como...' },
+  { id: 'Q45', text: 'Si pudiera expresar un deseo o fantasía sin ser juzgado o juzgada, diría que...' },
   { id: 'Q39', text: 'Si esta relación terminara mañana, lo que más me dolería sería...' },
   { id: 'Q40', text: 'Si hay algo que siento que se repite una y otra vez entre nosotros es...' },
   { id: 'Q41', text: 'Cuando nuestra relación está en su mejor momento es porque...' },
@@ -58,13 +61,9 @@ const QUESTIONS = [
 async function generateAudio(question) {
   const outPath = path.join(OUTPUT_DIR, `${question.id}.mp3`)
   
-  // Skip if already generated
+  // Force regeneration with new voice
   if (fs.existsSync(outPath)) {
-    const stat = fs.statSync(outPath)
-    if (stat.size > 1000) {
-      console.log(`✓ ${question.id} ya existe (${stat.size} bytes)`)
-      return true
-    }
+    fs.unlinkSync(outPath)
   }
 
   try {
@@ -78,7 +77,7 @@ async function generateAudio(question) {
       body: JSON.stringify({
         text: question.text,
         model_id: MODEL,
-        voice_settings: { stability: 0.55, similarity_boost: 0.75, style: 0.3 }
+        voice_settings: { stability: 0.40, similarity_boost: 0.65, style: 0.50 }
       })
     })
 

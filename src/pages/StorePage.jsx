@@ -16,18 +16,18 @@ const StorePage = () => {
   const products = [
     {
       id: 7,
-      name: 'Diagnóstico Relacional',
+      name: 'Test: ¿Cómo está tu relación realmente?',
       category: 'Psicología de Pareja',
       price: '$349 MXN',
       duration: '~30 min',
       image: '/pareja imagen.jpg',
-      description: 'Descubre los patrones invisibles que sostienen tu relación. 42 preguntas por voz, análisis profundo y reporte descargable.',
-      shortDesc: 'Lo que tu relación no te dice, pero tú ya sientes',
+      description: 'Habla libremente por micrófono. Nuestro algoritmo analiza tus palabras y genera un reporte profundo con gráficas, patrones invisibles y recomendaciones personalizadas.',
+      shortDesc: 'Descubre los patrones que se repiten sin que lo notes — y por qué sigues sintiéndote igual.',
       benefits: [
-        'Detecta ciclos emocionales repetitivos',
-        'Identifica patrones de apego y conflicto',
-        'Reporte con radar, barras y perfil completo',
-        'PDF descargable al instante'
+        'Habla por micrófono — como platicar con un psicólogo',
+        'Detecta ciclos emocionales que se repiten sin que lo notes',
+        'Identifica tu estilo de apego y mecanismos de defensa',
+        'Reporte visual: radar, barras, análisis y PDF descargable'
       ],
       gradient: 'from-violet-600/20 to-fuchsia-600/20',
       borderGradient: 'from-violet-500 to-fuchsia-500',
@@ -315,7 +315,7 @@ const StorePage = () => {
 
                   {/* Benefits preview */}
                   <div className="space-y-2">
-                    {product.benefits.slice(0, 2).map((benefit, i) => (
+                    {product.benefits.slice(0, product.isDiagnostic ? 4 : 2).map((benefit, i) => (
                       <div key={i} className="flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4 text-violet-400 flex-shrink-0" />
                         <span className="text-xs text-white/50 font-light">{benefit}</span>
