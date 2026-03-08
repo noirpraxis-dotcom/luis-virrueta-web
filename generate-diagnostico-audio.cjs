@@ -1,12 +1,12 @@
 // Script para pre-generar los 45 audios de las preguntas del diagnóstico relacional
-// Usa ElevenLabs API con voz Nicole (multilingual v2) — whispery, intimate, Latin feel
+// Usa ElevenLabs API con voz Charlotte (multilingual v2) — warm, clear, calming storytelling
 // Se ejecuta UNA VEZ y los MP3 se guardan como archivos estáticos
 
 const fs = require('fs')
 const path = require('path')
 
 const API_KEY = 'sk_77f6a31d112e8138e7d05a41f45466a6e72f556097aba8a7'
-const VOICE_ID = 'piTKgcLEGmPE4e6mEKli' // Nicole - whispery, intimate, hypnotic
+const VOICE_ID = 'XB0fDUnXU5powFXDhCwa' // Charlotte - warm, clear, calming female
 const MODEL = 'eleven_multilingual_v2'
 const OUTPUT_DIR = path.join(__dirname, 'public', 'audio', 'diagnostico')
 
@@ -77,7 +77,7 @@ async function generateAudio(question) {
       body: JSON.stringify({
         text: question.text,
         model_id: MODEL,
-        voice_settings: { stability: 0.40, similarity_boost: 0.65, style: 0.50 }
+        voice_settings: { stability: 0.60, similarity_boost: 0.75, style: 0.35 }
       })
     })
 

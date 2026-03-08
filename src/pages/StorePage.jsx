@@ -20,7 +20,7 @@ const StorePage = () => {
       category: 'Psicología de Pareja',
       price: '$349 MXN',
       duration: '~30 min',
-      image: '/pareja imagen.jpg',
+      image: '/TEST PAREJA/IMAGEN (1).jpg',
       description: 'Habla libremente por micrófono. Nuestro algoritmo analiza tus palabras y genera un reporte profundo con gráficas, patrones invisibles y recomendaciones personalizadas.',
       shortDesc: 'Descubre los patrones que se repiten sin que lo notes — y por qué sigues sintiéndote igual.',
       benefits: [
