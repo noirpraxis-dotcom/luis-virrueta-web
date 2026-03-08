@@ -6,7 +6,7 @@ import {
   Check, CheckCircle, Clock, FileText, Mail, Send, Download, Sparkles, Eye,
   Lock, Star, Activity, BarChart3, Zap, Layers, CreditCard, Loader2, Tag,
   Mic, MicOff, TrendingUp, TrendingDown, AlertTriangle, Play, ChevronDown,
-  XCircle
+  XCircle, Volume2
 } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 import jsPDF from 'jspdf'
@@ -459,7 +459,11 @@ const DiagnosticoRelacionalPage = () => {
   const [uiMode, setUiMode] = useState('voice')
   const [interim, setInterim] = useState('')
   const [recording, setRecording] = useState(false)
+  const [audioPlaying, setAudioPlaying] = useState(false)
   const recognitionRef = useRef(null)
+  const audioRef = useRef(null)
+  const currentQuestionRef = useRef(currentQuestion)
+  currentQuestionRef.current = currentQuestion
 
   // AI analysis
   const [aiAnalysis, setAiAnalysis] = useState(null)
@@ -488,14 +492,66 @@ const DiagnosticoRelacionalPage = () => {
     }
   }, [searchParams])
 
-  // Reset voice state when question changes
+  // Start mic recording (used by auto-play flow and toggleMic)
+  const startRecordingFn = useCallback(() => {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SR) { setUiMode('text'); return }
+    try { recognitionRef.current?.abort() } catch {}
+    const recognition = new SR()
+    recognition.lang = 'es-MX'
+    recognition.continuous = true
+    recognition.interimResults = true
+    recognition.onresult = (e) => {
+      let inter = ''
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) {
+          const transcript = e.results[i][0].transcript
+          setResponses(prev => {
+            const qId = QUESTIONS[currentQuestionRef.current]?.id
+            if (!qId) return prev
+            return { ...prev, [qId]: (prev[qId] || '') + ' ' + transcript }
+          })
+        } else {
+          inter += e.results[i][0].transcript
+        }
+      }
+      setInterim(inter)
+    }
+    recognition.onerror = () => { setRecording(false); setInterim('') }
+    recognition.onend = () => { setRecording(false); setInterim('') }
+    recognitionRef.current = recognition
+    recognition.start()
+    setRecording(true)
+  }, [])
+
+  const startRecordingRef = useRef(startRecordingFn)
+  startRecordingRef.current = startRecordingFn
+
+  // Reset voice state + play question audio when question changes
   useEffect(() => {
     setInterim('')
-    if (recording) {
-      recognitionRef.current?.stop()
-      setRecording(false)
+    if (recognitionRef.current) { try { recognitionRef.current.stop() } catch {} }
+    setRecording(false)
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current = null }
+    setAudioPlaying(false)
+
+    // Play pre-recorded question audio
+    if (uiMode === 'voice' && stage === 'questionnaire') {
+      const qId = QUESTIONS[currentQuestion]?.id
+      if (qId) {
+        const audio = new Audio(`/audio/diagnostico/${qId}.mp3`)
+        audioRef.current = audio
+        setAudioPlaying(true)
+        audio.onended = () => {
+          setAudioPlaying(false)
+          setTimeout(() => startRecordingRef.current?.(), 400)
+        }
+        audio.onerror = () => setAudioPlaying(false)
+        audio.play().catch(() => setAudioPlaying(false))
+      }
     }
-  }, [currentQuestion]) // eslint-disable-line react-hooks/exhaustive-deps
+    return () => { if (audioRef.current) { audioRef.current.pause(); audioRef.current = null } }
+  }, [currentQuestion, stage]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-save draft
   useEffect(() => {
@@ -537,36 +593,11 @@ const DiagnosticoRelacionalPage = () => {
       recognitionRef.current?.stop()
       setRecording(false)
       setInterim('')
-      return
+    } else {
+      if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; setAudioPlaying(false) }
+      startRecordingFn()
     }
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition
-    if (!SR) { setUiMode('text'); return }
-    const recognition = new SR()
-    recognition.lang = 'es-MX'
-    recognition.continuous = true
-    recognition.interimResults = true
-    recognition.onresult = (e) => {
-      let inter = ''
-      for (let i = e.resultIndex; i < e.results.length; i++) {
-        if (e.results[i].isFinal) {
-          const transcript = e.results[i][0].transcript
-          setResponses(prev => {
-            const qId = QUESTIONS[currentQuestion]?.id
-            if (!qId) return prev
-            return { ...prev, [qId]: (prev[qId] || '') + ' ' + transcript }
-          })
-        } else {
-          inter += e.results[i][0].transcript
-        }
-      }
-      setInterim(inter)
-    }
-    recognition.onerror = () => { setRecording(false); setInterim('') }
-    recognition.onend = () => { setRecording(false); setInterim('') }
-    recognitionRef.current = recognition
-    recognition.start()
-    setRecording(true)
-  }, [recording, currentQuestion])
+  }, [recording, startRecordingFn])
 
   // ─── DISCOUNT HANDLING ─────────────────────────────────────
 
@@ -638,7 +669,7 @@ const DiagnosticoRelacionalPage = () => {
   const currentQ = QUESTIONS[currentQuestion]
   const currentSectionIdx = SECTIONS.findIndex(s => s.name === currentQ?.section)
 
-  // PDF generation
+  // PDF generation — comprehensive report with ALL diagnostic sections
   const generatePDF = useCallback(() => {
     if (!aiAnalysis) return
     setPdfGenerating(true)
@@ -647,68 +678,170 @@ const DiagnosticoRelacionalPage = () => {
       const pw = doc.internal.pageSize.getWidth()
       const m = 15
       let y = 20
+      const maxW = pw - m * 2
+      const checkPage = (needed = 30) => { if (y > 270 - needed) { doc.addPage(); y = 20 } }
+      const addTitle = (title) => { checkPage(20); doc.setFontSize(13); doc.setTextColor(40, 40, 40); doc.text(title, m, y); y += 8 }
+      const addParagraph = (text) => {
+        doc.setFontSize(9); doc.setTextColor(60, 60, 60)
+        const lines = doc.splitTextToSize((text || '').replace(/\*\*/g, ''), maxW)
+        for (const line of lines) { checkPage(6); doc.text(line, m, y); y += 4.5 }
+        y += 3
+      }
 
-      doc.setFontSize(20)
-      doc.setTextColor(40, 40, 40)
-      doc.text('Diagnóstico Relacional', pw / 2, y, { align: 'center' })
-      y += 12
+      // Header
+      doc.setFontSize(20); doc.setTextColor(40, 40, 40)
+      doc.text('Diagnóstico Relacional', pw / 2, y, { align: 'center' }); y += 6
+      doc.setFontSize(9); doc.setTextColor(120, 120, 120)
+      doc.text('Generado a partir de 42 respuestas en 6 fases psicológicas', pw / 2, y, { align: 'center' }); y += 12
 
+      // Relationship type
+      if (aiAnalysis.relationship_type) {
+        addTitle('Tipo de Relación')
+        doc.setFontSize(11); doc.setTextColor(80, 50, 120)
+        doc.text(aiAnalysis.relationship_type.label || '', m, y); y += 7
+        addParagraph(aiAnalysis.relationship_type.explanation)
+      }
+
+      // Core scores
       if (aiAnalysis.core_scores) {
-        doc.setFontSize(13)
-        doc.text('Indicadores Principales', m, y); y += 8
+        addTitle('Indicadores Principales')
         doc.setFontSize(10)
         for (const [key, meta] of Object.entries(CORE_LABELS)) {
-          const val = aiAnalysis.core_scores[key] ?? 0
-          doc.text(`${meta.label}: ${val}%`, m, y); y += 6
+          checkPage(8); const val = aiAnalysis.core_scores[key] ?? 0
+          doc.setTextColor(60, 60, 60); doc.text(`${meta.label}: ${val}%`, m, y); y += 6
         }
         y += 4
       }
 
-      if (aiAnalysis.relationship_type) {
-        doc.setFontSize(13)
-        doc.text('Tipo de Relación', m, y); y += 8
+      // Radar scores
+      if (aiAnalysis.radar_scores) {
+        addTitle('Radar Relacional')
         doc.setFontSize(10)
-        doc.text(aiAnalysis.relationship_type.label || '', m, y); y += 6
-        const expLines = doc.splitTextToSize(
-          (aiAnalysis.relationship_type.explanation || '').replace(/\*\*/g, ''), pw - m * 2
-        )
-        doc.setFontSize(9)
-        doc.text(expLines, m, y); y += expLines.length * 4.5 + 6
+        for (const [key, label] of Object.entries(RADAR_LABELS)) {
+          checkPage(8); const val = aiAnalysis.radar_scores[key] ?? 0
+          doc.setTextColor(60, 60, 60); doc.text(`${label}: ${val}%`, m, y); y += 6
+        }
+        y += 4
       }
 
+      // Profile scores
+      if (aiAnalysis.profile_scores) {
+        addTitle('Perfil Emocional')
+        doc.setFontSize(10)
+        for (const [key, meta] of Object.entries(PROFILE_LABELS)) {
+          checkPage(8); const val = aiAnalysis.profile_scores[key] ?? 0
+          const healthPct = meta.inverted ? (100 - val) : val
+          const badge = meta.inverted ? (healthPct >= 55 ? ' ✓' : ' ⚠') : ''
+          doc.setTextColor(60, 60, 60); doc.text(`${meta.label}: ${val}%${badge}`, m, y); y += 6
+        }
+        y += 4
+      }
+
+      // Empathic opening
       if (aiAnalysis.empathic_opening) {
-        if (y > 230) { doc.addPage(); y = 20 }
-        doc.setFontSize(13)
-        doc.text('Lo que tu historia reveló', m, y); y += 8
-        doc.setFontSize(9)
-        const eoLines = doc.splitTextToSize(aiAnalysis.empathic_opening.replace(/\*\*/g, ''), pw - m * 2)
-        doc.text(eoLines, m, y); y += eoLines.length * 4.5 + 6
+        addTitle('Lo que tu historia reveló')
+        addParagraph(aiAnalysis.empathic_opening)
       }
 
+      // Individual insights (9 sections)
+      if (aiAnalysis.individual_insights) {
+        doc.addPage(); y = 20
+        doc.setFontSize(15); doc.setTextColor(40, 40, 40)
+        doc.text('Tu Perfil Relacional', pw / 2, y, { align: 'center' }); y += 12
+        const insightMap = [
+          ['emotional_style', 'Estilo emocional'],
+          ['attachment_patterns', 'Patrones de apego'],
+          ['defense_mechanisms', 'Mecanismos de defensa'],
+          ['what_they_seek_in_love', 'Lo que buscas en el amor'],
+          ['emotional_triggers', 'Detonantes emocionales'],
+          ['repeating_patterns', 'Patrones que se repiten'],
+          ['hidden_needs', 'Necesidades ocultas'],
+          ['role_in_relationship', 'Tu rol en la relación'],
+          ['likely_relational_attractor', 'Atractor relacional']
+        ]
+        for (const [key, label] of insightMap) {
+          const text = aiAnalysis.individual_insights[key]
+          if (!text) continue
+          checkPage(20); doc.setFontSize(11); doc.setTextColor(80, 50, 120)
+          doc.text(label, m, y); y += 7
+          addParagraph(text)
+        }
+      }
+
+      // Couple insights (8 sections)
+      if (aiAnalysis.couple_insights) {
+        doc.addPage(); y = 20
+        doc.setFontSize(15); doc.setTextColor(40, 40, 40)
+        doc.text('Dinámica de Pareja', pw / 2, y, { align: 'center' }); y += 12
+        const coupleMap = [
+          ['real_relationship_dynamic', 'Dinámica real de la relación'],
+          ['unconscious_patterns', 'Patrones inconscientes'],
+          ['conflict_and_defense', 'Conflicto y defensa'],
+          ['distancing_dynamics', 'Dinámica de distanciamiento'],
+          ['attachment_and_support', 'Apego y apoyo'],
+          ['strengths_of_the_relationship', 'Fortalezas de la relación'],
+          ['critical_moments_of_the_bond', 'Momentos críticos del vínculo'],
+          ['global_relationship_diagnosis', 'Diagnóstico global']
+        ]
+        for (const [key, label] of coupleMap) {
+          const text = aiAnalysis.couple_insights[key]
+          if (!text) continue
+          checkPage(20); doc.setFontSize(11); doc.setTextColor(80, 50, 120)
+          doc.text(label, m, y); y += 7
+          addParagraph(text)
+        }
+      }
+
+      // Dominant cycles
+      if (aiAnalysis.dominant_cycles?.length > 0) {
+        addTitle('Ciclos Relacionales Dominantes')
+        for (const cycle of aiAnalysis.dominant_cycles) {
+          checkPage(16); doc.setFontSize(10); doc.setTextColor(80, 60, 40)
+          doc.text(`• ${cycle.name}`, m, y); y += 6
+          addParagraph(cycle.explanation)
+        }
+      }
+
+      // Emotional sensitivities
+      if (aiAnalysis.activated_emotional_sensitivities?.length > 0) {
+        addTitle('Sensibilidades Emocionales Activadas')
+        for (const sens of aiAnalysis.activated_emotional_sensitivities) {
+          checkPage(16); doc.setFontSize(10); doc.setTextColor(120, 40, 60)
+          doc.text(`• ${sens.name}`, m, y); y += 6
+          addParagraph(sens.description)
+        }
+      }
+
+      // Key insight
       if (aiAnalysis.key_insight) {
-        if (y > 240) { doc.addPage(); y = 20 }
-        doc.setFontSize(13)
-        doc.text('Observación Clave', m, y); y += 8
-        doc.setFontSize(9)
-        const kiLines = doc.splitTextToSize(aiAnalysis.key_insight.replace(/\*\*/g, ''), pw - m * 2)
-        doc.text(kiLines, m, y); y += kiLines.length * 4.5 + 6
+        addTitle('Observación Clave')
+        addParagraph(aiAnalysis.key_insight)
       }
 
+      // Recommendation
       if (aiAnalysis.recommendation) {
-        if (y > 230) { doc.addPage(); y = 20 }
-        doc.setFontSize(13)
-        doc.text('Recomendación Profesional', m, y); y += 8
-        doc.setFontSize(9)
-        const recLines = doc.splitTextToSize(aiAnalysis.recommendation.replace(/\*\*/g, ''), pw - m * 2)
-        doc.text(recLines, m, y); y += recLines.length * 4.5 + 6
+        addTitle('Recomendación Profesional')
+        addParagraph(aiAnalysis.recommendation)
       }
 
-      if (y > 250) { doc.addPage(); y = 20 }
-      y += 8
+      // Session work items
+      if (aiAnalysis.session_work_items?.length > 0) {
+        addTitle('Temas para Sesión')
+        doc.setFontSize(9); doc.setTextColor(60, 60, 60)
+        aiAnalysis.session_work_items.forEach((item, i) => {
+          checkPage(10)
+          const clean = (item || '').replace(/\*\*/g, '')
+          const lines = doc.splitTextToSize(`${i + 1}. ${clean}`, maxW)
+          for (const line of lines) { checkPage(6); doc.text(line, m, y); y += 4.5 }
+          y += 2
+        })
+      }
+
+      // Footer
+      checkPage(35); y += 8
       doc.setFillColor(245, 245, 245)
       doc.roundedRect(m, y, pw - m * 2, 24, 3, 3, 'F')
-      doc.setFontSize(10)
-      doc.setTextColor(60, 60, 60)
+      doc.setFontSize(10); doc.setTextColor(60, 60, 60)
       doc.text('¿Te gustaría profundizar en estos resultados?', pw / 2, y + 8, { align: 'center' })
       doc.setFontSize(9)
       doc.text('Agenda una sesión con Luis Virrueta.', pw / 2, y + 15, { align: 'center' })
@@ -1128,93 +1261,118 @@ const DiagnosticoRelacionalPage = () => {
                   {/* VOICE MODE */}
                   {uiMode === 'voice' && (
                     <div className="flex flex-col items-center py-2">
-                      <motion.button type="button" onClick={toggleMic}
-                        whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }}
-                        className={`relative w-20 h-20 rounded-full border-2 flex items-center justify-center transition-all duration-300 mb-4 ${
-                          recording
-                            ? 'border-red-400/50 bg-red-500/15 text-red-300'
-                            : 'border-violet-500/40 bg-violet-500/10 text-violet-300 hover:border-violet-400/60 hover:bg-violet-500/20'
-                        }`}>
-                        {recording && (
-                          <motion.div className="absolute inset-0 rounded-full border border-red-400/20"
-                            animate={{ scale: [1, 1.35, 1], opacity: [0.4, 0, 0.4] }}
-                            transition={{ duration: 1.5, repeat: Infinity }} />
-                        )}
-                        {recording ? <MicOff className="w-8 h-8" strokeWidth={1.5} /> : <Mic className="w-8 h-8" strokeWidth={1.5} />}
-                      </motion.button>
 
-                      {!recording && !responses[currentQ?.id]?.trim() && (
-                        <p className="text-white/35 text-sm font-light text-center mb-2">Toca el micrófono para hablar</p>
-                      )}
-                      {recording && (
-                        <p className="text-red-300/60 text-sm font-light animate-pulse text-center mb-2">Escuchando... toca para pausar</p>
-                      )}
-
-                      {/* Live transcript */}
-                      {(responses[currentQ?.id]?.trim() || interim) && (
-                        <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-                          className="w-full mt-4 p-5 rounded-2xl border border-white/8 bg-white/[0.02] text-left">
-                          <p className="text-white/82 text-lg font-light leading-relaxed">
-                            {responses[currentQ?.id] || ''}
-                            {interim && <span className="text-white/30 italic"> {interim}</span>}
-                          </p>
+                      {/* Audio playing indicator */}
+                      {audioPlaying && (
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center mb-4">
+                          <div className="w-16 h-16 rounded-full border-2 border-violet-500/30 bg-violet-500/10 flex items-center justify-center mb-3">
+                            <Volume2 className="w-7 h-7 text-violet-400/70" strokeWidth={1.5} />
+                          </div>
+                          <div className="flex items-center gap-1 h-6 mb-2">
+                            {[0, 1, 2, 3, 4].map(i => (
+                              <motion.div key={i} className="w-0.5 bg-violet-400/40 rounded-full"
+                                animate={{ height: ['4px', '16px', '4px'] }}
+                                transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.15, ease: 'easeInOut' }} />
+                            ))}
+                          </div>
+                          <p className="text-violet-300/45 text-sm font-light">Escucha la pregunta...</p>
                         </motion.div>
                       )}
 
-                      {/* Actions when text exists */}
-                      {responses[currentQ?.id]?.trim() && !recording && (
-                        <div className="flex items-center gap-3 mt-5">
-                          <button onClick={toggleMic}
-                            className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-violet-500/20 text-violet-300/60 text-xs uppercase tracking-wider hover:border-violet-400/35 hover:text-violet-300/90 transition-all">
-                            <Mic className="w-3 h-3" /> Agregar más
-                          </button>
-                          <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                            onClick={handleNext}
-                            className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-violet-500/80 to-fuchsia-500/80 text-white text-xs uppercase tracking-wider hover:from-violet-500 hover:to-fuchsia-500 transition-all">
-                            {currentQuestion < QUESTIONS.length - 1 ? 'Siguiente' : 'Continuar'}
-                            <ArrowRight className="w-3.5 h-3.5" />
+                      {/* Mic area (hidden while audio plays) */}
+                      {!audioPlaying && (
+                        <>
+                          <motion.button type="button" onClick={toggleMic}
+                            whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }}
+                            className={`relative w-20 h-20 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                              recording
+                                ? 'border-red-400/50 bg-red-500/15 text-red-300'
+                                : 'border-violet-500/40 bg-violet-500/10 text-violet-300 hover:border-violet-400/60 hover:bg-violet-500/20'
+                            }`}>
+                            {recording && (
+                              <motion.div className="absolute inset-0 rounded-full border border-red-400/20"
+                                animate={{ scale: [1, 1.35, 1], opacity: [0.4, 0, 0.4] }}
+                                transition={{ duration: 1.5, repeat: Infinity }} />
+                            )}
+                            {recording ? <MicOff className="w-8 h-8" strokeWidth={1.5} /> : <Mic className="w-8 h-8" strokeWidth={1.5} />}
                           </motion.button>
-                        </div>
-                      )}
 
-                      {/* Skip & sample */}
-                      {!responses[currentQ?.id]?.trim() && !recording && (
-                        <div className="flex items-center gap-4 mt-4">
-                          <button onClick={handleNext}
-                            className="text-white/20 text-xs hover:text-white/40 tracking-wider transition-colors">
-                            OMITIR
-                          </button>
-                          {isDevMode && currentQ?.sample && (
-                            <button
-                              onClick={() => {
-                                setResponses(prev => ({ ...prev, [currentQ.id]: currentQ.sample }))
-                                setTimeout(handleNext, 350)
-                              }}
-                              className="flex items-center gap-1.5 text-amber-400/50 text-[10px] hover:text-amber-400/80 tracking-wider transition-colors border border-amber-400/20 rounded-full px-2.5 py-1 hover:border-amber-400/40">
-                              ► Muestra
-                            </button>
+                          {/* Wave animation while recording */}
+                          {recording && (
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-3">
+                              <div className="flex items-center justify-center gap-1.5 h-8 mb-2">
+                                {[0, 1, 2, 3, 4, 5, 6].map(i => (
+                                  <motion.div key={i} className="w-1 bg-red-400/50 rounded-full"
+                                    animate={{ height: ['4px', `${14 + (i % 3) * 6}px`, '4px'] }}
+                                    transition={{ duration: 0.6 + (i % 2) * 0.3, repeat: Infinity, delay: i * 0.09, ease: 'easeInOut' }} />
+                                ))}
+                              </div>
+                              <p className="text-red-300/45 text-sm font-light animate-pulse text-center">Grabando... toca para detener</p>
+                            </motion.div>
                           )}
-                          {isDevMode && (
-                            <button
-                              onClick={() => {
-                                const filled = { ...responses }
-                                QUESTIONS.forEach(q => { if (!filled[q.id]?.trim()) filled[q.id] = q.sample })
-                                setResponses(filled)
-                                fireBackgroundAnalysis(filled)
-                                setStage('email')
-                                scrollToTop()
-                              }}
-                              className="flex items-center gap-1.5 text-orange-400/60 text-[10px] hover:text-orange-400/90 tracking-wider transition-colors border border-orange-400/25 rounded-full px-2.5 py-1 hover:border-orange-400/50">
-                              ⚡ Completar todo
-                            </button>
-                          )}
-                        </div>
-                      )}
 
-                      <button onClick={() => setUiMode('text')}
-                        className="mt-5 text-white/22 text-xs hover:text-white/50 transition-colors underline underline-offset-4">
-                        Prefiero escribir
-                      </button>
+                          {/* Response captured + Siguiente */}
+                          {!recording && responses[currentQ?.id]?.trim() && (
+                            <div className="flex items-center gap-4 mt-4">
+                              <div className="flex items-center gap-1.5 text-emerald-400/60 text-sm font-light">
+                                <Check className="w-3.5 h-3.5" /> Respuesta capturada
+                              </div>
+                              <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                                onClick={handleNext}
+                                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-violet-500/80 to-fuchsia-500/80 text-white text-sm font-light hover:from-violet-500 hover:to-fuchsia-500 transition-all">
+                                {currentQuestion < QUESTIONS.length - 1 ? 'Siguiente' : 'Continuar'}
+                                <ArrowRight className="w-3.5 h-3.5" />
+                              </motion.button>
+                            </div>
+                          )}
+
+                          {/* Additional actions */}
+                          {!recording && (
+                            <div className="flex flex-wrap items-center justify-center gap-3 mt-5">
+                              {responses[currentQ?.id]?.trim() && (
+                                <button onClick={toggleMic}
+                                  className="flex items-center gap-1.5 text-violet-300/40 text-xs hover:text-violet-300/70 transition-colors">
+                                  <Mic className="w-3 h-3" /> Agregar más
+                                </button>
+                              )}
+                              {!responses[currentQ?.id]?.trim() && (
+                                <button onClick={handleNext}
+                                  className="text-white/20 text-xs hover:text-white/40 tracking-wider transition-colors">
+                                  OMITIR
+                                </button>
+                              )}
+                              {isDevMode && currentQ?.sample && !responses[currentQ?.id]?.trim() && (
+                                <button
+                                  onClick={() => {
+                                    setResponses(prev => ({ ...prev, [currentQ.id]: currentQ.sample }))
+                                    setTimeout(handleNext, 350)
+                                  }}
+                                  className="flex items-center gap-1.5 text-amber-400/50 text-[10px] hover:text-amber-400/80 tracking-wider transition-colors border border-amber-400/20 rounded-full px-2.5 py-1 hover:border-amber-400/40">
+                                  ► Muestra
+                                </button>
+                              )}
+                              {isDevMode && (
+                                <button
+                                  onClick={() => {
+                                    const filled = { ...responses }
+                                    QUESTIONS.forEach(q => { if (!filled[q.id]?.trim()) filled[q.id] = q.sample })
+                                    setResponses(filled)
+                                    fireBackgroundAnalysis(filled)
+                                    setStage('email')
+                                    scrollToTop()
+                                  }}
+                                  className="flex items-center gap-1.5 text-orange-400/60 text-[10px] hover:text-orange-400/90 tracking-wider transition-colors border border-orange-400/25 rounded-full px-2.5 py-1 hover:border-orange-400/50">
+                                  ⚡ Completar todo
+                                </button>
+                              )}
+                              <button onClick={() => { if (audioRef.current) { audioRef.current.pause(); audioRef.current = null }; setAudioPlaying(false); setUiMode('text') }}
+                                className="text-white/22 text-xs hover:text-white/50 transition-colors underline underline-offset-4">
+                                Prefiero escribir
+                              </button>
+                            </div>
+                          )}
+                        </>
+                      )}
                     </div>
                   )}
 
