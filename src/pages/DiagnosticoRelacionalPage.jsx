@@ -423,8 +423,8 @@ const DiagnosticoRelacionalPage = () => {
   const [pdfGenerating, setPdfGenerating] = useState(false)
   const [resumeDraft, setResumeDraft] = useState(null)
 
-  // Test mode check
-  const isTestMode = searchParams.get('test') === 'true' || searchParams.get('demo') === 'true'
+  // Test/dev mode: URL param OR LUISPRO discount
+  const isDevMode = searchParams.get('test') === 'true' || searchParams.get('demo') === 'true' || appliedDiscount?.discount === 1.0
 
   const finalPrice = appliedDiscount
     ? Math.round(PRODUCT_PRICE * (1 - appliedDiscount.discount))
@@ -686,143 +686,251 @@ const DiagnosticoRelacionalPage = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       <SEOHead
-        title="Diagnóstico Relacional - Luis Virrueta"
-        description="Diagnóstico psicológico profundo de tu relación con análisis por IA. 34 preguntas, respuestas por voz, reporte completo con gráficas."
+        title="Diagnóstico Relacional Profundo - Luis Virrueta"
+        description="Descubre los patrones invisibles de tu relación. 34 preguntas por voz, análisis psicológico profundo y reporte completo con gráficas."
         url="/tienda/diagnostico-relacional"
       />
 
       <AnimatePresence mode="wait">
 
         {/* ═══════════════════════════════════════════════════════
-            STAGE: HERO — Landing del producto
+            STAGE: HERO — Landing profesional
         ═══════════════════════════════════════════════════════ */}
         {stage === 'hero' && (
           <motion.div key="hero" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="min-h-screen pt-24 lg:pt-28 pb-20 px-6 relative overflow-hidden">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-violet-600/8 rounded-full blur-3xl" />
-              <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-fuchsia-600/6 rounded-full blur-3xl" />
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-violet-600/[0.04] rounded-full blur-[120px]" />
+              <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-fuchsia-600/[0.03] rounded-full blur-[100px]" />
             </div>
 
             <div className="relative z-10 max-w-5xl mx-auto">
-              {/* Title */}
+
+              {/* ── HEADLINE ─────────────────────────────── */}
               <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
-                className="text-center mb-12">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-violet-500/20 bg-violet-500/5 mb-6">
-                  <Brain className="w-4 h-4 text-violet-400/60" />
-                  <span className="text-violet-300/60 text-xs font-light uppercase tracking-wider">Diagnóstico con IA</span>
+                className="text-center mb-10 lg:mb-14">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/[0.03] mb-6">
+                  <Heart className="w-3.5 h-3.5 text-violet-400/50" strokeWidth={1.5} />
+                  <span className="text-white/40 text-[11px] font-light uppercase tracking-[0.15em]">Psicología de pareja</span>
                 </div>
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-light text-white leading-tight mb-6"
-                  style={{ letterSpacing: '0.02em' }}>
-                  Diagnóstico Relacional<br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">Profundo</span>
+                <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-light text-white leading-[1.15] mb-5"
+                  style={{ letterSpacing: '-0.01em' }}>
+                  Lo que tu relación no te dice,<br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400">pero tú ya sientes</span>
                 </h1>
-                <p className="text-lg sm:text-xl text-white/50 font-light max-w-2xl mx-auto leading-relaxed">
-                  34 preguntas por voz · Análisis psicológico con IA ·<br />
-                  Reporte completo con gráficas radar, barras y perfil descargable
+                <p className="text-base sm:text-lg text-white/45 font-light max-w-xl mx-auto leading-relaxed">
+                  34 preguntas por voz que revelan los patrones invisibles de tu relación. Recibes un reporte profesional con gráficas, indicadores y análisis descargable.
                 </p>
               </motion.div>
 
-              {/* Badges */}
+              {/* ── IMPACT BULLETS ─────────────────────────── */}
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                className="flex flex-wrap justify-center gap-3 mb-12">
-                {[
-                  { icon: Clock, text: '~30 min' },
-                  { icon: Mic, text: 'Responde con voz' },
-                  { icon: BarChart3, text: '14+ indicadores' },
-                  { icon: Download, text: 'PDF descargable' }
-                ].map((b, i) => (
-                  <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/[0.03]">
-                    <b.icon className="w-3.5 h-3.5 text-white/40" strokeWidth={1.5} />
-                    <span className="text-white/50 text-sm font-light">{b.text}</span>
-                  </div>
-                ))}
+                className="max-w-3xl mx-auto mb-14">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {[
+                    { icon: Activity, text: 'Detecta ciclos de conflicto que se repiten sin que lo notes' },
+                    { icon: Shield, text: 'Identifica qué mecanismos de defensa están activos en tu relación' },
+                    { icon: Users, text: 'Revela patrones de apego: quién se acerca, quién se aleja y por qué' },
+                    { icon: Eye, text: 'Muestra lo que no se dice: necesidades ocultas, miedos y proyecciones' },
+                    { icon: Heart, text: 'Mide la compatibilidad emocional real, no la percibida' },
+                    { icon: TrendingUp, text: 'Evalúa el potencial de reconexión y las fortalezas del vínculo' }
+                  ].map((b, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3 + i * 0.06 }}
+                      className="flex items-start gap-3 p-3.5 rounded-xl border border-white/[0.06] bg-white/[0.015]">
+                      <b.icon className="w-4 h-4 text-violet-400/50 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+                      <span className="text-white/55 text-sm font-light leading-snug">{b.text}</span>
+                    </motion.div>
+                  ))}
+                </div>
               </motion.div>
 
-              {/* Report preview */}
-              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-                className="max-w-3xl mx-auto mb-16">
-                <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-6 lg:p-8">
-                  <p className="text-white/30 text-xs uppercase tracking-wider mb-4">Así se ve tu reporte</p>
+              {/* ── SIMULATED REPORT PREVIEW ─────────────── */}
+              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+                className="max-w-4xl mx-auto mb-16">
+                <p className="text-center text-white/25 text-[10px] uppercase tracking-[0.2em] mb-4">Ejemplo de reporte generado</p>
 
-                  {/* Mini radar + core scores preview */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {/* Radar preview */}
-                    <div className="flex flex-col items-center">
-                      <svg viewBox="0 0 200 200" className="w-40 h-40 opacity-60">
-                        {[20, 40, 60, 80, 100].map(l => (
-                          <circle key={l} cx={100} cy={100} r={l * 0.8} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={0.5} />
-                        ))}
-                        <polygon points="145,60 155,115 130,160 70,160 45,115 55,60" fill="rgba(139,92,246,0.15)" stroke="rgba(139,92,246,0.4)" strokeWidth={1} />
-                      </svg>
-                      <p className="text-white/25 text-[10px] mt-2">Radar de 6 dimensiones</p>
-                    </div>
-                    {/* Core scores preview */}
-                    <div className="space-y-3">
-                      {[
-                        { label: 'Compatibilidad', val: 72, color: 'from-emerald-500 to-green-400' },
-                        { label: 'Estabilidad', val: 58, color: 'from-amber-500 to-yellow-400' },
-                        { label: 'Riesgo de erosión', val: 35, color: 'from-red-500 to-orange-400' },
-                        { label: 'Reconexión', val: 65, color: 'from-violet-500 to-fuchsia-400' }
-                      ].map((s, i) => (
-                        <div key={i}>
-                          <div className="flex justify-between text-xs mb-1">
-                            <span className="text-white/35 font-light">{s.label}</span>
-                            <span className="text-white/25 font-light">{s.val}%</span>
-                          </div>
-                          <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                            <div className={`h-full bg-gradient-to-r ${s.color} rounded-full opacity-50`} style={{ width: `${s.val}%` }} />
-                          </div>
-                        </div>
-                      ))}
-                      <p className="text-white/25 text-[10px] mt-2">4 indicadores principales</p>
+                <div className="rounded-2xl border border-white/[0.08] bg-zinc-950/70 backdrop-blur-sm overflow-hidden">
+                  {/* Report header */}
+                  <div className="px-6 lg:px-8 pt-6 pb-4 border-b border-white/[0.06]">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-white/25 text-[9px] uppercase tracking-[0.2em] mb-1">Diagnóstico Relacional</p>
+                        <p className="text-white/60 text-lg font-light">Relación con desconexión emocional progresiva</p>
+                      </div>
+                      <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-amber-500/20 bg-amber-500/[0.06]">
+                        <AlertTriangle className="w-3 h-3 text-amber-400/70" strokeWidth={1.5} />
+                        <span className="text-amber-300/60 text-[10px] font-light">Atención recomendada</span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Blurred text preview */}
-                  <div className="mt-6 p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                    <p className="text-white/10 text-sm font-light leading-relaxed blur-[3px] select-none">
-                      Lo que tus respuestas revelan es un patrón donde la necesidad de cercanía emocional choca con el miedo a ser vulnerable. Este ciclo genera momentos de conexión genuina alternados con distancia...
-                    </p>
-                    <p className="text-white/30 text-xs font-light mt-2 text-center">Este contenido se genera a partir de TUS respuestas</p>
+                  <div className="px-6 lg:px-8 py-6 space-y-6">
+                    {/* Row: Radar + Core scores */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      {/* Radar */}
+                      <div className="p-4 rounded-xl border border-white/[0.05] bg-white/[0.01]">
+                        <p className="text-white/30 text-[10px] uppercase tracking-wider mb-3">Radar relacional</p>
+                        <svg viewBox="0 0 200 200" className="w-full max-w-[180px] mx-auto">
+                          {[20, 40, 60, 80, 100].map(l => (
+                            <circle key={l} cx={100} cy={100} r={l * 0.8} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth={0.5} />
+                          ))}
+                          {[0, 1, 2, 3, 4, 5].map(i => {
+                            const angle = (Math.PI * 2 * i) / 6 - Math.PI / 2
+                            return <line key={i} x1={100} y1={100} x2={100 + 80 * Math.cos(angle)} y2={100 + 80 * Math.sin(angle)} stroke="rgba(255,255,255,0.05)" strokeWidth={0.5} />
+                          })}
+                          <polygon points="148,58 140,125 108,155 58,148 60,95 92,55" fill="rgba(139,92,246,0.12)" stroke="rgba(139,92,246,0.35)" strokeWidth={1} />
+                          {[
+                            [148, 58], [140, 125], [108, 155], [58, 148], [60, 95], [92, 55]
+                          ].map(([x, y], i) => (
+                            <circle key={i} cx={x} cy={y} r={2.5} fill="rgba(167,139,250,0.7)" />
+                          ))}
+                          {[
+                            { label: 'Sincronía', x: 155, y: 48 },
+                            { label: 'Comunicación', x: 162, y: 130 },
+                            { label: 'Seguridad', x: 108, y: 172 },
+                            { label: 'Conflicto', x: 38, y: 160 },
+                            { label: 'Balance', x: 30, y: 88 },
+                            { label: 'Apoyo', x: 82, y: 42 }
+                          ].map((l, i) => (
+                            <text key={i} x={l.x} y={l.y} textAnchor="middle" className="fill-white/30 text-[7px] font-light">{l.label}</text>
+                          ))}
+                        </svg>
+                      </div>
+
+                      {/* Core scores + profile bars */}
+                      <div className="space-y-4">
+                        <div className="p-4 rounded-xl border border-white/[0.05] bg-white/[0.01]">
+                          <p className="text-white/30 text-[10px] uppercase tracking-wider mb-3">Indicadores principales</p>
+                          <div className="space-y-2.5">
+                            {[
+                              { label: 'Compatibilidad emocional', val: 42, color: 'from-red-500 to-orange-400' },
+                              { label: 'Estabilidad relacional', val: 38, color: 'from-red-500 to-orange-400' },
+                              { label: 'Riesgo de erosión', val: 71, color: 'from-red-500 to-orange-400' },
+                              { label: 'Potencial de reconexión', val: 58, color: 'from-amber-500 to-yellow-400' }
+                            ].map((s, i) => (
+                              <div key={i}>
+                                <div className="flex justify-between text-[11px] mb-1">
+                                  <span className="text-white/40 font-light">{s.label}</span>
+                                  <span className="text-white/30 font-light tabular-nums">{s.val}%</span>
+                                </div>
+                                <div className="h-1.5 bg-white/[0.04] rounded-full overflow-hidden">
+                                  <div className={`h-full bg-gradient-to-r ${s.color} rounded-full opacity-60`} style={{ width: `${s.val}%` }} />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="p-4 rounded-xl border border-white/[0.05] bg-white/[0.01]">
+                          <p className="text-white/30 text-[10px] uppercase tracking-wider mb-3">Perfil emocional</p>
+                          <div className="space-y-2">
+                            {[
+                              { label: 'Distancia acumulada', val: 74 },
+                              { label: 'Dependencia emocional', val: 62 },
+                              { label: 'Nivel de fricción', val: 68 },
+                              { label: 'Capacidad de reparación', val: 35 }
+                            ].map((s, i) => (
+                              <div key={i} className="flex items-center gap-3">
+                                <span className="text-white/35 text-[10px] font-light w-36 flex-shrink-0">{s.label}</span>
+                                <div className="flex-1 h-1 bg-white/[0.04] rounded-full overflow-hidden">
+                                  <div className="h-full bg-gradient-to-r from-violet-500/50 to-fuchsia-500/50 rounded-full" style={{ width: `${s.val}%` }} />
+                                </div>
+                                <span className="text-white/25 text-[10px] font-light tabular-nums w-8 text-right">{s.val}%</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Simulated insight cards */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="p-4 rounded-xl border border-rose-500/10 bg-rose-500/[0.02]">
+                        <p className="text-rose-300/50 text-[10px] uppercase tracking-wider mb-2">Ciclo dominante detectado</p>
+                        <p className="text-white/55 text-sm font-light leading-relaxed">
+                          Persecución — Retirada: Uno busca cercanía mientras el otro se aleja. Cuanto más insiste uno, más se cierra el otro.
+                        </p>
+                      </div>
+                      <div className="p-4 rounded-xl border border-amber-500/10 bg-amber-500/[0.02]">
+                        <p className="text-amber-300/50 text-[10px] uppercase tracking-wider mb-2">Sensibilidad emocional activa</p>
+                        <p className="text-white/55 text-sm font-light leading-relaxed">
+                          Miedo al abandono emocional: La percepción de distancia se vive como rechazo, activando hipervigilancia afectiva.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Blurred narrative preview */}
+                    <div className="p-5 rounded-xl border border-white/[0.05] bg-white/[0.01]">
+                      <p className="text-white/30 text-[10px] uppercase tracking-wider mb-3">Análisis narrativo</p>
+                      <div className="space-y-2">
+                        <p className="text-white/50 text-sm font-light leading-relaxed">
+                          Lo que tus respuestas revelan es un patrón donde la <strong className="text-white/65 font-medium">necesidad de cercanía emocional</strong> choca con un <strong className="text-white/65 font-medium">mecanismo de protección</strong> que se activa automáticamente ante la vulnerabilidad…
+                        </p>
+                        <p className="text-white/15 text-sm font-light leading-relaxed blur-[4px] select-none">
+                          Este ciclo genera una dinámica de aproximación y alejamiento que erosiona la seguridad emocional del vínculo. Cuando uno de los dos se acerca, el otro interpreta esa cercanía como una amenaza a su autonomía y se retrae, lo cual confirma el miedo original de abandono.
+                        </p>
+                      </div>
+                      <p className="text-violet-300/30 text-[10px] font-light mt-3 text-center">El análisis completo se genera a partir de tus respuestas</p>
+                    </div>
                   </div>
                 </div>
               </motion.div>
 
-              {/* 10 sections grid */}
-              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
+              {/* ── WHAT YOU GET ─────────────────────────── */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
+                className="max-w-3xl mx-auto mb-16">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {[
+                    { icon: Mic, title: 'Responde con voz', desc: '34 preguntas abiertas. Habla con libertad, sin opciones limitadas.' },
+                    { icon: BarChart3, title: 'Reporte visual completo', desc: 'Radar, barras, indicadores y análisis narrativo de cada dimensión.' },
+                    { icon: Download, title: 'PDF descargable', desc: 'Tu diagnóstico completo en un documento que puedes conservar.' }
+                  ].map((item, i) => (
+                    <div key={i} className="p-5 rounded-xl border border-white/[0.06] bg-white/[0.015] text-center">
+                      <item.icon className="w-6 h-6 text-violet-400/40 mx-auto mb-3" strokeWidth={1.5} />
+                      <h3 className="text-white/70 text-sm font-light mb-1.5">{item.title}</h3>
+                      <p className="text-white/35 text-xs font-light leading-relaxed">{item.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* ── 10 DIMENSIONS ─────────────────────────── */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
                 className="max-w-4xl mx-auto mb-16">
-                <h2 className="text-center text-white/35 text-sm uppercase tracking-wider mb-6">10 dimensiones que evaluamos</h2>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                <h2 className="text-center text-white/30 text-[10px] uppercase tracking-[0.2em] mb-5">10 dimensiones que exploramos</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                   {SECTIONS.map((s, i) => {
                     const Icon = s.icon
                     return (
-                      <div key={i} className="p-3 rounded-xl border border-white/8 bg-white/[0.02] text-center">
-                        <Icon className="w-5 h-5 text-white/30 mx-auto mb-2" strokeWidth={1.5} />
-                        <p className="text-white/50 text-xs font-light">{s.name}</p>
+                      <div key={i} className="p-2.5 rounded-lg border border-white/[0.05] bg-white/[0.01] text-center">
+                        <Icon className="w-4 h-4 text-white/20 mx-auto mb-1.5" strokeWidth={1.5} />
+                        <p className="text-white/40 text-[10px] font-light leading-tight">{s.name}</p>
                       </div>
                     )
                   })}
                 </div>
               </motion.div>
 
-              {/* Pricing CTA */}
-              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
+              {/* ── PRICING CTA ───────────────────────────── */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}
                 className="text-center">
-                <div className="inline-block p-8 rounded-2xl border border-violet-500/20 bg-violet-500/5">
-                  <p className="text-3xl font-light text-white mb-2">${PRODUCT_PRICE} <span className="text-lg text-white/40">MXN</span></p>
-                  <p className="text-white/40 text-sm font-light mb-6">Acceso inmediato · Reporte descargable</p>
+                <div className="inline-block max-w-md w-full p-8 rounded-2xl border border-white/[0.08] bg-zinc-950/60">
+                  <p className="text-white/25 text-[10px] uppercase tracking-[0.15em] mb-3">Acceso inmediato</p>
+                  <p className="text-3xl font-light text-white mb-1">${PRODUCT_PRICE} <span className="text-lg text-white/35">MXN</span></p>
+                  <p className="text-white/30 text-xs font-light mb-6">~30 min · Reporte completo · PDF descargable</p>
                   <motion.button
                     onClick={() => { setStage('checkout'); scrollToTop() }}
                     whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="px-8 py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all">
-                    Comenzar diagnóstico
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all">
+                    Comenzar mi diagnóstico
                   </motion.button>
                   {resumeDraft && (
-                    <button onClick={restoreDraft} className="block mx-auto mt-4 text-violet-300/40 text-xs hover:text-violet-300/70 underline underline-offset-4 transition-colors">
+                    <button onClick={restoreDraft} className="block mx-auto mt-4 text-violet-300/35 text-xs hover:text-violet-300/60 underline underline-offset-4 transition-colors">
                       Continuar diagnóstico en progreso
                     </button>
                   )}
+                  <p className="text-white/15 text-[10px] font-light mt-4">Diseñado por Luis Virrueta · Psicólogo clínico</p>
                 </div>
               </motion.div>
             </div>
@@ -839,7 +947,7 @@ const DiagnosticoRelacionalPage = () => {
               <div className="text-center">
                 <CreditCard className="w-10 h-10 text-violet-400/50 mx-auto mb-4" />
                 <h2 className="text-2xl font-light text-white mb-2">Accede a tu diagnóstico</h2>
-                <p className="text-white/40 text-sm font-light">34 preguntas · Análisis con IA · Reporte descargable</p>
+                <p className="text-white/40 text-sm font-light">34 preguntas · Análisis psicológico profundo · Reporte descargable</p>
               </div>
 
               {/* Discount code */}
@@ -918,7 +1026,7 @@ const DiagnosticoRelacionalPage = () => {
                   { icon: Mic, text: 'Responde con el micrófono (o escribe si prefieres)' },
                   { icon: Clock, text: '34 preguntas · ~30 minutos' },
                   { icon: Brain, text: 'No hay respuestas correctas — habla con libertad' },
-                  { icon: Shield, text: 'Tus respuestas se procesan con IA y nunca se comparten' },
+                  { icon: Shield, text: 'Tus respuestas son confidenciales y nunca se comparten' },
                   { icon: FileText, text: 'Al final recibirás un reporte completo descargable' }
                 ].map((item, i) => (
                   <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
@@ -1037,7 +1145,7 @@ const DiagnosticoRelacionalPage = () => {
                             className="text-white/20 text-xs hover:text-white/40 tracking-wider transition-colors">
                             OMITIR
                           </button>
-                          {isTestMode && currentQ?.sample && (
+                          {isDevMode && currentQ?.sample && (
                             <button
                               onClick={() => {
                                 setResponses(prev => ({ ...prev, [currentQ.id]: currentQ.sample }))
@@ -1045,6 +1153,20 @@ const DiagnosticoRelacionalPage = () => {
                               }}
                               className="flex items-center gap-1.5 text-amber-400/50 text-[10px] hover:text-amber-400/80 tracking-wider transition-colors border border-amber-400/20 rounded-full px-2.5 py-1 hover:border-amber-400/40">
                               ► Muestra
+                            </button>
+                          )}
+                          {isDevMode && (
+                            <button
+                              onClick={() => {
+                                const filled = { ...responses }
+                                QUESTIONS.forEach(q => { if (!filled[q.id]?.trim()) filled[q.id] = q.sample })
+                                setResponses(filled)
+                                fireBackgroundAnalysis(filled)
+                                setStage('email')
+                                scrollToTop()
+                              }}
+                              className="flex items-center gap-1.5 text-orange-400/60 text-[10px] hover:text-orange-400/90 tracking-wider transition-colors border border-orange-400/25 rounded-full px-2.5 py-1 hover:border-orange-400/50">
+                              ⚡ Completar todo
                             </button>
                           )}
                         </div>
@@ -1073,11 +1195,25 @@ const DiagnosticoRelacionalPage = () => {
                             className="flex items-center gap-1.5 text-violet-300/40 text-xs hover:text-violet-300/70 transition-colors">
                             <Mic className="w-3 h-3" /> Usar micrófono
                           </button>
-                          {isTestMode && currentQ?.sample && !(responses[currentQ?.id] || '').trim() && (
+                          {isDevMode && currentQ?.sample && !(responses[currentQ?.id] || '').trim() && (
                             <button
                               onClick={() => setResponses(prev => ({ ...prev, [currentQ.id]: currentQ.sample }))}
                               className="text-amber-400/50 text-[10px] hover:text-amber-400/80 transition-colors border border-amber-400/20 rounded-full px-2.5 py-1 hover:border-amber-400/40">
                               ► Muestra
+                            </button>
+                          )}
+                          {isDevMode && (
+                            <button
+                              onClick={() => {
+                                const filled = { ...responses }
+                                QUESTIONS.forEach(q => { if (!filled[q.id]?.trim()) filled[q.id] = q.sample })
+                                setResponses(filled)
+                                fireBackgroundAnalysis(filled)
+                                setStage('email')
+                                scrollToTop()
+                              }}
+                              className="text-orange-400/60 text-[10px] hover:text-orange-400/90 transition-colors border border-orange-400/25 rounded-full px-2.5 py-1 hover:border-orange-400/50">
+                              ⚡ Completar todo
                             </button>
                           )}
                         </div>
@@ -1199,7 +1335,7 @@ const DiagnosticoRelacionalPage = () => {
               {/* Header */}
               <div className="text-center">
                 <h1 className="text-3xl lg:text-4xl font-light text-white mb-3">Tu Diagnóstico Relacional</h1>
-                <p className="text-white/40 text-sm font-light">Generado con inteligencia artificial a partir de tus 34 respuestas</p>
+                <p className="text-white/40 text-sm font-light">Generado a partir de tus 34 respuestas</p>
               </div>
 
               {/* Relationship Type */}

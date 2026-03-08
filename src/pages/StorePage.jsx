@@ -15,6 +15,26 @@ const StorePage = () => {
 
   const products = [
     {
+      id: 7,
+      name: 'Diagnóstico Relacional',
+      category: 'Psicología de Pareja',
+      price: '$349 MXN',
+      duration: '~30 min',
+      image: '/pareja imagen.jpg',
+      description: 'Descubre los patrones invisibles que sostienen tu relación. 34 preguntas por voz, análisis profundo y reporte descargable.',
+      shortDesc: 'Lo que tu relación no te dice, pero tú ya sientes',
+      benefits: [
+        'Detecta ciclos emocionales repetitivos',
+        'Identifica patrones de apego y conflicto',
+        'Reporte con radar, barras y perfil completo',
+        'PDF descargable al instante'
+      ],
+      gradient: 'from-violet-600/20 to-fuchsia-600/20',
+      borderGradient: 'from-violet-500 to-fuchsia-500',
+      popular: true,
+      isDiagnostic: true
+    },
+    {
       id: 1,
       name: 'Sesión Individual',
       category: 'Psicoterapia',
@@ -123,26 +143,6 @@ const StorePage = () => {
       ],
       gradient: 'from-amber-600/20 to-orange-600/20',
       borderGradient: 'from-amber-500 to-orange-500'
-    },
-    {
-      id: 7,
-      name: 'Diagnóstico Relacional',
-      category: 'Evaluación con IA',
-      price: '$349 MXN',
-      duration: '~30 min',
-      image: '/pareja imagen.jpg',
-      description: '34 preguntas por voz analizadas con inteligencia artificial. Radar, barras y perfil descargable.',
-      shortDesc: 'Mapa completo de tu relación con IA',
-      benefits: [
-        '34 preguntas por voz',
-        'Análisis con inteligencia artificial',
-        'Radar + barras + perfil emocional',
-        'Reporte PDF descargable'
-      ],
-      gradient: 'from-violet-600/20 to-fuchsia-600/20',
-      borderGradient: 'from-violet-500 to-fuchsia-500',
-      popular: true,
-      isDiagnostic: true
     }
   ]
 
