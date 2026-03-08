@@ -346,40 +346,40 @@ const ANALYSIS_TASK_GROUPS = [
     label: 'Escuchando tu historia',
     color: 'violet',
     tasks: [
-      { id: 1, text: 'Integrando lo que compartiste' },
-      { id: 2, text: 'Reconstruyendo momentos clave de la relación' },
-      { id: 3, text: 'Detectando emociones que aparecen entre líneas' },
-      { id: 4, text: 'Identificando lo que realmente necesitas' },
+      { id: 1, text: 'Analizando qué tan compatibles son emocionalmente…' },
+      { id: 2, text: 'Detectando patrones ocultos en la relación…' },
+      { id: 3, text: 'Buscando por qué ciertos conflictos se repiten…' },
+      { id: 4, text: 'Analizando cómo reaccionan cuando aparece la tensión…' },
     ]
   },
   {
     label: 'Detectando los patrones del vínculo',
     color: 'blue',
     tasks: [
-      { id: 5, text: 'Analizando compatibilidad emocional' },
-      { id: 6, text: 'Identificando patrones inconscientes en la relación' },
-      { id: 7, text: 'Detectando ciclos de conflicto que se repiten' },
-      { id: 8, text: 'Analizando cómo reaccionan bajo tensión' },
+      { id: 5, text: 'Leyendo las señales emocionales entre líneas…' },
+      { id: 6, text: 'Reconstruyendo la dinámica real entre ustedes…' },
+      { id: 7, text: 'Detectando dónde empieza el distanciamiento…' },
+      { id: 8, text: 'Analizando qué fortalece o debilita el vínculo…' },
     ]
   },
   {
     label: 'Encontrando las dinámicas ocultas',
     color: 'fuchsia',
     tasks: [
-      { id: 9, text: 'Interpretando señales emocionales entre líneas' },
-      { id: 10, text: 'Reconstruyendo la dinámica del vínculo' },
-      { id: 11, text: 'Detectando puntos de distanciamiento emocional' },
-      { id: 12, text: 'Buscando señales de reconexión posible' },
+      { id: 9, text: 'Calculando su nivel de sincronía emocional…' },
+      { id: 10, text: 'Evaluando la estabilidad actual de la relación…' },
+      { id: 11, text: 'Detectando puntos de ruptura que no siempre se ven…' },
+      { id: 12, text: 'Evaluando riesgo de desgaste emocional…' },
     ]
   },
   {
     label: 'Construyendo tu diagnóstico',
     color: 'pink',
     tasks: [
-      { id: 13, text: 'Evaluando estabilidad del vínculo' },
-      { id: 14, text: 'Calculando índice de sincronía emocional' },
-      { id: 15, text: 'Detectando puntos de ruptura invisibles' },
-      { id: 16, text: 'Preparando tu diagnóstico personalizado' },
+      { id: 13, text: 'Analizando estilos de apego en la relación…' },
+      { id: 14, text: 'Calculando cuánto se sostienen emocionalmente…' },
+      { id: 15, text: 'Identificando fuentes de fricción entre ustedes…' },
+      { id: 16, text: 'Integrando todos los indicadores del vínculo…' },
     ]
   }
 ]
@@ -1168,15 +1168,65 @@ const ConsultaParejaPage = () => {
   }
 
   const handleFlashAnswer = (flashId, value) => {
-    setFlashAnswers(prev => ({ ...prev, [flashId]: value }))
+    const updatedFlash = { ...flashAnswers, [flashId]: value }
+    setFlashAnswers(updatedFlash)
     if (currentFlash < FLASH_QUESTIONS.length - 1) {
       setTimeout(() => { setCurrentFlash(prev => prev + 1); scrollToTop() }, 350)
     } else {
+      // Last flash question → fire AI in background immediately, then show email
+      if (mode === 'premium' && isPremiumUnlocked) {
+        fireBackgroundAnalysis(updatedFlash)
+      }
       setTimeout(() => { setStage('email'); scrollToTop() }, 400)
     }
   }
 
+  // Background AI call — starts before email, so analysis runs while user fills email
+  const bgAnalysisRef = useRef(null)
+  const fireBackgroundAnalysis = (latestFlash) => {
+    if (bgAnalysisRef.current) return // already running
+    setAiLoading(true)
+    setAiReady(false)
+    const areaLabels = {}
+    for (const a of AREAS) areaLabels[a.key] = a.label
+    if (import.meta.env.DEV) {
+      console.log('[AI] Pre-firing DeepSeek from flash complete:', {
+        philosophicalCount: Object.keys(philosophicalAnswers).length,
+        flashCount: Object.keys(latestFlash).length,
+      })
+    }
+    bgAnalysisRef.current = analyzeRelationship({
+      areaLabels,
+      philosophicalAnswers,
+      philosophicalQuestions: PHILOSOPHICAL_QUESTIONS,
+      flashAnswers: latestFlash,
+      flashQuestions: FLASH_QUESTIONS,
+    }).then(result => {
+      if (import.meta.env.DEV) console.log('[AI] Background result keys:', Object.keys(result || {}))
+      setAiAnalysis(result)
+      setAiLoading(false)
+      setAiReady(true)
+    }).catch(e => {
+      console.error('AI background analysis error:', e)
+      const defaultScores = Object.fromEntries(AREAS.map(a => [a.key, 50]))
+      setAiAnalysis({
+        diagnosticoNarrado: 'No fue posible conectar con la inteligencia artificial en este momento. Se muestran resultados estimados.',
+        aperturaEmpatica: 'Gracias por compartir. Aunque el análisis profundo no estuvo disponible, tus respuestas revelan patrones importantes.',
+        dimensionScores: defaultScores,
+        areaCorrelations: Object.fromEntries(AREAS.map(a => [a.key, 'Análisis no disponible']))
+      })
+      setAiLoading(false)
+      setAiReady(true)
+    })
+  }
+
   const handleRunAIAnalysis = async () => {
+    // If background analysis already started, just switch to analyzing stage
+    if (bgAnalysisRef.current) {
+      setStage('analyzing')
+      scrollToTop()
+      return
+    }
     setAiLoading(true)
     setAiReady(false)
     setStage('analyzing')
@@ -1375,41 +1425,43 @@ const ConsultaParejaPage = () => {
             STAGE: HERO
         ═══════════════════════════════════════════════════════════ */}
         {stage === 'hero' && (
-          <motion.div key="hero" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative min-h-screen flex flex-col">
+          <motion.div key="hero" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative flex flex-col">
+            {/* ── Background blobs ── */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-pink-600/8 rounded-full blur-3xl" />
               <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-rose-600/6 rounded-full blur-3xl" />
               <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-violet-600/5 rounded-full blur-3xl" />
             </div>
 
-            <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 pt-28 lg:pt-36 pb-20">
+            {/* ══════════ SECTION 1: HERO ABOVE THE FOLD ══════════ */}
+            <div className="relative z-10 flex flex-col items-center justify-center px-6 pt-28 lg:pt-36 pb-16">
               <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} className="text-center max-w-3xl mx-auto">
                 <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.2 }}
                   className="inline-flex items-center gap-2 px-4 py-2 border border-pink-500/20 rounded-full bg-pink-500/5 backdrop-blur-sm mb-10">
                   <Heart className="w-3.5 h-3.5 text-pink-400/70" strokeWidth={1.5} />
-                  <span className="text-xs text-pink-300/70 font-light uppercase tracking-[0.2em]">Consulta de Pareja</span>
+                  <span className="text-xs text-pink-300/70 font-light uppercase tracking-[0.2em]">Diagnóstico de Pareja con IA</span>
                 </motion.div>
 
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light text-white mb-6 font-display tracking-wide leading-[1.1]">
-                  Diagnóstico de{' '}
-                  <span className="italic font-normal bg-gradient-to-r from-pink-400 via-rose-400 to-pink-300 bg-clip-text text-transparent">Relación</span>
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-light text-white mb-6 font-display tracking-wide leading-[1.1]">
+                  Descubre los patrones{' '}
+                  <span className="italic font-normal bg-gradient-to-r from-pink-400 via-rose-400 to-pink-300 bg-clip-text text-transparent">invisibles</span>
+                  {' '}de tu relación
                 </h1>
 
                 <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
-                  className="text-lg lg:text-xl text-white/60 font-light leading-relaxed mb-10 tracking-wide">
-                  Un análisis profundo con inteligencia artificial para entender la dinámica real de tu vínculo.
+                  className="text-lg lg:text-xl text-white/55 font-light leading-relaxed mb-8 tracking-wide max-w-2xl mx-auto">
+                  Un análisis psicológico profundo que cruza tus respuestas con inteligencia artificial para revelar dinámicas de apego, idealización, conflicto y conexión emocional.
                 </motion.p>
 
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="space-y-4 mb-12">
-                  <p className="text-base lg:text-lg text-white/50 font-extralight leading-relaxed">
-                    La mayoría de los conflictos en la pareja no vienen de lo que se dice.
-                  </p>
-                  <p className="text-base lg:text-lg text-white/50 font-extralight leading-relaxed">
-                    Vienen de <span className="text-white/70 italic">patrones inconscientes</span> que se repiten sin que nadie los vea.
-                  </p>
-                  <p className="text-base lg:text-lg text-white/40 font-extralight leading-relaxed mt-6">
-                    Este diagnóstico cruza 50 preguntas con IA para detectar patrones de apego, idealización, conflicto y conexión emocional.
-                  </p>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
+                  className="flex items-center justify-center gap-6 mb-10 text-white/35 text-xs tracking-wider flex-wrap">
+                  <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> ~25 minutos</span>
+                  <span className="w-px h-3 bg-white/20" />
+                  <span className="flex items-center gap-1.5"><Brain className="w-3.5 h-3.5" /> 50 preguntas + IA</span>
+                  <span className="w-px h-3 bg-white/20" />
+                  <span className="flex items-center gap-1.5"><BarChart3 className="w-3.5 h-3.5" /> Gráficas profesionales</span>
+                  <span className="w-px h-3 bg-white/20" />
+                  <span className="flex items-center gap-1.5"><Download className="w-3.5 h-3.5" /> PDF descargable</span>
                 </motion.div>
 
                 <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
@@ -1422,18 +1474,9 @@ const ConsultaParejaPage = () => {
                   <div className="absolute inset-0 bg-gradient-to-r from-rose-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </motion.button>
 
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}
-                  className="flex items-center justify-center gap-6 mt-8 text-white/30 text-xs tracking-wider flex-wrap">
-                  <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> ~25 minutos</span>
-                  <span className="w-px h-3 bg-white/20" />
-                  <span className="flex items-center gap-1.5"><Brain className="w-3.5 h-3.5" /> 50 preguntas + IA</span>
-                  <span className="w-px h-3 bg-white/20" />
-                  <span className="flex items-center gap-1.5"><BarChart3 className="w-3.5 h-3.5" /> Gráficas profesionales</span>
-                </motion.div>
-
                 {resumeDraft && (
                   <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3 }}
-                    className="mt-8 flex items-center justify-center gap-3">
+                    className="mt-6 flex items-center justify-center gap-3">
                     <button
                       onClick={() => {
                         setStage(resumeDraft.stage)
@@ -1456,35 +1499,220 @@ const ConsultaParejaPage = () => {
                     </button>
                   </motion.div>
                 )}
-
-
               </motion.div>
             </div>
 
-            {/* Qué analiza */}
-            <div className="relative z-10 px-6 lg:px-20 pb-32">
+            {/* ══════════ SECTION 2: PREVIEW — "Así se ve tu reporte" ══════════ */}
+            <div className="relative z-10 px-6 lg:px-20 pb-20">
               <div className="max-w-5xl mx-auto">
-                <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-center mb-16">
-                  <h2 className="text-3xl lg:text-4xl font-light text-white mb-4 font-display tracking-wide">
-                    Qué analiza el <span className="italic font-normal">diagnóstico</span>
+                <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-center mb-12">
+                  <h2 className="text-3xl lg:text-4xl font-light text-white mb-3 font-display tracking-wide">
+                    Así se ve tu <span className="italic font-normal">reporte</span>
                   </h2>
-                  <p className="text-white/40 text-sm font-extralight tracking-wide">8 áreas psicológicas fundamentales de tu relación</p>
+                  <p className="text-white/40 text-sm font-extralight tracking-wide">Un diagnóstico visual y profundo — no solo números.</p>
                 </motion.div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+                {/* Report preview mockup */}
+                <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.9 }}
+                  className="p-8 lg:p-10 border border-white/8 rounded-3xl bg-gradient-to-br from-white/[0.02] to-violet-500/[0.01] backdrop-blur-sm overflow-hidden">
+
+                  {/* Preview radar + scores side by side */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    {/* Mini radar preview */}
+                    <div className="p-6 border border-violet-500/10 rounded-2xl bg-violet-500/[0.02]">
+                      <div className="flex items-center gap-2 mb-5">
+                        <BarChart3 className="w-4 h-4 text-violet-400/50" strokeWidth={1.5} />
+                        <span className="text-white/40 text-xs font-light uppercase tracking-[0.15em]">Mapa de tu relación</span>
+                      </div>
+                      {/* Octagonal radar wireframe preview */}
+                      <div className="flex items-center justify-center py-4">
+                        <svg viewBox="0 0 200 200" className="w-44 h-44">
+                          {/* Grid rings */}
+                          {[0.3, 0.5, 0.7, 0.9].map((r, i) => (
+                            <polygon key={i}
+                              points={Array.from({length: 8}, (_, j) => {
+                                const angle = (Math.PI * 2 * j) / 8 - Math.PI / 2
+                                return `${100 + Math.cos(angle) * r * 80},${100 + Math.sin(angle) * r * 80}`
+                              }).join(' ')}
+                              fill="none" stroke="white" strokeOpacity={0.06} strokeWidth="0.5" />
+                          ))}
+                          {/* Sample data polygon */}
+                          <polygon
+                            points={[72, 65, 80, 42, 68, 58, 75, 50].map((v, j) => {
+                              const angle = (Math.PI * 2 * j) / 8 - Math.PI / 2
+                              const r = (v / 100) * 80
+                              return `${100 + Math.cos(angle) * r},${100 + Math.sin(angle) * r}`
+                            }).join(' ')}
+                            fill="url(#radarPreviewGrad)" fillOpacity="0.15" stroke="url(#radarPreviewGrad)" strokeWidth="1.5" strokeOpacity="0.6" />
+                          <defs>
+                            <linearGradient id="radarPreviewGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" stopColor="#a78bfa" />
+                              <stop offset="100%" stopColor="#ec4899" />
+                            </linearGradient>
+                          </defs>
+                          {/* Labels */}
+                          {AREAS.map((area, j) => {
+                            const angle = (Math.PI * 2 * j) / 8 - Math.PI / 2
+                            const labelR = 95
+                            const x = 100 + Math.cos(angle) * labelR
+                            const y = 100 + Math.sin(angle) * labelR
+                            return (
+                              <text key={area.key} x={x} y={y} textAnchor="middle" dominantBaseline="middle"
+                                className="fill-white/30 text-[6px] font-light">
+                                {area.label.slice(0, 5)}.
+                              </text>
+                            )
+                          })}
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* Score bars preview */}
+                    <div className="p-6 border border-pink-500/10 rounded-2xl bg-pink-500/[0.02]">
+                      <div className="flex items-center gap-2 mb-5">
+                        <Activity className="w-4 h-4 text-pink-400/50" strokeWidth={1.5} />
+                        <span className="text-white/40 text-xs font-light uppercase tracking-[0.15em]">Perfil por dimensión</span>
+                      </div>
+                      <div className="space-y-3">
+                        {[
+                          { label: 'Comunicación', pct: 72, color: 'from-blue-400 to-cyan-400' },
+                          { label: 'Intimidad', pct: 65, color: 'from-pink-400 to-rose-400' },
+                          { label: 'Admiración', pct: 80, color: 'from-amber-400 to-yellow-400' },
+                          { label: 'Conflictos', pct: 42, color: 'from-red-400 to-orange-400' },
+                          { label: 'Proyecto', pct: 68, color: 'from-emerald-400 to-green-400' },
+                          { label: 'Seguridad', pct: 58, color: 'from-violet-400 to-purple-400' },
+                          { label: 'Autonomía', pct: 75, color: 'from-indigo-400 to-blue-400' },
+                          { label: 'Idealización', pct: 50, color: 'from-fuchsia-400 to-pink-400' },
+                        ].map((d, i) => (
+                          <div key={i}>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-white/45 text-[11px] font-light">{d.label}</span>
+                              <span className="text-white/25 text-[10px] tabular-nums">{d.pct}%</span>
+                            </div>
+                            <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                              <motion.div initial={{ width: 0 }} whileInView={{ width: `${d.pct}%` }}
+                                viewport={{ once: true }} transition={{ duration: 1, delay: 0.1 + i * 0.06 }}
+                                className={`h-full rounded-full bg-gradient-to-r ${d.color} opacity-60`} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Preview: Feature highlights */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {[
+                      { icon: Eye, label: 'Patrones inconscientes', desc: 'Lo que no se ve' },
+                      { icon: AlertTriangle, label: 'Mecanismos de defensa', desc: 'Cómo te proteges' },
+                      { icon: TrendingUp, label: 'Fortalezas reales', desc: 'Lo que los sostiene' },
+                      { icon: Sparkles, label: 'Lectura psicoanalítica', desc: 'Análisis profundo' },
+                    ].map(({ icon: Icon, label, desc }, i) => (
+                      <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }} transition={{ delay: 0.1 + i * 0.08 }}
+                        className="p-4 border border-white/6 rounded-xl bg-white/[0.01] text-center">
+                        <Icon className="w-5 h-5 text-white/30 mx-auto mb-2" strokeWidth={1.5} />
+                        <p className="text-white/50 text-[10px] font-light uppercase tracking-[0.1em] mb-0.5">{label}</p>
+                        <p className="text-white/25 text-[9px] font-extralight">{desc}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Blurred text preview to suggest depth */}
+                  <div className="mt-6 p-5 border border-white/5 rounded-xl bg-white/[0.01]">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Brain className="w-4 h-4 text-violet-400/30" strokeWidth={1.5} />
+                      <span className="text-white/30 text-xs font-light">Lo que tu historia reveló</span>
+                    </div>
+                    <div className="space-y-2 filter blur-[3px] select-none pointer-events-none">
+                      <div className="h-3 bg-white/6 rounded w-full" />
+                      <div className="h-3 bg-white/5 rounded w-5/6" />
+                      <div className="h-3 bg-white/4 rounded w-4/5" />
+                      <div className="h-3 bg-white/3 rounded w-3/4" />
+                    </div>
+                    <p className="text-white/20 text-[10px] font-light text-center mt-3 italic">Este contenido se genera a partir de TUS respuestas</p>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+
+            {/* ══════════ SECTION 3: 8 ÁREAS ══════════ */}
+            <div className="relative z-10 px-6 lg:px-20 pb-20">
+              <div className="max-w-5xl mx-auto">
+                <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-center mb-12">
+                  <h2 className="text-3xl lg:text-4xl font-light text-white mb-3 font-display tracking-wide">
+                    8 dimensiones <span className="italic font-normal">psicológicas</span>
+                  </h2>
+                  <p className="text-white/40 text-sm font-extralight tracking-wide">Cada área se analiza con IA y se muestra con su propia gráfica y explicación</p>
+                </motion.div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {AREAS.map((area, i) => (
                     <motion.div key={area.key} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: i * 0.07 }}
-                      className="group relative p-6 border border-white/8 rounded-2xl bg-white/[0.02] backdrop-blur-sm hover:border-white/15 transition-all duration-500">
-                      <div className={`inline-flex p-2.5 rounded-xl bg-gradient-to-br ${area.color} bg-opacity-10 mb-4`}>
-                        <area.icon className="w-5 h-5 text-white/80" strokeWidth={1.5} />
+                      transition={{ duration: 0.5, delay: i * 0.06 }}
+                      className="group relative p-5 border border-white/8 rounded-2xl bg-white/[0.02] hover:border-white/15 transition-all duration-500">
+                      <div className={`inline-flex p-2 rounded-xl bg-gradient-to-br ${area.color} bg-opacity-10 mb-3`}>
+                        <area.icon className="w-4 h-4 text-white/80" strokeWidth={1.5} />
                       </div>
-                      <h3 className="text-white/90 text-sm font-light tracking-wide mb-2">{area.label}</h3>
-                      <p className="text-white/40 text-xs font-extralight leading-relaxed">{area.desc}</p>
+                      <h3 className="text-white/85 text-sm font-light tracking-wide mb-1">{area.label}</h3>
+                      <p className="text-white/35 text-[11px] font-extralight leading-relaxed">{area.desc}</p>
                       <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${area.color} opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500`} />
                     </motion.div>
                   ))}
                 </div>
               </div>
+            </div>
+
+            {/* ══════════ SECTION 4: HOW IT WORKS ══════════ */}
+            <div className="relative z-10 px-6 lg:px-20 pb-20">
+              <div className="max-w-3xl mx-auto">
+                <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
+                  <h2 className="text-3xl lg:text-4xl font-light text-white mb-3 font-display tracking-wide">
+                    Cómo <span className="italic font-normal">funciona</span>
+                  </h2>
+                </motion.div>
+                <div className="space-y-0">
+                  {[
+                    { step: '01', title: 'Cuéntanos tu historia', desc: '25 preguntas abiertas donde hablas de tu relación como si fuera con un amigo. Sin respuestas correctas.', icon: MessageCircle },
+                    { step: '02', title: 'Respuestas rápidas', desc: '25 preguntas proyectivas: completa frases y elige opciones sin pensar. Aquí aparece lo inconsciente.', icon: Zap },
+                    { step: '03', title: 'Análisis con IA', desc: 'La inteligencia artificial cruza tus respuestas para encontrar patrones de apego, idealización y conflicto.', icon: Brain },
+                    { step: '04', title: 'Tu diagnóstico completo', desc: 'Gráfica radar, análisis por dimensión, mecanismos de defensa, fortalezas y recomendaciones profesionales.', icon: BarChart3 },
+                  ].map(({ step, title, desc, icon: Icon }, i) => (
+                    <motion.div key={step} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                      className="flex gap-5 py-6 border-b border-white/5 last:border-0">
+                      <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500/10 to-violet-500/10 border border-white/8 flex items-center justify-center">
+                        <Icon className="w-5 h-5 text-white/50" strokeWidth={1.5} />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-pink-400/40 text-[10px] font-light uppercase tracking-wider">{step}</span>
+                          <span className="text-white/80 text-sm font-light tracking-wide">{title}</span>
+                        </div>
+                        <p className="text-white/35 text-xs font-extralight leading-relaxed">{desc}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* ══════════ SECTION 5: CTA FINAL ══════════ */}
+            <div className="relative z-10 px-6 lg:px-20 pb-32">
+              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                className="max-w-2xl mx-auto text-center">
+                <p className="text-white/40 text-base font-light leading-relaxed mb-8">
+                  La mayoría de los conflictos en la pareja no vienen de lo que se dice.<br/>
+                  Vienen de <span className="text-white/60 italic">patrones inconscientes</span> que se repiten sin que nadie los vea.
+                </p>
+                <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                  onClick={() => { setStage('mode-select'); scrollToTop() }}
+                  className="group relative px-10 py-4 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full text-white font-light text-sm uppercase tracking-[0.2em] overflow-hidden transition-shadow duration-300 hover:shadow-[0_0_40px_rgba(244,63,94,0.3)]">
+                  <span className="relative z-10 flex items-center gap-3">
+                    COMENZAR DIAGNÓSTICO <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-rose-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </motion.button>
+              </motion.div>
             </div>
           </motion.div>
         )}
@@ -1495,8 +1723,8 @@ const ConsultaParejaPage = () => {
         {stage === 'mode-select' && (
           <motion.div key="mode-select" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
             className="min-h-screen flex items-center justify-center px-6 pt-28 pb-20">
-            <div className="max-w-2xl w-full">
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="text-center mb-12">
+            <div className="max-w-3xl w-full">
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="text-center mb-14">
                 <div className="inline-flex items-center gap-2 px-4 py-2 border border-pink-500/20 rounded-full bg-pink-500/5 mb-8">
                   <Layers className="w-3.5 h-3.5 text-pink-400/70" strokeWidth={1.5} />
                   <span className="text-xs text-pink-300/70 font-light uppercase tracking-[0.2em]">Elige tu experiencia</span>
@@ -1504,36 +1732,41 @@ const ConsultaParejaPage = () => {
                 <h2 className="text-3xl lg:text-4xl font-light text-white mb-4 font-display tracking-wide">
                   ¿Qué nivel de <span className="italic font-normal text-pink-300/90">profundidad</span> buscas?
                 </h2>
-                <p className="text-white/40 text-sm font-extralight leading-relaxed max-w-md mx-auto">
-                  El diagnóstico gratuito te da una radiografía clara. El premium te revela los patrones invisibles con análisis psicoanalítico.
+                <p className="text-white/40 text-sm font-extralight leading-relaxed max-w-lg mx-auto">
+                  El diagnóstico gratuito te da una radiografía rápida. El premium analiza 50 preguntas con IA para revelar patrones invisibles.
                 </p>
               </motion.div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                {/* Gratuito */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {/* ── Gratuito ── */}
                 <motion.button initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
                   whileHover={{ scale: 1.02, y: -4 }} whileTap={{ scale: 0.98 }}
                   onClick={() => { setMode('free'); setStage('respondent'); scrollToTop() }}
-                  className="group relative p-8 border border-white/10 rounded-2xl bg-white/[0.02] hover:border-pink-500/30 hover:bg-pink-500/[0.03] transition-all duration-500 text-left overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-pink-500/5 to-transparent rounded-bl-full" />
+                  className="group relative p-8 border border-white/10 rounded-2xl bg-white/[0.02] hover:border-pink-500/25 hover:bg-pink-500/[0.02] transition-all duration-500 text-left overflow-hidden">
+                  <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-pink-500/4 to-transparent rounded-bl-full" />
                   <div className="relative z-10">
                     <div className="inline-flex p-3 rounded-xl bg-gradient-to-br from-pink-400/10 to-rose-400/10 border border-pink-500/10 mb-5">
-                      <Zap className="w-5 h-5 text-pink-400/80" strokeWidth={1.5} />
+                      <Zap className="w-5 h-5 text-pink-400/70" strokeWidth={1.5} />
                     </div>
-                    <h3 className="text-xl text-white/90 font-light tracking-wide mb-2 font-display">
+                    <h3 className="text-xl text-white/90 font-light tracking-wide mb-1 font-display">
                       Diagnóstico <span className="italic">Gratuito</span>
                     </h3>
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="flex items-center gap-1.5 text-white/40 text-xs"><Clock className="w-3 h-3" /> ~3 min</span>
+                    <p className="text-white/25 text-xs font-extralight mb-4">Radiografía rápida</p>
+
+                    <div className="flex items-center gap-3 mb-5 py-2 px-3 rounded-lg bg-white/[0.02] border border-white/5">
+                      <span className="flex items-center gap-1.5 text-white/45 text-xs"><Clock className="w-3 h-3" /> ~3 min</span>
                       <span className="w-px h-3 bg-white/10" />
-                      <span className="flex items-center gap-1.5 text-white/40 text-xs"><FileText className="w-3 h-3" /> 15 preguntas</span>
+                      <span className="flex items-center gap-1.5 text-white/45 text-xs"><FileText className="w-3 h-3" /> 15 preguntas</span>
                     </div>
-                    <ul className="space-y-2 mb-5 text-white/35 text-xs font-extralight">
-                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-pink-400/50 mt-0.5 flex-shrink-0" /> Resultado general de tu relación</li>
-                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-pink-400/50 mt-0.5 flex-shrink-0" /> Perfil visual de 7 áreas</li>
-                      <li className="flex items-start gap-2 opacity-40"><Lock className="w-3 h-3 mt-0.5 flex-shrink-0" /> Interpretación psicológica (bloqueada)</li>
-                      <li className="flex items-start gap-2 opacity-40"><Lock className="w-3 h-3 mt-0.5 flex-shrink-0" /> Análisis de idealización (bloqueado)</li>
+
+                    <ul className="space-y-2.5 mb-6 text-white/40 text-xs font-extralight">
+                      <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-pink-400/50 mt-0.5 flex-shrink-0" /> Resultado general de tu relación</li>
+                      <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-pink-400/50 mt-0.5 flex-shrink-0" /> Perfil visual de 7 áreas</li>
+                      <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-pink-400/50 mt-0.5 flex-shrink-0" /> Balance fortalezas vs. riesgos</li>
+                      <li className="flex items-start gap-2 opacity-40"><Lock className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Sin gráfica radar ni análisis IA</li>
+                      <li className="flex items-start gap-2 opacity-40"><Lock className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Sin análisis de idealización</li>
                     </ul>
+
                     <div className="flex items-center gap-2 text-pink-400/60 text-xs font-light group-hover:text-pink-400/90 transition-colors">
                       <span className="uppercase tracking-[0.15em]">Comenzar gratis</span>
                       <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
@@ -1541,38 +1774,66 @@ const ConsultaParejaPage = () => {
                   </div>
                 </motion.button>
 
-                {/* Premium */}
+                {/* ── Premium ── */}
                 <motion.button initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
                   whileHover={{ scale: 1.02, y: -4 }} whileTap={{ scale: 0.98 }}
                   onClick={() => { setMode('premium'); setStage('checkout'); scrollToTop() }}
-                  className="group relative p-8 pb-6 border border-violet-500/20 rounded-2xl bg-gradient-to-br from-violet-500/[0.03] to-pink-500/[0.02] hover:border-violet-400/40 transition-all duration-500 text-left overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-violet-500/8 to-transparent rounded-bl-full" />
-                  <div className="absolute top-4 right-4">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-gradient-to-r from-violet-500/20 to-pink-500/20 border border-violet-400/20 rounded-full text-[10px] text-violet-300/80 font-light uppercase tracking-[0.15em]">
-                      <Sparkles className="w-2.5 h-2.5" /> Premium
+                  className="group relative p-8 pb-7 border-2 border-violet-500/25 rounded-2xl bg-gradient-to-br from-violet-500/[0.04] to-pink-500/[0.02] hover:border-violet-400/45 transition-all duration-500 text-left overflow-hidden">
+                  <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-violet-500/8 to-transparent rounded-bl-full" />
+                  {/* Recommended badge */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-gradient-to-r from-violet-500 to-pink-500 rounded-full text-[10px] text-white font-light uppercase tracking-[0.15em] shadow-lg shadow-violet-500/25">
+                      <Sparkles className="w-3 h-3" /> Recomendado
                     </span>
                   </div>
-                  <div className="relative z-10">
-                    <div className="inline-flex p-3 rounded-xl bg-gradient-to-br from-violet-400/10 to-purple-400/10 border border-violet-500/10 mb-5">
+
+                  <div className="relative z-10 mt-2">
+                    <div className="inline-flex p-3 rounded-xl bg-gradient-to-br from-violet-400/15 to-purple-400/15 border border-violet-500/15 mb-5">
                       <Brain className="w-5 h-5 text-violet-400/80" strokeWidth={1.5} />
                     </div>
-                    <h3 className="text-xl text-white/90 font-light tracking-wide mb-3 font-display">
+                    <h3 className="text-xl text-white/90 font-light tracking-wide mb-1 font-display">
                       Diagnóstico <span className="italic">Premium</span>
                     </h3>
-                    <div className="flex items-center gap-3 mb-5">
-                      <span className="flex items-center gap-1.5 text-white/40 text-xs"><Clock className="w-3 h-3" /> ~20 min</span>
+                    <p className="text-white/30 text-xs font-extralight mb-4">Análisis psicoanalítico profundo con IA</p>
+
+                    <div className="flex items-center gap-3 mb-5 py-2 px-3 rounded-lg bg-violet-500/[0.06] border border-violet-500/10">
+                      <span className="flex items-center gap-1.5 text-white/45 text-xs"><Clock className="w-3 h-3" /> ~25 min</span>
+                      <span className="w-px h-3 bg-white/10" />
+                      <span className="flex items-center gap-1.5 text-white/45 text-xs"><Brain className="w-3 h-3" /> 50 preguntas</span>
                       <span className="w-px h-3 bg-white/10" />
                       <span className="text-violet-300/70 text-xs font-light">${PREMIUM_PRICE} MXN</span>
                     </div>
-                    <ul className="space-y-2.5 mb-6 text-white/40 text-xs font-extralight">
-                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> 15 preguntas abiertas + 25 confirmatorias + 10 proyectivas</li>
-                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Gráfica radar de 8 dimensiones</li>
-                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Correlación narrativa ↔ datos cuantitativos</li>
-                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Patrones inconscientes y mecanismos de defensa</li>
-                      <li className="flex items-start gap-2"><Check className="w-3 h-3 text-violet-400/50 mt-0.5 flex-shrink-0" /> Informe PDF profesional</li>
+
+                    <ul className="space-y-2.5 mb-5 text-white/45 text-xs font-extralight">
+                      <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 mt-0.5 flex-shrink-0" /> 25 preguntas abiertas + 25 proyectivas</li>
+                      <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 mt-0.5 flex-shrink-0" /> Gráfica radar de 8 dimensiones</li>
+                      <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 mt-0.5 flex-shrink-0" /> Análisis por dimensión con gráfica propia</li>
+                      <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 mt-0.5 flex-shrink-0" /> Patrones inconscientes y mecanismos de defensa</li>
+                      <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 mt-0.5 flex-shrink-0" /> Lectura psicoanalítica personalizada</li>
+                      <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 mt-0.5 flex-shrink-0" /> Informe PDF profesional descargable</li>
                     </ul>
-                    <div className="flex items-center gap-2 text-violet-400/60 text-xs font-light group-hover:text-violet-400/90 transition-colors">
-                      <span className="uppercase tracking-[0.15em]">Acceder</span>
+
+                    {/* Mini preview inside card */}
+                    <div className="mb-5 p-3 rounded-xl border border-violet-500/10 bg-violet-500/[0.03]">
+                      <div className="flex items-center gap-4">
+                        {[
+                          { label: 'Comm.', pct: 72, c: 'bg-blue-400' },
+                          { label: 'Intim.', pct: 65, c: 'bg-pink-400' },
+                          { label: 'Admir.', pct: 80, c: 'bg-amber-400' },
+                          { label: 'Confl.', pct: 42, c: 'bg-red-400' },
+                        ].map((d, i) => (
+                          <div key={i} className="flex-1">
+                            <div className="h-8 bg-white/5 rounded relative overflow-hidden">
+                              <div className={`absolute bottom-0 left-0 right-0 ${d.c} opacity-30 rounded`} style={{ height: `${d.pct}%` }} />
+                            </div>
+                            <p className="text-white/20 text-[8px] text-center mt-1">{d.label}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-violet-400/70 text-xs font-light group-hover:text-violet-300 transition-colors">
+                      <span className="uppercase tracking-[0.15em]">Acceder al diagnóstico completo</span>
                       <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                     </div>
                   </div>
@@ -1622,7 +1883,7 @@ const ConsultaParejaPage = () => {
 
                 {/* Features list */}
                 <div className="space-y-2.5 mb-8">
-                  {['Cuestionario psicológico profundo (61 preguntas)', 'Perfil de patrones inconscientes', 'Lectura psicoanalítica del cuestionario', 'Lectura integral: cruce de datos + reflexiones', 'Gráfica radar profesional de 8 dimensiones', 'Informe PDF profesional descargable'].map((feat, i) => (
+                  {['Cuestionario psicológico profundo (50 preguntas)', 'Perfil de patrones inconscientes', 'Análisis por dimensión con gráfica individual', 'Lectura integral: cruce de datos + reflexiones', 'Gráfica radar profesional de 8 dimensiones', 'Informe PDF profesional descargable'].map((feat, i) => (
                     <div key={i} className="flex items-start gap-2.5">
                       <Check className="w-3.5 h-3.5 text-violet-400/60 mt-0.5 flex-shrink-0" strokeWidth={2} />
                       <span className="text-white/50 text-xs font-light leading-relaxed">{feat}</span>
@@ -1725,7 +1986,7 @@ const ConsultaParejaPage = () => {
 
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
                 <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                  onClick={() => { setStage('respondent'); scrollToTop() }}
+                  onClick={() => { setRespondent('yo'); setStage('philosophical'); scrollToTop() }}
                   className="px-10 py-4 bg-gradient-to-r from-violet-500 to-pink-500 rounded-full text-white font-light text-sm uppercase tracking-[0.15em] hover:shadow-[0_0_30px_rgba(139,92,246,0.25)] transition-shadow">
                   Comenzar diagnóstico
                 </motion.button>
@@ -2102,9 +2363,9 @@ const ConsultaParejaPage = () => {
               </div>
 
               <div className="flex items-center justify-center gap-6 text-white/30 text-xs tracking-widest uppercase">
-                <span>15 preguntas</span>
+                <span>25 preguntas</span>
                 <span className="w-1 h-1 rounded-full bg-white/20" />
-                <span>~3 minutos</span>
+                <span>~5 minutos</span>
               </div>
 
               <button
@@ -2604,6 +2865,64 @@ const ConsultaParejaPage = () => {
                   })}
                 </div>
               </motion.div>
+
+              {/* ─── ANÁLISIS POR DIMENSIÓN (Premium — cada área con gráfica + explicación) ─── */}
+              {isPremiumUnlocked && aiAnalysis?.areaCorrelations && (
+                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+                  className="mt-10 mb-4">
+                  <div className="flex items-center gap-3 mb-8">
+                    <Brain className="w-5 h-5 text-violet-400/60" strokeWidth={1.5} />
+                    <h3 className="text-xl font-light text-white tracking-wide font-display">Análisis por dimensión</h3>
+                  </div>
+                  <p className="text-white/35 text-sm font-light leading-relaxed mb-8 -mt-4">
+                    Cada área fue evaluada a partir de lo que compartiste. Aquí te explicamos qué encontramos y por qué.
+                  </p>
+                  <div className="space-y-5">
+                    {AREAS.map((area, i) => {
+                      const pct = displayScores[area.key] ?? 50
+                      const level = getLevelPct(pct)
+                      const explanation = aiAnalysis.areaCorrelations[area.key]
+                      if (!explanation) return null
+                      return (
+                        <motion.div key={area.key} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.45 + i * 0.06 }}
+                          className={`p-7 border rounded-2xl bg-gradient-to-br from-white/[0.02] to-transparent ${
+                            pct >= 60 ? 'border-emerald-500/12' : pct >= 45 ? 'border-amber-500/12' : 'border-red-500/12'
+                          }`}>
+                          {/* Header: icon + name + bar + score */}
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className={`p-2 rounded-lg bg-gradient-to-br ${area.color} bg-opacity-10`}>
+                              <area.icon className="w-4 h-4 text-white/70" strokeWidth={1.5} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between mb-1.5">
+                                <span className="text-white/85 text-sm font-light tracking-wide">{area.label}</span>
+                                <div className="flex items-center gap-2">
+                                  <span className={`text-xs font-light ${level.color}`}>{level.label}</span>
+                                  <span className="text-white/50 text-lg font-light tabular-nums">{pct}%</span>
+                                </div>
+                              </div>
+                              <div className="h-2.5 bg-white/5 rounded-full overflow-hidden">
+                                <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }}
+                                  transition={{ duration: 1.2, delay: 0.5 + i * 0.06, ease: 'easeOut' }}
+                                  className={`h-full rounded-full bg-gradient-to-r ${area.color}`} />
+                              </div>
+                            </div>
+                          </div>
+                          {/* AI explanation */}
+                          <div className="mt-4 pl-1">
+                            {explanation.split('\n\n').map((p, j) => (
+                              <p key={j} className="text-white/60 text-sm font-light leading-[1.85] tracking-wide mb-3 last:mb-0">
+                                {renderBold(p)}
+                              </p>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )
+                    })}
+                  </div>
+                </motion.div>
+              )}
 
               {/* ─── CONEXIONES DETECTADAS (Premium — sección propia, más prominente) ─── */}
               {isPremiumUnlocked && aiAnalysis?.correlacionesPrincipales?.length > 0 && (

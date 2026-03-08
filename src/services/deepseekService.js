@@ -7,9 +7,9 @@ const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions'
 
 const SYSTEM_PROMPT = `Eres un psicólogo especialista en relaciones de pareja con enfoque profundo en dinámicas vinculares y patrones de comportamiento en el vínculo amoroso.
 
-Tu tarea es generar un diagnóstico integral cruzando TRES fuentes de datos:
+Tu tarea es generar un diagnóstico integral cruzando DOS fuentes de datos:
 
-FUENTE PRIMARIA — RESPUESTAS NARRATIVAS (15 preguntas conversacionales):
+FUENTE PRIMARIA — RESPUESTAS NARRATIVAS (25 preguntas conversacionales profundas):
 Son el corazón del diagnóstico. La persona habló libremente, revelando patrones sin darse cuenta. Extrae lo profundo de lo aparentemente cotidiano. Busca:
 - Lo que la persona en verdad necesita vs. lo que dice querer
 - Cómo percibe al otro: ¿lo ve como persona real o como lo que necesita que sea?
@@ -20,18 +20,23 @@ Son el corazón del diagnóstico. La persona habló libremente, revelando patron
 - Si la persona se mantiene como individuo o se ha ido perdiendo dentro del vínculo
 - Cómo habla del otro: con admiración, frustración, miedo, indiferencia, resignación
 
-FUENTE CONFIRMATORIA — AFIRMACIONES CUANTITATIVAS (25 reactivos Likert):
-Los datos corroboran o contradicen lo que la narrativa reveló. Cruza:
-- Si la narrativa dice "todo está bien" pero los números muestran áreas débiles: detectar evasión o disociación
-- Si la narrativa muestra sufrimiento pero los números son altos: posible minimización
-- Si coinciden: mayor confianza en el patrón detectado
-
-FUENTE PROYECTIVA — RESPUESTAS FLASH (10 preguntas sin filtro racional):
-Frases completadas en segundos + elecciones forzadas. Aquí aparece lo inconsciente sin censura.
+FUENTE PROYECTIVA — RESPUESTAS FLASH (25 preguntas sin filtro racional):
+15 frases completadas en segundos + 10 elecciones forzadas. Aquí aparece lo inconsciente sin censura.
 - Interpreta las frases completadas de forma proyectiva: el sujeto proyecta su mundo interno
 - Las elecciones forzadas revelan la estructura real del vínculo (quién cede, qué prefiere, qué teme)
-- Busca coherencia o contradicción con las otras dos fuentes
+- Busca coherencia o contradicción con la fuente primaria
 - SIEMPRE cita las frases completadas textualmente entre comillas en lecturaFlash
+
+PUNTUACIÓN DE DIMENSIONES (0-100):
+Debes asignar una puntuación de 0 a 100 para cada dimensión, basándote en la evidencia que encuentres en AMBAS fuentes:
+- comunicacion: Calidad de diálogo, escucha, manejo verbal de conflictos
+- intimidad: Conexión emocional y física, vulnerabilidad compartida
+- admiracion: Respeto mutuo, valoración del otro, reconocimiento
+- conflicto: Nivel de conflictos acumulados o evitados (0 = muchos conflictos, 100 = manejo saludable)
+- proyecto: Compatibilidad de metas, visión compartida de futuro
+- seguridad: Qué tan seguros se sienten juntos, confianza base
+- autonomia: Equilibrio entre cercanía e independencia personal
+- idealizacion: Grado de idealización (0 = visión realista, 100 = muy idealizado)
 
 INSTRUCCIONES CRÍTICAS:
 1. CITA PALABRAS EXACTAS: siempre que puedas, incluye frases literales de las respuestas entre comillas. Ej: «cuando dijiste "no sé cómo explicarlo pero algo cambió"...»
@@ -40,7 +45,7 @@ INSTRUCCIONES CRÍTICAS:
 4. SÉ ESPECÍFICO: cada observación debe poder ser reconocida como "esto es exactamente lo que yo dije y lo que yo vivo".
 5. APERTURA EMPÁTICA PRIMERO: lo primero que la persona leerá debe hacerla sentir profundamente comprendida — valida su experiencia, cita sus palabras, ve el ser humano antes que el patrón.
 
-Para cada área del diagnóstico, explica POR QUÉ tiene esa puntuación citando evidencia concreta de las respuestas.
+Para cada área/dimensión, explica detalladamente POR QUÉ tiene esa puntuación citando evidencia concreta de las respuestas. El campo areaCorrelations debe contener un análisis rico y empático de cada dimensión — esta es la sección principal que la persona leerá para cada área.
 
 IMPORTANTE: Responde EXCLUSIVAMENTE en formato JSON válido con la estructura solicitada.`
 
@@ -90,7 +95,7 @@ function buildPrompt(areaLabels, philosophicalAnswers, philosophicalQuestions, f
   }
 
   const areaKeys = Object.keys(areaLabels)
-  const areaCorrelationsSchema = areaKeys.map(k => `"${k}": "(1-2 párrafos profundos. Explica POR QUÉ esta área tiene esa puntuación. CITA PALABRAS EXACTAS de las respuestas donde sea posible.)"`).join(',\n    ')
+  const areaCorrelationsSchema = areaKeys.map(k => `"${k}": "(2-3 párrafos empáticos y profundos. Esta es la sección principal que la persona leerá sobre esta dimensión — hazla sentir comprendida. Explica POR QUÉ esta área tiene esa puntuación. CITA PALABRAS EXACTAS de sus respuestas. Conecta con su experiencia real. **Usa negrita** en conceptos clave. Sin tecnicismos.)"`).join(',\n    ')
   const dimensionScoresSchema = areaKeys.map(k => `"${k}": "(número entero 0-100)"`).join(',\n    ')
 
   prompt += `\nGenera tu análisis psicológico en el siguiente formato JSON exacto:
@@ -205,15 +210,16 @@ function generateFallbackAnalysis() {
     idealizationLevel: 'medio',
     idealizationScore: 55,
     idealizationExplanation: 'El nivel de idealización detectado refleja una tendencia a proyectar expectativas elevadas en la pareja o en la relación misma.\n\nTrabajarlo en sesión permite distinguir entre el amor al otro real — con sus límites y su falta — y el amor al otro idealizado.',
-    areaCorrelations: Object.fromEntries(
-      Object.entries(defaultScores).map(([key, score]) => {
-        const name = areaNames[key]
-        const msg = score >= 60
-          ? `**${name}** muestra un nivel saludable (${score}%). Los datos sugieren que esta es un área de fortaleza en el vínculo.`
-          : `**${name}** obtiene ${score}%, lo cual indica patrones que merecen atención.`
-        return [key, msg]
-      })
-    ),
+    areaCorrelations: {
+      comunicacion: '**La comunicación** obtiene un 55%, lo que sugiere que existen temas importantes que se evitan o se abordan de forma parcial.\n\nEn muchas relaciones, la comunicación parece funcionar en lo cotidiano — pero los temas que realmente importan se quedan sin decir. Lo que no se dice no desaparece: se acumula.\n\nUna sesión profesional puede ayudar a identificar qué conversaciones están pendientes y por qué resultan tan difíciles de iniciar.',
+      intimidad: '**La intimidad** se sitúa en un 50%, indicando que la conexión emocional profunda ha ido fluctuando.\n\nLa intimidad no es solo contacto físico — es la capacidad de mostrarse vulnerable frente al otro sin miedo. Cuando baja, no siempre es por falta de amor, sino por acumulación de pequeñas desconexiones que no se resolvieron a tiempo.\n\nExplorar esto en sesión permite reconectar desde un lugar más auténtico.',
+      admiracion: '**La admiración** alcanza un 60%, un indicador positivo que sugiere que aún existe respeto y valoración mutua.\n\nEsta es una de las bases más importantes del vínculo. Mientras haya capacidad de ver al otro con respeto genuino, la relación tiene un recurso fundamental para trabajar lo demás.',
+      conflicto: '**Los conflictos** obtienen un 45%, lo que indica la presencia de patrones de tensión que se repiten sin resolverse del todo.\n\nCuando los conflictos se acumulan sin ser procesados, tienden a generar resentimiento silencioso. No es la pelea en sí lo que desgasta, sino la sensación de que "siempre terminamos en el mismo lugar".\n\nIdentificar el ciclo del conflicto es el primer paso para transformarlo.',
+      proyecto: '**El proyecto de vida** marca un 55%, sugiriendo cierta alineación pero también áreas donde las visiones de futuro divergen.\n\nCuando cada uno imagina un futuro diferente sin comunicarlo claramente, la relación puede sentirse estancada. Explorar qué quiere realmente cada uno ayuda a decidir conscientemente hacia dónde caminar juntos.',
+      seguridad: '**La seguridad emocional** se ubica en un 50%, lo que indica que la base de confianza necesita fortalecerse.\n\nSentirse seguro emocionalmente es poder ser vulnerable sin miedo al juicio o al abandono. Cuando esta base se debilita, aparecen conductas de control, celos o evitación como mecanismos compensatorios.',
+      autonomia: '**La autonomía** alcanza un 60%, un valor saludable que indica capacidad de mantener la identidad propia dentro de la relación.\n\nAmar no debería significar perder quién eres. Esta puntuación sugiere cierto equilibrio entre cercanía e independencia — un recurso valioso que vale la pena cultivar conscientemente.',
+      idealizacion: '**La idealización** obtiene un 45%, lo que sugiere una tendencia moderada a proyectar en el otro expectativas que no siempre corresponden con la realidad.\n\nIdealizar no es lo mismo que admirar. La idealización coloca en el otro algo que en realidad necesitamos encontrar dentro de nosotros mismos. Cuando la realidad no coincide con la imagen idealizada, aparece frustración o decepción.',
+    },
     correlacionesPrincipales: [
       'La **Comunicación** y los **Conflictos** forman un ciclo que, sin intervención, tiende a profundizarse.',
       'La **Idealización** combinada con la **Seguridad emocional** sugiere que se busca en el otro aquello que se necesita para sentirse completo.'
