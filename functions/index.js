@@ -35,7 +35,9 @@ try {
   console.warn('⚠️  Firebase not configured — progress saving disabled')
 }
 
-app.use(cors({ origin: FRONTEND_URL }))
+app.use(cors({
+  origin: [FRONTEND_URL, 'http://localhost:3000', 'http://localhost:5173']
+}))
 app.use(express.json({ limit: '10mb' }))
 
 // ─── ENDPOINT: Verify Stripe payment session ────────────────────
@@ -195,9 +197,9 @@ app.post('/api/send-results-email', async (req, res) => {
 const CONSULTA_PROMO_CODES = {
   // Consulta Individual
   'MENTELIBRE':  { product: 'individual', priceCents: 50000,  label: '$500 MXN'   },
+  'VINCULOS650': { product: 'individual', priceCents: 65000,  label: '$650 MXN'   },
   // Consulta de Pareja
   'DOSPUERTAS':  { product: 'pareja',     priceCents: 100000, label: '$1,000 MXN' },
-  'VINCULOS650': { product: 'pareja',     priceCents: 65000,  label: '$650 MXN'   },
   // Free (testing) — valid for both
   'LUISPRAXIS':  { product: 'both',       priceCents: 0,      label: 'GRATIS'     }
 }

@@ -24,12 +24,12 @@ const StorePage = () => {
       description:
         'No venimos a hablar de síntomas. Venimos a ver qué hay por debajo. ' +
         'Trabajo los filtros inconscientes que moldean tu realidad y comenzamos a atravesarlos.',
-      shortDesc: 'Una hora que puede cambiarlo todo.',
+      shortDesc: 'Una hora que puede cambiarlo todo. Sin protocolo, sin rodeos — trabajo real con el inconsciente.',
       benefits: [
-        'Trabajo desde el Método AION©',
-        'Preguntas que van al fondo — sin protocolo',
-        'Seguimiento post-sesión vía WhatsApp',
-        'Sin compromisos — compra sesiones sueltas'
+        '60 min por videollamada — directo al fondo',
+        'Método AION© — sin scripts ni manuales',
+        'Seguimiento post-sesión por WhatsApp',
+        'Compra sesiones sueltas — sin contratos'
       ],
       gradient: 'from-emerald-600/20 to-teal-600/20',
       borderGradient: 'from-emerald-500 to-teal-500',
@@ -41,16 +41,16 @@ const StorePage = () => {
       category: 'Sesión para dos',
       price: '$1,199 MXN',
       duration: '90 min',
-      image: '/pareja imagen.jpg',
+      image: '/productos/consulta pareja/cONEXIÓN/0.jpg',
       description:
         'Detrás de cada conflicto hay un patrón: heredado, proyectado, repetido sin que nadie lo nombre. ' +
         'En esta sesión empezamos a nombrarlo.',
-      shortDesc: 'Para lo que solos no pueden atravesar.',
+      shortDesc: 'Lo que solos no pueden ver. 90 minutos donde los dos por fin escuchan lo que nadie dice.',
       benefits: [
-        'Para dos personas — juntos en la sesión',
-        'Análisis de dinámicas inconscientes de pareja',
-        'Perspectiva honesta y directa',
-        'Sin contratos — repiten cuando lo necesiten'
+        '90 min juntos por videollamada',
+        'Análisis de dinámicas inconscientes',
+        'Sin tomar partido — perspectiva real',
+        'Seguimiento post-sesión por WhatsApp'
       ],
       gradient: 'from-rose-600/20 to-pink-600/20',
       borderGradient: 'from-rose-500 to-pink-500',
@@ -77,80 +77,7 @@ const StorePage = () => {
       popular: true,
       isDiagnostic: true
     },
-    {
-      id: 1,
-      name: 'Sesión Individual',
-      category: 'Psicoterapia',
-      price: '$750 MXN',
-      duration: '60 min',
-      image: '/individual imagen.jpg',
-      description: 'Sesión de psicoterapia individual. Trabajo profundo con el inconsciente a través del método AION©.',
-      shortDesc: 'Transformación desde el inconsciente',
-      benefits: [
-        'Trabajo con filtros limitantes',
-        'Herramientas prácticas',
-        'Enfoque integrativo',
-        'Seguimiento personalizado'
-      ],
-      gradient: 'from-violet-600/20 to-purple-600/20',
-      borderGradient: 'from-violet-500 to-purple-500'
-    },
-    {
-      id: 2,
-      name: 'Sesión de Pareja',
-      category: 'Terapia de Pareja',
-      price: '$1,500 MXN',
-      duration: '90 min',
-      image: '/pareja imagen.jpg',
-      description: 'Terapia de pareja desde el psicoanálisis. Trabajamos las dinámicas inconscientes que sostienen el conflicto.',
-      shortDesc: 'Desmontaje de ilusiones en la relación',
-      benefits: [
-        'Análisis de dinámicas relacionales',
-        'Trabajo con proyecciones mutuas',
-        'Identificación de patrones repetitivos',
-        'Comunicación consciente'
-      ],
-      gradient: 'from-pink-600/20 to-rose-600/20',
-      borderGradient: 'from-pink-500 to-rose-500'
-    },
-    {
-      id: 3,
-      name: 'Sesión Familiar',
-      category: 'Terapia Familiar',
-      price: '$1,750 MXN',
-      duration: '90 min',
-      image: '/familia imagen.jpg',
-      description: 'Terapia familiar sistémica. Trabajamos los patrones transgeneracionales y las dinámicas familiares.',
-      shortDesc: 'Atravesar patrones heredados',
-      benefits: [
-        'Análisis de dinámicas familiares',
-        'Identificación de patrones transgeneracionales',
-        'Trabajo con roles familiares',
-        'Reestructuración de vínculos'
-      ],
-      gradient: 'from-cyan-600/20 to-blue-600/20',
-      borderGradient: 'from-cyan-500 to-blue-500'
-    },
-    {
-      id: 4,
-      name: 'Paquete 4 Sesiones',
-      category: 'Proceso Terapéutico',
-      price: 'Desde $2,400 MXN',
-      duration: '4 sesiones',
-      image: '/paquete 4 sesiones imagen.jpg',
-      description: '20% de descuento en paquetes de 4 sesiones. Elige entre Individual, Pareja, Familiar o Empresarial.',
-      shortDesc: '20% de ahorro · Múltiples opciones',
-      benefits: [
-        'Ahorro del 20%',
-        '4 modalidades disponibles',
-        'Seguimiento continuo',
-        'Transformación sostenida'
-      ],
-      gradient: 'from-fuchsia-600/20 to-pink-600/20',
-      borderGradient: 'from-fuchsia-500 to-pink-500',
-      popular: true,
-      isPackage: true
-    },
+
     {
       id: 5,
       name: 'Consultoría Empresarial',

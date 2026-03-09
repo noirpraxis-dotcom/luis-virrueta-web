@@ -55,15 +55,23 @@ const QUESTIONS = [
   { id: 'Q39', text: 'Si esta relación terminara mañana, lo que más me dolería sería...' },
   { id: 'Q40', text: 'Si hay algo que siento que se repite una y otra vez entre nosotros es...' },
   { id: 'Q41', text: 'Cuando nuestra relación está en su mejor momento es porque...' },
-  { id: 'Q42', text: 'Si esta relación cambiara profundamente mañana, lo primero que sentiría sería...' }
+  { id: 'Q42', text: 'Si esta relación cambiara profundamente mañana, lo primero que sentiría sería...' },
+  // NUEVAS — Familia de origen (Phase 5)
+  { id: 'Q46', text: 'La relación de tus padres se parecía a la tuya en que...' },
+  { id: 'Q47', text: 'Algo que aprendiste del amor viendo a tu familia fue...' },
+  { id: 'Q48', text: 'Un patrón de tu familia que reconoces en tu relación actual es...' },
+  // NUEVAS — Intimidad ampliada (Phase 6)
+  { id: 'Q49', text: 'Cuando hay cercanía física entre nosotros, emocionalmente yo...' },
+  { id: 'Q50', text: 'Lo que más echo de menos de nuestra intimidad es...' }
 ]
 
 async function generateAudio(question) {
   const outPath = path.join(OUTPUT_DIR, `${question.id}.mp3`)
   
-  // Force regeneration with new voice
+  // Skip if already exists (only regenerate missing)
   if (fs.existsSync(outPath)) {
-    fs.unlinkSync(outPath)
+    console.log(`⏭ ${question.id} ya existe, saltando`)
+    return true
   }
 
   try {
