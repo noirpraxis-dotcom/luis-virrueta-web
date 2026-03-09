@@ -166,7 +166,7 @@ const ImageCollage = ({ images, className = '' }) => {
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.5, delay: i * 0.08 }}
           className={`relative rounded-xl overflow-hidden ${
-            i === 0 ? 'col-span-2 row-span-2 aspect-[4/3]' : 'aspect-square'
+            i === 0 ? 'col-span-2 row-span-2 aspect-[4/3]' : 'aspect-[4/3]'
           }`}
         >
           <img
@@ -255,7 +255,7 @@ const ConsultaProductPage = ({ type }) => {
         className="flex items-center gap-2 text-white/40 hover:text-white/70 transition-colors text-sm font-light"
       >
         <Tag className="w-4 h-4" />
-        <span>\u00bfTienes un c\u00f3digo de descuento?</span>
+        <span>¿Tienes un código de descuento?</span>
         {showPromo ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
       </button>
 
@@ -270,7 +270,7 @@ const ConsultaProductPage = ({ type }) => {
               type="text"
               value={promoInput}
               onChange={e => { setPromoInput(e.target.value); setPromoError('') }}
-              placeholder="Ingresa tu c\u00f3digo"
+              placeholder="Ingresa tu código"
               className="flex-1 px-4 py-3 bg-zinc-900 border border-white/20 rounded-lg text-white placeholder-white/30 font-light focus:outline-none focus:border-white/40 uppercase tracking-wider text-sm"
               onKeyDown={e => e.key === 'Enter' && applyPromo()}
             />
@@ -285,7 +285,7 @@ const ConsultaProductPage = ({ type }) => {
           {promoApplied && (
             <div className={`flex items-center gap-2 text-sm font-light ${product.accentColor}`}>
               <CheckCircle2 className="w-4 h-4" />
-              <span>\u00a1C\u00f3digo <strong>{promoApplied.code}</strong> aplicado! Precio: <strong>{promoApplied.label}</strong></span>
+              <span>¡Código <strong>{promoApplied.code}</strong> aplicado! Precio: <strong>{promoApplied.label}</strong></span>
             </div>
           )}
         </motion.div>
@@ -440,13 +440,32 @@ const ConsultaProductPage = ({ type }) => {
               transition={{ duration: 0.7 }}
               className="text-center space-y-3"
             >
-              <h2 className="text-3xl lg:text-4xl font-light text-white">
-                El amor se siente \u2014 pero los patrones se repiten
+              <h2 className="text-3xl lg:text-4xl font-light text-white overflow-hidden">
+                {'El amor se siente — pero los patrones se repiten'
+                  .split(' ')
+                  .map((word, wi) => (
+                    <motion.span
+                      key={wi}
+                      initial={{ opacity: 0, y: 28 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.45, delay: 0.1 + wi * 0.055, ease: 'easeOut' }}
+                      className="inline-block mr-[0.28em]"
+                    >
+                      {word}
+                    </motion.span>
+                  ))}
               </h2>
-              <p className="text-white/50 font-light max-w-2xl mx-auto">
-                La conexi\u00f3n entre dos personas es real. Pero los conflictos que se repiten tambi\u00e9n lo son.
-                Esta sesi\u00f3n existe para nombrar lo que est\u00e1 pasando por debajo.
-              </p>
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.65 }}
+                className="text-white/50 font-light max-w-2xl mx-auto"
+              >
+                La conexión entre dos personas es real. Pero los conflictos que se repiten también lo son.
+                Esta sesión existe para nombrar lo que está pasando por debajo.
+              </motion.p>
             </motion.div>
 
             <motion.div
@@ -567,8 +586,8 @@ const ConsultaProductPage = ({ type }) => {
                   Lo que no se nombra, se repite
                 </h2>
                 <p className="text-lg text-white/50 font-light leading-relaxed">
-                  Muchas parejas llegan sinti\u00e9ndose atrapadas en el mismo ciclo. La misma pelea, con distinto disfraz.
-                  Pero el patr\u00f3n no es el problema \u2014 es la puerta.
+                  Muchas parejas llegan sintiéndose atrapadas en el mismo ciclo. La misma pelea, con distinto disfraz.
+                  Pero el patrón no es el problema — es la puerta.
                 </p>
                 <p className="text-lg text-white/50 font-light leading-relaxed">
                   Cuando logras verlo, dejas de repetirlo. Eso es lo que hacemos en estos 90 minutos.
@@ -577,7 +596,7 @@ const ConsultaProductPage = ({ type }) => {
                   <p className={`font-light ${product.accentColor} text-sm leading-relaxed italic`}>
                     "La claridad puede incomodar. Pero es mejor que seguir girando en el mismo ciclo."
                   </p>
-                  <p className="text-white/40 font-light text-xs mt-2">\u2014 Luis Virrueta</p>
+                  <p className="text-white/40 font-light text-xs mt-2">— Luis Virrueta</p>
                 </div>
               </motion.div>
             </div>
@@ -594,7 +613,7 @@ const ConsultaProductPage = ({ type }) => {
             transition={{ duration: 0.6 }}
             className="text-3xl lg:text-4xl font-light text-white text-center mb-14"
           >
-            \u00bfC\u00f3mo funciona?
+            ¿Cómo funciona?
           </motion.h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
