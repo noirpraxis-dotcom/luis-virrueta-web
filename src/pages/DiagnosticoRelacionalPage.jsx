@@ -1705,8 +1705,32 @@ const DiagnosticoRelacionalPage = () => {
                 )}
               </motion.div>
 
-              {/* Email collection */}
-              {!emailsSent && !verifyingPayment && (
+              {/* ── CONSULTA: WhatsApp flow ── */}
+              {purchaseType === 'consulta' && !verifyingPayment && (
+                <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
+                  className="space-y-5">
+                  <div className="p-6 rounded-2xl border border-violet-500/20 bg-violet-500/[0.04] space-y-4 text-center">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500/15 to-emerald-500/10 border border-green-500/20 flex items-center justify-center mx-auto">
+                      <span className="text-2xl">💬</span>
+                    </div>
+                    <h3 className="text-xl font-light text-white">¡Tu consulta está reservada!</h3>
+                    <p className="text-white/45 text-sm font-light leading-relaxed">
+                      El siguiente paso es coordinar la fecha y hora de tu sesión con Luis. Da clic en el botón de abajo — llegarás directo a WhatsApp con un mensaje listo para enviar.
+                    </p>
+                    <motion.a
+                      href={`https://wa.me/527228720520?text=${encodeURIComponent('Hola Luis, acabo de comprar una consulta psicológica en luisvirrueta.com. Me gustaría coordinar la fecha y hora de nuestra sesión. ¿Cuándo tienes disponibilidad?')}`}
+                      target="_blank" rel="noopener noreferrer"
+                      whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                      className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 text-white font-light text-base hover:from-green-500 hover:to-emerald-500 transition-all shadow-lg shadow-green-600/20">
+                      <span className="text-lg">💬</span> Agendar por WhatsApp
+                    </motion.a>
+                    <p className="text-white/25 text-xs font-light">wa.me/527228720520</p>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Email collection — Individual / Pareja only */}
+              {purchaseType !== 'consulta' && !emailsSent && !verifyingPayment && (
                 <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
                   className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] space-y-5">
                   <div className="text-center">
@@ -1798,7 +1822,8 @@ const DiagnosticoRelacionalPage = () => {
                 </motion.div>
               )}
 
-              {/* CTA: Start now or wait for email */}
+              {/* CTA: Start now or wait for email — Individual / Pareja only */}
+              {purchaseType !== 'consulta' && (
               <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: emailsSent ? 0.3 : 0.8 }}
                 className="text-center space-y-4">
                 <motion.button
@@ -1816,6 +1841,7 @@ const DiagnosticoRelacionalPage = () => {
                   </p>
                 )}
               </motion.div>
+              )}
             </div>
           </motion.div>
         )}
@@ -2658,8 +2684,9 @@ const DiagnosticoRelacionalPage = () => {
                       </span>
                     ))}
                   </div>
-                  <div className="pt-2">
-                    <p className="text-2xl font-light text-white mb-3">${PRODUCT_PRICE_CONSULTA} <span className="text-base text-white/35">MXN</span></p>
+                  <div className="pt-2 space-y-3">
+                    <p className="text-2xl font-light text-white mb-1">${PRODUCT_PRICE_CONSULTA} <span className="text-base text-white/35">MXN</span></p>
+                    <p className="text-white/35 text-xs font-light">Al completar el pago, recibirás un botón de WhatsApp para coordinar directamente con Luis la fecha y hora de tu sesión.</p>
                     <motion.a
                       href={STRIPE_LINKS.consulta}
                       target="_blank" rel="noopener noreferrer"
