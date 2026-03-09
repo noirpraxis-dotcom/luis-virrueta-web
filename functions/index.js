@@ -130,7 +130,7 @@ app.post('/api/send-access-email', async (req, res) => {
 
 app.post('/api/send-results-email', async (req, res) => {
   try {
-    const { email, purchaseId, pdfBase64, productType } = req.body
+    const { email, purchaseId, pdfBase64, productType, userName } = req.body
     if (!email || !pdfBase64) {
       return res.status(400).json({ error: 'email and pdfBase64 required' })
     }
@@ -138,24 +138,42 @@ app.post('/api/send-results-email', async (req, res) => {
     // Extract base64 data from data URI
     const base64Data = pdfBase64.replace(/^data:application\/pdf;[^,]+,/, '')
 
+    const productLabels = { individual: 'Individual ($349)', pareja: 'Pareja ($549)', consulta: 'Consulta ($1,199)' }
+    const fechaHora = new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })
+
+    // Send PDF to client
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: email,
-      bcc: NOTIFY_EMAIL,
       subject: '🔬 Tu Diagnóstico Relacional — Resultados y PDF',
       html: resultsEmailHtml({ productType }),
-      attachments: [
-        {
-          filename: 'diagnostico-relacional.pdf',
-          content: base64Data
-        }
-      ]
+      attachments: [{ filename: 'diagnostico-relacional.pdf', content: base64Data }]
     })
 
     if (error) {
       console.error('Resend error:', error)
       return res.status(500).json({ error: 'Error sending results email' })
     }
+
+    // Send admin notification to Luis (without PDF to keep it light)
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: NOTIFY_EMAIL,
+      subject: `📊 Nuevo diagnóstico completado — ${productLabels[productType] || productType}`,
+      html: `
+        <div style="font-family:sans-serif;max-width:500px;margin:0 auto;padding:24px;">
+          <h2 style="color:#7c3aed;">✅ Diagnóstico completado</h2>
+          <table style="width:100%;border-collapse:collapse;">
+            <tr><td style="padding:8px;color:#666;">Fecha y hora</td><td style="padding:8px;font-weight:bold;">${fechaHora}</td></tr>
+            <tr style="background:#f9f9f9;"><td style="padding:8px;color:#666;">Email del cliente</td><td style="padding:8px;font-weight:bold;">${email}</td></tr>
+            <tr><td style="padding:8px;color:#666;">Nombre</td><td style="padding:8px;font-weight:bold;">${userName || 'No capturado'}</td></tr>
+            <tr style="background:#f9f9f9;"><td style="padding:8px;color:#666;">Producto</td><td style="padding:8px;font-weight:bold;">${productLabels[productType] || productType}</td></tr>
+            <tr><td style="padding:8px;color:#666;">ID de compra</td><td style="padding:8px;font-size:12px;color:#888;">${purchaseId || 'N/A'}</td></tr>
+          </table>
+          <p style="margin-top:16px;color:#888;font-size:13px;">El PDF ya fue enviado automáticamente al cliente.</p>
+        </div>
+      `
+    }).catch(e => console.warn('Admin notify failed:', e.message))
 
     // Mark purchase as completed in Firestore (if available)
     if (db) {

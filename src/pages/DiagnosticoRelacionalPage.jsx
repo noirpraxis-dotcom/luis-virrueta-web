@@ -6,16 +6,19 @@ import {
   Check, CheckCircle, Clock, FileText, Mail, Send, Download, Sparkles, Eye,
   Lock, Star, Activity, BarChart3, Zap, Layers, CreditCard, Loader2, Tag,
   Mic, MicOff, TrendingUp, TrendingDown, AlertTriangle, Play, ChevronDown,
-  XCircle, Volume2
+  XCircle, Volume2, Gift, BookOpen
 } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 import jsPDF from 'jspdf'
 import { analyzeDiagnostic } from '../services/diagnosticRelacionalService'
+import { generateAccessToken, PRODUCT_LABELS, DATA_RETENTION_DAYS } from '../utils/accessToken'
+import { sendAccessEmails, sendResultsEmail, verifyStripeSession } from '../services/emailApiService'
+import { saveProgress, getProgress, savePurchase, saveResults } from '../services/firebaseAuthService'
 
-// ─── CUESTIONARIO: 45 PREGUNTAS EN 7 FASES ────────────────────
+// ─── CUESTIONARIO: 45 PREGUNTAS EN 8 FASES ────────────────────
 
 const QUESTIONS = [
-  // PHASE 0 — IDENTIDAD Y PERCEPCIÓN DE LA RELACIÓN (Q1-Q14)
+  // PHASE 0 — IDENTIDAD Y PERCEPCIÓN DE LA RELACIÓN (9 preguntas)
   { id: 'Q1', section: 'Identidad y percepción', text: 'Me describiría a mí mismo(a) como alguien que...', sample: 'Soy alguien que da mucho emocionalmente pero a veces siento que no recibo lo mismo a cambio.' },
   { id: 'Q2', section: 'Identidad y percepción', text: 'Las personas que me conocen suelen decir que yo...', sample: 'Que soy muy entregado pero que a veces me pierdo en el otro y dejo de cuidarme.' },
   { id: 'Q3', section: 'Identidad y percepción', text: 'Yo describiría a mi pareja como...', sample: 'Es fuerte, decidida, pero a veces se cierra emocionalmente cuando hay tensión.' },
@@ -23,15 +26,10 @@ const QUESTIONS = [
   { id: 'Q5', section: 'Identidad y percepción', text: 'Me junté con mi pareja porque...', sample: 'Sentí que me veía de verdad. De una forma que nadie me había visto antes.' },
   { id: 'Q6', section: 'Identidad y percepción', text: 'Con el tiempo me he dado cuenta de que mi pareja...', sample: 'No es exactamente como la imaginaba al principio. Tiene sus propios miedos y limitaciones que no vi.' },
   { id: 'Q7', section: 'Identidad y percepción', text: 'Algo de mi pareja que influye mucho en cómo me siento es que...', sample: 'Cuando está de buenas, todo fluye. Pero cuando se distancia, siento que todo se derrumba.' },
-  { id: 'Q8', section: 'Identidad y percepción', text: 'Estar con mi pareja me hace sentir...', sample: 'Una mezcla de seguridad y ansiedad. Me siento acompañado pero a veces cuestiono todo.' },
-  { id: 'Q9', section: 'Identidad y percepción', text: 'Cuando pienso en mi pareja, lo primero que siento es...', sample: 'Ternura mezclada con algo de incertidumbre. Como que la amo pero no siempre sé en qué estamos.' },
-  { id: 'Q10', section: 'Identidad y percepción', text: 'Lo que más valoro de mi relación es...', sample: 'Que a pesar de todo, hay momentos donde nos conectamos de una forma que no encuentro con nadie más.' },
   { id: 'Q11', section: 'Identidad y percepción', text: 'Lo que más me cuesta aceptar de mi pareja es...', sample: 'Que a veces no me demuestra lo que siente y yo necesito esas señales para sentirme seguro.' },
-  { id: 'Q12', section: 'Identidad y percepción', text: 'Desde que estoy con mi pareja he descubierto que yo...', sample: 'Tengo más inseguridades de las que pensaba. Esta relación las sacó todas a la luz.' },
-  { id: 'Q13', section: 'Identidad y percepción', text: 'Sin mi pareja, yo sería...', sample: 'Honestamente no sé. A veces pienso que más libre, pero también más solo.' },
   { id: 'Q14', section: 'Identidad y percepción', text: 'Lo que me llevaría a separarme de mi pareja sería...', sample: 'Sentir que no importo. Que se acabe esa sensación de que me elige cada día.' },
 
-  // PHASE 1 — EXPERIENCIA EMOCIONAL (Q15-Q20)
+  // PHASE 1 — EXPERIENCIA EMOCIONAL (6 preguntas)
   { id: 'Q15', section: 'Experiencia emocional', text: 'Cuando estamos bien juntos, yo me siento...', sample: 'En paz. Como si todo estuviera en su lugar y no necesitara nada más.' },
   { id: 'Q16', section: 'Experiencia emocional', text: 'Cuando estamos bien juntos, yo soy...', sample: 'Mi mejor versión. Más gracioso, más abierto, más yo.' },
   { id: 'Q17', section: 'Experiencia emocional', text: 'Cuando mi pareja se aleja emocionalmente, yo...', sample: 'Me quedo pensando qué hice mal. Reviso todo lo que dije buscando el error.' },
@@ -39,7 +37,7 @@ const QUESTIONS = [
   { id: 'Q19', section: 'Experiencia emocional', text: 'Lo que más miedo me da dentro de esta relación es...', sample: 'Que un día se canse de mí. Que se dé cuenta de que no soy suficiente.' },
   { id: 'Q20', section: 'Experiencia emocional', text: 'Para sentirme realmente amado(a) en esta relación necesito...', sample: 'Que me busquen. Que no tenga que adivinar si le importo. Que me lo demuestre sin que yo pregunte.' },
 
-  // PHASE 2 — NARRATIVA DE LA RELACIÓN (Q21-Q26)
+  // PHASE 2 — NARRATIVA DE LA RELACIÓN (6 preguntas)
   { id: 'Q21', section: 'Narrativa de la relación', text: 'El amor debería ser ___ pero en mi relación es...', sample: 'Debería ser tranquilo y seguro, pero en mi relación a veces es una montaña rusa emocional.' },
   { id: 'Q22', section: 'Narrativa de la relación', text: 'Lo que más nos une como pareja es...', sample: 'Los momentos íntimos donde bajamos la guardia y simplemente somos nosotros.' },
   { id: 'Q23', section: 'Narrativa de la relación', text: 'Lo que más nos separa como pareja es...', sample: 'La forma en que manejamos los problemas. Yo quiero hablar y ella quiere esperar.' },
@@ -47,7 +45,7 @@ const QUESTIONS = [
   { id: 'Q25', section: 'Narrativa de la relación', text: 'Si nuestra relación fuera una historia, ahora estaría en la parte donde...', sample: 'Los personajes se están preguntando si quieren seguir o empezar algo nuevo.' },
   { id: 'Q26', section: 'Narrativa de la relación', text: 'Si tuviera que explicar por qué mi pareja y yo seguimos juntos, diría que...', sample: 'Porque debajo de todo, hay algo real que ninguno de los dos quiere perder.' },
 
-  // PHASE 3 — DINÁMICA DE CONFLICTO (Q27-Q32)
+  // PHASE 3 — DINÁMICA DE CONFLICTO (6 preguntas)
   { id: 'Q27', section: 'Dinámica de conflicto', text: 'Cuando discutimos, normalmente termino sintiéndome...', sample: 'Invisible. Como si no importara lo que digo.' },
   { id: 'Q28', section: 'Dinámica de conflicto', text: 'Después de una discusión yo suelo...', sample: 'Quedarme callado un rato. Necesito procesar antes de hablar de nuevo.' },
   { id: 'Q29', section: 'Dinámica de conflicto', text: 'Cuando mi pareja se enoja conmigo, mi primera reacción suele ser...', sample: 'Callarme. Esperar a que se le pase para poder hablar con calma.' },
@@ -55,7 +53,7 @@ const QUESTIONS = [
   { id: 'Q31', section: 'Dinámica de conflicto', text: 'Algo que suele pasar entre nosotros cuando las cosas se ponen difíciles es que...', sample: 'Yo empiezo a explicar mi punto y ella se cierra. Y mientras más hablo, menos me escucha.' },
   { id: 'Q32', section: 'Dinámica de conflicto', text: 'Cuando nuestra relación empieza a sentirse distante, normalmente es después de que...', sample: 'Hay un conflicto que no se resolvió y los dos pretendemos que no pasó nada.' },
 
-  // PHASE 4 — PROYECCIÓN INCONSCIENTE (Q33-Q38)
+  // PHASE 4 — PROYECCIÓN INCONSCIENTE (6 preguntas)
   { id: 'Q33', section: 'Proyección inconsciente', text: 'Lo que más me molesta de mi pareja es...', sample: 'Que a veces actúa como si nada importara cuando yo estoy mal.' },
   { id: 'Q34', section: 'Proyección inconsciente', text: 'Lo que más admiro de mi pareja es...', sample: 'Su fortaleza. Puede con todo. Aunque a veces la confundo con frialdad.' },
   { id: 'Q35', section: 'Proyección inconsciente', text: 'Lo que nunca le he dicho a mi pareja es...', sample: 'Que a veces me siento solo incluso cuando estamos juntos. No sé cómo decirlo sin que suene a reproche.' },
@@ -63,12 +61,19 @@ const QUESTIONS = [
   { id: 'Q37', section: 'Proyección inconsciente', text: 'Si pudiera cambiar una sola cosa de nosotros, sería...', sample: 'La forma en que nos quedamos callados después de un problema. Ese silencio pesa más que la pelea.' },
   { id: 'Q38', section: 'Proyección inconsciente', text: 'Lo que más extraño de nosotros es...', sample: 'Cuando nos reíamos de todo. Cuando no había tantas cosas no dichas entre nosotros.' },
 
-  // PHASE 5 — INTIMIDAD Y CONEXIÓN FÍSICA (Q43-Q45)
+  // PHASE 5 — FAMILIA DE ORIGEN (3 preguntas — NUEVA FASE)
+  { id: 'Q46', section: 'Familia de origen', text: 'La relación de tus padres se parecía a la tuya en que...', sample: 'Mi papá era igual de distante que mi pareja. Y mi mamá era la que siempre buscaba que todo estuviera bien, como yo.' },
+  { id: 'Q47', section: 'Familia de origen', text: 'Algo que aprendiste del amor viendo a tu familia fue...', sample: 'Que el amor duele. Que siempre vas a tener que aguantar cosas. Que si te quejas eres el problema.' },
+  { id: 'Q48', section: 'Familia de origen', text: 'Un patrón de tu familia que reconoces en tu relación actual es...', sample: 'El silencio. En mi casa nadie hablaba de lo que sentía. Y en mi relación pasa lo mismo.' },
+
+  // PHASE 6 — INTIMIDAD Y CONEXIÓN FÍSICA (5 preguntas — ampliada)
   { id: 'Q43', section: 'Intimidad y conexión', text: 'En nuestra intimidad física, yo me siento...', sample: 'A veces me siento muy conectada, pero otras es más mecánico. Como que falta ese deseo real, esa conexión más allá de lo físico.' },
   { id: 'Q44', section: 'Intimidad y conexión', text: 'Hay algo en nuestra vida sexual que me gustaría que fuera diferente, como...', sample: 'Me gustaría que fuera más espontáneo. Que no fuera siempre igual. Que hubiera más juego, más exploración.' },
   { id: 'Q45', section: 'Intimidad y conexión', text: 'Si pudiera expresar un deseo o fantasía sin ser juzgado(a), diría que...', sample: 'Me gustaría explorar cosas nuevas juntos. Pero me da miedo que piense algo raro o que se aleje.' },
+  { id: 'Q49', section: 'Intimidad y conexión', text: 'Cuando hay cercanía física entre nosotros, emocionalmente yo...', sample: 'A veces me conecto de verdad, pero otras veces me siento lejos. Como si mi cuerpo estuviera ahí pero mi cabeza en otro lado.' },
+  { id: 'Q50', section: 'Intimidad y conexión', text: 'Lo que más echo de menos de nuestra intimidad es...', sample: 'La espontaneidad. Antes nos buscábamos con ganas real. Ahora se siente como algo que toca hacer.' },
 
-  // PHASE 6 — ESTRUCTURA PROFUNDA (Q39-Q42)
+  // PHASE 7 — ESTRUCTURA PROFUNDA (4 preguntas)
   { id: 'Q39', section: 'Estructura profunda', text: 'Si esta relación terminara mañana, lo que más me dolería sería...', sample: 'Darme cuenta de que no dije todo lo que sentía cuando tuve la oportunidad.' },
   { id: 'Q40', section: 'Estructura profunda', text: 'Si hay algo que siento que se repite una y otra vez entre nosotros es...', sample: 'Que uno se acerca y el otro se aleja. Nunca estamos los dos abiertos al mismo tiempo.' },
   { id: 'Q41', section: 'Estructura profunda', text: 'Cuando nuestra relación está en su mejor momento es porque...', sample: 'No hay presión externa. Cuando somos solo nosotros dos sin estrés ni obligaciones.' },
@@ -77,12 +82,13 @@ const QUESTIONS = [
 
 // Section metadata for progress display
 const SECTIONS = [
-  { name: 'Identidad y percepción', icon: Brain, color: 'violet', count: 14 },
+  { name: 'Identidad y percepción', icon: Brain, color: 'violet', count: 9 },
   { name: 'Experiencia emocional', icon: Heart, color: 'rose', count: 6 },
   { name: 'Narrativa de la relación', icon: MessageCircle, color: 'blue', count: 6 },
   { name: 'Dinámica de conflicto', icon: Activity, color: 'red', count: 6 },
   { name: 'Proyección inconsciente', icon: Eye, color: 'fuchsia', count: 6 },
-  { name: 'Intimidad y conexión', icon: Heart, color: 'pink', count: 3 },
+  { name: 'Familia de origen', icon: Users, color: 'orange', count: 3 },
+  { name: 'Intimidad y conexión', icon: Heart, color: 'pink', count: 5 },
   { name: 'Estructura profunda', icon: Layers, color: 'amber', count: 4 }
 ]
 
@@ -165,16 +171,24 @@ const ANALYSIS_TASK_GROUPS = [
 const ALL_ANALYSIS_TASKS = ANALYSIS_TASK_GROUPS.flatMap(g => g.tasks)
 const TASK_DURATIONS_MS = [6200, 6500, 6000, 7200, 6600, 6000, 7400, 6600, 5800, 7000, 6400, 7300, 6600, 8200, 6400, 7500]
 
+// ─── STRIPE PAYMENT LINKS ──────────────────────────────────────────
+
+const STRIPE_LINKS = {
+  individual: 'https://buy.stripe.com/28EfZh73503o5wzaed9AA03',
+  pareja: 'https://buy.stripe.com/4gMfZh2MP5nIe35fyx9AA04',
+  consulta: 'https://buy.stripe.com/9B64gz4UXeYigbdfyx9AA05'
+}
+
 // ─── DISCOUNT CODES ────────────────────────────────────────────────
 
 const DISCOUNT_CODES = {
-  'AMIGO30': { discount: 0.30, label: '30% de descuento' },
-  'PAREJA25': { discount: 0.25, label: '25% de descuento' },
-  'RELACION20': { discount: 0.20, label: '20% de descuento' },
   'LUISPRO': { discount: 1.0, label: 'Acceso gratuito (código profesional)' }
 }
 
-const PRODUCT_PRICE = 349
+const PRODUCT_PRICE_INDIVIDUAL = 349
+const PRODUCT_PRICE_PAREJA = 549
+const PRODUCT_PRICE_CONSULTA = 1199
+const DEMO_QUESTION_LIMIT = 5
 
 // ─── HELPER COMPONENTS ──────────────────────────────────────────────
 
@@ -446,9 +460,11 @@ const DiagnosticoRelacionalPage = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
 
-  // Stages: hero | checkout | instructions | questionnaire | email | analyzing | engagement | results
+  // Stages: hero | checkout | thankyou | instructions | questionnaire | email | analyzing | engagement | results
   const [stage, setStage] = useState('hero')
   const [isPurchased, setIsPurchased] = useState(false)
+  const [purchaseType, setPurchaseType] = useState(null) // 'individual' | 'pareja' | 'demo'
+  const [isDemo, setIsDemo] = useState(false)
 
   // Discount
   const [discountCode, setDiscountCode] = useState('')
@@ -481,24 +497,97 @@ const DiagnosticoRelacionalPage = () => {
   const [expandedInsights, setExpandedInsights] = useState({})
   const toggleInsight = useCallback((key) => setExpandedInsights(prev => ({ ...prev, [key]: !prev[key] })), [])
   const [resumeDraft, setResumeDraft] = useState(null)
+  const [showFreeGuide, setShowFreeGuide] = useState(false)
+
+  // Smart email/token flow
+  const [thankyouEmails, setThankyouEmails] = useState(['', ''])
+  const [emailsSent, setEmailsSent] = useState(false)
+  const [sendingEmails, setSendingEmails] = useState(false)
+  const [purchaseId, setPurchaseId] = useState(null)
+  const [accessToken, setAccessToken] = useState(null)
+  const [verifyingPayment, setVerifyingPayment] = useState(false)
+  const [autoSendingPdf, setAutoSendingPdf] = useState(false)
+  const [pdfAutoSent, setPdfAutoSent] = useState(false)
 
   // Test/dev mode: URL param OR LUISPRO discount
   const isDevMode = searchParams.get('test') === 'true' || searchParams.get('demo') === 'true' || appliedDiscount?.discount === 1.0
-
-  const finalPrice = appliedDiscount
-    ? Math.round(PRODUCT_PRICE * (1 - appliedDiscount.discount))
-    : PRODUCT_PRICE
 
   const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
-  // Restore purchase from session
+  // Restore purchase from session OR handle Stripe redirect
   useEffect(() => {
+    const sessionId = searchParams.get('session_id')
+    // New: unified Stripe return with session_id — verify via backend
+    if (sessionId && !purchaseId) {
+      setVerifyingPayment(true)
+      setStage('thankyou')
+      verifyStripeSession(sessionId).then(data => {
+        const type = data.type || 'individual'
+        setIsPurchased(true)
+        setPurchaseType(type)
+        setPurchaseId(sessionId)
+        sessionStorage.setItem('diagnostico_relacional_purchased', 'true')
+        sessionStorage.setItem('diagnostico_relacional_type', type)
+        sessionStorage.setItem('diagnostico_relacional_purchase_id', sessionId)
+        if (data.email) setThankyouEmails([data.email, ''])
+      }).catch(() => {
+        // Fallback: still mark as purchased from type param
+        const type = searchParams.get('type') || 'individual'
+        setIsPurchased(true)
+        setPurchaseType(type)
+        setPurchaseId(sessionId)
+        sessionStorage.setItem('diagnostico_relacional_purchased', 'true')
+        sessionStorage.setItem('diagnostico_relacional_type', type)
+      }).finally(() => setVerifyingPayment(false))
+      return
+    }
+    // Legacy: old-style payment_success param
+    if (searchParams.get('payment_success') === 'true') {
+      setIsPurchased(true)
+      const type = searchParams.get('type') || 'individual'
+      setPurchaseType(type)
+      sessionStorage.setItem('diagnostico_relacional_purchased', 'true')
+      sessionStorage.setItem('diagnostico_relacional_type', type)
+      setStage('thankyou')
+      return
+    }
+    // Restore from session
     if (searchParams.get('purchased') === 'true' || sessionStorage.getItem('diagnostico_relacional_purchased') === 'true') {
       setIsPurchased(true)
+      setPurchaseType(sessionStorage.getItem('diagnostico_relacional_type') || 'individual')
+      setPurchaseId(sessionStorage.getItem('diagnostico_relacional_purchase_id') || null)
     }
-  }, [searchParams])
+    // Token-based access from email link
+    const token = searchParams.get('token')
+    if (token) {
+      setAccessToken(token)
+      setIsPurchased(true)
+      const type = searchParams.get('type') || 'individual'
+      setPurchaseType(type)
+      sessionStorage.setItem('diagnostico_relacional_purchased', 'true')
+      sessionStorage.setItem('diagnostico_relacional_type', type)
+      // Check for saved progress
+      const savedPurchaseId = searchParams.get('pid')
+      if (savedPurchaseId) {
+        setPurchaseId(savedPurchaseId)
+        getProgress(savedPurchaseId).then(data => {
+          if (data && data.currentQuestion > 0) {
+            setResumeDraft({ question: data.currentQuestion, responses: data.responses })
+          }
+          setStage('instructions')
+          scrollToTop()
+        }).catch(() => {
+          setStage('instructions')
+          scrollToTop()
+        })
+      } else {
+        setStage('instructions')
+        scrollToTop()
+      }
+    }
+  }, [searchParams, scrollToTop, purchaseId])
 
   // Start mic recording (used by auto-play flow and toggleMic)
   // Track whether user manually stopped recording
@@ -637,11 +726,27 @@ const DiagnosticoRelacionalPage = () => {
     }
   }, [discountCode])
 
-  const handlePurchase = useCallback(() => {
-    setIsPurchased(true)
-    sessionStorage.setItem('diagnostico_relacional_purchased', 'true')
-    setStage('instructions')
-    scrollToTop()
+  const handlePurchase = useCallback((type) => {
+    if (type === 'demo') {
+      setIsDemo(true)
+      setPurchaseType('demo')
+      setStage('instructions')
+      scrollToTop()
+      return
+    }
+    if (type === 'free') {
+      // LUISPRO code — full free access
+      setIsPurchased(true)
+      setPurchaseType('individual')
+      sessionStorage.setItem('diagnostico_relacional_purchased', 'true')
+      sessionStorage.setItem('diagnostico_relacional_type', 'individual')
+      setStage('instructions')
+      scrollToTop()
+      return
+    }
+    // Stripe Payment Link — redirect to Stripe
+    const link = type === 'pareja' ? STRIPE_LINKS.pareja : STRIPE_LINKS.individual
+    window.location.href = link
   }, [scrollToTop])
 
   // ─── FIRE BACKGROUND ANALYSIS ───────────────────────────────
@@ -676,6 +781,20 @@ const DiagnosticoRelacionalPage = () => {
   // The analysis launches when user finishes the last question (in handleNext)
 
   const handleNext = useCallback(() => {
+    // Demo mode: limit to DEMO_QUESTION_LIMIT questions
+    if (isDemo && !isPurchased && currentQuestion >= DEMO_QUESTION_LIMIT - 1) {
+      setStage('checkout')
+      scrollToTop()
+      return
+    }
+    // Save progress to Firestore (non-blocking)
+    if (purchaseId) {
+      saveProgress(purchaseId, {
+        currentQuestion: currentQuestion + 1,
+        responses,
+        email: thankyouEmails[0] || email
+      }).catch(() => { /* silent */ })
+    }
     if (currentQuestion < QUESTIONS.length - 1) {
       setCurrentQuestion(prev => prev + 1)
       scrollToTop()
@@ -684,7 +803,7 @@ const DiagnosticoRelacionalPage = () => {
       setStage('email')
       scrollToTop()
     }
-  }, [currentQuestion, scrollToTop, responses, fireBackgroundAnalysis])
+  }, [currentQuestion, scrollToTop, responses, fireBackgroundAnalysis, isDemo, isPurchased, purchaseId, thankyouEmails, email])
 
   const handlePrev = useCallback(() => {
     if (currentQuestion > 0) {
@@ -720,7 +839,7 @@ const DiagnosticoRelacionalPage = () => {
       doc.setFontSize(20); doc.setTextColor(40, 40, 40)
       doc.text('Diagnóstico Relacional', pw / 2, y, { align: 'center' }); y += 6
       doc.setFontSize(9); doc.setTextColor(120, 120, 120)
-      doc.text('Generado a partir de 45 respuestas en 7 fases psicológicas', pw / 2, y, { align: 'center' }); y += 12
+      doc.text('Generado a partir de 45 respuestas en 8 fases psicológicas', pw / 2, y, { align: 'center' }); y += 12
 
       // Relationship type
       if (aiAnalysis.relationship_type) {
@@ -876,10 +995,65 @@ const DiagnosticoRelacionalPage = () => {
       doc.text('luisvirrueta.com  ·  wa.me/527228720520', pw / 2, y + 21, { align: 'center' })
 
       doc.save('diagnostico-relacional.pdf')
+      // Return base64 for email sending
+      return doc.output('datauristring')
     } finally {
       setPdfGenerating(false)
     }
   }, [aiAnalysis])
+
+  // Auto-send PDF to email when analysis completes
+  useEffect(() => {
+    if (!aiReady || !aiAnalysis || pdfAutoSent || autoSendingPdf) return
+    const recipientEmail = thankyouEmails[0] || email
+    if (!recipientEmail?.includes('@') || !purchaseId) return
+    setAutoSendingPdf(true)
+    // Save results to Firestore
+    saveResults(purchaseId, aiAnalysis).catch(() => {})
+    // Generate PDF as base64 and send via email (without downloading)
+    try {
+      const doc = new jsPDF('p', 'mm', 'a4')
+      const pw = doc.internal.pageSize.getWidth()
+      const m = 15
+      let y = 20
+      const maxW = pw - m * 2
+      const checkPage = (needed = 30) => { if (y > 270 - needed) { doc.addPage(); y = 20 } }
+      const addTitle = (title) => { checkPage(20); doc.setFontSize(13); doc.setTextColor(40, 40, 40); doc.text(title, m, y); y += 8 }
+      const addParagraph = (text) => {
+        doc.setFontSize(9); doc.setTextColor(60, 60, 60)
+        const lines = doc.splitTextToSize((text || '').replace(/\*\*/g, ''), maxW)
+        for (const line of lines) { checkPage(6); doc.text(line, m, y); y += 4.5 }
+        y += 3
+      }
+      doc.setFontSize(20); doc.setTextColor(40, 40, 40)
+      doc.text('Diagnóstico Relacional', pw / 2, y, { align: 'center' }); y += 6
+      doc.setFontSize(9); doc.setTextColor(120, 120, 120)
+      doc.text('Generado a partir de 45 respuestas en 8 fases psicológicas', pw / 2, y, { align: 'center' }); y += 12
+      if (aiAnalysis.relationship_type) {
+        addTitle('Tipo de Relación')
+        doc.setFontSize(11); doc.setTextColor(80, 50, 120)
+        doc.text(aiAnalysis.relationship_type.label || '', m, y); y += 7
+        addParagraph(aiAnalysis.relationship_type.explanation)
+      }
+      if (aiAnalysis.key_insight) { addTitle('Observación Clave'); addParagraph(aiAnalysis.key_insight) }
+      if (aiAnalysis.recommendation) { addTitle('Recomendación Profesional'); addParagraph(aiAnalysis.recommendation) }
+      checkPage(35); y += 8
+      doc.setFillColor(245, 245, 245); doc.roundedRect(m, y, pw - m * 2, 24, 3, 3, 'F')
+      doc.setFontSize(10); doc.setTextColor(60, 60, 60)
+      doc.text('¿Te gustaría profundizar en estos resultados?', pw / 2, y + 8, { align: 'center' })
+      doc.setFontSize(9)
+      doc.text('Agenda una sesión con Luis Virrueta.', pw / 2, y + 15, { align: 'center' })
+      doc.text('luisvirrueta.com  ·  wa.me/527228720520', pw / 2, y + 21, { align: 'center' })
+      const pdfBase64 = doc.output('datauristring')
+      const userName = responses[0] || ''
+      sendResultsEmail({ email: recipientEmail, purchaseId, pdfBase64, productType: purchaseType, userName })
+        .then(() => setPdfAutoSent(true))
+        .catch(() => {})
+        .finally(() => setAutoSendingPdf(false))
+    } catch {
+      setAutoSendingPdf(false)
+    }
+  }, [aiReady, aiAnalysis, pdfAutoSent, autoSendingPdf, thankyouEmails, email, purchaseId, purchaseType])
 
   // ─── RENDER ───────────────────────────────────────────────────
 
@@ -921,10 +1095,10 @@ const DiagnosticoRelacionalPage = () => {
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400">de Pareja</span>
                   </h1>
                   <p className="text-lg sm:text-xl lg:text-2xl text-white/55 font-light max-w-3xl mx-auto leading-relaxed mb-4">
-                    Diseñado por un psicólogo clínico para detectar lo que no se dice.
+                    ¿Sientes que algo cambió en tu relación pero no sabes qué?
                   </p>
                   <p className="text-base sm:text-lg text-white/35 font-light max-w-2xl mx-auto leading-relaxed mb-10">
-                    45 preguntas psicoanalíticas. Tú hablas, el test escucha entre líneas. Recibes un reporte profesional con los patrones inconscientes de tu relación.
+                    Un test psicológico que escucha lo que no dices. Hablas por micrófono, el algoritmo detecta tus patrones inconscientes y recibes un reporte profesional con lo que realmente está pasando.
                   </p>
                   {/* Early CTA */}
                   <motion.button
@@ -1195,9 +1369,9 @@ const DiagnosticoRelacionalPage = () => {
               <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div>
-                  <p className="text-white/40 text-sm uppercase tracking-[0.2em] mb-2">Las 7 dimensiones</p>
+                  <p className="text-white/40 text-sm uppercase tracking-[0.2em] mb-2">Las 8 dimensiones</p>
                   <h2 className="text-2xl lg:text-3xl font-light text-white/80 mb-3 leading-snug">No dejamos nada sin explorar</h2>
-                  <p className="text-white/35 text-base font-light mb-8 leading-relaxed">Cada fase está diseñada para activar una capa diferente de tu relación — desde lo que proyectas hacia afuera hasta lo que no te atreves a decir.</p>
+                  <p className="text-white/35 text-base font-light mb-8 leading-relaxed">Cada fase está diseñada para activar una capa diferente de tu relación — desde lo que proyectas hacia afuera hasta lo que heredaste de tu familia.</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {[
                       { emoji: '🪞', name: 'Percepción', desc: 'Cómo te ves, cómo ves a tu pareja y qué no coincide' },
@@ -1205,6 +1379,7 @@ const DiagnosticoRelacionalPage = () => {
                       { emoji: '📖', name: 'Narrativa', desc: 'La historia que te cuentas sobre tu relación' },
                       { emoji: '⚡', name: 'Conflicto', desc: 'Cómo pelean, qué se activa y qué queda sin resolver' },
                       { emoji: '🔮', name: 'Inconsciente', desc: 'Lo que no dices, lo que proyectas y lo que evitas' },
+                      { emoji: '🏠', name: 'Familia de origen', desc: 'Lo que aprendiste del amor en tu casa y lo que repites hoy' },
                       { emoji: '🔥', name: 'Intimidad', desc: 'Conexión física, deseo y vulnerabilidad sexual' },
                       { emoji: '🌊', name: 'Estructura', desc: 'Las bases del vínculo: qué lo sostiene o lo erosiona' }
                     ].map((s, i) => (
@@ -1269,23 +1444,83 @@ const DiagnosticoRelacionalPage = () => {
               {/* ── PRICING CTA ───────────────────────────── */}
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 className="text-center pb-20">
-                <div className="inline-block max-w-md w-full p-10 rounded-2xl border border-white/[0.1] bg-zinc-950/60">
-                  <p className="text-white/30 text-sm uppercase tracking-[0.15em] mb-3">Acceso inmediato</p>
-                  <p className="text-4xl font-light text-white mb-2">${PRODUCT_PRICE} <span className="text-xl text-white/35">MXN</span></p>
-                  <p className="text-white/35 text-base font-light mb-8">~30 min · Habla por micrófono · Reporte completo · PDF</p>
-                  <motion.button
-                    onClick={() => { setStage('checkout'); scrollToTop() }}
-                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="w-full py-5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
-                    Comenzar mi diagnóstico
-                  </motion.button>
-                  {resumeDraft && (
-                    <button onClick={restoreDraft} className="block mx-auto mt-4 text-violet-300/40 text-sm hover:text-violet-300/70 underline underline-offset-4 transition-colors">
-                      Continuar diagnóstico en progreso
-                    </button>
-                  )}
-                  <p className="text-white/20 text-xs font-light mt-5">Diseñado por Luis Virrueta · Psicólogo clínico</p>
+                <p className="text-white/30 text-sm uppercase tracking-[0.15em] mb-8">Elige tu plan</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
+                  {/* Guía Gratuita */}
+                  <div className="p-8 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.04] to-teal-500/[0.02] text-left relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500/40 to-teal-500/40" />
+                    <div className="flex items-center gap-2 mb-2">
+                      <p className="text-emerald-300/60 text-xs uppercase tracking-[0.15em]">Guía gratuita</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/20 text-emerald-300/70">Gratis</span>
+                    </div>
+                    <p className="text-3xl font-light text-white mb-1">$0 <span className="text-lg text-white/35">MXN</span></p>
+                    <p className="text-white/30 text-sm font-light mb-5">Descubre qué patrones repites sin darte cuenta</p>
+                    <ul className="space-y-2 mb-6">
+                      {['Los 5 patrones inconscientes más comunes', 'Señales de alerta que ignoras', 'Test rápido: ¿qué rol juegas en tu relación?', 'Acceso inmediato por email'].map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-white/45 text-sm font-light">
+                          <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                    <motion.button
+                      onClick={() => setShowFreeGuide(true)}
+                      whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-light text-base hover:from-emerald-500 hover:to-teal-500 transition-all shadow-lg shadow-emerald-600/20">
+                      Descargar gratis
+                    </motion.button>
+                  </div>
+                  {/* Individual */}
+                  <div className="p-8 rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left">
+                    <p className="text-white/40 text-xs uppercase tracking-[0.15em] mb-2">Individual</p>
+                    <p className="text-3xl font-light text-white mb-1">${PRODUCT_PRICE_INDIVIDUAL} <span className="text-lg text-white/35">MXN</span></p>
+                    <p className="text-white/30 text-sm font-light mb-5">1 persona · 45 preguntas · Reporte PDF</p>
+                    <ul className="space-y-2 mb-6">
+                      {['Análisis de tus patrones de apego', 'Radar emocional + perfil completo', 'Ciclos inconscientes detectados', 'Recomendación profesional'].map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-white/45 text-sm font-light">
+                          <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                    <motion.button
+                      onClick={() => { setStage('checkout'); scrollToTop() }}
+                      whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
+                      Comenzar
+                    </motion.button>
+                  </div>
+                  {/* Pareja */}
+                  <div className="p-8 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/50 to-fuchsia-500/50" />
+                    <div className="flex items-center gap-2 mb-2">
+                      <p className="text-violet-300/60 text-xs uppercase tracking-[0.15em]">Pareja</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/20 text-violet-300/70">Recomendado</span>
+                    </div>
+                    <p className="text-3xl font-light text-white mb-1">${PRODUCT_PRICE_PAREJA} <span className="text-lg text-white/35">MXN</span></p>
+                    <p className="text-white/30 text-sm font-light mb-5">2 personas · 45 preguntas cada uno · 2 reportes</p>
+                    <ul className="space-y-2 mb-6">
+                      {['Todo lo del plan individual ×2', 'Cada uno responde por separado', 'Comparación de patrones cruzados', 'Ideal para llevar a terapia de pareja'].map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-white/45 text-sm font-light">
+                          <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                    <motion.button
+                      onClick={() => { setStage('checkout'); scrollToTop() }}
+                      whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
+                      Comenzar en pareja
+                    </motion.button>
+                  </div>
                 </div>
+                {resumeDraft && (
+                  <button onClick={restoreDraft} className="block mx-auto mt-6 text-violet-300/40 text-sm hover:text-violet-300/70 underline underline-offset-4 transition-colors">
+                    Continuar diagnóstico en progreso
+                  </button>
+                )}
+                <p className="text-white/20 text-xs font-light mt-5">Diseñado por Luis Virrueta · Psicólogo clínico</p>
               </motion.div>
 
               </div>
@@ -1295,29 +1530,103 @@ const DiagnosticoRelacionalPage = () => {
         )}
 
         {/* ═══════════════════════════════════════════════════════
-            STAGE: CHECKOUT
+            STAGE: CHECKOUT — Stripe Payment Links
         ═══════════════════════════════════════════════════════ */}
         {stage === 'checkout' && (
           <motion.div key="checkout" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="min-h-screen flex items-center justify-center px-6 py-20">
-            <div className="max-w-md w-full space-y-8">
+            className="min-h-screen flex items-center justify-center px-6 pt-32 pb-20">
+            <div className="max-w-4xl w-full space-y-8">
               <div className="text-center">
                 <CreditCard className="w-10 h-10 text-violet-400/50 mx-auto mb-4" />
-                <h2 className="text-2xl font-light text-white mb-2">Accede a tu diagnóstico</h2>
+                <h2 className="text-2xl font-light text-white mb-2">Elige tu plan</h2>
                 <p className="text-white/40 text-sm font-light">45 preguntas · Análisis psicológico profundo · Reporte descargable</p>
               </div>
 
+              {/* Pricing Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                {/* Guía Gratuita */}
+                <div className="p-7 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.04] to-teal-500/[0.02] space-y-5 relative overflow-hidden">
+                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500/40 to-teal-500/40" />
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="text-emerald-300/60 text-xs uppercase tracking-[0.15em]">Guía gratuita</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/20 text-emerald-300/70">Gratis</span>
+                    </div>
+                    <p className="text-3xl font-light text-white">$0 <span className="text-lg text-white/35">MXN</span></p>
+                    <p className="text-white/30 text-sm font-light mt-1">Patrones que repites sin saberlo</p>
+                  </div>
+                  <ul className="space-y-2">
+                    {['Los 5 patrones inconscientes más comunes', 'Señales de alerta que ignoras', 'Mini-test: tu rol en la relación', 'Acceso inmediato por email'].map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 text-white/45 text-sm font-light">
+                        <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <motion.button onClick={() => setShowFreeGuide(true)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-light text-base hover:from-emerald-500 hover:to-teal-500 transition-all">
+                    Descargar gratis
+                  </motion.button>
+                </div>
+
+                {/* Individual */}
+                <div className="p-7 rounded-2xl border border-white/10 bg-white/[0.02] space-y-5">
+                  <div>
+                    <p className="text-white/40 text-xs uppercase tracking-[0.15em] mb-1">Individual</p>
+                    <p className="text-3xl font-light text-white">${PRODUCT_PRICE_INDIVIDUAL} <span className="text-lg text-white/35">MXN</span></p>
+                    <p className="text-white/30 text-sm font-light mt-1">1 persona · Reporte completo</p>
+                  </div>
+                  <ul className="space-y-2">
+                    {['45 preguntas psicoanalíticas', 'Radar + perfil emocional', 'Ciclos y sensibilidades', 'PDF descargable'].map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 text-white/45 text-sm font-light">
+                        <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <motion.button onClick={() => handlePurchase('individual')} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all">
+                    Pagar ${PRODUCT_PRICE_INDIVIDUAL} MXN
+                  </motion.button>
+                </div>
+
+                {/* Pareja */}
+                <div className="p-7 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] space-y-5 relative overflow-hidden">
+                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/50 to-fuchsia-500/50" />
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="text-violet-300/60 text-xs uppercase tracking-[0.15em]">Pareja</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/20 text-violet-300/70">Recomendado</span>
+                    </div>
+                    <p className="text-3xl font-light text-white">${PRODUCT_PRICE_PAREJA} <span className="text-lg text-white/35">MXN</span></p>
+                    <p className="text-white/30 text-sm font-light mt-1">2 personas · 2 reportes</p>
+                  </div>
+                  <ul className="space-y-2">
+                    {['Todo lo individual ×2', 'Cada uno responde por separado', 'Comparación cruzada de patrones', 'Ideal para terapia de pareja'].map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 text-white/45 text-sm font-light">
+                        <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <motion.button onClick={() => handlePurchase('pareja')} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all">
+                    Pagar ${PRODUCT_PRICE_PAREJA} MXN
+                  </motion.button>
+                </div>
+              </div>
+
               {/* Discount code */}
-              <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] space-y-4">
+              <div className="p-5 rounded-2xl border border-white/10 bg-white/[0.02] space-y-3">
                 <div className="flex items-center gap-2">
                   <Tag className="w-4 h-4 text-white/30" />
-                  <span className="text-white/50 text-sm font-light">¿Tienes un código?</span>
+                  <span className="text-white/50 text-sm font-light">¿Tienes un código de acceso?</span>
                 </div>
                 <div className="flex gap-2">
                   <input
                     type="text" value={discountCode}
                     onChange={e => { setDiscountCode(e.target.value); setDiscountError('') }}
-                    placeholder="Código de descuento"
+                    placeholder="Código"
                     className="flex-1 px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors"
                   />
                   <button onClick={handleApplyDiscount}
@@ -1328,41 +1637,185 @@ const DiagnosticoRelacionalPage = () => {
                 {discountError && <p className="text-red-400/70 text-xs">{discountError}</p>}
                 {appliedDiscount && (
                   <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-2 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                    <Check className="w-4 h-4 text-emerald-400" />
-                    <span className="text-emerald-300 text-sm font-light">{appliedDiscount.label}</span>
+                    className="flex items-center justify-between p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-emerald-400" />
+                      <span className="text-emerald-300 text-sm font-light">{appliedDiscount.label}</span>
+                    </div>
+                    <motion.button onClick={() => handlePurchase('free')} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                      className="px-5 py-2 rounded-lg bg-emerald-500/20 text-emerald-300 text-sm font-light hover:bg-emerald-500/30 transition-colors">
+                      Acceder gratis
+                    </motion.button>
                   </motion.div>
                 )}
               </div>
 
-              {/* Price summary */}
-              <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.02]">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-white/60 font-light">Diagnóstico Relacional</span>
-                  <span className={`text-white/80 font-light ${appliedDiscount ? 'line-through text-white/30' : ''}`}>${PRODUCT_PRICE} MXN</span>
-                </div>
-                {appliedDiscount && (
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-emerald-400/70 font-light text-sm">{appliedDiscount.label}</span>
-                    <span className="text-emerald-400 font-light">-${PRODUCT_PRICE - finalPrice} MXN</span>
-                  </div>
-                )}
-                <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                  <span className="text-white font-light">Total</span>
-                  <span className="text-2xl font-light text-white">{finalPrice === 0 ? 'Gratis' : `$${finalPrice} MXN`}</span>
-                </div>
+              {/* Demo option */}
+              <div className="text-center space-y-2">
+                <button onClick={() => handlePurchase('demo')}
+                  className="text-violet-300/40 text-sm hover:text-violet-300/70 transition-colors underline underline-offset-4">
+                  Probar demo gratuita ({DEMO_QUESTION_LIMIT} preguntas)
+                </button>
+                <br />
+                <button onClick={() => { setStage('hero'); scrollToTop() }}
+                  className="text-white/20 text-xs hover:text-white/40 transition-colors">
+                  Volver
+                </button>
               </div>
+            </div>
+          </motion.div>
+        )}
 
-              {/* CTA */}
-              <motion.button onClick={handlePurchase} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all">
-                {finalPrice === 0 ? 'Acceder gratis' : `Pagar $${finalPrice} MXN`}
-              </motion.button>
+        {/* ═══════════════════════════════════════════════════════
+            STAGE: THANK YOU (post-Stripe payment)
+        ═══════════════════════════════════════════════════════ */}
+        {stage === 'thankyou' && (
+          <motion.div key="thankyou" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="min-h-screen flex items-center justify-center px-6 pt-28 pb-20 relative">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-emerald-600/6 rounded-full blur-3xl animate-pulse" />
+              <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-violet-600/4 rounded-full blur-3xl animate-pulse" />
+            </div>
+            <div className="relative z-10 max-w-lg w-full space-y-8">
 
-              <button onClick={() => { setStage('hero'); scrollToTop() }}
-                className="block mx-auto text-white/25 text-xs hover:text-white/50 transition-colors">
-                Volver
-              </button>
+              {/* Confirmation icon */}
+              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
+                className="text-center">
+                <div className="mx-auto w-24 h-24 rounded-full bg-gradient-to-br from-emerald-400/20 to-violet-400/20 border border-emerald-400/25 flex items-center justify-center">
+                  <CheckCircle className="w-12 h-12 text-emerald-400/80" strokeWidth={1.5} />
+                </div>
+              </motion.div>
+
+              {/* Dynamic product message */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+                className="text-center">
+                {verifyingPayment ? (
+                  <>
+                    <Loader2 className="w-6 h-6 text-violet-400/60 animate-spin mx-auto mb-3" />
+                    <p className="text-white/40 text-sm font-light">Verificando tu pago...</p>
+                  </>
+                ) : (
+                  <>
+                    <h2 className="text-3xl lg:text-4xl font-light text-white mb-3">¡Gracias por tu compra!</h2>
+                    <p className="text-white/50 text-lg font-light leading-relaxed mb-2">
+                      Tu acceso al <span className="text-violet-300/80">Termómetro Inconsciente de Pareja</span>{' '}
+                      — plan <span className="text-emerald-300/80">{PRODUCT_LABELS[purchaseType] || 'Individual'}</span> — está confirmado.
+                    </p>
+                  </>
+                )}
+              </motion.div>
+
+              {/* Email collection */}
+              {!emailsSent && !verifyingPayment && (
+                <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
+                  className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] space-y-5">
+                  <div className="text-center">
+                    <Mail className="w-8 h-8 text-violet-400/50 mx-auto mb-3" />
+                    <h3 className="text-xl font-light text-white mb-1">
+                      {purchaseType === 'pareja' ? 'Introduce los emails de ambos' : 'Introduce tu email'}
+                    </h3>
+                    <p className="text-white/35 text-sm font-light">
+                      {purchaseType === 'pareja'
+                        ? 'Cada persona recibirá su propio enlace para tomar el test por separado.'
+                        : 'Te enviaremos un enlace seguro para acceder a tu test y tus resultados.'}
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-white/30 text-xs uppercase tracking-wider mb-1.5 block">
+                        {purchaseType === 'pareja' ? 'Email — Persona 1' : 'Tu email'}
+                      </label>
+                      <input type="email" value={thankyouEmails[0]}
+                        onChange={e => setThankyouEmails(prev => [e.target.value, prev[1]])}
+                        placeholder="email@ejemplo.com"
+                        className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors" />
+                    </div>
+                    {purchaseType === 'pareja' && (
+                      <div>
+                        <label className="text-white/30 text-xs uppercase tracking-wider mb-1.5 block">Email — Persona 2</label>
+                        <input type="email" value={thankyouEmails[1]}
+                          onChange={e => setThankyouEmails(prev => [prev[0], e.target.value])}
+                          placeholder="email2@ejemplo.com"
+                          className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors" />
+                      </div>
+                    )}
+                  </div>
+
+                  <motion.button
+                    onClick={async () => {
+                      const emails = purchaseType === 'pareja'
+                        ? thankyouEmails.filter(e => e.includes('@'))
+                        : [thankyouEmails[0]].filter(e => e.includes('@'))
+                      if (emails.length === 0) return
+                      setSendingEmails(true)
+                      try {
+                        const tokens = emails.map(() => generateAccessToken())
+                        const pid = purchaseId || generateAccessToken()
+                        setPurchaseId(pid)
+                        sessionStorage.setItem('diagnostico_relacional_purchase_id', pid)
+                        // Save purchase to Firestore
+                        await savePurchase(pid, { type: purchaseType, email: emails[0], stripeSessionId: purchaseId }).catch(() => {})
+                        // Send access emails via backend
+                        await sendAccessEmails({ purchaseId: pid, type: purchaseType, emails, tokens }).catch(() => {})
+                        setEmailsSent(true)
+                        // Also store email for later use
+                        setEmail(emails[0])
+                        sessionStorage.setItem('diagnostico_guide_email', emails[0])
+                      } finally {
+                        setSendingEmails(false)
+                      }
+                    }}
+                    disabled={sendingEmails || !thankyouEmails[0]?.includes('@') || (purchaseType === 'pareja' && !thankyouEmails[1]?.includes('@'))}
+                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20 disabled:opacity-40 disabled:cursor-not-allowed">
+                    {sendingEmails ? (
+                      <><Loader2 className="inline w-4 h-4 mr-2 animate-spin" /> Enviando...</>
+                    ) : (
+                      <><Send className="inline w-4 h-4 mr-2" /> Enviar acceso{purchaseType === 'pareja' ? ' a ambos' : ''}</>
+                    )}
+                  </motion.button>
+                </motion.div>
+              )}
+
+              {/* Success: emails sent */}
+              {emailsSent && (
+                <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
+                  className="p-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.04] space-y-4">
+                  <div className="flex items-center gap-3">
+                    <Check className="w-5 h-5 text-emerald-400/80" />
+                    <p className="text-emerald-300/80 text-base font-light">
+                      {purchaseType === 'pareja'
+                        ? `¡Enlace enviado a ${thankyouEmails[0]} y ${thankyouEmails[1]}!`
+                        : `¡Enlace enviado a ${thankyouEmails[0]}!`}
+                    </p>
+                  </div>
+                  <div className="space-y-2 text-white/40 text-sm font-light">
+                    <p>📩 Revisa tu bandeja de entrada (y spam, por si acaso)</p>
+                    <p>⏳ Tus datos se almacenarán por <strong className="text-white/60">{DATA_RETENTION_DAYS} días</strong> — descarga tu PDF al finalizar</p>
+                    <p>🔄 Si cierras el navegador, puedes continuar desde el enlace del email</p>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* CTA: Start now or wait for email */}
+              <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: emailsSent ? 0.3 : 0.8 }}
+                className="text-center space-y-4">
+                <motion.button
+                  onClick={() => { setStage('instructions'); scrollToTop() }}
+                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                  className="px-10 py-5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
+                  Comenzar mi diagnóstico ahora <ArrowRight className="inline w-5 h-5 ml-2" />
+                </motion.button>
+                <p className="text-white/20 text-xs font-light">
+                  ~30 minutos · Habla por micrófono · Reporte completo al final
+                </p>
+                {emailsSent && (
+                  <p className="text-white/25 text-xs font-light">
+                    También puedes acceder después desde el enlace en tu email
+                  </p>
+                )}
+              </motion.div>
             </div>
           </motion.div>
         )}
@@ -1764,7 +2217,7 @@ const DiagnosticoRelacionalPage = () => {
               {/* Header */}
               <div className="text-center">
                 <h1 className="text-3xl lg:text-4xl font-light text-white mb-3">🔬 Tu Diagnóstico Relacional</h1>
-                <p className="text-white/40 text-sm font-light">Generado a partir de tus 45 respuestas en 7 fases psicológicas</p>
+                <p className="text-white/40 text-sm font-light">Generado a partir de tus 45 respuestas en 8 fases psicológicas</p>
               </div>
 
               {/* ── RELATIONSHIP TYPE ── */}
@@ -2183,6 +2636,41 @@ const DiagnosticoRelacionalPage = () => {
                 </motion.button>
               </motion.div>
 
+              {/* ── CONSULTATION CTA — $1,199 ── */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5 }}
+                className="p-8 rounded-2xl border border-violet-500/20 bg-gradient-to-br from-violet-500/[0.06] to-fuchsia-500/[0.03] relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/50 via-fuchsia-500/50 to-pink-500/50" />
+                <div className="text-center space-y-4">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto">
+                    <Users className="w-7 h-7 text-violet-400/60" strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-light text-white mb-2">Lleva este diagnóstico a una sesión profesional</h3>
+                    <p className="text-white/40 text-sm font-light leading-relaxed max-w-lg mx-auto">
+                      Un psicólogo clínico interpreta tus resultados contigo en una sesión privada de 1 hora. No solo entenderás qué pasa — sabrás exactamente qué hacer con lo que descubriste.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center justify-center gap-3 text-white/35 text-xs font-light">
+                    {['Sesión 1:1 con Luis Virrueta', 'Interpretación profunda de tu reporte', 'Plan de acción personalizado', 'Seguimiento post-sesión'].map((item, i) => (
+                      <span key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/[0.08] bg-white/[0.02]">
+                        <Check className="w-3 h-3 text-violet-400/50" strokeWidth={2} />
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="pt-2">
+                    <p className="text-2xl font-light text-white mb-3">${PRODUCT_PRICE_CONSULTA} <span className="text-base text-white/35">MXN</span></p>
+                    <motion.a
+                      href={STRIPE_LINKS.consulta}
+                      target="_blank" rel="noopener noreferrer"
+                      whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                      className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
+                      Agendar consulta psicológica <ArrowRight className="w-4 h-4" />
+                    </motion.a>
+                  </div>
+                </div>
+              </motion.div>
+
               {/* Back to store */}
               <div className="text-center pt-4">
                 <button onClick={() => navigate('/tienda')}
@@ -2195,6 +2683,79 @@ const DiagnosticoRelacionalPage = () => {
           </motion.div>
         )}
 
+      </AnimatePresence>
+
+      {/* ═══════════════════════════════════════════════════════
+          MODAL: FREE GUIDE — Email capture + mini-guide
+      ═══════════════════════════════════════════════════════ */}
+      <AnimatePresence>
+        {showFreeGuide && (
+          <motion.div key="free-guide-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/80 backdrop-blur-sm"
+            onClick={(e) => { if (e.target === e.currentTarget) setShowFreeGuide(false) }}>
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="max-w-lg w-full rounded-2xl border border-emerald-500/20 bg-zinc-950 p-8 space-y-6 relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500/50 to-teal-500/50" />
+              <button onClick={() => setShowFreeGuide(false)} className="absolute top-4 right-4 text-white/30 hover:text-white/60 transition-colors">
+                <XCircle className="w-5 h-5" />
+              </button>
+              <div className="text-center">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/15 to-teal-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                  <BookOpen className="w-8 h-8 text-emerald-400/60" strokeWidth={1.5} />
+                </div>
+                <h3 className="text-2xl font-light text-white mb-2">Guía: Patrones Inconscientes de Pareja</h3>
+                <p className="text-white/40 text-sm font-light leading-relaxed">
+                  Descubre los 5 patrones que se repiten sin que te des cuenta — y cómo empiezan a sabotear tu relación antes de que lo notes.
+                </p>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.03]">
+                  <Eye className="w-5 h-5 text-emerald-400/50 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-white/70 text-sm font-light">Los 5 ciclos que más se repiten</p>
+                    <p className="text-white/30 text-xs font-light">Evitación, control, fusión, proyección y triangulación</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.03]">
+                  <AlertTriangle className="w-5 h-5 text-amber-400/50 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-white/70 text-sm font-light">Señales tempranas de desgaste</p>
+                    <p className="text-white/30 text-xs font-light">Lo que parece normal pero no lo es</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.03]">
+                  <Brain className="w-5 h-5 text-violet-400/50 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-white/70 text-sm font-light">Mini-test: ¿Qué rol juegas tú?</p>
+                    <p className="text-white/30 text-xs font-light">Identifica tu posición inconsciente en 3 preguntas</p>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <input
+                  type="email" value={email} onChange={e => setEmail(e.target.value)}
+                  placeholder="Tu email para recibir la guía"
+                  className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/25 focus:border-emerald-400/30 focus:outline-none transition-colors"
+                />
+                <motion.button
+                  onClick={() => {
+                    if (email.trim()) {
+                      sessionStorage.setItem('diagnostico_guide_email', email)
+                      setShowFreeGuide(false)
+                      handlePurchase('demo')
+                    }
+                  }}
+                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-light text-base hover:from-emerald-500 hover:to-teal-500 transition-all shadow-lg shadow-emerald-600/20">
+                  <Gift className="inline w-4 h-4 mr-2" /> Recibir guía gratuita
+                </motion.button>
+                <p className="text-white/20 text-xs text-center font-light">
+                  Además podrás probar {DEMO_QUESTION_LIMIT} preguntas del diagnóstico completo
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   )
