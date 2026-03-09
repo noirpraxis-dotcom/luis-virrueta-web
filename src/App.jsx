@@ -40,6 +40,8 @@ const FraseDelDiaPage = lazy(() => import('./pages/FraseDelDiaPage'))
 const AtlasHumanidadPage = lazy(() => import('./pages/AtlasHumanidadPage'))
 const LaboratorioEticoPage = lazy(() => import('./pages/LaboratorioEticoPage'))
 const DiagnosticoRelacionalPage = lazy(() => import('./pages/DiagnosticoRelacionalPage'))
+const ConsultaProductPage = lazy(() => import('./pages/ConsultaProductPage'))
+const ConsultaGraciasPage = lazy(() => import('./pages/ConsultaGraciasPage'))
 
 // Loading component
 const PageLoader = () => (
@@ -192,6 +194,21 @@ const AppContent = () => {
               {/* Diagnóstico Relacional */}
               <Route path="/tienda/diagnostico-relacional" element={
                 <DiagnosticoRelacionalPage />
+              } />
+
+              {/* Consulta Individual */}
+              <Route path="/tienda/8" element={
+                <ConsultaProductPage type="individual" />
+              } />
+
+              {/* Consulta de Pareja */}
+              <Route path="/tienda/9" element={
+                <ConsultaProductPage type="pareja" />
+              } />
+
+              {/* Thank-you page after consulta payment */}
+              <Route path="/tienda/consulta-gracias" element={
+                <ConsultaGraciasPage />
               } />
 
               {/* Página Detalle de Producto */}

@@ -190,6 +190,144 @@ app.post('/api/send-results-email', async (req, res) => {
   }
 })
 
+// ─── CONSULTA: Promo codes ────────────────────────────────────────
+
+const CONSULTA_PROMO_CODES = {
+  // Consulta Individual
+  'MENTELIBRE':  { product: 'individual', priceCents: 50000,  label: '$500 MXN'   },
+  // Consulta de Pareja
+  'DOSPUERTAS':  { product: 'pareja',     priceCents: 100000, label: '$1,000 MXN' },
+  'VINCULOS650': { product: 'pareja',     priceCents: 65000,  label: '$650 MXN'   },
+  // Free (testing) — valid for both
+  'LUISPRAXIS':  { product: 'both',       priceCents: 0,      label: 'GRATIS'     }
+}
+
+const CONSULTA_BASE_PRICES = {
+  individual: 120000, // $1,200 MXN in centavos
+  pareja:     200000  // $2,000 MXN in centavos
+}
+
+// ─── ENDPOINT: Create consulta checkout session ───────────────────
+
+app.post('/api/create-consulta-checkout', async (req, res) => {
+  try {
+    const { type, promoCode } = req.body
+    if (!type || !['individual', 'pareja'].includes(type)) {
+      return res.status(400).json({ error: 'type must be individual or pareja' })
+    }
+
+    let priceCents = CONSULTA_BASE_PRICES[type]
+    let promoApplied = null
+
+    if (promoCode) {
+      const code = String(promoCode).toUpperCase().trim()
+      const promo = CONSULTA_PROMO_CODES[code]
+      if (!promo || (promo.product !== type && promo.product !== 'both')) {
+        return res.status(400).json({ error: 'Código inválido o no aplicable a este producto' })
+      }
+      priceCents = promo.priceCents
+      promoApplied = { code, label: promo.label }
+    }
+
+    // Free path — skip Stripe, redirect directly to thank-you
+    if (priceCents === 0) {
+      return res.json({
+        url: `${FRONTEND_URL}/tienda/consulta-gracias?type=${type}&free=true`
+      })
+    }
+
+    const productName = type === 'individual'
+      ? 'Consulta Individual — Luis Virrueta'
+      : 'Consulta de Pareja — Luis Virrueta'
+
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      line_items: [{
+        price_data: {
+          currency: 'mxn',
+          product_data: {
+            name: productName,
+            description: promoApplied
+              ? `Código aplicado: ${promoApplied.code} (${promoApplied.label})`
+              : undefined
+          },
+          unit_amount: priceCents
+        },
+        quantity: 1
+      }],
+      success_url: `${FRONTEND_URL}/tienda/consulta-gracias?session_id={CHECKOUT_SESSION_ID}&type=${type}`,
+      cancel_url: `${FRONTEND_URL}/tienda/${type === 'individual' ? '8' : '9'}`,
+      metadata: {
+        product_type: `consulta_${type}`,
+        promo_applied: promoApplied ? promoApplied.code : 'none'
+      }
+    })
+
+    res.json({ url: session.url })
+  } catch (err) {
+    console.error('create-consulta-checkout error:', err.message)
+    res.status(500).json({ error: 'Error creating checkout session' })
+  }
+})
+
+// ─── ENDPOINT: Notify Luis of consulta purchase ───────────────────
+
+app.post('/api/notify-consulta-purchase', async (req, res) => {
+  try {
+    const { sessionId, type, free } = req.body
+    const fechaHora = new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })
+    const typeLabel = type === 'pareja' ? 'Consulta de Pareja' : 'Consulta Individual'
+
+    let clientEmail = 'N/A'
+    let amount = free ? 'GRATIS (prueba)' : 'N/A'
+
+    if (sessionId && !free) {
+      try {
+        const session = await stripe.checkout.sessions.retrieve(sessionId)
+        clientEmail = session.customer_details?.email || 'N/A'
+        amount = `$${(session.amount_total / 100).toLocaleString('es-MX')} MXN`
+      } catch { /* silently ignore */ }
+    }
+
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: NOTIFY_EMAIL,
+      subject: `📅 Nueva ${typeLabel} — ${amount}`,
+      html: `
+        <div style="font-family:sans-serif;max-width:500px;margin:0 auto;padding:24px;">
+          <h2 style="color:#16a34a;">📅 Nueva ${typeLabel}</h2>
+          <table style="width:100%;border-collapse:collapse;">
+            <tr>
+              <td style="padding:8px;color:#666;">Fecha y hora</td>
+              <td style="padding:8px;font-weight:bold;">${fechaHora}</td>
+            </tr>
+            <tr style="background:#f9f9f9;">
+              <td style="padding:8px;color:#666;">Producto</td>
+              <td style="padding:8px;font-weight:bold;">${typeLabel}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px;color:#666;">Email del cliente</td>
+              <td style="padding:8px;font-weight:bold;">${clientEmail}</td>
+            </tr>
+            <tr style="background:#f9f9f9;">
+              <td style="padding:8px;color:#666;">Monto pagado</td>
+              <td style="padding:8px;font-weight:bold;">${amount}</td>
+            </tr>
+          </table>
+          <p style="margin-top:16px;color:#888;font-size:13px;">
+            El cliente ya recibió el botón de WhatsApp para contactarte.
+          </p>
+        </div>
+      `
+    }).catch(e => console.warn('Consulta notify failed:', e.message))
+
+    res.json({ success: true })
+  } catch (err) {
+    console.error('notify-consulta-purchase error:', err.message)
+    res.status(500).json({ error: 'Error sending notification' })
+  }
+})
+
 // ─── START ───────────────────────────────────────────────────────
 
 app.listen(PORT, () => {

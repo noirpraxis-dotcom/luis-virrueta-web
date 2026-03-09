@@ -15,20 +15,62 @@ const StorePage = () => {
 
   const products = [
     {
+      id: 8,
+      name: 'Consulta Individual',
+      category: 'Sesión 1:1 con Luis',
+      price: '$1,200 MXN',
+      duration: '60 min',
+      image: '/individual imagen.jpg',
+      description:
+        'No venimos a hablar de síntomas. Venimos a ver qué hay por debajo. ' +
+        'Trabajo los filtros inconscientes que moldean tu realidad y comenzamos a atravesarlos.',
+      shortDesc: 'Una hora que puede cambiarlo todo.',
+      benefits: [
+        'Trabajo desde el Método AION©',
+        'Preguntas que van al fondo — sin protocolo',
+        'Seguimiento post-sesión vía WhatsApp',
+        'Sin compromisos — compra sesiones sueltas'
+      ],
+      gradient: 'from-emerald-600/20 to-teal-600/20',
+      borderGradient: 'from-emerald-500 to-teal-500',
+      isNew: true
+    },
+    {
+      id: 9,
+      name: 'Consulta de Pareja',
+      category: 'Sesión para dos',
+      price: '$2,000 MXN',
+      duration: '90 min',
+      image: '/pareja imagen.jpg',
+      description:
+        'Detrás de cada conflicto hay un patrón: heredado, proyectado, repetido sin que nadie lo nombre. ' +
+        'En esta sesión empezamos a nombrarlo.',
+      shortDesc: 'Para lo que solos no pueden atravesar.',
+      benefits: [
+        'Para dos personas — juntos en la sesión',
+        'Análisis de dinámicas inconscientes de pareja',
+        'Perspectiva honesta y directa',
+        'Sin contratos — repiten cuando lo necesiten'
+      ],
+      gradient: 'from-rose-600/20 to-pink-600/20',
+      borderGradient: 'from-rose-500 to-pink-500',
+      isNew: true
+    },
+    {
       id: 7,
       name: 'Termómetro Inconsciente de Pareja',
       category: 'Diagnóstico Psicológico',
       price: 'Desde $349 MXN',
       duration: '~30 min',
       image: '/TEST PAREJA/TERMOMETRO AMOR.jpg',
-      description: 'Test psicológico conversacional diseñado por un psicólogo clínico. Hablas por micrófono, el sistema analiza tus patrones inconscientes y recibes un reporte profesional con gráficas, ciclos emocionales y recomendaciones.',
-      shortDesc: '45 preguntas psicoanalíticas que detectan los patrones invisibles de tu relación — lo que no se dice pero se siente.',
+      description: '¿Sientes que algo cambió pero no sabes qué? Este test escucha lo que no dices. Hablas por micrófono, el algoritmo detecta tus patrones inconscientes y recibes un reporte profesional con gráficas, ciclos emocionales y lo que realmente está pasando en tu relación.',
+      shortDesc: '¿Tu relación ya no se siente igual? Descubre los patrones invisibles que la están desgastando — antes de que sea tarde.',
       benefits: [
-        'Individual ($349) o en Pareja ($499) — cada quien por separado',
-        'Habla por micrófono — como platicar con un psicólogo',
-        'Detecta ciclos, apego, defensa y patrones inconscientes',
-        'Reporte visual: radar, barras, análisis narrativo y PDF',
-        'Opción: sesión con el psicólogo para interpretar resultados'
+        'Individual ($349) o Pareja ($549) — cada quien responde por separado',
+        'Hablas por micrófono — como platicar con un psicólogo',
+        'Detecta ciclos de apego, defensa y patrones que se repiten',
+        'Reporte visual completo: radar, barras, análisis narrativo y PDF',
+        'Opción: sesión con el psicólogo ($1,199) para interpretar tus resultados'
       ],
       gradient: 'from-violet-600/20 to-fuchsia-600/20',
       borderGradient: 'from-violet-500 to-fuchsia-500',
@@ -276,6 +318,13 @@ const StorePage = () => {
                 {product.popular && (
                   <div className="absolute top-4 right-4 z-10 px-3 py-1 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-full">
                     <span className="text-xs font-light text-white tracking-wide">MÁS POPULAR</span>
+                  </div>
+                )}
+
+                {/* New badge */}
+                {product.isNew && (
+                  <div className="absolute top-4 right-4 z-10 px-3 py-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-full">
+                    <span className="text-xs font-light text-white tracking-wide">NUEVO</span>
                   </div>
                 )}
 
