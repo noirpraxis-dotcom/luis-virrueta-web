@@ -203,8 +203,8 @@ const CONSULTA_PROMO_CODES = {
 }
 
 const CONSULTA_BASE_PRICES = {
-  individual: 120000, // $1,200 MXN in centavos
-  pareja:     200000  // $2,000 MXN in centavos
+  individual: 70000,  // $700 MXN in centavos
+  pareja:     119900  // $1,199 MXN in centavos
 }
 
 // ─── ENDPOINT: Create consulta checkout session ───────────────────

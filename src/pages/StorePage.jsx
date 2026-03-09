@@ -18,7 +18,7 @@ const StorePage = () => {
       id: 8,
       name: 'Consulta Individual',
       category: 'Sesión 1:1 con Luis',
-      price: '$1,200 MXN',
+      price: '$700 MXN',
       duration: '60 min',
       image: '/individual imagen.jpg',
       description:
@@ -39,7 +39,7 @@ const StorePage = () => {
       id: 9,
       name: 'Consulta de Pareja',
       category: 'Sesión para dos',
-      price: '$2,000 MXN',
+      price: '$1,199 MXN',
       duration: '90 min',
       image: '/pareja imagen.jpg',
       description:
