@@ -24,7 +24,7 @@ const StorePage = () => {
       description:
         'No venimos a hablar de síntomas. Venimos a ver qué hay por debajo. ' +
         'Trabajo los filtros inconscientes que moldean tu realidad y comenzamos a atravesarlos.',
-      shortDesc: 'Una hora que puede cambiarlo todo. Sin protocolo, sin rodeos — trabajo real con el inconsciente.',
+      shortDesc: 'No venimos a hablar de síntomas. En 60 minutos trabajamos los filtros inconscientes que están moldeando tu realidad — con el Método AION©, sin rodeos, sin protocolo.',
       benefits: [
         '60 min por videollamada — directo al fondo',
         'Método AION© — sin scripts ni manuales',
@@ -45,11 +45,11 @@ const StorePage = () => {
       description:
         'Detrás de cada conflicto hay un patrón: heredado, proyectado, repetido sin que nadie lo nombre. ' +
         'En esta sesión empezamos a nombrarlo.',
-      shortDesc: 'Lo que solos no pueden ver. 90 minutos donde los dos por fin escuchan lo que nadie dice.',
+      shortDesc: 'Las parejas no pelean por lo que creen que pelean. Detrás de cada conflicto hay un patrón heredado, proyectado, repetido. En 90 minutos de trabajo real, empezamos a nombrar lo que nadie ha nombrado — y eso cambia todo.',
       benefits: [
-        '90 min juntos por videollamada',
-        'Análisis de dinámicas inconscientes',
-        'Sin tomar partido — perspectiva real',
+        '90 min juntos por videollamada — sin tomar partido',
+        'Se nombra lo que ninguno puede ver solo',
+        'Análisis de patrones inconscientes de pareja',
         'Seguimiento post-sesión por WhatsApp'
       ],
       gradient: 'from-rose-600/20 to-pink-600/20',
@@ -292,7 +292,7 @@ const StorePage = () => {
 
                   {/* Benefits preview */}
                   <div className="space-y-2">
-                    {product.benefits.slice(0, product.isDiagnostic ? 5 : 2).map((benefit, i) => (
+                    {product.benefits.slice(0, product.isDiagnostic ? 5 : 3).map((benefit, i) => (
                       <div key={i} className="flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4 text-violet-400 flex-shrink-0" />
                         <span className="text-xs text-white/50 font-light">{benefit}</span>
