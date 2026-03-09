@@ -16,6 +16,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173'
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Termómetro de Pareja <hola@luisvirrueta.com>'
+const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || 'hola@luisvirrueta.com'
 
 // Initialize Firebase Admin (optional — skip if no service account)
 let db = null
@@ -140,6 +141,7 @@ app.post('/api/send-results-email', async (req, res) => {
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: email,
+      bcc: NOTIFY_EMAIL,
       subject: '🔬 Tu Diagnóstico Relacional — Resultados y PDF',
       html: resultsEmailHtml({ productType }),
       attachments: [
