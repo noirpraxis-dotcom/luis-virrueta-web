@@ -59,6 +59,30 @@ const PAREJA_IMAGES = {
   video: '/productos/consulta pareja/VIDEO AMOR.mp4'
 }
 
+const INDIVIDUAL_IMAGES = {
+  consulta: [
+    '/productos/consulta individual/imagenes consulta/descarga - 2026-03-09T134637.679.jpg',
+    '/productos/consulta individual/imagenes consulta/descarga - 2026-03-09T134644.527.jpg',
+    '/productos/consulta individual/imagenes consulta/descarga - 2026-03-09T134658.040.jpg',
+    '/productos/consulta individual/imagenes consulta/descarga - 2026-03-09T134821.193.jpg',
+    '/productos/consulta individual/imagenes consulta/descarga - 2026-03-09T134855.466.jpg',
+    '/productos/consulta individual/imagenes consulta/descarga - 2026-03-09T134946.693.jpg'
+  ],
+  inconsciente: [
+    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133224.311.jpg',
+    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133335.376.jpg',
+    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133450.122.jpg',
+    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133707.091.jpg',
+    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133738.021.jpg',
+    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133806.854.jpg',
+    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133923.890.jpg',
+    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T134000.375.jpg',
+    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T134142.952.jpg',
+    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T134409.894.jpg',
+    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T134437.255.jpg'
+  ]
+}
+
 const TESTIMONIALS = [
   {
     name: 'Andrea M.',
@@ -72,7 +96,7 @@ const TESTIMONIALS = [
     type: 'individual',
     time: '6 sesiones',
     text: 'Pensé que necesitaba motivación. Lo que necesitaba era alguien que me hiciera las preguntas que yo no me atrevía a hacerme. En una hora entendí más que en años de terapia convencional.',
-    image: null
+    image: '/productos/consulta individual/imagenes consulta/descarga - 2026-03-09T134637.679.jpg'
   },
   {
     name: 'Mariana y Javier',
@@ -86,7 +110,7 @@ const TESTIMONIALS = [
     type: 'individual',
     time: '2 sesiones',
     text: 'No sabía ni por dónde empezar. Solo sabía que algo no estaba bien. Luis lo identificó en los primeros 15 minutos. No es magia — es alguien que realmente escucha lo que no dices.',
-    image: null
+    image: '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133335.376.jpg'
   },
   {
     name: 'Sofía y Andrés',
@@ -100,7 +124,7 @@ const TESTIMONIALS = [
     type: 'individual',
     time: '8 sesiones',
     text: 'Llevaba años con ansiedad y no entendía de dónde venía. Con el Método AION© empecé a ver los filtros que estaban operando sin que yo lo supiera. Hoy no necesito estrategias para "controlar" nada.',
-    image: null
+    image: '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133707.091.jpg'
   },
   {
     name: 'Roberto y Ana',
@@ -114,7 +138,21 @@ const TESTIMONIALS = [
     type: 'individual',
     time: '3 sesiones',
     text: 'Mi vida estaba "bien" pero yo no. Una sesión con Luis bastó para darme cuenta de que estaba viviendo una vida que no elegí. Duro pero necesario.',
-    image: null
+    image: '/productos/consulta individual/imagenes consulta/descarga - 2026-03-09T134855.466.jpg'
+  },
+  {
+    name: 'Alejandro P.',
+    type: 'individual',
+    time: '5 sesiones',
+    text: 'Siempre fui "el fuerte" de la familia. Con el Método AION© descubrí que esa fortaleza era una armadura que no me dejaba sentir. Cuando la vi, dejó de controlarme.',
+    image: '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133923.890.jpg'
+  },
+  {
+    name: 'Daniela S.',
+    type: 'individual',
+    time: '4 sesiones',
+    text: 'Vine por un problema de pareja y terminé descubriendo que el problema era conmigo. Luis no juzga — solo ilumina lo que no puedes ver solo. Eso lo cambia todo.',
+    image: '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T134142.952.jpg'
   },
   {
     name: 'Patricia y Luis E.',
@@ -300,7 +338,7 @@ const ConsultaProductPage = ({ type }) => {
 
   const relevantTestimonials = TESTIMONIALS.filter(
     t => t.type === type || t.type === 'both'
-  ).slice(0, isPareja ? 9 : 5)
+  ).slice(0, isPareja ? 9 : 6)
 
   const applyPromo = () => {
     const code = promoInput.toUpperCase().trim()
@@ -438,9 +476,18 @@ const ConsultaProductPage = ({ type }) => {
                   </div>
                 </div>
               ) : (
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
-                  <img src={product.image} alt={product.name} className="absolute inset-0 w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                <div className="space-y-3">
+                  <div className="relative aspect-[16/10] rounded-2xl overflow-hidden">
+                    <img src={INDIVIDUAL_IMAGES.consulta[0]} alt="Consulta individual" className="absolute inset-0 w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {INDIVIDUAL_IMAGES.consulta.slice(1, 4).map((src, i) => (
+                      <div key={i} className="relative aspect-[4/3] rounded-xl overflow-hidden">
+                        <img src={src} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </motion.div>
@@ -507,8 +554,8 @@ const ConsultaProductPage = ({ type }) => {
       {/* SECTION 3 — PARA QUIÉN ES */}
       <section ref={forWhoRef} className="relative py-20 px-6 lg:px-20">
         <div className="max-w-7xl mx-auto">
-          <div className={`grid grid-cols-1 ${isPareja ? 'lg:grid-cols-2' : 'lg:grid-cols-5'} gap-12 lg:gap-16 items-start`}>
-            <div className={`space-y-8 ${isPareja ? '' : 'lg:col-span-3'}`}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+            <div className="space-y-8">
               <motion.div initial={{ opacity: 0, y: 30 }} animate={isForWhoInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7 }} className="space-y-3">
                 <h2 className="text-3xl lg:text-4xl font-light text-white">
                   {isPareja ? '¿Esto es para ustedes?' : '¿Esto es para ti?'}
@@ -543,41 +590,45 @@ const ConsultaProductPage = ({ type }) => {
                 <ImageCollage images={PAREJA_IMAGES.sesion} />
               </motion.div>
             ) : (
-              <motion.div initial={{ opacity: 0, y: 30 }} animate={isForWhoInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, delay: 0.2 }} className="lg:col-span-2 relative aspect-[3/4] rounded-2xl overflow-hidden">
-                <img src="/individual imagen.jpg" alt="Sesión individual" className="absolute inset-0 w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+              <motion.div initial={{ opacity: 0, y: 30 }} animate={isForWhoInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, delay: 0.2 }}>
+                <ImageCollage images={INDIVIDUAL_IMAGES.consulta} />
               </motion.div>
             )}
           </div>
         </div>
       </section>
 
-      {/* SECTION 4 — PATRONES COLLAGE (pareja only) */}
-      {isPareja && (
-        <section className="relative py-16 px-6 lg:px-20 bg-zinc-950/40">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              <ImageCollage images={PAREJA_IMAGES.patrones} />
-              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="space-y-6">
-                <h2 className="text-3xl lg:text-4xl font-light text-white">Lo que no se nombra, se repite</h2>
-                <p className="text-lg text-white/50 font-light leading-relaxed">
-                  Muchas parejas llegan sintiéndose atrapadas en el mismo ciclo. La misma pelea, con distinto disfraz.
-                  Pero el patrón no es el problema — es la puerta.
+      {/* SECTION 4 — PATRONES / INCONSCIENTE COLLAGE */}
+      <section className="relative py-16 px-6 lg:px-20 bg-zinc-950/40">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <ImageCollage images={isPareja ? PAREJA_IMAGES.patrones : INDIVIDUAL_IMAGES.inconsciente} />
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="space-y-6">
+              <h2 className="text-3xl lg:text-4xl font-light text-white">
+                {isPareja ? 'Lo que no se nombra, se repite' : 'Tu inconsciente dirige — hasta que lo ves'}
+              </h2>
+              <p className="text-lg text-white/50 font-light leading-relaxed">
+                {isPareja
+                  ? 'Muchas parejas llegan sintiéndose atrapadas en el mismo ciclo. La misma pelea, con distinto disfraz. Pero el patrón no es el problema — es la puerta.'
+                  : 'Hay filtros que operan sin que lo sepas: cómo eliges, qué evitas, qué repites. No son defectos — son estructuras inconscientes que aprendiste antes de poder cuestionarlas.'}
+              </p>
+              <p className="text-lg text-white/50 font-light leading-relaxed">
+                {isPareja
+                  ? 'Cuando logras verlo, dejas de repetirlo. Eso es lo que hacemos en estos 90 minutos.'
+                  : 'El Método AION© no trabaja sobre lo que te pasa. Trabaja sobre lo que hay debajo de lo que te pasa. Cuando lo ves, algo se mueve. Eso no se explica — se experimenta.'}
+              </p>
+              <div className={`p-5 rounded-xl ${product.lightBg} border ${product.borderAccent}`}>
+                <p className={`font-light ${product.accentColor} text-sm leading-relaxed italic`}>
+                  {isPareja
+                    ? '\u201cLa claridad puede incomodar. Pero es mejor que seguir girando en el mismo ciclo.\u201d'
+                    : '\u201cNo vengo a decirte lo que quieres escuchar. Vengo a mostrarte lo que necesitas ver.\u201d'}
                 </p>
-                <p className="text-lg text-white/50 font-light leading-relaxed">
-                  Cuando logras verlo, dejas de repetirlo. Eso es lo que hacemos en estos 90 minutos.
-                </p>
-                <div className={`p-5 rounded-xl ${product.lightBg} border ${product.borderAccent}`}>
-                  <p className={`font-light ${product.accentColor} text-sm leading-relaxed italic`}>
-                    &ldquo;La claridad puede incomodar. Pero es mejor que seguir girando en el mismo ciclo.&rdquo;
-                  </p>
-                  <p className="text-white/40 font-light text-xs mt-2">— Luis Virrueta</p>
-                </div>
-              </motion.div>
-            </div>
+                <p className="text-white/40 font-light text-xs mt-2">— Luis Virrueta</p>
+              </div>
+            </motion.div>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* SECTION 5 — HOW IT WORKS */}
       <section ref={stepsRef} className="relative py-20 px-6 lg:px-20">
@@ -639,25 +690,29 @@ const ConsultaProductPage = ({ type }) => {
         </div>
       </section>
 
-      {/* SECTION 8 — VIDEO (pareja only, at end) */}
-      {isPareja && (
-        <section className="relative py-16 px-6 lg:px-20">
-          <div className="max-w-5xl mx-auto space-y-8">
-            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center space-y-3">
-              <h2 className="text-3xl lg:text-4xl font-light text-white overflow-hidden">
-                {'El amor se siente — pero los patrones se repiten'.split(' ').map((word, wi) => (
-                  <motion.span key={wi} initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                    transition={{ duration: 0.45, delay: 0.1 + wi * 0.055, ease: 'easeOut' }} className="inline-block mr-[0.28em]">
-                    {word}
-                  </motion.span>
-                ))}
-              </h2>
-              <motion.p initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.65 }}
-                className="text-white/50 font-light max-w-2xl mx-auto">
-                La conexión entre dos personas es real. Pero los conflictos que se repiten también lo son.
-                Esta sesión existe para nombrar lo que está pasando por debajo.
-              </motion.p>
-            </motion.div>
+      {/* SECTION 8 — CLOSING VISUAL */}
+      <section className="relative py-16 px-6 lg:px-20">
+        <div className="max-w-5xl mx-auto space-y-8">
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center space-y-3">
+            <h2 className="text-3xl lg:text-4xl font-light text-white overflow-hidden">
+              {(isPareja
+                ? 'El amor se siente — pero los patrones se repiten'
+                : 'Lo que no ves, te dirige — hasta que decides mirarlo'
+              ).split(' ').map((word, wi) => (
+                <motion.span key={wi} initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                  transition={{ duration: 0.45, delay: 0.1 + wi * 0.055, ease: 'easeOut' }} className="inline-block mr-[0.28em]">
+                  {word}
+                </motion.span>
+              ))}
+            </h2>
+            <motion.p initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.65 }}
+              className="text-white/50 font-light max-w-2xl mx-auto">
+              {isPareja
+                ? 'La conexión entre dos personas es real. Pero los conflictos que se repiten también lo son. Esta sesión existe para nombrar lo que está pasando por debajo.'
+                : 'Tus decisiones, relaciones y bloqueos tienen una lógica que no es la que crees. Esta sesión existe para hacer visible lo invisible — y que dejes de operarlo en automático.'}
+            </motion.p>
+          </motion.div>
+          {isPareja ? (
             <motion.div initial={{ opacity: 0, scale: 0.96 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.1 }}
               className="relative aspect-video rounded-2xl overflow-hidden border border-white/10">
               <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
@@ -665,9 +720,21 @@ const ConsultaProductPage = ({ type }) => {
               </video>
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
             </motion.div>
-          </div>
-        </section>
-      )}
+          ) : (
+            <motion.div initial={{ opacity: 0, scale: 0.96 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.1 }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {INDIVIDUAL_IMAGES.inconsciente.slice(0, 8).map((src, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.1 + i * 0.06 }}
+                  className={`relative rounded-xl overflow-hidden border border-white/10 ${i === 0 || i === 5 ? 'aspect-[3/4]' : 'aspect-[4/3]'}`}>
+                  <img src={src} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+                  <div className="absolute inset-0 bg-black/20" />
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
+        </div>
+      </section>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-// Script para pre-generar los 45 audios de las preguntas del diagnóstico relacional
+// Script para pre-generar los 44 audios de las preguntas del diagnóstico relacional (12 dimensiones)
 // Usa ElevenLabs API con voz Charlotte (multilingual v2) — warm, clear, calming storytelling
 // Se ejecuta UNA VEZ y los MP3 se guardan como archivos estáticos
 
@@ -11,58 +11,50 @@ const MODEL = 'eleven_multilingual_v2'
 const OUTPUT_DIR = path.join(__dirname, 'public', 'audio', 'diagnostico')
 
 const QUESTIONS = [
-  { id: 'Q1', text: 'Me describiría a mí mismo o misma como alguien que...' },
-  { id: 'Q2', text: 'Las personas que me conocen suelen decir que yo...' },
-  { id: 'Q3', text: 'Yo describiría a mi pareja como...' },
-  { id: 'Q4', text: 'Las personas suelen pensar de mi pareja que...' },
-  { id: 'Q5', text: 'Me junté con mi pareja porque...' },
-  { id: 'Q6', text: 'Con el tiempo me he dado cuenta de que mi pareja...' },
-  { id: 'Q7', text: 'Algo de mi pareja que influye mucho en cómo me siento es que...' },
-  { id: 'Q8', text: 'Estar con mi pareja me hace sentir...' },
-  { id: 'Q9', text: 'Cuando pienso en mi pareja, lo primero que siento es...' },
-  { id: 'Q10', text: 'Lo que más valoro de mi relación es...' },
-  { id: 'Q11', text: 'Lo que más me cuesta aceptar de mi pareja es...' },
-  { id: 'Q12', text: 'Desde que estoy con mi pareja he descubierto que yo...' },
-  { id: 'Q13', text: 'Sin mi pareja, yo sería...' },
-  { id: 'Q14', text: 'Lo que me llevaría a separarme de mi pareja sería...' },
-  { id: 'Q15', text: 'Cuando estamos bien juntos, yo me siento...' },
-  { id: 'Q16', text: 'Cuando estamos bien juntos, yo soy...' },
-  { id: 'Q17', text: 'Cuando mi pareja se aleja emocionalmente, yo...' },
-  { id: 'Q18', text: 'Cuando mi pareja busca acercarse más a mí, yo tiendo a...' },
-  { id: 'Q19', text: 'Lo que más miedo me da dentro de esta relación es...' },
-  { id: 'Q20', text: 'Para sentirme realmente amado o amada en esta relación necesito...' },
-  { id: 'Q21', text: 'El amor debería ser... pero en mi relación es...' },
-  { id: 'Q22', text: 'Lo que más nos une como pareja es...' },
-  { id: 'Q23', text: 'Lo que más nos separa como pareja es...' },
-  { id: 'Q24', text: 'Si alguien observara nuestra relación desde fuera diría que...' },
-  { id: 'Q25', text: 'Si nuestra relación fuera una historia, ahora estaría en la parte donde...' },
-  { id: 'Q26', text: 'Si tuviera que explicar por qué mi pareja y yo seguimos juntos, diría que...' },
-  { id: 'Q27', text: 'Cuando discutimos, normalmente termino sintiéndome...' },
-  { id: 'Q28', text: 'Después de una discusión yo suelo...' },
-  { id: 'Q29', text: 'Cuando mi pareja se enoja conmigo, mi primera reacción suele ser...' },
-  { id: 'Q30', text: 'Cuando aparece un problema entre nosotros, yo tiendo a...' },
-  { id: 'Q31', text: 'Algo que suele pasar entre nosotros cuando las cosas se ponen difíciles es que...' },
-  { id: 'Q32', text: 'Cuando nuestra relación empieza a sentirse distante, normalmente es después de que...' },
-  { id: 'Q33', text: 'Lo que más me molesta de mi pareja es...' },
-  { id: 'Q34', text: 'Lo que más admiro de mi pareja es...' },
-  { id: 'Q35', text: 'Lo que nunca le he dicho a mi pareja es...' },
-  { id: 'Q36', text: 'Hay partes de mí que mi pareja todavía no conoce, como por ejemplo...' },
-  { id: 'Q37', text: 'Si pudiera cambiar una sola cosa de nosotros, sería...' },
-  { id: 'Q38', text: 'Lo que más extraño de nosotros es...' },
-  { id: 'Q43', text: 'En nuestra intimidad física, yo me siento...' },
-  { id: 'Q44', text: 'Hay algo en nuestra vida sexual que me gustaría que fuera diferente, como...' },
-  { id: 'Q45', text: 'Si pudiera expresar un deseo o fantasía sin ser juzgado o juzgada, diría que...' },
-  { id: 'Q39', text: 'Si esta relación terminara mañana, lo que más me dolería sería...' },
-  { id: 'Q40', text: 'Si hay algo que siento que se repite una y otra vez entre nosotros es...' },
-  { id: 'Q41', text: 'Cuando nuestra relación está en su mejor momento es porque...' },
-  { id: 'Q42', text: 'Si esta relación cambiara profundamente mañana, lo primero que sentiría sería...' },
-  // NUEVAS — Familia de origen (Phase 5)
-  { id: 'Q46', text: 'La relación de tus padres se parecía a la tuya en que...' },
-  { id: 'Q47', text: 'Algo que aprendiste del amor viendo a tu familia fue...' },
-  { id: 'Q48', text: 'Un patrón de tu familia que reconoces en tu relación actual es...' },
-  // NUEVAS — Intimidad ampliada (Phase 6)
-  { id: 'Q49', text: 'Cuando hay cercanía física entre nosotros, emocionalmente yo...' },
-  { id: 'Q50', text: 'Lo que más echo de menos de nuestra intimidad es...' }
+  { id: 'Q0', text: 'Antes de empezar, cuéntame: ¿cómo te llamas, cuántos años tienes, cuánto tiempo llevan juntos como pareja, y en una frase, cómo describirías tu relación hoy?' },
+  { id: 'Q1', text: '¿Cómo comenzó tu relación? Cuéntame cómo se conocieron y cómo fueron esos primeros momentos importantes.' },
+  { id: 'Q2', text: 'Si tuvieras que contar la historia de tu relación como una película o un relato corto, ¿cómo sería? ¿En qué parte de la historia están ahora?' },
+  { id: 'Q3', text: 'Mirando hacia atrás desde el inicio hasta hoy, ¿qué momentos consideras los puntos clave que cambiaron la relación — para bien o para mal?' },
+  { id: 'Q4', text: 'Piensa en un momento reciente en el que hayas sentido admiración o respeto por tu pareja. Describe qué ocurrió y por qué ese momento fue significativo para ti.' },
+  { id: 'Q5', text: 'De todas las cualidades de tu pareja, ¿cuáles valoras más profundamente? No lo que hace, sino cómo es como persona. Cuéntame por qué esas cualidades son importantes para ti.' },
+  { id: 'Q6', text: '¿En qué momentos o situaciones sientes que te sientes especialmente orgulloso u orgullosa de tu pareja? Describe alguno.' },
+  { id: 'Q7', text: 'Cuando sientes que tu pareja está distante o menos conectada contigo — ya sea porque está ocupada, fría o simplemente no responde como esperas — ¿qué emociones aparecen dentro de ti y qué es lo primero que sueles hacer?' },
+  { id: 'Q8', text: 'Cuando tú necesitas cercanía emocional — sentirte acompañado, escuchado o contenido — ¿cómo sueles buscarla dentro de la relación? ¿La pides directamente o haces algo para que suceda?' },
+  { id: 'Q9', text: 'Si la relación terminara por completo, ¿qué es lo que más sentirías que pierdes? No hablo de cosas prácticas, sino emocionalmente — ¿qué se iría contigo?' },
+  { id: 'Q10', text: 'Describe un momento reciente en el que hayas sentido una conexión emocional profunda con tu pareja. ¿Qué estaban haciendo y cómo se sintió por dentro?' },
+  { id: 'Q11', text: '¿Qué tipo de situaciones o momentos hacen que te sientas emocionalmente más cerca de tu pareja? No lo general — piensa en algo específico que haya pasado.' },
+  { id: 'Q12', text: '¿Hay momentos en los que te sientes emocionalmente solo o sola dentro de la relación, aunque tu pareja esté ahí presente? Cuéntame cómo es eso para ti.' },
+  { id: 'Q13', text: 'Describe cómo suele comenzar una discusión entre ustedes. ¿Quién dice qué primero, cómo escala, y cuál es el patrón que se repite?' },
+  { id: 'Q14', text: '¿Qué ocurre normalmente durante esas discusiones? ¿Cómo reaccionas tú, cómo reacciona tu pareja, y cómo suele terminar la cosa?' },
+  { id: 'Q15', text: 'Después de un conflicto fuerte, ¿cómo se reconstruye la relación entre ustedes? ¿Quién da el primer paso, cuánto tardan, y cómo se siente ese proceso de reconexión?' },
+  { id: 'Q16', text: '¿Qué partes de ti siente tu pareja que realmente conoce bien? Y por otro lado, ¿hay cosas importantes de ti que tu pareja no sabe o no entiende del todo?' },
+  { id: 'Q17', text: '¿Qué partes de tu mundo emocional te cuesta compartir con tu pareja? ¿Hay temas, sentimientos o pensamientos que prefieres no mostrar?' },
+  { id: 'Q18', text: 'Describe un momento en el que te hayas sentido profundamente comprendido o comprendida por tu pareja. ¿Qué pasó y qué significó eso para ti?' },
+  { id: 'Q19', text: '¿Qué fue lo que inicialmente despertó tu atracción hacia tu pareja? No solo lo físico — ¿qué te enganchó emocionalmente de esa persona?' },
+  { id: 'Q20', text: '¿Cómo describirías hoy el deseo y la atracción entre ustedes? ¿Ha cambiado desde el inicio de la relación? ¿En qué sentido?' },
+  { id: 'Q21', text: '¿Qué cosas ayudan — o ayudarían — a mantener viva la chispa, el deseo y la atracción en la relación? ¿Qué falta o qué les funciona?' },
+  { id: 'Q22', text: 'Si miras tu historia amorosa pasada — relaciones anteriores o incluso la forma en que creciste — ¿ves patrones que se repiten también en esta relación?' },
+  { id: 'Q23', text: '¿Hay algo que se repite una y otra vez en los conflictos de tu relación? Un tema, una reacción, una dinámica que siempre vuelve, aunque cambien las circunstancias.' },
+  { id: 'Q24', text: 'En los momentos más difíciles de la relación, ¿qué rol sientes que sueles ocupar? ¿Eres quien busca solucionar, quien se retira, quien explota, quien calla, quien cuida al otro?' },
+  { id: 'Q25', text: '¿Qué aspectos de tu identidad personal — quién eres tú como individuo — sientes que es importante mantener dentro de la relación, aunque a tu pareja no siempre le guste o lo entienda?' },
+  { id: 'Q26', text: '¿En qué momentos sientes que necesitas más espacio personal dentro de la relación? ¿Cómo reacciona tu pareja cuando pides ese espacio o cuando te alejas un poco?' },
+  { id: 'Q27', text: '¿Qué tan fácil o difícil es para ti mantener tu propia independencia emocional dentro de la relación? Es decir, estar bien contigo mismo o misma sin que eso dependa de cómo esté tu pareja.' },
+  { id: 'Q28', text: '¿Qué cosas concretas hace tu pareja que te hacen sentir amado, valorado o cuidado? Piensa en acciones específicas — no conceptos generales.' },
+  { id: 'Q29', text: '¿Cómo sueles tú expresar cariño o amor hacia tu pareja? ¿De qué formas le demuestras que te importa en el día a día?' },
+  { id: 'Q30', text: 'Cuando uno de los dos está emocionalmente alterado — enojado, ansioso, triste — ¿cómo suele reaccionar el otro? ¿Se acerca para calmar, se aleja, intenta resolver, se engancha en la emoción?' },
+  { id: 'Q31', text: '¿Qué cosas ayudan a que la relación vuelva a sentirse estable y segura después de un momento difícil o una crisis emocional entre ustedes?' },
+  { id: 'Q32', text: 'Si piensas en tu relación en tres dimensiones — la pasión física, la cercanía emocional y el compromiso a largo plazo — ¿cuál de las tres sientes que está más viva hoy y cuál sientes que se ha ido apagando?' },
+  { id: 'Q33', text: '¿Cuál de estas tres dimensiones — pasión, cercanía emocional o compromiso — sientes que tu pareja vive de forma distinta a ti? ¿En cuál están más desalineados?' },
+  { id: 'Q34', text: '¿Qué sensaciones físicas notas cuando estás cerca de tu pareja? ¿Calma, excitación, tensión, indiferencia, algo más? ¿Han cambiado esas sensaciones con el tiempo?' },
+  { id: 'Q35', text: '¿Hay momentos en los que sientes una necesidad casi física de estar con tu pareja — como una urgencia de cercanía, de tocarla, de estar juntos — o eso ya no te pasa como antes?' },
+  { id: 'Q36', text: 'Cuando no sabes dónde está tu pareja, no te contesta el teléfono o tarda mucho en responder, ¿qué es lo primero que sientes y qué haces? Sé honesto o honesta.' },
+  { id: 'Q37', text: 'Cuando tu pareja quiere más cercanía, más tiempo juntos o más contacto emocional del que tú necesitas en ese momento, ¿cómo reaccionas por dentro y qué haces?' },
+  { id: 'Q38', text: 'Si tuvieras que ponerle una calificación del 1 al 10 a qué tan satisfecho o satisfecha te sientes hoy con tu relación, ¿cuál sería? Y sobre todo: ¿por qué esa cifra y no una más alta?' },
+  { id: 'Q39', text: '¿Qué esfuerzos activos haces tú para cuidar la relación en el día a día? Y honestamente, ¿sientes que tu pareja hace lo mismo o hay un desequilibrio?' },
+  { id: 'Q40', text: '¿Cómo imaginas tu relación dentro de cinco años si todo sigue como está ahora? ¿Y cómo la imaginas si las cosas mejoraran?' },
+  { id: 'Q41', text: '¿Qué cambios concretos — no ideales, sino reales y posibles — ayudarían a que la relación se fortalezca entre ustedes?' },
+  { id: 'Q42', text: '¿Qué aspectos de la relación sientes que necesitan más cuidado y atención hacia el futuro? ¿Qué no quieres que se pierda?' },
+  { id: 'Q43', text: '¿Hay algo importante sobre tu relación, sobre ti o sobre tu pareja que no te haya preguntado y que sientas que debería saber? Lo que sea.' }
 ]
 
 async function generateAudio(question) {
@@ -85,7 +77,7 @@ async function generateAudio(question) {
       body: JSON.stringify({
         text: question.text,
         model_id: MODEL,
-        voice_settings: { stability: 0.60, similarity_boost: 0.75, style: 0.35 }
+        voice_settings: { stability: 0.80, similarity_boost: 0.80, style: 0.08 }
       })
     })
 

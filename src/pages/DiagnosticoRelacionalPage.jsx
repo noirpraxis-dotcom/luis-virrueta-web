@@ -6,7 +6,9 @@ import {
   Check, CheckCircle, Clock, FileText, Mail, Send, Download, Sparkles, Eye,
   Lock, Star, Activity, BarChart3, Zap, Layers, CreditCard, Loader2, Tag,
   Mic, MicOff, TrendingUp, TrendingDown, AlertTriangle, Play, ChevronDown,
-  XCircle, Volume2, Gift, BookOpen
+  XCircle, Volume2, Gift, BookOpen, ChevronLeft, ChevronRight, Hourglass,
+  Flame, Link2, Fingerprint, HeartHandshake, Puzzle, MessageSquare, Triangle,
+  ScanEye, Magnet, Scale, Dna
 } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 import jsPDF from 'jspdf'
@@ -15,155 +17,284 @@ import { generateAccessToken, PRODUCT_LABELS, DATA_RETENTION_DAYS } from '../uti
 import { sendAccessEmails, sendResultsEmail, verifyStripeSession } from '../services/emailApiService'
 import { saveProgress, getProgress, savePurchase, saveResults } from '../services/firebaseAuthService'
 
-// ─── CUESTIONARIO: 45 PREGUNTAS EN 8 FASES ────────────────────
+// ─── CUESTIONARIO: 44 PREGUNTAS EN 18 BLOQUES ────────────────────
 
 const QUESTIONS = [
-  // PHASE 0 — IDENTIDAD Y PERCEPCIÓN DE LA RELACIÓN (9 preguntas)
-  { id: 'Q1', section: 'Identidad y percepción', text: 'Me describiría a mí mismo(a) como alguien que...', sample: 'Soy alguien que da mucho emocionalmente pero a veces siento que no recibo lo mismo a cambio.' },
-  { id: 'Q2', section: 'Identidad y percepción', text: 'Las personas que me conocen suelen decir que yo...', sample: 'Que soy muy entregado pero que a veces me pierdo en el otro y dejo de cuidarme.' },
-  { id: 'Q3', section: 'Identidad y percepción', text: 'Yo describiría a mi pareja como...', sample: 'Es fuerte, decidida, pero a veces se cierra emocionalmente cuando hay tensión.' },
-  { id: 'Q4', section: 'Identidad y percepción', text: 'Las personas suelen pensar de mi pareja que...', sample: 'Es muy segura de sí misma, pero en realidad tiene muchas inseguridades que nadie ve.' },
-  { id: 'Q5', section: 'Identidad y percepción', text: 'Me junté con mi pareja porque...', sample: 'Sentí que me veía de verdad. De una forma que nadie me había visto antes.' },
-  { id: 'Q6', section: 'Identidad y percepción', text: 'Con el tiempo me he dado cuenta de que mi pareja...', sample: 'No es exactamente como la imaginaba al principio. Tiene sus propios miedos y limitaciones que no vi.' },
-  { id: 'Q7', section: 'Identidad y percepción', text: 'Algo de mi pareja que influye mucho en cómo me siento es que...', sample: 'Cuando está de buenas, todo fluye. Pero cuando se distancia, siento que todo se derrumba.' },
-  { id: 'Q11', section: 'Identidad y percepción', text: 'Lo que más me cuesta aceptar de mi pareja es...', sample: 'Que a veces no me demuestra lo que siente y yo necesito esas señales para sentirme seguro.' },
-  { id: 'Q14', section: 'Identidad y percepción', text: 'Lo que me llevaría a separarme de mi pareja sería...', sample: 'Sentir que no importo. Que se acabe esa sensación de que me elige cada día.' },
+  // Q0 — INTRODUCCIÓN (datos personales + primera impresión)
+  { id: 'Q0', section: 'Introducción', text: 'Antes de empezar, cuéntame: ¿cómo te llamas, cuántos años tienes, cuánto tiempo llevan juntos como pareja, y en una frase, cómo describirías tu relación hoy?', sample: 'Soy Luis, tengo 32 años, llevamos 4 años juntos. Diría que estamos en un momento raro — hay amor pero también mucho desgaste.' },
 
-  // PHASE 1 — EXPERIENCIA EMOCIONAL (6 preguntas)
-  { id: 'Q15', section: 'Experiencia emocional', text: 'Cuando estamos bien juntos, yo me siento...', sample: 'En paz. Como si todo estuviera en su lugar y no necesitara nada más.' },
-  { id: 'Q16', section: 'Experiencia emocional', text: 'Cuando estamos bien juntos, yo soy...', sample: 'Mi mejor versión. Más gracioso, más abierto, más yo.' },
-  { id: 'Q17', section: 'Experiencia emocional', text: 'Cuando mi pareja se aleja emocionalmente, yo...', sample: 'Me quedo pensando qué hice mal. Reviso todo lo que dije buscando el error.' },
-  { id: 'Q18', section: 'Experiencia emocional', text: 'Cuando mi pareja busca acercarse más a mí, yo tiendo a...', sample: 'Abrirme, pero a veces me asusto un poco. Como si tanta cercanía me pusiera nervioso.' },
-  { id: 'Q19', section: 'Experiencia emocional', text: 'Lo que más miedo me da dentro de esta relación es...', sample: 'Que un día se canse de mí. Que se dé cuenta de que no soy suficiente.' },
-  { id: 'Q20', section: 'Experiencia emocional', text: 'Para sentirme realmente amado(a) en esta relación necesito...', sample: 'Que me busquen. Que no tenga que adivinar si le importo. Que me lo demuestre sin que yo pregunte.' },
+  // BLOQUE 1 — HISTORIA DEL VÍNCULO (Narrativa relacional) — 3 preguntas
+  { id: 'Q1', section: 'Historia del vínculo', text: '¿Cómo comenzó tu relación? Cuéntame cómo se conocieron y cómo fueron esos primeros momentos importantes.', sample: 'Nos conocimos en una fiesta. Hubo una conexión inmediata, como si ya nos conociéramos. A los dos meses ya estábamos viviendo juntos.' },
+  { id: 'Q2', section: 'Historia del vínculo', text: 'Si tuvieras que contar la historia de tu relación como una película o un relato corto, ¿cómo sería? ¿En qué parte de la historia están ahora?', sample: 'Sería un drama romántico. Empezó con fuego, luego hubo una crisis fuerte, y ahora estamos en la parte donde los personajes deciden si siguen o no.' },
+  { id: 'Q3', section: 'Historia del vínculo', text: 'Mirando hacia atrás desde el inicio hasta hoy, ¿qué momentos consideras los puntos clave que cambiaron la relación — para bien o para mal?', sample: 'Cuando nos mudamos juntos todo cambió para bien. Pero cuando perdí mi trabajo, empezamos a pelear por todo y nunca volvimos a ser iguales.' },
 
-  // PHASE 2 — NARRATIVA DE LA RELACIÓN (6 preguntas)
-  { id: 'Q21', section: 'Narrativa de la relación', text: 'El amor debería ser ___ pero en mi relación es...', sample: 'Debería ser tranquilo y seguro, pero en mi relación a veces es una montaña rusa emocional.' },
-  { id: 'Q22', section: 'Narrativa de la relación', text: 'Lo que más nos une como pareja es...', sample: 'Los momentos íntimos donde bajamos la guardia y simplemente somos nosotros.' },
-  { id: 'Q23', section: 'Narrativa de la relación', text: 'Lo que más nos separa como pareja es...', sample: 'La forma en que manejamos los problemas. Yo quiero hablar y ella quiere esperar.' },
-  { id: 'Q24', section: 'Narrativa de la relación', text: 'Si alguien observara nuestra relación desde fuera diría que...', sample: 'Somos una pareja estable, pero no se dan cuenta de lo que pasa cuando estamos solos.' },
-  { id: 'Q25', section: 'Narrativa de la relación', text: 'Si nuestra relación fuera una historia, ahora estaría en la parte donde...', sample: 'Los personajes se están preguntando si quieren seguir o empezar algo nuevo.' },
-  { id: 'Q26', section: 'Narrativa de la relación', text: 'Si tuviera que explicar por qué mi pareja y yo seguimos juntos, diría que...', sample: 'Porque debajo de todo, hay algo real que ninguno de los dos quiere perder.' },
+  // BLOQUE 2 — ADMIRACIÓN Y VALORACIÓN (Gottman) — 3 preguntas
+  { id: 'Q4', section: 'Admiración y valoración', text: 'Piensa en un momento reciente en el que hayas sentido admiración o respeto por tu pareja. Describe qué ocurrió y por qué ese momento fue significativo para ti.', sample: 'Hace poco la vi resolver un problema con su familia con mucha calma. Me di cuenta de que es más fuerte de lo que yo creía.' },
+  { id: 'Q5', section: 'Admiración y valoración', text: 'De todas las cualidades de tu pareja, ¿cuáles valoras más profundamente? No lo que hace, sino cómo es como persona. Cuéntame por qué esas cualidades son importantes para ti.', sample: 'Su honestidad. Nunca miente, aunque duela. Eso me hace confiar en ella aunque a veces me cueste escucharlo.' },
+  { id: 'Q6', section: 'Admiración y valoración', text: '¿En qué momentos o situaciones sientes que te sientes especialmente orgulloso u orgullosa de tu pareja? Describe alguno.', sample: 'Cuando la veo con sus amigos. Es otra persona — más libre, más divertida. Me gusta verla así.' },
 
-  // PHASE 3 — DINÁMICA DE CONFLICTO (6 preguntas)
-  { id: 'Q27', section: 'Dinámica de conflicto', text: 'Cuando discutimos, normalmente termino sintiéndome...', sample: 'Invisible. Como si no importara lo que digo.' },
-  { id: 'Q28', section: 'Dinámica de conflicto', text: 'Después de una discusión yo suelo...', sample: 'Quedarme callado un rato. Necesito procesar antes de hablar de nuevo.' },
-  { id: 'Q29', section: 'Dinámica de conflicto', text: 'Cuando mi pareja se enoja conmigo, mi primera reacción suele ser...', sample: 'Callarme. Esperar a que se le pase para poder hablar con calma.' },
-  { id: 'Q30', section: 'Dinámica de conflicto', text: 'Cuando aparece un problema entre nosotros, yo tiendo a...', sample: 'Intentar resolverlo rápido, a veces antes de entender realmente qué pasó.' },
-  { id: 'Q31', section: 'Dinámica de conflicto', text: 'Algo que suele pasar entre nosotros cuando las cosas se ponen difíciles es que...', sample: 'Yo empiezo a explicar mi punto y ella se cierra. Y mientras más hablo, menos me escucha.' },
-  { id: 'Q32', section: 'Dinámica de conflicto', text: 'Cuando nuestra relación empieza a sentirse distante, normalmente es después de que...', sample: 'Hay un conflicto que no se resolvió y los dos pretendemos que no pasó nada.' },
+  // BLOQUE 3 — APEGO EMOCIONAL (Bowlby/Ainsworth) — 3 preguntas
+  { id: 'Q7', section: 'Apego emocional', text: 'Cuando sientes que tu pareja está distante o menos conectada contigo — ya sea porque está ocupada, fría o simplemente no responde como esperas — ¿qué emociones aparecen dentro de ti y qué es lo primero que sueles hacer?', sample: 'Me da ansiedad. Empiezo a pensar qué hice mal. A veces la busco más, otras me cierro para protegerme.' },
+  { id: 'Q8', section: 'Apego emocional', text: 'Cuando tú necesitas cercanía emocional — sentirte acompañado, escuchado o contenido — ¿cómo sueles buscarla dentro de la relación? ¿La pides directamente o haces algo para que suceda?', sample: 'Casi nunca la pido directamente. Más bien hago cosas para estar cerca — cocino, propongo ver algo juntos. Pero no digo "necesito que me abraces".' },
+  { id: 'Q9', section: 'Apego emocional', text: 'Si la relación terminara por completo, ¿qué es lo que más sentirías que pierdes? No hablo de cosas prácticas, sino emocionalmente — ¿qué se iría contigo?', sample: 'Perdería la única persona que me conoce de verdad. Eso me aterra. No es que no pueda estar solo — es que con ella no tengo que fingir.' },
 
-  // PHASE 4 — PROYECCIÓN INCONSCIENTE (6 preguntas)
-  { id: 'Q33', section: 'Proyección inconsciente', text: 'Lo que más me molesta de mi pareja es...', sample: 'Que a veces actúa como si nada importara cuando yo estoy mal.' },
-  { id: 'Q34', section: 'Proyección inconsciente', text: 'Lo que más admiro de mi pareja es...', sample: 'Su fortaleza. Puede con todo. Aunque a veces la confundo con frialdad.' },
-  { id: 'Q35', section: 'Proyección inconsciente', text: 'Lo que nunca le he dicho a mi pareja es...', sample: 'Que a veces me siento solo incluso cuando estamos juntos. No sé cómo decirlo sin que suene a reproche.' },
-  { id: 'Q36', section: 'Proyección inconsciente', text: 'Hay partes de mí que mi pareja todavía no conoce, como por ejemplo...', sample: 'Lo mucho que me esfuerzo por mantener todo en calma entre nosotros.' },
-  { id: 'Q37', section: 'Proyección inconsciente', text: 'Si pudiera cambiar una sola cosa de nosotros, sería...', sample: 'La forma en que nos quedamos callados después de un problema. Ese silencio pesa más que la pelea.' },
-  { id: 'Q38', section: 'Proyección inconsciente', text: 'Lo que más extraño de nosotros es...', sample: 'Cuando nos reíamos de todo. Cuando no había tantas cosas no dichas entre nosotros.' },
+  // BLOQUE 4 — CONEXIÓN EMOCIONAL (Sue Johnson) — 3 preguntas
+  { id: 'Q10', section: 'Conexión emocional', text: 'Describe un momento reciente en el que hayas sentido una conexión emocional profunda con tu pareja. ¿Qué estaban haciendo y cómo se sintió por dentro?', sample: 'Una noche nos quedamos hablando hasta las 3am sobre nuestros miedos. No había celulares, no había prisa. Me sentí visto de verdad.' },
+  { id: 'Q11', section: 'Conexión emocional', text: '¿Qué tipo de situaciones o momentos hacen que te sientas emocionalmente más cerca de tu pareja? No lo general — piensa en algo específico que haya pasado.', sample: 'Cuando me cuenta algo que no le cuenta a nadie más. Cuando baja la guardia. Ahí siento que realmente confía en mí.' },
+  { id: 'Q12', section: 'Conexión emocional', text: '¿Hay momentos en los que te sientes emocionalmente solo o sola dentro de la relación, aunque tu pareja esté ahí presente? Cuéntame cómo es eso para ti.', sample: 'Sí. A veces estamos en el mismo cuarto pero siento un muro invisible. Ella está en su teléfono y yo me siento transparente.' },
 
-  // PHASE 5 — FAMILIA DE ORIGEN (3 preguntas — NUEVA FASE)
-  { id: 'Q46', section: 'Familia de origen', text: 'La relación de tus padres se parecía a la tuya en que...', sample: 'Mi papá era igual de distante que mi pareja. Y mi mamá era la que siempre buscaba que todo estuviera bien, como yo.' },
-  { id: 'Q47', section: 'Familia de origen', text: 'Algo que aprendiste del amor viendo a tu familia fue...', sample: 'Que el amor duele. Que siempre vas a tener que aguantar cosas. Que si te quejas eres el problema.' },
-  { id: 'Q48', section: 'Familia de origen', text: 'Un patrón de tu familia que reconoces en tu relación actual es...', sample: 'El silencio. En mi casa nadie hablaba de lo que sentía. Y en mi relación pasa lo mismo.' },
+  // BLOQUE 5 — MANEJO DEL CONFLICTO (Gottman) — 3 preguntas
+  { id: 'Q13', section: 'Manejo del conflicto', text: 'Describe cómo suele comenzar una discusión entre ustedes. ¿Quién dice qué primero, cómo escala, y cuál es el patrón que se repite?', sample: 'Ella hace un comentario que parece inofensivo pero tiene veneno. Yo me pongo a la defensiva. Ella sube el tono. Yo me callo. Siempre es igual.' },
+  { id: 'Q14', section: 'Manejo del conflicto', text: '¿Qué ocurre normalmente durante esas discusiones? ¿Cómo reaccionas tú, cómo reacciona tu pareja, y cómo suele terminar la cosa?', sample: 'Yo intento explicar mi punto pero ella siente que la estoy atacando. Entonces se cierra. Y yo me quedo hablando solo. Termina en silencio.' },
+  { id: 'Q15', section: 'Manejo del conflicto', text: 'Después de un conflicto fuerte, ¿cómo se reconstruye la relación entre ustedes? ¿Quién da el primer paso, cuánto tardan, y cómo se siente ese proceso de reconexión?', sample: 'Normalmente yo doy el primer paso al día siguiente. Ella tarda más. A veces pasan días sin hablar del tema y simplemente fingimos que no pasó.' },
 
-  // PHASE 6 — INTIMIDAD Y CONEXIÓN FÍSICA (5 preguntas — ampliada)
-  { id: 'Q43', section: 'Intimidad y conexión', text: 'En nuestra intimidad física, yo me siento...', sample: 'A veces me siento muy conectada, pero otras es más mecánico. Como que falta ese deseo real, esa conexión más allá de lo físico.' },
-  { id: 'Q44', section: 'Intimidad y conexión', text: 'Hay algo en nuestra vida sexual que me gustaría que fuera diferente, como...', sample: 'Me gustaría que fuera más espontáneo. Que no fuera siempre igual. Que hubiera más juego, más exploración.' },
-  { id: 'Q45', section: 'Intimidad y conexión', text: 'Si pudiera expresar un deseo o fantasía sin ser juzgado(a), diría que...', sample: 'Me gustaría explorar cosas nuevas juntos. Pero me da miedo que piense algo raro o que se aleje.' },
-  { id: 'Q49', section: 'Intimidad y conexión', text: 'Cuando hay cercanía física entre nosotros, emocionalmente yo...', sample: 'A veces me conecto de verdad, pero otras veces me siento lejos. Como si mi cuerpo estuviera ahí pero mi cabeza en otro lado.' },
-  { id: 'Q50', section: 'Intimidad y conexión', text: 'Lo que más echo de menos de nuestra intimidad es...', sample: 'La espontaneidad. Antes nos buscábamos con ganas real. Ahora se siente como algo que toca hacer.' },
+  // BLOQUE 6 — INTIMIDAD EMOCIONAL — 3 preguntas
+  { id: 'Q16', section: 'Intimidad emocional', text: '¿Qué partes de ti siente tu pareja que realmente conoce bien? Y por otro lado, ¿hay cosas importantes de ti que tu pareja no sabe o no entiende del todo?', sample: 'Ella conoce mis inseguridades, eso sí. Pero no sabe cuánto me afecta cuando me ignora. Eso nunca lo he dicho.' },
+  { id: 'Q17', section: 'Intimidad emocional', text: '¿Qué partes de tu mundo emocional te cuesta compartir con tu pareja? ¿Hay temas, sentimientos o pensamientos que prefieres no mostrar?', sample: 'Me cuesta mostrar debilidad. Si estoy triste, lo escondo. No quiero que piense que soy frágil o que me va a perder el respeto.' },
+  { id: 'Q18', section: 'Intimidad emocional', text: 'Describe un momento en el que te hayas sentido profundamente comprendido o comprendida por tu pareja. ¿Qué pasó y qué significó eso para ti?', sample: 'Cuando murió mi abuela, ella no dijo nada. Solo me abrazó y se quedó ahí. No necesité palabras. Eso fue todo.' },
 
-  // PHASE 7 — ESTRUCTURA PROFUNDA (4 preguntas)
-  { id: 'Q39', section: 'Estructura profunda', text: 'Si esta relación terminara mañana, lo que más me dolería sería...', sample: 'Darme cuenta de que no dije todo lo que sentía cuando tuve la oportunidad.' },
-  { id: 'Q40', section: 'Estructura profunda', text: 'Si hay algo que siento que se repite una y otra vez entre nosotros es...', sample: 'Que uno se acerca y el otro se aleja. Nunca estamos los dos abiertos al mismo tiempo.' },
-  { id: 'Q41', section: 'Estructura profunda', text: 'Cuando nuestra relación está en su mejor momento es porque...', sample: 'No hay presión externa. Cuando somos solo nosotros dos sin estrés ni obligaciones.' },
-  { id: 'Q42', section: 'Estructura profunda', text: 'Si esta relación cambiara profundamente mañana, lo primero que sentiría sería...', sample: 'Miedo y esperanza al mismo tiempo. Miedo de perder lo que conozco, esperanza de algo mejor.' }
+  // BLOQUE 7 — DESEO Y ATRACCIÓN (Perel) — 3 preguntas
+  { id: 'Q19', section: 'Deseo y atracción', text: '¿Qué fue lo que inicialmente despertó tu atracción hacia tu pareja? No solo lo físico — ¿qué te enganchó emocionalmente de esa persona?', sample: 'Su forma de reír. Cómo me miraba. Sentía que me deseaba de verdad, no solo como algo bonito sino como algo profundo.' },
+  { id: 'Q20', section: 'Deseo y atracción', text: '¿Cómo describirías hoy el deseo y la atracción entre ustedes? ¿Ha cambiado desde el inicio de la relación? ¿En qué sentido?', sample: 'Cambió mucho. Antes era constante, casi urgente. Ahora es más tranquilo. A veces lo extraño, pero tampoco sé cómo recuperarlo.' },
+  { id: 'Q21', section: 'Deseo y atracción', text: '¿Qué cosas ayudan — o ayudarían — a mantener viva la chispa, el deseo y la atracción en la relación? ¿Qué falta o qué les funciona?', sample: 'Cuando salimos solos, sin rutina, vuelve algo. Pero en el día a día se pierde. Creo que nos falta sorprendernos más.' },
+
+  // BLOQUE 8 — PATRONES INCONSCIENTES (Hendrix) — 3 preguntas
+  { id: 'Q22', section: 'Patrones inconscientes', text: 'Si miras tu historia amorosa pasada — relaciones anteriores o incluso la forma en que creciste — ¿ves patrones que se repiten también en esta relación?', sample: 'Siempre elijo personas emocionalmente distantes. Mi papá era así. Y aquí estoy de nuevo buscando que alguien frío me dé calor.' },
+  { id: 'Q23', section: 'Patrones inconscientes', text: '¿Hay algo que se repite una y otra vez en los conflictos de tu relación? Un tema, una reacción, una dinámica que siempre vuelve, aunque cambien las circunstancias.', sample: 'Siempre termino sintiéndome el que pide disculpas. No importa quién empezó — siempre soy yo el que cede para que se arregle.' },
+  { id: 'Q24', section: 'Patrones inconscientes', text: 'En los momentos más difíciles de la relación, ¿qué rol sientes que sueles ocupar? ¿Eres quien busca solucionar, quien se retira, quien explota, quien calla, quien cuida al otro?', sample: 'Soy el que intenta arreglar todo. El mediador. El que dice "está bien" aunque no esté bien. Es agotador.' },
+
+  // BLOQUE 9 — DIFERENCIACIÓN (Schnarch) — 3 preguntas
+  { id: 'Q25', section: 'Diferenciación', text: '¿Qué aspectos de tu identidad personal — quién eres tú como individuo — sientes que es importante mantener dentro de la relación, aunque a tu pareja no siempre le guste o lo entienda?', sample: 'Mi tiempo a solas. Necesito mis espacios, mis hobbies, mi mundo. Cuando lo pierdo, me pierdo yo.' },
+  { id: 'Q26', section: 'Diferenciación', text: '¿En qué momentos sientes que necesitas más espacio personal dentro de la relación? ¿Cómo reacciona tu pareja cuando pides ese espacio o cuando te alejas un poco?', sample: 'Después de una pelea necesito estar solo. Pero ella lo interpreta como rechazo y se enoja más. Es un círculo.' },
+  { id: 'Q27', section: 'Diferenciación', text: '¿Qué tan fácil o difícil es para ti mantener tu propia independencia emocional dentro de la relación? Es decir, estar bien contigo mismo(a) sin que eso dependa de cómo esté tu pareja.', sample: 'Me cuesta. Si ella está mal, yo estoy mal. Si ella está distante, yo me desmorono. Sé que no es sano pero no sé cómo cambiarlo.' },
+
+  // BLOQUE 10 — LENGUAJES DEL AMOR (Chapman) — 2 preguntas
+  { id: 'Q28', section: 'Lenguajes del amor', text: '¿Qué cosas concretas hace tu pareja que te hacen sentir amado, valorado o cuidado? Piensa en acciones específicas — no conceptos generales.', sample: 'Cuando me trae un café sin que se lo pida. Cuando me manda un mensaje random diciendo que me extraña. Esas pequeñas cosas.' },
+  { id: 'Q29', section: 'Lenguajes del amor', text: '¿Cómo sueles tú expresar cariño o amor hacia tu pareja? ¿De qué formas le demuestras que te importa en el día a día?', sample: 'Le hago de comer, le resuelvo cosas, le doy su espacio. Pero ella dice que nunca le digo que la quiero con palabras. Y tiene razón.' },
+
+  // BLOQUE 11 — REGULACIÓN EMOCIONAL (Tatkin) — 2 preguntas
+  { id: 'Q30', section: 'Regulación emocional', text: 'Cuando uno de los dos está emocionalmente alterado — enojado, ansioso, triste — ¿cómo suele reaccionar el otro? ¿Se acerca para calmar, se aleja, intenta resolver, se engancha en la emoción?', sample: 'Si yo estoy mal, ella se aleja. No sabe qué hacer. Y si ella está mal, yo intento arreglarlo y eso la frustra más.' },
+  { id: 'Q31', section: 'Regulación emocional', text: '¿Qué cosas ayudan a que la relación vuelva a sentirse estable y segura después de un momento difícil o una crisis emocional entre ustedes?', sample: 'El tiempo. Y a veces un gesto pequeño — una caricia, un "perdón" sincero. Pero a veces no hay nada que ayude y simplemente se pasa.' },
+
+  // BLOQUE 12 — TRIÁNGULO DEL AMOR (Sternberg) — 2 preguntas
+  { id: 'Q32', section: 'Estructura del amor', text: 'Si piensas en tu relación en tres dimensiones — la pasión física, la cercanía emocional y el compromiso a largo plazo — ¿cuál de las tres sientes que está más viva hoy y cuál sientes que se ha ido apagando?', sample: 'El compromiso sigue firme. La cercanía emocional va y viene. Pero la pasión... se apagó bastante. Y eso me preocupa.' },
+  { id: 'Q33', section: 'Estructura del amor', text: '¿Cuál de estas tres dimensiones — pasión, cercanía emocional o compromiso — sientes que tu pareja vive de forma distinta a ti? ¿En cuál están más desalineados?', sample: 'Yo siento que ella está bien con el compromiso y ya. Pero a mí me falta la pasión y la cercanía. Creo que ella no lo nota.' },
+
+  // BLOQUE 13 — NEUROBIOLOGÍA DEL AMOR (Fisher) — 2 preguntas
+  { id: 'Q34', section: 'Neurobiología del amor', text: '¿Qué sensaciones físicas notas cuando estás cerca de tu pareja? ¿Calma, excitación, tensión, indiferencia, algo más? ¿Han cambiado esas sensaciones con el tiempo?', sample: 'Antes me daba mariposas. Ahora siento calma, a veces nada. Cuando peleamos, siento un nudo en el estómago que no se va en días.' },
+  { id: 'Q35', section: 'Neurobiología del amor', text: '¿Hay momentos en los que sientes una necesidad casi física de estar con tu pareja — como una urgencia de cercanía, de tocarla, de estar juntos — o eso ya no te pasa como antes?', sample: 'Ya no me pasa como antes. A veces sí, después de pasar unos días separados, vuelve algo. Pero en el día a día, no.' },
+
+  // BLOQUE 14 — APEGO APLICADO (Levine) — 2 preguntas
+  { id: 'Q36', section: 'Apego aplicado', text: 'Cuando no sabes dónde está tu pareja, no te contesta el teléfono o tarda mucho en responder, ¿qué es lo primero que sientes y qué haces? Sé honesto o honesta.', sample: 'Empiezo a imaginar cosas. ¿Está enojada? ¿Le pasó algo? ¿Está con alguien? Sé que es irracional pero no puedo evitarlo. Le mando otro mensaje.' },
+  { id: 'Q37', section: 'Apego aplicado', text: 'Cuando tu pareja quiere más cercanía, más tiempo juntos o más contacto emocional del que tú necesitas en ese momento, ¿cómo reaccionas por dentro y qué haces?', sample: 'Me siento un poco asfixiado. Necesito mi espacio. Pero no sé cómo decirlo sin que suene a rechazo, entonces me aguanto.' },
+
+  // BLOQUE 15 — SATISFACCIÓN Y MANTENIMIENTO (Finkel) — 2 preguntas
+  { id: 'Q38', section: 'Satisfacción y mantenimiento', text: 'Si tuvieras que ponerle una calificación del 1 al 10 a qué tan satisfecho o satisfecha te sientes hoy con tu relación, ¿cuál sería? Y sobre todo: ¿por qué esa cifra y no una más alta?', sample: 'Un 6. Porque hay amor pero falta profundidad. No es un 8 porque ya no me siento priorizado. Y no es un 4 porque seguimos eligiéndonos.' },
+  { id: 'Q39', section: 'Satisfacción y mantenimiento', text: '¿Qué esfuerzos activos haces tú para cuidar la relación en el día a día? Y honestamente, ¿sientes que tu pareja hace lo mismo o hay un desequilibrio?', sample: 'Yo siento que hago más. Organizo citas, pregunto cómo está, cedo en peleas. Ella no tanto. Y cuando se lo digo, se ofende.' },
+
+  // BLOQUE 16 — VISIÓN DEL FUTURO (Compromiso) — 3 preguntas
+  { id: 'Q40', section: 'Visión del futuro', text: '¿Cómo imaginas tu relación dentro de cinco años si todo sigue como está ahora? ¿Y cómo la imaginas si las cosas mejoraran?', sample: 'Si sigue así, nos vamos a separar. Si mejora, me imagino viajando juntos, riendo otra vez, siendo equipo de verdad.' },
+  { id: 'Q41', section: 'Visión del futuro', text: '¿Qué cambios concretos — no ideales, sino reales y posibles — ayudarían a que la relación se fortalezca entre ustedes?', sample: 'Hablar de lo que realmente sentimos sin que se convierta en pelea. Y que ella también ponga de su parte, no solo yo.' },
+  { id: 'Q42', section: 'Visión del futuro', text: '¿Qué aspectos de la relación sientes que necesitan más cuidado y atención hacia el futuro? ¿Qué no quieres que se pierda?', sample: 'La complicidad. Eso que teníamos al principio. La sensación de que somos un equipo. No quiero que se pierda eso.' },
+
+  // Q43 — CIERRE LIBRE
+  { id: 'Q43', section: 'Cierre', text: '¿Hay algo importante sobre tu relación, sobre ti o sobre tu pareja que no te haya preguntado y que sientas que debería saber? Lo que sea.', sample: 'Que a pesar de todo, la amo. Y que tengo miedo de que eso no sea suficiente.' }
 ]
 
 // Section metadata for progress display
 const SECTIONS = [
-  { name: 'Identidad y percepción', icon: Brain, color: 'violet', count: 9 },
-  { name: 'Experiencia emocional', icon: Heart, color: 'rose', count: 6 },
-  { name: 'Narrativa de la relación', icon: MessageCircle, color: 'blue', count: 6 },
-  { name: 'Dinámica de conflicto', icon: Activity, color: 'red', count: 6 },
-  { name: 'Proyección inconsciente', icon: Eye, color: 'fuchsia', count: 6 },
-  { name: 'Familia de origen', icon: Users, color: 'orange', count: 3 },
-  { name: 'Intimidad y conexión', icon: Heart, color: 'pink', count: 5 },
-  { name: 'Estructura profunda', icon: Layers, color: 'amber', count: 4 }
+  { name: 'Introducción', icon: Users, color: 'slate', count: 1 },
+  { name: 'Historia del vínculo', icon: BookOpen, color: 'violet', count: 3 },
+  { name: 'Admiración y valoración', icon: Star, color: 'amber', count: 3 },
+  { name: 'Apego emocional', icon: Heart, color: 'rose', count: 3 },
+  { name: 'Conexión emocional', icon: MessageCircle, color: 'blue', count: 3 },
+  { name: 'Manejo del conflicto', icon: Activity, color: 'red', count: 3 },
+  { name: 'Intimidad emocional', icon: Eye, color: 'fuchsia', count: 3 },
+  { name: 'Deseo y atracción', icon: Zap, color: 'pink', count: 3 },
+  { name: 'Patrones inconscientes', icon: Brain, color: 'purple', count: 3 },
+  { name: 'Diferenciación', icon: Target, color: 'emerald', count: 3 },
+  { name: 'Lenguajes del amor', icon: Gift, color: 'orange', count: 2 },
+  { name: 'Regulación emocional', icon: Shield, color: 'cyan', count: 2 },
+  { name: 'Estructura del amor', icon: Layers, color: 'indigo', count: 2 },
+  { name: 'Neurobiología del amor', icon: Sparkles, color: 'teal', count: 2 },
+  { name: 'Apego aplicado', icon: Lock, color: 'sky', count: 2 },
+  { name: 'Satisfacción y mantenimiento', icon: BarChart3, color: 'lime', count: 2 },
+  { name: 'Visión del futuro', icon: TrendingUp, color: 'yellow', count: 3 },
+  { name: 'Cierre', icon: CheckCircle, color: 'green', count: 1 }
 ]
 
 // ─── LABELS FOR SCORING ──────────────────────────────────────
 
-const CORE_LABELS = {
-  emotional_compatibility: { label: 'Compatibilidad Emocional', icon: Heart },
-  relationship_stability: { label: 'Estabilidad Relacional', icon: Shield },
-  emotional_erosion_risk: { label: 'Riesgo de Erosión', icon: AlertTriangle, inverted: true },
-  reconnection_potential: { label: 'Potencial de Reconexión', icon: TrendingUp }
+// Composite scores (high-level relationship indicators)
+const COMPOSITE_LABELS = {
+  salud_relacional_global: { label: 'Salud Relacional Global', icon: Heart },
+  sincronia_emocional: { label: 'Sincronía Emocional', icon: Shield },
+  riesgo_ruptura: { label: 'Riesgo de Ruptura', icon: AlertTriangle, inverted: true },
+  potencial_crecimiento: { label: 'Potencial de Crecimiento', icon: TrendingUp }
 }
 
-const RADAR_LABELS = {
-  emotional_synchrony: 'Sincronía emocional',
-  communication_clarity: 'Claridad comunicativa',
-  emotional_safety: 'Seguridad emocional',
-  conflict_management: 'Manejo de conflictos',
-  relational_balance: 'Balance relacional',
-  emotional_support: 'Apoyo emocional'
+// 12 dimension labels (one per author/axis on radar)
+const DIMENSION_LABELS = {
+  apego: 'Apego (Bowlby)',
+  interaccion_conflicto: 'Conflicto (Gottman)',
+  estructura_amor: 'Amor (Sternberg)',
+  vinculo_emocional: 'Vínculo (Johnson)',
+  diferenciacion: 'Diferenciación (Schnarch)',
+  deseo: 'Deseo (Perel)',
+  patrones_inconscientes: 'Patrones (Hendrix)',
+  neurobiologia_amor: 'Neuro (Fisher)',
+  regulacion_emocional: 'Regulación (Tatkin)',
+  apego_aplicado: 'Apego apl. (Levine)',
+  lenguaje_amor: 'Lenguaje (Chapman)',
+  satisfaccion_mantenimiento: 'Satisfacción (Finkel)'
 }
 
-const RADAR_COLORS = ['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#06b6d4']
+const DIMENSION_COLORS = [
+  '#8b5cf6', '#ef4444', '#6366f1', '#3b82f6', '#10b981', '#ec4899',
+  '#a855f7', '#14b8a6', '#06b6d4', '#0ea5e9', '#f97316', '#84cc16'
+]
 
-const PROFILE_LABELS = {
-  idealization_level: { label: 'Nivel de idealización', inverted: true },
-  friction_level: { label: 'Nivel de fricción', inverted: true },
-  emotional_openness: { label: 'Apertura emocional' },
-  accumulated_distance: { label: 'Distancia acumulada', inverted: true },
-  repair_capacity: { label: 'Capacidad de reparación' },
-  emotional_dependency: { label: 'Dependencia emocional', inverted: true },
-  emotional_awareness_of_partner: { label: 'Conciencia emocional del otro' },
-  power_balance: { label: 'Balance de poder' }
+// Sub-score labels for expandable detail
+const SUB_SCORE_LABELS = {
+  apego: {
+    seguridad_base: { label: 'Seguridad de base' },
+    miedo_abandono: { label: 'Miedo al abandono', inverted: true },
+    busqueda_cercania: { label: 'Búsqueda de cercanía' }
+  },
+  interaccion_conflicto: {
+    critica_desprecio: { label: 'Crítica/Desprecio', inverted: true },
+    defensividad: { label: 'Defensividad', inverted: true },
+    stonewalling: { label: 'Stonewalling', inverted: true },
+    capacidad_reparacion: { label: 'Capacidad de reparación' }
+  },
+  estructura_amor: {
+    pasion: { label: 'Pasión' },
+    intimidad: { label: 'Intimidad' },
+    compromiso: { label: 'Compromiso' }
+  },
+  deseo: {
+    atraccion_actual: { label: 'Atracción actual' },
+    espontaneidad_erotica: { label: 'Espontaneidad erótica' },
+    misterio_novedad: { label: 'Misterio y novedad' }
+  }
+}
+
+// ─── SAMPLE ANALYSIS (for ?preview=results) ────────────────────────
+
+const SAMPLE_ANALYSIS = {
+  person_info: { name: 'María', age: '32', relationship_duration: '5 años', first_impression: 'Relación con amor profundo pero con desconexión emocional progresiva' },
+  relationship_type: { label: 'Relación con desconexión emocional progresiva', explanation: 'Existe un **vínculo genuino y un amor de fondo**, pero la acumulación de conflictos no resueltos y la falta de reparación emocional ha generado una distancia que ambos sienten sin poder nombrar.\n\nEsta dinámica suele presentarse en relaciones que empezaron con mucha pasión y conexión, pero donde **la rutina, los hijos o el estrés fueron erosionando el espacio emocional** sin que ninguno de los dos se diera cuenta a tiempo.' },
+  dimension_scores: { apego: 42, interaccion_conflicto: 35, estructura_amor: 55, vinculo_emocional: 48, diferenciacion: 62, deseo: 38, patrones_inconscientes: 45, neurobiologia_amor: 52, regulacion_emocional: 40, apego_aplicado: 44, lenguaje_amor: 58, satisfaccion_mantenimiento: 47 },
+  sub_scores: {
+    apego: { seguridad_base: 38, miedo_abandono: 72, busqueda_cercania: 65 },
+    interaccion_conflicto: { critica_desprecio: 68, defensividad: 72, stonewalling: 55, capacidad_reparacion: 30 },
+    estructura_amor: { pasion: 40, intimidad: 62, compromiso: 78 },
+    deseo: { atraccion_actual: 35, espontaneidad_erotica: 28, misterio_novedad: 22 }
+  },
+  composite_scores: { salud_relacional_global: 44, sincronia_emocional: 38, riesgo_ruptura: 67, potencial_crecimiento: 72 },
+  attachment_map: { style: 'Ansioso-preocupado', anxiety_level: 68, avoidance_level: 35 },
+  dimension_narratives: {
+    apego: 'Tu estilo de apego muestra una **búsqueda intensa de cercanía emocional** que choca con un miedo profundo al abandono. Cuando tu pareja se distancia — incluso ligeramente —, se activa en ti una alarma interna que te lleva a buscar reaseguramiento de formas que pueden sentirse como persecución para el otro.',
+    interaccion_conflicto: 'Los conflictos en tu relación siguen un patrón claro: **crítica inicial que escala a defensividad mutua**. La capacidad de reparación después del conflicto es baja — ambos esperan que el otro dé el primer paso, lo que genera silencios prolongados que erosionan la confianza.',
+    estructura_amor: 'Tu relación muestra un **compromiso sólido** pero con la pasión significativamente disminuida. La intimidad emocional existe en momentos puntuales pero no fluye de forma cotidiana. Es como si el compromiso fuera el ancla que mantiene la relación, mientras que la pasión y la intimidad necesitan ser reavivadas.',
+    vinculo_emocional: 'Hay momentos de conexión genuina pero son **islas en un mar de desconexión cotidiana**. Cuando logran romper la barrera y ser vulnerables el uno con el otro, la conexión es profunda — pero esos momentos son cada vez menos frecuentes.',
+    diferenciacion: 'Muestras una **diferenciación moderadamente saludable**: puedes mantener tu identidad dentro de la relación, aunque en momentos de conflicto tiendes a fusionarte emocionalmente con el estado de tu pareja, perdiendo tu propio centro.',
+    deseo: 'El deseo se ha ido apagando progresivamente. La **atracción inicial todavía existe en el fondo**, pero la falta de novedad, espontaneidad y espacio para el misterio ha creado una rutina sexual que ambos sienten pero ninguno aborda directamente.',
+    patrones_inconscientes: 'Se detecta un **patrón transgeneracional de relaciones donde uno busca y el otro evita**. Esta dinámica probablemente se aprendió en tu familia de origen, donde la cercanía emocional era inconsistente y había que "ganársela".',
+    neurobiologia_amor: 'Las sensaciones físicas cerca de tu pareja han cambiado: donde antes había **mariposas y excitación**, ahora hay más calma y en ocasiones tensión. El sistema nervioso ya no asocia a tu pareja con novedad sino con familiaridad — lo cual puede ser seguridad o estancamiento.',
+    regulacion_emocional: 'La co-regulación emocional en la pareja es **deficiente**: cuando uno se altera, el otro tiende a alterarse también o a retirarse completamente. Falta un "puerto seguro" al que ambos puedan recurrir en momentos de tormenta emocional.',
+    apego_aplicado: 'Ante la distancia de tu pareja, tu respuesta primaria es la **ansiedad de apego**: quedarte revisando si algo está mal, buscar señales de que todo está bien, interpretar silencios como rechazo. Esto activa en tu pareja una respuesta de evitación.',
+    lenguaje_amor: 'Tu lenguaje del amor primario son las **palabras de afirmación y el tiempo de calidad**, pero tu pareja parece expresar amor a través de actos de servicio. Este desajuste hace que ambos sientan que dan mucho y reciben poco.',
+    satisfaccion_mantenimiento: 'La satisfacción relacional se encuentra en un **punto de inflexión**: no es lo suficientemente baja para provocar una ruptura, pero tampoco es alta como para sentirse plena. Hay un desequilibrio en el esfuerzo — tú sientes que inviertes más.'
+  },
+  empathic_opening: 'Lo que tus respuestas revelan no es una relación rota — es una relación que **necesita atención urgente en áreas específicas**. Hay amor, hay historia compartida, y hay un deseo genuino de que las cosas funcionen.\n\nPero también hay **patrones que se han instalado silenciosamente**: la forma en que discuten, la distancia que se ha creado en la intimidad, y una desconexión emocional que se siente como vivir juntos pero solos.\n\nLa buena noticia es que tu relación tiene un **potencial de crecimiento alto (72%)**. Los cimientos están — lo que falta es trabajar de forma consciente las áreas que este diagnóstico ha revelado.',
+  individual_insights: {
+    emotional_style: 'Tu estilo emocional es **reactivo-afectivo**: sientes con intensidad y necesitas expresar lo que sientes, pero a veces esa intensidad puede abrumar a tu pareja.\n\nEsta característica no es un defecto — es una fortaleza cuando se canaliza. El desafío está en aprender a **regular la intensidad sin apagar la emoción**.',
+    attachment_patterns: 'Tu patrón de apego muestra rasgos **ansioso-preocupados**: necesitas cercanía para sentirte seguro/a, y cuando no la obtienes, la buscas con más intensidad.\n\nEste patrón tiene raíces en experiencias tempranas donde la disponibilidad emocional de tus figuras de apego fue **inconsistente**.',
+    defense_mechanisms: 'Tu mecanismo de defensa principal es la **racionalización seguida de confrontación**: primero intentas entender lógicamente qué pasa, y cuando no puedes, confrontas directamente.\n\nEl problema es que esta confrontación a menudo llega cargada de la frustración acumulada durante la fase de racionalización.',
+    what_they_seek_in_love: 'Lo que buscas en el amor es fundamentalmente **seguridad emocional con pasión**: quieres saber que tu pareja está ahí, que te elige cada día, pero también quieres sentir que la chispa no se ha apagado.\n\nEsta combinación es posible, pero requiere un trabajo consciente de ambos.',
+    emotional_triggers: 'Tus principales detonantes emocionales son: **el silencio prolongado de tu pareja**, la sensación de que "no le importa", y los momentos donde sientes que estás haciendo todo el esfuerzo solo/a.\n\nEstos detonantes están conectados con tu patrón de apego ansioso.',
+    repeating_patterns: 'El patrón que más se repite en tu historia es: **buscas cercanía → la otra persona se aleja → tú persigues más → se crea un ciclo de tensión**. Este patrón se ha presentado en relaciones anteriores.\n\nReconocerlo es el primer paso para romperlo.',
+    hidden_needs: 'Tu necesidad oculta más profunda es ser **vista/o y validada/o emocionalmente sin tener que pedirlo**. Quieres que tu pareja note cuando algo te pasa, que pregunte, que se acerque.\n\nCuando esto no sucede, interpretas el silencio como indiferencia.',
+    role_in_relationship: 'Tu rol predominante es el de **cuidador/a emocional**: eres quien mantiene el pulso de la relación, quien nota los cambios, quien intenta reparar después de los conflictos.\n\nEste rol es agotador cuando no es compartido.',
+    differentiation_profile: 'Tu perfil de diferenciación muestra que puedes funcionar de manera independiente en lo cotidiano, pero **en momentos de estrés relacional pierdes tu centro** y te fusionas con las emociones de la relación.\n\nDesarrollar mayor diferenciación te permitiría estar presente sin perderte.'
+  },
+  couple_insights: {
+    real_relationship_dynamic: 'La dinámica real de su relación es un ciclo de **persecución-retirada**: cuando tú buscas cercanía, tu pareja percibe presión y se aleja. Cuando se aleja, tú sientes rechazo y buscas más — confirmando el ciclo.\n\nEste ciclo no es culpa de ninguno — es un sistema que se alimenta solo.',
+    unconscious_patterns: 'Ambos están repitiendo sin saberlo **dinámicas de sus familias de origen**: tú aprendiste que el amor requiere esfuerzo constante, y tu pareja aprendió que la cercanía excesiva es amenazante.\n\nEstas dos programaciones chocan inevitablemente.',
+    conflict_and_defense: 'En los conflictos, se activan los **4 jinetes de Gottman**: crítica ("siempre haces lo mismo"), desprecio (ojos en blanco, sarcasmo), defensividad ("pero tú también") y stonewalling (silencio, retirarse).\n\nLa capacidad de reparación es lo que más necesita trabajo urgente.',
+    distancing_dynamics: 'La distancia entre ustedes no es un evento — es un **proceso que se ha instalado gradualmente**. Cada conflicto no resuelto, cada conversación evitada, cada noche sin conectar ha ido sumando capas de distancia.\n\nLa buena noticia: este proceso es reversible con trabajo consciente.',
+    attachment_and_support: 'El sistema de apego de la relación está **desregulado**: en lugar de funcionar como un refugio seguro para ambos, la relación se ha convertido en una fuente de estrés. Necesitan reconstruir la sensación de que el otro está disponible emocionalmente.',
+    strengths_of_the_relationship: 'Las fortalezas de su relación incluyen: un **compromiso sólido** (78%), momentos genuinos de conexión cuando bajan la guardia, historia compartida significativa, y un potencial de crecimiento alto.\n\nEstas fortalezas son los cimientos sobre los cuales reconstruir.',
+    love_languages_analysis: 'Existe un **desajuste en los lenguajes del amor**: uno expresa cariño a través de actos de servicio ("hago cosas por ti") mientras el otro necesita palabras de afirmación ("dime que me amas"). Ambos dan amor, pero en idiomas diferentes.',
+    global_relationship_diagnosis: 'El diagnóstico global indica una relación en **fase de desgaste silencioso**: hay suficiente amor para justificar el esfuerzo de reparación, pero las dinámicas actuales están erosionando lentamente el vínculo.\n\nSin intervención, el riesgo de ruptura (67%) continuará aumentando. Con trabajo consciente, el potencial de crecimiento (72%) puede activarse plenamente.'
+  },
+  dominant_cycles: [
+    { name: 'Persecución – Retirada – Silencio – Persecución', explanation: 'Este es el ciclo central de tu relación: **tú buscas conexión, tu pareja se retira**, el silencio se instala, y la tensión acumulada te impulsa a buscar de nuevo con más urgencia.\n\nCada repetición del ciclo erosiona un poco más la confianza emocional.' },
+    { name: 'Crítica – Defensividad – Escalada – Stonewalling', explanation: 'Los conflictos siguen un patrón predecible: **una observación se convierte en crítica**, la otra persona se defiende, la conversación escala, y alguien se retira completamente.\n\nEste ciclo impide que los conflictos se resuelvan — solo se posponen.' }
+  ],
+  activated_emotional_sensitivities: [
+    { name: 'Miedo al abandono emocional', description: 'La distancia emocional de tu pareja activa un **miedo profundo de ser dejada/o o no importar**. Este miedo magnifica pequeñas señales y las convierte en amenazas.' },
+    { name: 'Necesidad de validación', description: 'Necesitas saber que **tu pareja te ve, te valora y te elige**. Cuando esta validación no llega espontáneamente, sientes que algo está mal en la relación.' },
+    { name: 'Hipervigilancia relacional', description: 'Estás constantemente **monitoreando el estado emocional de tu pareja** y de la relación. Esto te agota y a veces te hace reaccionar ante señales que no son reales.' }
+  ],
+  key_insight: 'La observación más importante de tu diagnóstico es que **el problema no es la falta de amor — es la falta de reparación después del conflicto**. Ambos se aman, pero no saben cómo volver a conectarse después de desconectarse. Cada ciclo de conflicto sin reparación deposita una capa más de distancia emocional. Aprender a reparar — no a evitar el conflicto, sino a reconectarse después — es la llave que puede transformar esta relación.',
+  recommendation: 'La recomendación principal es **iniciar un proceso de terapia de pareja enfocado en la reparación emocional** (Emotionally Focused Therapy - EFT). El nivel de riesgo actual (67%) indica que la intervención temprana es importante.\n\nAdemás, trabajar de forma individual en la regulación emocional y el reconocimiento de patrones de apego puede acelerar significativamente el proceso de reconexión.',
+  session_work_items: [
+    '**Reparación después del conflicto**: Aprender a reconectarse emocionalmente después de una discusión, en lugar de esperar que "se pase solo".',
+    '**Ciclo persecución-retirada**: Identificar en tiempo real cuándo se activa el ciclo y aprender a frenarlo antes de que escale.',
+    '**Lenguajes del amor desajustados**: Aprender el idioma emocional del otro para que el amor que se da sea el amor que se necesita.',
+    '**Regulación emocional individual**: Desarrollar la capacidad de auto-calmarse antes de buscar la regulación en el otro.',
+    '**Reconstrucción de la intimidad**: Crear espacios seguros para la vulnerabilidad emocional y la reconexión erótica.'
+  ],
+  evidence_signals: [
+    { signal: 'Uso frecuente de "siempre" y "nunca" al describir conflictos', source: 'Q13, Q14' },
+    { signal: 'Describe a la pareja con admiración en abstracto pero frustración en lo cotidiano', source: 'Q4, Q5, Q13' },
+    { signal: 'Respuesta emocional intensa ante preguntas de distancia (Q7, Q9)', source: 'Q7, Q9' }
+  ]
 }
 
 // ─── ANALYSIS ANIMATION TASKS ───────────────────────────────────────
 
 const ANALYSIS_TASK_GROUPS = [
   {
-    label: 'Procesando tus respuestas',
+    label: 'Procesando 44 respuestas',
     color: 'violet',
     tasks: [
-      { id: 1, text: 'Analizando tu identidad y autopercepción relacional…' },
-      { id: 2, text: 'Detectando cómo percibes a tu pareja y qué proyectas…' },
-      { id: 3, text: 'Mapeando tu experiencia emocional en la relación…' },
-      { id: 4, text: 'Evaluando la narrativa que construyes sobre el vínculo…' },
+      { id: 1, text: 'Reconstruyendo la narrativa de tu vínculo…' },
+      { id: 2, text: 'Analizando patrones de admiración y valoración (Gottman)…' },
+      { id: 3, text: 'Mapeando tu estilo de apego emocional (Bowlby)…' },
+      { id: 4, text: 'Evaluando la conexión emocional profunda (Sue Johnson)…' },
     ]
   },
   {
-    label: 'Detectando patrones de apego',
+    label: 'Análisis de 12 dimensiones psicológicas',
     color: 'blue',
     tasks: [
-      { id: 5, text: 'Analizando dinámicas de conflicto y reacción…' },
-      { id: 6, text: 'Detectando proyecciones inconscientes…' },
-      { id: 7, text: 'Identificando ciclos de distancia y cercanía…' },
-      { id: 8, text: 'Evaluando capacidad de reparación emocional…' },
+      { id: 5, text: 'Descifrando dinámicas de conflicto y reparación (Gottman)…' },
+      { id: 6, text: 'Analizando deseo, atracción y erotismo (Perel)…' },
+      { id: 7, text: 'Detectando patrones inconscientes repetitivos (Hendrix)…' },
+      { id: 8, text: 'Evaluando diferenciación e identidad personal (Schnarch)…' },
     ]
   },
   {
-    label: 'Leyendo entre líneas',
+    label: 'Triangulación y análisis del discurso',
     color: 'fuchsia',
     tasks: [
-      { id: 9, text: 'Analizando lo que no se dice en la relación…' },
-      { id: 10, text: 'Detectando mecanismos de defensa activos…' },
-      { id: 11, text: 'Identificando sensibilidades emocionales profundas…' },
-      { id: 12, text: 'Evaluando la estructura inconsciente del vínculo…' },
+      { id: 9, text: 'Identificando contradicciones entre respuestas…' },
+      { id: 10, text: 'Analizando tono emocional y metáforas usadas…' },
+      { id: 11, text: 'Cruzando dimensiones: neurobiología, regulación, lenguajes…' },
+      { id: 12, text: 'Evaluando satisfacción relacional y potencial de crecimiento (Finkel)…' },
     ]
   },
   {
-    label: 'Construyendo tu diagnóstico',
+    label: 'Construyendo tu diagnóstico profundo',
     color: 'pink',
     tasks: [
-      { id: 13, text: 'Calculando indicadores de compatibilidad…' },
-      { id: 14, text: 'Generando perfil radar y barras de análisis…' },
-      { id: 15, text: 'Clasificando tipo de relación dominante…' },
-      { id: 16, text: 'Integrando todas las dimensiones del diagnóstico…' },
+      { id: 13, text: 'Calculando 12 scores dimensionales por autor…' },
+      { id: 14, text: 'Generando mapa de apego y triángulo de Sternberg…' },
+      { id: 15, text: 'Clasificando tipo de relación y ciclos dominantes…' },
+      { id: 16, text: 'Integrando todas las dimensiones en el diagnóstico final…' },
     ]
   }
 ]
@@ -370,7 +501,7 @@ function AnalyzingProgress({ isDone, onComplete }) {
               <span className="text-violet-300/60 text-sm font-light">Finalizando tu diagnóstico profundo…</span>
             </motion.div>
             <p className="text-white/20 text-[10px] font-light mt-2">
-              El análisis narrativo de 45 respuestas requiere unos momentos adicionales
+              El análisis narrativo de 44 respuestas en 12 dimensiones requiere unos momentos adicionales
             </p>
           </motion.div>
         )}
@@ -382,10 +513,10 @@ function AnalyzingProgress({ isDone, onComplete }) {
 // ─── RADAR CHART SVG (multi-color with legend) ──────────────────────
 
 function RadarChart({ scores }) {
-  const keys = Object.keys(RADAR_LABELS)
-  const labels = Object.values(RADAR_LABELS)
+  const keys = Object.keys(DIMENSION_LABELS)
+  const labels = Object.values(DIMENSION_LABELS)
   const n = keys.length
-  const cx = 150, cy = 150, r = 110
+  const cx = 180, cy = 180, r = 120
 
   const getPoint = (i, val) => {
     const angle = (Math.PI * 2 * i) / n - Math.PI / 2
@@ -400,7 +531,7 @@ function RadarChart({ scores }) {
 
   return (
     <div>
-      <svg viewBox="0 0 300 300" className="w-full max-w-xs mx-auto">
+      <svg viewBox="0 0 360 360" className="w-full max-w-sm mx-auto">
         {/* Grid circles */}
         {[20, 40, 60, 80, 100].map(level => (
           <circle key={level} cx={cx} cy={cy} r={r * level / 100} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={0.5} />
@@ -417,8 +548,8 @@ function RadarChart({ scores }) {
           return (
             <polygon key={`seg-${i}`}
               points={`${cx},${cy} ${p1.x},${p1.y} ${p2.x},${p2.y}`}
-              fill={RADAR_COLORS[i]} fillOpacity={0.12}
-              stroke={RADAR_COLORS[i]} strokeOpacity={0.3} strokeWidth={0.8}
+              fill={DIMENSION_COLORS[i]} fillOpacity={0.10}
+              stroke={DIMENSION_COLORS[i]} strokeOpacity={0.25} strokeWidth={0.7}
             />
           )
         })}
@@ -427,26 +558,26 @@ function RadarChart({ scores }) {
         {/* Data points with distinct colors */}
         {keys.map((k, i) => {
           const p = getPoint(i, scores[k] || 0)
-          return <circle key={k} cx={p.x} cy={p.y} r={3.5} fill={RADAR_COLORS[i]} />
+          return <circle key={k} cx={p.x} cy={p.y} r={3} fill={DIMENSION_COLORS[i]} />
         })}
         {/* Labels with matching colors */}
         {keys.map((_, i) => {
-          const p = getPoint(i, 130)
+          const p = getPoint(i, 135)
           return (
             <text key={i} x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle"
-              fill={RADAR_COLORS[i]} className="text-[8px] font-light" fillOpacity={0.85}>
+              fill={DIMENSION_COLORS[i]} className="text-[6.5px] font-light" fillOpacity={0.85}>
               {labels[i]}
             </text>
           )
         })}
       </svg>
-      {/* Color-coded legend */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4">
+      {/* Color-coded legend — 12 items in 3 columns */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 mt-4">
         {keys.map((key, i) => (
-          <div key={key} className="flex items-center gap-2 p-2 rounded-lg border border-white/[0.04] bg-white/[0.01]">
-            <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: RADAR_COLORS[i] }} />
-            <span className="text-white/50 text-[11px] font-light flex-1">{labels[i]}</span>
-            <span className="text-white/70 text-[11px] font-light tabular-nums">{scores[key] ?? 0}%</span>
+          <div key={key} className="flex items-center gap-1.5 p-1.5 rounded-lg border border-white/[0.04] bg-white/[0.01]">
+            <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: DIMENSION_COLORS[i] }} />
+            <span className="text-white/50 text-[10px] font-light flex-1 leading-tight">{labels[i]}</span>
+            <span className="text-white/70 text-[10px] font-light tabular-nums">{scores[key] ?? 0}%</span>
           </div>
         ))}
       </div>
@@ -482,6 +613,7 @@ const DiagnosticoRelacionalPage = () => {
   const [interim, setInterim] = useState('')
   const [recording, setRecording] = useState(false)
   const [audioPlaying, setAudioPlaying] = useState(false)
+  const [voiceGender, setVoiceGender] = useState('female') // 'female' = Charlotte MP3, 'male' = male MP3
   const recognitionRef = useRef(null)
   const audioRef = useRef(null)
   const currentQuestionRef = useRef(currentQuestion)
@@ -494,10 +626,39 @@ const DiagnosticoRelacionalPage = () => {
   const bgAnalysisRef = useRef(null)
 
   const [pdfGenerating, setPdfGenerating] = useState(false)
+  const [carouselIdx, setCarouselIdx] = useState(0)
+  const [testimonialIdx, setTestimonialIdx] = useState(0)
+  const [pricingIdx, setPricingIdx] = useState(0)
+  const testimonialRef = useRef(null)
+  const pricingRef = useRef(null)
   const [expandedInsights, setExpandedInsights] = useState({})
   const toggleInsight = useCallback((key) => setExpandedInsights(prev => ({ ...prev, [key]: !prev[key] })), [])
   const [resumeDraft, setResumeDraft] = useState(null)
   const [showFreeGuide, setShowFreeGuide] = useState(false)
+
+  // Countdown timer — 3 days from first visit, persisted in localStorage
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, pct: 100 })
+  useEffect(() => {
+    const DURATION_MS = 3 * 24 * 60 * 60 * 1000 // 3 days
+    const key = 'diagnostico_promo_end'
+    let endTime = parseInt(localStorage.getItem(key), 10)
+    if (!endTime || isNaN(endTime)) {
+      endTime = Date.now() + DURATION_MS
+      localStorage.setItem(key, String(endTime))
+    }
+    const tick = () => {
+      const remaining = Math.max(0, endTime - Date.now())
+      const pct = Math.max(0, (remaining / DURATION_MS) * 100)
+      const d = Math.floor(remaining / (1000 * 60 * 60 * 24))
+      const h = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+      const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60))
+      const s = Math.floor((remaining % (1000 * 60)) / 1000)
+      setCountdown({ days: d, hours: h, minutes: m, seconds: s, pct })
+    }
+    tick()
+    const iv = setInterval(tick, 1000)
+    return () => clearInterval(iv)
+  }, [])
 
   // Smart email/token flow
   const [thankyouEmails, setThankyouEmails] = useState(['', ''])
@@ -511,6 +672,14 @@ const DiagnosticoRelacionalPage = () => {
 
   // Test/dev mode: URL param OR LUISPRO discount
   const isDevMode = searchParams.get('test') === 'true' || searchParams.get('demo') === 'true' || appliedDiscount?.discount === 1.0
+
+  // ─── PREVIEW MODE: ?preview=results → skip to results with sample data ───
+  useEffect(() => {
+    if (searchParams.get('preview') === 'results' && !aiAnalysis) {
+      setAiAnalysis(SAMPLE_ANALYSIS)
+      setStage('results')
+    }
+  }, [searchParams]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -647,24 +816,25 @@ const DiagnosticoRelacionalPage = () => {
     if (audioRef.current) { audioRef.current.pause(); audioRef.current = null }
     setAudioPlaying(false)
 
-    // Play pre-recorded question audio
+    // Play question audio (female = Charlotte MP3, male = male MP3)
     if (uiMode === 'voice' && stage === 'questionnaire') {
-      const qId = QUESTIONS[currentQuestion]?.id
-      if (qId) {
-        const audio = new Audio(`/audio/diagnostico/${qId}.mp3`)
+      const q = QUESTIONS[currentQuestion]
+      if (q) {
+        const audioPath = voiceGender === 'male'
+          ? `/audio/diagnostico/male/${q.id}.mp3`
+          : `/audio/diagnostico/${q.id}.mp3`
+        const audio = new Audio(audioPath)
         audioRef.current = audio
         setAudioPlaying(true)
-        audio.onended = () => {
-          setAudioPlaying(false)
-          // Start mic immediately after audio ends — no delay
-          startRecordingRef.current?.()
-        }
+        audio.onended = () => { setAudioPlaying(false); startRecordingRef.current?.() }
         audio.onerror = () => setAudioPlaying(false)
         audio.play().catch(() => setAudioPlaying(false))
       }
     }
-    return () => { if (audioRef.current) { audioRef.current.pause(); audioRef.current = null } }
-  }, [currentQuestion, stage]) // eslint-disable-line react-hooks/exhaustive-deps
+    return () => {
+      if (audioRef.current) { audioRef.current.pause(); audioRef.current = null }
+    }
+  }, [currentQuestion, stage, voiceGender]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-save draft
   useEffect(() => {
@@ -777,7 +947,7 @@ const DiagnosticoRelacionalPage = () => {
 
   // ─── QUESTION NAVIGATION ──────────────────────────────────
 
-  // No longer pre-fire early — wait for ALL 45 answers to ensure complete analysis
+  // No longer pre-fire early — wait for ALL 44 answers to ensure complete analysis
   // The analysis launches when user finishes the last question (in handleNext)
 
   const handleNext = useCallback(() => {
@@ -839,7 +1009,7 @@ const DiagnosticoRelacionalPage = () => {
       doc.setFontSize(20); doc.setTextColor(40, 40, 40)
       doc.text('Diagnóstico Relacional', pw / 2, y, { align: 'center' }); y += 6
       doc.setFontSize(9); doc.setTextColor(120, 120, 120)
-      doc.text('Generado a partir de 45 respuestas en 8 fases psicológicas', pw / 2, y, { align: 'center' }); y += 12
+      doc.text('Generado a partir de 44 respuestas en 18 bloques psicológicos — 12 dimensiones', pw / 2, y, { align: 'center' }); y += 12
 
       // Relationship type
       if (aiAnalysis.relationship_type) {
@@ -849,39 +1019,65 @@ const DiagnosticoRelacionalPage = () => {
         addParagraph(aiAnalysis.relationship_type.explanation)
       }
 
-      // Core scores
-      if (aiAnalysis.core_scores) {
-        addTitle('Indicadores Principales')
+      // Composite scores
+      if (aiAnalysis.composite_scores) {
+        addTitle('Indicadores Compuestos')
         doc.setFontSize(10)
-        for (const [key, meta] of Object.entries(CORE_LABELS)) {
-          checkPage(8); const val = aiAnalysis.core_scores[key] ?? 0
+        for (const [key, meta] of Object.entries(COMPOSITE_LABELS)) {
+          checkPage(8); const val = aiAnalysis.composite_scores[key] ?? 0
           doc.setTextColor(60, 60, 60); doc.text(`${meta.label}: ${val}%`, m, y); y += 6
         }
         y += 4
       }
 
-      // Radar scores
-      if (aiAnalysis.radar_scores) {
-        addTitle('Radar Relacional')
+      // 12 Dimension scores
+      if (aiAnalysis.dimension_scores) {
+        addTitle('Radar de 12 Dimensiones')
         doc.setFontSize(10)
-        for (const [key, label] of Object.entries(RADAR_LABELS)) {
-          checkPage(8); const val = aiAnalysis.radar_scores[key] ?? 0
+        for (const [key, label] of Object.entries(DIMENSION_LABELS)) {
+          checkPage(8); const val = aiAnalysis.dimension_scores[key] ?? 0
           doc.setTextColor(60, 60, 60); doc.text(`${label}: ${val}%`, m, y); y += 6
         }
         y += 4
       }
 
-      // Profile scores
-      if (aiAnalysis.profile_scores) {
-        addTitle('Perfil Emocional')
+      // Attachment map
+      if (aiAnalysis.attachment_map) {
+        addTitle('Mapa de Apego')
+        doc.setFontSize(10); doc.setTextColor(60, 60, 60)
+        doc.text(`Estilo: ${aiAnalysis.attachment_map.style || 'No determinado'}`, m, y); y += 6
+        doc.text(`Ansiedad: ${aiAnalysis.attachment_map.anxiety_level ?? 0}%  |  Evitación: ${aiAnalysis.attachment_map.avoidance_level ?? 0}%`, m, y); y += 8
+      }
+
+      // Sub-scores
+      if (aiAnalysis.sub_scores) {
+        addTitle('Desglose por Dimensión')
         doc.setFontSize(10)
-        for (const [key, meta] of Object.entries(PROFILE_LABELS)) {
-          checkPage(8); const val = aiAnalysis.profile_scores[key] ?? 0
-          const healthPct = meta.inverted ? (100 - val) : val
-          const badge = meta.inverted ? (healthPct >= 55 ? ' ✓' : ' ⚠') : ''
-          doc.setTextColor(60, 60, 60); doc.text(`${meta.label}: ${val}%${badge}`, m, y); y += 6
+        for (const [dimKey, subs] of Object.entries(SUB_SCORE_LABELS)) {
+          const dimData = aiAnalysis.sub_scores[dimKey]
+          if (!dimData) continue
+          checkPage(14); doc.setFontSize(10); doc.setTextColor(80, 50, 120)
+          doc.text(DIMENSION_LABELS[dimKey] || dimKey, m, y); y += 6
+          for (const [subKey, meta] of Object.entries(subs)) {
+            checkPage(8); const val = dimData[subKey] ?? 0
+            doc.setTextColor(60, 60, 60); doc.text(`  ${meta.label}: ${val}%`, m, y); y += 5
+          }
+          y += 3
         }
-        y += 4
+      }
+
+      // Dimension narratives
+      if (aiAnalysis.dimension_narratives) {
+        doc.addPage(); y = 20
+        doc.setFontSize(15); doc.setTextColor(40, 40, 40)
+        doc.text('Análisis por Dimensión', pw / 2, y, { align: 'center' }); y += 12
+        for (const [key, text] of Object.entries(aiAnalysis.dimension_narratives)) {
+          if (!text) continue
+          const label = DIMENSION_LABELS[key] || key
+          checkPage(20); doc.setFontSize(11); doc.setTextColor(80, 50, 120)
+          doc.text(label, m, y); y += 7
+          addParagraph(text)
+        }
       }
 
       // Empathic opening
@@ -904,7 +1100,7 @@ const DiagnosticoRelacionalPage = () => {
           ['repeating_patterns', 'Patrones que se repiten'],
           ['hidden_needs', 'Necesidades ocultas'],
           ['role_in_relationship', 'Tu rol en la relación'],
-          ['likely_relational_attractor', 'Atractor relacional']
+          ['differentiation_profile', 'Perfil de diferenciación']
         ]
         for (const [key, label] of insightMap) {
           const text = aiAnalysis.individual_insights[key]
@@ -927,7 +1123,7 @@ const DiagnosticoRelacionalPage = () => {
           ['distancing_dynamics', 'Dinámica de distanciamiento'],
           ['attachment_and_support', 'Apego y apoyo'],
           ['strengths_of_the_relationship', 'Fortalezas de la relación'],
-          ['critical_moments_of_the_bond', 'Momentos críticos del vínculo'],
+          ['love_languages_analysis', 'Análisis de lenguajes del amor'],
           ['global_relationship_diagnosis', 'Diagnóstico global']
         ]
         for (const [key, label] of coupleMap) {
@@ -1028,7 +1224,7 @@ const DiagnosticoRelacionalPage = () => {
       doc.setFontSize(20); doc.setTextColor(40, 40, 40)
       doc.text('Diagnóstico Relacional', pw / 2, y, { align: 'center' }); y += 6
       doc.setFontSize(9); doc.setTextColor(120, 120, 120)
-      doc.text('Generado a partir de 45 respuestas en 8 fases psicológicas', pw / 2, y, { align: 'center' }); y += 12
+      doc.text('Generado a partir de 44 respuestas en 12 dimensiones psicológicas', pw / 2, y, { align: 'center' }); y += 12
       if (aiAnalysis.relationship_type) {
         addTitle('Tipo de Relación')
         doc.setFontSize(11); doc.setTextColor(80, 50, 120)
@@ -1045,7 +1241,7 @@ const DiagnosticoRelacionalPage = () => {
       doc.text('Agenda una sesión con Luis Virrueta.', pw / 2, y + 15, { align: 'center' })
       doc.text('luisvirrueta.com  ·  wa.me/527228720520', pw / 2, y + 21, { align: 'center' })
       const pdfBase64 = doc.output('datauristring')
-      const userName = responses[0] || ''
+      const userName = aiAnalysis?.person_info?.name || responses['Q0'] || ''
       sendResultsEmail({ email: recipientEmail, purchaseId, pdfBase64, productType: purchaseType, userName })
         .then(() => setPdfAutoSent(true))
         .catch(() => {})
@@ -1060,8 +1256,8 @@ const DiagnosticoRelacionalPage = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       <SEOHead
-        title="Test de Pareja: Descubre los patrones invisibles de tu relación - Luis Virrueta"
-        description="¿Sientes que algo no funciona pero no sabes qué? Habla por micrófono, nuestro algoritmo analiza tus patrones y recibes un reporte profundo con gráficas."
+        title="Radiografía de Pareja: 12 Dimensiones Psicológicas Analizadas con IA - Luis Virrueta"
+        description="44 preguntas por voz analizadas desde la perspectiva de 12 psicólogos (Bowlby, Gottman, Sternberg). Radar, mapa de apego, triángulo del amor y PDF clínico profesional."
         url="/tienda/diagnostico-relacional"
       />
 
@@ -1074,390 +1270,653 @@ const DiagnosticoRelacionalPage = () => {
           <motion.div key="hero" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="min-h-screen">
 
-            {/* ── VIDEO HEADER — full viewport cinematic ── */}
-            <section className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
-              <video autoPlay loop muted playsInline preload="auto"
-                className="absolute inset-0 w-full h-full object-cover opacity-45">
-                <source src="/TEST PAREJA/TERMOMETRO AMOR.mp4" type="video/mp4" />
-              </video>
-              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black z-[3] pointer-events-none" />
-              <div className="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-black via-black/80 to-transparent z-[5] pointer-events-none" />
-
-              <div className="relative max-w-5xl mx-auto z-10 text-center px-6 lg:px-20">
-                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-                  <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/15 bg-white/[0.06] backdrop-blur-sm mb-8">
-                    <Heart className="w-4 h-4 text-violet-400/70" strokeWidth={1.5} />
-                    <span className="text-white/60 text-sm font-light uppercase tracking-[0.18em]">Diagnóstico psicológico de pareja</span>
-                  </div>
-                  <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light text-white leading-[1.1] mb-6"
-                    style={{ letterSpacing: '-0.01em', textShadow: '0 0 80px rgba(255,255,255,0.12), 0 10px 40px rgba(168,85,247,0.15)' }}>
-                    Termómetro Inconsciente<br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400">de Pareja</span>
-                  </h1>
-                  <p className="text-lg sm:text-xl lg:text-2xl text-white/55 font-light max-w-3xl mx-auto leading-relaxed mb-4">
-                    ¿Sientes que algo cambió en tu relación pero no sabes qué?
-                  </p>
-                  <p className="text-base sm:text-lg text-white/35 font-light max-w-2xl mx-auto leading-relaxed mb-10">
-                    Un test psicológico que escucha lo que no dices. Hablas por micrófono, el algoritmo detecta tus patrones inconscientes y recibes un reporte profesional con lo que realmente está pasando.
-                  </p>
-                  {/* Early CTA */}
-                  <motion.button
-                    onClick={() => { setStage('checkout'); scrollToTop() }}
-                    whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                    className="px-10 py-5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
-                    Comenzar mi diagnóstico <ArrowRight className="inline w-5 h-5 ml-2" />
-                  </motion.button>
-                  {resumeDraft && (
-                    <button onClick={restoreDraft} className="block mx-auto mt-4 text-violet-300/40 text-sm hover:text-violet-300/70 underline underline-offset-4 transition-colors">
-                      Continuar diagnóstico en progreso
-                    </button>
-                  )}
-                </motion.div>
-              </div>
-            </section>
-
-            <div className="relative z-10 px-6 lg:px-20 -mt-20">
-              <div className="max-w-5xl mx-auto space-y-24 lg:space-y-32">
-
-              {/* ── ¿TE IDENTIFICAS? — luminous emoji cards + image ────── */}
-              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div>
-                  <p className="text-white/40 text-sm uppercase tracking-[0.2em] mb-2">¿Te suena familiar?</p>
-                  <h2 className="text-2xl lg:text-3xl font-light text-white/80 mb-8 leading-snug">Esto es lo que escuchamos<br />de personas como tú</h2>
-                  <div className="space-y-3">
-                    {[
-                      { emoji: '💬', text: '"Siempre terminamos discutiendo por lo mismo"' },
-                      { emoji: '🧊', text: '"Siento que mi pareja se aleja y no sé por qué"' },
-                      { emoji: '💔', text: '"Doy mucho pero no siento que recibo lo mismo"' },
-                      { emoji: '🤐', text: '"Después de pelear, nadie dice nada y todo queda ahí"' },
-                      { emoji: '😶', text: '"A veces me pregunto si realmente nos conocemos"' },
-                      { emoji: '😰', text: '"Me da miedo que un día se canse de mí"' }
-                    ].map((item, i) => (
-                      <motion.div key={i} initial={{ opacity: 0, x: -15 }} whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-                        className="flex items-center gap-4 p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] hover:border-violet-500/15 transition-all group">
-                        <div className="w-11 h-11 rounded-full bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 group-hover:shadow-[0_0_20px_rgba(139,92,246,0.15)] transition-shadow">
-                          <span className="text-lg">{item.emoji}</span>
-                        </div>
-                        <span className="text-white/60 text-base font-light leading-snug">{item.text}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                  <p className="text-white/30 text-base font-light mt-6">Si algo de esto resuena, este test fue diseñado para ti.</p>
+            {/* Promo countdown bar — fixed below header */}
+            <div className="fixed top-[60px] md:top-[68px] lg:top-24 left-0 right-0 z-[99] bg-gradient-to-r from-amber-950/95 via-orange-950/95 to-amber-950/95 border-b border-amber-500/20 backdrop-blur-sm">
+              <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-center gap-3 sm:gap-5">
+                <div className="flex items-center gap-1.5">
+                  <Zap className="w-3.5 h-3.5 text-amber-400" strokeWidth={2} />
+                  <span className="text-amber-200/90 text-xs sm:text-sm font-medium">Promoción de lanzamiento</span>
                 </div>
-                <div className="hidden lg:block">
-                  <img src="/TEST PAREJA/IMAGEN (2).jpg" alt="Pareja" className="w-full rounded-2xl object-cover aspect-[4/5] opacity-80 shadow-2xl shadow-black/30" loading="lazy" />
-                </div>
-              </motion.div>
-
-              {/* ── ¿QUÉ DESCUBRIRÁS? — with brain-scan image ─────── */}
-              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div className="hidden lg:block order-1 lg:order-none">
-                  <img src="/TEST PAREJA/IMAGEN (3).jpg" alt="Análisis de pareja" className="w-full rounded-2xl object-cover aspect-[4/5] opacity-80 shadow-2xl shadow-black/30" loading="lazy" />
-                </div>
-                <div>
-                  <p className="text-white/40 text-sm uppercase tracking-[0.2em] mb-2">Lo que el test revela</p>
-                  <h2 className="text-2xl lg:text-3xl font-light text-white/80 mb-8 leading-snug">Patrones invisibles que<br />ningún test estándar detecta</h2>
-                  <div className="space-y-3">
-                    {[
-                      { icon: Activity, text: 'Los ciclos emocionales que se repiten sin que lo notes', glow: 'from-red-500/15 to-rose-500/10' },
-                      { icon: Shield, text: 'Tus mecanismos de defensa y los de tu pareja', glow: 'from-blue-500/15 to-cyan-500/10' },
-                      { icon: Users, text: 'Tu estilo de apego: quién se acerca, quién se aleja y por qué', glow: 'from-emerald-500/15 to-teal-500/10' },
-                      { icon: Eye, text: 'Necesidades ocultas que nunca has dicho en voz alta', glow: 'from-amber-500/15 to-yellow-500/10' },
-                      { icon: Heart, text: 'Tu compatibilidad emocional real — no la que imaginas', glow: 'from-pink-500/15 to-rose-500/10' },
-                      { icon: TrendingUp, text: 'Las fortalezas del vínculo y lo que se puede reparar', glow: 'from-violet-500/15 to-purple-500/10' }
-                    ].map((b, i) => (
-                      <motion.div key={i} initial={{ opacity: 0, x: 15 }} whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-                        className="flex items-start gap-4 p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] transition-all group">
-                        <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${b.glow} border border-white/10 flex items-center justify-center flex-shrink-0 group-hover:shadow-[0_0_24px_rgba(139,92,246,0.12)] transition-shadow`}>
-                          <b.icon className="w-5 h-5 text-white/50" strokeWidth={1.5} />
-                        </div>
-                        <span className="text-white/60 text-base font-light leading-snug pt-2">{b.text}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* ── MID-PAGE CTA ────────────────────────────── */}
-              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                className="text-center py-4">
-                <motion.button
-                  onClick={() => { setStage('checkout'); scrollToTop() }}
-                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  className="px-10 py-5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
-                  Quiero comenzar <ArrowRight className="inline w-5 h-5 ml-2" />
-                </motion.button>
-              </motion.div>
-
-              {/* ── IMAGE GALLERY — professional grid ────────── */}
-              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                <p className="text-center text-white/40 text-sm uppercase tracking-[0.2em] mb-2">Conexión emocional</p>
-                <h2 className="text-center text-2xl lg:text-3xl font-light text-white/70 mb-8">Cada relación tiene una historia invisible</h2>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 lg:gap-4">
-                  {[4, 5, 6, 7, 8, 9].map(n => (
-                    <div key={n} className="group overflow-hidden rounded-2xl aspect-[4/3] relative">
-                      <img src={`/TEST PAREJA/IMAGEN (${n}).jpg`} alt={`Pareja ${n}`}
-                        className="w-full h-full object-cover opacity-60 group-hover:opacity-85 group-hover:scale-105 transition-all duration-700" loading="lazy" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="flex items-center gap-2">
+                  {[
+                    { val: countdown.days, label: 'd' },
+                    { val: countdown.hours, label: 'h' },
+                    { val: countdown.minutes, label: 'm' },
+                    { val: countdown.seconds, label: 's' }
+                  ].map((u, i) => (
+                    <div key={i} className="flex items-baseline gap-0.5">
+                      <span className="text-white font-medium text-sm sm:text-base tabular-nums">{String(u.val).padStart(2, '0')}</span>
+                      <span className="text-amber-400/60 text-[10px]">{u.label}</span>
                     </div>
                   ))}
                 </div>
-              </motion.div>
+                <div className="hidden sm:block w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-amber-400 to-orange-400 rounded-full transition-all duration-1000" style={{ width: `${countdown.pct}%` }} />
+                </div>
+                <span className="text-amber-300/50 text-[10px] hidden lg:inline">Hasta -54% en todos los planes</span>
+              </div>
+            </div>
 
-              {/* ── SIMULATED REPORT PREVIEW ─────────────── */}
-              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                <p className="text-center text-white/35 text-sm uppercase tracking-[0.2em] mb-6">Ejemplo de reporte generado</p>
+            {/* ── HERO — Split layout: texto + video ── */}
+            <section className="relative min-h-screen flex items-center overflow-hidden pt-28 pb-16 lg:pt-36 lg:pb-20">
+              <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-950 to-black z-0" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.06),transparent_60%)] z-[1]" />
 
-                <div className="rounded-2xl border border-white/[0.08] bg-zinc-950/70 backdrop-blur-sm overflow-hidden">
-                  {/* Report header */}
-                  <div className="px-6 lg:px-8 pt-6 pb-4 border-b border-white/[0.06]">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-white/30 text-xs uppercase tracking-[0.2em] mb-1">Diagnóstico Relacional</p>
-                        <p className="text-white/65 text-xl font-light">Relación con desconexión emocional progresiva</p>
+              <div className="relative max-w-6xl mx-auto z-10 px-6 lg:px-12 w-full">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                  {/* Left — Copy */}
+                  <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
+                    className="order-2 lg:order-1 text-center lg:text-left">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-violet-500/20 bg-violet-500/[0.06] mb-6">
+                      <Sparkles className="w-3.5 h-3.5 text-violet-400/70" strokeWidth={1.5} />
+                      <span className="text-violet-300/70 text-xs font-light uppercase tracking-[0.15em]">Análisis clínico de relaciones</span>
+                    </div>
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-light text-white leading-[1.1] mb-5"
+                      style={{ letterSpacing: '-0.01em', textShadow: '0 0 80px rgba(255,255,255,0.08), 0 10px 40px rgba(168,85,247,0.12)' }}>
+                      Radiografía<br />
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400">de Pareja</span>
+                    </h1>
+                    <p className="text-lg sm:text-xl text-white/70 font-light leading-relaxed mb-6 italic">
+                      "Descubre lo que realmente está ocurriendo en tu relación."
+                    </p>
+
+                    {/* Key features with icons */}
+                    <div className="space-y-3 mb-6">
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-violet-500/10 border border-violet-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Eye className="w-4 h-4 text-violet-400/70" strokeWidth={1.5} />
+                        </div>
+                        <p className="text-base sm:text-lg text-white/70 font-light leading-relaxed">
+                          Detecta <strong className="text-white/90 font-medium">patrones invisibles</strong>, dinámicas emocionales y señales tempranas que revelan hacia dónde se dirige tu relación.
+                        </p>
                       </div>
-                      <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-amber-500/20 bg-amber-500/[0.06]">
-                        <AlertTriangle className="w-3.5 h-3.5 text-amber-400/70" strokeWidth={1.5} />
-                        <span className="text-amber-300/60 text-xs font-light">Atención recomendada</span>
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <TrendingUp className="w-4 h-4 text-fuchsia-400/70" strokeWidth={1.5} />
+                        </div>
+                        <p className="text-base sm:text-lg text-white/70 font-light leading-relaxed">
+                          Descubre <strong className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-300 to-pink-300 font-medium">si aún estás a tiempo de cambiarlo</strong> — antes de que sea demasiado tarde.
+                        </p>
                       </div>
                     </div>
+
+                    <p className="text-white/65 text-base sm:text-lg font-light leading-relaxed mb-5">
+                      Nuestro sistema integra <strong className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-fuchsia-300 font-medium">12 de las teorías más influyentes</strong> de la psicología del amor y analiza tu relación desde múltiples dimensiones simultáneamente para revelar <em className="text-white/85 not-italic font-medium">patrones que los tests convencionales no pueden detectar</em>.
+                    </p>
+
+                    {/* Feature pills */}
+                    <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-6">
+                      {[
+                        { icon: Clock, text: '~25 min' },
+                        { icon: Brain, text: '12 teorías' },
+                        { icon: BarChart3, text: 'Gráficas + PDF' },
+                        { icon: Shield, text: '100% privado' }
+                      ].map((pill, i) => (
+                        <span key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-white/[0.08] bg-white/[0.03] text-white/55 text-xs font-light">
+                          <pill.icon className="w-3.5 h-3.5 text-violet-400/60" strokeWidth={1.5} />
+                          {pill.text}
+                        </span>
+                      ))}
+                    </div>
+
+                    <p className="text-base text-white/70 font-light leading-relaxed mb-6">
+                      <strong className="text-white/90 font-medium">En los próximos 25 minutos</strong> podrás ver con claridad qué está pasando en tu relación.
+                    </p>
+
+                    <motion.button
+                      onClick={() => { setStage('checkout'); scrollToTop() }}
+                      whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                      className="px-7 sm:px-10 py-4 sm:py-5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base sm:text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20 whitespace-nowrap">
+                      Comenzar mi radiografía <ArrowRight className="inline w-5 h-5 ml-1.5" />
+                    </motion.button>
+                    {resumeDraft && (
+                      <button onClick={restoreDraft} className="block mt-4 text-violet-300/40 text-sm hover:text-violet-300/70 underline underline-offset-4 transition-colors">
+                        Continuar diagnóstico en progreso
+                      </button>
+                    )}
+                  </motion.div>
+
+                  {/* Right — Video */}
+                  <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, delay: 0.2 }}
+                    className="relative order-1 lg:order-2">
+                    <div className="rounded-2xl overflow-hidden border border-white/[0.08] shadow-2xl shadow-violet-900/20 relative">
+                      <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/[0.06] z-10 pointer-events-none" />
+                      <video autoPlay loop muted playsInline preload="auto"
+                        className="w-full aspect-[4/3] object-cover">
+                        <source src="/productos/radar de pareja/videos/radiografia.mp4" type="video/mp4" />
+                      </video>
+                    </div>
+                    <div className="absolute -inset-4 bg-gradient-to-r from-violet-600/10 via-fuchsia-600/5 to-transparent rounded-3xl blur-2xl -z-10" />
+                    {/* Complementary images — desktop 2×2 */}
+                    <div className="hidden lg:grid grid-cols-2 gap-3 mt-4">
+                      {[
+                        '/productos/radar de pareja/videos/descarga - 2026-03-10T110453.071.jpg',
+                        '/productos/radar de pareja/videos/descarga - 2026-03-10T110632.365.jpg',
+                        '/productos/radar de pareja/videos/descarga - 2026-03-10T110652.870.jpg',
+                        '/productos/radar de pareja/videos/descarga - 2026-03-10T115325.221.jpg'
+                      ].map((src, i) => (
+                        <div key={i} className="aspect-[16/9] rounded-lg overflow-hidden border border-white/[0.06]">
+                          <img src={src} alt="" className="w-full h-full object-cover opacity-60 hover:opacity-80 transition-opacity" loading="lazy" />
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                  {/* Complementary images — mobile 2×2 */}
+                  <div className="order-3 lg:hidden grid grid-cols-2 gap-2">
+                    {[
+                      '/productos/radar de pareja/videos/descarga - 2026-03-10T110453.071.jpg',
+                      '/productos/radar de pareja/videos/descarga - 2026-03-10T110632.365.jpg',
+                      '/productos/radar de pareja/videos/descarga - 2026-03-10T110652.870.jpg',
+                      '/productos/radar de pareja/videos/descarga - 2026-03-10T115325.221.jpg'
+                    ].map((src, i) => (
+                      <div key={i} className="aspect-[16/9] rounded-lg overflow-hidden border border-white/[0.06]">
+                        <img src={src} alt="" className="w-full h-full object-cover opacity-60" loading="lazy" />
+                      </div>
+                    ))}
                   </div>
+                </div>
+              </div>
+            </section>
 
-                  <div className="px-6 lg:px-8 py-6 space-y-6">
-                    {/* Row: Radar + Core scores */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      {/* Radar */}
-                      <div className="p-5 rounded-xl border border-white/[0.05] bg-white/[0.01]">
-                        <p className="text-white/35 text-xs uppercase tracking-wider mb-3">Radar relacional</p>
-                        <svg viewBox="0 0 200 200" className="w-full max-w-[200px] mx-auto">
-                          {[20, 40, 60, 80, 100].map(l => (
-                            <circle key={l} cx={100} cy={100} r={l * 0.8} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth={0.5} />
-                          ))}
-                          {[0, 1, 2, 3, 4, 5].map(i => {
-                            const angle = (Math.PI * 2 * i) / 6 - Math.PI / 2
-                            return <line key={i} x1={100} y1={100} x2={100 + 80 * Math.cos(angle)} y2={100 + 80 * Math.sin(angle)} stroke="rgba(255,255,255,0.05)" strokeWidth={0.5} />
-                          })}
-                          <polygon points="148,58 140,125 108,155 58,148 60,95 92,55" fill="rgba(139,92,246,0.12)" stroke="rgba(139,92,246,0.35)" strokeWidth={1} />
-                          {[
-                            [148, 58], [140, 125], [108, 155], [58, 148], [60, 95], [92, 55]
-                          ].map(([x, y], i) => (
-                            <circle key={i} cx={x} cy={y} r={2.5} fill={RADAR_COLORS[i]} />
-                          ))}
-                          {[
-                            { label: 'Sincronía', x: 155, y: 48 },
-                            { label: 'Comunicación', x: 162, y: 130 },
-                            { label: 'Seguridad', x: 108, y: 172 },
-                            { label: 'Conflicto', x: 38, y: 160 },
-                            { label: 'Balance', x: 30, y: 88 },
-                            { label: 'Apoyo', x: 82, y: 42 }
-                          ].map((l, i) => (
-                            <text key={i} x={l.x} y={l.y} textAnchor="middle" fill={RADAR_COLORS[i]} className="text-[8px] font-light" fillOpacity={0.8}>{l.label}</text>
-                          ))}
-                        </svg>
+            {/* Section separator */}
+            <div className="relative z-10 py-8 lg:py-12">
+              <div className="max-w-6xl mx-auto px-6 lg:px-12">
+                <div className="h-px bg-gradient-to-r from-transparent via-violet-500/15 to-transparent" />
+              </div>
+            </div>
+
+            <div className="relative z-10 px-6 lg:px-12">
+              <div className="max-w-6xl mx-auto space-y-24 lg:space-y-32">
+
+              {/* ═══════════════════════════════════════════════════════
+                  SECTION 1: LAS 12 DIMENSIONES PSICOLÓGICAS
+              ═══════════════════════════════════════════════════════ */}
+              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                {/* Intro */}
+                <div className="text-center mb-12">
+                  <p className="text-white/50 text-sm uppercase tracking-[0.2em] mb-3">Nuestro sistema de análisis</p>
+                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-white/90 mb-5 leading-snug">
+                    Las 12 dimensiones psicológicas<br />que analizamos en tu relación
+                  </h2>
+                  <p className="text-white/60 text-lg font-light max-w-2xl mx-auto leading-relaxed">
+                    La mayoría de las parejas <strong className="text-white/80 font-medium">nunca logra ver estos patrones</strong> hasta que el problema ya es evidente. Este análisis permite <strong className="text-white/80 font-medium">identificarlos antes</strong>.
+                  </p>
+                </div>
+
+                {/* Top photos — 3 horizontal images */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-12">
+                  {[
+                    '/productos/radar de pareja/imagenes 12 psicologos/1a338099-8fd4-47e8-a4a5-086b916fd2a2.jpg',
+                    '/productos/radar de pareja/imagenes 12 psicologos/2c970695-4438-4cc2-9a03-8086654f7008.jpg',
+                    '/productos/radar de pareja/imagenes 12 psicologos/374629a4-00e3-40ba-8898-83748eab483e.jpg'
+                  ].map((src, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                      className="aspect-[16/9] sm:aspect-[16/9] rounded-xl overflow-hidden border border-white/[0.06] max-h-48 sm:max-h-none">
+                      <img src={src} alt="" className="w-full h-full object-cover opacity-70 hover:opacity-85 transition-opacity" loading="lazy" />
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Algorithm quote — prominent */}
+                <div className="max-w-4xl mx-auto mb-14">
+                  <div className="p-8 lg:p-10 rounded-2xl border border-violet-500/15 bg-gradient-to-br from-violet-500/[0.05] to-fuchsia-500/[0.02] relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/30 via-fuchsia-500/20 to-transparent" />
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0">
+                        <Brain className="w-6 h-6 text-violet-400/60" strokeWidth={1.5} />
                       </div>
-
-                      {/* Core scores + profile bars */}
-                      <div className="space-y-4">
-                        <div className="p-5 rounded-xl border border-white/[0.05] bg-white/[0.01]">
-                          <p className="text-white/35 text-xs uppercase tracking-wider mb-3">Indicadores principales</p>
-                          <div className="space-y-3">
-                            {[
-                              { label: 'Compatibilidad emocional', val: 42, color: 'from-red-500 to-orange-400' },
-                              { label: 'Estabilidad relacional', val: 38, color: 'from-red-500 to-orange-400' },
-                              { label: 'Riesgo de erosión', val: 71, color: 'from-red-500 to-orange-400' },
-                              { label: 'Potencial de reconexión', val: 58, color: 'from-amber-500 to-yellow-400' }
-                            ].map((s, i) => (
-                              <div key={i}>
-                                <div className="flex justify-between text-sm mb-1">
-                                  <span className="text-white/45 font-light">{s.label}</span>
-                                  <span className="text-white/35 font-light tabular-nums">{s.val}%</span>
-                                </div>
-                                <div className="h-2 bg-white/[0.04] rounded-full overflow-hidden">
-                                  <div className={`h-full bg-gradient-to-r ${s.color} rounded-full opacity-60`} style={{ width: `${s.val}%` }} />
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="p-5 rounded-xl border border-white/[0.05] bg-white/[0.01]">
-                          <p className="text-white/35 text-xs uppercase tracking-wider mb-3">Perfil emocional</p>
-                          <div className="space-y-2.5">
-                            {[
-                              { label: 'Distancia acumulada', val: 74 },
-                              { label: 'Dependencia emocional', val: 62 },
-                              { label: 'Nivel de fricción', val: 68 },
-                              { label: 'Capacidad de reparación', val: 35 }
-                            ].map((s, i) => (
-                              <div key={i} className="flex items-center gap-3">
-                                <span className="text-white/40 text-sm font-light w-44 flex-shrink-0">{s.label}</span>
-                                <div className="flex-1 h-1.5 bg-white/[0.04] rounded-full overflow-hidden">
-                                  <div className="h-full bg-gradient-to-r from-violet-500/50 to-fuchsia-500/50 rounded-full" style={{ width: `${s.val}%` }} />
-                                </div>
-                                <span className="text-white/30 text-sm font-light tabular-nums w-10 text-right">{s.val}%</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Simulated insight cards */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div className="p-5 rounded-xl border border-rose-500/10 bg-rose-500/[0.02]">
-                        <p className="text-rose-300/55 text-xs uppercase tracking-wider mb-2">Ciclo dominante detectado</p>
-                        <p className="text-white/60 text-base font-light leading-relaxed">
-                          Persecución — Retirada: Uno busca cercanía mientras el otro se aleja. Cuanto más insiste uno, más se cierra el otro.
+                      <div>
+                        <p className="text-white/35 text-xs uppercase tracking-[0.2em] mb-3">Cómo funciona</p>
+                        <p className="text-white/70 text-lg lg:text-xl font-light leading-relaxed">
+                          "Nuestro algoritmo correlaciona los <strong className="text-white/90 font-medium">12 modelos psicológicos más influyentes</strong> en el estudio del amor, analizando múltiples dimensiones del vínculo para revelar <strong className="text-white/90 font-medium">patrones profundos</strong> que normalmente permanecen invisibles."
                         </p>
                       </div>
-                      <div className="p-5 rounded-xl border border-amber-500/10 bg-amber-500/[0.02]">
-                        <p className="text-amber-300/55 text-xs uppercase tracking-wider mb-2">Sensibilidad emocional activa</p>
-                        <p className="text-white/60 text-base font-light leading-relaxed">
-                          Miedo al abandono emocional: La percepción de distancia se vive como rechazo, activando hipervigilancia afectiva.
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Blurred narrative preview */}
-                    <div className="p-5 rounded-xl border border-white/[0.05] bg-white/[0.01]">
-                      <p className="text-white/35 text-xs uppercase tracking-wider mb-3">Análisis narrativo</p>
-                      <div className="space-y-2">
-                        <p className="text-white/55 text-base font-light leading-relaxed">
-                          Lo que tus respuestas revelan es un patrón donde la <strong className="text-white/70 font-medium">necesidad de cercanía emocional</strong> choca con un <strong className="text-white/70 font-medium">mecanismo de protección</strong> que se activa automáticamente ante la vulnerabilidad…
-                        </p>
-                        <p className="text-white/15 text-base font-light leading-relaxed blur-[4px] select-none">
-                          Este ciclo genera una dinámica de aproximación y alejamiento que erosiona la seguridad emocional del vínculo. Cuando uno de los dos se acerca, el otro interpreta esa cercanía como una amenaza a su autonomía y se retrae, lo cual confirma el miedo original de abandono.
-                        </p>
-                      </div>
-                      <p className="text-violet-300/35 text-sm font-light mt-3 text-center">El análisis completo se genera a partir de tus respuestas</p>
                     </div>
                   </div>
                 </div>
-              </motion.div>
 
-              {/* ── ¿CÓMO FUNCIONA? — bigger professional cards ─────── */}
-              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                <p className="text-center text-white/40 text-sm uppercase tracking-[0.2em] mb-2">El proceso</p>
-                <h2 className="text-center text-2xl lg:text-3xl font-light text-white/70 mb-10">Así funciona el diagnóstico</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+                {/* 12 Psychologists table — with icons & bigger text */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {[
-                    { icon: Volume2, num: '1', title: 'Escuchas', desc: 'Cada pregunta se lee en voz alta. Solo relájate y escucha.' },
-                    { icon: Mic, num: '2', title: 'Hablas', desc: 'Tu micrófono se activa automáticamente. Di lo que sientas, sin filtro.' },
-                    { icon: Brain, num: '3', title: 'Analizamos', desc: 'El sistema detecta patrones inconscientes cruzando tus 45 respuestas.' },
-                    { icon: BarChart3, num: '4', title: 'Tu reporte', desc: 'Radar emocional, barras de perfil, ciclos y análisis narrativo.' },
-                    { icon: Download, num: '5', title: 'Descargas', desc: 'PDF profesional que puedes conservar o llevar a terapia.' }
-                  ].map((step, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-                      className="p-6 rounded-2xl border border-white/[0.08] bg-white/[0.02] text-center hover:bg-white/[0.04] transition-colors">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-4">
-                        <span className="text-violet-400/70 text-base font-light">{step.num}</span>
+                    { name: '1. John Gottman', icon: Hourglass, desc: 'Detecta los patrones de interacción que predicen si una relación se fortalece o se deteriora con el tiempo.', color: 'border-rose-500/15 bg-rose-500/[0.03]', nameColor: 'text-rose-300/75', iconColor: 'text-rose-400/50' },
+                    { name: '2. Sue Johnson', icon: HeartHandshake, desc: 'Analiza el nivel real de conexión emocional y seguridad afectiva entre ambos.', color: 'border-blue-500/15 bg-blue-500/[0.03]', nameColor: 'text-blue-300/75', iconColor: 'text-blue-400/50' },
+                    { name: '3. Esther Perel', icon: Flame, desc: 'Evalúa el equilibrio entre cercanía, deseo y autonomía dentro de la relación.', color: 'border-amber-500/15 bg-amber-500/[0.03]', nameColor: 'text-amber-300/75', iconColor: 'text-amber-400/50' },
+                    { name: '4. Amir Levine', icon: Link2, desc: 'Identifica los estilos de apego que influyen en cómo cada uno ama, se acerca o se distancia.', color: 'border-emerald-500/15 bg-emerald-500/[0.03]', nameColor: 'text-emerald-300/75', iconColor: 'text-emerald-400/50' },
+                    { name: '5. Harville Hendrix', icon: Fingerprint, desc: 'Explora cómo las heridas emocionales del pasado influyen en la elección de pareja.', color: 'border-purple-500/15 bg-purple-500/[0.03]', nameColor: 'text-purple-300/75', iconColor: 'text-purple-400/50' },
+                    { name: '6. Stan Tatkin', icon: Puzzle, desc: 'Analiza el grado de sincronía emocional y cooperación dentro del vínculo.', color: 'border-cyan-500/15 bg-cyan-500/[0.03]', nameColor: 'text-cyan-300/75', iconColor: 'text-cyan-400/50' },
+                    { name: '7. Gary Chapman', icon: MessageSquare, desc: 'Identifica cómo cada persona expresa y necesita recibir amor.', color: 'border-pink-500/15 bg-pink-500/[0.03]', nameColor: 'text-pink-300/75', iconColor: 'text-pink-400/50' },
+                    { name: '8. Robert Sternberg', icon: Triangle, desc: 'Evalúa el equilibrio entre intimidad, pasión y compromiso.', color: 'border-red-500/15 bg-red-500/[0.03]', nameColor: 'text-red-300/75', iconColor: 'text-red-400/50' },
+                    { name: '9. David Schnarch', icon: ScanEye, desc: 'Analiza el nivel de madurez emocional y diferenciación dentro de la pareja.', color: 'border-teal-500/15 bg-teal-500/[0.03]', nameColor: 'text-teal-300/75', iconColor: 'text-teal-400/50' },
+                    { name: '10. Helen Fisher', icon: Magnet, desc: 'Explora los patrones biológicos y emocionales que influyen en la atracción.', color: 'border-orange-500/15 bg-orange-500/[0.03]', nameColor: 'text-orange-300/75', iconColor: 'text-orange-400/50' },
+                    { name: '11. Terrence Real', icon: Scale, desc: 'Detecta dinámicas de poder y conflictos emocionales no resueltos.', color: 'border-violet-500/15 bg-violet-500/[0.03]', nameColor: 'text-violet-300/75', iconColor: 'text-violet-400/50' },
+                    { name: '12. Sue Carter', icon: Dna, desc: 'Analiza los mecanismos neurobiológicos que sostienen el vínculo afectivo.', color: 'border-fuchsia-500/15 bg-fuchsia-500/[0.03]', nameColor: 'text-fuchsia-300/75', iconColor: 'text-fuchsia-400/50' }
+                  ].map((p, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }} transition={{ delay: i * 0.04 }}
+                      className={`rounded-xl border ${p.color} hover:bg-white/[0.04] transition-colors overflow-hidden`}>
+                      <div className={`px-5 py-3 flex items-center justify-center sm:justify-start gap-3 border-b ${p.color.split(' ')[0]}`} style={{ background: `linear-gradient(135deg, ${p.color.includes('rose') ? 'rgba(244,63,94,0.06)' : p.color.includes('blue') ? 'rgba(59,130,246,0.06)' : p.color.includes('amber') ? 'rgba(245,158,11,0.06)' : p.color.includes('emerald') ? 'rgba(16,185,129,0.06)' : p.color.includes('purple') ? 'rgba(168,85,247,0.06)' : p.color.includes('cyan') ? 'rgba(6,182,212,0.06)' : p.color.includes('pink') ? 'rgba(236,72,153,0.06)' : p.color.includes('red') ? 'rgba(239,68,68,0.06)' : p.color.includes('teal') ? 'rgba(20,184,166,0.06)' : p.color.includes('orange') ? 'rgba(249,115,22,0.06)' : p.color.includes('violet') ? 'rgba(139,92,246,0.06)' : 'rgba(217,70,239,0.06)'}, transparent)` }}>
+                        <div className="w-8 h-8 rounded-lg bg-white/[0.06] border border-white/[0.08] flex items-center justify-center flex-shrink-0">
+                          <p.icon className={`w-4 h-4 ${p.iconColor}`} strokeWidth={1.5} />
+                        </div>
+                        <p className={`${p.nameColor} text-base font-medium`}>{p.name}</p>
                       </div>
-                      <step.icon className="w-7 h-7 text-violet-400/50 mx-auto mb-3" strokeWidth={1.5} />
-                      <h3 className="text-white/80 text-base font-light mb-2">{step.title}</h3>
-                      <p className="text-white/40 text-sm font-light leading-relaxed">{step.desc}</p>
+                      <div className="px-5 py-4">
+                        <p className="text-white/60 text-base font-light leading-relaxed text-center sm:text-left">{p.desc}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Closing statement — emphasized */}
+                <div className="mt-14 mb-14">
+                  <div className="max-w-3xl mx-auto text-center">
+                    <div className="h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent mb-8" />
+                    <p className="text-white/70 text-xl lg:text-2xl font-light leading-relaxed">
+                      Cuando estas dimensiones se analizan juntas, es posible ver<br className="hidden sm:inline" /> <strong className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400 font-medium">la arquitectura real de una relación.</strong>
+                    </p>
+                    <div className="h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent mt-8" />
+                  </div>
+                </div>
+
+                {/* Bottom photos — 4 horizontal images */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                  {[
+                    '/productos/radar de pareja/imagenes 12 psicologos/1eedb718-c8fe-4cbc-a33a-10cecad714fe.jpg',
+                    '/productos/radar de pareja/imagenes 12 psicologos/descarga - 2026-03-10T121820.168.jpg',
+                    '/productos/radar de pareja/imagenes 12 psicologos/f101da9f-0f74-4afc-bc07-2ae275384bbd.jpg',
+                    '/productos/radar de pareja/imagenes 12 psicologos/fada3a35-4083-451d-939f-bf6f60a721d4.jpg'
+                  ].map((src, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                      className="aspect-[16/9] rounded-xl overflow-hidden border border-white/[0.06]">
+                      <img src={src} alt="" className="w-full h-full object-cover opacity-65 hover:opacity-85 transition-opacity" loading="lazy" />
                     </motion.div>
                   ))}
                 </div>
               </motion.div>
 
-              {/* ── FASES — stronger copy + image ─────────────────────── */}
+              {/* ═══════════════════════════════════════════════════════
+                  SECTION 2: QUIÉN ESTÁ DETRÁS — Luis Virrueta (Autoridad)
+              ═══════════════════════════════════════════════════════ */}
               <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div>
-                  <p className="text-white/40 text-sm uppercase tracking-[0.2em] mb-2">Las 8 dimensiones</p>
-                  <h2 className="text-2xl lg:text-3xl font-light text-white/80 mb-3 leading-snug">No dejamos nada sin explorar</h2>
-                  <p className="text-white/35 text-base font-light mb-8 leading-relaxed">Cada fase está diseñada para activar una capa diferente de tu relación — desde lo que proyectas hacia afuera hasta lo que heredaste de tu familia.</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {[
-                      { emoji: '🪞', name: 'Percepción', desc: 'Cómo te ves, cómo ves a tu pareja y qué no coincide' },
-                      { emoji: '💗', name: 'Emociones', desc: 'Qué sientes cuando están bien — y cuando todo se tensa' },
-                      { emoji: '📖', name: 'Narrativa', desc: 'La historia que te cuentas sobre tu relación' },
-                      { emoji: '⚡', name: 'Conflicto', desc: 'Cómo pelean, qué se activa y qué queda sin resolver' },
-                      { emoji: '🔮', name: 'Inconsciente', desc: 'Lo que no dices, lo que proyectas y lo que evitas' },
-                      { emoji: '🏠', name: 'Familia de origen', desc: 'Lo que aprendiste del amor en tu casa y lo que repites hoy' },
-                      { emoji: '🔥', name: 'Intimidad', desc: 'Conexión física, deseo y vulnerabilidad sexual' },
-                      { emoji: '🌊', name: 'Estructura', desc: 'Las bases del vínculo: qué lo sostiene o lo erosiona' }
-                    ].map((s, i) => (
-                      <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }} transition={{ delay: i * 0.06 }}
-                        className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/15 flex items-center justify-center flex-shrink-0">
-                            <span className="text-base">{s.emoji}</span>
-                          </div>
-                          <h4 className="text-white/70 text-sm font-medium">{s.name}</h4>
-                        </div>
-                        <p className="text-white/40 text-sm font-light leading-snug pl-12">{s.desc}</p>
-                      </motion.div>
-                    ))}
+                className="relative">
+                <div className="p-8 lg:p-12 rounded-2xl border border-white/[0.08] bg-gradient-to-br from-violet-500/[0.03] to-transparent relative overflow-hidden">
+                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/30 via-fuchsia-500/30 to-pink-500/30" />
+                  <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-8 lg:gap-12 items-center">
+                    <div className="mx-auto lg:mx-0">
+                      <div className="w-48 h-48 lg:w-56 lg:h-56 rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-violet-900/20">
+                        <img src="/luxmania perfil.webp" alt="Luis Virrueta — Psicólogo clínico" className="w-full h-full object-cover" loading="lazy" />
+                      </div>
+                    </div>
+                    <div className="text-center lg:text-left">
+                      <p className="text-white/40 text-sm uppercase tracking-[0.2em] mb-2">El creador</p>
+                      <h2 className="text-2xl lg:text-3xl font-light text-white mb-2">Luis Virrueta</h2>
+                      <p className="text-violet-300/60 text-sm font-light tracking-wider uppercase mb-5">Psicólogo · Psicoanalista · Filósofo</p>
+                      <p className="text-white/65 text-base font-light leading-relaxed mb-5">
+                        <Target className="inline w-4 h-4 text-violet-400/60 mr-1 -mt-0.5" strokeWidth={1.5} />
+                        Después de más de 10 años trabajando con parejas, diseñé un sistema que analiza tu relación desde la perspectiva de <strong className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-fuchsia-300 font-medium">los 12 psicólogos más influyentes del mundo en relaciones de pareja</strong>. Los cuestionarios convencionales miden síntomas — este <em className="text-white/80">encuentra las causas</em>.
+                      </p>
+                      <p className="text-white/55 text-base font-light leading-relaxed mb-6">
+                        <Eye className="inline w-4 h-4 text-fuchsia-400/60 mr-1 -mt-0.5" strokeWidth={1.5} />
+                        El sistema cruza tus respuestas con las teorías de <strong className="text-white/70 font-medium">Bowlby</strong> (apego), <strong className="text-white/70 font-medium">Gottman</strong> (conflicto), <strong className="text-white/70 font-medium">Sternberg</strong> (amor), <strong className="text-white/70 font-medium">Perel</strong> (deseo), <strong className="text-white/70 font-medium">Johnson</strong> (conexión emocional) y <strong className="text-white/70 font-medium">7 especialistas más</strong> — <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-300 font-medium">los referentes que realmente explican cómo funcionan las relaciones humanas</span>. No existe otro diagnóstico que haga esto.
+                      </p>
+                      <div className="flex flex-wrap justify-center lg:justify-start gap-3">
+                        {[
+                          { icon: Brain, text: 'Método AION©' },
+                          { icon: Users, text: '12 psicólogos referentes' },
+                          { icon: Activity, text: '12 dimensiones simultáneas' }
+                        ].map((tag, i) => (
+                          <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-violet-500/15 bg-violet-500/[0.06] text-violet-300/60 text-xs font-light">
+                            <tag.icon className="w-3 h-3" strokeWidth={1.5} />
+                            {tag.text}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="hidden lg:block">
-                  <img src="/TEST PAREJA/IMAGEN (10).jpg" alt="Fases del test" className="w-full rounded-2xl object-cover aspect-[4/5] opacity-80 shadow-2xl shadow-black/30" loading="lazy" />
                 </div>
               </motion.div>
 
-              {/* ── TESTIMONIALS — professional, with face avatars ── */}
+              {/* CTA after Luis section */}
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                className="text-center">
+                <motion.button
+                  onClick={() => { setStage('checkout'); scrollToTop() }}
+                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                  className="px-8 sm:px-10 py-4 sm:py-5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base sm:text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20 whitespace-nowrap">
+                  Comenzar mi radiografía <ArrowRight className="inline w-5 h-5 ml-1.5" />
+                </motion.button>
+                <p className="text-white/30 text-xs font-light mt-3">44 preguntas · 12 dimensiones · Reporte descargable</p>
+              </motion.div>
+
+              {/* ═══════════════════════════════════════════════════════
+                  SECTION 3: TESTIMONIOS
+              ═══════════════════════════════════════════════════════ */}
               <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                <p className="text-center text-white/40 text-sm uppercase tracking-[0.2em] mb-2">Testimonios</p>
-                <h2 className="text-center text-2xl lg:text-3xl font-light text-white/70 mb-10">Lo que dicen quienes ya lo vivieron</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div className="text-center mb-10">
+                  <p className="text-white/50 text-sm uppercase tracking-[0.2em] mb-2">Testimonios</p>
+                  <h2 className="text-2xl lg:text-3xl font-light text-white/80 mb-4">Lo que dicen quienes ya lo vivieron</h2>
+                  <p className="text-white/50 text-base font-light max-w-2xl mx-auto leading-relaxed">
+                    Miles de parejas descubren cada día patrones que nunca habían logrado ver por sí mismas.<br />
+                    Después del análisis, muchas deciden tomar una consulta de pareja para trabajar de forma más clara en los problemas que el diagnóstico revela.
+                  </p>
+                </div>
+                <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {[
-                    { name: 'Mariana L.', age: '32 años', rating: 5, text: 'Me hizo ver cosas que llevaba años evitando. Cuando vi el radar de compatibilidad fue como un espejo — todo encajaba. Terminé llorando pero sobre todo entendiendo por qué repito los mismos patrones. Lo llevé a mi siguiente sesión de terapia y fue muy útil para profundizar.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face' },
-                    { name: 'Carlos & Andrea', age: '5 años juntos', rating: 5, text: 'Lo hicimos los dos por separado y luego comparamos reportes. Fue increíble ver las diferencias — lo que yo pensaba que estaba bien, para ella era un problema. Después tomamos una sesión con el psicólogo para que nos ayudara a interpretar todo y fue de las mejores decisiones que hemos tomado juntos.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face' },
-                    { name: 'Sofía R.', age: '28 años', rating: 5, text: 'No pensé que hablar por micrófono fuera a ser tan diferente a escribir. Cuando hablas van saliendo cosas que no tenías planeado decir. Las gráficas y el análisis son impresionantes — se siente como si un psicólogo te hubiera escuchado durante horas.', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face' },
-                    { name: 'Roberto M.', age: '41 años', rating: 5, text: 'Lo que más me impactó fue ver el patrón de "persecución-retirada" que detectó. Es exactamente lo que hago: yo busco y ella se aleja, y mientras más busco, más se cierra. Nunca nadie me lo había explicado así de claro. Ahora estamos trabajándolo juntos en terapia de pareja.', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face' },
-                    { name: 'Daniela & Jorge', age: '8 años juntos', rating: 5, text: 'Llevamos 8 años juntos y esto nos reveló dinámicas que ni en terapia habíamos nombrado. El psicólogo usó nuestros reportes como punto de partida para las sesiones y dijo que era el diagnóstico inicial más completo que había visto. Totalmente vale la inversión — especialmente el paquete de pareja.', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face' },
-                    { name: 'Valentina G.', age: '35 años', rating: 5, text: 'Lo hice sola porque mi pareja no quería. Aun así, el test detectó perfectamente la dinámica entre los dos. Me ayudó a entender mi parte del problema — que yo también contribuyo al ciclo. Después convencí a mi esposo de que lo hiciera y fue un antes y un después.', avatar: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=100&h=100&fit=crop&crop=face' },
-                    { name: 'Alejandro P.', age: '38 años', rating: 5, text: 'Yo era escéptico — pensé que era otro cuestionario de internet. Pero cuando vi mi reporte y leí "distancia acumulada: 74%" sentí un golpe en el estómago porque es exactamente lo que llevo sintiendo. Es como una radiografía emocional. Lo recomiendo a cualquier hombre que sienta que algo no está bien.', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face' },
-                    { name: 'Laura & Miguel', age: '3 años juntos', rating: 5, text: 'Hicimos el test una noche cada uno y al día siguiente fuimos a sesión con Luis. Fue de las experiencias más intensas que hemos tenido — por fin pudimos hablar de cosas que teníamos atoradas desde hace meses. El test abre puertas que no sabías que existían.', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face' },
-                    { name: 'Fernanda D.', age: '29 años', rating: 5, text: 'Me encantó que cita tus propias palabras en el análisis. Lees algo y dices "sí, yo dije eso" — pero lo conecta con un patrón más grande que no veías. Es como tener un espejo psicológico. Ya se lo recomendé a tres amigas que están pasando por situaciones similares.', avatar: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&h=100&fit=crop&crop=face' }
+                    { name: 'Laura y Andrés', initials: 'LA', detail: '8 años juntos', bg: 'from-pink-500/30 to-rose-500/20', text: 'Sentíamos que algo no estaba bien, pero no lográbamos entender qué estaba pasando entre nosotros.\nLa radiografía de pareja nos mostró patrones que nunca habíamos logrado ver por nuestra cuenta.\nDespués del análisis tomamos una consulta de pareja y fue mucho más fácil empezar a reparar lo que se había ido desgastando.' },
+                    { name: 'Mariana', initials: 'M', detail: '34 años', bg: 'from-violet-500/30 to-purple-500/20', text: 'Siempre discutíamos por lo mismo y pensábamos que era por cosas pequeñas.\nEl análisis reveló dinámicas emocionales que ninguno de los dos había notado.\nEso cambió completamente la forma en que empezamos a hablar de nuestra relación.' },
+                    { name: 'Carlos y Daniela', initials: 'CD', detail: '5 años juntos', bg: 'from-blue-500/30 to-cyan-500/20', text: 'Nos sorprendió lo preciso que fue el análisis.\nDetectó patrones que llevábamos años repitiendo sin darnos cuenta.\nDespués de ver los resultados decidimos tomar una sesión de pareja y nos ayudó muchísimo a entendernos mejor.' },
+                    { name: 'Andrea', initials: 'A', detail: '29 años', bg: 'from-amber-500/30 to-orange-500/20', text: 'Sentía que la relación estaba cambiando, pero no sabía explicar por qué.\nLa radiografía de pareja me ayudó a entender lo que realmente estaba pasando entre nosotros.\nFue como ver el mapa emocional de la relación por primera vez.' },
+                    { name: 'Javier y Paula', initials: 'JP', detail: '11 años juntos', bg: 'from-emerald-500/30 to-teal-500/20', text: 'Pensábamos que nuestra relación estaba bien, pero el análisis reveló pequeñas dinámicas que estaban generando distancia emocional.\nDetectarlo a tiempo nos permitió trabajar en ello antes de que se volviera un problema más grande.' },
+                    { name: 'Sofía', initials: 'S', detail: '31 años', bg: 'from-fuchsia-500/30 to-pink-500/20', text: 'El análisis mostró cosas que yo intuía, pero que nunca había podido poner en palabras.\nEntender esos patrones cambió completamente la manera en que veo mi relación.' }
                   ].map((t, i) => (
                     <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }} transition={{ delay: i * 0.06 }}
                       className="p-6 rounded-2xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
-                      <div className="flex items-center gap-3 mb-4">
-                        <img src={t.avatar} alt={t.name} className="w-11 h-11 rounded-full object-cover ring-2 ring-violet-500/20" loading="lazy" />
-                        <div>
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${t.bg} flex items-center justify-center`}>
+                          <span className="text-white/80 text-xs font-medium">{t.initials}</span>
+                        </div>
+                        <div className="text-center sm:text-left">
                           <p className="text-white/75 text-sm font-medium">{t.name}</p>
-                          <div className="flex items-center gap-2">
-                            <div className="flex gap-0.5">
-                              {Array.from({ length: t.rating }).map((_, j) => (
-                                <Star key={j} className="w-3 h-3 text-amber-400/80 fill-amber-400/80" />
-                              ))}
-                            </div>
-                            <span className="text-white/25 text-xs font-light">{t.age}</span>
-                          </div>
+                          <span className="text-white/25 text-xs font-light">{t.detail}</span>
                         </div>
                       </div>
-                      <p className="text-white/50 text-sm font-light leading-relaxed">"{t.text}"</p>
+                      <div className="flex justify-center sm:justify-start gap-0.5 mb-3">
+                        {Array.from({ length: 5 }).map((_, j) => (
+                          <Star key={j} className="w-3.5 h-3.5 text-amber-400/80 fill-amber-400/80" />
+                        ))}
+                      </div>
+                      <p className="text-white/55 text-sm font-light leading-relaxed whitespace-pre-line text-center sm:text-left">"{t.text}"</p>
                     </motion.div>
                   ))}
                 </div>
+                {/* Mobile: swipeable carousel with arrows + dots */}
+                <div className="sm:hidden">
+                  <div className="relative">
+                    {testimonialIdx > 0 && (
+                      <button
+                        onClick={() => {
+                          const next = testimonialIdx - 1
+                          setTestimonialIdx(next)
+                          if (testimonialRef.current) {
+                            testimonialRef.current.scrollTo({ left: next * (testimonialRef.current.scrollWidth / 6), behavior: 'smooth' })
+                          }
+                        }}
+                        className="absolute left-1 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-black/60 border border-white/20 text-white backdrop-blur-sm shadow-lg"
+                      >
+                        <ChevronLeft className="w-4 h-4" strokeWidth={2} />
+                      </button>
+                    )}
+                    {testimonialIdx < 5 && (
+                      <button
+                        onClick={() => {
+                          const next = testimonialIdx + 1
+                          setTestimonialIdx(next)
+                          if (testimonialRef.current) {
+                            testimonialRef.current.scrollTo({ left: next * (testimonialRef.current.scrollWidth / 6), behavior: 'smooth' })
+                          }
+                        }}
+                        className="absolute right-1 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-black/60 border border-white/20 text-white backdrop-blur-sm shadow-lg"
+                      >
+                        <ChevronRight className="w-4 h-4" strokeWidth={2} />
+                      </button>
+                    )}
+                    <div
+                      ref={testimonialRef}
+                      onScroll={(e) => {
+                        const el = e.currentTarget
+                        setTestimonialIdx(Math.min(5, Math.round(el.scrollLeft / (el.scrollWidth / 6))))
+                      }}
+                      className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mx-2 px-2 scrollbar-hide"
+                      style={{ WebkitOverflowScrolling: 'touch' }}
+                    >
+                      {[
+                        { name: 'Laura y Andrés', initials: 'LA', detail: '8 años juntos', bg: 'from-pink-500/30 to-rose-500/20', text: 'Sentíamos que algo no estaba bien, pero no lográbamos entender qué estaba pasando entre nosotros.\nLa radiografía de pareja nos mostró patrones que nunca habíamos logrado ver por nuestra cuenta.\nDespués del análisis tomamos una consulta de pareja y fue mucho más fácil empezar a reparar lo que se había ido desgastando.' },
+                        { name: 'Mariana', initials: 'M', detail: '34 años', bg: 'from-violet-500/30 to-purple-500/20', text: 'Siempre discutíamos por lo mismo y pensábamos que era por cosas pequeñas.\nEl análisis reveló dinámicas emocionales que ninguno de los dos había notado.\nEso cambió completamente la forma en que empezamos a hablar de nuestra relación.' },
+                        { name: 'Carlos y Daniela', initials: 'CD', detail: '5 años juntos', bg: 'from-blue-500/30 to-cyan-500/20', text: 'Nos sorprendió lo preciso que fue el análisis.\nDetectó patrones que llevábamos años repitiendo sin darnos cuenta.\nDespués de ver los resultados decidimos tomar una sesión de pareja y nos ayudó muchísimo a entendernos mejor.' },
+                        { name: 'Andrea', initials: 'A', detail: '29 años', bg: 'from-amber-500/30 to-orange-500/20', text: 'Sentía que la relación estaba cambiando, pero no sabía explicar por qué.\nLa radiografía de pareja me ayudó a entender lo que realmente estaba pasando entre nosotros.\nFue como ver el mapa emocional de la relación por primera vez.' },
+                        { name: 'Javier y Paula', initials: 'JP', detail: '11 años juntos', bg: 'from-emerald-500/30 to-teal-500/20', text: 'Pensábamos que nuestra relación estaba bien, pero el análisis reveló pequeñas dinámicas que estaban generando distancia emocional.\nDetectarlo a tiempo nos permitió trabajar en ello antes de que se volviera un problema más grande.' },
+                        { name: 'Sofía', initials: 'S', detail: '31 años', bg: 'from-fuchsia-500/30 to-pink-500/20', text: 'El análisis mostró cosas que yo intuía, pero que nunca había podido poner en palabras.\nEntender esos patrones cambió completamente la manera en que veo mi relación.' }
+                      ].map((t, i) => (
+                        <div key={i} className="flex-shrink-0 w-[85vw] snap-center p-6 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${t.bg} flex items-center justify-center`}>
+                              <span className="text-white/80 text-xs font-medium">{t.initials}</span>
+                            </div>
+                            <div className="text-left">
+                              <p className="text-white/75 text-sm font-medium">{t.name}</p>
+                              <span className="text-white/25 text-xs font-light">{t.detail}</span>
+                            </div>
+                          </div>
+                          <div className="flex justify-start gap-0.5 mb-3">
+                            {Array.from({ length: 5 }).map((_, j) => (
+                              <Star key={j} className="w-3.5 h-3.5 text-amber-400/80 fill-amber-400/80" />
+                            ))}
+                          </div>
+                          <p className="text-white/55 text-sm font-light leading-relaxed whitespace-pre-line text-left">"{t.text}"</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Dots */}
+                  <div className="flex justify-center gap-2 mt-3">
+                    {[0,1,2,3,4,5].map(i => (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          setTestimonialIdx(i)
+                          if (testimonialRef.current) {
+                            testimonialRef.current.scrollTo({ left: i * (testimonialRef.current.scrollWidth / 6), behavior: 'smooth' })
+                          }
+                        }}
+                        className={`rounded-full transition-all duration-300 ${
+                          i === testimonialIdx ? 'w-5 h-1.5 bg-violet-400' : 'w-1.5 h-1.5 bg-white/25'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-center text-white/45 text-base font-light italic mt-10 max-w-2xl mx-auto leading-relaxed">
+                  "A veces la diferencia entre una relación que se desgasta y una que se transforma es simplemente entender qué está pasando realmente."
+                </p>
               </motion.div>
 
-              {/* ── PRICING CTA ───────────────────────────── */}
+              {/* ═══════════════════════════════════════════════════════
+                  SECTION 4: CARRUSEL DEL REPORTE
+              ═══════════════════════════════════════════════════════ */}
+              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                <p className="text-center text-white/40 text-sm uppercase tracking-[0.2em] mb-2">Ejemplo de reporte real</p>
+                <h2 className="text-center text-2xl lg:text-3xl font-light text-white/70 mb-3">Cada dimensión de tu relación, <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-fuchsia-300">visualizada con precisión clínica</span></h2>
+                <p className="text-center text-white/40 text-base font-light mb-10 max-w-2xl mx-auto">Tu reporte incluye gráficos interactivos, análisis narrativo por dimensión y recomendaciones personalizadas. Desliza para explorar.</p>
+
+                <div className="relative max-w-3xl mx-auto">
+                  {/* Carousel container — PDF page style */}
+                  <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-zinc-950/80 backdrop-blur-sm shadow-2xl shadow-violet-900/10">
+
+                    <div className="relative" style={{ minHeight: '420px' }}>
+                      <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${carouselIdx * 100}%)` }}>
+
+                        {/* Page 1: Radar 12 dimensiones */}
+                        <div className="w-full flex-shrink-0">
+                          <div className="px-6 lg:px-8 pt-5 pb-3 border-b border-white/[0.06] flex items-center justify-between">
+                            <div><p className="text-white/25 text-[10px] uppercase tracking-[0.2em]">Diagnóstico Relacional · Página 1</p><p className="text-white/60 text-sm font-light mt-0.5">Radar de 12 dimensiones</p></div>
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-amber-500/20 bg-amber-500/[0.06]"><AlertTriangle className="w-3 h-3 text-amber-400/70" strokeWidth={1.5} /><span className="text-amber-300/60 text-[10px] font-light">Atención recomendada</span></div>
+                          </div>
+                          <div className="p-6 lg:p-8 flex flex-col items-center">
+                            <svg viewBox="0 0 260 260" className="w-full max-w-[240px] mx-auto mb-4">
+                              {[20, 40, 60, 80, 100].map(l => (<circle key={l} cx={130} cy={130} r={l * 0.95} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth={0.5} />))}
+                              {Array.from({ length: 12 }).map((_, i) => { const a = (Math.PI * 2 * i) / 12 - Math.PI / 2; return <line key={i} x1={130} y1={130} x2={130 + 95 * Math.cos(a)} y2={130 + 95 * Math.sin(a)} stroke="rgba(255,255,255,0.05)" strokeWidth={0.5} /> })}
+                              {(() => { const vals = [55,42,68,38,61,45,52,70,35,58,48,63]; const pts = vals.map((v,i) => { const a=(Math.PI*2*i)/12-Math.PI/2; const d=(v/100)*95; return `${130+d*Math.cos(a)},${130+d*Math.sin(a)}` }).join(' '); return <polygon points={pts} fill="rgba(139,92,246,0.10)" stroke="rgba(139,92,246,0.35)" strokeWidth={1} /> })()}
+                              {[55,42,68,38,61,45,52,70,35,58,48,63].map((v,i) => { const a=(Math.PI*2*i)/12-Math.PI/2; const d=(v/100)*95; return <circle key={i} cx={130+d*Math.cos(a)} cy={130+d*Math.sin(a)} r={2.5} fill={DIMENSION_COLORS[i]} /> })}
+                              {['Apego','Conflicto','Conexión','Amor','Patrones','Deseo','Diferenciación','Neuro','Regulación','Apego apl.','Lenguaje','Satisfacción'].map((label,i) => { const a=(Math.PI*2*i)/12-Math.PI/2; const r=115; return <text key={i} x={130+r*Math.cos(a)} y={130+r*Math.sin(a)} textAnchor="middle" dominantBaseline="middle" fill="rgba(255,255,255,0.25)" fontSize="6">{label}</text> })}
+                            </svg>
+                            <p className="text-white/40 text-sm font-light text-center">Tu relación desde 12 perspectivas psicológicas: Bowlby, Gottman, Sternberg y 9 más.</p>
+                          </div>
+                          <div className="px-6 lg:px-8 pb-4"><div className="h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" /><p className="text-white/15 text-[9px] font-light mt-2 text-center">Radiografía de Pareja · Luis Virrueta · Método AION©</p></div>
+                        </div>
+
+                        {/* Page 2: Triángulo de Sternberg */}
+                        <div className="w-full flex-shrink-0">
+                          <div className="px-6 lg:px-8 pt-5 pb-3 border-b border-white/[0.06] flex items-center justify-between">
+                            <div><p className="text-white/25 text-[10px] uppercase tracking-[0.2em]">Diagnóstico Relacional · Página 2</p><p className="text-white/60 text-sm font-light mt-0.5">Triángulo del amor (Sternberg)</p></div>
+                          </div>
+                          <div className="p-6 lg:p-8 flex flex-col items-center">
+                            <svg viewBox="0 0 260 240" className="w-full max-w-[240px] mx-auto mb-4">
+                              <polygon points="130,20 20,215 240,215" fill="rgba(99,102,241,0.04)" stroke="rgba(99,102,241,0.15)" strokeWidth={1} />
+                              <text x="130" y="14" textAnchor="middle" fill="rgba(96,165,250,0.7)" fontSize="9" fontWeight="300">Intimidad 62%</text>
+                              <text x="10" y="230" textAnchor="middle" fill="rgba(244,114,182,0.7)" fontSize="9" fontWeight="300">Pasión 45%</text>
+                              <text x="250" y="230" textAnchor="middle" fill="rgba(52,211,153,0.7)" fontSize="9" fontWeight="300">Compromiso 71%</text>
+                              <circle cx="148" cy="146" r="7" fill="rgba(99,102,241,0.5)" />
+                              <circle cx="148" cy="146" r="14" fill="none" stroke="rgba(99,102,241,0.2)" strokeWidth={0.5} />
+                              <text x="148" y="134" textAnchor="middle" fill="rgba(99,102,241,0.6)" fontSize="7">Tu posición</text>
+                            </svg>
+                            <div className="space-y-3 w-full max-w-sm">
+                              {[{label:'Pasión',val:45,color:'from-pink-500/50 to-rose-500/50'},{label:'Intimidad',val:62,color:'from-blue-500/50 to-indigo-500/50'},{label:'Compromiso',val:71,color:'from-emerald-500/50 to-green-500/50'}].map((s,i) => (
+                                <div key={i}>
+                                  <div className="flex justify-between text-sm mb-1"><span className="text-white/50 font-light">{s.label}</span><span className="text-white/35 font-light tabular-nums">{s.val}%</span></div>
+                                  <div className="h-2 bg-white/[0.04] rounded-full overflow-hidden"><div className={`h-full bg-gradient-to-r ${s.color} rounded-full`} style={{width:`${s.val}%`}} /></div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="px-6 lg:px-8 pb-4"><div className="h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" /><p className="text-white/15 text-[9px] font-light mt-2 text-center">Radiografía de Pareja · Luis Virrueta · Método AION©</p></div>
+                        </div>
+
+                        {/* Page 3: Los 4 jinetes de Gottman */}
+                        <div className="w-full flex-shrink-0">
+                          <div className="px-6 lg:px-8 pt-5 pb-3 border-b border-white/[0.06] flex items-center justify-between">
+                            <div><p className="text-white/25 text-[10px] uppercase tracking-[0.2em]">Diagnóstico Relacional · Página 3</p><p className="text-white/60 text-sm font-light mt-0.5">Los 4 jinetes del conflicto (Gottman)</p></div>
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-red-500/20 bg-red-500/[0.06]"><AlertTriangle className="w-3 h-3 text-red-400/70" strokeWidth={1.5} /><span className="text-red-300/60 text-[10px] font-light">Patrón detectado</span></div>
+                          </div>
+                          <div className="p-6 lg:p-8">
+                            <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto mb-4">
+                              {[{emoji:'🗡️',name:'Crítica / Desprecio',val:58,bad:true},{emoji:'🛡️',name:'Defensividad',val:52,bad:true},{emoji:'🧱',name:'Stonewalling',val:43,bad:true},{emoji:'🩹',name:'Reparación',val:35,bad:false}].map((h,i) => (
+                                <div key={i} className="p-3 rounded-xl border border-white/[0.06] bg-white/[0.02] text-center">
+                                  <span className="text-xl mb-1 block">{h.emoji}</span>
+                                  <p className="text-white/45 text-[11px] font-light mb-1">{h.name}</p>
+                                  <p className="text-white/70 text-lg font-light tabular-nums">{h.val}%</p>
+                                  <div className="h-1.5 bg-white/[0.04] rounded-full overflow-hidden mt-1.5">
+                                    <div className={`h-full rounded-full ${h.bad ? (h.val > 55 ? 'bg-red-500/60' : 'bg-amber-500/50') : (h.val < 40 ? 'bg-red-500/60' : 'bg-emerald-500/50')}`} style={{width:`${h.val}%`}} />
+                                  </div>
+                                  {h.bad && h.val > 55 && <p className="text-red-400/50 text-[10px] mt-1">⚠ Atención</p>}
+                                </div>
+                              ))}
+                            </div>
+                            <p className="text-white/35 text-xs font-light text-center">Los 4 jinetes predicen el deterioro relacional según Gottman.</p>
+                          </div>
+                          <div className="px-6 lg:px-8 pb-4"><div className="h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" /><p className="text-white/15 text-[9px] font-light mt-2 text-center">Radiografía de Pareja · Luis Virrueta · Método AION©</p></div>
+                        </div>
+
+                        {/* Page 4: Indicadores compuestos */}
+                        <div className="w-full flex-shrink-0">
+                          <div className="px-6 lg:px-8 pt-5 pb-3 border-b border-white/[0.06]"><p className="text-white/25 text-[10px] uppercase tracking-[0.2em]">Diagnóstico Relacional · Página 4</p><p className="text-white/60 text-sm font-light mt-0.5">Indicadores compuestos</p></div>
+                          <div className="p-6 lg:p-8">
+                            <div className="max-w-md mx-auto space-y-5">
+                              {[{label:'Salud relacional global',val:44,color:'from-red-500 to-orange-400',icon:'❤️',desc:'Basado en las 12 dimensiones combinadas'},{label:'Sincronía emocional',val:38,color:'from-red-500 to-orange-400',icon:'🔄',desc:'Conexión empática + co-regulación'},{label:'Riesgo de ruptura',val:67,color:'from-red-500 to-orange-400',icon:'⚠️',desc:'Predictores de Gottman + distancia acumulada'},{label:'Potencial de crecimiento',val:58,color:'from-amber-500 to-yellow-400',icon:'🌱',desc:'Fortalezas + disposición al cambio'}].map((s,i) => (
+                                <div key={i}>
+                                  <div className="flex justify-between text-sm mb-1"><span className="text-white/55 font-light"><span className="mr-1.5">{s.icon}</span>{s.label}</span><span className="text-white/40 font-light tabular-nums">{s.val}%</span></div>
+                                  <div className="h-2.5 bg-white/[0.04] rounded-full overflow-hidden"><div className={`h-full bg-gradient-to-r ${s.color} rounded-full opacity-60`} style={{width:`${s.val}%`}} /></div>
+                                  <p className="text-white/25 text-xs font-light mt-1">{s.desc}</p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="px-6 lg:px-8 pb-4"><div className="h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" /><p className="text-white/15 text-[9px] font-light mt-2 text-center">Radiografía de Pareja · Luis Virrueta · Método AION©</p></div>
+                        </div>
+
+                        {/* Page 5: Mapa de apego */}
+                        <div className="w-full flex-shrink-0">
+                          <div className="px-6 lg:px-8 pt-5 pb-3 border-b border-white/[0.06]"><p className="text-white/25 text-[10px] uppercase tracking-[0.2em]">Diagnóstico Relacional · Página 5</p><p className="text-white/60 text-sm font-light mt-0.5">Mapa de apego (Bowlby + Levine)</p></div>
+                          <div className="p-6 lg:p-8 flex flex-col items-center">
+                            <svg viewBox="0 0 220 220" className="w-full max-w-[210px] mx-auto mb-4">
+                              <rect x="111" y="111" width="98" height="98" rx="6" fill="rgba(96,165,250,0.04)" stroke="rgba(96,165,250,0.12)" strokeWidth={0.5} />
+                              <text x="160" y="164" textAnchor="middle" fill="rgba(96,165,250,0.35)" fontSize="9">Seguro</text>
+                              <rect x="11" y="111" width="98" height="98" rx="6" fill="rgba(52,211,153,0.04)" stroke="rgba(52,211,153,0.12)" strokeWidth={0.5} />
+                              <text x="60" y="164" textAnchor="middle" fill="rgba(52,211,153,0.35)" fontSize="9">Ansioso</text>
+                              <rect x="111" y="11" width="98" height="98" rx="6" fill="rgba(251,191,36,0.04)" stroke="rgba(251,191,36,0.08)" strokeWidth={0.5} />
+                              <text x="160" y="64" textAnchor="middle" fill="rgba(251,191,36,0.30)" fontSize="9">Evitativo</text>
+                              <rect x="11" y="11" width="98" height="98" rx="6" fill="rgba(239,68,68,0.03)" stroke="rgba(239,68,68,0.08)" strokeWidth={0.5} />
+                              <text x="60" y="64" textAnchor="middle" fill="rgba(239,68,68,0.25)" fontSize="9">Desorganizado</text>
+                              <line x1="110" y1="8" x2="110" y2="212" stroke="rgba(255,255,255,0.06)" strokeWidth={0.5} />
+                              <line x1="8" y1="110" x2="212" y2="110" stroke="rgba(255,255,255,0.06)" strokeWidth={0.5} />
+                              <text x="110" y="5" textAnchor="middle" fill="rgba(255,255,255,0.25)" fontSize="7">+ Evitación</text>
+                              <text x="110" y="220" textAnchor="middle" fill="rgba(255,255,255,0.25)" fontSize="7">− Evitación</text>
+                              <text x="5" y="113" fill="rgba(255,255,255,0.25)" fontSize="7" textAnchor="end" transform="rotate(-90,5,113)">+ Ansiedad</text>
+                              <text x="215" y="113" fill="rgba(255,255,255,0.25)" fontSize="7" textAnchor="start" transform="rotate(90,215,113)">− Ansiedad</text>
+                              <circle cx="46" cy="140" r="7" fill="rgba(139,92,246,0.6)" />
+                              <circle cx="46" cy="140" r="14" fill="none" stroke="rgba(139,92,246,0.2)" strokeWidth={0.5} />
+                            </svg>
+                            <div className="flex flex-wrap items-center justify-center gap-3 mb-2">
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-violet-500/20 bg-violet-500/[0.06] text-violet-300/70 text-xs font-light">Ansioso-preocupado</span>
+                            </div>
+                            <div className="space-y-1.5 max-w-xs w-full">
+                              {[{label:'Ansiedad',pct:68},{label:'Evitación',pct:35}].map((s,i) => (
+                                <div key={i} className="flex items-center gap-3">
+                                  <span className="text-white/40 text-xs font-light w-20 flex-shrink-0">{s.label}</span>
+                                  <div className="flex-1 h-1.5 bg-white/[0.04] rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-violet-500/50 to-fuchsia-500/50 rounded-full" style={{width:`${s.pct}%`}} /></div>
+                                  <span className="text-white/30 text-xs font-light tabular-nums w-8 text-right">{s.pct}%</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="px-6 lg:px-8 pb-4"><div className="h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" /><p className="text-white/15 text-[9px] font-light mt-2 text-center">Radiografía de Pareja · Luis Virrueta · Método AION©</p></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Carousel navigation arrows */}
+                  <button
+                    onClick={() => setCarouselIdx(i => Math.max(0, i - 1))}
+                    className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 lg:-translate-x-6 w-10 h-10 rounded-full border border-white/10 bg-black/60 backdrop-blur-sm flex items-center justify-center transition-opacity ${carouselIdx === 0 ? 'opacity-30 cursor-default' : 'hover:border-violet-500/30 hover:bg-violet-500/10'}`}
+                    disabled={carouselIdx === 0}>
+                    <ChevronLeft className="w-5 h-5 text-white/60" strokeWidth={1.5} />
+                  </button>
+                  <button
+                    onClick={() => setCarouselIdx(i => Math.min(4, i + 1))}
+                    className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 lg:translate-x-6 w-10 h-10 rounded-full border border-white/10 bg-black/60 backdrop-blur-sm flex items-center justify-center transition-opacity ${carouselIdx === 4 ? 'opacity-30 cursor-default' : 'hover:border-violet-500/30 hover:bg-violet-500/10'}`}
+                    disabled={carouselIdx === 4}>
+                    <ChevronRight className="w-5 h-5 text-white/60" strokeWidth={1.5} />
+                  </button>
+
+                  {/* Dot indicators */}
+                  <div className="flex justify-center gap-2 mt-4">
+                    {[0,1,2,3,4].map(i => (
+                      <button key={i} onClick={() => setCarouselIdx(i)}
+                        className={`w-2 h-2 rounded-full transition-all ${carouselIdx === i ? 'bg-violet-400/70 w-6' : 'bg-white/15 hover:bg-white/25'}`} />
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* ═══════════════════════════════════════════════════════
+                  SECTION 7: PRICING — Con copy de 12 psicólogos + garantía
+              ═══════════════════════════════════════════════════════ */}
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 className="text-center pb-20">
-                <p className="text-white/30 text-sm uppercase tracking-[0.15em] mb-8">Elige tu plan</p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
+                <p className="text-white/35 text-sm uppercase tracking-[0.15em] mb-3">Elige tu plan</p>
+                <h2 className="text-2xl lg:text-3xl font-light text-white/80 mb-3">Invierte en entender tu relación</h2>
+                <p className="text-white/50 text-lg font-light mb-3 max-w-xl mx-auto">Un diagnóstico que analiza tu relación desde 12 perspectivas psicológicas simultáneas.</p>
+                <p className="text-white/30 text-sm font-light mb-10 max-w-lg mx-auto">Gottman · Bowlby · Sternberg · Perel · Johnson · y 7 especialistas más analizan tu caso en un solo reporte.</p>
+
+                <div className="hidden sm:grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
                   {/* Guía Gratuita */}
                   <div className="p-8 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.04] to-teal-500/[0.02] text-left relative overflow-hidden">
                     <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500/40 to-teal-500/40" />
                     <div className="flex items-center gap-2 mb-2">
                       <p className="text-emerald-300/60 text-xs uppercase tracking-[0.15em]">Guía gratuita</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/20 text-emerald-300/70">Gratis</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/20 text-emerald-300/70">Oferta</span>
                     </div>
-                    <p className="text-3xl font-light text-white mb-1">$0 <span className="text-lg text-white/35">MXN</span></p>
-                    <p className="text-white/30 text-sm font-light mb-5">Descubre qué patrones repites sin darte cuenta</p>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-white/30 text-lg line-through">$199</span>
+                      <p className="text-3xl font-light text-emerald-300">Gratis</p>
+                    </div>
+                    <p className="text-white/40 text-sm font-light mb-5">Entiende los patrones que repites sin darte cuenta</p>
                     <ul className="space-y-2 mb-6">
-                      {['Los 5 patrones inconscientes más comunes', 'Señales de alerta que ignoras', 'Test rápido: ¿qué rol juegas en tu relación?', 'Acceso inmediato por email'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/45 text-sm font-light">
+                      {['Los 5 patrones inconscientes más comunes en parejas', 'Señales tempranas de desgaste relacional', 'Mini-test: ¿qué rol juegas en tu relación?', 'Acceso inmediato a tu email'].map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
@@ -1473,11 +1932,15 @@ const DiagnosticoRelacionalPage = () => {
                   {/* Individual */}
                   <div className="p-8 rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left">
                     <p className="text-white/40 text-xs uppercase tracking-[0.15em] mb-2">Individual</p>
-                    <p className="text-3xl font-light text-white mb-1">${PRODUCT_PRICE_INDIVIDUAL} <span className="text-lg text-white/35">MXN</span></p>
-                    <p className="text-white/30 text-sm font-light mb-5">1 persona · 45 preguntas · Reporte PDF</p>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-white/30 text-lg line-through">$699</span>
+                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_INDIVIDUAL} <span className="text-lg text-white/35">MXN</span></p>
+                    </div>
+                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
+                    <p className="text-white/40 text-sm font-light mb-5">Tu relación analizada por 12 teorías clínicas</p>
                     <ul className="space-y-2 mb-6">
-                      {['Análisis de tus patrones de apego', 'Radar emocional + perfil completo', 'Ciclos inconscientes detectados', 'Recomendación profesional'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/45 text-sm font-light">
+                      {['12 dimensiones: Gottman, Bowlby, Sternberg y 9 más', 'Radar de 12 ejes + mapa de apego + scores', 'Análisis narrativo por cada dimensión', 'Reporte PDF profesional descargable'].map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
@@ -1497,11 +1960,15 @@ const DiagnosticoRelacionalPage = () => {
                       <p className="text-violet-300/60 text-xs uppercase tracking-[0.15em]">Pareja</p>
                       <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/20 text-violet-300/70">Recomendado</span>
                     </div>
-                    <p className="text-3xl font-light text-white mb-1">${PRODUCT_PRICE_PAREJA} <span className="text-lg text-white/35">MXN</span></p>
-                    <p className="text-white/30 text-sm font-light mb-5">2 personas · 45 preguntas cada uno · 2 reportes</p>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-white/30 text-lg line-through">$1,199</span>
+                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_PAREJA} <span className="text-lg text-white/35">MXN</span></p>
+                    </div>
+                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-54% por lanzamiento</p>
+                    <p className="text-white/40 text-sm font-light mb-5">Cada uno contesta por separado · Cada uno recibe su propio reporte</p>
                     <ul className="space-y-2 mb-6">
-                      {['Todo lo del plan individual ×2', 'Cada uno responde por separado', 'Comparación de patrones cruzados', 'Ideal para llevar a terapia de pareja'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/45 text-sm font-light">
+                      {['2 reportes individuales — cada persona es analizada por las 12 teorías', 'Cada reporte es privado: solo tú ves el tuyo', 'Comparación cruzada de patrones y dinámicas de pareja', 'El punto de partida ideal para terapia de pareja'].map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
@@ -1515,12 +1982,165 @@ const DiagnosticoRelacionalPage = () => {
                     </motion.button>
                   </div>
                 </div>
+
+                {/* Mobile: swipeable pricing carousel with arrows + dots */}
+                <div className="sm:hidden">
+                <div className="relative">
+                  {pricingIdx > 0 && (
+                    <button
+                      onClick={() => {
+                        const next = pricingIdx - 1
+                        setPricingIdx(next)
+                        if (pricingRef.current) {
+                          pricingRef.current.scrollTo({ left: next * (pricingRef.current.scrollWidth / 3), behavior: 'smooth' })
+                        }
+                      }}
+                      className="absolute left-1 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-black/60 border border-white/20 text-white backdrop-blur-sm shadow-lg"
+                    >
+                      <ChevronLeft className="w-4 h-4" strokeWidth={2} />
+                    </button>
+                  )}
+                  {pricingIdx < 2 && (
+                    <button
+                      onClick={() => {
+                        const next = pricingIdx + 1
+                        setPricingIdx(next)
+                        if (pricingRef.current) {
+                          pricingRef.current.scrollTo({ left: next * (pricingRef.current.scrollWidth / 3), behavior: 'smooth' })
+                        }
+                      }}
+                      className="absolute right-1 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-black/60 border border-white/20 text-white backdrop-blur-sm shadow-lg"
+                    >
+                      <ChevronRight className="w-4 h-4" strokeWidth={2} />
+                    </button>
+                  )}
+                <div
+                  ref={pricingRef}
+                  onScroll={(e) => {
+                    const el = e.currentTarget
+                    setPricingIdx(Math.min(2, Math.round(el.scrollLeft / (el.scrollWidth / 3))))
+                  }}
+                  className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mx-2 px-2 scrollbar-hide max-w-4xl" style={{ WebkitOverflowScrolling: 'touch' }}>
+                  {/* Guía Gratuita mobile */}
+                  <div className="flex-shrink-0 w-[85vw] snap-center p-7 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.04] to-teal-500/[0.02] text-left relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500/40 to-teal-500/40" />
+                    <div className="flex items-center gap-2 mb-2">
+                      <p className="text-emerald-300/60 text-xs uppercase tracking-[0.15em]">Guía gratuita</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/20 text-emerald-300/70">Oferta</span>
+                    </div>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-white/30 text-lg line-through">$199</span>
+                      <p className="text-3xl font-light text-emerald-300">Gratis</p>
+                    </div>
+                    <p className="text-white/40 text-sm font-light mb-5">Entiende los patrones que repites sin darte cuenta</p>
+                    <ul className="space-y-2 mb-6">
+                      {['Los 5 patrones inconscientes más comunes en parejas', 'Señales tempranas de desgaste relacional', 'Mini-test: ¿qué rol juegas en tu relación?', 'Acceso inmediato a tu email'].map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
+                          <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                    <motion.button onClick={() => setShowFreeGuide(true)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-light text-base">
+                      Descargar gratis
+                    </motion.button>
+                  </div>
+                  {/* Individual mobile */}
+                  <div className="flex-shrink-0 w-[85vw] snap-center p-7 rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left">
+                    <p className="text-white/50 text-xs uppercase tracking-[0.15em] mb-2">Individual</p>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-white/30 text-lg line-through">$699</span>
+                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_INDIVIDUAL} <span className="text-lg text-white/35">MXN</span></p>
+                    </div>
+                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
+                    <p className="text-white/40 text-sm font-light mb-5">Tu relación analizada por 12 teorías clínicas</p>
+                    <ul className="space-y-2 mb-6">
+                      {['12 dimensiones: Gottman, Bowlby, Sternberg y 9 más', 'Radar de 12 ejes + mapa de apego + scores', 'Análisis narrativo por cada dimensión', 'Reporte PDF profesional descargable'].map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
+                          <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                    <motion.button onClick={() => { setStage('checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base">
+                      Comenzar
+                    </motion.button>
+                  </div>
+                  {/* Pareja mobile */}
+                  <div className="flex-shrink-0 w-[85vw] snap-center p-7 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/50 to-fuchsia-500/50" />
+                    <div className="flex items-center gap-2 mb-2">
+                      <p className="text-violet-300/60 text-xs uppercase tracking-[0.15em]">Pareja</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/20 text-violet-300/70">Recomendado</span>
+                    </div>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-white/30 text-lg line-through">$1,199</span>
+                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_PAREJA} <span className="text-lg text-white/35">MXN</span></p>
+                    </div>
+                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-54% por lanzamiento</p>
+                    <p className="text-white/40 text-sm font-light mb-5">Cada uno contesta por separado · Cada uno recibe su propio reporte</p>
+                    <ul className="space-y-2 mb-6">
+                      {['2 reportes individuales — cada persona es analizada por las 12 teorías', 'Cada reporte es privado: solo tú ves el tuyo', 'Comparación cruzada de patrones y dinámicas de pareja', 'El punto de partida ideal para terapia de pareja'].map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
+                          <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                    <motion.button onClick={() => { setStage('checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base">
+                      Comenzar en pareja
+                    </motion.button>
+                  </div>
+                </div>
+                </div>
+                {/* Pricing dots */}
+                <div className="flex justify-center gap-2 mt-3">
+                  {['Gratis', 'Individual', 'Pareja'].map((label, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setPricingIdx(i)
+                        if (pricingRef.current) {
+                          pricingRef.current.scrollTo({ left: i * (pricingRef.current.scrollWidth / 3), behavior: 'smooth' })
+                        }
+                      }}
+                      className={`transition-all duration-300 rounded-full px-2 py-0.5 text-[10px] font-medium border ${
+                        i === pricingIdx
+                          ? 'bg-violet-500/20 border-violet-400/40 text-violet-300'
+                          : 'bg-white/5 border-white/10 text-white/30'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                </div>
+
+                {/* Trust signals */}
+                <div className="flex flex-wrap items-center justify-center gap-6 mt-8">
+                  <div className="flex items-center gap-2 text-white/25 text-xs font-light">
+                    <Shield className="w-4 h-4 text-emerald-400/40" strokeWidth={1.5} />
+                    <span>Pago seguro con Stripe</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-white/25 text-xs font-light">
+                    <Lock className="w-4 h-4 text-violet-400/40" strokeWidth={1.5} />
+                    <span>Tus respuestas son 100% privadas</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-white/25 text-xs font-light">
+                    <CheckCircle className="w-4 h-4 text-amber-400/40" strokeWidth={1.5} />
+                    <span>Garantía de satisfacción</span>
+                  </div>
+                </div>
+
                 {resumeDraft && (
                   <button onClick={restoreDraft} className="block mx-auto mt-6 text-violet-300/40 text-sm hover:text-violet-300/70 underline underline-offset-4 transition-colors">
                     Continuar diagnóstico en progreso
                   </button>
                 )}
-                <p className="text-white/20 text-xs font-light mt-5">Diseñado por Luis Virrueta · Psicólogo clínico</p>
+                <p className="text-white/20 text-xs font-light mt-5">12 dimensiones psicológicas · Bowlby, Gottman, Sternberg, Perel y 8 autores más</p>
               </motion.div>
 
               </div>
@@ -1539,7 +2159,7 @@ const DiagnosticoRelacionalPage = () => {
               <div className="text-center">
                 <CreditCard className="w-10 h-10 text-violet-400/50 mx-auto mb-4" />
                 <h2 className="text-2xl font-light text-white mb-2">Elige tu plan</h2>
-                <p className="text-white/40 text-sm font-light">45 preguntas · Análisis psicológico profundo · Reporte descargable</p>
+                <p className="text-white/40 text-sm font-light">44 preguntas · 12 dimensiones psicológicas · Reporte descargable</p>
               </div>
 
               {/* Pricing Cards */}
@@ -1577,7 +2197,7 @@ const DiagnosticoRelacionalPage = () => {
                     <p className="text-white/30 text-sm font-light mt-1">1 persona · Reporte completo</p>
                   </div>
                   <ul className="space-y-2">
-                    {['45 preguntas psicoanalíticas', 'Radar + perfil emocional', 'Ciclos y sensibilidades', 'PDF descargable'].map((item, i) => (
+                    {['44 preguntas narrativas', 'Radar de 12 dimensiones', 'Mapa de apego + sub-scores', 'PDF descargable'].map((item, i) => (
                       <li key={i} className="flex items-start gap-2 text-white/45 text-sm font-light">
                         <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                         {item}
@@ -1698,7 +2318,7 @@ const DiagnosticoRelacionalPage = () => {
                   <>
                     <h2 className="text-3xl lg:text-4xl font-light text-white mb-3">¡Gracias por tu compra!</h2>
                     <p className="text-white/50 text-lg font-light leading-relaxed mb-2">
-                      Tu acceso al <span className="text-violet-300/80">Termómetro Inconsciente de Pareja</span>{' '}
+                      Tu acceso a la <span className="text-violet-300/80">Radiografía de Pareja</span>{' '}
                       — plan <span className="text-emerald-300/80">{PRODUCT_LABELS[purchaseType] || 'Individual'}</span> — está confirmado.
                     </p>
                   </>
@@ -1888,6 +2508,30 @@ const DiagnosticoRelacionalPage = () => {
                   💡 <strong className="text-violet-300/70">Tip:</strong> Si en algún momento prefieres escribir en vez de hablar, puedes cambiar de modo en cualquier momento. Pero hablar es más rápido y te permite ser más espontáneo — que es lo que queremos.
                 </p>
               </div>
+
+              {/* Voice gender selector */}
+              <div className="flex flex-col items-center gap-3">
+                <p className="text-white/40 text-sm font-light">Elige la voz que te acompañará:</p>
+                <div className="flex items-center rounded-full border border-white/10 bg-white/[0.03] p-1">
+                  <button onClick={() => setVoiceGender('female')}
+                    className={`px-5 py-2 rounded-full text-sm font-light transition-all ${
+                      voiceGender === 'female'
+                        ? 'bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-400/30'
+                        : 'text-white/30 hover:text-white/50 border border-transparent'
+                    }`}>
+                    ♀ Voz femenina
+                  </button>
+                  <button onClick={() => setVoiceGender('male')}
+                    className={`px-5 py-2 rounded-full text-sm font-light transition-all ${
+                      voiceGender === 'male'
+                        ? 'bg-blue-500/20 text-blue-300 border border-blue-400/30'
+                        : 'text-white/30 hover:text-white/50 border border-transparent'
+                    }`}>
+                    ♂ Voz masculina
+                  </button>
+                </div>
+              </div>
+
               <div className="text-center">
                 <motion.button onClick={() => { setStage('questionnaire'); scrollToTop() }}
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
@@ -1900,7 +2544,7 @@ const DiagnosticoRelacionalPage = () => {
         )}
 
         {/* ═══════════════════════════════════════════════════════
-            STAGE: QUESTIONNAIRE (45 voice-first questions)
+            STAGE: QUESTIONNAIRE (44 voice-first questions)
         ═══════════════════════════════════════════════════════ */}
         {stage === 'questionnaire' && (
           <motion.div key="questionnaire" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -1936,13 +2580,15 @@ const DiagnosticoRelacionalPage = () => {
                 <motion.div key={currentQuestion} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
 
-                  <h3 className="text-2xl lg:text-3xl font-light text-white/90 leading-relaxed mb-8 tracking-wide font-display">
+                  <h3 className="text-2xl lg:text-3xl font-light text-white/90 leading-relaxed mb-8 tracking-wide font-display text-center">
                     {currentQ?.text}
                   </h3>
 
                   {/* VOICE MODE */}
                   {uiMode === 'voice' && (
                     <div className="flex flex-col items-center py-2">
+
+                      {/* Voice gender indicator */}
 
                       {/* Audio playing indicator */}
                       {audioPlaying && (
@@ -1957,13 +2603,14 @@ const DiagnosticoRelacionalPage = () => {
                                 transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.15, ease: 'easeInOut' }} />
                             ))}
                           </div>
-                          <p className="text-violet-300/45 text-sm font-light">Escucha la pregunta...</p>
+                          <p className="text-violet-300/45 text-sm font-light">
+                            {voiceGender === 'female' ? 'Escucha la pregunta...' : 'Escucha la pregunta...'}
+                          </p>
                         </motion.div>
                       )}
 
-                      {/* Mic area (hidden while audio plays) */}
-                      {!audioPlaying && (
-                        <>
+                      {/* Mic area — always visible */}
+                      <>
                           {/* Mic button with reactive gradient effect */}
                           <div className="relative">
                             <motion.button type="button" onClick={toggleMic}
@@ -2037,7 +2684,7 @@ const DiagnosticoRelacionalPage = () => {
                             </div>
                           )}
 
-                          {/* Additional actions */}
+                          {/* Additional actions — always visible */}
                           {!recording && (
                             <div className="flex flex-wrap items-center justify-center gap-3 mt-5">
                               {responses[currentQ?.id]?.trim() && (
@@ -2083,7 +2730,6 @@ const DiagnosticoRelacionalPage = () => {
                             </div>
                           )}
                         </>
-                      )}
                     </div>
                   )}
 
@@ -2220,7 +2866,7 @@ const DiagnosticoRelacionalPage = () => {
               <div>
                 <h3 className="text-2xl font-light text-white mb-3">Tu diagnóstico está listo</h3>
                 <p className="text-white/40 text-sm font-light leading-relaxed">
-                  Hemos cruzado tus 45 respuestas para construir un mapa completo de tu relación.
+                  Hemos cruzado tus 44 respuestas en 12 dimensiones psicológicas para construir un mapa profundo de tu relación.
                 </p>
               </div>
               <motion.button onClick={() => { setStage('results'); scrollToTop() }}
@@ -2233,7 +2879,7 @@ const DiagnosticoRelacionalPage = () => {
         )}
 
         {/* ═══════════════════════════════════════════════════════
-            STAGE: RESULTS — Premium redesign
+            STAGE: RESULTS — Dimension-by-Dimension Premium
         ═══════════════════════════════════════════════════════ */}
         {stage === 'results' && aiAnalysis && (
           <motion.div key="results" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -2242,8 +2888,8 @@ const DiagnosticoRelacionalPage = () => {
 
               {/* Header */}
               <div className="text-center">
-                <h1 className="text-3xl lg:text-4xl font-light text-white mb-3">🔬 Tu Diagnóstico Relacional</h1>
-                <p className="text-white/40 text-sm font-light">Generado a partir de tus 45 respuestas en 8 fases psicológicas</p>
+                <h1 className="text-3xl lg:text-4xl font-light text-white mb-3">Tu Radiografía de Pareja</h1>
+                <p className="text-white/40 text-sm font-light">Análisis de 44 respuestas × 12 dimensiones psicológicas × 12 autores</p>
               </div>
 
               {/* ── RELATIONSHIP TYPE ── */}
@@ -2271,26 +2917,21 @@ const DiagnosticoRelacionalPage = () => {
                 </motion.div>
               )}
 
-              {/* ── CORE SCORES ── */}
-              {aiAnalysis.core_scores && (
+              {/* ── 4 COMPOSITE SCORES (top KPIs) ── */}
+              {aiAnalysis.composite_scores && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">🎯 Indicadores Principales</h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {Object.entries(CORE_LABELS).map(([key, meta]) => {
-                      const val = aiAnalysis.core_scores[key] ?? 0
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    {Object.entries(COMPOSITE_LABELS).map(([key, meta]) => {
+                      const val = aiAnalysis.composite_scores[key] ?? 0
                       const level = getLevelPct(meta.inverted ? (100 - val) : val)
                       const Icon = meta.icon
                       return (
-                        <div key={key} className="p-5 rounded-2xl border border-white/8 bg-white/[0.02]">
-                          <div className="flex items-center gap-3 mb-3">
-                            <Icon className="w-5 h-5 text-violet-400/50" strokeWidth={1.5} />
-                            <span className="text-white/60 font-light text-sm">{meta.label}</span>
-                          </div>
-                          <div className="flex items-end justify-between mb-2">
-                            <span className="text-3xl font-light text-white">{val}%</span>
-                            <span className={`text-xs font-light ${level.color}`}>{level.label}</span>
-                          </div>
-                          <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                        <div key={key} className="p-5 rounded-2xl border border-white/8 bg-white/[0.02] text-center">
+                          <Icon className="w-5 h-5 text-violet-400/50 mx-auto mb-2" strokeWidth={1.5} />
+                          <p className="text-3xl font-light text-white mb-1">{val}<span className="text-base text-white/30">%</span></p>
+                          <p className="text-white/50 text-xs font-light mb-2">{meta.label}</p>
+                          <span className={`text-[10px] font-light ${level.color}`}>{level.label}</span>
+                          <div className="h-1.5 bg-white/5 rounded-full overflow-hidden mt-2">
                             <motion.div initial={{ width: 0 }} animate={{ width: `${val}%` }} transition={{ duration: 1, delay: 0.3 }}
                               className={`h-full bg-gradient-to-r ${getBarColor(val, meta.inverted)} rounded-full`} />
                           </div>
@@ -2301,79 +2942,317 @@ const DiagnosticoRelacionalPage = () => {
                 </motion.div>
               )}
 
-              {/* ── RADAR CHART (colored) ── */}
-              {aiAnalysis.radar_scores && (
+              {/* ── RADAR OVERVIEW — all 12 dimensions at a glance ── */}
+              {aiAnalysis.dimension_scores && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">📊 Radar Relacional</h2>
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">Panorama: 12 Dimensiones</h2>
                   <div className="p-6 rounded-2xl border border-white/8 bg-white/[0.02]">
-                    <RadarChart scores={aiAnalysis.radar_scores} />
+                    <RadarChart scores={aiAnalysis.dimension_scores} />
+                    <p className="text-center text-white/25 text-xs font-light mt-4">Cada dimensión se detalla abajo con su propia gráfica y análisis</p>
                   </div>
                 </motion.div>
               )}
 
-              {/* ── PROFILE BARS (fixed: raw values + health indicators) ── */}
-              {aiAnalysis.profile_scores && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">📈 Perfil Emocional</h2>
-                  <div className="space-y-4">
-                    {Object.entries(PROFILE_LABELS).map(([key, meta]) => {
-                      const val = aiAnalysis.profile_scores[key] ?? 0
-                      const rawLevel = getLevelPct(val)
-                      const healthPct = meta.inverted ? (100 - val) : val
-                      const isHealthy = healthPct >= 55
-                      return (
-                        <div key={key} className="p-4 rounded-xl border border-white/8 bg-white/[0.02]">
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                              <span className="text-white/55 text-sm font-light">{meta.label}</span>
-                              {meta.inverted && (
-                                <span className={`text-[9px] px-1.5 py-0.5 rounded-full border ${
-                                  isHealthy
-                                    ? 'bg-emerald-500/10 text-emerald-400/60 border-emerald-500/15'
-                                    : 'bg-amber-500/10 text-amber-400/60 border-amber-500/15'
-                                }`}>
-                                  {isHealthy ? '✓ Saludable' : '⚠ Atención'}
-                                </span>
-                              )}
-                            </div>
-                            <span className={`text-xs font-light ${rawLevel.color}`}>{val}% · {rawLevel.label}</span>
+              {/* ══════════════════════════════════════════════════════
+                  12 DIMENSIONES — cada una con su tarjeta y gráfica
+              ══════════════════════════════════════════════════════ */}
+              <div>
+                <h2 className="text-xl font-light text-white/70 mb-2 text-center">Las 12 Dimensiones de tu Relación</h2>
+                <p className="text-white/30 text-sm font-light mb-8 text-center">Cada dimensión incluye su puntuación, una gráfica relevante y el análisis narrativo del autor</p>
+
+                <div className="space-y-6">
+
+                  {/* ── 1. APEGO (Bowlby) — gauge + sub-scores ── */}
+                  {(() => {
+                    const score = aiAnalysis.dimension_scores?.apego ?? 0
+                    const subs = aiAnalysis.sub_scores?.apego
+                    const narrative = aiAnalysis.dimension_narratives?.apego
+                    return (
+                      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                        className="p-6 rounded-2xl border border-white/8 bg-gradient-to-br from-violet-500/[0.03] to-transparent relative overflow-hidden">
+                        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(to right, ${DIMENSION_COLORS[0]}40, transparent)` }} />
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${DIMENSION_COLORS[0]}15`, border: `1px solid ${DIMENSION_COLORS[0]}25` }}>
+                            <span className="text-lg">🔗</span>
                           </div>
-                          <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                            <motion.div initial={{ width: 0 }} animate={{ width: `${val}%` }} transition={{ duration: 0.8, delay: 0.2 }}
-                              className={`h-full bg-gradient-to-r ${getBarColor(val, meta.inverted)} rounded-full`} />
+                          <div className="flex-1">
+                            <h3 className="text-white/80 font-light">Apego (Bowlby)</h3>
+                            <p className="text-white/30 text-xs font-light">Seguridad emocional y estilo de vínculo</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-2xl font-light text-white">{score}<span className="text-sm text-white/30">%</span></p>
+                            <p className={`text-xs ${getLevelPct(score).color}`}>{getLevelPct(score).label}</p>
                           </div>
                         </div>
+                        {/* Semi-circle gauge */}
+                        <div className="flex justify-center mb-4">
+                          <svg viewBox="0 0 200 110" className="w-48">
+                            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={12} strokeLinecap="round" />
+                            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke={DIMENSION_COLORS[0]} strokeWidth={12} strokeLinecap="round" strokeOpacity={0.5}
+                              strokeDasharray={`${(score / 100) * 251.3} 251.3`} />
+                            <text x="100" y="95" textAnchor="middle" fill="white" fontSize="28" fontWeight="300" opacity={0.8}>{score}%</text>
+                          </svg>
+                        </div>
+                        {subs && (
+                          <div className="space-y-2 mb-4">
+                            {Object.entries(SUB_SCORE_LABELS.apego || {}).map(([subKey, meta]) => {
+                              const val = subs[subKey] ?? 0
+                              return (
+                                <div key={subKey}>
+                                  <div className="flex justify-between mb-0.5">
+                                    <span className="text-white/45 text-xs font-light">{meta.label}</span>
+                                    <span className="text-white/30 text-xs">{val}%</span>
+                                  </div>
+                                  <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                    <motion.div initial={{ width: 0 }} whileInView={{ width: `${val}%` }} viewport={{ once: true }}
+                                      className={`h-full bg-gradient-to-r ${getBarColor(val, meta.inverted)} rounded-full`} />
+                                  </div>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
+                        {narrative && <p className="text-white/50 text-sm font-light leading-relaxed border-t border-white/5 pt-4">{renderBold(narrative)}</p>}
+                      </motion.div>
+                    )
+                  })()}
+
+                  {/* ── 2. CONFLICTO (Gottman) — 4 horsemen bars ── */}
+                  {(() => {
+                    const score = aiAnalysis.dimension_scores?.interaccion_conflicto ?? 0
+                    const subs = aiAnalysis.sub_scores?.interaccion_conflicto
+                    const narrative = aiAnalysis.dimension_narratives?.interaccion_conflicto
+                    const horsemen = subs ? [
+                      { label: 'Crítica/Desprecio', val: subs.critica_desprecio ?? 0, bad: true, emoji: '🗡️' },
+                      { label: 'Defensividad', val: subs.defensividad ?? 0, bad: true, emoji: '🛡️' },
+                      { label: 'Stonewalling', val: subs.stonewalling ?? 0, bad: true, emoji: '🧱' },
+                      { label: 'Capacidad de reparación', val: subs.capacidad_reparacion ?? 0, bad: false, emoji: '🩹' }
+                    ] : []
+                    return (
+                      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                        className="p-6 rounded-2xl border border-white/8 bg-gradient-to-br from-red-500/[0.03] to-transparent relative overflow-hidden">
+                        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(to right, ${DIMENSION_COLORS[1]}40, transparent)` }} />
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${DIMENSION_COLORS[1]}15`, border: `1px solid ${DIMENSION_COLORS[1]}25` }}>
+                            <span className="text-lg">⚡</span>
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-white/80 font-light">Interacción y Conflicto (Gottman)</h3>
+                            <p className="text-white/30 text-xs font-light">Los 4 jinetes + capacidad de reparación</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-2xl font-light text-white">{score}<span className="text-sm text-white/30">%</span></p>
+                            <p className={`text-xs ${getLevelPct(score).color}`}>{getLevelPct(score).label}</p>
+                          </div>
+                        </div>
+                        {horsemen.length > 0 && (
+                          <div className="grid grid-cols-2 gap-3 mb-4">
+                            {horsemen.map((h, i) => (
+                              <div key={i} className="p-3 rounded-xl border border-white/5 bg-white/[0.02]">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="text-sm">{h.emoji}</span>
+                                  <span className="text-white/50 text-xs font-light">{h.label}</span>
+                                </div>
+                                <p className="text-xl font-light text-white mb-1">{h.val}%</p>
+                                <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                  <motion.div initial={{ width: 0 }} whileInView={{ width: `${h.val}%` }} viewport={{ once: true }}
+                                    className={`h-full bg-gradient-to-r ${getBarColor(h.val, h.bad)} rounded-full`} />
+                                </div>
+                                {h.bad && h.val > 55 && <p className="text-red-400/50 text-[9px] mt-1">⚠ Atención</p>}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        {narrative && <p className="text-white/50 text-sm font-light leading-relaxed border-t border-white/5 pt-4">{renderBold(narrative)}</p>}
+                      </motion.div>
+                    )
+                  })()}
+
+                  {/* ── 3. AMOR (Sternberg) — Triangle ── */}
+                  {(() => {
+                    const score = aiAnalysis.dimension_scores?.estructura_amor ?? 0
+                    const subs = aiAnalysis.sub_scores?.estructura_amor
+                    const narrative = aiAnalysis.dimension_narratives?.estructura_amor
+                    const p = subs?.pasion ?? 50, n = subs?.intimidad ?? 50, c = subs?.compromiso ?? 50
+                    const cx = 130, topY = 25, botY = 200, leftX = 30, rightX = 230
+                    const total = (p + n + c) || 1
+                    const dx = (n * cx + p * leftX + c * rightX) / total
+                    const dy = (n * topY + p * botY + c * botY) / total
+                    return (
+                      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                        className="p-6 rounded-2xl border border-white/8 bg-gradient-to-br from-indigo-500/[0.03] to-transparent relative overflow-hidden">
+                        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(to right, ${DIMENSION_COLORS[2]}40, transparent)` }} />
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${DIMENSION_COLORS[2]}15`, border: `1px solid ${DIMENSION_COLORS[2]}25` }}>
+                            <span className="text-lg">△</span>
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-white/80 font-light">Estructura del Amor (Sternberg)</h3>
+                            <p className="text-white/30 text-xs font-light">Pasión · Intimidad · Compromiso</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-2xl font-light text-white">{score}<span className="text-sm text-white/30">%</span></p>
+                          </div>
+                        </div>
+                        <div className="flex flex-col lg:flex-row items-center gap-6">
+                          <svg viewBox="0 0 260 230" className="w-full max-w-[260px] flex-shrink-0">
+                            <polygon points={`${cx},${topY} ${leftX},${botY} ${rightX},${botY}`} fill="rgba(99,102,241,0.04)" stroke="rgba(255,255,255,0.08)" strokeWidth={0.8} />
+                            <circle cx={dx} cy={dy} r={7} fill="rgba(99,102,241,0.5)" stroke="rgba(99,102,241,0.9)" strokeWidth={1.5} />
+                            <circle cx={dx} cy={dy} r={14} fill="none" stroke="rgba(99,102,241,0.15)" strokeWidth={0.5} />
+                            <text x={cx} y={topY - 8} textAnchor="middle" fill="rgba(59,130,246,0.7)" className="text-[9px] font-medium">Intimidad {n}%</text>
+                            <text x={leftX - 2} y={botY + 16} textAnchor="middle" fill="rgba(236,72,153,0.7)" className="text-[9px] font-medium">Pasión {p}%</text>
+                            <text x={rightX + 2} y={botY + 16} textAnchor="middle" fill="rgba(16,185,129,0.7)" className="text-[9px] font-medium">Compromiso {c}%</text>
+                          </svg>
+                          <div className="space-y-2 flex-1 w-full">
+                            {[{ label: 'Pasión', val: p, color: 'from-pink-500 to-rose-400' }, { label: 'Intimidad', val: n, color: 'from-blue-500 to-indigo-400' }, { label: 'Compromiso', val: c, color: 'from-emerald-500 to-green-400' }].map((s, i) => (
+                              <div key={i}>
+                                <div className="flex justify-between mb-0.5"><span className="text-white/45 text-xs">{s.label}</span><span className="text-white/30 text-xs">{s.val}%</span></div>
+                                <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                                  <motion.div initial={{ width: 0 }} whileInView={{ width: `${s.val}%` }} viewport={{ once: true }}
+                                    className={`h-full bg-gradient-to-r ${s.color} rounded-full opacity-60`} />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        {narrative && <p className="text-white/50 text-sm font-light leading-relaxed border-t border-white/5 pt-4 mt-4">{renderBold(narrative)}</p>}
+                      </motion.div>
+                    )
+                  })()}
+
+                  {/* ── 4. VÍNCULO EMOCIONAL (Johnson) — connection meter ── */}
+                  {/* ── 5. DIFERENCIACIÓN (Schnarch) ── */}
+                  {/* ── 6. DESEO (Perel) — sub-scores ── */}
+                  {/* ── 7-12: remaining dimensions — each with score + narrative ── */}
+                  {(() => {
+                    const remainingDims = [
+                      { key: 'vinculo_emocional', emoji: '❤️', idx: 3, subtitle: 'Ciclos de conexión y desconexión profunda' },
+                      { key: 'diferenciacion', emoji: '🪞', idx: 4, subtitle: 'Identidad propia dentro de la relación' },
+                      { key: 'deseo', emoji: '🔥', idx: 5, subtitle: 'Atracción, espontaneidad y novedad', hasSubs: true },
+                      { key: 'patrones_inconscientes', emoji: '🔮', idx: 6, subtitle: 'Repeticiones de relaciones pasadas' },
+                      { key: 'neurobiologia_amor', emoji: '🧬', idx: 7, subtitle: 'Sensaciones físicas y química del amor' },
+                      { key: 'regulacion_emocional', emoji: '🛡️', idx: 8, subtitle: 'Cómo se calman o desregulan mutuamente' },
+                      { key: 'apego_aplicado', emoji: '📎', idx: 9, subtitle: 'Reacciones ante la distancia' },
+                      { key: 'lenguaje_amor', emoji: '💬', idx: 10, subtitle: 'Cómo expresas y necesitas recibir amor' },
+                      { key: 'satisfaccion_mantenimiento', emoji: '📊', idx: 11, subtitle: 'Esfuerzo, equilibrio y satisfacción actual' }
+                    ]
+                    return remainingDims.map((dim) => {
+                      const score = aiAnalysis.dimension_scores?.[dim.key] ?? 0
+                      const narrative = aiAnalysis.dimension_narratives?.[dim.key]
+                      const subs = dim.hasSubs ? aiAnalysis.sub_scores?.[dim.key] : null
+                      const color = DIMENSION_COLORS[dim.idx]
+                      const label = DIMENSION_LABELS[dim.key]
+                      return (
+                        <motion.div key={dim.key} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                          className="p-6 rounded-2xl border border-white/8 bg-gradient-to-br from-white/[0.02] to-transparent relative overflow-hidden">
+                          <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(to right, ${color}40, transparent)` }} />
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${color}15`, border: `1px solid ${color}25` }}>
+                              <span className="text-lg">{dim.emoji}</span>
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="text-white/80 font-light">{label}</h3>
+                              <p className="text-white/30 text-xs font-light">{dim.subtitle}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-2xl font-light text-white">{score}<span className="text-sm text-white/30">%</span></p>
+                              <p className={`text-xs ${getLevelPct(score).color}`}>{getLevelPct(score).label}</p>
+                            </div>
+                          </div>
+                          {/* Horizontal bar */}
+                          <div className="h-3 bg-white/5 rounded-full overflow-hidden mb-4">
+                            <motion.div initial={{ width: 0 }} whileInView={{ width: `${score}%` }} viewport={{ once: true }}
+                              transition={{ duration: 0.8 }} className="h-full rounded-full opacity-60" style={{ background: `linear-gradient(to right, ${color}80, ${color}40)` }} />
+                          </div>
+                          {/* Sub-scores if available (deseo) */}
+                          {subs && (
+                            <div className="grid grid-cols-3 gap-3 mb-4">
+                              {Object.entries(SUB_SCORE_LABELS[dim.key] || {}).map(([subKey, meta]) => {
+                                const val = subs[subKey] ?? 0
+                                return (
+                                  <div key={subKey} className="p-2 rounded-lg border border-white/5 bg-white/[0.02] text-center">
+                                    <p className="text-lg font-light text-white">{val}%</p>
+                                    <p className="text-white/35 text-[10px] font-light">{meta.label}</p>
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          )}
+                          {narrative && <p className="text-white/50 text-sm font-light leading-relaxed border-t border-white/5 pt-4">{renderBold(narrative)}</p>}
+                        </motion.div>
                       )
-                    })}
+                    })
+                  })()}
+
+                </div>
+              </div>
+
+              {/* ══════════════════════════════════════════════════════
+                  MAPA DE APEGO (quadrant visualization)
+              ══════════════════════════════════════════════════════ */}
+              {aiAnalysis.attachment_map && (
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">🗺️ Tu Posición en el Mapa de Apego</h2>
+                  <div className="p-6 rounded-2xl border border-white/8 bg-white/[0.02]">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="px-4 py-2 rounded-full border border-violet-500/20 bg-violet-500/[0.06]">
+                        <span className="text-violet-300/80 text-sm font-light">Estilo: {aiAnalysis.attachment_map.style}</span>
+                      </div>
+                      <svg viewBox="0 0 220 220" className="w-full max-w-[280px]">
+                        <rect x="10" y="10" width="100" height="100" fill="rgba(239,68,68,0.04)" rx="4" />
+                        <rect x="110" y="10" width="100" height="100" fill="rgba(245,158,11,0.04)" rx="4" />
+                        <rect x="10" y="110" width="100" height="100" fill="rgba(16,185,129,0.04)" rx="4" />
+                        <rect x="110" y="110" width="100" height="100" fill="rgba(59,130,246,0.04)" rx="4" />
+                        <line x1="110" y1="10" x2="110" y2="210" stroke="rgba(255,255,255,0.1)" strokeWidth={0.5} />
+                        <line x1="10" y1="110" x2="210" y2="110" stroke="rgba(255,255,255,0.1)" strokeWidth={0.5} />
+                        <text x="110" y="7" textAnchor="middle" fill="rgba(255,255,255,0.3)" className="text-[7px]">Alta evitación</text>
+                        <text x="110" y="218" textAnchor="middle" fill="rgba(255,255,255,0.3)" className="text-[7px]">Baja evitación</text>
+                        <text x="5" y="110" textAnchor="start" fill="rgba(255,255,255,0.3)" className="text-[7px]" transform="rotate(-90 5 110)">Alta ansiedad</text>
+                        <text x="215" y="110" textAnchor="end" fill="rgba(255,255,255,0.3)" className="text-[7px]" transform="rotate(90 215 110)">Baja ansiedad</text>
+                        <text x="60" y="60" textAnchor="middle" fill="rgba(239,68,68,0.4)" className="text-[7px]">Desorganizado</text>
+                        <text x="160" y="60" textAnchor="middle" fill="rgba(245,158,11,0.4)" className="text-[7px]">Evitativo</text>
+                        <text x="60" y="160" textAnchor="middle" fill="rgba(16,185,129,0.3)" className="text-[7px]">Ansioso</text>
+                        <text x="160" y="160" textAnchor="middle" fill="rgba(59,130,246,0.3)" className="text-[7px]">Seguro</text>
+                        <circle
+                          cx={110 + ((aiAnalysis.attachment_map.avoidance_level ?? 50) - 50) * 2}
+                          cy={110 - ((aiAnalysis.attachment_map.anxiety_level ?? 50) - 50) * 2}
+                          r={6} fill="rgba(139,92,246,0.6)" stroke="rgba(139,92,246,0.9)" strokeWidth={1.5} />
+                        <circle
+                          cx={110 + ((aiAnalysis.attachment_map.avoidance_level ?? 50) - 50) * 2}
+                          cy={110 - ((aiAnalysis.attachment_map.anxiety_level ?? 50) - 50) * 2}
+                          r={12} fill="none" stroke="rgba(139,92,246,0.2)" strokeWidth={0.5} />
+                      </svg>
+                      <div className="flex gap-6 text-xs text-white/40 font-light">
+                        <span>Ansiedad: {aiAnalysis.attachment_map.anxiety_level ?? 0}%</span>
+                        <span>Evitación: {aiAnalysis.attachment_map.avoidance_level ?? 0}%</span>
+                      </div>
+                    </div>
                   </div>
                 </motion.div>
               )}
 
-              {/* ── EMPATHIC OPENING (structured with icons) ── */}
+              {/* ══════════════════════════════════════════════════════
+                  LO QUE TU HISTORIA REVELÓ (empathic opening)
+              ══════════════════════════════════════════════════════ */}
               {aiAnalysis.empathic_opening && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                   className="p-6 lg:p-8 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.03] to-transparent relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/30 to-fuchsia-500/30" />
                   <div className="flex items-center gap-3 mb-5">
                     <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center">
                       <Sparkles className="w-5 h-5 text-violet-400/50" strokeWidth={1.5} />
                     </div>
-                    <h2 className="text-xl font-light text-white/70">✨ Lo que tu historia reveló</h2>
+                    <h2 className="text-xl font-light text-white/70">Lo que tu historia reveló</h2>
                   </div>
                   <div className="space-y-3">
                     {aiAnalysis.empathic_opening.split('\n\n').map((p, i) => {
                       const paragraphs = aiAnalysis.empathic_opening.split('\n\n')
-                      const isFirst = i === 0
-                      const isLast = i === paragraphs.length - 1
+                      const isFirst = i === 0, isLast = i === paragraphs.length - 1
                       return (
                         <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-                          {isFirst ? (
-                            <CheckCircle className="w-4 h-4 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
-                          ) : isLast ? (
-                            <Star className="w-4 h-4 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
-                          ) : (
-                            <AlertTriangle className="w-4 h-4 text-amber-400/50 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
-                          )}
+                          {isFirst ? <CheckCircle className="w-4 h-4 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={1.5} /> :
+                           isLast ? <Star className="w-4 h-4 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={1.5} /> :
+                           <AlertTriangle className="w-4 h-4 text-amber-400/50 flex-shrink-0 mt-0.5" strokeWidth={1.5} />}
                           <p className="text-white/55 text-sm font-light leading-relaxed">{renderBold(p)}</p>
                         </div>
                       )
@@ -2382,63 +3261,37 @@ const DiagnosticoRelacionalPage = () => {
                 </motion.div>
               )}
 
-              {/* ── INDIVIDUAL INSIGHTS (premium cards) ── */}
+              {/* ── INDIVIDUAL INSIGHTS (expandable) ── */}
               {aiAnalysis.individual_insights && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">🔍 Tu Perfil Relacional</h2>
-                  <div className="space-y-4">
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">Tu Perfil Relacional</h2>
+                  <div className="space-y-3">
                     {[
-                      { key: 'emotional_style', label: '🎭 Estilo emocional', icon: Heart, accent: 'violet' },
-                      { key: 'attachment_patterns', label: '🔗 Patrones de apego', icon: Users, accent: 'blue' },
-                      { key: 'defense_mechanisms', label: '🛡️ Mecanismos de defensa', icon: Shield, accent: 'amber' },
-                      { key: 'what_they_seek_in_love', label: '💕 Lo que buscas en el amor', icon: Sparkles, accent: 'pink' },
-                      { key: 'emotional_triggers', label: '⚡ Detonantes emocionales', icon: Zap, accent: 'red' },
-                      { key: 'repeating_patterns', label: '🔄 Patrones que se repiten', icon: Activity, accent: 'fuchsia' },
-                      { key: 'hidden_needs', label: '🔮 Necesidades ocultas', icon: Eye, accent: 'indigo' },
-                      { key: 'role_in_relationship', label: '👤 Tu rol en la relación', icon: Target, accent: 'emerald' },
-                      { key: 'likely_relational_attractor', label: '🧲 Atractor relacional', icon: Brain, accent: 'cyan' }
-                    ].map(({ key, label, icon: Icon, accent }) => {
+                      { key: 'emotional_style', label: 'Estilo emocional', emoji: '🎭' },
+                      { key: 'attachment_patterns', label: 'Patrones de apego', emoji: '🔗' },
+                      { key: 'defense_mechanisms', label: 'Mecanismos de defensa', emoji: '🛡️' },
+                      { key: 'what_they_seek_in_love', label: 'Lo que buscas en el amor', emoji: '💕' },
+                      { key: 'emotional_triggers', label: 'Detonantes emocionales', emoji: '⚡' },
+                      { key: 'repeating_patterns', label: 'Patrones que se repiten', emoji: '🔄' },
+                      { key: 'hidden_needs', label: 'Necesidades ocultas', emoji: '🔮' },
+                      { key: 'role_in_relationship', label: 'Tu rol en la relación', emoji: '👤' },
+                      { key: 'differentiation_profile', label: 'Perfil de diferenciación', emoji: '🧲' }
+                    ].map(({ key, label, emoji }) => {
                       const text = aiAnalysis.individual_insights[key]
                       if (!text) return null
-                      const accentClasses = {
-                        violet: { bg: 'bg-violet-500/10', border: 'border-violet-500/15', line: 'from-violet-500/30 to-violet-400/10', icon: 'text-violet-400/60', dot: 'text-violet-400/40' },
-                        blue: { bg: 'bg-blue-500/10', border: 'border-blue-500/15', line: 'from-blue-500/30 to-blue-400/10', icon: 'text-blue-400/60', dot: 'text-blue-400/40' },
-                        amber: { bg: 'bg-amber-500/10', border: 'border-amber-500/15', line: 'from-amber-500/30 to-amber-400/10', icon: 'text-amber-400/60', dot: 'text-amber-400/40' },
-                        pink: { bg: 'bg-pink-500/10', border: 'border-pink-500/15', line: 'from-pink-500/30 to-pink-400/10', icon: 'text-pink-400/60', dot: 'text-pink-400/40' },
-                        red: { bg: 'bg-red-500/10', border: 'border-red-500/15', line: 'from-red-500/30 to-red-400/10', icon: 'text-red-400/60', dot: 'text-red-400/40' },
-                        fuchsia: { bg: 'bg-fuchsia-500/10', border: 'border-fuchsia-500/15', line: 'from-fuchsia-500/30 to-fuchsia-400/10', icon: 'text-fuchsia-400/60', dot: 'text-fuchsia-400/40' },
-                        indigo: { bg: 'bg-indigo-500/10', border: 'border-indigo-500/15', line: 'from-indigo-500/30 to-indigo-400/10', icon: 'text-indigo-400/60', dot: 'text-indigo-400/40' },
-                        emerald: { bg: 'bg-emerald-500/10', border: 'border-emerald-500/15', line: 'from-emerald-500/30 to-emerald-400/10', icon: 'text-emerald-400/60', dot: 'text-emerald-400/40' },
-                        cyan: { bg: 'bg-cyan-500/10', border: 'border-cyan-500/15', line: 'from-cyan-500/30 to-cyan-400/10', icon: 'text-cyan-400/60', dot: 'text-cyan-400/40' }
-                      }
-                      const a = accentClasses[accent]
                       const paragraphs = text.split('\n\n')
                       const isExpanded = expandedInsights[key]
-                      const visibleParagraphs = isExpanded ? paragraphs : paragraphs.slice(0, 1)
                       return (
-                        <div key={key} className="p-5 rounded-2xl border border-white/8 bg-gradient-to-br from-white/[0.02] to-transparent overflow-hidden relative cursor-pointer group"
-                          onClick={() => toggleInsight(key)}>
-                          <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${a.line}`} />
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className={`w-8 h-8 rounded-lg ${a.bg} border ${a.border} flex items-center justify-center`}>
-                              <Icon className={`w-4 h-4 ${a.icon}`} strokeWidth={1.5} />
-                            </div>
-                            <h3 className="text-white/80 font-light flex-1">{label}</h3>
-                            {paragraphs.length > 1 && (
-                              <ChevronDown className={`w-4 h-4 text-white/30 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} strokeWidth={1.5} />
-                            )}
+                        <div key={key} className="p-4 rounded-xl border border-white/8 bg-white/[0.02] cursor-pointer" onClick={() => toggleInsight(key)}>
+                          <div className="flex items-center gap-3 mb-2">
+                            <span className="text-base">{emoji}</span>
+                            <h3 className="text-white/75 font-light text-sm flex-1">{label}</h3>
+                            <ChevronDown className={`w-4 h-4 text-white/25 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                           </div>
-                          <div className="text-white/55 text-sm font-light leading-relaxed space-y-2">
-                            {visibleParagraphs.map((p, i) => (
-                              <div key={i} className="flex items-start gap-2">
-                                <span className={`${a.dot} mt-1.5 text-[6px]`}>●</span>
-                                <p>{renderBold(p)}</p>
-                              </div>
-                            ))}
+                          <div className="text-white/50 text-sm font-light leading-relaxed space-y-2">
+                            {(isExpanded ? paragraphs : paragraphs.slice(0, 1)).map((p, i) => <p key={i}>{renderBold(p)}</p>)}
                           </div>
-                          {paragraphs.length > 1 && !isExpanded && (
-                            <p className={`text-xs mt-2 ${a.icon} opacity-60`}>Toca para ver más →</p>
-                          )}
+                          {!isExpanded && paragraphs.length > 1 && <p className="text-violet-400/40 text-xs mt-1">Ver más →</p>}
                         </div>
                       )
                     })}
@@ -2446,61 +3299,37 @@ const DiagnosticoRelacionalPage = () => {
                 </motion.div>
               )}
 
-              {/* ── COUPLE INSIGHTS (premium) ── */}
+              {/* ── COUPLE INSIGHTS (expandable) ── */}
               {aiAnalysis.couple_insights && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">👥 Dinámica de Pareja</h2>
-                  <div className="space-y-4">
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">Dinámica de Pareja</h2>
+                  <div className="space-y-3">
                     {[
-                      { key: 'real_relationship_dynamic', label: '🔄 Dinámica real de la relación', icon: Activity, accent: 'violet' },
-                      { key: 'unconscious_patterns', label: '🧩 Patrones inconscientes', icon: Brain, accent: 'indigo' },
-                      { key: 'conflict_and_defense', label: '⚔️ Conflicto y defensa', icon: Shield, accent: 'red' },
-                      { key: 'distancing_dynamics', label: '📏 Dinámica de distanciamiento', icon: TrendingDown, accent: 'amber' },
-                      { key: 'attachment_and_support', label: '🤝 Apego y apoyo', icon: Heart, accent: 'emerald' },
-                      { key: 'strengths_of_the_relationship', label: '💪 Fortalezas de la relación', icon: Star, accent: 'cyan' },
-                      { key: 'critical_moments_of_the_bond', label: '⚡ Momentos críticos del vínculo', icon: Zap, accent: 'fuchsia' },
-                      { key: 'global_relationship_diagnosis', label: '🩺 Diagnóstico global', icon: Target, accent: 'pink' }
-                    ].map(({ key, label, icon: Icon, accent }) => {
+                      { key: 'real_relationship_dynamic', label: 'Dinámica real', emoji: '🔄' },
+                      { key: 'unconscious_patterns', label: 'Patrones inconscientes', emoji: '🧩' },
+                      { key: 'conflict_and_defense', label: 'Conflicto y defensa', emoji: '⚔️' },
+                      { key: 'distancing_dynamics', label: 'Distanciamiento', emoji: '📏' },
+                      { key: 'attachment_and_support', label: 'Apego y apoyo', emoji: '🤝' },
+                      { key: 'strengths_of_the_relationship', label: 'Fortalezas', emoji: '💪' },
+                      { key: 'love_languages_analysis', label: 'Lenguajes del amor', emoji: '💬' },
+                      { key: 'global_relationship_diagnosis', label: 'Diagnóstico global', emoji: '🩺' }
+                    ].map(({ key, label, emoji }) => {
                       const text = aiAnalysis.couple_insights[key]
                       if (!text) return null
-                      const accentMap = {
-                        violet: { bg: 'bg-violet-500/10', border: 'border-violet-500/15', line: 'from-violet-500/20 to-violet-400/10', icon: 'text-violet-400/60', dot: 'text-violet-400/30' },
-                        indigo: { bg: 'bg-indigo-500/10', border: 'border-indigo-500/15', line: 'from-indigo-500/20 to-indigo-400/10', icon: 'text-indigo-400/60', dot: 'text-indigo-400/30' },
-                        red: { bg: 'bg-red-500/10', border: 'border-red-500/15', line: 'from-red-500/20 to-red-400/10', icon: 'text-red-400/60', dot: 'text-red-400/30' },
-                        amber: { bg: 'bg-amber-500/10', border: 'border-amber-500/15', line: 'from-amber-500/20 to-amber-400/10', icon: 'text-amber-400/60', dot: 'text-amber-400/30' },
-                        emerald: { bg: 'bg-emerald-500/10', border: 'border-emerald-500/15', line: 'from-emerald-500/20 to-emerald-400/10', icon: 'text-emerald-400/60', dot: 'text-emerald-400/30' },
-                        cyan: { bg: 'bg-cyan-500/10', border: 'border-cyan-500/15', line: 'from-cyan-500/20 to-cyan-400/10', icon: 'text-cyan-400/60', dot: 'text-cyan-400/30' },
-                        fuchsia: { bg: 'bg-fuchsia-500/10', border: 'border-fuchsia-500/15', line: 'from-fuchsia-500/20 to-fuchsia-400/10', icon: 'text-fuchsia-400/60', dot: 'text-fuchsia-400/30' },
-                        pink: { bg: 'bg-pink-500/10', border: 'border-pink-500/15', line: 'from-pink-500/20 to-pink-400/10', icon: 'text-pink-400/60', dot: 'text-pink-400/30' }
-                      }
-                      const a = accentMap[accent]
                       const paragraphs = text.split('\n\n')
-                      const isExpanded = expandedInsights[`couple_${key}`]
-                      const visibleParagraphs = isExpanded ? paragraphs : paragraphs.slice(0, 1)
+                      const ck = `couple_${key}`
+                      const isExpanded = expandedInsights[ck]
                       return (
-                        <div key={key} className="p-5 rounded-2xl border border-white/8 bg-gradient-to-br from-white/[0.02] to-transparent overflow-hidden relative cursor-pointer group"
-                          onClick={() => toggleInsight(`couple_${key}`)}>
-                          <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${a.line}`} />
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className={`w-8 h-8 rounded-lg ${a.bg} border ${a.border} flex items-center justify-center`}>
-                              <Icon className={`w-4 h-4 ${a.icon}`} strokeWidth={1.5} />
-                            </div>
-                            <h3 className="text-white/80 font-light flex-1">{label}</h3>
-                            {paragraphs.length > 1 && (
-                              <ChevronDown className={`w-4 h-4 text-white/30 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} strokeWidth={1.5} />
-                            )}
+                        <div key={key} className="p-4 rounded-xl border border-white/8 bg-white/[0.02] cursor-pointer" onClick={() => toggleInsight(ck)}>
+                          <div className="flex items-center gap-3 mb-2">
+                            <span className="text-base">{emoji}</span>
+                            <h3 className="text-white/75 font-light text-sm flex-1">{label}</h3>
+                            <ChevronDown className={`w-4 h-4 text-white/25 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                           </div>
-                          <div className="text-white/55 text-sm font-light leading-relaxed space-y-2">
-                            {visibleParagraphs.map((p, i) => (
-                              <div key={i} className="flex items-start gap-2">
-                                <span className={`${a.dot} mt-1.5 text-[6px]`}>●</span>
-                                <p>{renderBold(p)}</p>
-                              </div>
-                            ))}
+                          <div className="text-white/50 text-sm font-light leading-relaxed space-y-2">
+                            {(isExpanded ? paragraphs : paragraphs.slice(0, 1)).map((p, i) => <p key={i}>{renderBold(p)}</p>)}
                           </div>
-                          {paragraphs.length > 1 && !isExpanded && (
-                            <p className={`text-xs mt-2 ${a.icon} opacity-60`}>Toca para ver más →</p>
-                          )}
+                          {!isExpanded && paragraphs.length > 1 && <p className="text-violet-400/40 text-xs mt-1">Ver más →</p>}
                         </div>
                       )
                     })}
@@ -2508,105 +3337,72 @@ const DiagnosticoRelacionalPage = () => {
                 </motion.div>
               )}
 
-              {/* ── DOMINANT CYCLES (premium) ── */}
+              {/* ── DOMINANT CYCLES ── */}
               {aiAnalysis.dominant_cycles?.length > 0 && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                   <h2 className="text-xl font-light text-white/70 mb-6 text-center">🔄 Ciclos Relacionales Dominantes</h2>
                   <div className="space-y-4">
                     {aiAnalysis.dominant_cycles.map((cycle, i) => (
                       <div key={i} className="p-5 rounded-2xl border border-amber-500/15 bg-gradient-to-br from-amber-500/[0.03] to-transparent relative overflow-hidden">
                         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-500/30 to-orange-500/30" />
-                        {/* Cycle name as visual badge */}
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
-                            <span className="text-lg">🔁</span>
-                          </div>
-                          <div>
-                            <h3 className="text-amber-300/80 font-medium">{cycle.name}</h3>
-                            <p className="text-white/30 text-xs">Ciclo {i + 1} detectado</p>
-                          </div>
+                        <div className="flex items-center gap-3 mb-3">
+                          <span className="text-lg">🔁</span>
+                          <h3 className="text-amber-300/80 font-light flex-1">{cycle.name}</h3>
                         </div>
-                        {/* Visual cycle flow arrow */}
                         {cycle.name && (
-                          <div className="flex items-center justify-center gap-2 mb-4 py-3 px-4 rounded-xl bg-amber-500/[0.05] border border-amber-500/10">
+                          <div className="flex items-center justify-center gap-2 mb-4 py-3 px-4 rounded-xl bg-amber-500/[0.05] border border-amber-500/10 flex-wrap">
                             {cycle.name.split(/[-–→]/g).map((step, si, arr) => (
                               <span key={si} className="flex items-center gap-2">
                                 <span className="text-amber-300/70 text-sm font-light">{step.trim()}</span>
                                 {si < arr.length - 1 && <ArrowRight className="w-3.5 h-3.5 text-amber-400/40" />}
                               </span>
                             ))}
-                            <ArrowRight className="w-3.5 h-3.5 text-amber-400/40" />
                             <span className="text-amber-400/50 text-[10px]">↻</span>
                           </div>
                         )}
-                        <div className="text-white/55 text-sm font-light leading-relaxed space-y-2">
-                          {(cycle.explanation || '').split('\n\n').map((p, j) => (
-                            <div key={j} className="flex items-start gap-2">
-                              <span className="text-amber-400/30 mt-1.5 text-[6px]">●</span>
-                              <p>{renderBold(p)}</p>
-                            </div>
-                          ))}
-                        </div>
+                        <p className="text-white/55 text-sm font-light leading-relaxed">{renderBold(cycle.explanation)}</p>
                       </div>
                     ))}
                   </div>
                 </motion.div>
               )}
 
-              {/* ── EMOTIONAL SENSITIVITIES (premium) ── */}
+              {/* ── EMOTIONAL SENSITIVITIES ── */}
               {aiAnalysis.activated_emotional_sensitivities?.length > 0 && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">💔 Sensibilidades Emocionales Activadas</h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {aiAnalysis.activated_emotional_sensitivities.map((sens, i) => {
-                      const sensEmojis = ['😰', '😢', '😔', '🥺', '😶', '💫']
-                      return (
-                        <div key={i} className="p-5 rounded-2xl border border-rose-500/15 bg-gradient-to-br from-rose-500/[0.03] to-transparent relative overflow-hidden">
-                          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-rose-500/30 to-pink-500/30" />
-                          <div className="flex items-center gap-3 mb-3">
-                            <span className="text-xl">{sensEmojis[i % sensEmojis.length]}</span>
-                            <h3 className="text-rose-300/80 font-light flex-1">{sens.name}</h3>
-                          </div>
-                          {/* Severity indicator */}
-                          <div className="flex items-center gap-1.5 mb-3">
-                            {[1, 2, 3].map(dot => (
-                              <div key={dot} className={`w-2 h-2 rounded-full ${dot <= 2 ? 'bg-rose-400/50' : 'bg-white/10'}`} />
-                            ))}
-                            <span className="text-rose-400/40 text-[10px] ml-1">activada</span>
-                          </div>
-                          <p className="text-white/55 text-sm font-light leading-relaxed">{renderBold(sens.description)}</p>
-                        </div>
-                      )
-                    })}
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">Sensibilidades Emocionales Activadas</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {aiAnalysis.activated_emotional_sensitivities.map((sens, i) => (
+                      <div key={i} className="p-5 rounded-2xl border border-rose-500/15 bg-gradient-to-br from-rose-500/[0.03] to-transparent">
+                        <h3 className="text-rose-300/80 font-light mb-2">{sens.name}</h3>
+                        <p className="text-white/50 text-sm font-light leading-relaxed">{renderBold(sens.description)}</p>
+                      </div>
+                    ))}
                   </div>
                 </motion.div>
               )}
 
-              {/* ── KEY INSIGHT (premium) ── */}
+              {/* ── KEY INSIGHT ── */}
               {aiAnalysis.key_insight && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                   className="p-6 lg:p-8 rounded-2xl border border-cyan-500/15 bg-gradient-to-br from-cyan-500/[0.03] to-transparent relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500/30 to-teal-500/30" />
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/15 flex items-center justify-center">
-                      <Zap className="w-5 h-5 text-cyan-400/50" strokeWidth={1.5} />
-                    </div>
-                    <h2 className="text-xl font-light text-white/70">💡 Observación Clave</h2>
+                    <Zap className="w-6 h-6 text-cyan-400/50" strokeWidth={1.5} />
+                    <h2 className="text-xl font-light text-white/70">Observación Clave</h2>
                   </div>
-                  <p className="text-white/60 text-sm font-light leading-relaxed">{renderBold(aiAnalysis.key_insight)}</p>
+                  <p className="text-white/60 text-base font-light leading-relaxed">{renderBold(aiAnalysis.key_insight)}</p>
                 </motion.div>
               )}
 
-              {/* ── RECOMMENDATION (premium) ── */}
+              {/* ── RECOMMENDATION ── */}
               {aiAnalysis.recommendation && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1 }}
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                   className="p-6 lg:p-8 rounded-2xl border border-emerald-500/15 bg-gradient-to-br from-emerald-500/[0.03] to-transparent relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500/30 to-green-500/30" />
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center">
-                      <Star className="w-5 h-5 text-emerald-400/50" strokeWidth={1.5} />
-                    </div>
-                    <h2 className="text-xl font-light text-white/70">🌟 Recomendación Profesional</h2>
+                    <Star className="w-6 h-6 text-emerald-400/50" strokeWidth={1.5} />
+                    <h2 className="text-xl font-light text-white/70">Recomendación Profesional</h2>
                   </div>
                   <div className="text-white/60 text-sm font-light leading-relaxed space-y-3">
                     {aiAnalysis.recommendation.split('\n\n').map((p, i) => (
@@ -2619,17 +3415,17 @@ const DiagnosticoRelacionalPage = () => {
                 </motion.div>
               )}
 
-              {/* ── SESSION WORK ITEMS (premium) ── */}
+              {/* ── SESSION WORK ITEMS (temas para terapia) ── */}
               {aiAnalysis.session_work_items?.length > 0 && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2 }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">📋 Temas para Sesión</h2>
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">Temas para Trabajar en Terapia</h2>
                   <div className="space-y-3">
                     {aiAnalysis.session_work_items.map((item, i) => {
                       const { title, description } = parseItemTitle(item)
                       return (
-                        <div key={i} className="p-4 rounded-xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.02] to-transparent relative overflow-hidden flex items-start gap-3">
+                        <div key={i} className="p-4 rounded-xl border border-violet-500/10 bg-violet-500/[0.02] flex items-start gap-3">
                           <div className="w-7 h-7 rounded-lg bg-violet-500/10 border border-violet-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <span className="text-violet-400/60 text-xs font-light">{i + 1}</span>
+                            <span className="text-violet-400/60 text-xs">{i + 1}</span>
                           </div>
                           <div>
                             {title && <p className="text-violet-300/80 font-medium text-sm mb-0.5">{title}</p>}
@@ -2642,8 +3438,8 @@ const DiagnosticoRelacionalPage = () => {
                 </motion.div>
               )}
 
-              {/* Actions: PDF + WhatsApp + Restart */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3 }}
+              {/* ── ACTIONS: PDF + WhatsApp ── */}
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 className="flex flex-col sm:flex-row items-center gap-4 justify-center pt-8 border-t border-white/5">
                 <motion.button onClick={generatePDF} disabled={pdfGenerating}
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
@@ -2653,7 +3449,7 @@ const DiagnosticoRelacionalPage = () => {
                 </motion.button>
                 <motion.button
                   onClick={() => {
-                    const msg = `Hola! Acabo de hacer el Diagnóstico Relacional y me gustaría agendar una sesión para profundizar en mis resultados.`
+                    const msg = `Hola! Acabo de hacer la Radiografía de Pareja y me gustaría agendar una sesión para profundizar en mis resultados.`
                     window.open(`https://wa.me/527228720520?text=${encodeURIComponent(msg)}`, '_blank')
                   }}
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
@@ -2663,7 +3459,7 @@ const DiagnosticoRelacionalPage = () => {
               </motion.div>
 
               {/* ── CONSULTATION CTA — $1,199 ── */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5 }}
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 className="p-8 rounded-2xl border border-violet-500/20 bg-gradient-to-br from-violet-500/[0.06] to-fuchsia-500/[0.03] relative overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/50 via-fuchsia-500/50 to-pink-500/50" />
                 <div className="text-center space-y-4">
@@ -2673,7 +3469,7 @@ const DiagnosticoRelacionalPage = () => {
                   <div>
                     <h3 className="text-xl font-light text-white mb-2">Lleva este diagnóstico a una sesión profesional</h3>
                     <p className="text-white/40 text-sm font-light leading-relaxed max-w-lg mx-auto">
-                      Un psicólogo clínico interpreta tus resultados contigo en una sesión privada de 1 hora. No solo entenderás qué pasa — sabrás exactamente qué hacer con lo que descubriste.
+                      Un psicólogo clínico interpreta tus resultados contigo en una sesión privada de 1 hora.
                     </p>
                   </div>
                   <div className="flex flex-wrap items-center justify-center gap-3 text-white/35 text-xs font-light">
@@ -2686,7 +3482,6 @@ const DiagnosticoRelacionalPage = () => {
                   </div>
                   <div className="pt-2 space-y-3">
                     <p className="text-2xl font-light text-white mb-1">${PRODUCT_PRICE_CONSULTA} <span className="text-base text-white/35">MXN</span></p>
-                    <p className="text-white/35 text-xs font-light">Al completar el pago, recibirás un botón de WhatsApp para coordinar directamente con Luis la fecha y hora de tu sesión.</p>
                     <motion.a
                       href={STRIPE_LINKS.consulta}
                       target="_blank" rel="noopener noreferrer"

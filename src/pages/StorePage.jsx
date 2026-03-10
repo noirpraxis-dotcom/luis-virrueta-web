@@ -20,11 +20,11 @@ const StorePage = () => {
       category: 'Sesión 1:1 con Luis',
       price: '$700 MXN',
       duration: '60 min',
-      image: '/individual imagen.jpg',
+      image: '/productos/consulta individual/imagenes consulta/portada tarjeta.jpg',
       description:
         'No venimos a hablar de síntomas. Venimos a ver qué hay por debajo. ' +
         'Trabajo los filtros inconscientes que moldean tu realidad y comenzamos a atravesarlos.',
-      shortDesc: 'No venimos a hablar de síntomas. En 60 minutos trabajamos los filtros inconscientes que están moldeando tu realidad — con el Método AION©, sin rodeos, sin protocolo.',
+      shortDesc: 'Algo no está bien — y no terminas de nombrarlo. En 60 minutos de trabajo real con el Método AION©, vemos lo que hay debajo. No síntomas. No estrategias. Lo que realmente está operando.',
       benefits: [
         '60 min por videollamada — directo al fondo',
         'Método AION© — sin scripts ni manuales',
@@ -41,11 +41,11 @@ const StorePage = () => {
       category: 'Sesión para dos',
       price: '$1,199 MXN',
       duration: '90 min',
-      image: '/productos/consulta pareja/cONEXIÓN/0.jpg',
+      image: '/productos/consulta pareja/imagenes pareja/portada pareja.jpg',
       description:
         'Detrás de cada conflicto hay un patrón: heredado, proyectado, repetido sin que nadie lo nombre. ' +
         'En esta sesión empezamos a nombrarlo.',
-      shortDesc: 'Las parejas no pelean por lo que creen que pelean. Detrás de cada conflicto hay un patrón heredado, proyectado, repetido. En 90 minutos de trabajo real, empezamos a nombrar lo que nadie ha nombrado — y eso cambia todo.',
+      shortDesc: 'No pelean por lo que creen que pelean. Hay algo más. En 90 minutos con el Método AION©, lo nombramos — sin tomar partido, sin técnicas, sin protocolo. Solo lo que realmente está pasando entre ustedes.', 
       benefits: [
         '90 min juntos por videollamada — sin tomar partido',
         'Se nombra lo que ninguno puede ver solo',
@@ -58,18 +58,18 @@ const StorePage = () => {
     },
     {
       id: 7,
-      name: 'Termómetro Inconsciente de Pareja',
+      name: 'Radiografía de Pareja — 12 Dimensiones Psicológicas',
       category: 'Diagnóstico Psicológico',
       price: 'Desde $349 MXN',
-      duration: '~30 min',
+      duration: '~35 min',
       image: '/TEST PAREJA/TERMOMETRO AMOR.jpg',
-      description: '¿Sientes que algo cambió pero no sabes qué? Este test escucha lo que no dices. Hablas por micrófono, el algoritmo detecta tus patrones inconscientes y recibes un reporte profesional con gráficas, ciclos emocionales y lo que realmente está pasando en tu relación.',
-      shortDesc: '¿Tu relación ya no se siente igual? Descubre los patrones invisibles que la están desgastando — antes de que sea tarde.',
+      description: '44 preguntas narrativas analizadas por inteligencia artificial desde la perspectiva de 12 psicólogos especializados en relaciones (Bowlby, Gottman, Sternberg, Perel, Schnarch y más). Radar de 12 dimensiones, mapa de apego, sub-scores y análisis clínico profundo.',
+      shortDesc: '¿Tu relación ya no se siente igual? Un test que cruza 12 dimensiones psicológicas para mostrarte exactamente qué está pasando.',
       benefits: [
         'Individual ($349) o Pareja ($549) — cada quien responde por separado',
         'Hablas por micrófono — como platicar con un psicólogo',
-        'Detecta ciclos de apego, defensa y patrones que se repiten',
-        'Reporte visual completo: radar, barras, análisis narrativo y PDF',
+        '12 dimensiones: apego, conflicto, deseo, diferenciación, y más',
+        'Radar, mapa de apego, sub-scores, narrativas por autor y PDF completo',
         'Opción: sesión con el psicólogo ($1,199) para interpretar tus resultados'
       ],
       gradient: 'from-violet-600/20 to-fuchsia-600/20',

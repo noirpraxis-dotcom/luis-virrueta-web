@@ -1457,7 +1457,7 @@ const ConsultaParejaPage = () => {
                   className="flex items-center justify-center gap-6 mb-10 text-white/35 text-xs tracking-wider flex-wrap">
                   <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> ~25 minutos</span>
                   <span className="w-px h-3 bg-white/20" />
-                  <span className="flex items-center gap-1.5"><Brain className="w-3.5 h-3.5" /> 50 preguntas + IA</span>
+                  <span className="flex items-center gap-1.5"><Brain className="w-3.5 h-3.5" /> 44 preguntas + IA</span>
                   <span className="w-px h-3 bg-white/20" />
                   <span className="flex items-center gap-1.5"><BarChart3 className="w-3.5 h-3.5" /> Gráficas profesionales</span>
                   <span className="w-px h-3 bg-white/20" />
@@ -1641,9 +1641,9 @@ const ConsultaParejaPage = () => {
               <div className="max-w-5xl mx-auto">
                 <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-center mb-12">
                   <h2 className="text-3xl lg:text-4xl font-light text-white mb-3 font-display tracking-wide">
-                    8 dimensiones <span className="italic font-normal">psicológicas</span>
+                    12 dimensiones <span className="italic font-normal">psicológicas</span>
                   </h2>
-                  <p className="text-white/40 text-sm font-extralight tracking-wide">Cada área se analiza con IA y se muestra con su propia gráfica y explicación</p>
+                  <p className="text-white/40 text-sm font-extralight tracking-wide">Cada dimensión se analiza con IA desde la perspectiva de 12 psicólogos especializados</p>
                 </motion.div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {AREAS.map((area, i) => (
@@ -1733,7 +1733,7 @@ const ConsultaParejaPage = () => {
                   ¿Qué nivel de <span className="italic font-normal text-pink-300/90">profundidad</span> buscas?
                 </h2>
                 <p className="text-white/40 text-sm font-extralight leading-relaxed max-w-lg mx-auto">
-                  El diagnóstico gratuito te da una radiografía rápida. El premium analiza 50 preguntas con IA para revelar patrones invisibles.
+                  El diagnóstico gratuito te da una radiografía rápida. El premium analiza 44 preguntas con IA para revelar patrones invisibles.
                 </p>
               </motion.div>
 
@@ -1799,14 +1799,14 @@ const ConsultaParejaPage = () => {
                     <div className="flex items-center gap-3 mb-5 py-2 px-3 rounded-lg bg-violet-500/[0.06] border border-violet-500/10">
                       <span className="flex items-center gap-1.5 text-white/45 text-xs"><Clock className="w-3 h-3" /> ~25 min</span>
                       <span className="w-px h-3 bg-white/10" />
-                      <span className="flex items-center gap-1.5 text-white/45 text-xs"><Brain className="w-3 h-3" /> 50 preguntas</span>
+                      <span className="flex items-center gap-1.5 text-white/45 text-xs"><Brain className="w-3 h-3" /> 44 preguntas</span>
                       <span className="w-px h-3 bg-white/10" />
                       <span className="text-violet-300/70 text-xs font-light">${PREMIUM_PRICE} MXN</span>
                     </div>
 
                     <ul className="space-y-2.5 mb-5 text-white/45 text-xs font-extralight">
-                      <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 mt-0.5 flex-shrink-0" /> 25 preguntas abiertas + 25 proyectivas</li>
-                      <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 mt-0.5 flex-shrink-0" /> Gráfica radar de 8 dimensiones</li>
+                      <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 mt-0.5 flex-shrink-0" /> 44 preguntas analizadas por IA</li>
+                      <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 mt-0.5 flex-shrink-0" /> Gráfica radar de 12 dimensiones</li>
                       <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 mt-0.5 flex-shrink-0" /> Análisis por dimensión con gráfica propia</li>
                       <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 mt-0.5 flex-shrink-0" /> Patrones inconscientes y mecanismos de defensa</li>
                       <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 mt-0.5 flex-shrink-0" /> Lectura psicoanalítica personalizada</li>
@@ -1883,7 +1883,7 @@ const ConsultaParejaPage = () => {
 
                 {/* Features list */}
                 <div className="space-y-2.5 mb-8">
-                  {['Cuestionario psicológico profundo (50 preguntas)', 'Perfil de patrones inconscientes', 'Análisis por dimensión con gráfica individual', 'Lectura integral: cruce de datos + reflexiones', 'Gráfica radar profesional de 8 dimensiones', 'Informe PDF profesional descargable'].map((feat, i) => (
+                  {['Cuestionario psicológico profundo (44 preguntas)', 'Perfil de patrones inconscientes', 'Análisis por dimensión con gráfica individual', 'Lectura integral: cruce de datos + reflexiones', 'Gráfica radar profesional de 12 dimensiones', 'Informe PDF profesional descargable'].map((feat, i) => (
                     <div key={i} className="flex items-start gap-2.5">
                       <Check className="w-3.5 h-3.5 text-violet-400/60 mt-0.5 flex-shrink-0" strokeWidth={2} />
                       <span className="text-white/50 text-xs font-light leading-relaxed">{feat}</span>
