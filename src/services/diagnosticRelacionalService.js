@@ -188,6 +188,31 @@ function buildPrompt(responses, questions, analysisMode) {
   "evidence_signals": [
     {"signal": "(señal detectada)", "source_questions": ["Q1", "Q15"]}
   ],
+  "key_patterns": [
+    {"title": "(patrón clave 1 — frase corta)", "description": "(1-2 oraciones explicando el patrón)", "severity": "high|medium|low"},
+    {"title": "(patrón clave 2)", "description": "(1-2 oraciones)", "severity": "high|medium|low"},
+    {"title": "(patrón clave 3)", "description": "(1-2 oraciones)", "severity": "high|medium|low"}
+  ],
+  "conflict_flow": {
+    "nodes": [
+      {"id": "trigger", "label": "(lo que detona el conflicto)"},
+      {"id": "reaction_a", "label": "(reacción persona A)"},
+      {"id": "reaction_b", "label": "(reacción persona B)"},
+      {"id": "escalation", "label": "(cómo escala)"},
+      {"id": "result", "label": "(resultado habitual)"}
+    ],
+    "links": [
+      {"source": "trigger", "target": "reaction_a", "value": "(intensidad 10-100)"},
+      {"source": "trigger", "target": "reaction_b", "value": "(intensidad 10-100)"},
+      {"source": "reaction_a", "target": "escalation", "value": "(10-100)"},
+      {"source": "reaction_b", "target": "escalation", "value": "(10-100)"},
+      {"source": "escalation", "target": "result", "value": "(10-100)"}
+    ]
+  },
+  "future_projection": {
+    "if_continues": "(2 párrafos: qué pasará si los patrones actuales siguen sin intervención. Sé directo pero empático.)",
+    "if_changes": "(2 párrafos: qué potencial tiene la relación si trabajan estas áreas. Inspira sin prometer.)"
+  },
   "empathic_opening": "(2-3 párrafos. Lo primero que la persona leerá. Hazla sentir profundamente comprendida. Cita sus palabras. **Negrita** en lo importante.)",
   "key_insight": "(1 párrafo: la observación más reveladora de todo el análisis.)",
   "recommendation": "(2 párrafos: recomendación profesional personalizada. Orienta hacia sesión.)",
@@ -347,6 +372,31 @@ function generateFallbackAnalysis(analysisMode) {
       '**Patrón de apego**: Explorar cómo tu historia personal influye en lo que buscas y temes en la relación',
       '**Ciclos de conflicto**: Identificar qué se repite y qué necesidad no resuelta lo alimenta',
       '**Comunicación emocional**: Trabajar la capacidad de expresar necesidades sin que se convierta en demanda o reproche'
-    ]
+    ],
+    key_patterns: [
+      { title: 'Ciclo de persecución-retirada', description: 'Cuando uno busca cercanía, el otro se aleja. Este ciclo se retroalimenta y genera más distancia.', severity: 'high' },
+      { title: 'Reparación incompleta post-conflicto', description: 'Después de discutir, el tema se "olvida" sin resolverse. La tensión se acumula silenciosamente.', severity: 'high' },
+      { title: 'Desajuste en lenguajes del amor', description: 'Cada uno expresa amor de forma distinta, generando la sensación de dar mucho y recibir poco.', severity: 'medium' }
+    ],
+    conflict_flow: {
+      nodes: [
+        { id: 'trigger', label: 'Comentario crítico' },
+        { id: 'reaction_a', label: 'Defensividad' },
+        { id: 'reaction_b', label: 'Silencio' },
+        { id: 'escalation', label: 'Escalada emocional' },
+        { id: 'result', label: 'Distanciamiento' }
+      ],
+      links: [
+        { source: 'trigger', target: 'reaction_a', value: 60 },
+        { source: 'trigger', target: 'reaction_b', value: 40 },
+        { source: 'reaction_a', target: 'escalation', value: 70 },
+        { source: 'reaction_b', target: 'escalation', value: 30 },
+        { source: 'escalation', target: 'result', value: 80 }
+      ]
+    },
+    future_projection: {
+      if_continues: 'Si los patrones actuales continúan sin intervención, es probable que la **distancia emocional se normalice** — dejando de ser un problema para convertirse en la nueva forma de relacionarse.\n\nEsto genera relaciones donde ambos coexisten pero ya no se buscan emocionalmente. El riesgo no es una ruptura explosiva sino un **desgaste silencioso** que un día se hace irreversible.',
+      if_changes: 'Si deciden trabajar estos patrones de forma consciente, esta relación tiene un **potencial real de transformación**. Los cimientos están: hay compromiso, hay historia compartida, y hay voluntad de entender.\n\nCon intervención profesional, los ciclos actuales pueden romperse y reemplazarse por dinámicas donde ambos se sientan **vistos, seguros y elegidos**.'
+    }
   }
 }

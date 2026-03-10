@@ -251,7 +251,33 @@ const SAMPLE_ANALYSIS = {
     { signal: 'Uso frecuente de "siempre" y "nunca" al describir conflictos', source: 'Q13, Q14' },
     { signal: 'Describe a la pareja con admiración en abstracto pero frustración en lo cotidiano', source: 'Q4, Q5, Q13' },
     { signal: 'Respuesta emocional intensa ante preguntas de distancia (Q7, Q9)', source: 'Q7, Q9' }
-  ]
+  ],
+  key_patterns: [
+    { title: 'Ciclo persecución-retirada activo', description: 'Cuando buscas cercanía, tu pareja percibe presión y se aleja. Cuando se aleja, tú buscas más — confirmando el ciclo.', severity: 'high' },
+    { title: 'Reparación post-conflicto ausente', description: 'Los conflictos no se resuelven — se acumulan y cada silencio deposita una capa más de distancia emocional.', severity: 'high' },
+    { title: 'Desajuste en lenguajes del amor', description: 'Uno da amor con actos de servicio, el otro necesita palabras. Ambos dan mucho pero en idiomas diferentes.', severity: 'medium' },
+    { title: 'Pasión en declive silencioso', description: 'La atracción inicial existe en el fondo, pero la rutina y la falta de novedad han apagado la espontaneidad.', severity: 'medium' }
+  ],
+  conflict_flow: {
+    nodes: [
+      { id: 'trigger', label: 'Comentario percibido como crítica' },
+      { id: 'reaction_a', label: 'Defensividad inmediata' },
+      { id: 'reaction_b', label: 'Silencio / Stonewalling' },
+      { id: 'escalation', label: 'Escalada emocional' },
+      { id: 'result', label: 'Distanciamiento prolongado' }
+    ],
+    links: [
+      { source: 'trigger', target: 'reaction_a', value: 65 },
+      { source: 'trigger', target: 'reaction_b', value: 45 },
+      { source: 'reaction_a', target: 'escalation', value: 75 },
+      { source: 'reaction_b', target: 'escalation', value: 35 },
+      { source: 'escalation', target: 'result', value: 80 }
+    ]
+  },
+  future_projection: {
+    if_continues: 'Si los patrones actuales continúan sin intervención, la **desconexión emocional se normalizará** progresivamente. Dejarán de pelear — no porque se resuelvan los conflictos, sino porque ambos dejarán de intentar.\n\nEl riesgo no es una ruptura explosiva sino un **desgaste silencioso e irreversible**. La coexistencia sin conexión es el destino más probable si no se interviene.',
+    if_changes: 'Si deciden trabajar activamente estas áreas, esta relación tiene un **potencial de transformación real del 72%**. Los cimientos están: hay compromiso sólido, momentos de conexión genuina cuando bajan la guardia, y un deseo mutuo de que funcione.\n\nCon terapia focalizada en emociones (EFT) y trabajo individual en patrones de apego, los ciclos actuales pueden **romperse y reemplazarse por dinámicas de conexión segura**.'
+  }
 }
 
 // ─── ANALYSIS ANIMATION TASKS ───────────────────────────────────────
@@ -581,6 +607,124 @@ function RadarChart({ scores }) {
           </div>
         ))}
       </div>
+    </div>
+  )
+}
+
+// ─── GAUGE CHART SVG (semi-circle arc) ──────────────────────────────
+
+function GaugeChart({ value, label, color, inverted = false, icon }) {
+  const clampedVal = Math.max(0, Math.min(100, value || 0))
+  const displayColor = color || (inverted
+    ? (clampedVal > 60 ? '#ef4444' : clampedVal > 40 ? '#f59e0b' : '#10b981')
+    : (clampedVal >= 60 ? '#10b981' : clampedVal >= 40 ? '#f59e0b' : '#ef4444'))
+  // Arc math: 180deg semi-circle, radius 80, center at (100, 95)
+  const arcLength = Math.PI * 80 // ~251.3
+  const filledLength = (clampedVal / 100) * arcLength
+
+  return (
+    <div className="flex flex-col items-center">
+      <svg viewBox="0 0 200 115" className="w-full max-w-[180px]">
+        {/* Background arc */}
+        <path d="M 20 95 A 80 80 0 0 1 180 95" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={14} strokeLinecap="round" />
+        {/* Filled arc */}
+        <path d="M 20 95 A 80 80 0 0 1 180 95" fill="none" stroke={displayColor} strokeWidth={14} strokeLinecap="round" strokeOpacity={0.6}
+          strokeDasharray={`${filledLength} ${arcLength}`} />
+        {/* Value text */}
+        <text x="100" y="85" textAnchor="middle" fill="white" fontSize="30" fontWeight="300" opacity={0.85}>{clampedVal}%</text>
+        <text x="100" y="108" textAnchor="middle" fill="rgba(255,255,255,0.35)" fontSize="9" fontWeight="300">
+          {inverted ? (clampedVal > 60 ? 'Atención' : clampedVal > 40 ? 'Moderado' : 'Bajo') : (clampedVal >= 60 ? 'Saludable' : clampedVal >= 40 ? 'Moderado' : 'Atención')}
+        </text>
+      </svg>
+      {label && (
+        <div className="flex items-center gap-1.5 mt-1">
+          {icon && <span className="text-sm">{icon}</span>}
+          <span className="text-white/50 text-xs font-light text-center">{label}</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ─── CONFLICT SANKEY DIAGRAM (pure SVG) ─────────────────────────────
+
+function ConflictSankeyChart({ conflictFlow }) {
+  if (!conflictFlow?.nodes?.length || !conflictFlow?.links?.length) return null
+
+  const nodes = conflictFlow.nodes
+  const links = conflictFlow.links
+
+  // Layout: nodes spread across columns (left to right)
+  const colMap = { trigger: 0, reaction_a: 1, reaction_b: 1, escalation: 2, result: 3 }
+  const colGroups = {}
+  nodes.forEach(n => {
+    const col = colMap[n.id] ?? 0
+    if (!colGroups[col]) colGroups[col] = []
+    colGroups[col].push(n)
+  })
+
+  const W = 600, H = 260, pad = 40, nodeW = 18
+  const cols = Object.keys(colGroups).sort((a, b) => a - b)
+  const colCount = cols.length
+
+  // Position nodes
+  const positions = {}
+  cols.forEach((c, ci) => {
+    const group = colGroups[c]
+    const x = pad + (ci / (colCount - 1)) * (W - 2 * pad - nodeW)
+    const totalH = H - 2 * pad
+    const gap = group.length > 1 ? totalH / group.length : 0
+    group.forEach((n, ni) => {
+      const nodeH = Math.max(30, totalH / Math.max(group.length, 1) - 10)
+      const y = pad + ni * gap + (gap - nodeH) / 2
+      positions[n.id] = { x, y, w: nodeW, h: nodeH, label: n.label }
+    })
+  })
+
+  const nodeColors = {
+    trigger: '#f59e0b',
+    reaction_a: '#ef4444',
+    reaction_b: '#6366f1',
+    escalation: '#ec4899',
+    result: '#64748b'
+  }
+
+  return (
+    <div className="overflow-x-auto">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full min-w-[500px]" style={{ maxHeight: 260 }}>
+        {/* Links as curved paths */}
+        {links.map((link, i) => {
+          const src = positions[link.source]
+          const tgt = positions[link.target]
+          if (!src || !tgt) return null
+          const x1 = src.x + src.w
+          const y1 = src.y + src.h / 2
+          const x2 = tgt.x
+          const y2 = tgt.y + tgt.h / 2
+          const mx = (x1 + x2) / 2
+          const thickness = Math.max(2, (link.value / 100) * 12)
+          return (
+            <path key={i}
+              d={`M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`}
+              fill="none" stroke={nodeColors[link.source] || '#8b5cf6'} strokeWidth={thickness} strokeOpacity={0.25}
+            />
+          )
+        })}
+        {/* Nodes */}
+        {nodes.map((n) => {
+          const p = positions[n.id]
+          if (!p) return null
+          const color = nodeColors[n.id] || '#8b5cf6'
+          return (
+            <g key={n.id}>
+              <rect x={p.x} y={p.y} width={p.w} height={p.h} rx={4} fill={color} fillOpacity={0.3} stroke={color} strokeOpacity={0.5} strokeWidth={1} />
+              <text x={p.x + p.w + 6} y={p.y + p.h / 2} dominantBaseline="middle" fill="rgba(255,255,255,0.6)" className="text-[9px] font-light">
+                {p.label}
+              </text>
+            </g>
+          )
+        })}
+      </svg>
     </div>
   )
 }
@@ -1017,6 +1161,16 @@ const DiagnosticoRelacionalPage = () => {
         addParagraph(aiAnalysis.relationship_type.explanation)
       }
 
+      // Key patterns
+      if (aiAnalysis.key_patterns?.length > 0) {
+        addTitle('Patrones Clave Detectados')
+        for (const pattern of aiAnalysis.key_patterns) {
+          checkPage(12); doc.setFontSize(10); doc.setTextColor(80, 50, 120)
+          doc.text(`• ${pattern.title} [${pattern.severity}]`, m, y); y += 6
+          addParagraph(pattern.description)
+        }
+      }
+
       // Composite scores
       if (aiAnalysis.composite_scores) {
         addTitle('Indicadores Compuestos')
@@ -1163,6 +1317,17 @@ const DiagnosticoRelacionalPage = () => {
       if (aiAnalysis.recommendation) {
         addTitle('Recomendación Profesional')
         addParagraph(aiAnalysis.recommendation)
+      }
+
+      // Future projection
+      if (aiAnalysis.future_projection) {
+        addTitle('Proyección del Vínculo')
+        checkPage(12); doc.setFontSize(10); doc.setTextColor(180, 60, 60)
+        doc.text('Si los patrones continúan:', m, y); y += 6
+        addParagraph(aiAnalysis.future_projection.if_continues)
+        checkPage(12); doc.setFontSize(10); doc.setTextColor(40, 140, 80)
+        doc.text('Si deciden trabajarlo:', m, y); y += 6
+        addParagraph(aiAnalysis.future_projection.if_changes)
       }
 
       // Session work items
@@ -2831,6 +2996,48 @@ const DiagnosticoRelacionalPage = () => {
                 <p className="text-white/40 text-sm font-light">Análisis de 44 respuestas × 12 dimensiones psicológicas × 12 autores</p>
               </div>
 
+              {/* ══════════════════════════════════════════════════════
+                  PATRONES CLAVE DETECTADOS (first screen)
+              ══════════════════════════════════════════════════════ */}
+              {aiAnalysis.key_patterns?.length > 0 && (
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+                  <div className="text-center mb-6">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-500/15 bg-amber-500/[0.04] mb-3">
+                      <ScanEye className="w-4 h-4 text-amber-400/60" strokeWidth={1.5} />
+                      <span className="text-amber-300/70 text-xs font-light uppercase tracking-wider">Hallazgos principales</span>
+                    </div>
+                    <h2 className="text-xl font-light text-white/70">Patrones Clave Detectados</h2>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {aiAnalysis.key_patterns.map((pattern, i) => {
+                      const severityConfig = {
+                        high: { border: 'border-red-500/20', bg: 'from-red-500/[0.05]', dot: 'bg-red-400', label: 'Alta prioridad', labelColor: 'text-red-400/70' },
+                        medium: { border: 'border-amber-500/20', bg: 'from-amber-500/[0.04]', dot: 'bg-amber-400', label: 'Moderado', labelColor: 'text-amber-400/60' },
+                        low: { border: 'border-blue-500/15', bg: 'from-blue-500/[0.03]', dot: 'bg-blue-400', label: 'A observar', labelColor: 'text-blue-400/60' }
+                      }
+                      const sev = severityConfig[pattern.severity] || severityConfig.medium
+                      return (
+                        <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                          transition={{ delay: i * 0.08 }}
+                          className={`p-5 rounded-2xl border ${sev.border} bg-gradient-to-br ${sev.bg} to-transparent relative overflow-hidden`}>
+                          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-white/5 to-transparent" />
+                          <div className="flex items-start gap-3">
+                            <div className={`w-2 h-2 rounded-full ${sev.dot} mt-1.5 flex-shrink-0 opacity-60`} />
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1.5">
+                                <h3 className="text-white/80 font-light text-sm">{pattern.title}</h3>
+                              </div>
+                              <p className="text-white/45 text-xs font-light leading-relaxed mb-2">{renderBold(pattern.description)}</p>
+                              <span className={`text-[9px] font-light uppercase tracking-wider ${sev.labelColor}`}>{sev.label}</span>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )
+                    })}
+                  </div>
+                </motion.div>
+              )}
+
               {/* ── RELATIONSHIP TYPE ── */}
               {aiAnalysis.relationship_type && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
@@ -2856,27 +3063,27 @@ const DiagnosticoRelacionalPage = () => {
                 </motion.div>
               )}
 
-              {/* ── 4 COMPOSITE SCORES (top KPIs) ── */}
+              {/* ══════════════════════════════════════════════════════
+                  ESTABILIDAD DEL VÍNCULO (Gauge Charts)
+              ══════════════════════════════════════════════════════ */}
               {aiAnalysis.composite_scores && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                    {Object.entries(COMPOSITE_LABELS).map(([key, meta]) => {
-                      const val = aiAnalysis.composite_scores[key] ?? 0
-                      const level = getLevelPct(meta.inverted ? (100 - val) : val)
-                      const Icon = meta.icon
-                      return (
-                        <div key={key} className="p-5 rounded-2xl border border-white/8 bg-white/[0.02] text-center">
-                          <Icon className="w-5 h-5 text-violet-400/50 mx-auto mb-2" strokeWidth={1.5} />
-                          <p className="text-3xl font-light text-white mb-1">{val}<span className="text-base text-white/30">%</span></p>
-                          <p className="text-white/50 text-xs font-light mb-2">{meta.label}</p>
-                          <span className={`text-[10px] font-light ${level.color}`}>{level.label}</span>
-                          <div className="h-1.5 bg-white/5 rounded-full overflow-hidden mt-2">
-                            <motion.div initial={{ width: 0 }} animate={{ width: `${val}%` }} transition={{ duration: 1, delay: 0.3 }}
-                              className={`h-full bg-gradient-to-r ${getBarColor(val, meta.inverted)} rounded-full`} />
-                          </div>
-                        </div>
-                      )
-                    })}
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">Estabilidad del Vínculo</h2>
+                  <div className="p-6 rounded-2xl border border-white/8 bg-white/[0.02]">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                      {Object.entries(COMPOSITE_LABELS).map(([key, meta]) => {
+                        const val = aiAnalysis.composite_scores[key] ?? 0
+                        return (
+                          <GaugeChart
+                            key={key}
+                            value={val}
+                            label={meta.label}
+                            inverted={meta.inverted}
+                            icon={key === 'salud_relacional_global' ? '💚' : key === 'sincronia_emocional' ? '🔄' : key === 'riesgo_ruptura' ? '⚠️' : '🌱'}
+                          />
+                        )
+                      })}
+                    </div>
                   </div>
                 </motion.div>
               )}
@@ -3164,6 +3371,66 @@ const DiagnosticoRelacionalPage = () => {
                       <div className="flex gap-6 text-xs text-white/40 font-light">
                         <span>Ansiedad: {aiAnalysis.attachment_map.anxiety_level ?? 0}%</span>
                         <span>Evitación: {aiAnalysis.attachment_map.avoidance_level ?? 0}%</span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* ══════════════════════════════════════════════════════
+                  DINÁMICA DE CONFLICTO (Sankey Flow)
+              ══════════════════════════════════════════════════════ */}
+              {aiAnalysis.conflict_flow && (
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">⚡ Dinámica de Conflicto</h2>
+                  <div className="p-6 rounded-2xl border border-white/8 bg-gradient-to-br from-rose-500/[0.02] to-transparent">
+                    <p className="text-white/35 text-xs font-light mb-4 text-center">Cómo fluye el conflicto en tu relación: desde el detonante hasta el resultado habitual</p>
+                    <ConflictSankeyChart conflictFlow={aiAnalysis.conflict_flow} />
+                  </div>
+                </motion.div>
+              )}
+
+              {/* ══════════════════════════════════════════════════════
+                  PROYECCIÓN DEL VÍNCULO (two scenarios)
+              ══════════════════════════════════════════════════════ */}
+              {aiAnalysis.future_projection && (
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">🔮 Proyección del Vínculo</h2>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    {/* Scenario: If continues */}
+                    <div className="p-6 rounded-2xl border border-red-500/15 bg-gradient-to-br from-red-500/[0.03] to-transparent relative overflow-hidden">
+                      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-red-500/30 to-orange-500/30" />
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/15 flex items-center justify-center">
+                          <TrendingDown className="w-5 h-5 text-red-400/50" strokeWidth={1.5} />
+                        </div>
+                        <div>
+                          <h3 className="text-red-300/80 font-light text-sm">Si los patrones continúan</h3>
+                          <p className="text-white/25 text-[10px] font-light">Sin intervención profesional</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        {(aiAnalysis.future_projection.if_continues || '').split('\n\n').map((p, i) => (
+                          <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                        ))}
+                      </div>
+                    </div>
+                    {/* Scenario: If changes */}
+                    <div className="p-6 rounded-2xl border border-emerald-500/15 bg-gradient-to-br from-emerald-500/[0.03] to-transparent relative overflow-hidden">
+                      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500/30 to-teal-500/30" />
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center">
+                          <TrendingUp className="w-5 h-5 text-emerald-400/50" strokeWidth={1.5} />
+                        </div>
+                        <div>
+                          <h3 className="text-emerald-300/80 font-light text-sm">Si deciden trabajarlo</h3>
+                          <p className="text-white/25 text-[10px] font-light">Con trabajo consciente o terapia</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        {(aiAnalysis.future_projection.if_changes || '').split('\n\n').map((p, i) => (
+                          <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                        ))}
                       </div>
                     </div>
                   </div>
