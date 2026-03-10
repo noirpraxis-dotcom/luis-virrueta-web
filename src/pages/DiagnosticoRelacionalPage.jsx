@@ -628,9 +628,7 @@ const DiagnosticoRelacionalPage = () => {
   const [pdfGenerating, setPdfGenerating] = useState(false)
   const [carouselIdx, setCarouselIdx] = useState(0)
   const [testimonialIdx, setTestimonialIdx] = useState(0)
-  const [pricingIdx, setPricingIdx] = useState(0)
   const testimonialRef = useRef(null)
-  const pricingRef = useRef(null)
   const [expandedInsights, setExpandedInsights] = useState({})
   const toggleInsight = useCallback((key) => setExpandedInsights(prev => ({ ...prev, [key]: !prev[key] })), [])
   const [resumeDraft, setResumeDraft] = useState(null)
@@ -1983,46 +1981,10 @@ const DiagnosticoRelacionalPage = () => {
                   </div>
                 </div>
 
-                {/* Mobile: swipeable pricing carousel with arrows + dots */}
-                <div className="sm:hidden">
-                <div className="relative">
-                  {pricingIdx > 0 && (
-                    <button
-                      onClick={() => {
-                        const next = pricingIdx - 1
-                        setPricingIdx(next)
-                        if (pricingRef.current) {
-                          pricingRef.current.scrollTo({ left: next * (pricingRef.current.scrollWidth / 3), behavior: 'smooth' })
-                        }
-                      }}
-                      className="absolute left-1 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-black/60 border border-white/20 text-white backdrop-blur-sm shadow-lg"
-                    >
-                      <ChevronLeft className="w-4 h-4" strokeWidth={2} />
-                    </button>
-                  )}
-                  {pricingIdx < 2 && (
-                    <button
-                      onClick={() => {
-                        const next = pricingIdx + 1
-                        setPricingIdx(next)
-                        if (pricingRef.current) {
-                          pricingRef.current.scrollTo({ left: next * (pricingRef.current.scrollWidth / 3), behavior: 'smooth' })
-                        }
-                      }}
-                      className="absolute right-1 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-black/60 border border-white/20 text-white backdrop-blur-sm shadow-lg"
-                    >
-                      <ChevronRight className="w-4 h-4" strokeWidth={2} />
-                    </button>
-                  )}
-                <div
-                  ref={pricingRef}
-                  onScroll={(e) => {
-                    const el = e.currentTarget
-                    setPricingIdx(Math.min(2, Math.round(el.scrollLeft / (el.scrollWidth / 3))))
-                  }}
-                  className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mx-2 px-2 scrollbar-hide max-w-4xl" style={{ WebkitOverflowScrolling: 'touch' }}>
-                  {/* Guía Gratuita mobile */}
-                  <div className="flex-shrink-0 w-[85vw] snap-center p-7 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.04] to-teal-500/[0.02] text-left relative overflow-hidden">
+                {/* Mobile: stacked pricing cards */}
+                <div className="sm:hidden flex flex-col gap-5 max-w-sm mx-auto">
+                  {/* Guía Gratuita */}
+                  <div className="p-7 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.04] to-teal-500/[0.02] text-left relative overflow-hidden">
                     <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500/40 to-teal-500/40" />
                     <div className="flex items-center gap-2 mb-2">
                       <p className="text-emerald-300/60 text-xs uppercase tracking-[0.15em]">Guía gratuita</p>
@@ -2046,8 +2008,8 @@ const DiagnosticoRelacionalPage = () => {
                       Descargar gratis
                     </motion.button>
                   </div>
-                  {/* Individual mobile */}
-                  <div className="flex-shrink-0 w-[85vw] snap-center p-7 rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left">
+                  {/* Individual */}
+                  <div className="p-7 rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left">
                     <p className="text-white/50 text-xs uppercase tracking-[0.15em] mb-2">Individual</p>
                     <div className="flex items-baseline gap-2 mb-1">
                       <span className="text-white/30 text-lg line-through">$699</span>
@@ -2068,8 +2030,8 @@ const DiagnosticoRelacionalPage = () => {
                       Comenzar
                     </motion.button>
                   </div>
-                  {/* Pareja mobile */}
-                  <div className="flex-shrink-0 w-[85vw] snap-center p-7 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left relative overflow-hidden">
+                  {/* Pareja */}
+                  <div className="p-7 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left relative overflow-hidden">
                     <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/50 to-fuchsia-500/50" />
                     <div className="flex items-center gap-2 mb-2">
                       <p className="text-violet-300/60 text-xs uppercase tracking-[0.15em]">Pareja</p>
@@ -2094,29 +2056,6 @@ const DiagnosticoRelacionalPage = () => {
                       Comenzar en pareja
                     </motion.button>
                   </div>
-                </div>
-                </div>
-                {/* Pricing dots */}
-                <div className="flex justify-center gap-2 mt-3">
-                  {['Gratis', 'Individual', 'Pareja'].map((label, i) => (
-                    <button
-                      key={i}
-                      onClick={() => {
-                        setPricingIdx(i)
-                        if (pricingRef.current) {
-                          pricingRef.current.scrollTo({ left: i * (pricingRef.current.scrollWidth / 3), behavior: 'smooth' })
-                        }
-                      }}
-                      className={`transition-all duration-300 rounded-full px-2 py-0.5 text-[10px] font-medium border ${
-                        i === pricingIdx
-                          ? 'bg-violet-500/20 border-violet-400/40 text-violet-300'
-                          : 'bg-white/5 border-white/10 text-white/30'
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
                 </div>
 
                 {/* Trust signals */}
