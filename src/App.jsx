@@ -42,6 +42,7 @@ const LaboratorioEticoPage = lazy(() => import('./pages/LaboratorioEticoPage'))
 const DiagnosticoRelacionalPage = lazy(() => import('./pages/DiagnosticoRelacionalPage'))
 const ConsultaProductPage = lazy(() => import('./pages/ConsultaProductPage'))
 const ConsultaGraciasPage = lazy(() => import('./pages/ConsultaGraciasPage'))
+const RadiografiaPremiumPage = lazy(() => import('./pages/RadiografiaPremiumPage'))
 
 // Loading component
 const PageLoader = () => (
@@ -194,6 +195,11 @@ const AppContent = () => {
               {/* Diagnóstico Relacional */}
               <Route path="/tienda/diagnostico-relacional" element={
                 <DiagnosticoRelacionalPage />
+              } />
+
+              {/* Radiografía Premium */}
+              <Route path="/tienda/radiografia-premium" element={
+                <RadiografiaPremiumPage />
               } />
 
               {/* Consulta Individual */}

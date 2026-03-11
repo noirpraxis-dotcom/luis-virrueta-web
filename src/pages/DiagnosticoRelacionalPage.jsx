@@ -2064,7 +2064,7 @@ const DiagnosticoRelacionalPage = () => {
                 <p className="text-white/50 text-lg font-light mb-3 max-w-xl mx-auto">Un diagnóstico que analiza tu relación desde 12 perspectivas psicológicas simultáneas.</p>
                 <p className="text-white/30 text-sm font-light mb-10 max-w-lg mx-auto">Gottman · Bowlby · Sternberg · Perel · Johnson · y 7 especialistas más analizan tu caso en un solo reporte.</p>
 
-                <div className="hidden sm:grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
+                <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
                   {/* Guía Gratuita */}
                   <div className="p-8 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.04] to-teal-500/[0.02] text-left relative overflow-hidden">
                     <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500/40 to-teal-500/40" />
@@ -2144,6 +2144,44 @@ const DiagnosticoRelacionalPage = () => {
                       Comenzar en pareja
                     </motion.button>
                   </div>
+                  {/* Radiografía Premium */}
+                  <div className="p-8 rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500/50 to-blue-500/50" />
+                    <div className="flex items-center gap-2 mb-2">
+                      <p className="text-cyan-300/60 text-xs uppercase tracking-[0.15em]">Premium</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/20 text-cyan-300/70">40 preguntas narrativas</span>
+                    </div>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <p className="text-3xl font-light text-cyan-300">Con código</p>
+                    </div>
+                    <p className="text-white/40 text-sm font-light mb-5">Análisis narrativo profundo · 12 dimensiones · 9 corrientes psicológicas</p>
+                    <ul className="space-y-2 mb-6">
+                      {['40 preguntas abiertas con respuesta por voz', 'Análisis por Gottman, Bowlby, Freud, Lacan y 5 más', 'Lectura psicoanalítica + dinámica de conflicto', 'Reporte con radar, gauges y tabla diagnóstica'].map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
+                          <Check className="w-3.5 h-3.5 text-cyan-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mb-4">
+                      <input
+                        type="text"
+                        placeholder="Ingresa tu código"
+                        id="premiumCodeDesktop"
+                        maxLength={20}
+                        className="w-full px-4 py-3 rounded-xl border border-cyan-500/20 bg-white/[0.03] text-white text-sm font-light placeholder:text-white/25 focus:border-cyan-500/40 focus:outline-none transition-colors"
+                      />
+                    </div>
+                    <motion.button
+                      onClick={() => {
+                        const code = document.getElementById('premiumCodeDesktop')?.value?.trim()
+                        if (code) navigate(`/tienda/radiografia-premium?code=${encodeURIComponent(code)}`)
+                      }}
+                      whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-light text-base hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg shadow-cyan-600/20">
+                      Acceder con código
+                    </motion.button>
+                  </div>
                 </div>
 
                 {/* Mobile: stacked pricing cards */}
@@ -2219,6 +2257,44 @@ const DiagnosticoRelacionalPage = () => {
                     <motion.button onClick={() => { setStage('checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base">
                       Comenzar en pareja
+                    </motion.button>
+                  </div>
+                  {/* Radiografía Premium – Mobile */}
+                  <div className="p-7 rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500/50 to-blue-500/50" />
+                    <div className="flex items-center gap-2 mb-2">
+                      <p className="text-cyan-300/60 text-xs uppercase tracking-[0.15em]">Premium</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/20 text-cyan-300/70">40 preguntas narrativas</span>
+                    </div>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <p className="text-3xl font-light text-cyan-300">Con código</p>
+                    </div>
+                    <p className="text-white/40 text-sm font-light mb-5">Análisis narrativo profundo · 12 dimensiones · 9 corrientes psicológicas</p>
+                    <ul className="space-y-2 mb-6">
+                      {['40 preguntas abiertas con respuesta por voz', 'Análisis por Gottman, Bowlby, Freud, Lacan y 5 más', 'Lectura psicoanalítica + dinámica de conflicto', 'Reporte con radar, gauges y tabla diagnóstica'].map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
+                          <Check className="w-3.5 h-3.5 text-cyan-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mb-4">
+                      <input
+                        type="text"
+                        placeholder="Ingresa tu código"
+                        id="premiumCodeMobile"
+                        maxLength={20}
+                        className="w-full px-4 py-3 rounded-xl border border-cyan-500/20 bg-white/[0.03] text-white text-sm font-light placeholder:text-white/25 focus:border-cyan-500/40 focus:outline-none transition-colors"
+                      />
+                    </div>
+                    <motion.button
+                      onClick={() => {
+                        const code = document.getElementById('premiumCodeMobile')?.value?.trim()
+                        if (code) navigate(`/tienda/radiografia-premium?code=${encodeURIComponent(code)}`)
+                      }}
+                      whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-light text-base">
+                      Acceder con código
                     </motion.button>
                   </div>
                 </div>
