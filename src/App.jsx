@@ -70,7 +70,7 @@ const AppContent = () => {
 
   const AppShell = () => {
     const location = useLocation()
-    const hideGlobalHeader = location.pathname.startsWith('/test-vocacional/iniciar') || location.pathname === '/frase-del-dia' || location.pathname === '/atlas-humanidad' || location.pathname === '/laboratorio-etico'
+    const hideGlobalHeader = location.pathname.startsWith('/test-vocacional/iniciar') || location.pathname === '/frase-del-dia' || location.pathname === '/atlas-humanidad' || location.pathname === '/laboratorio-etico' || location.pathname === '/tienda/radiografia-premium' || location.pathname === '/tienda/diagnostico-relacional'
 
     return (
       <div className="relative min-h-screen">

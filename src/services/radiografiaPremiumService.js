@@ -172,6 +172,58 @@ Devuelve el resultado en el siguiente formato JSON exacto:
     {"dimension": "Vulnerabilidad emocional", "nivel": "(Alto|Medio|Bajo)", "interpretacion": "(1 frase)"},
     {"dimension": "Narrativa de futuro", "nivel": "(Alto|Medio|Bajo)", "interpretacion": "(1 frase)"}
   ],
+  "lecturas_por_enfoque": {
+    "gottman": {
+      "titulo": "John Gottman",
+      "enfoque": "Estabilidad relacional y dinámica del conflicto",
+      "interpretacion": "(2 párrafos: análisis desde la perspectiva de Gottman — Los Cuatro Jinetes, ratio positivo/negativo, bids for connection)",
+      "puntuacion": "(0-100)"
+    },
+    "bowlby": {
+      "titulo": "John Bowlby",
+      "enfoque": "Teoría del apego y seguridad emocional",
+      "interpretacion": "(2 párrafos: estilo de apego detectado, base segura, ansiedad de separación, patrones de la infancia)",
+      "puntuacion": "(0-100)"
+    },
+    "sue_johnson": {
+      "titulo": "Sue Johnson",
+      "enfoque": "Terapia Focalizada en las Emociones (EFT)",
+      "interpretacion": "(2 párrafos: ciclos de interacción negativa, accesibilidad emocional, responsividad, engagement)",
+      "puntuacion": "(0-100)"
+    },
+    "perel": {
+      "titulo": "Esther Perel",
+      "enfoque": "Deseo erótico y tensión entre seguridad y aventura",
+      "interpretacion": "(2 párrafos: erotismo vs domesticidad, misterio, autonomía dentro del vínculo)",
+      "puntuacion": "(0-100)"
+    },
+    "sternberg": {
+      "titulo": "Robert Sternberg",
+      "enfoque": "Triángulo del amor: intimidad, pasión y compromiso",
+      "interpretacion": "(2 párrafos: balance entre los tres componentes, tipo de amor resultante)",
+      "puntuacion_intimidad": "(0-100)",
+      "puntuacion_pasion": "(0-100)",
+      "puntuacion_compromiso": "(0-100)"
+    },
+    "tatkin": {
+      "titulo": "Stan Tatkin",
+      "enfoque": "Sincronía y regulación mutua en la pareja",
+      "interpretacion": "(2 párrafos: sistema nervioso compartido, co-regulación, anchor/wave/island)",
+      "puntuacion": "(0-100)"
+    },
+    "freud": {
+      "titulo": "Sigmund Freud",
+      "enfoque": "Patrones inconscientes y repetición relacional",
+      "interpretacion": "(2 párrafos: compulsión a la repetición, proyecciones, roles heredados de la familia)",
+      "puntuacion": "(0-100)"
+    },
+    "lacan": {
+      "titulo": "Jacques Lacan",
+      "enfoque": "Fantasma relacional y estructura del deseo",
+      "interpretacion": "(2 párrafos: qué representa la pareja para el sujeto, demanda vs deseo, goce)",
+      "puntuacion": "(0-100)"
+    }
+  },
   "sintesis_final": {
     "que_ocurre": "(1-2 párrafos: qué está ocurriendo realmente en la relación)",
     "posibilidades_evolucion": "(1-2 párrafos: qué posibilidades de evolución existen)",
@@ -203,7 +255,7 @@ export async function analyzeRadiografiaPremium({ responses, questions }) {
           { role: 'user', content: prompt }
         ],
         temperature: 0.7,
-        max_tokens: 10000,
+        max_tokens: 14000,
         response_format: { type: 'json_object' }
       })
     })
@@ -310,6 +362,58 @@ function generateFallbackAnalysis() {
       { dimension: 'Vulnerabilidad emocional', nivel: 'Medio-Alto', interpretacion: 'Sensibilidad emocional que requiere manejo' },
       { dimension: 'Narrativa de futuro', nivel: 'Medio', interpretacion: 'Visión de futuro presente pero con incertidumbre' }
     ],
+    lecturas_por_enfoque: {
+      gottman: {
+        titulo: 'John Gottman',
+        enfoque: 'Estabilidad relacional y dinámica del conflicto',
+        interpretacion: 'Desde la perspectiva de Gottman, tu relación muestra señales de **desgaste en la ratio positivo/negativo**. Las interacciones negativas están comenzando a superar las positivas en ciertos momentos, lo que indica la presencia incipiente de los Cuatro Jinetes — especialmente la **crítica** y la **actitud defensiva**.\n\nSin embargo, la disposición a buscar ayuda es un indicador positivo. Gottman señala que las parejas que mantienen una ratio de 5:1 (interacciones positivas por cada negativa) tienen mayor probabilidad de estabilidad. El trabajo está en **aumentar los momentos de conexión positiva** y aprender a manejar el conflicto de forma constructiva.',
+        puntuacion: 55
+      },
+      bowlby: {
+        titulo: 'John Bowlby',
+        enfoque: 'Teoría del apego y seguridad emocional',
+        interpretacion: 'El análisis del apego revela un patrón **ansioso-preocupado** que se activa especialmente en momentos de conflicto. Hay una necesidad intensa de cercanía que, cuando no se satisface, genera ansiedad y conductas de protesta.\n\nLas experiencias tempranas con las figuras de apego parecen haber dejado una huella en cómo se busca seguridad emocional dentro de la relación actual. La **base segura** existe pero no es consistente — fluctúa según la dinámica del momento.',
+        puntuacion: 52
+      },
+      sue_johnson: {
+        titulo: 'Sue Johnson',
+        enfoque: 'Terapia Focalizada en las Emociones (EFT)',
+        interpretacion: 'Desde la EFT, se detecta un **ciclo de interacción negativa perseguidor-retirada** donde uno busca conexión activamente mientras el otro se cierra emocionalmente. Este ciclo se ha vuelto predecible y automático.\n\nLa clave para romper este patrón es acceder a las **emociones primarias** debajo del ciclo: el miedo al abandono, la necesidad de ser importante, la vulnerabilidad que no se muestra. Cuando ambos puedan acceder a esas emociones, la reconexión será posible.',
+        puntuacion: 50
+      },
+      perel: {
+        titulo: 'Esther Perel',
+        enfoque: 'Deseo erótico y tensión entre seguridad y aventura',
+        interpretacion: 'Perel diría que tu relación está experimentando la **tensión clásica entre domesticidad y erotismo**. La seguridad del vínculo ha crecido pero ha absorbido parte del misterio y la novedad que alimentaban el deseo inicial.\n\nEl deseo necesita distancia, sorpresa y novedad — elementos que la rutina diluye naturalmente. No se trata de perder la seguridad sino de **introducir espacios de autonomía y exploración** que mantengan vivo el interés erótico.',
+        puntuacion: 45
+      },
+      sternberg: {
+        titulo: 'Robert Sternberg',
+        enfoque: 'Triángulo del amor: intimidad, pasión y compromiso',
+        interpretacion: 'El triángulo de Sternberg en tu relación muestra un **desequilibrio entre los tres componentes**. El compromiso parece ser el componente más fuerte, seguido por la intimidad. La pasión es el eje que necesita más atención.\n\nEsto sitúa la relación más cerca del **amor compañero** que del amor consumado. Para alcanzar el equilibrio, es necesario trabajar intencionalmente en la dimensión pasional sin descuidar lo que ya funciona.',
+        puntuacion_intimidad: 55,
+        puntuacion_pasion: 40,
+        puntuacion_compromiso: 65
+      },
+      tatkin: {
+        titulo: 'Stan Tatkin',
+        enfoque: 'Sincronía y regulación mutua en la pareja',
+        interpretacion: 'Desde Tatkin, la pareja muestra dificultades en la **co-regulación emocional** — la capacidad de calmarse mutuamente en momentos de estrés. Hay momentos donde cada uno se regula por separado en lugar de buscar al otro como recurso.\n\nEl patrón descrito sugiere una dinámica **anchor-wave** donde uno busca estabilidad mientras el otro oscila entre cercanía y distancia. Fortalecer el sistema de regulación compartido es clave para la resiliencia del vínculo.',
+        puntuacion: 50
+      },
+      freud: {
+        titulo: 'Sigmund Freud',
+        enfoque: 'Patrones inconscientes y repetición relacional',
+        interpretacion: 'El análisis freudiano detecta señales de **compulsión a la repetición** — dinámicas que se repiten desde relaciones anteriores y desde la familia de origen. La forma de reaccionar al conflicto tiene raíces que van más allá de la relación actual.\n\nHay **proyecciones inconscientes** operando en la relación: expectativas no dichas que provienen de necesidades no satisfechas en la infancia. Hacer conscientes estos patrones es el primer paso para dejar de repetirlos.',
+        puntuacion: 58
+      },
+      lacan: {
+        titulo: 'Jacques Lacan',
+        enfoque: 'Fantasma relacional y estructura del deseo',
+        interpretacion: 'Desde Lacan, tu pareja ocupa un lugar simbólico que va más allá de quién es realmente — representa una **respuesta a una falta fundamental**. Lo que buscas en el vínculo no es solo compañía sino un reconocimiento profundo de tu ser.\n\nEl **fantasma relacional** — esa escena inconsciente que organiza tu deseo — parece incluir una búsqueda de completud que la otra persona no puede satisfacer enteramente. Reconocer esta dimensión permite amar de forma menos demandante y más libre.',
+        puntuacion: 55
+      }
+    },
     sintesis_final: {
       que_ocurre: 'Lo que está ocurriendo en tu relación es un **proceso de transformación** donde las dinámicas iniciales ya no funcionan de la misma manera. No es que el amor haya desaparecido — es que la forma de relacionarse necesita evolucionar.\n\nHay patrones emocionales que se han instalado silenciosamente y que ahora influyen en cómo se conectan y desconectan.',
       posibilidades_evolucion: 'La relación tiene **potencial real de crecimiento** si ambos deciden trabajar conscientemente en las áreas que este diagnóstico ha revelado. Los cimientos están — lo que falta es una intervención consciente.\n\nCon trabajo terapéutico y voluntad mutua, los ciclos actuales pueden transformarse en dinámicas más funcionales.',

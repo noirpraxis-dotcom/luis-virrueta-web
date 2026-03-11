@@ -251,8 +251,8 @@ const DIMENSION_COLORS = [
 // ─── ElevenLabs voices (Latin Spanish, fast & clear) ────────────
 
 const VOICES = {
-  female: { id: 'XB0fDUnXU5powFXDhCwa', name: 'Charlotte' },
-  male: { id: 'onwK4e9ZLuTAKqWW03F9', name: 'Daniel' }
+  female: { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Bella' },
+  male: { id: 'VR6AewLTigWG4xSOukaG', name: 'Arnold' }
 }
 
 // ─── DEMO RESPONSES (for testing) ────────────────────────────────
@@ -346,7 +346,7 @@ function RadarChart({ dimensiones }) {
   const keys = Object.keys(DIMENSION_LABELS)
   const labels = Object.values(DIMENSION_LABELS)
   const n = keys.length
-  const cx = 180, cy = 180, r = 120
+  const cx = 250, cy = 250, r = 170
 
   const getPoint = (i, val) => {
     const angle = (Math.PI * 2 * i) / n - Math.PI / 2
@@ -361,7 +361,7 @@ function RadarChart({ dimensiones }) {
 
   return (
     <div>
-      <svg viewBox="0 0 360 360" className="w-full max-w-sm mx-auto">
+      <svg viewBox="0 0 500 500" className="w-full max-w-lg mx-auto">
         {[20, 40, 60, 80, 100].map(level => (
           <circle key={level} cx={cx} cy={cy} r={r * level / 100} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={0.5} />
         ))}
@@ -383,24 +383,24 @@ function RadarChart({ dimensiones }) {
         <polygon points={polygon} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={0.5} />
         {keys.map((k, i) => {
           const p = getPoint(i, dimensiones[k] || 0)
-          return <circle key={k} cx={p.x} cy={p.y} r={3} fill={DIMENSION_COLORS[i]} />
+          return <circle key={k} cx={p.x} cy={p.y} r={4} fill={DIMENSION_COLORS[i]} />
         })}
         {keys.map((_, i) => {
           const p = getPoint(i, 135)
           return (
             <text key={i} x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle"
-              fill={DIMENSION_COLORS[i]} className="text-[6.5px] font-light" fillOpacity={0.85}>
+              fill={DIMENSION_COLORS[i]} className="text-[9px] font-light" fillOpacity={0.9}>
               {labels[i]}
             </text>
           )
         })}
       </svg>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 mt-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-5">
         {keys.map((key, i) => (
-          <div key={key} className="flex items-center gap-1.5 p-1.5 rounded-lg border border-white/[0.04] bg-white/[0.01]">
-            <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: DIMENSION_COLORS[i] }} />
-            <span className="text-white/50 text-[10px] font-light flex-1 leading-tight">{labels[i]}</span>
-            <span className="text-white/70 text-[10px] font-light tabular-nums">{dimensiones[key] ?? 0}%</span>
+          <div key={key} className="flex items-center gap-2 p-2 rounded-lg border border-white/[0.06] bg-white/[0.02]">
+            <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: DIMENSION_COLORS[i] }} />
+            <span className="text-white/55 text-xs font-light flex-1 leading-tight">{labels[i]}</span>
+            <span className="text-white/75 text-xs font-medium tabular-nums">{dimensiones[key] ?? 0}%</span>
           </div>
         ))}
       </div>
@@ -487,8 +487,7 @@ const RadiografiaPremiumPage = () => {
         body: JSON.stringify({
           text,
           model_id: 'eleven_multilingual_v2',
-          language_code: 'es',
-          voice_settings: { stability: 0.6, similarity_boost: 0.85, style: 0.15, use_speaker_boost: true }
+          voice_settings: { stability: 0.35, similarity_boost: 0.85, style: 0.3, use_speaker_boost: true }
         })
       })
       if (!res.ok) { setAudioPlaying(false); return }
@@ -728,7 +727,7 @@ const RadiografiaPremiumPage = () => {
                   <Headphones className="w-4 h-4 text-violet-400/50" /> Elige la voz que te guiará
                 </p>
                 <div className="flex justify-center gap-4">
-                  {[{ g: 'female', label: 'Charlotte (mujer)', icon: '👩' }, { g: 'male', label: 'Daniel (hombre)', icon: '👨' }].map(v => (
+                  {[{ g: 'female', label: 'Bella (mujer)', icon: '👩' }, { g: 'male', label: 'Arnold (hombre)', icon: '👨' }].map(v => (
                     <button key={v.g} onClick={() => setVoiceGender(v.g)}
                       className={`flex items-center gap-2 px-5 py-3 rounded-xl border transition-all ${voiceGender === v.g
                         ? 'border-violet-500/30 bg-violet-500/10 text-violet-300/80'
@@ -820,9 +819,9 @@ const RadiografiaPremiumPage = () => {
 
               {/* Progress bar */}
               <div className="mb-8">
-                <div className="flex justify-between mb-2">
-                  <span className="text-violet-300/70 text-xs font-medium uppercase tracking-wider">{question.block}</span>
-                  <span className="text-white/60 text-xs font-light">{currentQ + 1} de {totalQ}</span>
+                <div className="text-center mb-2">
+                  <span className="text-violet-300/70 text-xs font-medium uppercase tracking-wider block">{question.block}</span>
+                  <span className="text-white/40 text-xs font-light">{currentQ + 1} de {totalQ}</span>
                 </div>
                 <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                   <motion.div animate={{ width: `${progress}%` }} transition={{ duration: 0.4 }}
@@ -832,16 +831,22 @@ const RadiografiaPremiumPage = () => {
 
               {/* Main question — centered */}
               <div className="text-center mb-8">
-                <div className="inline-flex items-center gap-2 mb-4">
+                <div className="flex items-center justify-center gap-2 mb-4">
                   <span className="text-white/25 text-xs font-light">Pregunta {currentQ + 1}</span>
                   <button
                     onClick={() => playQuestion(question.mainQuestion)}
-                    className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all ${audioPlaying
-                      ? 'border-violet-500/40 bg-violet-500/15 text-violet-400'
-                      : 'border-white/15 bg-white/[0.04] text-white/50 hover:text-white/70 hover:border-white/25'}`}
-                    title="Escuchar pregunta">
-                    {audioPlaying ? <VolumeX className="w-3.5 h-3.5" onClick={(e) => { e.stopPropagation(); stopAudio() }} /> : <Volume2 className="w-3.5 h-3.5" />}
+                    className="h-7 px-3 rounded-lg border border-white/15 bg-white/[0.04] text-white/50 hover:text-white/70 hover:border-white/25 transition-all text-[10px] font-light inline-flex items-center gap-1.5"
+                    title="Repetir audio">
+                    <Volume2 className="w-3 h-3" /> Repetir
                   </button>
+                  {audioPlaying && (
+                    <button
+                      onClick={stopAudio}
+                      className="h-7 px-3 rounded-lg border border-amber-500/20 bg-amber-500/[0.06] text-amber-300/70 hover:text-amber-300 transition-all text-[10px] font-light inline-flex items-center gap-1.5"
+                      title="Saltar audio">
+                      <SkipForward className="w-3 h-3" /> Saltar
+                    </button>
+                  )}
                 </div>
                 <p className="text-white/90 text-lg lg:text-xl font-light leading-relaxed max-w-xl mx-auto">{question.mainQuestion}</p>
               </div>
@@ -900,7 +905,7 @@ const RadiografiaPremiumPage = () => {
               {/* If no content and not recording and not typing: prompt to start */}
               {!currentText.trim() && !recording && !typingMode && (
                 <p className="text-center text-white/35 text-sm font-light mb-4">
-                  Toca el micrófono cuando quieras contestar
+                  Decide cómo vas a contestar
                 </p>
               )}
 
@@ -910,8 +915,8 @@ const RadiografiaPremiumPage = () => {
                 </p>
               )}
 
-              {/* ── Action buttons: Back · Mic · Next ── */}
-              <div className="flex items-center justify-center gap-4 mb-6">
+              {/* ── Action buttons: Mic · Write side by side ── */}
+              <div className="flex items-center justify-center gap-4 mb-4">
                 {/* Back */}
                 <button onClick={goBack} disabled={currentQ === 0}
                   className="w-11 h-11 rounded-xl border border-white/10 bg-white/[0.03] flex items-center justify-center text-white/40 hover:text-white/60 hover:border-white/20 transition-all disabled:opacity-20 disabled:pointer-events-none">
@@ -920,50 +925,68 @@ const RadiografiaPremiumPage = () => {
 
                 {/* Microphone */}
                 <motion.button
-                  onClick={recording ? stopRecording : startRecording}
+                  onClick={() => {
+                    if (typingMode) setTypingMode(false)
+                    recording ? stopRecording() : startRecording()
+                  }}
                   whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                  className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${recording
+                  className={`flex flex-col items-center gap-1 ${recording
+                    ? ''
+                    : !typingMode ? '' : ''}`}>
+                  <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${recording
                     ? 'bg-red-500/20 border-2 border-red-500/50 text-red-400 animate-pulse'
-                    : 'bg-violet-500/10 border-2 border-violet-500/30 text-violet-400/70 hover:border-violet-500/50'}`}>
-                  {recording ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+                    : !typingMode
+                      ? 'bg-violet-500/15 border-2 border-violet-500/40 text-violet-400'
+                      : 'bg-white/[0.04] border-2 border-white/15 text-white/40 hover:border-white/30'}`}>
+                    {recording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                  </div>
+                  <span className={`text-[10px] font-light ${recording ? 'text-red-400/70' : !typingMode ? 'text-violet-300/60' : 'text-white/30'}`}>Micrófono</span>
                 </motion.button>
 
-                {/* Next / Finalizar */}
+                {/* Write */}
+                <motion.button
+                  onClick={() => { if (!recording) { setTypingMode(true); setTextInput(transcript || textInput) } }}
+                  whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                  className="flex flex-col items-center gap-1">
+                  <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${typingMode && !recording
+                    ? 'bg-violet-500/15 border-2 border-violet-500/40 text-violet-400'
+                    : 'bg-white/[0.04] border-2 border-white/15 text-white/40 hover:border-white/30'}`}>
+                    <PenLine className="w-5 h-5" />
+                  </div>
+                  <span className={`text-[10px] font-light ${typingMode && !recording ? 'text-violet-300/60' : 'text-white/30'}`}>Escribir</span>
+                </motion.button>
+              </div>
+
+              {/* Next / Finalizar — separate, below */}
+              <div className="flex justify-center mb-6">
                 <motion.button onClick={saveAndNext}
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                  className={`h-11 px-5 rounded-xl border flex items-center gap-2 text-sm font-light transition-all ${currentText.trim()
-                    ? 'border-violet-500/30 bg-violet-500/15 text-violet-300/90 hover:bg-violet-500/25'
+                  className={`h-12 px-8 rounded-xl border flex items-center gap-2 text-sm font-light transition-all ${currentText.trim()
+                    ? 'border-cyan-500/30 bg-cyan-500/15 text-cyan-300/90 hover:bg-cyan-500/25'
                     : 'border-white/10 bg-white/[0.03] text-white/40 hover:text-white/60 hover:border-white/20'}`}>
                   {currentQ < totalQ - 1 ? (
-                    <><span>Siguiente</span><SkipForward className="w-3.5 h-3.5" /></>
+                    <><span>Siguiente</span><ArrowRight className="w-4 h-4" /></>
                   ) : (
-                    <><span>Finalizar</span><Check className="w-3.5 h-3.5" /></>
+                    <><span>Finalizar</span><Check className="w-4 h-4" /></>
                   )}
                 </motion.button>
               </div>
 
-              {/* Toggle typing mode */}
-              {!recording && (
-                <div className="text-center">
-                  <button
-                    onClick={() => { setTypingMode(!typingMode); if (!typingMode) setTextInput(transcript || textInput) }}
-                    className="text-white/30 text-xs font-light hover:text-white/55 transition-colors inline-flex items-center gap-1.5">
-                    <PenLine className="w-3 h-3" />
-                    {typingMode ? 'Prefiero usar el micrófono' : 'Prefiero escribir mi respuesta'}
-                  </button>
-                </div>
-              )}
-
               {/* DEV: Fill demo responses */}
               {import.meta.env.DEV && (
                 <div className="mt-8 pt-6 border-t border-white/5 flex flex-wrap gap-3 justify-center">
-                  <button onClick={fillDemoResponses}
+                  <button onClick={() => {
+                    const demoText = DEMO_RESPONSES[question?.id] || ''
+                    setTranscript(demoText)
+                    setTextInput(demoText)
+                    setResponses(prev => ({ ...prev, [question.id]: demoText }))
+                  }}
                     className="text-xs px-4 py-2 rounded-lg border border-amber-500/20 bg-amber-500/5 text-amber-300/60 hover:text-amber-300/90 transition-colors">
-                    🧪 Rellenar 40 respuestas demo
+                    🧪 Rellenar esta respuesta
                   </button>
-                  <button onClick={() => { fillDemoResponses(); setTimeout(() => handleRunAnalysis(DEMO_RESPONSES), 200) }}
+                  <button onClick={() => { setResponses({ ...DEMO_RESPONSES }); setTimeout(() => handleRunAnalysis(DEMO_RESPONSES), 200) }}
                     className="text-xs px-4 py-2 rounded-lg border border-emerald-500/20 bg-emerald-500/5 text-emerald-300/60 hover:text-emerald-300/90 transition-colors">
-                    🚀 Rellenar + Lanzar análisis
+                    🚀 Rellenar todo + Lanzar análisis
                   </button>
                 </div>
               )}
@@ -1018,14 +1041,17 @@ const RadiografiaPremiumPage = () => {
               {/* Header */}
               <div className="text-center">
                 <h1 className="text-3xl lg:text-4xl font-light text-white mb-3">Tu Radiografía de Pareja</h1>
-                <p className="text-white/40 text-sm font-light">Análisis narrativo de 40 respuestas × 12 dimensiones psicológicas × 9 corrientes</p>
+                <p className="text-white/40 text-sm font-light">Análisis narrativo profundo · 12 dimensiones · 8 enfoques psicológicos</p>
               </div>
 
               {/* ═══ 1. RADAR PSICOLÓGICO DEL VÍNCULO ═══ */}
               {aiAnalysis.dimensiones && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                  <h2 className="text-xl font-light text-white/70 mb-2 text-center">Mapa Psicológico del Vínculo</h2>
-                  <p className="text-white/30 text-xs font-light mb-6 text-center">Cada eje representa una dimensión psicológica diferente de tu relación</p>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
+                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Mapa Psicológico</h2>
+                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
+                  </div>
                   <div className="p-6 rounded-2xl border border-white/8 bg-white/[0.02]">
                     <RadarChart dimensiones={aiAnalysis.dimensiones} />
                   </div>
@@ -1037,7 +1063,7 @@ const RadiografiaPremiumPage = () => {
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                   className="p-6 lg:p-8 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.03] to-transparent relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/30 to-fuchsia-500/30" />
-                  <h2 className="text-xl font-light text-white/70 mb-4">Radiografía Inicial de tu Relación</h2>
+                  <h2 className="text-lg font-light text-white/70 mb-4">Radiografía Inicial</h2>
                   <div className="space-y-3">
                     {aiAnalysis.radiografia_inicial.split('\n\n').map((p, i) => (
                       <p key={i} className="text-white/55 text-sm font-light leading-relaxed">{renderBold(p)}</p>
@@ -1049,7 +1075,11 @@ const RadiografiaPremiumPage = () => {
               {/* ═══ 3. ESTADO ACTUAL — Bar chart ═══ */}
               {aiAnalysis.dimensiones && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">Estado Actual de la Relación</h2>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
+                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Estado Actual</h2>
+                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
+                  </div>
                   <div className="p-6 rounded-2xl border border-white/8 bg-white/[0.02]">
                     <div className="space-y-3">
                       {['estabilidad_relacional', 'conexion_emocional', 'deseo_erotico', 'sincronia_relacional', 'resiliencia_vinculo'].map(key => {
@@ -1075,7 +1105,11 @@ const RadiografiaPremiumPage = () => {
               {/* ═══ 4. DINÁMICA DEL CONFLICTO ═══ */}
               {aiAnalysis.dinamica_conflicto && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">⚡ Dinámica de Conflicto</h2>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
+                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Dinámica del Conflicto</h2>
+                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
+                  </div>
                   <div className="p-6 rounded-2xl border border-white/8 bg-gradient-to-br from-orange-500/[0.02] to-transparent">
                     <div className="grid grid-cols-2 gap-4 mb-4">
                       <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02] text-center">
@@ -1106,7 +1140,11 @@ const RadiografiaPremiumPage = () => {
               {/* ═══ 5. ENERGÍA EMOCIONAL Y ERÓTICA ═══ */}
               {aiAnalysis.energia_vinculo && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">🔥 Energía Emocional y Erótica</h2>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-pink-500/10" />
+                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Energía Emocional y Erótica</h2>
+                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-pink-500/10" />
+                  </div>
                   <div className="p-6 rounded-2xl border border-white/8 bg-gradient-to-br from-pink-500/[0.02] to-transparent">
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                       {[
@@ -1131,7 +1169,11 @@ const RadiografiaPremiumPage = () => {
               {/* ═══ 6. DIRECCIÓN PROBABLE ═══ */}
               {aiAnalysis.direccion_probable && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">🔮 Dirección Probable de la Relación</h2>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
+                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Dirección Probable</h2>
+                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
+                  </div>
                   <div className="p-6 rounded-2xl border border-white/8 bg-white/[0.02]">
                     <div className="grid grid-cols-3 gap-4">
                       <GaugeChart value={aiAnalysis.direccion_probable.estabilidad_futura} label="Estabilidad futura" />
@@ -1145,21 +1187,28 @@ const RadiografiaPremiumPage = () => {
               {/* ═══ 7. TABLA DIAGNÓSTICA ═══ */}
               {aiAnalysis.tabla_diagnostica && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">📊 Diagnóstico Estructural</h2>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
+                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Diagnóstico Estructural</h2>
+                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
+                  </div>
                   <div className="rounded-2xl border border-white/8 overflow-hidden">
-                    <div className="grid grid-cols-3 gap-px bg-white/5 text-xs font-light">
-                      <div className="bg-zinc-950 p-3 text-white/40">Dimensión</div>
-                      <div className="bg-zinc-950 p-3 text-white/40 text-center">Nivel</div>
-                      <div className="bg-zinc-950 p-3 text-white/40">Interpretación</div>
-                    </div>
                     {aiAnalysis.tabla_diagnostica.map((row, i) => {
-                      const levelColor = row.nivel?.toLowerCase().includes('alto') ? 'text-emerald-400' :
-                        row.nivel?.toLowerCase().includes('bajo') ? 'text-red-400' : 'text-amber-400'
+                      const score = aiAnalysis.dimensiones ? (aiAnalysis.dimensiones[Object.keys(DIMENSION_LABELS)[i]] ?? 50) : 50
+                      const barColor = score >= 70 ? 'bg-emerald-500' : score >= 45 ? 'bg-amber-500' : 'bg-red-500'
                       return (
-                        <div key={i} className="grid grid-cols-3 gap-px bg-white/5">
-                          <div className="bg-zinc-950 p-3 text-white/60 text-xs font-light">{row.dimension}</div>
-                          <div className={`bg-zinc-950 p-3 text-xs font-light text-center ${levelColor}`}>{row.nivel}</div>
-                          <div className="bg-zinc-950 p-3 text-white/45 text-xs font-light">{row.interpretacion}</div>
+                        <div key={i} className="flex items-center gap-4 px-4 py-3 border-b border-white/[0.04] last:border-b-0">
+                          <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: DIMENSION_COLORS[i] }} />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-white/65 text-xs font-light">{row.dimension}</span>
+                              <span className="text-white/75 text-xs font-medium tabular-nums ml-2">{score}%</span>
+                            </div>
+                            <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden mb-1.5">
+                              <div className={`h-full rounded-full ${barColor} transition-all`} style={{ width: `${score}%`, opacity: 0.7 }} />
+                            </div>
+                            <p className="text-white/35 text-[10px] font-light leading-snug">{row.interpretacion}</p>
+                          </div>
                         </div>
                       )
                     })}
@@ -1170,19 +1219,28 @@ const RadiografiaPremiumPage = () => {
               {/* ═══ 8. LECTURA PROFUNDA ═══ */}
               {aiAnalysis.analisis_profundo && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">🔍 Lectura Profunda del Vínculo</h2>
-                  <div className="space-y-4">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
+                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Lectura Profunda</h2>
+                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
+                  </div>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     {[
-                      { key: 'narrativa_dominante', label: 'Narrativa dominante' },
-                      { key: 'tensiones_estructurales', label: 'Tensiones estructurales' },
-                      { key: 'evolucion_deseo', label: 'Evolución del deseo' },
-                      { key: 'dinamica_emocional', label: 'Dinámica emocional' }
-                    ].map(({ key, label }) => {
+                      { key: 'narrativa_dominante', label: 'Narrativa dominante', icon: Eye },
+                      { key: 'tensiones_estructurales', label: 'Tensiones estructurales', icon: Activity },
+                      { key: 'evolucion_deseo', label: 'Evolución del deseo', icon: Flame },
+                      { key: 'dinamica_emocional', label: 'Dinámica emocional', icon: Heart }
+                    ].map(({ key, label, icon: Icon }) => {
                       const text = aiAnalysis.analisis_profundo[key]
                       if (!text) return null
                       return (
                         <div key={key} className="p-5 rounded-2xl border border-white/8 bg-white/[0.02]">
-                          <h3 className="text-white/60 text-sm font-light mb-2">{label}</h3>
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="w-7 h-7 rounded-lg bg-violet-500/10 border border-violet-500/15 flex items-center justify-center">
+                              <Icon className="w-3.5 h-3.5 text-violet-400/60" strokeWidth={1.5} />
+                            </div>
+                            <h3 className="text-white/65 text-sm font-light">{label}</h3>
+                          </div>
                           <div className="space-y-2">
                             {text.split('\n\n').map((p, i) => (
                               <p key={i} className="text-white/45 text-sm font-light leading-relaxed">{renderBold(p)}</p>
@@ -1198,18 +1256,30 @@ const RadiografiaPremiumPage = () => {
               {/* ═══ 9. LECTURA PSICOANALÍTICA ═══ */}
               {aiAnalysis.lectura_psicoanalitica && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">🧠 Lectura Psicoanalítica</h2>
-                  <div className="space-y-4">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-purple-500/10" />
+                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Lectura Psicoanalítica</h2>
+                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-purple-500/10" />
+                  </div>
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                     {[
-                      { key: 'proyecciones_inconscientes', label: 'Proyecciones inconscientes (Freud)' },
-                      { key: 'fantasma_relacional', label: 'Fantasma relacional (Lacan)' },
-                      { key: 'roles_simbolicos', label: 'Roles simbólicos' }
-                    ].map(({ key, label }) => {
+                      { key: 'proyecciones_inconscientes', label: 'Proyecciones inconscientes', sub: 'Freud', icon: Brain },
+                      { key: 'fantasma_relacional', label: 'Fantasma relacional', sub: 'Lacan', icon: Eye },
+                      { key: 'roles_simbolicos', label: 'Roles simbólicos', sub: 'Sistémico', icon: Users }
+                    ].map(({ key, label, sub, icon: Icon }) => {
                       const text = aiAnalysis.lectura_psicoanalitica[key]
                       if (!text) return null
                       return (
                         <div key={key} className="p-5 rounded-2xl border border-purple-500/10 bg-gradient-to-br from-purple-500/[0.02] to-transparent">
-                          <h3 className="text-purple-300/60 text-sm font-light mb-2">{label}</h3>
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="w-7 h-7 rounded-lg bg-purple-500/10 border border-purple-500/15 flex items-center justify-center">
+                              <Icon className="w-3.5 h-3.5 text-purple-400/60" strokeWidth={1.5} />
+                            </div>
+                            <div>
+                              <h3 className="text-purple-300/70 text-sm font-light leading-tight">{label}</h3>
+                              <p className="text-purple-300/35 text-[10px] font-light">{sub}</p>
+                            </div>
+                          </div>
                           <div className="space-y-2">
                             {text.split('\n\n').map((p, i) => (
                               <p key={i} className="text-white/45 text-sm font-light leading-relaxed">{renderBold(p)}</p>
@@ -1225,11 +1295,17 @@ const RadiografiaPremiumPage = () => {
               {/* ═══ 10. FORTALEZAS ═══ */}
               {aiAnalysis.fortalezas?.length > 0 && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">💪 Fortalezas Detectadas</h2>
-                  <div className="space-y-3">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-emerald-500/15" />
+                    <h2 className="text-xs font-medium text-emerald-300/50 uppercase tracking-[0.2em]">Fortalezas Detectadas</h2>
+                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-emerald-500/15" />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {aiAnalysis.fortalezas.map((f, i) => (
                       <div key={i} className="p-4 rounded-xl border border-emerald-500/10 bg-emerald-500/[0.02] flex items-start gap-3">
-                        <CheckCircle className="w-4 h-4 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+                        <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center flex-shrink-0">
+                          <CheckCircle className="w-3.5 h-3.5 text-emerald-400/60" strokeWidth={1.5} />
+                        </div>
                         <p className="text-white/55 text-sm font-light">{renderBold(f)}</p>
                       </div>
                     ))}
@@ -1240,11 +1316,17 @@ const RadiografiaPremiumPage = () => {
               {/* ═══ 11. SEÑALES DE RIESGO ═══ */}
               {aiAnalysis.riesgos?.length > 0 && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <h2 className="text-xl font-light text-white/70 mb-6 text-center">⚠️ Señales de Riesgo</h2>
-                  <div className="space-y-3">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-red-500/15" />
+                    <h2 className="text-xs font-medium text-red-300/50 uppercase tracking-[0.2em]">Señales de Riesgo</h2>
+                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-red-500/15" />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {aiAnalysis.riesgos.map((r, i) => (
                       <div key={i} className="p-4 rounded-xl border border-red-500/10 bg-red-500/[0.02] flex items-start gap-3">
-                        <AlertTriangle className="w-4 h-4 text-red-400/60 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+                        <div className="w-7 h-7 rounded-lg bg-red-500/10 border border-red-500/15 flex items-center justify-center flex-shrink-0">
+                          <AlertTriangle className="w-3.5 h-3.5 text-red-400/60" strokeWidth={1.5} />
+                        </div>
                         <p className="text-white/55 text-sm font-light">{renderBold(r)}</p>
                       </div>
                     ))}
@@ -1257,7 +1339,7 @@ const RadiografiaPremiumPage = () => {
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                   className="p-6 lg:p-8 rounded-2xl border border-cyan-500/15 bg-gradient-to-br from-cyan-500/[0.03] to-transparent relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500/30 to-teal-500/30" />
-                  <h2 className="text-xl font-light text-white/70 mb-4">Síntesis Final</h2>
+                  <h2 className="text-lg font-light text-white/70 mb-4">Síntesis Final</h2>
                   <div className="space-y-4">
                     {[
                       { key: 'que_ocurre', label: '¿Qué está ocurriendo realmente?' },
@@ -1275,6 +1357,85 @@ const RadiografiaPremiumPage = () => {
                             ))}
                           </div>
                         </div>
+                      )
+                    })}
+                  </div>
+                </motion.div>
+              )}
+
+              {/* ═══ 13. ANÁLISIS POR ENFOQUE PSICOLÓGICO ═══ */}
+              {aiAnalysis.lecturas_por_enfoque && (
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-violet-500/15" />
+                    <h2 className="text-xs font-medium text-violet-300/50 uppercase tracking-[0.2em]">Análisis por Enfoque Psicológico</h2>
+                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-violet-500/15" />
+                  </div>
+                  <p className="text-white/35 text-sm font-light text-center mb-8">Cada perspectiva teórica ilumina una dimensión diferente de tu vínculo</p>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    {[
+                      { key: 'gottman', icon: Shield, border: 'border-blue-500/10', bg: 'from-blue-500/[0.02]', line: 'from-blue-500/20', iconBg: 'bg-blue-500/10 border-blue-500/15', iconColor: 'text-blue-400/60' },
+                      { key: 'bowlby', icon: Heart, border: 'border-amber-500/10', bg: 'from-amber-500/[0.02]', line: 'from-amber-500/20', iconBg: 'bg-amber-500/10 border-amber-500/15', iconColor: 'text-amber-400/60' },
+                      { key: 'sue_johnson', icon: Users, border: 'border-rose-500/10', bg: 'from-rose-500/[0.02]', line: 'from-rose-500/20', iconBg: 'bg-rose-500/10 border-rose-500/15', iconColor: 'text-rose-400/60' },
+                      { key: 'perel', icon: Flame, border: 'border-pink-500/10', bg: 'from-pink-500/[0.02]', line: 'from-pink-500/20', iconBg: 'bg-pink-500/10 border-pink-500/15', iconColor: 'text-pink-400/60' },
+                      { key: 'sternberg', icon: Star, border: 'border-violet-500/10', bg: 'from-violet-500/[0.02]', line: 'from-violet-500/20', iconBg: 'bg-violet-500/10 border-violet-500/15', iconColor: 'text-violet-400/60' },
+                      { key: 'tatkin', icon: Activity, border: 'border-teal-500/10', bg: 'from-teal-500/[0.02]', line: 'from-teal-500/20', iconBg: 'bg-teal-500/10 border-teal-500/15', iconColor: 'text-teal-400/60' },
+                      { key: 'freud', icon: Brain, border: 'border-purple-500/10', bg: 'from-purple-500/[0.02]', line: 'from-purple-500/20', iconBg: 'bg-purple-500/10 border-purple-500/15', iconColor: 'text-purple-400/60' },
+                      { key: 'lacan', icon: Eye, border: 'border-indigo-500/10', bg: 'from-indigo-500/[0.02]', line: 'from-indigo-500/20', iconBg: 'bg-indigo-500/10 border-indigo-500/15', iconColor: 'text-indigo-400/60' }
+                    ].map(({ key, icon: Icon, border, bg, line, iconBg, iconColor }) => {
+                      const data = aiAnalysis.lecturas_por_enfoque[key]
+                      if (!data) return null
+                      const score = data.puntuacion ?? 50
+                      const barColor = score >= 60 ? 'bg-emerald-500' : score >= 40 ? 'bg-amber-500' : 'bg-red-500'
+                      const isSternberg = key === 'sternberg'
+                      return (
+                        <motion.div key={key}
+                          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                          className={`p-5 rounded-2xl border ${border} bg-gradient-to-br ${bg} to-transparent relative overflow-hidden`}>
+                          <div className={`absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r ${line} to-transparent`} />
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-center gap-2.5">
+                              <div className={`w-8 h-8 rounded-xl ${iconBg} border flex items-center justify-center`}>
+                                <Icon className={`w-4 h-4 ${iconColor}`} strokeWidth={1.5} />
+                              </div>
+                              <div>
+                                <h3 className="text-white/75 text-sm font-medium">{data.titulo}</h3>
+                                <p className="text-white/35 text-[10px] font-light">{data.enfoque}</p>
+                              </div>
+                            </div>
+                          </div>
+                          {/* Score bar */}
+                          {isSternberg ? (
+                            <div className="grid grid-cols-3 gap-2 mb-4">
+                              {[
+                                { label: 'Intimidad', val: data.puntuacion_intimidad ?? 50 },
+                                { label: 'Pasión', val: data.puntuacion_pasion ?? 50 },
+                                { label: 'Compromiso', val: data.puntuacion_compromiso ?? 50 }
+                              ].map(({ label, val }) => (
+                                <div key={label} className="text-center">
+                                  <p className="text-white/50 text-[10px] font-light mb-1">{label}</p>
+                                  <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                                    <div className={`h-full rounded-full ${val >= 60 ? 'bg-emerald-500' : val >= 40 ? 'bg-amber-500' : 'bg-red-500'}`}
+                                      style={{ width: `${val}%`, opacity: 0.7 }} />
+                                  </div>
+                                  <p className="text-white/60 text-[10px] font-medium mt-0.5">{val}%</p>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-3 mb-4">
+                              <div className="flex-1 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                                <div className={`h-full rounded-full ${barColor}`} style={{ width: `${score}%`, opacity: 0.7 }} />
+                              </div>
+                              <span className="text-white/60 text-xs font-medium tabular-nums w-8 text-right">{score}%</span>
+                            </div>
+                          )}
+                          <div className="space-y-2">
+                            {(data.interpretacion || '').split('\n\n').map((p, i) => (
+                              <p key={i} className="text-white/45 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                            ))}
+                          </div>
+                        </motion.div>
                       )
                     })}
                   </div>

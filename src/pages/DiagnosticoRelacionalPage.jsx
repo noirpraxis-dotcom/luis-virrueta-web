@@ -2064,34 +2064,7 @@ const DiagnosticoRelacionalPage = () => {
                 <p className="text-white/50 text-lg font-light mb-3 max-w-xl mx-auto">Un diagnóstico que analiza tu relación desde 12 perspectivas psicológicas simultáneas.</p>
                 <p className="text-white/30 text-sm font-light mb-10 max-w-lg mx-auto">Gottman · Bowlby · Sternberg · Perel · Johnson · y 7 especialistas más analizan tu caso en un solo reporte.</p>
 
-                <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
-                  {/* Guía Gratuita */}
-                  <div className="p-8 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.04] to-teal-500/[0.02] text-left relative overflow-hidden">
-                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500/40 to-teal-500/40" />
-                    <div className="flex items-center gap-2 mb-2">
-                      <p className="text-emerald-300/60 text-xs uppercase tracking-[0.15em]">Guía gratuita</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/20 text-emerald-300/70">Oferta</span>
-                    </div>
-                    <div className="flex items-baseline gap-2 mb-1">
-                      <span className="text-white/30 text-lg line-through">$199</span>
-                      <p className="text-3xl font-light text-emerald-300">Gratis</p>
-                    </div>
-                    <p className="text-white/40 text-sm font-light mb-5">Entiende los patrones que repites sin darte cuenta</p>
-                    <ul className="space-y-2 mb-6">
-                      {['Los 5 patrones inconscientes más comunes en parejas', 'Señales tempranas de desgaste relacional', 'Mini-test: ¿qué rol juegas en tu relación?', 'Acceso inmediato a tu email'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
-                          <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                    <motion.button
-                      onClick={() => setShowFreeGuide(true)}
-                      whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                      className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-light text-base hover:from-emerald-500 hover:to-teal-500 transition-all shadow-lg shadow-emerald-600/20">
-                      Descargar gratis
-                    </motion.button>
-                  </div>
+                <div className="hidden sm:grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
                   {/* Individual */}
                   <div className="p-8 rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left">
                     <p className="text-white/40 text-xs uppercase tracking-[0.15em] mb-2">Individual</p>
@@ -2186,31 +2159,6 @@ const DiagnosticoRelacionalPage = () => {
 
                 {/* Mobile: stacked pricing cards */}
                 <div className="sm:hidden flex flex-col gap-5 max-w-sm mx-auto">
-                  {/* Guía Gratuita */}
-                  <div className="p-7 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.04] to-teal-500/[0.02] text-left relative overflow-hidden">
-                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500/40 to-teal-500/40" />
-                    <div className="flex items-center gap-2 mb-2">
-                      <p className="text-emerald-300/60 text-xs uppercase tracking-[0.15em]">Guía gratuita</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/20 text-emerald-300/70">Oferta</span>
-                    </div>
-                    <div className="flex items-baseline gap-2 mb-1">
-                      <span className="text-white/30 text-lg line-through">$199</span>
-                      <p className="text-3xl font-light text-emerald-300">Gratis</p>
-                    </div>
-                    <p className="text-white/40 text-sm font-light mb-5">Entiende los patrones que repites sin darte cuenta</p>
-                    <ul className="space-y-2 mb-6">
-                      {['Los 5 patrones inconscientes más comunes en parejas', 'Señales tempranas de desgaste relacional', 'Mini-test: ¿qué rol juegas en tu relación?', 'Acceso inmediato a tu email'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
-                          <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                    <motion.button onClick={() => setShowFreeGuide(true)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                      className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-light text-base">
-                      Descargar gratis
-                    </motion.button>
-                  </div>
                   {/* Individual */}
                   <div className="p-7 rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left">
                     <p className="text-white/50 text-xs uppercase tracking-[0.15em] mb-2">Individual</p>
@@ -2344,31 +2292,6 @@ const DiagnosticoRelacionalPage = () => {
 
               {/* Pricing Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                {/* Guía Gratuita */}
-                <div className="p-7 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.04] to-teal-500/[0.02] space-y-5 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500/40 to-teal-500/40" />
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="text-emerald-300/60 text-xs uppercase tracking-[0.15em]">Guía gratuita</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/20 text-emerald-300/70">Gratis</span>
-                    </div>
-                    <p className="text-3xl font-light text-white">$0 <span className="text-lg text-white/35">MXN</span></p>
-                    <p className="text-white/30 text-sm font-light mt-1">Patrones que repites sin saberlo</p>
-                  </div>
-                  <ul className="space-y-2">
-                    {['Los 5 patrones inconscientes más comunes', 'Señales de alerta que ignoras', 'Mini-test: tu rol en la relación', 'Acceso inmediato por email'].map((item, i) => (
-                      <li key={i} className="flex items-start gap-2 text-white/45 text-sm font-light">
-                        <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <motion.button onClick={() => setShowFreeGuide(true)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-light text-base hover:from-emerald-500 hover:to-teal-500 transition-all">
-                    Descargar gratis
-                  </motion.button>
-                </div>
-
                 {/* Individual */}
                 <div className="p-7 rounded-2xl border border-white/10 bg-white/[0.02] space-y-5">
                   <div>
@@ -2413,6 +2336,33 @@ const DiagnosticoRelacionalPage = () => {
                     className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all">
                     Pagar ${PRODUCT_PRICE_PAREJA} MXN
                   </motion.button>
+                </div>
+              </div>
+
+              {/* Radiografía Premium */}
+              <div className="p-5 rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-cyan-500/[0.03] to-blue-500/[0.02] relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-cyan-500/40 to-blue-500/40" />
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="text-cyan-300/60 text-xs uppercase tracking-[0.15em]">Premium</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/20 text-cyan-300/70">40 preguntas narrativas</span>
+                    </div>
+                    <p className="text-white/50 text-sm font-light">Análisis narrativo profundo · 12 dimensiones · 9 corrientes psicológicas</p>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <input type="text" placeholder="Tu código" id="premiumCodeCheckout" maxLength={20}
+                      className="w-36 px-3 py-2.5 rounded-lg border border-cyan-500/20 bg-white/[0.03] text-white text-sm font-light placeholder:text-white/25 focus:border-cyan-500/40 focus:outline-none" />
+                    <motion.button
+                      onClick={() => {
+                        const code = document.getElementById('premiumCodeCheckout')?.value?.trim()
+                        if (code) navigate(`/tienda/radiografia-premium?code=${encodeURIComponent(code)}`)
+                      }}
+                      whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                      className="px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 text-white text-sm font-light">
+                      Acceder
+                    </motion.button>
+                  </div>
                 </div>
               </div>
 
