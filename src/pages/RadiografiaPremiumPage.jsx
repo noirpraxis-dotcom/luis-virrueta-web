@@ -5,7 +5,8 @@ import {
   ArrowRight, ArrowLeft, Check, Sparkles, Mic, MicOff, Volume2, VolumeX,
   Loader2, ChevronDown, AlertTriangle, TrendingUp, TrendingDown, Star,
   Shield, Activity, Brain, Heart, Zap, Eye, Target, Users, Flame,
-  CheckCircle, Download
+  CheckCircle, Download, PenLine, Send, MessageCircle, Lightbulb, Clock,
+  Headphones, SkipForward
 } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 import jsPDF from 'jspdf'
@@ -247,11 +248,56 @@ const DIMENSION_COLORS = [
   '#22d3ee', '#60a5fa', '#a78bfa', '#e879f9', '#f87171', '#4ade80'
 ]
 
-// ─── ElevenLabs voices ──────────────────────────────────────────
+// ─── ElevenLabs voices (Latin Spanish, fast & clear) ────────────
 
 const VOICES = {
   female: { id: 'XB0fDUnXU5powFXDhCwa', name: 'Charlotte' },
   male: { id: 'onwK4e9ZLuTAKqWW03F9', name: 'Daniel' }
+}
+
+// ─── DEMO RESPONSES (for testing) ────────────────────────────────
+
+const DEMO_RESPONSES = {
+  Q1: 'Me llamo Carlos, tengo 32 años, soy diseñador gráfico freelance. Llevo 4 años con mi pareja Ana. Estoy en un momento de mucha reflexión personal, buscando estabilidad.',
+  Q2: 'Nos conocimos en una fiesta de amigos en común hace como 5 años. Al principio fue algo casual, nos caímos bien, empezamos a salir y poco a poco se fue haciendo más serio. Llevamos viviendo juntos dos años.',
+  Q3: 'Actualmente la relación está en un momento complicado. Hay muchas discusiones por cosas pequeñas. Pero también hay momentos buenos donde sentimos que todo vale la pena.',
+  Q4: 'En el día a día trabajamos los dos desde casa. Compartimos las comidas, a veces vemos series juntos. La comunicación es lo que más nos cuesta, a veces pasamos horas sin hablarnos después de una discusión.',
+  Q5: 'Siento que hemos construido un hogar juntos, una rutina. También hemos aprendido a conocernos profundamente. La relación me ha enseñado mucho sobre mí mismo.',
+  Q6: 'Lo que más me llamó la atención fue su inteligencia y su risa. Tenía una forma de ver la vida que me parecía fascinante, como muy libre y segura de sí misma.',
+  Q7: 'Me gustaba mucho su independencia, su creatividad. Era atractiva pero también muy inteligente. Sentía que podía hablar con ella de cualquier cosa.',
+  Q8: 'El primer viaje que hicimos juntos fue muy importante. También cuando decidimos vivir juntos. Y hubo una crisis fuerte hace un año que nos cambió mucho.',
+  Q9: 'Al principio imaginaba que íbamos a ser una pareja muy unida, viajar mucho, crecer juntos profesionalmente. Veía un futuro largo.',
+  Q10: 'Ella representaba estabilidad emocional para mí. Sentía que con ella podía ser yo mismo sin máscaras.',
+  Q11: 'Mis padres tenían una relación complicada. Se querían pero discutían mucho. Mi mamá era más emocional y mi papá más distante.',
+  Q12: 'Aprendí que el amor requiere sacrificio, que hay que aguantar. También que las discusiones son normales. No vi mucha expresión de cariño físico.',
+  Q13: 'Sí, noto que a veces me distancio como hacía mi papá. Me cuesta expresar lo que siento y me refugio en el silencio.',
+  Q14: 'Tuve una relación de 3 años antes que terminó porque yo era muy celoso. Aprendí que los celos destruyen todo.',
+  Q15: 'Sí, noto que repito el patrón de cerrarme emocionalmente cuando me siento atacado. Es algo que quiero cambiar.',
+  Q16: 'Esta relación me ha hecho más consciente de mis miedos. He aprendido que necesito trabajar en mi comunicación.',
+  Q17: 'Las discusiones empiezan por cosas pequeñas, como tareas del hogar o decisiones del día a día. Escala rápido.',
+  Q18: 'Yo tiendo a callarme y alejarme. Me cuesta mucho discutir en el momento, prefiero pensar antes de hablar.',
+  Q19: 'Ella se frustra porque yo me callo. Sube el tono, insiste en que yo hable. A veces llora de frustración.',
+  Q20: 'Después de una discusión solemos pasar un rato sin hablarnos. Generalmente ella da el primer paso para reconciliarnos.',
+  Q21: 'Me sigue atrayendo mucho su físico, su manera de moverse. Pero lo que más me atrae es cuando la veo apasionada por algo que le gusta.',
+  Q22: 'Hay momentos de mucha conexión, sobre todo cuando hablamos de nuestros sueños o cuando viajamos juntos. Pero en la rutina es más difícil.',
+  Q23: 'La intimidad física ha bajado un poco. Antes era más frecuente y más espontánea. Ahora se siente más como un esfuerzo.',
+  Q24: 'Al inicio el deseo era muy fuerte, constante. Ahora hay altibajos. Después de discusiones es difícil reconectarse.',
+  Q25: 'Los viajes nos acercan mucho. También cocinar juntos o cuando compartimos algo creativo.',
+  Q26: 'La distancia aparece cuando hay mucho estrés laboral o después de conflictos. A veces siento que vivimos como roommates.',
+  Q27: 'Las decisiones grandes las tomamos platicando, pero a veces siento que ella impone su punto de vista y yo cedo.',
+  Q28: 'Ella espera que yo sea más expresivo y detallista. Yo espero más espacio personal. Esas expectativas chocan.',
+  Q29: 'Creo que para ella es importante sentirse valorada y escuchada. Necesita que le demuestre que me importa con acciones.',
+  Q30: 'Para mí es importante tener algo de espacio personal, sentir que somos equipo, y tener más momentos de diversión juntos.',
+  Q31: 'Esta relación es muy importante para mí. Es donde me siento más yo, aunque también donde más vulnerable soy.',
+  Q32: 'Imagino que si trabajamos en nuestra comunicación podemos tener un futuro muy sólido. Me gustaría formar una familia.',
+  Q33: 'La risa que compartimos, los planes que hacemos, la historia que ya tenemos. Los buenos momentos superan a los malos.',
+  Q34: 'A veces me pregunto si somos compatibles a largo plazo. Las discusiones repetitivas me generan duda.',
+  Q35: 'Lo que nos ha salvado es que los dos queremos estar juntos. Hay amor debajo de todo el conflicto.',
+  Q36: 'Me gustaría que aprendiéramos a comunicarnos sin gritar, más paciencia, más momentos de calidad juntos.',
+  Q37: 'Creo que ella busca seguridad emocional y cercanía. Yo busco compañerismo y paz en la relación.',
+  Q38: 'He descubierto que soy más sensible de lo que creía. También que tengo miedo al abandono.',
+  Q39: 'Lo único de nuestra relación es la intensidad. Nos amamos mucho pero también nos hacemos daño. Es apasionada.',
+  Q40: 'Creo que lo más importante es que ambos estamos aquí porque queremos mejorar. Eso dice mucho.'
 }
 
 // ─── ANÁLISIS ANIMATION TASKS ─────────────────────────────────────
@@ -400,9 +446,11 @@ const RadiografiaPremiumPage = () => {
   const audioRef = useRef(null)
   const currentAudioRef = useRef(null)
 
-  // Recording
+  // Recording & Input
   const [recording, setRecording] = useState(false)
   const [transcript, setTranscript] = useState('')
+  const [typingMode, setTypingMode] = useState(false)
+  const [textInput, setTextInput] = useState('')
   const recognitionRef = useRef(null)
 
   // Analysis
@@ -439,7 +487,8 @@ const RadiografiaPremiumPage = () => {
         body: JSON.stringify({
           text,
           model_id: 'eleven_multilingual_v2',
-          voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.3 }
+          language_code: 'es',
+          voice_settings: { stability: 0.6, similarity_boost: 0.85, style: 0.15, use_speaker_boost: true }
         })
       })
       if (!res.ok) { setAudioPlaying(false); return }
@@ -491,40 +540,58 @@ const RadiografiaPremiumPage = () => {
   }, [])
 
   // ── Save response and navigate ──
+  const currentText = typingMode ? textInput : transcript
+
   const saveAndNext = useCallback(() => {
-    if (transcript.trim()) {
-      setResponses(prev => ({ ...prev, [question.id]: transcript.trim() }))
+    const finalText = typingMode ? textInput.trim() : transcript.trim()
+    if (finalText) {
+      setResponses(prev => ({ ...prev, [question.id]: finalText }))
     }
     stopRecording()
     setTranscript('')
+    setTextInput('')
+    setTypingMode(false)
     if (currentQ < totalQ - 1) {
       setCurrentQ(prev => prev + 1)
     } else {
-      // All questions done → run analysis
       const finalResponses = { ...responses }
-      if (transcript.trim()) finalResponses[question.id] = transcript.trim()
+      if (finalText) finalResponses[question.id] = finalText
       handleRunAnalysis(finalResponses)
     }
-  }, [transcript, currentQ, totalQ, question, responses, stopRecording])
+  }, [textInput, transcript, typingMode, currentQ, totalQ, question, responses, stopRecording])
 
   const goBack = useCallback(() => {
     if (currentQ > 0) {
-      if (transcript.trim()) {
-        setResponses(prev => ({ ...prev, [question.id]: transcript.trim() }))
+      const finalText = typingMode ? textInput.trim() : transcript.trim()
+      if (finalText) {
+        setResponses(prev => ({ ...prev, [question.id]: finalText }))
       }
       stopRecording()
       setCurrentQ(prev => prev - 1)
       const prevQ = PREGUNTAS[currentQ - 1]
-      setTranscript(responses[prevQ.id] || '')
+      const prevVal = responses[prevQ.id] || ''
+      setTranscript(prevVal)
+      setTextInput(prevVal)
+      setTypingMode(false)
     }
-  }, [currentQ, transcript, question, responses, stopRecording])
+  }, [currentQ, textInput, transcript, typingMode, question, responses, stopRecording])
 
   // ── When entering a question, load saved transcript ──
   useEffect(() => {
     if (stage === 'questionnaire') {
-      setTranscript(responses[question?.id] || '')
+      const saved = responses[question?.id] || ''
+      setTranscript(saved)
+      setTextInput(saved)
+      setTypingMode(false)
     }
   }, [currentQ, stage]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Fill demo responses for testing ──
+  const fillDemoResponses = useCallback(() => {
+    setResponses({ ...DEMO_RESPONSES })
+    setTranscript(DEMO_RESPONSES[question?.id] || '')
+    setTextInput(DEMO_RESPONSES[question?.id] || '')
+  }, [question])
 
   // ── Run AI Analysis ──
   const handleRunAnalysis = useCallback(async (finalResponses) => {
@@ -643,20 +710,23 @@ const RadiografiaPremiumPage = () => {
         ═══════════════════════════════════════════════════════ */}
         {stage === 'instructions' && (
           <motion.div key="instructions" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="min-h-screen flex items-center justify-center px-6 pt-24">
-            <div className="max-w-lg w-full text-center space-y-8">
+            className="min-h-screen flex items-center justify-center px-6 pt-24 pb-12">
+            <div className="max-w-xl w-full text-center space-y-8">
               <div>
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-4">
                   <Brain className="w-8 h-8 text-violet-400/60" strokeWidth={1.5} />
                 </div>
                 <h1 className="text-2xl lg:text-3xl font-light text-white mb-3">Radiografía de Pareja Premium</h1>
-                <p className="text-white/40 text-sm font-light leading-relaxed">
-                  Este es un análisis narrativo profundo de tu relación. 40 preguntas abiertas que exploran tu vínculo desde 12 dimensiones psicológicas.
+                <p className="text-white/50 text-sm font-light leading-relaxed max-w-md mx-auto">
+                  Un análisis narrativo profundo de tu relación a través de <strong className="text-white/70">40 preguntas abiertas</strong> que exploran tu vínculo desde <strong className="text-white/70">12 dimensiones psicológicas</strong>.
                 </p>
               </div>
 
+              {/* Elige voz */}
               <div className="space-y-4">
-                <p className="text-white/50 text-sm font-light">Elige la voz que te guiará</p>
+                <p className="text-white/60 text-sm font-light flex items-center justify-center gap-2">
+                  <Headphones className="w-4 h-4 text-violet-400/50" /> Elige la voz que te guiará
+                </p>
                 <div className="flex justify-center gap-4">
                   {[{ g: 'female', label: 'Charlotte (mujer)', icon: '👩' }, { g: 'male', label: 'Daniel (hombre)', icon: '👨' }].map(v => (
                     <button key={v.g} onClick={() => setVoiceGender(v.g)}
@@ -670,14 +740,63 @@ const RadiografiaPremiumPage = () => {
                 </div>
               </div>
 
-              <div className="space-y-3 text-left p-5 rounded-2xl border border-white/8 bg-white/[0.02]">
-                <p className="text-white/60 text-sm font-light">📋 Cómo funciona:</p>
-                <ul className="space-y-2 text-white/40 text-sm font-light">
-                  <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} /> Escucharás cada pregunta en voz alta</li>
-                  <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} /> Los ejemplos orientativos se muestran debajo (no se leen)</li>
-                  <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} /> Presiona el micrófono para responder con tu voz</li>
-                  <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} /> Si la voz está hablando, al dar clic al micrófono se detiene</li>
-                  <li className="flex items-start gap-2"><Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} /> La bocina junto a la pregunta te permite escucharla de nuevo</li>
+              {/* Cómo funciona */}
+              <div className="space-y-4 text-left p-6 rounded-2xl border border-white/10 bg-white/[0.02]">
+                <p className="text-white/70 text-sm font-medium flex items-center gap-2">
+                  <Lightbulb className="w-4 h-4 text-amber-400/60" /> ¿Cómo funciona?
+                </p>
+                <div className="h-px bg-white/8" />
+                <ul className="space-y-3 text-white/55 text-sm font-light">
+                  <li className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Volume2 className="w-3 h-3 text-violet-400/70" />
+                    </div>
+                    <span>Escucharás cada pregunta en voz alta. Los <strong className="text-white/70">ejemplos orientativos</strong> se muestran debajo para inspirarte (no se leen).</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Mic className="w-3 h-3 text-violet-400/70" />
+                    </div>
+                    <span>Presiona el <strong className="text-white/70">micrófono</strong> para responder con tu voz. Si la voz está hablando, al tocar el micrófono se detiene y empieza a grabarte.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <PenLine className="w-3 h-3 text-violet-400/70" />
+                    </div>
+                    <span>Si prefieres, también puedes <strong className="text-white/70">escribir</strong> tu respuesta con el teclado.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Volume2 className="w-3 h-3 text-violet-400/70" />
+                    </div>
+                    <span>La bocina junto a la pregunta te permite <strong className="text-white/70">escucharla de nuevo</strong> si lo necesitas.</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Tips */}
+              <div className="space-y-3 text-left p-6 rounded-2xl border border-amber-500/10 bg-amber-500/[0.02]">
+                <p className="text-amber-300/70 text-sm font-medium flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-amber-400/50" /> Antes de empezar
+                </p>
+                <div className="h-px bg-white/5" />
+                <ul className="space-y-2 text-white/50 text-sm font-light">
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-400/40 mt-0.5">•</span>
+                    <span><strong className="text-white/65">Tómate tu tiempo.</strong> No hay prisa. Puedes pausar cuando quieras.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-400/40 mt-0.5">•</span>
+                    <span><strong className="text-white/65">Contesta lo primero que te venga a la mente.</strong> No te preocupes si sientes que te equivocas — lo que surge primero es lo que más te define.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-400/40 mt-0.5">•</span>
+                    <span><strong className="text-white/65">Son 40 preguntas abiertas.</strong> No hay respuestas correctas ni incorrectas. Habla con la libertad que necesites.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-400/40 mt-0.5">•</span>
+                    <span>Usar el <strong className="text-white/65">micrófono</strong> es más rápido y natural, pero escribir funciona igual de bien.</span>
+                  </li>
                 </ul>
               </div>
 
@@ -700,59 +819,106 @@ const RadiografiaPremiumPage = () => {
             <div className="max-w-2xl mx-auto">
 
               {/* Progress bar */}
-              <div className="mb-6">
-                <div className="flex justify-between mb-1.5">
-                  <span className="text-white/30 text-xs font-light">{question.block}</span>
-                  <span className="text-white/30 text-xs font-light">{currentQ + 1} / {totalQ}</span>
+              <div className="mb-8">
+                <div className="flex justify-between mb-2">
+                  <span className="text-violet-300/70 text-xs font-medium uppercase tracking-wider">{question.block}</span>
+                  <span className="text-white/60 text-xs font-light">{currentQ + 1} de {totalQ}</span>
                 </div>
-                <div className="h-1 bg-white/5 rounded-full overflow-hidden">
-                  <motion.div animate={{ width: `${progress}%` }} className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full" />
+                <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                  <motion.div animate={{ width: `${progress}%` }} transition={{ duration: 0.4 }}
+                    className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full" />
                 </div>
               </div>
 
-              {/* Main question + speaker button */}
-              <div className="mb-6">
-                <div className="flex items-start gap-3">
-                  <div className="flex-1">
-                    <p className="text-white/80 text-lg font-light leading-relaxed">{question.mainQuestion}</p>
-                  </div>
+              {/* Main question — centered */}
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center gap-2 mb-4">
+                  <span className="text-white/25 text-xs font-light">Pregunta {currentQ + 1}</span>
                   <button
                     onClick={() => playQuestion(question.mainQuestion)}
-                    className={`flex-shrink-0 w-10 h-10 rounded-xl border flex items-center justify-center transition-all ${audioPlaying
-                      ? 'border-violet-500/30 bg-violet-500/10 text-violet-400/80'
-                      : 'border-white/10 bg-white/[0.03] text-white/40 hover:text-white/60 hover:border-white/20'}`}>
-                    {audioPlaying ? <VolumeX className="w-4 h-4" onClick={(e) => { e.stopPropagation(); stopAudio() }} /> : <Volume2 className="w-4 h-4" />}
+                    className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all ${audioPlaying
+                      ? 'border-violet-500/40 bg-violet-500/15 text-violet-400'
+                      : 'border-white/15 bg-white/[0.04] text-white/50 hover:text-white/70 hover:border-white/25'}`}
+                    title="Escuchar pregunta">
+                    {audioPlaying ? <VolumeX className="w-3.5 h-3.5" onClick={(e) => { e.stopPropagation(); stopAudio() }} /> : <Volume2 className="w-3.5 h-3.5" />}
                   </button>
                 </div>
+                <p className="text-white/90 text-lg lg:text-xl font-light leading-relaxed max-w-xl mx-auto">{question.mainQuestion}</p>
               </div>
 
-              {/* Examples (not read aloud) */}
-              <div className="mb-8 p-4 rounded-xl border border-white/5 bg-white/[0.015]">
-                <p className="text-white/30 text-xs font-light mb-2">Ejemplos que pueden orientar tu respuesta:</p>
-                <ul className="space-y-1">
+              {/* Divider */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                <Lightbulb className="w-3.5 h-3.5 text-amber-400/40" />
+                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+              </div>
+
+              {/* Examples — centered, premium */}
+              <div className="mb-8 p-5 rounded-2xl border border-white/10 bg-white/[0.025] text-center">
+                <p className="text-white/55 text-xs font-medium uppercase tracking-wider mb-4">Ejemplos que pueden orientar tu respuesta</p>
+                <div className="space-y-2">
                   {question.examples.map((ex, i) => (
-                    <li key={i} className="text-white/35 text-sm font-light flex items-start gap-2">
-                      <span className="text-white/20 mt-0.5">•</span>
-                      {ex}
-                    </li>
+                    <div key={i} className="flex items-center justify-center gap-2 text-white/50 text-sm font-light">
+                      <span className="text-violet-400/40">✦</span>
+                      <span>{ex}</span>
+                    </div>
                   ))}
-                </ul>
-                <p className="text-white/20 text-[11px] font-light mt-2 italic">Puedes añadir cualquier otro detalle que sientas importante.</p>
-              </div>
-
-              {/* Transcript area */}
-              <div className="mb-6">
-                <div className="min-h-[120px] p-4 rounded-xl border border-white/10 bg-white/[0.02]">
-                  {transcript ? (
-                    <p className="text-white/60 text-sm font-light leading-relaxed">{transcript}</p>
-                  ) : (
-                    <p className="text-white/20 text-sm font-light italic">Tu respuesta aparecerá aquí mientras hablas…</p>
-                  )}
                 </div>
+                <div className="h-px bg-white/5 mt-4 mb-3" />
+                <p className="text-white/35 text-xs font-light italic flex items-center justify-center gap-1.5">
+                  <Sparkles className="w-3 h-3 text-violet-400/30" />
+                  Puedes añadir cualquier otro detalle que sientas importante
+                </p>
               </div>
 
-              {/* Microphone */}
-              <div className="flex justify-center mb-8">
+              {/* ── Response area ── */}
+
+              {/* If has content: show transcript/text */}
+              {(currentText.trim() || recording) && (
+                <div className="mb-6">
+                  <div className="min-h-[80px] p-4 rounded-xl border border-violet-500/15 bg-violet-500/[0.03]">
+                    <p className="text-white/70 text-sm font-light leading-relaxed">{currentText || (
+                      <span className="text-white/30 italic">Escuchando…</span>
+                    )}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Typing mode: textarea */}
+              {typingMode && !recording && (
+                <div className="mb-6">
+                  <textarea
+                    value={textInput}
+                    onChange={(e) => setTextInput(e.target.value)}
+                    placeholder="Escribe tu respuesta aquí…"
+                    rows={4}
+                    className="w-full p-4 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/30 focus:border-violet-500/30 focus:outline-none resize-none transition-colors leading-relaxed"
+                  />
+                </div>
+              )}
+
+              {/* If no content and not recording and not typing: prompt to start */}
+              {!currentText.trim() && !recording && !typingMode && (
+                <p className="text-center text-white/35 text-sm font-light mb-4">
+                  Toca el micrófono cuando quieras contestar
+                </p>
+              )}
+
+              {recording && (
+                <p className="text-center text-red-400/70 text-xs font-light mb-3 animate-pulse">
+                  🔴 Grabando — habla con libertad. Toca de nuevo para detener.
+                </p>
+              )}
+
+              {/* ── Action buttons: Back · Mic · Next ── */}
+              <div className="flex items-center justify-center gap-4 mb-6">
+                {/* Back */}
+                <button onClick={goBack} disabled={currentQ === 0}
+                  className="w-11 h-11 rounded-xl border border-white/10 bg-white/[0.03] flex items-center justify-center text-white/40 hover:text-white/60 hover:border-white/20 transition-all disabled:opacity-20 disabled:pointer-events-none">
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+
+                {/* Microphone */}
                 <motion.button
                   onClick={recording ? stopRecording : startRecording}
                   whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
@@ -761,25 +927,46 @@ const RadiografiaPremiumPage = () => {
                     : 'bg-violet-500/10 border-2 border-violet-500/30 text-violet-400/70 hover:border-violet-500/50'}`}>
                   {recording ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
                 </motion.button>
+
+                {/* Next / Finalizar */}
+                <motion.button onClick={saveAndNext}
+                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  className={`h-11 px-5 rounded-xl border flex items-center gap-2 text-sm font-light transition-all ${currentText.trim()
+                    ? 'border-violet-500/30 bg-violet-500/15 text-violet-300/90 hover:bg-violet-500/25'
+                    : 'border-white/10 bg-white/[0.03] text-white/40 hover:text-white/60 hover:border-white/20'}`}>
+                  {currentQ < totalQ - 1 ? (
+                    <><span>Siguiente</span><SkipForward className="w-3.5 h-3.5" /></>
+                  ) : (
+                    <><span>Finalizar</span><Check className="w-3.5 h-3.5" /></>
+                  )}
+                </motion.button>
               </div>
 
-              {recording && (
-                <p className="text-center text-red-400/60 text-xs font-light mb-4 animate-pulse">
-                  🔴 Grabando — habla con libertad. Presiona de nuevo para detener.
-                </p>
+              {/* Toggle typing mode */}
+              {!recording && (
+                <div className="text-center">
+                  <button
+                    onClick={() => { setTypingMode(!typingMode); if (!typingMode) setTextInput(transcript || textInput) }}
+                    className="text-white/30 text-xs font-light hover:text-white/55 transition-colors inline-flex items-center gap-1.5">
+                    <PenLine className="w-3 h-3" />
+                    {typingMode ? 'Prefiero usar el micrófono' : 'Prefiero escribir mi respuesta'}
+                  </button>
+                </div>
               )}
 
-              {/* Navigation */}
-              <div className="flex justify-between">
-                <button onClick={goBack} disabled={currentQ === 0}
-                  className="flex items-center gap-2 text-white/30 hover:text-white/60 text-xs tracking-wider transition-colors disabled:opacity-20">
-                  <ArrowLeft className="w-3.5 h-3.5" /> ANTERIOR
-                </button>
-                <button onClick={saveAndNext}
-                  className="flex items-center gap-2 text-violet-300/60 hover:text-violet-300/90 text-xs tracking-wider transition-colors">
-                  {currentQ < totalQ - 1 ? 'SIGUIENTE' : 'FINALIZAR'} <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
+              {/* DEV: Fill demo responses */}
+              {import.meta.env.DEV && (
+                <div className="mt-8 pt-6 border-t border-white/5 flex flex-wrap gap-3 justify-center">
+                  <button onClick={fillDemoResponses}
+                    className="text-xs px-4 py-2 rounded-lg border border-amber-500/20 bg-amber-500/5 text-amber-300/60 hover:text-amber-300/90 transition-colors">
+                    🧪 Rellenar 40 respuestas demo
+                  </button>
+                  <button onClick={() => { fillDemoResponses(); setTimeout(() => handleRunAnalysis(DEMO_RESPONSES), 200) }}
+                    className="text-xs px-4 py-2 rounded-lg border border-emerald-500/20 bg-emerald-500/5 text-emerald-300/60 hover:text-emerald-300/90 transition-colors">
+                    🚀 Rellenar + Lanzar análisis
+                  </button>
+                </div>
+              )}
 
             </div>
           </motion.div>
