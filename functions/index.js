@@ -36,7 +36,14 @@ try {
 }
 
 app.use(cors({
-  origin: [FRONTEND_URL, 'http://localhost:3000', 'http://localhost:5173']
+  origin: [
+    FRONTEND_URL,
+    'https://luisvirrueta.com',
+    'https://www.luisvirrueta.com',
+    'https://luis-virrueta-web.pages.dev',
+    'http://localhost:3000',
+    'http://localhost:5173'
+  ]
 }))
 app.use(express.json({ limit: '10mb' }))
 
