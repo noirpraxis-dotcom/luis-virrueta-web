@@ -778,29 +778,7 @@ const DiagnosticoRelacionalPage = () => {
   const [resumeDraft, setResumeDraft] = useState(null)
   const [showFreeGuide, setShowFreeGuide] = useState(false)
 
-  // Countdown timer — 3 days from first visit, persisted in localStorage
-  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, pct: 100 })
-  useEffect(() => {
-    const DURATION_MS = 3 * 24 * 60 * 60 * 1000 // 3 days
-    const key = 'diagnostico_promo_end'
-    let endTime = parseInt(localStorage.getItem(key), 10)
-    if (!endTime || isNaN(endTime)) {
-      endTime = Date.now() + DURATION_MS
-      localStorage.setItem(key, String(endTime))
-    }
-    const tick = () => {
-      const remaining = Math.max(0, endTime - Date.now())
-      const pct = Math.max(0, (remaining / DURATION_MS) * 100)
-      const d = Math.floor(remaining / (1000 * 60 * 60 * 24))
-      const h = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-      const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60))
-      const s = Math.floor((remaining % (1000 * 60)) / 1000)
-      setCountdown({ days: d, hours: h, minutes: m, seconds: s, pct })
-    }
-    tick()
-    const iv = setInterval(tick, 1000)
-    return () => clearInterval(iv)
-  }, [])
+
 
   // Smart email/token flow
   const [thankyouEmails, setThankyouEmails] = useState(['', ''])
@@ -1433,35 +1411,8 @@ const DiagnosticoRelacionalPage = () => {
           <motion.div key="hero" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="min-h-screen">
 
-            {/* Promo countdown bar — fixed below header */}
-            <div className="fixed top-[60px] md:top-[68px] lg:top-24 left-0 right-0 z-[99] bg-gradient-to-r from-amber-950/95 via-orange-950/95 to-amber-950/95 border-b border-amber-500/20 backdrop-blur-sm">
-              <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-center gap-3 sm:gap-5">
-                <div className="flex items-center gap-1.5">
-                  <Zap className="w-3.5 h-3.5 text-amber-400" strokeWidth={2} />
-                  <span className="text-amber-200/90 text-xs sm:text-sm font-medium">Promoción de lanzamiento</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {[
-                    { val: countdown.days, label: 'd' },
-                    { val: countdown.hours, label: 'h' },
-                    { val: countdown.minutes, label: 'm' },
-                    { val: countdown.seconds, label: 's' }
-                  ].map((u, i) => (
-                    <div key={i} className="flex items-baseline gap-0.5">
-                      <span className="text-white font-medium text-sm sm:text-base tabular-nums">{String(u.val).padStart(2, '0')}</span>
-                      <span className="text-amber-400/60 text-[10px]">{u.label}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="hidden sm:block w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-amber-400 to-orange-400 rounded-full transition-all duration-1000" style={{ width: `${countdown.pct}%` }} />
-                </div>
-                <span className="text-amber-300/50 text-[10px] hidden lg:inline">Hasta -54% en todos los planes</span>
-              </div>
-            </div>
-
             {/* ── HERO — Split layout: texto + video ── */}
-            <section className="relative min-h-screen flex items-center overflow-hidden pt-28 pb-16 lg:pt-36 lg:pb-20">
+            <section className="relative min-h-screen flex items-center overflow-hidden pt-12 pb-16 lg:pt-16 lg:pb-20">
               <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-950 to-black z-0" />
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.06),transparent_60%)] z-[1]" />
 
@@ -2073,9 +2024,9 @@ const DiagnosticoRelacionalPage = () => {
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_INDIVIDUAL} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light mb-5">Tu relación analizada por 12 teorías clínicas</p>
+                    <p className="text-white/40 text-sm font-light mb-5">Tu relación analizada por 11 corrientes clínicas</p>
                     <ul className="space-y-2 mb-6">
-                      {['12 dimensiones: Gottman, Bowlby, Sternberg y 9 más', 'Radar de 12 ejes + mapa de apego + scores', 'Análisis narrativo por cada dimensión', 'Reporte PDF profesional descargable'].map((item, i) => (
+                      {['12 dimensiones: Gottman, Sternberg, Perel y 8 más', 'Radar de 12 ejes + mapa de apego + scores', 'Análisis narrativo por cada dimensión', 'Reporte PDF profesional descargable'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
@@ -2103,7 +2054,7 @@ const DiagnosticoRelacionalPage = () => {
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-54% por lanzamiento</p>
                     <p className="text-white/40 text-sm font-light mb-5">Cada uno contesta por separado · Cada uno recibe su propio reporte</p>
                     <ul className="space-y-2 mb-6">
-                      {['2 reportes individuales — cada persona es analizada por las 12 teorías', 'Cada reporte es privado: solo tú ves el tuyo', 'Comparación cruzada de patrones y dinámicas de pareja', 'El punto de partida ideal para terapia de pareja'].map((item, i) => (
+                      {['2 reportes individuales — 11 corrientes cada uno', 'Cada reporte es privado: solo tú ves el tuyo', 'Comparación cruzada de patrones y dinámicas de pareja', 'El punto de partida ideal para terapia de pareja'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
@@ -2127,9 +2078,9 @@ const DiagnosticoRelacionalPage = () => {
                     <div className="flex items-baseline gap-2 mb-1">
                       <p className="text-3xl font-light text-cyan-300">Con código</p>
                     </div>
-                    <p className="text-white/40 text-sm font-light mb-5">Análisis narrativo profundo · 12 dimensiones · 9 corrientes psicológicas</p>
+                    <p className="text-white/40 text-sm font-light mb-5">Análisis narrativo profundo · 12 dimensiones · 11 corrientes psicológicas</p>
                     <ul className="space-y-2 mb-6">
-                      {['40 preguntas abiertas con respuesta por voz', 'Análisis por Gottman, Bowlby, Freud, Lacan y 5 más', 'Lectura psicoanalítica + dinámica de conflicto', 'Reporte con radar, gauges y tabla diagnóstica'].map((item, i) => (
+                      {['40 preguntas abiertas con respuesta por voz', 'Gottman, Perel, Sternberg, Chapman y 7 más', 'Lectura psicoanalítica + dinámica de conflicto', 'Reporte con radar, gráficas y tabla diagnóstica'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-cyan-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
@@ -2167,9 +2118,9 @@ const DiagnosticoRelacionalPage = () => {
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_INDIVIDUAL} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light mb-5">Tu relación analizada por 12 teorías clínicas</p>
+                    <p className="text-white/40 text-sm font-light mb-5">Tu relación analizada por 11 corrientes clínicas</p>
                     <ul className="space-y-2 mb-6">
-                      {['12 dimensiones: Gottman, Bowlby, Sternberg y 9 más', 'Radar de 12 ejes + mapa de apego + scores', 'Análisis narrativo por cada dimensión', 'Reporte PDF profesional descargable'].map((item, i) => (
+                      {['12 dimensiones: Gottman, Sternberg, Perel y 8 más', 'Radar de 12 ejes + mapa de apego + scores', 'Análisis narrativo por cada dimensión', 'Reporte PDF profesional descargable'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
@@ -2195,7 +2146,7 @@ const DiagnosticoRelacionalPage = () => {
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-54% por lanzamiento</p>
                     <p className="text-white/40 text-sm font-light mb-5">Cada uno contesta por separado · Cada uno recibe su propio reporte</p>
                     <ul className="space-y-2 mb-6">
-                      {['2 reportes individuales — cada persona es analizada por las 12 teorías', 'Cada reporte es privado: solo tú ves el tuyo', 'Comparación cruzada de patrones y dinámicas de pareja', 'El punto de partida ideal para terapia de pareja'].map((item, i) => (
+                      {['2 reportes individuales — 11 corrientes cada uno', 'Cada reporte es privado: solo tú ves el tuyo', 'Comparación cruzada de patrones y dinámicas de pareja', 'El punto de partida ideal para terapia de pareja'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
@@ -2217,9 +2168,9 @@ const DiagnosticoRelacionalPage = () => {
                     <div className="flex items-baseline gap-2 mb-1">
                       <p className="text-3xl font-light text-cyan-300">Con código</p>
                     </div>
-                    <p className="text-white/40 text-sm font-light mb-5">Análisis narrativo profundo · 12 dimensiones · 9 corrientes psicológicas</p>
+                    <p className="text-white/40 text-sm font-light mb-5">Análisis narrativo profundo · 12 dimensiones · 11 corrientes psicológicas</p>
                     <ul className="space-y-2 mb-6">
-                      {['40 preguntas abiertas con respuesta por voz', 'Análisis por Gottman, Bowlby, Freud, Lacan y 5 más', 'Lectura psicoanalítica + dinámica de conflicto', 'Reporte con radar, gauges y tabla diagnóstica'].map((item, i) => (
+                      {['40 preguntas abiertas con respuesta por voz', 'Gottman, Perel, Sternberg, Chapman y 7 más', 'Lectura psicoanalítica + dinámica de conflicto', 'Reporte con radar, gráficas y tabla diagnóstica'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-cyan-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
@@ -2282,33 +2233,37 @@ const DiagnosticoRelacionalPage = () => {
         ═══════════════════════════════════════════════════════ */}
         {stage === 'checkout' && (
           <motion.div key="checkout" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="min-h-screen flex items-center justify-center px-6 pt-32 pb-20">
+            className="min-h-screen flex items-center justify-center px-6 pt-12 pb-20">
             <div className="max-w-4xl w-full space-y-8">
               <div className="text-center">
                 <CreditCard className="w-10 h-10 text-violet-400/50 mx-auto mb-4" />
                 <h2 className="text-2xl font-light text-white mb-2">Elige tu plan</h2>
-                <p className="text-white/40 text-sm font-light">44 preguntas · 12 dimensiones psicológicas · Reporte descargable</p>
+                <p className="text-white/40 text-sm font-light">40 preguntas · 12 dimensiones psicológicas · 11 corrientes · Reporte descargable</p>
               </div>
 
-              {/* Pricing Cards */}
+              {/* Pricing Cards — matches landing */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 {/* Individual */}
-                <div className="p-7 rounded-2xl border border-white/10 bg-white/[0.02] space-y-5">
+                <div className="p-7 rounded-2xl border border-white/10 bg-zinc-950/60 space-y-5">
                   <div>
-                    <p className="text-white/40 text-xs uppercase tracking-[0.15em] mb-1">Individual</p>
-                    <p className="text-3xl font-light text-white">${PRODUCT_PRICE_INDIVIDUAL} <span className="text-lg text-white/35">MXN</span></p>
-                    <p className="text-white/30 text-sm font-light mt-1">1 persona · Reporte completo</p>
+                    <p className="text-white/40 text-xs uppercase tracking-[0.15em] mb-2">Individual</p>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-white/30 text-lg line-through">$699</span>
+                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_INDIVIDUAL} <span className="text-lg text-white/35">MXN</span></p>
+                    </div>
+                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
+                    <p className="text-white/40 text-sm font-light">Tu relación analizada por 11 corrientes clínicas</p>
                   </div>
                   <ul className="space-y-2">
-                    {['44 preguntas narrativas', 'Radar de 12 dimensiones', 'Mapa de apego + sub-scores', 'PDF descargable'].map((item, i) => (
-                      <li key={i} className="flex items-start gap-2 text-white/45 text-sm font-light">
+                    {['12 dimensiones: Gottman, Sternberg, Perel y 8 más', 'Radar de 12 ejes + mapa de apego + scores', 'Análisis narrativo por cada dimensión', 'Reporte PDF profesional descargable'].map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 text-white/50 text-sm font-light">
                         <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                         {item}
                       </li>
                     ))}
                   </ul>
                   <motion.button onClick={() => handlePurchase('individual')} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all">
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
                     Pagar ${PRODUCT_PRICE_INDIVIDUAL} MXN
                   </motion.button>
                 </div>
@@ -2317,50 +2272,61 @@ const DiagnosticoRelacionalPage = () => {
                 <div className="p-7 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] space-y-5 relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/50 to-fuchsia-500/50" />
                   <div>
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center gap-2 mb-2">
                       <p className="text-violet-300/60 text-xs uppercase tracking-[0.15em]">Pareja</p>
                       <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/20 text-violet-300/70">Recomendado</span>
                     </div>
-                    <p className="text-3xl font-light text-white">${PRODUCT_PRICE_PAREJA} <span className="text-lg text-white/35">MXN</span></p>
-                    <p className="text-white/30 text-sm font-light mt-1">2 personas · 2 reportes</p>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-white/30 text-lg line-through">$1,199</span>
+                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_PAREJA} <span className="text-lg text-white/35">MXN</span></p>
+                    </div>
+                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-54% por lanzamiento</p>
+                    <p className="text-white/40 text-sm font-light">Cada uno contesta por separado · 2 reportes privados</p>
                   </div>
                   <ul className="space-y-2">
-                    {['Todo lo individual ×2', 'Cada uno responde por separado', 'Comparación cruzada de patrones', 'Ideal para terapia de pareja'].map((item, i) => (
-                      <li key={i} className="flex items-start gap-2 text-white/45 text-sm font-light">
+                    {['2 reportes individuales — 11 corrientes cada uno', 'Cada reporte es privado: solo tú ves el tuyo', 'Comparación cruzada de patrones', 'Ideal para terapia de pareja'].map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 text-white/50 text-sm font-light">
                         <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                         {item}
                       </li>
                     ))}
                   </ul>
                   <motion.button onClick={() => handlePurchase('pareja')} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all">
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
                     Pagar ${PRODUCT_PRICE_PAREJA} MXN
                   </motion.button>
                 </div>
-              </div>
 
-              {/* Radiografía Premium */}
-              <div className="p-5 rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-cyan-500/[0.03] to-blue-500/[0.02] relative overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-cyan-500/40 to-blue-500/40" />
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                {/* Premium */}
+                <div className="p-7 rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] space-y-5 relative overflow-hidden">
+                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500/50 to-blue-500/50" />
                   <div>
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center gap-2 mb-2">
                       <p className="text-cyan-300/60 text-xs uppercase tracking-[0.15em]">Premium</p>
                       <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/20 text-cyan-300/70">40 preguntas narrativas</span>
                     </div>
-                    <p className="text-white/50 text-sm font-light">Análisis narrativo profundo · 12 dimensiones · 9 corrientes psicológicas</p>
+                    <p className="text-3xl font-light text-cyan-300 mb-1">Con código</p>
+                    <p className="text-white/40 text-sm font-light">Análisis narrativo profundo · 11 corrientes psicológicas</p>
                   </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <input type="text" placeholder="Tu código" id="premiumCodeCheckout" maxLength={20}
-                      className="w-36 px-3 py-2.5 rounded-lg border border-cyan-500/20 bg-white/[0.03] text-white text-sm font-light placeholder:text-white/25 focus:border-cyan-500/40 focus:outline-none" />
+                  <ul className="space-y-2">
+                    {['40 preguntas abiertas con respuesta por voz', 'Gottman, Perel, Sternberg, Chapman y 7 más', 'Lectura psicoanalítica + dinámica de conflicto', 'Reporte con radar, gráficas y tabla diagnóstica'].map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 text-white/50 text-sm font-light">
+                        <Check className="w-3.5 h-3.5 text-cyan-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="space-y-2">
+                    <input type="text" placeholder="Ingresa tu código" id="premiumCodeCheckout" maxLength={20}
+                      className="w-full px-4 py-3 rounded-xl border border-cyan-500/20 bg-white/[0.03] text-white text-sm font-light placeholder:text-white/25 focus:border-cyan-500/40 focus:outline-none transition-colors" />
                     <motion.button
                       onClick={() => {
                         const code = document.getElementById('premiumCodeCheckout')?.value?.trim()
                         if (code) navigate(`/tienda/radiografia-premium?code=${encodeURIComponent(code)}`)
                       }}
                       whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                      className="px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 text-white text-sm font-light">
-                      Acceder
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-light text-base hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg shadow-cyan-600/20">
+                      Acceder con código
                     </motion.button>
                   </div>
                 </div>

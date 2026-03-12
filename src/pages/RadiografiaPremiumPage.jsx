@@ -6,11 +6,13 @@ import {
   Loader2, ChevronDown, AlertTriangle, TrendingUp, TrendingDown, Star,
   Shield, Activity, Brain, Heart, Zap, Eye, Target, Users, Flame,
   CheckCircle, Download, PenLine, Send, MessageCircle, Lightbulb, Clock,
-  Headphones, SkipForward
+  Headphones, SkipForward, Anchor, Compass, Scale, Gift, Repeat
 } from 'lucide-react'
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, RadarChart as RechartRadar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts'
 import SEOHead from '../components/SEOHead'
 import jsPDF from 'jspdf'
-import { analyzeRadiografiaPremium } from '../services/radiografiaPremiumService'
+import { analyzeRadiografiaPremium, generateFallbackAnalysis } from '../services/radiografiaPremiumService'
+import { CACHED_PREVIEW_ANALYSIS } from '../data/cachedPreviewAnalysis'
 
 // ─── 40 PREGUNTAS NARRATIVAS — 5 BLOQUES ────────────────────
 
@@ -18,8 +20,8 @@ const PREGUNTAS = [
   // BLOQUE 0 — Contexto personal y panorama general (Q1–Q5)
   {
     id: 'Q1', block: 'Contexto personal y panorama general',
-    mainQuestion: 'Para empezar, cuéntame un poco sobre ti y sobre tu vida actualmente, de forma que podamos entender quién eres y en qué momento de tu vida te encuentras hoy.',
-    examples: ['¿Cómo te llamas?', '¿Cuántos años tienes?', '¿A qué te dedicas o en qué estás enfocado actualmente?', '¿Cómo describirías el momento de vida en el que te encuentras ahora?', '¿Cuánto tiempo llevas en tu relación actual?']
+    mainQuestion: 'Para empezar, cuéntame un poco sobre tu vida actualmente y en qué momento te encuentras hoy.',
+    examples: ['¿A qué te dedicas o en qué estás enfocado actualmente?', '¿Cómo describirías el momento de vida en el que te encuentras ahora?', '¿Cuánto tiempo llevas en tu relación actual?', '¿Hay algo que esté pasando en tu vida que creas que impacta tu relación?']
   },
   {
     id: 'Q2', block: 'Contexto personal y panorama general',
@@ -34,7 +36,7 @@ const PREGUNTAS = [
   {
     id: 'Q4', block: 'Contexto personal y panorama general',
     mainQuestion: 'Háblame de cómo es la vida cotidiana entre ustedes y cómo suelen relacionarse en el día a día.',
-    examples: ['Cómo pasan el tiempo juntos normalmente', 'Qué tipo de momentos comparten', 'Cómo suelen comunicarse', 'Qué suele ocurrir entre ustedes en lo cotidiano']
+    examples: ['Cómo pasan el tiempo juntos normalmente', 'Cómo se cuidan o se apoyan mutuamente en el día a día', 'Cómo suelen comunicarse cuando necesitan algo del otro', 'Si sienten que se protegen mutuamente o si cada uno va por su lado']
   },
   {
     id: 'Q5', block: 'Contexto personal y panorama general',
@@ -46,12 +48,12 @@ const PREGUNTAS = [
   {
     id: 'Q6', block: 'Origen del vínculo y atracción inicial',
     mainQuestion: 'Regresando al inicio de la relación, cuéntame qué fue lo que más te llamó la atención de tu pareja cuando empezaron a conocerse.',
-    examples: ['Qué fue lo primero que te atrajo', 'Qué despertó tu curiosidad o interés', 'Qué sentiste cuando empezaron a conocerse', 'Qué tenía esa persona que la hacía especial para ti']
+    examples: ['Qué fue lo primero que te atrajo físicamente o emocionalmente', 'Qué cualidades o rasgos de personalidad te llamaban la atención', 'Qué despertó tu curiosidad, admiración o interés', 'Qué tenía esa persona que la hacía especial o diferente para ti']
   },
   {
-    id: 'Q7', block: 'Origen del vínculo y atracción inicial',
-    mainQuestion: 'Pensando en los primeros momentos de la relación, cuéntame qué cualidades o formas de ser de tu pareja despertaban en ti admiración, interés o atracción.',
-    examples: ['Rasgos de su personalidad que te llamaban la atención', 'Cosas que admirabas o valorabas', 'Formas de ser que te resultaban atractivas', 'Aspectos que te hacían sentir curiosidad o conexión']
+    id: 'Q7', block: 'Expresión afectiva y lenguajes del amor',
+    mainQuestion: 'Cuéntame cómo se demuestran cariño o amor entre ustedes en el día a día, y cómo te gusta a ti que te lo demuestren.',
+    examples: ['Si se expresan más con palabras, con gestos, con tiempo juntos o con contacto físico', 'Cómo te gusta que te demuestren que te quieren', 'Cómo le demuestras tú a tu pareja que la quieres', 'Si hay diferencias en la forma en que cada uno expresa o necesita recibir amor']
   },
   {
     id: 'Q8', block: 'Origen del vínculo y atracción inicial',
@@ -88,17 +90,17 @@ const PREGUNTAS = [
   {
     id: 'Q14', block: 'Historia emocional y patrones relacionales',
     mainQuestion: 'Antes de esta relación, cuéntame cómo fueron tus relaciones importantes anteriores y qué cosas sientes que aprendiste de ellas.',
-    examples: ['Experiencias que recuerdas de relaciones anteriores', 'Qué aprendiste sobre ti mismo en esas relaciones', 'Qué cosas cambiaron en tu forma de amar', 'Qué descubriste sobre lo que buscas o no buscas en una pareja']
+    examples: ['Experiencias que recuerdas de relaciones anteriores y qué aprendiste', 'Si sientes que hay patrones que se repiten entre relaciones', 'Dinámicas que reconoces que aparecen una y otra vez', 'Qué descubriste sobre lo que buscas o no buscas en una pareja']
   },
   {
-    id: 'Q15', block: 'Historia emocional y patrones relacionales',
-    mainQuestion: 'Pensando en lo que has vivido en relaciones anteriores y en tu relación actual, cuéntame si sientes que hay cosas que se repiten o patrones que reconoces en tu forma de relacionarte.',
-    examples: ['Situaciones que te parecen familiares', 'Formas de reaccionar que aparecen varias veces', 'Dinámicas que se repiten entre relaciones', 'Cosas que has descubierto sobre tu forma de amar']
+    id: 'Q15', block: 'Identidad y autonomía dentro de la relación',
+    mainQuestion: 'Dentro de tu relación, cuéntame qué tanto sientes que puedes ser tú mismo/a sin perder tu identidad o tus propios espacios.',
+    examples: ['Si sientes que puedes expresar lo que piensas y sientes libremente', 'Si mantienes actividades, amistades o intereses propios fuera de la relación', 'Si alguna vez sientes que te adaptas demasiado para evitar conflicto', 'Qué tanto espacio personal necesitas y qué tanto sientes que tienes']
   },
   {
-    id: 'Q16', block: 'Historia emocional y patrones relacionales',
-    mainQuestion: 'Cuando piensas en la forma en que te relacionas con tu pareja hoy, cuéntame qué cosas sientes que esta relación ha despertado o cambiado en ti.',
-    examples: ['Aspectos de tu personalidad que han cambiado', 'Cosas que has descubierto sobre ti mismo', 'Aprendizajes que han surgido en la relación', 'Partes de ti que se han desarrollado o transformado']
+    id: 'Q16', block: 'Regulación emocional y equipo de pareja',
+    mainQuestion: 'Cuéntame si sienten que funcionan como equipo cuando las cosas se ponen difíciles, o si cada uno tiende a manejar las cosas por su lado.',
+    examples: ['Cómo se cuidan o protegen mutuamente en momentos de estrés', 'Si cuando uno está mal el otro lo nota y responde', 'Si sienten que se regulan emocionalmente juntos o cada uno por su cuenta', 'Si hay momentos en que uno necesita al otro y no lo encuentra disponible']
   },
   {
     id: 'Q17', block: 'Historia emocional y patrones relacionales',
@@ -145,7 +147,7 @@ const PREGUNTAS = [
   {
     id: 'Q25', block: 'Deseo, intimidad y dinámica emocional',
     mainQuestion: 'Cuéntame qué cosas o situaciones suelen hacer que se sientan más cercanos o conectados dentro de la relación.',
-    examples: ['Actividades que disfrutan juntos', 'Momentos que fortalecen el vínculo', 'Conversaciones importantes', 'Experiencias que los acercan']
+    examples: ['Cómo suelen demostrarse cariño o amor en los momentos buenos', 'Si se conectan más con palabras, con gestos, con tiempo juntos o con contacto físico', 'Momentos en los que sienten que funcionan como equipo', 'Qué cosas hace tu pareja que te hacen sentir querido/a o valorado/a']
   },
   {
     id: 'Q26', block: 'Deseo, intimidad y dinámica emocional',
@@ -158,9 +160,9 @@ const PREGUNTAS = [
     examples: ['Cómo toman decisiones importantes', 'Cómo manejan las diferencias de opinión', 'Cómo llegan a acuerdos', 'Qué suele pasar cuando no están de acuerdo']
   },
   {
-    id: 'Q28', block: 'Deseo, intimidad y dinámica emocional',
-    mainQuestion: 'Cuéntame si dentro de la relación aparecen expectativas o ideas sobre cómo debería ser la relación o cómo debería comportarse cada uno.',
-    examples: ['Expectativas que han surgido entre ustedes', 'Cosas que uno espera del otro', 'Situaciones donde alguien siente presión', 'Diferencias en lo que cada uno imagina para la relación']
+    id: 'Q28', block: 'Dinámicas de poder y equilibrio emocional',
+    mainQuestion: 'Cuéntame si dentro de la relación sientes que hay un equilibrio en el poder y la influencia entre ustedes, o si alguno de los dos suele tener más peso.',
+    examples: ['Si alguno suele ceder más que el otro en las decisiones o conflictos', 'Si hay resentimientos acumulados que no se han expresado abiertamente', 'Si alguna vez te has sentido menos escuchado/a o invisible en la relación', 'Si hay momentos de dominación o sumisión emocional entre ustedes']
   },
   {
     id: 'Q29', block: 'Deseo, intimidad y dinámica emocional',
@@ -170,24 +172,24 @@ const PREGUNTAS = [
   {
     id: 'Q30', block: 'Deseo, intimidad y dinámica emocional',
     mainQuestion: 'Ahora piensa en lo que tú esperas dentro de la relación y cuéntame qué cosas son importantes para ti.',
-    examples: ['Qué valoras más en la relación', 'Qué esperas de tu pareja', 'Qué cosas te hacen sentir bien dentro del vínculo', 'Qué cosas te gustaría que fueran diferentes']
+    examples: ['Qué tipo de muestras de amor o cariño necesitas para sentirte bien', 'Si necesitas más palabras, más presencia, más contacto o más acciones concretas', 'Qué tanto espacio personal necesitas dentro de la relación para sentirte tú mismo/a', 'Qué cosas te gustaría que fueran diferentes en cómo se demuestran amor']
   },
 
   // BLOQUE 5 — Futuro del vínculo y sentido (Q31–Q40)
   {
     id: 'Q31', block: 'Futuro del vínculo y sentido de la relación',
     mainQuestion: 'Pensando en todo lo que han vivido juntos, cuéntame qué significa hoy esta relación para ti dentro de tu vida.',
-    examples: ['Qué lugar ocupa esta relación en tu vida', 'Qué representa tu pareja para ti actualmente', 'Qué valor tiene la relación para ti hoy', 'Cómo influye esta relación en tu vida']
+    examples: ['Qué lugar ocupa esta relación en tu vida y qué representa para ti', 'Qué te hace sentir que vale la pena seguir construyendo este vínculo', 'Cualidades de tu pareja que aprecias profundamente', 'Razones por las que sientes que esta relación es importante en tu vida']
   },
   {
     id: 'Q32', block: 'Futuro del vínculo y sentido de la relación',
     mainQuestion: 'Cuando piensas en el futuro, cuéntame cómo imaginas o visualizas la relación entre ustedes con el paso del tiempo.',
-    examples: ['Cómo imaginas la relación en los próximos años', 'Qué tipo de vida imaginas juntos', 'Qué cosas te gustaría construir con tu pareja', 'Qué posibilidades ves hacia adelante']
+    examples: ['Cómo imaginas la relación en los próximos años', 'Qué cambios o mejoras te gustaría ver en la relación', 'Dinámicas que te gustaría fortalecer o transformar', 'Qué cosas te gustaría construir juntos hacia adelante']
   },
   {
-    id: 'Q33', block: 'Futuro del vínculo y sentido de la relación',
-    mainQuestion: 'Cuéntame qué cosas dentro de la relación te hacen sentir que vale la pena seguir construyendo este vínculo.',
-    examples: ['Momentos que te hacen valorar la relación', 'Cualidades de tu pareja que aprecias', 'Experiencias que fortalecen el vínculo', 'Razones por las que sientes que esta relación es importante']
+    id: 'Q33', block: 'Seguridad emocional y expresión de amor',
+    mainQuestion: 'Cuéntame qué cosas concretas hace tu pareja que te hacen sentir amado/a o seguro/a, y cuáles sientes que te faltan.',
+    examples: ['Acciones específicas que te hacen sentir valorado/a y querido/a', 'Cosas que tu pareja hacía antes y que ya no hace', 'Qué necesitarías recibir más de tu pareja para sentirte seguro/a', 'Momentos en que te sientes realmente querido/a vs. momentos en que no']
   },
   {
     id: 'Q34', block: 'Futuro del vínculo y sentido de la relación',
@@ -200,9 +202,9 @@ const PREGUNTAS = [
     examples: ['Cómo superan momentos complicados', 'Qué ayuda a que se reconcilien', 'Qué fortalezas aparecen en la relación', 'Qué hace posible que sigan adelante']
   },
   {
-    id: 'Q36', block: 'Futuro del vínculo y sentido de la relación',
-    mainQuestion: 'Si imaginas que la relación pudiera mejorar o evolucionar en el futuro, cuéntame qué cambios o transformaciones te gustaría ver.',
-    examples: ['Cosas que te gustaría fortalecer en la relación', 'Dinámicas que te gustaría mejorar', 'Aspectos que quisieras desarrollar juntos', 'Formas en que la relación podría crecer']
+    id: 'Q36', block: 'Novedad, rutina y deseo',
+    mainQuestion: 'Cuéntame si sienten que la relación tiene momentos de novedad o sorpresa, o si se ha vuelto más predecible y rutinaria.',
+    examples: ['Si hay espacio para la sorpresa o lo inesperado entre ustedes', 'Si extrañas la emoción o la aventura que sentían al principio', 'Si han buscado formas de romper la rutina juntos', 'Qué tanto la estabilidad les da paz vs. aburrimiento']
   },
   {
     id: 'Q37', block: 'Futuro del vínculo y sentido de la relación',
@@ -212,7 +214,7 @@ const PREGUNTAS = [
   {
     id: 'Q38', block: 'Futuro del vínculo y sentido de la relación',
     mainQuestion: 'Pensando en todo lo que has contado hasta ahora, cuéntame qué crees que esta relación ha despertado o revelado en ti como persona.',
-    examples: ['Cosas que has descubierto sobre ti mismo', 'Aprendizajes que han surgido en la relación', 'Cambios personales que han ocurrido', 'Aspectos de tu personalidad que han emergido']
+    examples: ['Aspectos de tu personalidad que han cambiado o se han desarrollado', 'Cosas que has descubierto sobre ti mismo/a gracias a esta relación', 'Aprendizajes profundos que han surgido en la relación', 'Partes de ti que se han transformado o que no conocías antes']
   },
   {
     id: 'Q39', block: 'Futuro del vínculo y sentido de la relación',
@@ -248,11 +250,41 @@ const DIMENSION_COLORS = [
   '#22d3ee', '#60a5fa', '#a78bfa', '#e879f9', '#f87171', '#4ade80'
 ]
 
-// ─── ElevenLabs voices (Latin Spanish, fast & clear) ────────────
+// ─── ElevenLabs voices (Latin Spanish) ────────────
 
-const VOICES = {
-  female: { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Bella' },
-  male: { id: 'VR6AewLTigWG4xSOukaG', name: 'Arnold' }
+const VOICE_LIST = [
+  { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Valentina', desc: 'Cálida y clara', initial: 'V', color: 'from-rose-500 to-pink-500', ring: 'ring-rose-400/20', border: 'border-rose-500/30', bg: 'bg-rose-500/10', text: 'text-rose-300' },
+  { id: '21m00Tcm4TlvDq8ikWAM', name: 'Sofía', desc: 'Rápida y enérgica', initial: 'S', color: 'from-fuchsia-500 to-purple-500', ring: 'ring-fuchsia-400/20', border: 'border-fuchsia-500/30', bg: 'bg-fuchsia-500/10', text: 'text-fuchsia-300' },
+  { id: 'VR6AewLTigWG4xSOukaG', name: 'Santiago', desc: 'Firme y profesional', initial: 'S', color: 'from-violet-500 to-indigo-500', ring: 'ring-violet-400/20', border: 'border-violet-500/30', bg: 'bg-violet-500/10', text: 'text-violet-300' },
+  { id: 'ErXwobaYiN019PkySvjV', name: 'Mateo', desc: 'Grave y pausado', initial: 'M', color: 'from-blue-500 to-cyan-500', ring: 'ring-blue-400/20', border: 'border-blue-500/30', bg: 'bg-blue-500/10', text: 'text-blue-300' }
+]
+
+// ─── MicLevelBars (visual mic test feedback) ───────────────────
+const MicLevelBars = ({ analyser }) => {
+  const canvasRef = useRef(null)
+  useEffect(() => {
+    if (!analyser) return
+    const data = new Uint8Array(analyser.frequencyBinCount)
+    let raf
+    const draw = () => {
+      analyser.getByteFrequencyData(data)
+      const canvas = canvasRef.current
+      if (!canvas) return
+      const ctx = canvas.getContext('2d')
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      const bars = 20, w = canvas.width / bars
+      for (let i = 0; i < bars; i++) {
+        const v = data[i * 2] / 255
+        const h = v * canvas.height
+        ctx.fillStyle = v > 0.5 ? '#34d399' : v > 0.2 ? '#6ee7b7' : '#a7f3d0'
+        ctx.fillRect(i * w + 1, canvas.height - h, w - 2, h)
+      }
+      raf = requestAnimationFrame(draw)
+    }
+    draw()
+    return () => cancelAnimationFrame(raf)
+  }, [analyser])
+  return <canvas ref={canvasRef} width={200} height={40} className="mx-auto rounded-lg" />
 }
 
 // ─── DEMO RESPONSES (for testing) ────────────────────────────────
@@ -264,7 +296,7 @@ const DEMO_RESPONSES = {
   Q4: 'En el día a día trabajamos los dos desde casa. Compartimos las comidas, a veces vemos series juntos. La comunicación es lo que más nos cuesta, a veces pasamos horas sin hablarnos después de una discusión.',
   Q5: 'Siento que hemos construido un hogar juntos, una rutina. También hemos aprendido a conocernos profundamente. La relación me ha enseñado mucho sobre mí mismo.',
   Q6: 'Lo que más me llamó la atención fue su inteligencia y su risa. Tenía una forma de ver la vida que me parecía fascinante, como muy libre y segura de sí misma.',
-  Q7: 'Me gustaba mucho su independencia, su creatividad. Era atractiva pero también muy inteligente. Sentía que podía hablar con ella de cualquier cosa.',
+  Q7: 'Ella me demuestra cariño con palabras, me dice cosas bonitas y me escribe mensajes. Yo soy más de actos, le hago cosas, le cocino. A mí me gusta más el contacto físico, los abrazos. Ella prefiere que le diga cosas. A veces choca porque cada uno lo expresa diferente.',
   Q8: 'El primer viaje que hicimos juntos fue muy importante. También cuando decidimos vivir juntos. Y hubo una crisis fuerte hace un año que nos cambió mucho.',
   Q9: 'Al principio imaginaba que íbamos a ser una pareja muy unida, viajar mucho, crecer juntos profesionalmente. Veía un futuro largo.',
   Q10: 'Ella representaba estabilidad emocional para mí. Sentía que con ella podía ser yo mismo sin máscaras.',
@@ -272,8 +304,8 @@ const DEMO_RESPONSES = {
   Q12: 'Aprendí que el amor requiere sacrificio, que hay que aguantar. También que las discusiones son normales. No vi mucha expresión de cariño físico.',
   Q13: 'Sí, noto que a veces me distancio como hacía mi papá. Me cuesta expresar lo que siento y me refugio en el silencio.',
   Q14: 'Tuve una relación de 3 años antes que terminó porque yo era muy celoso. Aprendí que los celos destruyen todo.',
-  Q15: 'Sí, noto que repito el patrón de cerrarme emocionalmente cuando me siento atacado. Es algo que quiero cambiar.',
-  Q16: 'Esta relación me ha hecho más consciente de mis miedos. He aprendido que necesito trabajar en mi comunicación.',
+  Q15: 'Siento que puedo ser yo mismo en muchas cosas, pero hay temas donde me callo para no generar conflicto. Mantengo mis amigos pero a veces siento culpa por salir. Creo que me adapto más de lo que debería para mantener la paz.',
+  Q16: 'Cuando las cosas están difíciles, cada uno tiende a manejar el estrés por su lado. Yo me encierro y ella busca a sus amigas. No siempre funciona como equipo, pero cuando uno está realmente mal, el otro sí responde.',
   Q17: 'Las discusiones empiezan por cosas pequeñas, como tareas del hogar o decisiones del día a día. Escala rápido.',
   Q18: 'Yo tiendo a callarme y alejarme. Me cuesta mucho discutir en el momento, prefiero pensar antes de hablar.',
   Q19: 'Ella se frustra porque yo me callo. Sube el tono, insiste en que yo hable. A veces llora de frustración.',
@@ -285,15 +317,15 @@ const DEMO_RESPONSES = {
   Q25: 'Los viajes nos acercan mucho. También cocinar juntos o cuando compartimos algo creativo.',
   Q26: 'La distancia aparece cuando hay mucho estrés laboral o después de conflictos. A veces siento que vivimos como roommates.',
   Q27: 'Las decisiones grandes las tomamos platicando, pero a veces siento que ella impone su punto de vista y yo cedo.',
-  Q28: 'Ella espera que yo sea más expresivo y detallista. Yo espero más espacio personal. Esas expectativas chocan.',
+  Q28: 'Siento que ella tiene más peso en las decisiones importantes, yo suelo ceder. Hay resentimientos que no he expresado, como sentir que mis opiniones pesan menos. A veces me siento invisible cuando ella ya decidió algo sin consultarme.',
   Q29: 'Creo que para ella es importante sentirse valorada y escuchada. Necesita que le demuestre que me importa con acciones.',
   Q30: 'Para mí es importante tener algo de espacio personal, sentir que somos equipo, y tener más momentos de diversión juntos.',
   Q31: 'Esta relación es muy importante para mí. Es donde me siento más yo, aunque también donde más vulnerable soy.',
   Q32: 'Imagino que si trabajamos en nuestra comunicación podemos tener un futuro muy sólido. Me gustaría formar una familia.',
-  Q33: 'La risa que compartimos, los planes que hacemos, la historia que ya tenemos. Los buenos momentos superan a los malos.',
+  Q33: 'Me siento amado cuando ella me abraza sin razón, o cuando me pregunta cómo estoy de verdad. Antes me dejaba notas, ya no lo hace. Me faltaría más contacto físico y que me diga que está orgullosa de mí.',
   Q34: 'A veces me pregunto si somos compatibles a largo plazo. Las discusiones repetitivas me generan duda.',
   Q35: 'Lo que nos ha salvado es que los dos queremos estar juntos. Hay amor debajo de todo el conflicto.',
-  Q36: 'Me gustaría que aprendiéramos a comunicarnos sin gritar, más paciencia, más momentos de calidad juntos.',
+  Q36: 'La relación se ha vuelto bastante rutinaria. Ya no hay sorpresas, todo es predecible. Extraño la emoción del principio, las aventuras espontáneas. Hemos intentado romper la rutina pero siempre volvemos a lo mismo.',
   Q37: 'Creo que ella busca seguridad emocional y cercanía. Yo busco compañerismo y paz en la relación.',
   Q38: 'He descubierto que soy más sensible de lo que creía. También que tengo miedo al abandono.',
   Q39: 'Lo único de nuestra relación es la intensidad. Nos amamos mucho pero también nos hacemos daño. Es apasionada.',
@@ -303,20 +335,26 @@ const DEMO_RESPONSES = {
 // ─── ANÁLISIS ANIMATION TASKS ─────────────────────────────────────
 
 const ANALYSIS_TASKS = [
-  { id: 1, text: 'Leyendo tu narrativa completa…' },
-  { id: 2, text: 'Detectando temas recurrentes…' },
-  { id: 3, text: 'Analizando contradicciones narrativas…' },
-  { id: 4, text: 'Identificando tono relacional…' },
-  { id: 5, text: 'Calculando 12 dimensiones psicológicas…' },
-  { id: 6, text: 'Infiriendo estilo de apego…' },
-  { id: 7, text: 'Detectando dinámica de conflicto…' },
-  { id: 8, text: 'Analizando patrones inconscientes (Freud)…' },
-  { id: 9, text: 'Identificando fantasma relacional (Lacan)…' },
-  { id: 10, text: 'Estimando dirección probable del vínculo…' },
-  { id: 11, text: 'Construyendo perfil relacional…' },
-  { id: 12, text: 'Extrayendo evidencia textual…' },
-  { id: 13, text: 'Generando visualizaciones…' },
-  { id: 14, text: 'Compilando informe final…' }
+  { id: 1, group: 'Lectura profunda', text: 'Leyendo tu narrativa completa…' },
+  { id: 2, group: 'Lectura profunda', text: 'Procesando 40 respuestas y contexto emocional…' },
+  { id: 3, group: 'Lectura profunda', text: 'Detectando temas recurrentes y contradicciones…' },
+  { id: 4, group: 'Detección de patrones', text: 'Identificando tono relacional dominante…' },
+  { id: 5, group: 'Detección de patrones', text: 'Infiriendo estilo de apego (Amir Levine)…' },
+  { id: 6, group: 'Detección de patrones', text: 'Detectando lenguajes del amor (Chapman)…' },
+  { id: 7, group: 'Detección de patrones', text: 'Analizando dinámicas de poder (Terrence Real)…' },
+  { id: 8, group: 'Análisis por corriente', text: 'Evaluando los 4 jinetes de Gottman…' },
+  { id: 9, group: 'Análisis por corriente', text: 'Aplicando teoría del vínculo (Sue Johnson)…' },
+  { id: 10, group: 'Análisis por corriente', text: 'Analizando erotismo y deseo (Esther Perel)…' },
+  { id: 11, group: 'Análisis por corriente', text: 'Evaluando regulación mutua (Tatkin)…' },
+  { id: 12, group: 'Análisis por corriente', text: 'Midiendo triángulo del amor (Sternberg)…' },
+  { id: 13, group: 'Análisis por corriente', text: 'Evaluando diferenciación (Schnarch)…' },
+  { id: 14, group: 'Análisis por corriente', text: 'Interpretando desde el psicoanálisis (Freud + Lacan)…' },
+  { id: 15, group: 'Análisis por corriente', text: 'Analizando imago relacional (Hendrix)…' },
+  { id: 16, group: 'Síntesis final', text: 'Calculando 12 dimensiones psicológicas…' },
+  { id: 17, group: 'Síntesis final', text: 'Extrayendo evidencia textual…' },
+  { id: 18, group: 'Síntesis final', text: 'Estimando dirección probable del vínculo…' },
+  { id: 19, group: 'Síntesis final', text: 'Generando visualizaciones…' },
+  { id: 20, group: 'Síntesis final', text: 'Compilando informe final…' }
 ]
 
 // ─── HELPERS ──────────────────────────────────────────────────
@@ -435,11 +473,18 @@ function GaugeChart({ value, label, inverted = false }) {
 const RadiografiaPremiumPage = () => {
   const navigate = useNavigate()
 
-  // Stages: instructions | questionnaire | analyzing | results
+  // Stages: instructions | profile | questionnaire | analyzing | results
   const [stage, setStage] = useState('instructions')
   const [currentQ, setCurrentQ] = useState(0)
   const [responses, setResponses] = useState({})
-  const [voiceGender, setVoiceGender] = useState('female')
+  const [selectedVoiceId, setSelectedVoiceId] = useState(VOICE_LIST[0].id)
+  const [previewingVoiceId, setPreviewingVoiceId] = useState(null)
+
+  // Profile — Question 0 (name, age, date)
+  const [profileData, setProfileData] = useState({ nombre: '', edad: '', fecha: new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }) })
+  const [soundTestOk, setSoundTestOk] = useState(null)
+  const [micTestOk, setMicTestOk] = useState(null)
+  const [micAnalyser, setMicAnalyser] = useState(null)
 
   // Audio
   const [audioPlaying, setAudioPlaying] = useState(false)
@@ -458,6 +503,8 @@ const RadiografiaPremiumPage = () => {
   const [analysisDone, setAnalysisDone] = useState(false)
   const [completedTasks, setCompletedTasks] = useState(0)
   const [pdfGenerating, setPdfGenerating] = useState(false)
+  const [chartViewMode, setChartViewMode] = useState('radar')
+  const [cachedAnalysis, setCachedAnalysis] = useState(null)
 
   const question = PREGUNTAS[currentQ]
   const totalQ = PREGUNTAS.length
@@ -473,15 +520,58 @@ const RadiografiaPremiumPage = () => {
     setAudioPlaying(false)
   }, [])
 
-  // ── Play question using ElevenLabs TTS ──
-  const playQuestion = useCallback(async (text) => {
+  // ── Play audio using ElevenLabs TTS, optional override voiceId + onEnded callback ──
+  const audioCache = useRef({})
+  const playQuestion = useCallback(async (text, overrideVoiceId, onEndedCallback) => {
     stopAudio()
     const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY
-    const voiceId = VOICES[voiceGender].id
+    const voiceId = overrideVoiceId || selectedVoiceId
     if (!apiKey) return
     try {
       setAudioPlaying(true)
-      const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+      if (overrideVoiceId) setPreviewingVoiceId(overrideVoiceId)
+
+      // Check cache first
+      const cacheKey = `${voiceId}::${text.slice(0, 80)}`
+      let blob
+      if (audioCache.current[cacheKey]) {
+        blob = audioCache.current[cacheKey]
+      } else {
+        const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'xi-api-key': apiKey },
+          body: JSON.stringify({
+            text,
+            model_id: 'eleven_multilingual_v2',
+            voice_settings: { stability: 0.35, similarity_boost: 0.85, style: 0.3, use_speaker_boost: true }
+          })
+        })
+        if (!res.ok) { setAudioPlaying(false); setPreviewingVoiceId(null); return }
+        blob = await res.blob()
+        audioCache.current[cacheKey] = blob
+      }
+
+      const url = URL.createObjectURL(blob)
+      const audio = new Audio(url)
+      currentAudioRef.current = audio
+      audio.onended = () => {
+        setAudioPlaying(false)
+        setPreviewingVoiceId(null)
+        currentAudioRef.current = null
+        if (onEndedCallback) onEndedCallback()
+      }
+      audio.play()
+    } catch { setAudioPlaying(false); setPreviewingVoiceId(null) }
+  }, [selectedVoiceId, stopAudio])
+
+  // ── Preload next question audio ──
+  const preloadAudio = useCallback(async (text) => {
+    const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY
+    if (!apiKey) return
+    const cacheKey = `${selectedVoiceId}::${text.slice(0, 80)}`
+    if (audioCache.current[cacheKey]) return
+    try {
+      const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selectedVoiceId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'xi-api-key': apiKey },
         body: JSON.stringify({
@@ -490,20 +580,29 @@ const RadiografiaPremiumPage = () => {
           voice_settings: { stability: 0.35, similarity_boost: 0.85, style: 0.3, use_speaker_boost: true }
         })
       })
-      if (!res.ok) { setAudioPlaying(false); return }
-      const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
-      const audio = new Audio(url)
-      currentAudioRef.current = audio
-      audio.onended = () => { setAudioPlaying(false); currentAudioRef.current = null }
-      audio.play()
-    } catch { setAudioPlaying(false) }
-  }, [voiceGender, stopAudio])
+      if (res.ok) {
+        const blob = await res.blob()
+        audioCache.current[cacheKey] = blob
+      }
+    } catch {}
+  }, [selectedVoiceId])
 
-  // ── Auto-play question when changing question ──
+  // ── Auto-play question when changing question + auto-mic after audio ends ──
   useEffect(() => {
     if (stage === 'questionnaire' && question) {
-      playQuestion(question.mainQuestion)
+      setTypingMode(false)
+      playQuestion(question.mainQuestion, undefined, () => {
+        // Auto-start mic after TTS ends (only if not already recording/typing)
+        setTimeout(() => {
+          const sr = window.SpeechRecognition || window.webkitSpeechRecognition
+          if (sr && !typingMode) startRecording()
+        }, 300)
+      })
+      // Preload next question
+      if (currentQ < totalQ - 1) {
+        const nextQ = PREGUNTAS[currentQ + 1]
+        if (nextQ) preloadAudio(nextQ.mainQuestion)
+      }
     }
     return () => stopAudio()
   }, [currentQ, stage]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -594,22 +693,32 @@ const RadiografiaPremiumPage = () => {
 
   // ── Run AI Analysis ──
   const handleRunAnalysis = useCallback(async (finalResponses) => {
+    // If we have a cached analysis (DEV mode), use it directly
+    if (cachedAnalysis) {
+      setAiAnalysis(cachedAnalysis)
+      setStage('results')
+      return
+    }
+
     setStage('analyzing')
     setCompletedTasks(0)
     setAnalysisDone(false)
 
-    // Start animation
+    // Start animation — 20 tasks, fast enough to finish within typical API time
     let taskIdx = 0
     const animInterval = setInterval(() => {
       taskIdx++
       setCompletedTasks(taskIdx)
       if (taskIdx >= ANALYSIS_TASKS.length) clearInterval(animInterval)
-    }, 4500)
+    }, 2800)
 
     try {
-      const result = await analyzeRadiografiaPremium({ responses: finalResponses, questions: PREGUNTAS })
+      const result = await analyzeRadiografiaPremium({ responses: finalResponses, questions: PREGUNTAS, profileData })
       setAiAnalysis(result)
+      setCachedAnalysis(result) // Cache for DEV reuse
       setAnalysisDone(true)
+      // Save to localStorage for later DEV access
+      try { localStorage.setItem('radiografia_cached_analysis', JSON.stringify(result)) } catch {}
     } catch (err) {
       console.error('Analysis failed:', err)
       setAnalysisDone(true)
@@ -709,38 +818,139 @@ const RadiografiaPremiumPage = () => {
         ═══════════════════════════════════════════════════════ */}
         {stage === 'instructions' && (
           <motion.div key="instructions" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="min-h-screen flex items-center justify-center px-6 pt-24 pb-12">
+            className="min-h-screen flex items-center justify-center px-6 pt-6 pb-12">
             <div className="max-w-xl w-full text-center space-y-8">
+
+              {/* ── Header + tagline ── */}
               <div>
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-4">
                   <Brain className="w-8 h-8 text-violet-400/60" strokeWidth={1.5} />
                 </div>
-                <h1 className="text-2xl lg:text-3xl font-light text-white mb-3">Radiografía de Pareja Premium</h1>
+                <h1 className="text-2xl lg:text-3xl font-light text-white mb-2">Radiografía de Pareja Premium</h1>
+                <p className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400 text-sm font-medium tracking-wide mb-4">Descubre tu forma de amar</p>
                 <p className="text-white/50 text-sm font-light leading-relaxed max-w-md mx-auto">
                   Un análisis narrativo profundo de tu relación a través de <strong className="text-white/70">40 preguntas abiertas</strong> que exploran tu vínculo desde <strong className="text-white/70">12 dimensiones psicológicas</strong>.
                 </p>
               </div>
 
-              {/* Elige voz */}
+              {/* ── Voice selector: 4 circular cards, single toggle ── */}
               <div className="space-y-4">
                 <p className="text-white/60 text-sm font-light flex items-center justify-center gap-2">
                   <Headphones className="w-4 h-4 text-violet-400/50" /> Elige la voz que te guiará
                 </p>
-                <div className="flex justify-center gap-4">
-                  {[{ g: 'female', label: 'Bella (mujer)', icon: '👩' }, { g: 'male', label: 'Arnold (hombre)', icon: '👨' }].map(v => (
-                    <button key={v.g} onClick={() => setVoiceGender(v.g)}
-                      className={`flex items-center gap-2 px-5 py-3 rounded-xl border transition-all ${voiceGender === v.g
-                        ? 'border-violet-500/30 bg-violet-500/10 text-violet-300/80'
-                        : 'border-white/10 bg-white/[0.02] text-white/40 hover:border-white/20'}`}>
-                      <span>{v.icon}</span>
-                      <span className="text-sm font-light">{v.label}</span>
+                <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto">
+                  {VOICE_LIST.map(v => {
+                    const isSelected = selectedVoiceId === v.id
+                    const isPreviewing = previewingVoiceId === v.id && audioPlaying
+                    return (
+                      <button key={v.id}
+                        onClick={() => {
+                          stopAudio()
+                          setSelectedVoiceId(v.id)
+                          if (!isSelected || !audioPlaying) {
+                            playQuestion(`Hola, soy ${v.name} y te acompañaré durante toda tu radiografía. Escucharás cada pregunta en mi voz.`, v.id)
+                          }
+                        }}
+                        className={`relative flex flex-col items-center gap-2 py-4 px-3 rounded-2xl border transition-all duration-300 ${isSelected
+                          ? `${v.border} ${v.bg} shadow-lg`
+                          : 'border-white/8 bg-white/[0.02] hover:border-white/15 hover:bg-white/[0.04]'}`}>
+                        <div className={`relative w-14 h-14 rounded-full bg-gradient-to-br ${v.color} flex items-center justify-center text-white font-semibold text-lg shadow-lg ${isPreviewing ? `ring-4 ${v.ring} animate-pulse` : ''}`}>
+                          {v.initial}
+                          {isSelected && (
+                            <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full bg-zinc-900 border-2 border-green-500 flex items-center justify-center">
+                              <Check className="w-3 h-3 text-green-400" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-center">
+                          <span className={`text-sm font-medium block ${isSelected ? v.text : 'text-white/60'}`}>{v.name}</span>
+                          <span className="text-[11px] text-white/35 font-light">{v.desc}</span>
+                        </div>
+                        {isPreviewing && (
+                          <div className="absolute top-2 right-2">
+                            <Volume2 className={`w-3.5 h-3.5 ${v.text} animate-pulse`} />
+                          </div>
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+                <p className="text-white/30 text-[11px] font-light">Toca una voz para seleccionarla y escuchar una prueba</p>
+              </div>
+
+              {/* ── Section 1: Prepara tu espacio ── */}
+              <div className="space-y-3 text-left p-6 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.04] to-transparent">
+                <p className="text-violet-300/80 text-sm font-medium flex items-center gap-2">
+                  <Headphones className="w-4 h-4 text-violet-400/50" /> Prepara tu espacio
+                </p>
+                <div className="h-px bg-white/5" />
+                <ul className="space-y-2.5 text-white/55 text-sm font-light">
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-violet-400/40 mt-2 flex-shrink-0" />
+                    <span><strong className="text-white/70">Sube el volumen</strong> de tu dispositivo al máximo. Usa <strong className="text-white/70">audífonos</strong> para mayor privacidad.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-violet-400/40 mt-2 flex-shrink-0" />
+                    <span>Busca un <strong className="text-white/70">lugar privado y tranquilo</strong> donde puedas hablar con libertad.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-violet-400/40 mt-2 flex-shrink-0" />
+                    <span>Reserva unos <strong className="text-white/70">20–25 minutos</strong> sin interrupciones.</span>
+                  </li>
+                </ul>
+
+                {/* ── Audio & Mic test ── */}
+                <div className="mt-4 pt-4 border-t border-white/5 space-y-3">
+                  <p className="text-violet-300/60 text-xs font-medium uppercase tracking-wider">Comprobación rápida</p>
+                  <div className="flex flex-wrap gap-3">
+                    {/* Sound test */}
+                    <button
+                      onClick={() => {
+                        const a = new Audio('/audio-test-chime.wav')
+                        a.play().then(() => setSoundTestOk(true)).catch(() => setSoundTestOk(false))
+                      }}
+                      className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all text-xs font-light ${
+                        soundTestOk === true ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' :
+                        soundTestOk === false ? 'border-red-500/30 bg-red-500/10 text-red-300' :
+                        'border-white/15 bg-white/[0.03] text-white/50 hover:border-white/25 hover:text-white/70'}`}>
+                      <Volume2 className="w-4 h-4" />
+                      {soundTestOk === true ? '✓ Se escucha bien' : soundTestOk === false ? 'No se escuchó' : 'Probar sonido'}
                     </button>
-                  ))}
+                    {/* Mic test */}
+                    <button
+                      onClick={async () => {
+                        try {
+                          const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+                          setMicTestOk(true)
+                          // Show level bars for 2 seconds then cleanup
+                          const ctx = new (window.AudioContext || window.webkitAudioContext)()
+                          const src = ctx.createMediaStreamSource(stream)
+                          const analyser = ctx.createAnalyser()
+                          analyser.fftSize = 256
+                          src.connect(analyser)
+                          setMicAnalyser(analyser)
+                          setTimeout(() => {
+                            stream.getTracks().forEach(t => t.stop())
+                            ctx.close()
+                            setMicAnalyser(null)
+                          }, 3000)
+                        } catch { setMicTestOk(false) }
+                      }}
+                      className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all text-xs font-light ${
+                        micTestOk === true ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' :
+                        micTestOk === false ? 'border-red-500/30 bg-red-500/10 text-red-300' :
+                        'border-white/15 bg-white/[0.03] text-white/50 hover:border-white/25 hover:text-white/70'}`}>
+                      <Mic className="w-4 h-4" />
+                      {micTestOk === true ? '✓ Micrófono listo' : micTestOk === false ? 'Sin acceso al mic' : 'Probar micrófono'}
+                    </button>
+                  </div>
+                  {/* Mic level bars */}
+                  {micAnalyser && <MicLevelBars analyser={micAnalyser} />}
                 </div>
               </div>
 
-              {/* Cómo funciona */}
-              <div className="space-y-4 text-left p-6 rounded-2xl border border-white/10 bg-white/[0.02]">
+              {/* ── Section 2: Cómo funciona ── */}
+              <div className="space-y-3 text-left p-6 rounded-2xl border border-white/10 bg-white/[0.02]">
                 <p className="text-white/70 text-sm font-medium flex items-center gap-2">
                   <Lightbulb className="w-4 h-4 text-amber-400/60" /> ¿Cómo funciona?
                 </p>
@@ -750,60 +960,121 @@ const RadiografiaPremiumPage = () => {
                     <div className="w-6 h-6 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                       <Volume2 className="w-3 h-3 text-violet-400/70" />
                     </div>
-                    <span>Escucharás cada pregunta en voz alta. Los <strong className="text-white/70">ejemplos orientativos</strong> se muestran debajo para inspirarte (no se leen).</span>
+                    <span>Escucharás cada pregunta en voz alta. Al <strong className="text-white/70">terminar la voz, tu micrófono se activa automáticamente</strong> para que respondas de inmediato.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <SkipForward className="w-3 h-3 text-violet-400/70" />
+                    </div>
+                    <span>Si no quieres esperar, pulsa <strong className="text-white/70">"Saltar"</strong> — se detiene la voz y tu micrófono se activa al instante.</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-6 h-6 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                       <Mic className="w-3 h-3 text-violet-400/70" />
                     </div>
-                    <span>Presiona el <strong className="text-white/70">micrófono</strong> para responder con tu voz. Si la voz está hablando, al tocar el micrófono se detiene y empieza a grabarte.</span>
+                    <span>Responde con tu voz diciendo lo primero que te venga a la mente. Verás tu <strong className="text-white/70">transcripción al terminar</strong>, y puedes <strong className="text-white/70">regrabar</strong> si quieres.</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-6 h-6 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                       <PenLine className="w-3 h-3 text-violet-400/70" />
                     </div>
-                    <span>Si prefieres, también puedes <strong className="text-white/70">escribir</strong> tu respuesta con el teclado.</span>
+                    <span>¿Prefieres escribir? Debajo de los botones aparece un enlace <strong className="text-white/70">"Prefiero escribir"</strong> que abre un campo de texto.</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-6 h-6 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Volume2 className="w-3 h-3 text-violet-400/70" />
+                      <Lightbulb className="w-3 h-3 text-violet-400/70" />
                     </div>
-                    <span>La bocina junto a la pregunta te permite <strong className="text-white/70">escucharla de nuevo</strong> si lo necesitas.</span>
+                    <span>Debajo de cada pregunta hay <strong className="text-white/70">ideas de apoyo</strong>: si sientes que te faltó algo, úsalas para completar tu respuesta.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <ArrowRight className="w-3 h-3 text-violet-400/70" />
+                    </div>
+                    <span>Son <strong className="text-white/70">40 preguntas abiertas</strong> que cubren 12 dimensiones. No hay respuestas correctas ni incorrectas.</span>
                   </li>
                 </ul>
               </div>
 
-              {/* Tips */}
+              {/* ── Section 3: Para mejores resultados ── */}
               <div className="space-y-3 text-left p-6 rounded-2xl border border-amber-500/10 bg-amber-500/[0.02]">
                 <p className="text-amber-300/70 text-sm font-medium flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-amber-400/50" /> Antes de empezar
+                  <Sparkles className="w-4 h-4 text-amber-400/50" /> Para mejores resultados
                 </p>
                 <div className="h-px bg-white/5" />
-                <ul className="space-y-2 text-white/50 text-sm font-light">
-                  <li className="flex items-start gap-2">
-                    <span className="text-amber-400/40 mt-0.5">•</span>
-                    <span><strong className="text-white/65">Tómate tu tiempo.</strong> No hay prisa. Puedes pausar cuando quieras.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-amber-400/40 mt-0.5">•</span>
+                <ul className="space-y-2.5 text-white/50 text-sm font-light">
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-amber-400/40 mt-2 flex-shrink-0" />
                     <span><strong className="text-white/65">Contesta lo primero que te venga a la mente.</strong> No te preocupes si sientes que te equivocas — lo que surge primero es lo que más te define.</span>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-amber-400/40 mt-0.5">•</span>
-                    <span><strong className="text-white/65">Son 40 preguntas abiertas.</strong> No hay respuestas correctas ni incorrectas. Habla con la libertad que necesites.</span>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-amber-400/40 mt-2 flex-shrink-0" />
+                    <span><strong className="text-white/65">No analices demasiado.</strong> Esto no es un examen. Háblale como si fuera un psicólogo que escucha sin juzgar.</span>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-amber-400/40 mt-0.5">•</span>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-amber-400/40 mt-2 flex-shrink-0" />
                     <span>Usar el <strong className="text-white/65">micrófono</strong> es más rápido y natural, pero escribir funciona igual de bien.</span>
                   </li>
                 </ul>
               </div>
 
               <motion.button
-                onClick={() => setStage('questionnaire')}
+                onClick={() => {
+                  setStage('profile')
+                  playQuestion('¡Hola! Antes de iniciar, necesito conocer un par de datos tuyos muy rápidos. Escríbelos en los campos que aparecen a continuación y podremos comenzar.')
+                }}
                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                 className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
                 Comenzar radiografía <ArrowRight className="inline w-4 h-4 ml-2" />
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════
+            STAGE: PROFILE — Pregunta 0 (datos personales)
+        ═══════════════════════════════════════════════════════ */}
+        {stage === 'profile' && (
+          <motion.div key="profile" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="min-h-screen flex items-center justify-center px-6 pt-6 pb-12">
+            <div className="max-w-lg w-full space-y-8">
+              <div className="text-center">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-4">
+                  <Users className="w-7 h-7 text-violet-400/60" strokeWidth={1.5} />
+                </div>
+                <h2 className="text-xl lg:text-2xl font-light text-white mb-2">Antes de empezar</h2>
+                <p className="text-white/50 text-sm font-light max-w-sm mx-auto">
+                  Escribe tus datos separados por comas o completa cada campo. Estos datos aparecerán en tu reporte personalizado.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Tu nombre</label>
+                  <input type="text" value={profileData.nombre}
+                    autoFocus
+                    onChange={(e) => setProfileData(p => ({ ...p, nombre: e.target.value }))}
+                    onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('profile-edad')?.focus() }}
+                    placeholder="Ej: Luis"
+                    className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/25 focus:border-violet-500/30 focus:outline-none transition-colors" />
+                </div>
+                <div>
+                  <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Tu edad</label>
+                  <input type="text" id="profile-edad" value={profileData.edad}
+                    onChange={(e) => setProfileData(p => ({ ...p, edad: e.target.value }))}
+                    onKeyDown={(e) => { if (e.key === 'Enter' && profileData.nombre.trim() && profileData.edad.trim()) setStage('questionnaire') }}
+                    placeholder="Ej: 28"
+                    className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/25 focus:border-violet-500/30 focus:outline-none transition-colors" />
+                </div>
+              </div>
+
+              <motion.button
+                onClick={() => { if (profileData.nombre.trim() && profileData.edad.trim()) setStage('questionnaire') }}
+                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                disabled={!profileData.nombre.trim() || !profileData.edad.trim()}
+                className={`w-full py-4 rounded-xl text-white font-light text-base transition-all shadow-lg ${profileData.nombre.trim() && profileData.edad.trim()
+                  ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 shadow-violet-600/20'
+                  : 'bg-white/10 text-white/30 cursor-not-allowed shadow-none'}`}>
+                Continuar al cuestionario <ArrowRight className="inline w-4 h-4 ml-2" />
               </motion.button>
             </div>
           </motion.div>
@@ -814,7 +1085,7 @@ const RadiografiaPremiumPage = () => {
         ═══════════════════════════════════════════════════════ */}
         {stage === 'questionnaire' && question && (
           <motion.div key="questionnaire" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="min-h-screen pt-24 lg:pt-28 pb-20 px-6">
+            className="min-h-screen pt-6 lg:pt-10 pb-20 px-6">
             <div className="max-w-2xl mx-auto">
 
               {/* Progress bar */}
@@ -830,147 +1101,214 @@ const RadiografiaPremiumPage = () => {
               </div>
 
               {/* Main question — centered */}
-              <div className="text-center mb-8">
-                <div className="flex items-center justify-center gap-2 mb-4">
+              <div className="text-center mb-6">
+                <div className="flex items-center justify-center gap-2 mb-3">
                   <span className="text-white/25 text-xs font-light">Pregunta {currentQ + 1}</span>
                   <button
-                    onClick={() => playQuestion(question.mainQuestion)}
+                    onClick={() => {
+                      if (recording) stopRecording()
+                      playQuestion(question.mainQuestion, undefined, () => {
+                        const sr = window.SpeechRecognition || window.webkitSpeechRecognition
+                        if (sr && !typingMode) startRecording()
+                      })
+                    }}
                     className="h-7 px-3 rounded-lg border border-white/15 bg-white/[0.04] text-white/50 hover:text-white/70 hover:border-white/25 transition-all text-[10px] font-light inline-flex items-center gap-1.5"
                     title="Repetir audio">
                     <Volume2 className="w-3 h-3" /> Repetir
                   </button>
                   {audioPlaying && (
                     <button
-                      onClick={stopAudio}
+                      onClick={() => {
+                        stopAudio()
+                        // Auto-start mic on "Saltar"
+                        setTimeout(() => {
+                          const sr = window.SpeechRecognition || window.webkitSpeechRecognition
+                          if (sr && !typingMode) startRecording()
+                        }, 300)
+                      }}
                       className="h-7 px-3 rounded-lg border border-amber-500/20 bg-amber-500/[0.06] text-amber-300/70 hover:text-amber-300 transition-all text-[10px] font-light inline-flex items-center gap-1.5"
                       title="Saltar audio">
                       <SkipForward className="w-3 h-3" /> Saltar
                     </button>
                   )}
                 </div>
-                <p className="text-white/90 text-lg lg:text-xl font-light leading-relaxed max-w-xl mx-auto">{question.mainQuestion}</p>
+
               </div>
 
-              {/* Divider */}
-              <div className="flex items-center gap-3 mb-6">
-                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                <Lightbulb className="w-3.5 h-3.5 text-amber-400/40" />
-                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+              {/* ── Card verde: Responde libremente + pregunta principal ── */}
+              <div className="mb-6">
+                <div className="px-4 py-2.5 rounded-t-2xl bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-emerald-500/15 border border-b-0 border-emerald-500/15">
+                  <p className="text-emerald-300/80 text-xs font-semibold uppercase tracking-widest text-center flex items-center justify-center gap-2">
+                    <Heart className="w-3.5 h-3.5 text-emerald-400/60" />
+                    Responde libremente — di lo primero que te venga a la mente
+                  </p>
+                </div>
+                <div className="px-6 py-6 rounded-b-2xl border border-t-0 border-emerald-500/10 bg-emerald-500/[0.02]">
+                  <p className="text-white/90 text-lg lg:text-xl font-light leading-relaxed text-center max-w-xl mx-auto">{question.mainQuestion}</p>
+                </div>
               </div>
 
-              {/* Examples — centered, premium */}
-              <div className="mb-8 p-5 rounded-2xl border border-white/10 bg-white/[0.025] text-center">
-                <p className="text-white/55 text-xs font-medium uppercase tracking-wider mb-4">Ejemplos que pueden orientar tu respuesta</p>
-                <div className="space-y-2">
+              {/* Examples — as completion prompts */}
+              <div className="mb-8">
+                <div className="px-4 py-2.5 rounded-t-2xl bg-gradient-to-r from-violet-500/15 via-fuchsia-500/10 to-violet-500/15 border border-b-0 border-violet-500/15">
+                  <p className="text-violet-300/80 text-xs font-semibold uppercase tracking-widest text-center flex items-center justify-center gap-2">
+                    <Lightbulb className="w-3.5 h-3.5 text-violet-400/60" />
+                    Si te faltó algo, completa con estas ideas
+                  </p>
+                </div>
+                <div className="px-5 py-4 rounded-b-2xl border border-t-0 border-white/10 bg-white/[0.02] space-y-2">
                   {question.examples.map((ex, i) => (
-                    <div key={i} className="flex items-center justify-center gap-2 text-white/50 text-sm font-light">
-                      <span className="text-violet-400/40">✦</span>
+                    <div key={i} className="flex items-center justify-center gap-2 text-white/55 text-sm font-light">
+                      <span className="text-violet-400/50">✦</span>
                       <span>{ex}</span>
                     </div>
                   ))}
+                  <div className="h-px bg-white/5 mt-3 mb-2" />
+                  <p className="text-white/40 text-xs font-light italic flex items-center justify-center gap-1.5">
+                    <Sparkles className="w-3 h-3 text-violet-400/30" />
+                    Puedes añadir cualquier otro detalle que sientas importante
+                  </p>
                 </div>
-                <div className="h-px bg-white/5 mt-4 mb-3" />
-                <p className="text-white/35 text-xs font-light italic flex items-center justify-center gap-1.5">
-                  <Sparkles className="w-3 h-3 text-violet-400/30" />
-                  Puedes añadir cualquier otro detalle que sientas importante
-                </p>
               </div>
 
               {/* ── Response area ── */}
 
-              {/* If has content: show transcript/text */}
-              {(currentText.trim() || recording) && (
-                <div className="mb-6">
-                  <div className="min-h-[80px] p-4 rounded-xl border border-violet-500/15 bg-violet-500/[0.03]">
-                    <p className="text-white/70 text-sm font-light leading-relaxed">{currentText || (
-                      <span className="text-white/30 italic">Escuchando…</span>
-                    )}</p>
+              {/* While recording: show animated indicator (no transcript) */}
+              {recording && !typingMode && (
+                <div className="mb-6 text-center">
+                  <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl border border-red-500/20 bg-red-500/[0.04]">
+                    <div className="flex gap-1">
+                      <div className="w-1.5 h-4 bg-red-500/60 rounded-full animate-pulse" />
+                      <div className="w-1.5 h-6 bg-red-500/70 rounded-full animate-pulse" style={{ animationDelay: '150ms' }} />
+                      <div className="w-1.5 h-3 bg-red-500/50 rounded-full animate-pulse" style={{ animationDelay: '300ms' }} />
+                      <div className="w-1.5 h-5 bg-red-500/60 rounded-full animate-pulse" style={{ animationDelay: '100ms' }} />
+                    </div>
+                    <span className="text-red-300/70 text-sm font-light">Escuchando… habla con libertad</span>
                   </div>
                 </div>
               )}
 
-              {/* Typing mode: textarea */}
+              {/* After stopping: "Respuesta guardada" + options (NOT showing transcript) */}
+              {!recording && currentText.trim() && !typingMode && (
+                <div className="mb-6 text-center">
+                  <div className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.05]">
+                    <CheckCircle className="w-4 h-4 text-emerald-400/70" />
+                    <span className="text-emerald-300/80 text-sm font-light">Respuesta guardada</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-4 mt-4">
+                    <button onClick={saveAndNext}
+                      className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-sm font-light shadow-lg shadow-violet-500/20 hover:from-violet-500 hover:to-fuchsia-500 transition-all flex items-center gap-2">
+                      {currentQ < totalQ - 1 ? <><ArrowRight className="w-4 h-4" /> Continuar</> : <><Check className="w-4 h-4" /> Finalizar</>}
+                    </button>
+                    <button
+                      onClick={() => { setTypingMode(true); setTextInput(transcript || textInput) }}
+                      className="text-xs text-white/40 hover:text-white/60 transition-colors underline underline-offset-2 decoration-white/15">
+                      Prefiero enriquecer mi respuesta
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Typing mode: show previous recording read-only + textarea */}
               {typingMode && !recording && (
-                <div className="mb-6">
+                <div className="mb-6 space-y-3">
+                  {transcript.trim() && (
+                    <div className="p-3 rounded-xl border border-white/8 bg-white/[0.02]">
+                      <p className="text-white/30 text-[10px] font-medium uppercase tracking-wider mb-1">Lo que grabaste antes</p>
+                      <p className="text-white/40 text-xs font-light leading-relaxed">{transcript}</p>
+                    </div>
+                  )}
                   <textarea
                     value={textInput}
                     onChange={(e) => setTextInput(e.target.value)}
-                    placeholder="Escribe tu respuesta aquí…"
+                    placeholder="Escribe o complementa tu respuesta aquí…"
                     rows={4}
                     className="w-full p-4 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/30 focus:border-violet-500/30 focus:outline-none resize-none transition-colors leading-relaxed"
                   />
                 </div>
               )}
 
-              {/* If no content and not recording and not typing: prompt to start */}
+              {/* If no content and not recording and not typing: waiting state */}
               {!currentText.trim() && !recording && !typingMode && (
-                <p className="text-center text-white/35 text-sm font-light mb-4">
-                  Decide cómo vas a contestar
+                <p className="text-center text-white/30 text-sm font-light mb-4 italic">
+                  {audioPlaying ? 'Escucha la pregunta…' : 'Tu micrófono se activará en un momento'}
                 </p>
               )}
 
-              {recording && (
-                <p className="text-center text-red-400/70 text-xs font-light mb-3 animate-pulse">
-                  🔴 Grabando — habla con libertad. Toca de nuevo para detener.
-                </p>
-              )}
-
-              {/* ── Action buttons: Mic · Write side by side ── */}
-              <div className="flex items-center justify-center gap-4 mb-4">
+              {/* ── Action buttons: Back | Mic | Next ── */}
+              <div className="flex items-end justify-center gap-4 lg:gap-5 mb-4">
                 {/* Back */}
-                <button onClick={goBack} disabled={currentQ === 0}
-                  className="w-11 h-11 rounded-xl border border-white/10 bg-white/[0.03] flex items-center justify-center text-white/40 hover:text-white/60 hover:border-white/20 transition-all disabled:opacity-20 disabled:pointer-events-none">
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-
-                {/* Microphone */}
-                <motion.button
-                  onClick={() => {
-                    if (typingMode) setTypingMode(false)
-                    recording ? stopRecording() : startRecording()
-                  }}
-                  whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                  className={`flex flex-col items-center gap-1 ${recording
-                    ? ''
-                    : !typingMode ? '' : ''}`}>
-                  <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${recording
-                    ? 'bg-red-500/20 border-2 border-red-500/50 text-red-400 animate-pulse'
-                    : !typingMode
-                      ? 'bg-violet-500/15 border-2 border-violet-500/40 text-violet-400'
-                      : 'bg-white/[0.04] border-2 border-white/15 text-white/40 hover:border-white/30'}`}>
-                    {recording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-                  </div>
-                  <span className={`text-[10px] font-light ${recording ? 'text-red-400/70' : !typingMode ? 'text-violet-300/60' : 'text-white/30'}`}>Micrófono</span>
-                </motion.button>
-
-                {/* Write */}
-                <motion.button
-                  onClick={() => { if (!recording) { setTypingMode(true); setTextInput(transcript || textInput) } }}
+                <motion.button onClick={goBack} disabled={currentQ === 0}
                   whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                   className="flex flex-col items-center gap-1">
-                  <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${typingMode && !recording
-                    ? 'bg-violet-500/15 border-2 border-violet-500/40 text-violet-400'
-                    : 'bg-white/[0.04] border-2 border-white/15 text-white/40 hover:border-white/30'}`}>
-                    <PenLine className="w-5 h-5" />
+                  <div className={`w-11 h-11 lg:w-12 lg:h-12 rounded-full flex items-center justify-center transition-all border-2 ${currentQ === 0 ? 'opacity-20 pointer-events-none' : ''} border-white/15 bg-white/[0.04] text-white/40 hover:border-white/25 hover:text-white/60`}>
+                    <ArrowLeft className="w-4 h-4 lg:w-5 lg:h-5" />
                   </div>
-                  <span className={`text-[10px] font-light ${typingMode && !recording ? 'text-violet-300/60' : 'text-white/30'}`}>Escribir</span>
+                  <span className="text-[10px] font-light text-white/30">Anterior</span>
+                </motion.button>
+
+                {/* Mic */}
+                <motion.button
+                  onClick={() => { if (typingMode) setTypingMode(false); recording ? stopRecording() : startRecording() }}
+                  whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                  className="flex flex-col items-center gap-1">
+                  <div className={`w-16 h-16 lg:w-14 lg:h-14 rounded-full flex items-center justify-center transition-all ${recording
+                    ? 'bg-red-500/20 border-2 border-red-500/50 text-red-400 animate-pulse'
+                    : 'bg-gradient-to-br from-violet-500/20 to-fuchsia-500/15 border-2 border-violet-500/40 text-violet-400 shadow-lg shadow-violet-500/25 ring-4 ring-violet-400/10'}`}>
+                    {recording ? <MicOff className="w-6 h-6 lg:w-5 lg:h-5" /> : <Mic className="w-6 h-6 lg:w-5 lg:h-5" />}
+                  </div>
+                  <span className={`text-[10px] font-light ${recording ? 'text-red-400/70' : 'text-violet-300/60'}`}>
+                    {recording ? 'Detener' : 'Micrófono'}
+                  </span>
+                </motion.button>
+
+                {/* Regrabar — always visible when recording or when there's content */}
+                {(recording || currentText.trim()) && !typingMode && (
+                  <motion.button
+                    onClick={() => { if (recording) stopRecording(); setTranscript(''); setTextInput(''); setTimeout(() => startRecording(), 200) }}
+                    whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                    className="flex flex-col items-center gap-1">
+                    <div className="w-11 h-11 lg:w-12 lg:h-12 rounded-full flex items-center justify-center transition-all border-2 border-amber-500/30 bg-amber-500/[0.08] text-amber-400/70 hover:border-amber-500/50 hover:text-amber-300">
+                      <Repeat className="w-4 h-4 lg:w-5 lg:h-5" />
+                    </div>
+                    <span className="text-[10px] font-light text-amber-300/50">Regrabar</span>
+                  </motion.button>
+                )}
+
+                {/* Next */}
+                <motion.button onClick={saveAndNext}
+                  whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                  className="flex flex-col items-center gap-1">
+                  <div className={`w-11 h-11 lg:w-12 lg:h-12 rounded-full flex items-center justify-center transition-all border-2 ${currentText.trim()
+                    ? 'bg-gradient-to-br from-violet-600 to-fuchsia-600 border-violet-500/50 text-white shadow-lg shadow-violet-500/25'
+                    : 'border-white/15 bg-white/[0.04] text-white/40 hover:border-white/25'}`}>
+                    {currentQ < totalQ - 1 ? <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5" /> : <Check className="w-4 h-4 lg:w-5 lg:h-5" />}
+                  </div>
+                  <span className={`text-[10px] font-light ${currentText.trim() ? 'text-violet-300/60' : 'text-white/30'}`}>
+                    {currentQ < totalQ - 1 ? 'Siguiente' : 'Finalizar'}
+                  </span>
                 </motion.button>
               </div>
 
-              {/* Next / Finalizar — separate, below */}
-              <div className="flex justify-center mb-6">
-                <motion.button onClick={saveAndNext}
-                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                  className={`h-12 px-8 rounded-xl border flex items-center gap-2 text-sm font-light transition-all ${currentText.trim()
-                    ? 'border-cyan-500/30 bg-cyan-500/15 text-cyan-300/90 hover:bg-cyan-500/25'
-                    : 'border-white/10 bg-white/[0.03] text-white/40 hover:text-white/60 hover:border-white/20'}`}>
-                  {currentQ < totalQ - 1 ? (
-                    <><span>Siguiente</span><ArrowRight className="w-4 h-4" /></>
-                  ) : (
-                    <><span>Finalizar</span><Check className="w-4 h-4" /></>
-                  )}
-                </motion.button>
-              </div>
+              {/* "Prefiero escribir" link — below buttons (only when no saved response showing) */}
+              {!typingMode && !recording && !currentText.trim() && (
+                <p className="text-center mb-6">
+                  <button
+                    onClick={() => { setTypingMode(true); setTextInput(transcript || textInput) }}
+                    className="text-white/30 text-xs font-light hover:text-white/55 transition-colors underline underline-offset-2 decoration-white/15 hover:decoration-white/30">
+                    Prefiero escribir mi respuesta
+                  </button>
+                </p>
+              )}
+              {typingMode && (
+                <p className="text-center mb-6">
+                  <button
+                    onClick={() => setTypingMode(false)}
+                    className="text-white/30 text-xs font-light hover:text-white/55 transition-colors underline underline-offset-2 decoration-white/15 hover:decoration-white/30">
+                    Volver al micrófono
+                  </button>
+                </p>
+              )}
 
               {/* DEV: Fill demo responses */}
               {import.meta.env.DEV && (
@@ -988,6 +1326,41 @@ const RadiografiaPremiumPage = () => {
                     className="text-xs px-4 py-2 rounded-lg border border-emerald-500/20 bg-emerald-500/5 text-emerald-300/60 hover:text-emerald-300/90 transition-colors">
                     🚀 Rellenar todo + Lanzar análisis
                   </button>
+                  <button onClick={() => {
+                    // Priority: imported cache > localStorage > fallback to API
+                    if (CACHED_PREVIEW_ANALYSIS) {
+                      setAiAnalysis(CACHED_PREVIEW_ANALYSIS)
+                      setCachedAnalysis(CACHED_PREVIEW_ANALYSIS)
+                      setStage('results')
+                      return
+                    }
+                    const saved = localStorage.getItem('radiografia_cached_analysis')
+                    if (saved) {
+                      try {
+                        const parsed = JSON.parse(saved)
+                        setAiAnalysis(parsed)
+                        setCachedAnalysis(parsed)
+                        setStage('results')
+                        return
+                      } catch {}
+                    }
+                    setResponses({ ...DEMO_RESPONSES })
+                    setTimeout(() => handleRunAnalysis(DEMO_RESPONSES), 200)
+                  }}
+                    className="text-xs px-4 py-2 rounded-lg border border-fuchsia-500/20 bg-fuchsia-500/5 text-fuchsia-300/60 hover:text-fuchsia-300/90 transition-colors">
+                    ⚡ Vista previa {CACHED_PREVIEW_ANALYSIS ? '(caché real)' : localStorage.getItem('radiografia_cached_analysis') ? '(usar caché)' : '(lanzar análisis)'}
+                  </button>
+                  {localStorage.getItem('radiografia_cached_analysis') && (
+                    <button onClick={() => {
+                      localStorage.removeItem('radiografia_cached_analysis')
+                      setCachedAnalysis(null)
+                      setResponses({ ...DEMO_RESPONSES })
+                      setTimeout(() => handleRunAnalysis(DEMO_RESPONSES), 200)
+                    }}
+                      className="text-xs px-4 py-2 rounded-lg border border-red-500/20 bg-red-500/5 text-red-300/60 hover:text-red-300/90 transition-colors">
+                      🔄 Borrar caché y relanzar DeepSeek
+                    </button>
+                  )}
                 </div>
               )}
 
@@ -1005,26 +1378,35 @@ const RadiografiaPremiumPage = () => {
               <div className="text-center mb-6">
                 <Brain className="w-12 h-12 text-violet-400/40 mx-auto mb-4 animate-pulse" />
                 <h2 className="text-xl font-light text-white mb-2">Analizando tu narrativa</h2>
-                <p className="text-white/35 text-sm font-light">40 respuestas × 12 dimensiones × 9 corrientes psicológicas</p>
+                <p className="text-white/35 text-sm font-light">40 respuestas × 12 dimensiones × 11 corrientes psicológicas</p>
               </div>
-              <div className="space-y-2">
-                {ANALYSIS_TASKS.map((task, i) => {
+              <div className="space-y-1.5">
+                {ANALYSIS_TASKS.map((task, i, arr) => {
                   const done = i < completedTasks
                   const active = i === completedTasks
+                  const showGroup = i === 0 || arr[i - 1].group !== task.group
                   return (
-                    <motion.div key={task.id} animate={{ opacity: done || active ? 1 : 0.3 }}
-                      className={`flex items-center gap-3 p-3 rounded-xl ${done ? 'bg-emerald-500/[0.04] border border-emerald-500/10' : active ? 'bg-violet-500/[0.04] border border-violet-500/15' : 'border border-white/5'}`}>
-                      {done ? (
-                        <Check className="w-4 h-4 text-emerald-400/70" strokeWidth={2.5} />
-                      ) : active ? (
-                        <Loader2 className="w-4 h-4 text-violet-400/60 animate-spin" />
-                      ) : (
-                        <div className="w-4 h-4 rounded-full bg-white/10" />
+                    <div key={task.id}>
+                      {showGroup && (
+                        <p className={`text-[10px] uppercase tracking-widest font-medium mt-3 mb-1.5 px-3 ${done || active ? 'text-violet-400/50' : 'text-white/15'}`}>{task.group}</p>
                       )}
-                      <span className={`text-sm font-light ${done ? 'text-white/60' : active ? 'text-white/80' : 'text-white/25'}`}>{task.text}</span>
-                    </motion.div>
+                      <motion.div animate={{ opacity: done || active ? 1 : 0.3 }}
+                        className={`flex items-center gap-3 p-2.5 rounded-xl ${done ? 'bg-emerald-500/[0.04] border border-emerald-500/10' : active ? 'bg-violet-500/[0.04] border border-violet-500/15' : 'border border-white/5'}`}>
+                        {done ? (
+                          <Check className="w-4 h-4 text-emerald-400/70 shrink-0" strokeWidth={2.5} />
+                        ) : active ? (
+                          <Loader2 className="w-4 h-4 text-violet-400/60 animate-spin shrink-0" />
+                        ) : (
+                          <div className="w-4 h-4 rounded-full bg-white/10 shrink-0" />
+                        )}
+                        <span className={`text-sm font-light ${done ? 'text-white/60' : active ? 'text-white/80' : 'text-white/25'}`}>{task.text}</span>
+                      </motion.div>
+                    </div>
                   )
                 })}
+              </div>
+              <div className="text-center pt-2">
+                <p className="text-white/20 text-xs font-light">{completedTasks} de {ANALYSIS_TASKS.length} procesos completados</p>
               </div>
             </div>
           </motion.div>
@@ -1035,14 +1417,213 @@ const RadiografiaPremiumPage = () => {
         ═══════════════════════════════════════════════════════ */}
         {stage === 'results' && aiAnalysis && (
           <motion.div key="results" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="min-h-screen pt-24 lg:pt-28 pb-20 px-6">
+            className="min-h-screen pt-6 lg:pt-10 pb-20 px-6">
             <div className="max-w-4xl mx-auto space-y-12">
 
-              {/* Header */}
-              <div className="text-center">
-                <h1 className="text-3xl lg:text-4xl font-light text-white mb-3">Tu Radiografía de Pareja</h1>
-                <p className="text-white/40 text-sm font-light">Análisis narrativo profundo · 12 dimensiones · 8 enfoques psicológicos</p>
+              {/* Header — Ultra Premium with profile data */}
+              <div className="relative text-center py-8 mb-4">
+                <div className="absolute inset-0 bg-gradient-to-b from-violet-500/[0.06] via-fuchsia-500/[0.03] to-transparent rounded-3xl" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.08),transparent_70%)]" />
+                <div className="relative">
+                  <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.6 }}
+                    className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 border border-violet-500/20 flex items-center justify-center shadow-lg shadow-violet-500/10">
+                    <Brain className="w-8 h-8 text-violet-400/70" />
+                  </motion.div>
+                  <h1 className="text-3xl lg:text-4xl font-light text-white mb-2">Tu Radiografía de Pareja</h1>
+                  <p className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400 text-sm font-medium tracking-wide mb-4">Tu perfil de amor según 11 teorías</p>
+
+                  {/* Profile info bar */}
+                  {profileData.nombre && (
+                    <div className="flex flex-wrap items-center justify-center gap-3 mb-4">
+                      <span className="px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.04] text-white/60 text-xs font-medium">{profileData.nombre}{profileData.edad ? `, ${profileData.edad} años` : ''}</span>
+                      <span className="px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.04] text-white/40 text-xs font-light">{profileData.fecha}</span>
+                    </div>
+                  )}
+
+                  <p className="text-white/40 text-sm font-light mb-6 max-w-lg mx-auto">Estas son las principales corrientes de la psicología del amor aplicadas a tu historia. Cada sección revela una dimensión distinta de tu forma de amar.</p>
+                  <div className="flex flex-wrap items-center justify-center gap-3">
+                    <span className="px-3 py-1.5 rounded-full border border-violet-500/15 bg-violet-500/[0.06] text-violet-300/60 text-xs font-medium">11 corrientes psicológicas</span>
+                    <span className="px-3 py-1.5 rounded-full border border-fuchsia-500/15 bg-fuchsia-500/[0.06] text-fuchsia-300/60 text-xs font-medium">40 preguntas analizadas</span>
+                    <span className="px-3 py-1.5 rounded-full border border-cyan-500/15 bg-cyan-500/[0.06] text-cyan-300/60 text-xs font-medium">12 dimensiones</span>
+                  </div>
+                </div>
               </div>
+
+              {/* ═══ SECCIÓN 0: AUTOANÁLISIS — TU FORMA DE AMAR ═══ */}
+              {aiAnalysis.autoanalisis_usuario && (
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                  className="p-6 lg:p-8 rounded-2xl border border-fuchsia-500/15 bg-gradient-to-br from-fuchsia-500/[0.04] via-violet-500/[0.03] to-transparent relative overflow-hidden">
+                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-fuchsia-500/40 via-violet-500/30 to-fuchsia-500/40" />
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-fuchsia-500/15" />
+                    <h2 className="text-xs font-medium text-fuchsia-300/60 uppercase tracking-[0.2em]">Tu forma de amar</h2>
+                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-fuchsia-500/15" />
+                  </div>
+
+                  <div className="space-y-6">
+                    {/* 1. Apertura y rapport */}
+                    {aiAnalysis.autoanalisis_usuario.apertura_rapport && (
+                      <div className="flex items-start gap-4 mb-2">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-500/20 to-violet-500/15 border border-fuchsia-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+                          <Heart className="w-5 h-5 text-fuchsia-400/70" />
+                        </div>
+                        <div className="space-y-2">
+                          {aiAnalysis.autoanalisis_usuario.apertura_rapport.split('\n\n').map((p, i) => (
+                            <p key={i} className="text-white/65 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 2. Forma de amar */}
+                    {aiAnalysis.autoanalisis_usuario.forma_de_amar && (
+                      <div>
+                        <p className="text-fuchsia-300/50 text-[10px] font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
+                          <Flame className="w-3.5 h-3.5" /> Cómo amas y cómo esperas ser amado
+                        </p>
+                        <div className="space-y-2 pl-3 border-l-2 border-fuchsia-500/15">
+                          {aiAnalysis.autoanalisis_usuario.forma_de_amar.split('\n\n').map((p, i) => (
+                            <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 3. Lo que busca en el otro */}
+                    {aiAnalysis.autoanalisis_usuario.lo_que_busca_en_el_otro && (
+                      <div>
+                        <p className="text-violet-300/50 text-[10px] font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
+                          <Eye className="w-3.5 h-3.5" /> Lo que buscas en el otro
+                        </p>
+                        <div className="space-y-2 pl-3 border-l-2 border-violet-500/15">
+                          {aiAnalysis.autoanalisis_usuario.lo_que_busca_en_el_otro.split('\n\n').map((p, i) => (
+                            <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 4. Lo que reclama afuera */}
+                    {aiAnalysis.autoanalisis_usuario.lo_que_reclama_afuera && (
+                      <div>
+                        <p className="text-rose-300/50 text-[10px] font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
+                          <Compass className="w-3.5 h-3.5" /> Lo que reclamas afuera y te pertenece adentro
+                        </p>
+                        <div className="space-y-2 pl-3 border-l-2 border-rose-500/15">
+                          {aiAnalysis.autoanalisis_usuario.lo_que_reclama_afuera.split('\n\n').map((p, i) => (
+                            <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 5. Fantasma relacional */}
+                    {aiAnalysis.autoanalisis_usuario.fantasma_relacional && (
+                      <div>
+                        <p className="text-purple-300/50 text-[10px] font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
+                          <Anchor className="w-3.5 h-3.5" /> Tu fantasma relacional
+                        </p>
+                        <div className="space-y-2 pl-3 border-l-2 border-purple-500/15">
+                          {aiAnalysis.autoanalisis_usuario.fantasma_relacional.split('\n\n').map((p, i) => (
+                            <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 6. Yo ideal vs yo real */}
+                    {aiAnalysis.autoanalisis_usuario.yo_ideal && (
+                      <div>
+                        <p className="text-cyan-300/50 text-[10px] font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
+                          <Target className="w-3.5 h-3.5" /> Quién crees ser vs quién eres cuando amas
+                        </p>
+                        <div className="space-y-2 pl-3 border-l-2 border-cyan-500/15">
+                          {aiAnalysis.autoanalisis_usuario.yo_ideal.split('\n\n').map((p, i) => (
+                            <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 7. Mecanismos de defensa */}
+                    {aiAnalysis.autoanalisis_usuario.mecanismos_defensa && (
+                      <div>
+                        <p className="text-amber-300/50 text-[10px] font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
+                          <Shield className="w-3.5 h-3.5" /> Tus mecanismos de defensa
+                        </p>
+                        <div className="space-y-2 pl-3 border-l-2 border-amber-500/15">
+                          {aiAnalysis.autoanalisis_usuario.mecanismos_defensa.split('\n\n').map((p, i) => (
+                            <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 8. Tipo de pareja que repite */}
+                    {aiAnalysis.autoanalisis_usuario.tipo_pareja_que_repite && (
+                      <div>
+                        <p className="text-orange-300/50 text-[10px] font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
+                          <Repeat className="w-3.5 h-3.5" /> El tipo de pareja que repites
+                        </p>
+                        <div className="space-y-2 pl-3 border-l-2 border-orange-500/15">
+                          {aiAnalysis.autoanalisis_usuario.tipo_pareja_que_repite.split('\n\n').map((p, i) => (
+                            <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 9. Núcleo del patrón */}
+                    {aiAnalysis.autoanalisis_usuario.nucleo_del_patron && (
+                      <div className="mt-2 p-5 rounded-xl border border-fuchsia-500/15 bg-fuchsia-500/[0.04]">
+                        <p className="text-fuchsia-300/60 text-[10px] font-medium uppercase tracking-wider mb-3 flex items-center gap-2">
+                          <Zap className="w-3.5 h-3.5" /> El núcleo de tu patrón
+                        </p>
+                        <div className="space-y-2">
+                          {aiAnalysis.autoanalisis_usuario.nucleo_del_patron.split('\n\n').map((p, i) => (
+                            <p key={i} className="text-white/60 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 10. Cierre transformador */}
+                    {aiAnalysis.autoanalisis_usuario.cierre_transformador && (
+                      <div className="mt-2 p-5 rounded-xl border border-emerald-500/15 bg-emerald-500/[0.03]">
+                        <p className="text-emerald-300/60 text-[10px] font-medium uppercase tracking-wider mb-3 flex items-center gap-2">
+                          <Sparkles className="w-3.5 h-3.5" /> Tu camino transformador
+                        </p>
+                        <div className="space-y-2">
+                          {aiAnalysis.autoanalisis_usuario.cierre_transformador.split('\n\n').map((p, i) => (
+                            <p key={i} className="text-white/55 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+
+              {/* ═══ RAPPORT — BIENVENIDA EMPÁTICA ═══ */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                className="p-6 lg:p-8 rounded-2xl border border-violet-500/15 bg-gradient-to-br from-violet-500/[0.04] via-fuchsia-500/[0.02] to-transparent relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/40 via-fuchsia-500/30 to-violet-500/40" />
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/15 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+                    <Heart className="w-5 h-5 text-violet-400/70" />
+                  </div>
+                  <div className="space-y-3">
+                    <h2 className="text-white/80 text-base font-medium">Gracias por compartir tu historia</h2>
+                    <p className="text-white/50 text-sm font-light leading-relaxed">Lo que compartiste aquí es valioso y único. Este análisis está diseñado para ayudarte a comprender cómo amas, qué patrones se repiten en tu relación, y qué posibilidades de crecimiento existen.</p>
+                    {aiAnalysis.radiografia_inicial && (
+                      <div className="pt-3 border-t border-white/5">
+                        <p className="text-white/35 text-xs font-medium uppercase tracking-wider mb-2">Lo que percibimos de tu relación</p>
+                        <p className="text-white/50 text-sm font-light leading-relaxed italic">{renderBold(aiAnalysis.radiografia_inicial.split('\n\n')[0])}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
 
               {/* ═══ 1. RADAR PSICOLÓGICO DEL VÍNCULO ═══ */}
               {aiAnalysis.dimensiones && (
@@ -1072,7 +1653,351 @@ const RadiografiaPremiumPage = () => {
                 </motion.div>
               )}
 
-              {/* ═══ 3. ESTADO ACTUAL — Bar chart ═══ */}
+              {/* ═══ 3. ANÁLISIS POR ENFOQUE PSICOLÓGICO (11 corrientes) ═══ */}
+              {aiAnalysis.lecturas_por_enfoque && (() => {
+                const AUTHOR_CONFIG = [
+                  { key: 'gottman', icon: Shield, border: 'border-blue-500/10', bg: 'from-blue-500/[0.02]', line: 'from-blue-500/20', iconBg: 'bg-blue-500/10 border-blue-500/15', iconColor: 'text-blue-400/60', barFill: '#3b82f6', radar: '#60a5fa' },
+                  { key: 'sue_johnson', icon: Heart, border: 'border-rose-500/10', bg: 'from-rose-500/[0.02]', line: 'from-rose-500/20', iconBg: 'bg-rose-500/10 border-rose-500/15', iconColor: 'text-rose-400/60', barFill: '#f43f5e', radar: '#fb7185' },
+                  { key: 'perel', icon: Flame, border: 'border-pink-500/10', bg: 'from-pink-500/[0.02]', line: 'from-pink-500/20', iconBg: 'bg-pink-500/10 border-pink-500/15', iconColor: 'text-pink-400/60', barFill: '#ec4899', radar: '#f472b6' },
+                  { key: 'levine', icon: Anchor, border: 'border-amber-500/10', bg: 'from-amber-500/[0.02]', line: 'from-amber-500/20', iconBg: 'bg-amber-500/10 border-amber-500/15', iconColor: 'text-amber-400/60', barFill: '#f59e0b', radar: '#fbbf24' },
+                  { key: 'hendrix', icon: Repeat, border: 'border-orange-500/10', bg: 'from-orange-500/[0.02]', line: 'from-orange-500/20', iconBg: 'bg-orange-500/10 border-orange-500/15', iconColor: 'text-orange-400/60', barFill: '#f97316', radar: '#fb923c' },
+                  { key: 'tatkin', icon: Activity, border: 'border-teal-500/10', bg: 'from-teal-500/[0.02]', line: 'from-teal-500/20', iconBg: 'bg-teal-500/10 border-teal-500/15', iconColor: 'text-teal-400/60', barFill: '#14b8a6', radar: '#2dd4bf' },
+                  { key: 'chapman', icon: Gift, border: 'border-red-500/10', bg: 'from-red-500/[0.02]', line: 'from-red-500/20', iconBg: 'bg-red-500/10 border-red-500/15', iconColor: 'text-red-400/60', barFill: '#ef4444', radar: '#f87171' },
+                  { key: 'sternberg', icon: Star, border: 'border-violet-500/10', bg: 'from-violet-500/[0.02]', line: 'from-violet-500/20', iconBg: 'bg-violet-500/10 border-violet-500/15', iconColor: 'text-violet-400/60', barFill: '#8b5cf6', radar: '#a78bfa' },
+                  { key: 'schnarch', icon: Compass, border: 'border-emerald-500/10', bg: 'from-emerald-500/[0.02]', line: 'from-emerald-500/20', iconBg: 'bg-emerald-500/10 border-emerald-500/15', iconColor: 'text-emerald-400/60', barFill: '#10b981', radar: '#34d399' },
+                  { key: 'real', icon: Scale, border: 'border-cyan-500/10', bg: 'from-cyan-500/[0.02]', line: 'from-cyan-500/20', iconBg: 'bg-cyan-500/10 border-cyan-500/15', iconColor: 'text-cyan-400/60', barFill: '#06b6d4', radar: '#22d3ee' },
+                  { key: 'freud_lacan', icon: Brain, border: 'border-purple-500/10', bg: 'from-purple-500/[0.02]', line: 'from-purple-500/20', iconBg: 'bg-purple-500/10 border-purple-500/15', iconColor: 'text-purple-400/60', barFill: '#a855f7', radar: '#c084fc' }
+                ]
+                const radarData = AUTHOR_CONFIG
+                  .filter(a => aiAnalysis.lecturas_por_enfoque[a.key])
+                  .map(a => ({
+                    subject: (aiAnalysis.lecturas_por_enfoque[a.key].titulo || a.key).split('(')[0].split('–')[0].trim().split(' ').slice(0, 2).join(' '),
+                    score: aiAnalysis.lecturas_por_enfoque[a.key].puntuacion ?? 50,
+                    fill: a.barFill,
+                    fullMark: 100
+                  }))
+                return (
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-violet-500/15" />
+                    <h2 className="text-xs font-medium text-violet-300/50 uppercase tracking-[0.2em]">Análisis por Enfoque Psicológico</h2>
+                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-violet-500/15" />
+                  </div>
+                  <p className="text-white/35 text-sm font-light text-center mb-8">11 perspectivas teóricas que iluminan cada dimensión de tu vínculo</p>
+
+                  {/* ── 3 Selectable chart views — professional ── */}
+                  {radarData.length > 0 && (
+                    <div className="mb-10 p-6 lg:p-8 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.03] via-fuchsia-500/[0.02] to-transparent relative overflow-hidden">
+                      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.06),transparent_70%)]" />
+                      <div className="relative">
+                        <p className="text-white/50 text-xs font-medium uppercase tracking-wider mb-2 text-center">Mapa Integral de Corrientes</p>
+                        <p className="text-white/30 text-[11px] font-light text-center mb-5">Elige la visualización que prefieras para explorar tu perfil</p>
+
+                        {/* Chart selector tabs */}
+                        <div className="flex items-center justify-center gap-2 mb-6">
+                          {[
+                            { id: 'radar', label: '◎ Radar' },
+                            { id: 'polar', label: '❋ Rosa polar' },
+                            { id: 'bars', label: '▮ Barras' }
+                          ].map(tab => (
+                            <button key={tab.id} onClick={() => setChartViewMode(tab.id)}
+                              className={`px-5 py-2.5 rounded-xl text-xs font-medium transition-all duration-300 ${chartViewMode === tab.id
+                                ? 'bg-gradient-to-r from-violet-500/25 to-fuchsia-500/20 border border-violet-500/40 text-violet-200/90 shadow-lg shadow-violet-500/15'
+                                : 'border border-white/8 bg-white/[0.02] text-white/35 hover:text-white/55 hover:border-white/15'}`}>
+                              {tab.label}
+                            </button>
+                          ))}
+                        </div>
+
+                        {/* Chart: Radar view — with gradient fill + glow dots */}
+                        {chartViewMode === 'radar' && (
+                          <ResponsiveContainer width="100%" height={420}>
+                            <RechartRadar cx="50%" cy="50%" outerRadius="78%" data={radarData}>
+                              <defs>
+                                <radialGradient id="radarAreaGrad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                                  <stop offset="0%" stopColor="rgba(139,92,246,0.35)" />
+                                  <stop offset="100%" stopColor="rgba(139,92,246,0.05)" />
+                                </radialGradient>
+                                <filter id="glow">
+                                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                  <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                                </filter>
+                              </defs>
+                              <PolarGrid stroke="rgba(255,255,255,0.06)" radialLines={false} />
+                              <PolarAngleAxis dataKey="subject" tick={{ fill: 'rgba(255,255,255,0.55)', fontSize: 11, fontWeight: 400 }} />
+                              <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: 'rgba(255,255,255,0.12)', fontSize: 9 }} axisLine={false} />
+                              <Radar name="Puntuación" dataKey="score" stroke="rgba(139,92,246,0.9)" fill="url(#radarAreaGrad)" strokeWidth={2.5}
+                                dot={{ r: 5, fill: '#a78bfa', fillOpacity: 1, stroke: '#8b5cf6', strokeWidth: 2, filter: 'url(#glow)' }}
+                                activeDot={{ r: 7, fill: '#c084fc', stroke: '#8b5cf6', strokeWidth: 2 }} />
+                              <Tooltip
+                                contentStyle={{ background: 'rgba(10,10,18,0.96)', border: '1px solid rgba(139,92,246,0.3)', borderRadius: '14px', fontSize: '13px', color: 'rgba(255,255,255,0.8)', boxShadow: '0 8px 32px rgba(139,92,246,0.15)' }}
+                                formatter={(val) => [`${val}%`, 'Puntuación']}
+                              />
+                            </RechartRadar>
+                          </ResponsiveContainer>
+                        )}
+
+                        {/* Chart: Polar / Rose area — dual layer with gradient */}
+                        {chartViewMode === 'polar' && (
+                          <ResponsiveContainer width="100%" height={420}>
+                            <RechartRadar cx="50%" cy="50%" outerRadius="78%" data={radarData}>
+                              <defs>
+                                <radialGradient id="polarAreaGrad" cx="50%" cy="50%" r="50%">
+                                  <stop offset="0%" stopColor="rgba(236,72,153,0.4)" />
+                                  <stop offset="60%" stopColor="rgba(139,92,246,0.2)" />
+                                  <stop offset="100%" stopColor="rgba(139,92,246,0.02)" />
+                                </radialGradient>
+                                <linearGradient id="polarStrokeGrad" x1="0" y1="0" x2="1" y2="1">
+                                  <stop offset="0%" stopColor="rgba(236,72,153,0.9)" />
+                                  <stop offset="100%" stopColor="rgba(139,92,246,0.9)" />
+                                </linearGradient>
+                                <filter id="softGlow">
+                                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                                  <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                                </filter>
+                              </defs>
+                              <PolarGrid stroke="rgba(255,255,255,0.05)" gridType="circle" />
+                              <PolarAngleAxis dataKey="subject" tick={{ fill: 'rgba(255,255,255,0.55)', fontSize: 11, fontWeight: 400 }} />
+                              <PolarRadiusAxis angle={90} domain={[0, 100]} tick={false} axisLine={false} />
+                              <Radar name="Puntuación" dataKey="score" stroke="url(#polarStrokeGrad)" fill="url(#polarAreaGrad)" strokeWidth={3}
+                                dot={{ r: 6, fill: '#ec4899', fillOpacity: 1, stroke: 'rgba(236,72,153,0.4)', strokeWidth: 3, filter: 'url(#softGlow)' }}
+                                activeDot={{ r: 8, fill: '#f472b6', stroke: '#ec4899', strokeWidth: 2 }} />
+                              <Tooltip
+                                contentStyle={{ background: 'rgba(10,10,18,0.96)', border: '1px solid rgba(236,72,153,0.3)', borderRadius: '14px', fontSize: '13px', color: 'rgba(255,255,255,0.8)', boxShadow: '0 8px 32px rgba(236,72,153,0.15)' }}
+                                formatter={(val) => [`${val}%`, 'Puntuación']}
+                              />
+                            </RechartRadar>
+                          </ResponsiveContainer>
+                        )}
+
+                        {/* Chart: Bars view — horizontal with individual gradients + score labels */}
+                        {chartViewMode === 'bars' && (
+                          <div>
+                            <ResponsiveContainer width="100%" height={radarData.length * 44 + 20}>
+                              <BarChart data={radarData} margin={{ top: 5, right: 40, left: 0, bottom: 5 }} layout="vertical" barCategoryGap="20%">
+                                <defs>
+                                  {AUTHOR_CONFIG.map((a, i) => (
+                                    <linearGradient key={a.key} id={`barGrad${i}`} x1="0" y1="0" x2="1" y2="0">
+                                      <stop offset="0%" stopColor={a.barFill} stopOpacity={0.9} />
+                                      <stop offset="100%" stopColor={a.barFill} stopOpacity={0.4} />
+                                    </linearGradient>
+                                  ))}
+                                </defs>
+                                <XAxis type="number" domain={[0, 100]} tick={{ fill: 'rgba(255,255,255,0.15)', fontSize: 10 }} axisLine={false} tickLine={false} />
+                                <YAxis dataKey="subject" type="category"
+                                  tick={{ fill: 'rgba(255,255,255,0.55)', fontSize: 11, fontWeight: 400 }}
+                                  axisLine={false} tickLine={false} width={115} />
+                                <Tooltip
+                                  contentStyle={{ background: 'rgba(10,10,18,0.96)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '14px', fontSize: '13px', color: 'rgba(255,255,255,0.8)', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}
+                                  cursor={{ fill: 'rgba(255,255,255,0.02)', radius: 8 }}
+                                  formatter={(val) => [`${val}%`, 'Puntuación']}
+                                />
+                                <Bar dataKey="score" radius={[0, 10, 10, 0]} maxBarSize={22} label={{ position: 'right', fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: 500, formatter: (v) => `${v}%` }}>
+                                  {radarData.map((entry, i) => (
+                                    <Cell key={i} fill={`url(#barGrad${i})`} />
+                                  ))}
+                                </Bar>
+                              </BarChart>
+                            </ResponsiveContainer>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ── Individual author cards — full-width, structured ── */}
+                  <div className="grid grid-cols-1 gap-6">
+                    {AUTHOR_CONFIG.map(({ key, icon: Icon, border, bg, line, iconBg, iconColor, barFill }) => {
+                      const data = aiAnalysis.lecturas_por_enfoque[key]
+                      if (!data) return null
+                      const score = data.puntuacion ?? 50
+                      const barColor = score >= 60 ? 'bg-emerald-500' : score >= 40 ? 'bg-amber-500' : 'bg-red-500'
+                      const isSternberg = key === 'sternberg'
+                      const isFreudLacan = key === 'freud_lacan'
+                      const isChapman = key === 'chapman'
+                      const isLevine = key === 'levine'
+                      const isGottman = key === 'gottman'
+                      const displayTitle = isFreudLacan ? 'Psicoanálisis' : data.titulo
+                      const displaySubtitle = isFreudLacan ? 'Fantasma relacional, mecanismos de defensa y patrones inconscientes' : data.enfoque
+
+                      /* Bold-initial renderer: first sentence bold, rest normal */
+                      const renderBoldInitial = (text) => {
+                        if (!text) return null
+                        const firstDot = text.indexOf('.')
+                        if (firstDot > 0 && firstDot < 120) {
+                          return <><strong className="text-white/65 font-semibold">{text.slice(0, firstDot + 1)}</strong>{' '}<span>{text.slice(firstDot + 1).trim()}</span></>
+                        }
+                        const words = text.split(' ')
+                        if (words.length > 3) {
+                          return <><strong className="text-white/65 font-semibold">{words.slice(0, 3).join(' ')}:</strong>{' '}<span>{words.slice(3).join(' ')}</span></>
+                        }
+                        return renderBold(text)
+                      }
+
+                      return (
+                        <motion.div key={key}
+                          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                          className={`p-6 md:p-8 rounded-2xl border ${border} bg-gradient-to-br ${bg} to-transparent relative overflow-hidden`}>
+                          <div className={`absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r ${line} to-transparent`} />
+
+                          {/* Header row: icon + title + score badge */}
+                          <div className="flex items-start justify-between mb-5">
+                            <div className="flex items-center gap-3">
+                              <div className={`w-10 h-10 rounded-xl ${iconBg} border flex items-center justify-center`}>
+                                <Icon className={`w-5 h-5 ${iconColor}`} strokeWidth={1.5} />
+                              </div>
+                              <div>
+                                <h3 className="text-white/80 text-base font-semibold">{displayTitle}</h3>
+                                <p className="text-white/35 text-xs font-light mt-0.5 max-w-md">{displaySubtitle}</p>
+                              </div>
+                            </div>
+                            {!isSternberg && (
+                              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border ${border} bg-white/[0.02]`}>
+                                <div className={`w-2 h-2 rounded-full ${barColor}`} style={{ opacity: 0.8 }} />
+                                <span className="text-white/65 text-sm font-semibold tabular-nums">{score}%</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Score bar — Sternberg triple, others single */}
+                          {isSternberg ? (
+                            <div className="grid grid-cols-3 gap-3 mb-5">
+                              {[
+                                { label: 'Intimidad', val: data.puntuacion_intimidad ?? 50 },
+                                { label: 'Pasión', val: data.puntuacion_pasion ?? 50 },
+                                { label: 'Compromiso', val: data.puntuacion_compromiso ?? 50 }
+                              ].map(({ label, val }) => (
+                                <div key={label} className="text-center">
+                                  <p className="text-white/50 text-[11px] font-light mb-1.5">{label}</p>
+                                  <div className="h-2 bg-white/[0.06] rounded-full overflow-hidden">
+                                    <div className={`h-full rounded-full ${val >= 60 ? 'bg-emerald-500' : val >= 40 ? 'bg-amber-500' : 'bg-red-500'}`}
+                                      style={{ width: `${val}%`, opacity: 0.7 }} />
+                                  </div>
+                                  <p className="text-white/60 text-xs font-semibold mt-1">{val}%</p>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-3 mb-5">
+                              <div className="flex-1 h-2 bg-white/[0.06] rounded-full overflow-hidden">
+                                <div className={`h-full rounded-full ${barColor}`} style={{ width: `${score}%`, opacity: 0.7 }} />
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Specialized visualizations */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                            {/* Left column: special vis if any */}
+                            {isGottman && data.indicadores && data.indicadores.length >= 4 && (
+                              <div className="p-4 rounded-xl border border-blue-500/10 bg-blue-500/[0.03] space-y-2.5">
+                                <p className="text-blue-300/60 text-[10px] font-medium uppercase tracking-wider">Los 4 jinetes</p>
+                                {['Crítica', 'Desprecio', 'Actitud defensiva', 'Evasión'].map((jinete, idx) => (
+                                  <div key={jinete} className="flex items-center gap-2">
+                                    <span className="text-white/40 text-[11px] font-light w-28 text-right">{jinete}</span>
+                                    <div className="flex-1 h-2 bg-white/[0.06] rounded-full overflow-hidden">
+                                      <div className="h-full rounded-full bg-blue-500" style={{ width: `${Math.min(100, 20 + idx * 15 + (score > 50 ? 10 : 30))}%`, opacity: 0.5 }} />
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {isSternberg && (
+                              <div className="flex justify-center items-center p-4 rounded-xl border border-violet-500/10 bg-violet-500/[0.03]">
+                                <svg viewBox="0 0 200 180" className="w-44 h-40">
+                                  <polygon points="100,15 15,165 185,165" fill="none" stroke="rgba(139,92,246,0.15)" strokeWidth="1.5" />
+                                  <polygon
+                                    points={`100,${15 + (100 - (data.puntuacion_intimidad ?? 50)) * 0.75} ${15 + (100 - (data.puntuacion_pasion ?? 50)) * 0.85},165 ${185 - (100 - (data.puntuacion_compromiso ?? 50)) * 0.85},165`}
+                                    fill="rgba(139,92,246,0.12)" stroke="rgba(139,92,246,0.5)" strokeWidth="1.5" />
+                                  <text x="100" y="10" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="9" fontWeight="300">Intimidad</text>
+                                  <text x="5" y="178" textAnchor="start" fill="rgba(255,255,255,0.4)" fontSize="9" fontWeight="300">Pasión</text>
+                                  <text x="195" y="178" textAnchor="end" fill="rgba(255,255,255,0.4)" fontSize="9" fontWeight="300">Compromiso</text>
+                                </svg>
+                              </div>
+                            )}
+
+                            {isChapman && (data.lenguaje_usuario || data.lenguaje_pareja) && (
+                              <>
+                                {data.lenguaje_usuario && (
+                                  <div className="px-4 py-3 rounded-xl border border-red-500/10 bg-red-500/[0.04]">
+                                    <p className="text-red-300/60 text-[10px] font-medium uppercase tracking-wider mb-1">Tu lenguaje de amor</p>
+                                    <p className="text-white/65 text-sm font-light">{data.lenguaje_usuario}</p>
+                                  </div>
+                                )}
+                                {data.lenguaje_pareja && (
+                                  <div className="px-4 py-3 rounded-xl border border-red-500/10 bg-red-500/[0.04]">
+                                    <p className="text-red-300/60 text-[10px] font-medium uppercase tracking-wider mb-1">Su lenguaje de amor</p>
+                                    <p className="text-white/65 text-sm font-light">{data.lenguaje_pareja}</p>
+                                  </div>
+                                )}
+                              </>
+                            )}
+
+                            {isLevine && data.estilo_apego && (
+                              <div className="px-4 py-3 rounded-xl border border-amber-500/10 bg-amber-500/[0.04]">
+                                <p className="text-amber-300/60 text-[10px] font-medium uppercase tracking-wider mb-1">Estilo de apego detectado</p>
+                                <p className="text-white/65 text-sm font-medium">{data.estilo_apego}</p>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Indicadores — structured as bold-initial list */}
+                          {data.indicadores && data.indicadores.length > 0 && (
+                            <div className="mb-5">
+                              <p className="text-white/40 text-[10px] font-medium uppercase tracking-wider mb-3">Puntos clave</p>
+                              <ul className="space-y-2">
+                                {data.indicadores.map((ind, i) => (
+                                  <li key={i} className="flex items-start gap-2.5 text-white/50 text-sm font-light leading-relaxed">
+                                    <span className="mt-1.5 text-[8px]" style={{ color: barFill, opacity: 0.6 }}>●</span>
+                                    <span>{renderBoldInitial(ind)}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* Interpretación — bold-initial style */}
+                          <div className="pt-4 border-t border-white/5">
+                            <p className="text-white/40 text-[10px] font-medium uppercase tracking-wider mb-3">Interpretación personalizada</p>
+                            {isFreudLacan ? (
+                              <div className="space-y-4">
+                                {data.interpretacion_freud && (
+                                  <div className="pl-3 border-l-2 border-purple-500/20">
+                                    <p className="text-purple-300/50 text-[10px] font-medium uppercase tracking-wider mb-1.5">Lectura freudiana</p>
+                                    <p className="text-white/50 text-sm font-light leading-relaxed">{renderBoldInitial(data.interpretacion_freud)}</p>
+                                  </div>
+                                )}
+                                {data.interpretacion_lacan && (
+                                  <div className="pl-3 border-l-2 border-indigo-500/20">
+                                    <p className="text-indigo-300/50 text-[10px] font-medium uppercase tracking-wider mb-1.5">Lectura lacaniana</p>
+                                    <p className="text-white/50 text-sm font-light leading-relaxed">{renderBoldInitial(data.interpretacion_lacan)}</p>
+                                  </div>
+                                )}
+                                {data.interpretacion && !data.interpretacion_freud && (
+                                  <div className="space-y-2">
+                                    {data.interpretacion.split('\n\n').map((p, i) => (
+                                      <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBoldInitial(p)}</p>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="space-y-2.5">
+                                {(data.interpretacion || '').split('\n\n').map((p, i) => (
+                                  <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBoldInitial(p)}</p>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </motion.div>
+                      )
+                    })}
+                  </div>
+                </motion.div>
+                )
+              })()}
+
+              {/* ═══ 4. ESTADO ACTUAL ═══ */}
               {aiAnalysis.dimensiones && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                   <div className="flex items-center gap-3 mb-6">
@@ -1102,7 +2027,7 @@ const RadiografiaPremiumPage = () => {
                 </motion.div>
               )}
 
-              {/* ═══ 4. DINÁMICA DEL CONFLICTO ═══ */}
+              {/* ═══ 5. DINÁMICA DEL CONFLICTO ═══ */}
               {aiAnalysis.dinamica_conflicto && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                   <div className="flex items-center gap-3 mb-6">
@@ -1137,7 +2062,7 @@ const RadiografiaPremiumPage = () => {
                 </motion.div>
               )}
 
-              {/* ═══ 5. ENERGÍA EMOCIONAL Y ERÓTICA ═══ */}
+              {/* ═══ 6. ENERGÍA EMOCIONAL Y ERÓTICA ═══ */}
               {aiAnalysis.energia_vinculo && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                   <div className="flex items-center gap-3 mb-6">
@@ -1166,7 +2091,7 @@ const RadiografiaPremiumPage = () => {
                 </motion.div>
               )}
 
-              {/* ═══ 6. DIRECCIÓN PROBABLE ═══ */}
+              {/* ═══ 7. DIRECCIÓN PROBABLE ═══ */}
               {aiAnalysis.direccion_probable && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                   <div className="flex items-center gap-3 mb-6">
@@ -1184,7 +2109,7 @@ const RadiografiaPremiumPage = () => {
                 </motion.div>
               )}
 
-              {/* ═══ 7. TABLA DIAGNÓSTICA ═══ */}
+              {/* ═══ 8. TABLA DIAGNÓSTICA ═══ */}
               {aiAnalysis.tabla_diagnostica && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                   <div className="flex items-center gap-3 mb-6">
@@ -1216,7 +2141,7 @@ const RadiografiaPremiumPage = () => {
                 </motion.div>
               )}
 
-              {/* ═══ 8. LECTURA PROFUNDA ═══ */}
+              {/* ═══ 9. LECTURA PROFUNDA ═══ */}
               {aiAnalysis.analisis_profundo && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                   <div className="flex items-center gap-3 mb-6">
@@ -1253,7 +2178,7 @@ const RadiografiaPremiumPage = () => {
                 </motion.div>
               )}
 
-              {/* ═══ 9. LECTURA PSICOANALÍTICA ═══ */}
+              {/* ═══ 10. LECTURA PSICOANALÍTICA ═══ */}
               {aiAnalysis.lectura_psicoanalitica && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                   <div className="flex items-center gap-3 mb-6">
@@ -1292,7 +2217,7 @@ const RadiografiaPremiumPage = () => {
                 </motion.div>
               )}
 
-              {/* ═══ 10. FORTALEZAS ═══ */}
+              {/* ═══ 11. FORTALEZAS ═══ */}
               {aiAnalysis.fortalezas?.length > 0 && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                   <div className="flex items-center gap-3 mb-6">
@@ -1313,7 +2238,7 @@ const RadiografiaPremiumPage = () => {
                 </motion.div>
               )}
 
-              {/* ═══ 11. SEÑALES DE RIESGO ═══ */}
+              {/* ═══ 12. SEÑALES DE RIESGO ═══ */}
               {aiAnalysis.riesgos?.length > 0 && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                   <div className="flex items-center gap-3 mb-6">
@@ -1334,7 +2259,7 @@ const RadiografiaPremiumPage = () => {
                 </motion.div>
               )}
 
-              {/* ═══ 12. SÍNTESIS FINAL ═══ */}
+              {/* ═══ 13. SÍNTESIS FINAL ═══ */}
               {aiAnalysis.sintesis_final && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                   className="p-6 lg:p-8 rounded-2xl border border-cyan-500/15 bg-gradient-to-br from-cyan-500/[0.03] to-transparent relative overflow-hidden">
@@ -1357,85 +2282,6 @@ const RadiografiaPremiumPage = () => {
                             ))}
                           </div>
                         </div>
-                      )
-                    })}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* ═══ 13. ANÁLISIS POR ENFOQUE PSICOLÓGICO ═══ */}
-              {aiAnalysis.lecturas_por_enfoque && (
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <div className="flex items-center gap-3 mb-8">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-violet-500/15" />
-                    <h2 className="text-xs font-medium text-violet-300/50 uppercase tracking-[0.2em]">Análisis por Enfoque Psicológico</h2>
-                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-violet-500/15" />
-                  </div>
-                  <p className="text-white/35 text-sm font-light text-center mb-8">Cada perspectiva teórica ilumina una dimensión diferente de tu vínculo</p>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                    {[
-                      { key: 'gottman', icon: Shield, border: 'border-blue-500/10', bg: 'from-blue-500/[0.02]', line: 'from-blue-500/20', iconBg: 'bg-blue-500/10 border-blue-500/15', iconColor: 'text-blue-400/60' },
-                      { key: 'bowlby', icon: Heart, border: 'border-amber-500/10', bg: 'from-amber-500/[0.02]', line: 'from-amber-500/20', iconBg: 'bg-amber-500/10 border-amber-500/15', iconColor: 'text-amber-400/60' },
-                      { key: 'sue_johnson', icon: Users, border: 'border-rose-500/10', bg: 'from-rose-500/[0.02]', line: 'from-rose-500/20', iconBg: 'bg-rose-500/10 border-rose-500/15', iconColor: 'text-rose-400/60' },
-                      { key: 'perel', icon: Flame, border: 'border-pink-500/10', bg: 'from-pink-500/[0.02]', line: 'from-pink-500/20', iconBg: 'bg-pink-500/10 border-pink-500/15', iconColor: 'text-pink-400/60' },
-                      { key: 'sternberg', icon: Star, border: 'border-violet-500/10', bg: 'from-violet-500/[0.02]', line: 'from-violet-500/20', iconBg: 'bg-violet-500/10 border-violet-500/15', iconColor: 'text-violet-400/60' },
-                      { key: 'tatkin', icon: Activity, border: 'border-teal-500/10', bg: 'from-teal-500/[0.02]', line: 'from-teal-500/20', iconBg: 'bg-teal-500/10 border-teal-500/15', iconColor: 'text-teal-400/60' },
-                      { key: 'freud', icon: Brain, border: 'border-purple-500/10', bg: 'from-purple-500/[0.02]', line: 'from-purple-500/20', iconBg: 'bg-purple-500/10 border-purple-500/15', iconColor: 'text-purple-400/60' },
-                      { key: 'lacan', icon: Eye, border: 'border-indigo-500/10', bg: 'from-indigo-500/[0.02]', line: 'from-indigo-500/20', iconBg: 'bg-indigo-500/10 border-indigo-500/15', iconColor: 'text-indigo-400/60' }
-                    ].map(({ key, icon: Icon, border, bg, line, iconBg, iconColor }) => {
-                      const data = aiAnalysis.lecturas_por_enfoque[key]
-                      if (!data) return null
-                      const score = data.puntuacion ?? 50
-                      const barColor = score >= 60 ? 'bg-emerald-500' : score >= 40 ? 'bg-amber-500' : 'bg-red-500'
-                      const isSternberg = key === 'sternberg'
-                      return (
-                        <motion.div key={key}
-                          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                          className={`p-5 rounded-2xl border ${border} bg-gradient-to-br ${bg} to-transparent relative overflow-hidden`}>
-                          <div className={`absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r ${line} to-transparent`} />
-                          <div className="flex items-start justify-between mb-3">
-                            <div className="flex items-center gap-2.5">
-                              <div className={`w-8 h-8 rounded-xl ${iconBg} border flex items-center justify-center`}>
-                                <Icon className={`w-4 h-4 ${iconColor}`} strokeWidth={1.5} />
-                              </div>
-                              <div>
-                                <h3 className="text-white/75 text-sm font-medium">{data.titulo}</h3>
-                                <p className="text-white/35 text-[10px] font-light">{data.enfoque}</p>
-                              </div>
-                            </div>
-                          </div>
-                          {/* Score bar */}
-                          {isSternberg ? (
-                            <div className="grid grid-cols-3 gap-2 mb-4">
-                              {[
-                                { label: 'Intimidad', val: data.puntuacion_intimidad ?? 50 },
-                                { label: 'Pasión', val: data.puntuacion_pasion ?? 50 },
-                                { label: 'Compromiso', val: data.puntuacion_compromiso ?? 50 }
-                              ].map(({ label, val }) => (
-                                <div key={label} className="text-center">
-                                  <p className="text-white/50 text-[10px] font-light mb-1">{label}</p>
-                                  <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
-                                    <div className={`h-full rounded-full ${val >= 60 ? 'bg-emerald-500' : val >= 40 ? 'bg-amber-500' : 'bg-red-500'}`}
-                                      style={{ width: `${val}%`, opacity: 0.7 }} />
-                                  </div>
-                                  <p className="text-white/60 text-[10px] font-medium mt-0.5">{val}%</p>
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <div className="flex items-center gap-3 mb-4">
-                              <div className="flex-1 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
-                                <div className={`h-full rounded-full ${barColor}`} style={{ width: `${score}%`, opacity: 0.7 }} />
-                              </div>
-                              <span className="text-white/60 text-xs font-medium tabular-nums w-8 text-right">{score}%</span>
-                            </div>
-                          )}
-                          <div className="space-y-2">
-                            {(data.interpretacion || '').split('\n\n').map((p, i) => (
-                              <p key={i} className="text-white/45 text-sm font-light leading-relaxed">{renderBold(p)}</p>
-                            ))}
-                          </div>
-                        </motion.div>
                       )
                     })}
                   </div>

@@ -62,7 +62,7 @@ const StorePage = () => {
       category: 'Diagnóstico Psicológico',
       price: 'Desde $349 MXN',
       duration: '~35 min',
-      image: '/TEST PAREJA/TERMOMETRO AMOR.jpg',
+      image: '/productos/radar de pareja/imagenes 12 psicologos/fada3a35-4083-451d-939f-bf6f60a721d4.jpg',
       description: '44 preguntas narrativas analizadas por inteligencia artificial desde la perspectiva de 12 psicólogos especializados en relaciones (Bowlby, Gottman, Sternberg, Perel, Schnarch y más). Radar de 12 dimensiones, mapa de apego, sub-scores y análisis clínico profundo.',
       shortDesc: '¿Tu relación ya no se siente igual? Un test que cruza 12 dimensiones psicológicas para mostrarte exactamente qué está pasando.',
       benefits: [
