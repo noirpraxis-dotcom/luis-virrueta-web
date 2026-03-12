@@ -13,6 +13,7 @@
     "@nivo/sankey": "^0.99.0",
     "@studio-freight/lenis": "^1.0.42",
     "@supabase/supabase-js": "^2.89.0",
+    "d3": "^7.9.0",
     "dotenv": "^17.2.3",
     "firebase": "^12.10.0",
     "framer-motion": "^11.5.4",

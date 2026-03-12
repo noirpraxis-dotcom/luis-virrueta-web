@@ -331,8 +331,9 @@ const TASK_DURATIONS_MS = [6200, 6500, 6000, 7200, 6600, 6000, 7400, 6600, 5800,
 // ─── STRIPE PAYMENT LINKS ──────────────────────────────────────────
 
 const STRIPE_LINKS = {
-  individual: 'https://buy.stripe.com/28EfZh73503o5wzaed9AA03',
-  pareja: 'https://buy.stripe.com/4gMfZh2MP5nIe35fyx9AA04',
+  descubre: 'https://buy.stripe.com/28EfZh73503o5wzaed9AA03',
+  solo: 'https://buy.stripe.com/4gMfZh2MP5nIe35fyx9AA04',
+  losdos: 'https://buy.stripe.com/9B64gz4UXeYigbdfyx9AA05',
   consulta: 'https://buy.stripe.com/9B64gz4UXeYigbdfyx9AA05'
 }
 
@@ -342,8 +343,9 @@ const DISCOUNT_CODES = {
   'LUISPRO': { discount: 1.0, label: 'Acceso gratuito (código profesional)' }
 }
 
-const PRODUCT_PRICE_INDIVIDUAL = 349
-const PRODUCT_PRICE_PAREJA = 549
+const PRODUCT_PRICE_DESCUBRE = 199
+const PRODUCT_PRICE_SOLO = 349
+const PRODUCT_PRICE_LOSDOS = 549
 const PRODUCT_PRICE_CONSULTA = 1199
 const DEMO_QUESTION_LIMIT = 5
 
@@ -1027,15 +1029,15 @@ const DiagnosticoRelacionalPage = () => {
     if (type === 'free') {
       // LUISPRO code — full free access
       setIsPurchased(true)
-      setPurchaseType('individual')
+      setPurchaseType('solo')
       sessionStorage.setItem('diagnostico_relacional_purchased', 'true')
-      sessionStorage.setItem('diagnostico_relacional_type', 'individual')
+      sessionStorage.setItem('diagnostico_relacional_type', 'solo')
       setStage('instructions')
       scrollToTop()
       return
     }
-    // Stripe Payment Link — redirect to Stripe
-    const link = type === 'pareja' ? STRIPE_LINKS.pareja : STRIPE_LINKS.individual
+    // Stripe Payment Link — redirect by type
+    const link = type === 'losdos' ? STRIPE_LINKS.losdos : type === 'solo' ? STRIPE_LINKS.solo : STRIPE_LINKS.descubre
     window.location.href = link
   }, [scrollToTop])
 
@@ -2010,23 +2012,24 @@ const DiagnosticoRelacionalPage = () => {
               ═══════════════════════════════════════════════════════ */}
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 className="text-center pb-20">
-                <p className="text-white/35 text-sm uppercase tracking-[0.15em] mb-3">Elige tu plan</p>
-                <h2 className="text-2xl lg:text-3xl font-light text-white/80 mb-3">Invierte en entender tu relación</h2>
-                <p className="text-white/50 text-lg font-light mb-3 max-w-xl mx-auto">Un diagnóstico que analiza tu relación desde 12 perspectivas psicológicas simultáneas.</p>
-                <p className="text-white/30 text-sm font-light mb-10 max-w-lg mx-auto">Gottman · Bowlby · Sternberg · Perel · Johnson · y 7 especialistas más analizan tu caso en un solo reporte.</p>
+                <p className="text-white/35 text-sm uppercase tracking-[0.15em] mb-3">Elige tu radiografía</p>
+                <h2 className="text-2xl lg:text-3xl font-light text-white/80 mb-3">¿Qué necesitas entender?</h2>
+                <p className="text-white/50 text-lg font-light mb-3 max-w-xl mx-auto">No es un test de compatibilidad. Es una radiografía profunda de cómo amas, qué repites y hacia dónde va tu relación.</p>
+                <p className="text-white/30 text-sm font-light mb-10 max-w-lg mx-auto">11 corrientes psicológicas analizan tu caso simultáneamente: Gottman · Perel · Sternberg · Johnson · Lacan y más.</p>
 
                 <div className="hidden sm:grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
-                  {/* Individual */}
+                  {/* Radiografía de tu forma de amar */}
                   <div className="p-8 rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left">
-                    <p className="text-white/40 text-xs uppercase tracking-[0.15em] mb-2">Individual</p>
+                    <p className="text-white/40 text-xs uppercase tracking-[0.15em] mb-1">Individual</p>
+                    <p className="text-fuchsia-300/70 text-sm font-medium mb-3 italic">"¿Por qué siempre me pasa lo mismo?"</p>
                     <div className="flex items-baseline gap-2 mb-1">
-                      <span className="text-white/30 text-lg line-through">$699</span>
-                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_INDIVIDUAL} <span className="text-lg text-white/35">MXN</span></p>
+                      <span className="text-white/30 text-lg line-through">$399</span>
+                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_DESCUBRE} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light mb-5">Tu relación analizada por 11 corrientes clínicas</p>
+                    <p className="text-white/40 text-sm font-light mb-5">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
                     <ul className="space-y-2 mb-6">
-                      {['12 dimensiones: Gottman, Sternberg, Perel y 8 más', 'Radar de 12 ejes + mapa de apego + scores', 'Análisis narrativo por cada dimensión', 'Reporte PDF profesional descargable'].map((item, i) => (
+                      {['Descubre por qué eliges siempre el mismo tipo de pareja', 'Mapa de tu estilo de apego y mecanismos de defensa', 'Radiografía de tus patrones inconscientes al amar', 'Reporte PDF con gráficas y análisis descargable'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
@@ -2037,24 +2040,25 @@ const DiagnosticoRelacionalPage = () => {
                       onClick={() => { setStage('checkout'); scrollToTop() }}
                       whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
-                      Comenzar
+                      Descubrir mi patrón
                     </motion.button>
                   </div>
-                  {/* Pareja */}
+                  {/* Radiografía de tu relación */}
                   <div className="p-8 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left relative overflow-hidden">
                     <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/50 to-fuchsia-500/50" />
-                    <div className="flex items-center gap-2 mb-2">
-                      <p className="text-violet-300/60 text-xs uppercase tracking-[0.15em]">Pareja</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/20 text-violet-300/70">Recomendado</span>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="text-violet-300/60 text-xs uppercase tracking-[0.15em]">Pareja — Solo</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/20 text-violet-300/70">Más elegido</span>
                     </div>
+                    <p className="text-violet-300/70 text-sm font-medium mb-3 italic">"Algo no está funcionando y no sé qué es"</p>
                     <div className="flex items-baseline gap-2 mb-1">
-                      <span className="text-white/30 text-lg line-through">$1,199</span>
-                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_PAREJA} <span className="text-lg text-white/35">MXN</span></p>
+                      <span className="text-white/30 text-lg line-through">$699</span>
+                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_SOLO} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
-                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-54% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light mb-5">Cada uno contesta por separado · Cada uno recibe su propio reporte</p>
+                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
+                    <p className="text-white/40 text-sm font-light mb-5">Tú contestas · Análisis profundo de lo que está pasando en tu relación</p>
                     <ul className="space-y-2 mb-6">
-                      {['2 reportes individuales — 11 corrientes cada uno', 'Cada reporte es privado: solo tú ves el tuyo', 'Comparación cruzada de patrones y dinámicas de pareja', 'El punto de partida ideal para terapia de pareja'].map((item, i) => (
+                      {['Entiende qué dinámicas invisibles están desgastando tu relación', '40 preguntas por voz + análisis de 11 corrientes psicológicas', 'Diagnóstico de hacia dónde va tu relación si nada cambia', 'Reporte PDF profesional con radar y gráficas'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
@@ -2065,62 +2069,54 @@ const DiagnosticoRelacionalPage = () => {
                       onClick={() => { setStage('checkout'); scrollToTop() }}
                       whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
-                      Comenzar en pareja
+                      Radiografiar mi relación
                     </motion.button>
                   </div>
-                  {/* Radiografía Premium */}
+                  {/* Radiografía cruzada de pareja */}
                   <div className="p-8 rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left relative overflow-hidden">
                     <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500/50 to-blue-500/50" />
-                    <div className="flex items-center gap-2 mb-2">
-                      <p className="text-cyan-300/60 text-xs uppercase tracking-[0.15em]">Premium</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/20 text-cyan-300/70">40 preguntas narrativas</span>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="text-cyan-300/60 text-xs uppercase tracking-[0.15em]">Pareja — Los dos</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/20 text-cyan-300/70">2 reportes</span>
                     </div>
+                    <p className="text-cyan-300/70 text-sm font-medium mb-3 italic">"Nos queremos pero no nos entendemos"</p>
                     <div className="flex items-baseline gap-2 mb-1">
-                      <p className="text-3xl font-light text-cyan-300">Con código</p>
+                      <span className="text-white/30 text-lg line-through">$1,099</span>
+                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_LOSDOS} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
-                    <p className="text-white/40 text-sm font-light mb-5">Análisis narrativo profundo · 12 dimensiones · 11 corrientes psicológicas</p>
+                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
+                    <p className="text-white/40 text-sm font-light mb-5">Cada uno contesta por separado · 2 reportes privados</p>
                     <ul className="space-y-2 mb-6">
-                      {['40 preguntas abiertas con respuesta por voz', 'Gottman, Perel, Sternberg, Chapman y 7 más', 'Lectura psicoanalítica + dinámica de conflicto', 'Reporte con radar, gráficas y tabla diagnóstica'].map((item, i) => (
+                      {['Cada uno ve su propio mapa emocional y patrones', 'Comparación cruzada: dónde chocan y dónde se complementan', 'Diagnóstico de la dinámica invisible entre los dos', 'El punto de partida ideal antes de terapia de pareja'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-cyan-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
                       ))}
                     </ul>
-                    <div className="mb-4">
-                      <input
-                        type="text"
-                        placeholder="Ingresa tu código"
-                        id="premiumCodeDesktop"
-                        maxLength={20}
-                        className="w-full px-4 py-3 rounded-xl border border-cyan-500/20 bg-white/[0.03] text-white text-sm font-light placeholder:text-white/25 focus:border-cyan-500/40 focus:outline-none transition-colors"
-                      />
-                    </div>
                     <motion.button
-                      onClick={() => {
-                        const code = document.getElementById('premiumCodeDesktop')?.value?.trim()
-                        if (code) navigate(`/tienda/radiografia-premium?code=${encodeURIComponent(code)}`)
-                      }}
+                      onClick={() => { setStage('checkout'); scrollToTop() }}
                       whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-light text-base hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg shadow-cyan-600/20">
-                      Acceder con código
+                      Empezar juntos
                     </motion.button>
                   </div>
                 </div>
 
                 {/* Mobile: stacked pricing cards */}
                 <div className="sm:hidden flex flex-col gap-5 max-w-sm mx-auto">
-                  {/* Individual */}
+                  {/* Radiografía de tu forma de amar — Mobile */}
                   <div className="p-7 rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left">
-                    <p className="text-white/50 text-xs uppercase tracking-[0.15em] mb-2">Individual</p>
+                    <p className="text-white/50 text-xs uppercase tracking-[0.15em] mb-1">Individual</p>
+                    <p className="text-fuchsia-300/70 text-sm font-medium mb-3 italic">"¿Por qué siempre me pasa lo mismo?"</p>
                     <div className="flex items-baseline gap-2 mb-1">
-                      <span className="text-white/30 text-lg line-through">$699</span>
-                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_INDIVIDUAL} <span className="text-lg text-white/35">MXN</span></p>
+                      <span className="text-white/30 text-lg line-through">$399</span>
+                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_DESCUBRE} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light mb-5">Tu relación analizada por 11 corrientes clínicas</p>
+                    <p className="text-white/40 text-sm font-light mb-5">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
                     <ul className="space-y-2 mb-6">
-                      {['12 dimensiones: Gottman, Sternberg, Perel y 8 más', 'Radar de 12 ejes + mapa de apego + scores', 'Análisis narrativo por cada dimensión', 'Reporte PDF profesional descargable'].map((item, i) => (
+                      {['Descubre por qué eliges siempre el mismo tipo de pareja', 'Mapa de tu estilo de apego y mecanismos de defensa', 'Radiografía de tus patrones inconscientes al amar', 'Reporte PDF con gráficas y análisis descargable'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
@@ -2129,24 +2125,25 @@ const DiagnosticoRelacionalPage = () => {
                     </ul>
                     <motion.button onClick={() => { setStage('checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base">
-                      Comenzar
+                      Descubrir mi patrón
                     </motion.button>
                   </div>
-                  {/* Pareja */}
+                  {/* Pareja Solo — Mobile */}
                   <div className="p-7 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left relative overflow-hidden">
                     <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/50 to-fuchsia-500/50" />
-                    <div className="flex items-center gap-2 mb-2">
-                      <p className="text-violet-300/60 text-xs uppercase tracking-[0.15em]">Pareja</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/20 text-violet-300/70">Recomendado</span>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="text-violet-300/60 text-xs uppercase tracking-[0.15em]">Pareja — Solo</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/20 text-violet-300/70">Más elegido</span>
                     </div>
+                    <p className="text-violet-300/70 text-sm font-medium mb-3 italic">"Algo no está funcionando y no sé qué es"</p>
                     <div className="flex items-baseline gap-2 mb-1">
-                      <span className="text-white/30 text-lg line-through">$1,199</span>
-                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_PAREJA} <span className="text-lg text-white/35">MXN</span></p>
+                      <span className="text-white/30 text-lg line-through">$699</span>
+                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_SOLO} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
-                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-54% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light mb-5">Cada uno contesta por separado · Cada uno recibe su propio reporte</p>
+                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
+                    <p className="text-white/40 text-sm font-light mb-5">Tú contestas · Análisis profundo de lo que está pasando en tu relación</p>
                     <ul className="space-y-2 mb-6">
-                      {['2 reportes individuales — 11 corrientes cada uno', 'Cada reporte es privado: solo tú ves el tuyo', 'Comparación cruzada de patrones y dinámicas de pareja', 'El punto de partida ideal para terapia de pareja'].map((item, i) => (
+                      {['Entiende qué dinámicas invisibles están desgastando tu relación', '40 preguntas por voz + análisis de 11 corrientes psicológicas', 'Diagnóstico de hacia dónde va tu relación si nada cambia', 'Reporte PDF profesional con radar y gráficas'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
@@ -2155,45 +2152,34 @@ const DiagnosticoRelacionalPage = () => {
                     </ul>
                     <motion.button onClick={() => { setStage('checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base">
-                      Comenzar en pareja
+                      Radiografiar mi relación
                     </motion.button>
                   </div>
-                  {/* Radiografía Premium – Mobile */}
+                  {/* Pareja Los dos — Mobile */}
                   <div className="p-7 rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left relative overflow-hidden">
                     <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500/50 to-blue-500/50" />
-                    <div className="flex items-center gap-2 mb-2">
-                      <p className="text-cyan-300/60 text-xs uppercase tracking-[0.15em]">Premium</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/20 text-cyan-300/70">40 preguntas narrativas</span>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="text-cyan-300/60 text-xs uppercase tracking-[0.15em]">Pareja — Los dos</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/20 text-cyan-300/70">2 reportes</span>
                     </div>
+                    <p className="text-cyan-300/70 text-sm font-medium mb-3 italic">"Nos queremos pero no nos entendemos"</p>
                     <div className="flex items-baseline gap-2 mb-1">
-                      <p className="text-3xl font-light text-cyan-300">Con código</p>
+                      <span className="text-white/30 text-lg line-through">$1,099</span>
+                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_LOSDOS} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
-                    <p className="text-white/40 text-sm font-light mb-5">Análisis narrativo profundo · 12 dimensiones · 11 corrientes psicológicas</p>
+                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
+                    <p className="text-white/40 text-sm font-light mb-5">Cada uno contesta por separado · 2 reportes privados</p>
                     <ul className="space-y-2 mb-6">
-                      {['40 preguntas abiertas con respuesta por voz', 'Gottman, Perel, Sternberg, Chapman y 7 más', 'Lectura psicoanalítica + dinámica de conflicto', 'Reporte con radar, gráficas y tabla diagnóstica'].map((item, i) => (
+                      {['Cada uno ve su propio mapa emocional y patrones', 'Comparación cruzada: dónde chocan y dónde se complementan', 'Diagnóstico de la dinámica invisible entre los dos', 'El punto de partida ideal antes de terapia de pareja'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-cyan-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
                       ))}
                     </ul>
-                    <div className="mb-4">
-                      <input
-                        type="text"
-                        placeholder="Ingresa tu código"
-                        id="premiumCodeMobile"
-                        maxLength={20}
-                        className="w-full px-4 py-3 rounded-xl border border-cyan-500/20 bg-white/[0.03] text-white text-sm font-light placeholder:text-white/25 focus:border-cyan-500/40 focus:outline-none transition-colors"
-                      />
-                    </div>
-                    <motion.button
-                      onClick={() => {
-                        const code = document.getElementById('premiumCodeMobile')?.value?.trim()
-                        if (code) navigate(`/tienda/radiografia-premium?code=${encodeURIComponent(code)}`)
-                      }}
-                      whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    <motion.button onClick={() => { setStage('checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-light text-base">
-                      Acceder con código
+                      Empezar juntos
                     </motion.button>
                   </div>
                 </div>
@@ -2237,98 +2223,96 @@ const DiagnosticoRelacionalPage = () => {
             <div className="max-w-4xl w-full space-y-8">
               <div className="text-center">
                 <CreditCard className="w-10 h-10 text-violet-400/50 mx-auto mb-4" />
-                <h2 className="text-2xl font-light text-white mb-2">Elige tu plan</h2>
-                <p className="text-white/40 text-sm font-light">40 preguntas · 12 dimensiones psicológicas · 11 corrientes · Reporte descargable</p>
+                <h2 className="text-2xl font-light text-white mb-2">Elige tu radiografía</h2>
+                <p className="text-white/40 text-sm font-light">40 preguntas por voz · 12 dimensiones psicológicas · 11 corrientes · Reporte descargable</p>
               </div>
 
               {/* Pricing Cards — matches landing */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                {/* Individual */}
+                {/* Radiografía de tu forma de amar */}
                 <div className="p-7 rounded-2xl border border-white/10 bg-zinc-950/60 space-y-5">
                   <div>
-                    <p className="text-white/40 text-xs uppercase tracking-[0.15em] mb-2">Individual</p>
+                    <p className="text-white/40 text-xs uppercase tracking-[0.15em] mb-1">Individual</p>
+                    <p className="text-fuchsia-300/70 text-sm font-medium mb-3 italic">"¿Por qué siempre me pasa lo mismo?"</p>
                     <div className="flex items-baseline gap-2 mb-1">
-                      <span className="text-white/30 text-lg line-through">$699</span>
-                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_INDIVIDUAL} <span className="text-lg text-white/35">MXN</span></p>
+                      <span className="text-white/30 text-lg line-through">$399</span>
+                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_DESCUBRE} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light">Tu relación analizada por 11 corrientes clínicas</p>
+                    <p className="text-white/40 text-sm font-light">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
                   </div>
                   <ul className="space-y-2">
-                    {['12 dimensiones: Gottman, Sternberg, Perel y 8 más', 'Radar de 12 ejes + mapa de apego + scores', 'Análisis narrativo por cada dimensión', 'Reporte PDF profesional descargable'].map((item, i) => (
+                    {['Descubre por qué eliges siempre el mismo tipo de pareja', 'Mapa de tu estilo de apego y mecanismos de defensa', 'Radiografía de tus patrones inconscientes al amar', 'Reporte PDF con gráficas y análisis descargable'].map((item, i) => (
                       <li key={i} className="flex items-start gap-2 text-white/50 text-sm font-light">
                         <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                         {item}
                       </li>
                     ))}
                   </ul>
-                  <motion.button onClick={() => handlePurchase('individual')} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  <motion.button onClick={() => handlePurchase('descubre')} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
-                    Pagar ${PRODUCT_PRICE_INDIVIDUAL} MXN
+                    Pagar ${PRODUCT_PRICE_DESCUBRE} MXN
                   </motion.button>
                 </div>
 
-                {/* Pareja */}
+                {/* Pareja — Solo */}
                 <div className="p-7 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] space-y-5 relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/50 to-fuchsia-500/50" />
                   <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <p className="text-violet-300/60 text-xs uppercase tracking-[0.15em]">Pareja</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/20 text-violet-300/70">Recomendado</span>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="text-violet-300/60 text-xs uppercase tracking-[0.15em]">Pareja — Solo</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/20 text-violet-300/70">Más elegido</span>
                     </div>
+                    <p className="text-violet-300/70 text-sm font-medium mb-3 italic">"Algo no está funcionando y no sé qué es"</p>
                     <div className="flex items-baseline gap-2 mb-1">
-                      <span className="text-white/30 text-lg line-through">$1,199</span>
-                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_PAREJA} <span className="text-lg text-white/35">MXN</span></p>
+                      <span className="text-white/30 text-lg line-through">$699</span>
+                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_SOLO} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
-                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-54% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light">Cada uno contesta por separado · 2 reportes privados</p>
+                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
+                    <p className="text-white/40 text-sm font-light">Tú contestas · Análisis profundo de lo que está pasando</p>
                   </div>
                   <ul className="space-y-2">
-                    {['2 reportes individuales — 11 corrientes cada uno', 'Cada reporte es privado: solo tú ves el tuyo', 'Comparación cruzada de patrones', 'Ideal para terapia de pareja'].map((item, i) => (
+                    {['Entiende qué dinámicas invisibles están desgastando tu relación', '40 preguntas por voz + análisis de 11 corrientes psicológicas', 'Diagnóstico de hacia dónde va tu relación si nada cambia', 'Reporte PDF profesional con radar y gráficas'].map((item, i) => (
                       <li key={i} className="flex items-start gap-2 text-white/50 text-sm font-light">
                         <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                         {item}
                       </li>
                     ))}
                   </ul>
-                  <motion.button onClick={() => handlePurchase('pareja')} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  <motion.button onClick={() => handlePurchase('solo')} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
-                    Pagar ${PRODUCT_PRICE_PAREJA} MXN
+                    Pagar ${PRODUCT_PRICE_SOLO} MXN
                   </motion.button>
                 </div>
 
-                {/* Premium */}
+                {/* Pareja — Los dos */}
                 <div className="p-7 rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] space-y-5 relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500/50 to-blue-500/50" />
                   <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <p className="text-cyan-300/60 text-xs uppercase tracking-[0.15em]">Premium</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/20 text-cyan-300/70">40 preguntas narrativas</span>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="text-cyan-300/60 text-xs uppercase tracking-[0.15em]">Pareja — Los dos</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/20 text-cyan-300/70">2 reportes</span>
                     </div>
-                    <p className="text-3xl font-light text-cyan-300 mb-1">Con código</p>
-                    <p className="text-white/40 text-sm font-light">Análisis narrativo profundo · 11 corrientes psicológicas</p>
+                    <p className="text-cyan-300/70 text-sm font-medium mb-3 italic">"Nos queremos pero no nos entendemos"</p>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-white/30 text-lg line-through">$1,099</span>
+                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_LOSDOS} <span className="text-lg text-white/35">MXN</span></p>
+                    </div>
+                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
+                    <p className="text-white/40 text-sm font-light">Cada uno contesta por separado · 2 reportes privados</p>
                   </div>
                   <ul className="space-y-2">
-                    {['40 preguntas abiertas con respuesta por voz', 'Gottman, Perel, Sternberg, Chapman y 7 más', 'Lectura psicoanalítica + dinámica de conflicto', 'Reporte con radar, gráficas y tabla diagnóstica'].map((item, i) => (
+                    {['Cada uno ve su propio mapa emocional y patrones', 'Comparación cruzada: dónde chocan y dónde se complementan', 'Diagnóstico de la dinámica invisible entre los dos', 'El punto de partida ideal antes de terapia de pareja'].map((item, i) => (
                       <li key={i} className="flex items-start gap-2 text-white/50 text-sm font-light">
                         <Check className="w-3.5 h-3.5 text-cyan-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                         {item}
                       </li>
                     ))}
                   </ul>
-                  <div className="space-y-2">
-                    <input type="text" placeholder="Ingresa tu código" id="premiumCodeCheckout" maxLength={20}
-                      className="w-full px-4 py-3 rounded-xl border border-cyan-500/20 bg-white/[0.03] text-white text-sm font-light placeholder:text-white/25 focus:border-cyan-500/40 focus:outline-none transition-colors" />
-                    <motion.button
-                      onClick={() => {
-                        const code = document.getElementById('premiumCodeCheckout')?.value?.trim()
-                        if (code) navigate(`/tienda/radiografia-premium?code=${encodeURIComponent(code)}`)
-                      }}
-                      whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                      className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-light text-base hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg shadow-cyan-600/20">
-                      Acceder con código
-                    </motion.button>
-                  </div>
+                  <motion.button onClick={() => handlePurchase('losdos')} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-light text-base hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg shadow-cyan-600/20">
+                    Pagar ${PRODUCT_PRICE_LOSDOS} MXN
+                  </motion.button>
                 </div>
               </div>
 

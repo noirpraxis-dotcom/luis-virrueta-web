@@ -69,6 +69,20 @@ INFERENCIA PSICOLÓGICA:
 ANÁLISIS POR ENFOQUE — Para cada uno de los 11 enfoques:
 Cada enfoque debe incluir variables específicas medidas, indicadores con checkpoints, y una interpretación narrativa personalizada basada en el discurso real del usuario. Cita palabras del usuario entre comillas.
 
+INSTRUCCIONES PARA INDICADORES (MUY IMPORTANTE):
+Los indicadores NO deben ser técnicos ni en inglés. Deben ser frases cortas y claras en español que cualquier persona sin formación psicológica entienda. Formato: "Frase descriptiva clara" (no formatos como "Ratio: 1:3" ni "Bids for connection: bajo").
+Ejemplos correctos:
+- "Hay distancia emocional en momentos de conflicto"
+- "Tiende a evitar conversaciones difíciles"
+- "Busca seguridad en la rutina"
+- "Idealiza el inicio de la relación"
+- "Se siente responsable del bienestar emocional del otro"
+Ejemplos INCORRECTOS (NO usar):
+- "Ratio positivo-negativo: 1:3"
+- "Bids for connection: bajo"
+- "Attachment anxiety: moderate"
+- "Escalation pattern: pursue-withdraw"
+
 SECCIÓN ESPECIAL: AUTOANÁLISIS DEL USUARIO (PRIMERA SECCIÓN DEL REPORTE — LA MÁS IMPORTANTE)
 
 Esta sección es el CORAZÓN del reporte. Debe funcionar incluso si la persona NO tiene pareja actual: lo que analizas es SU FORMA DE AMAR, SUS PATRONES, SUS ERRORES DE REPETICIÓN. No es sobre "la relación" sino sobre QUIÉN ES ESTA PERSONA CUANDO AMA.
@@ -317,28 +331,28 @@ Devuelve el resultado en el siguiente formato JSON exacto:
       "titulo": "John Gottman",
       "enfoque": "Estabilidad relacional y dinámica del conflicto",
       "interpretacion": "(2 párrafos: Los Cuatro Jinetes detectados, ratio positivo/negativo, bids for connection, capacidad de reparación. Cita al usuario.)",
-      "indicadores": ["(nombre del indicador): (valor detectado)", "...3-5 indicadores"],
+      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 indicadores, cada uno una frase corta comprensible sin jerga"],
       "puntuacion": "(0-100)"
     },
     "sue_johnson": {
       "titulo": "Sue Johnson",
       "enfoque": "Seguridad emocional y Terapia Focalizada en las Emociones",
       "interpretacion": "(2 párrafos: ciclos de interacción negativa, accesibilidad emocional, responsividad, patrón perseguidor-evitador. Cita al usuario.)",
-      "indicadores": ["(nombre): (valor)", "...3-5 indicadores"],
+      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "puntuacion": "(0-100)"
     },
     "perel": {
       "titulo": "Esther Perel",
       "enfoque": "Deseo erótico y tensión entre seguridad y aventura",
       "interpretacion": "(2 párrafos: erotismo vs domesticidad, misterio, autonomía, novedad, espacio psicológico. Cita al usuario.)",
-      "indicadores": ["(nombre): (valor)", "...3-5 indicadores"],
+      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "puntuacion": "(0-100)"
     },
     "levine": {
       "titulo": "Amir Levine",
       "enfoque": "Estilo de apego adulto",
       "interpretacion": "(2 párrafos: estilo de apego detectado — seguro/ansioso/evitativo/desorganizado, ansiedad relacional, distancia emocional, tolerancia a la intimidad. Cita al usuario.)",
-      "indicadores": ["(nombre): (valor)", "...3-5 indicadores"],
+      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "estilo_apego": "(Seguro | Ansioso | Evitativo | Desorganizado)",
       "puntuacion": "(0-100)"
     },
@@ -346,21 +360,21 @@ Devuelve el resultado en el siguiente formato JSON exacto:
       "titulo": "Harville Hendrix",
       "enfoque": "Reparación inconsciente — Terapia Imago",
       "interpretacion": "(2 párrafos: heridas infantiles detectadas, necesidades no satisfechas, elección de pareja como intento de reparación. Cita al usuario.)",
-      "indicadores": ["(nombre): (valor)", "...3-5 indicadores"],
+      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "puntuacion": "(0-100)"
     },
     "tatkin": {
       "titulo": "Stan Tatkin",
       "enfoque": "Sincronía emocional y regulación mutua",
       "interpretacion": "(2 párrafos: co-regulación, protección mutua, respuesta al estrés, anchor/wave/island. Cita al usuario.)",
-      "indicadores": ["(nombre): (valor)", "...3-5 indicadores"],
+      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "puntuacion": "(0-100)"
     },
     "chapman": {
       "titulo": "Gary Chapman",
       "enfoque": "Lenguajes del amor y comunicación afectiva",
       "interpretacion": "(2 párrafos: lenguaje predominante del usuario y de la pareja, compatibilidad afectiva, frustraciones. Cita al usuario.)",
-      "indicadores": ["(nombre): (valor)", "...3-5 indicadores"],
+      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "lenguaje_usuario": "(Palabras de afirmación | Actos de servicio | Contacto físico | Tiempo de calidad | Regalos)",
       "lenguaje_pareja": "(Palabras de afirmación | Actos de servicio | Contacto físico | Tiempo de calidad | Regalos)",
       "puntuacion": "(0-100 compatibilidad afectiva)"
@@ -369,7 +383,7 @@ Devuelve el resultado en el siguiente formato JSON exacto:
       "titulo": "Robert Sternberg",
       "enfoque": "Triángulo del amor: intimidad, pasión y compromiso",
       "interpretacion": "(2 párrafos: balance entre los tres componentes, tipo de amor resultante. Cita al usuario.)",
-      "indicadores": ["(nombre): (valor)", "...3 indicadores"],
+      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3 frases cortas sin jerga técnica"],
       "puntuacion_intimidad": "(0-100)",
       "puntuacion_pasion": "(0-100)",
       "puntuacion_compromiso": "(0-100)"
@@ -378,14 +392,14 @@ Devuelve el resultado en el siguiente formato JSON exacto:
       "titulo": "David Schnarch",
       "enfoque": "Madurez relacional y diferenciación del self",
       "interpretacion": "(2 párrafos: nivel de diferenciación, autonomía emocional, capacidad de tolerar conflicto sin perder identidad. Cita al usuario.)",
-      "indicadores": ["(nombre): (valor)", "...3-5 indicadores"],
+      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "puntuacion": "(0-100)"
     },
     "real": {
       "titulo": "Terrence Real",
       "enfoque": "Dinámicas de poder y equilibrio emocional",
       "interpretacion": "(2 párrafos: luchas de poder, vergüenza, resentimiento acumulado, dominación/sumisión emocional. Cita al usuario.)",
-      "indicadores": ["(nombre): (valor)", "...3-5 indicadores"],
+      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "puntuacion": "(0-100 equilibrio de poder)"
     },
     "freud_lacan": {
@@ -393,7 +407,7 @@ Devuelve el resultado en el siguiente formato JSON exacto:
       "enfoque": "Inconsciente relacional y estructura del deseo",
       "interpretacion_freud": "(1-2 párrafos: compulsión a la repetición, proyecciones inconscientes, roles heredados. Cita al usuario.)",
       "interpretacion_lacan": "(1-2 párrafos: fantasma relacional, qué representa la pareja, demanda vs deseo. Cita al usuario.)",
-      "indicadores": ["(nombre): (valor)", "...3-5 indicadores"],
+      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "puntuacion": "(0-100 intensidad inconsciente)"
     }
   },
@@ -401,7 +415,13 @@ Devuelve el resultado en el siguiente formato JSON exacto:
     "que_ocurre": "(1-2 párrafos: qué está ocurriendo realmente en la relación)",
     "posibilidades_evolucion": "(1-2 párrafos: qué posibilidades de evolución existen)",
     "factores_fortalecimiento": "(1-2 párrafos: qué factores podrían fortalecer el vínculo)"
-  }
+  },
+  "temas_para_consulta": [
+    "(Tema específico y personalizado basado en el análisis, ej: 'Tu patrón de evitar conversaciones sobre el futuro refleja una herida de abandono que podemos trabajar.')",
+    "(Otro tema: describir en 1-2 frases qué se trabajaría y por qué es relevante para ESTA persona.)",
+    "(Incluir entre 4 y 6 temas derivados directamente del análisis, NO genéricos.)",
+    "(Cada tema debe conectar con algo que el usuario dijo o un patrón detectado.)"
+  ]
 }`
 
   return prompt
@@ -637,6 +657,13 @@ export function generateFallbackAnalysis() {
       que_ocurre: 'Lo que está ocurriendo en tu relación es un **proceso de transformación** donde las dinámicas iniciales ya no funcionan de la misma manera. No es que el amor haya desaparecido — es que la forma de relacionarse necesita evolucionar.\n\nHay patrones emocionales que se han instalado silenciosamente y que ahora influyen en cómo se conectan y desconectan.',
       posibilidades_evolucion: 'La relación tiene **potencial real de crecimiento** si ambos deciden trabajar conscientemente en las áreas que este diagnóstico ha revelado. Los cimientos están — lo que falta es una intervención consciente.\n\nCon trabajo terapéutico y voluntad mutua, los ciclos actuales pueden transformarse en dinámicas más funcionales.',
       factores_fortalecimiento: 'Los factores que pueden fortalecer el vínculo incluyen: **mejorar la comunicación durante el conflicto**, crear espacios regulares de conexión emocional, y trabajar individualmente en los patrones de apego.\n\nTambién es importante reavivar la dimensión erótica del vínculo — no como obligación sino como exploración mutua.'
-    }
+    },
+    temas_para_consulta: [
+      'Cómo dejar de repetir el mismo patrón de distanciamiento cuando hay conflicto',
+      'El peso de las expectativas familiares en tu forma de amar',
+      'Aprender a pedir sin sentir que eres demasiado',
+      'Reconectar la intimidad emocional antes de trabajar la física',
+      'Entender por qué eliges parejas que confirman tus miedos'
+    ]
   }
 }

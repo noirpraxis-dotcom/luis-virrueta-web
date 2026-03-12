@@ -254,9 +254,9 @@ const DIMENSION_COLORS = [
 
 const VOICE_LIST = [
   { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Valentina', desc: 'Cálida y clara', initial: 'V', color: 'from-rose-500 to-pink-500', ring: 'ring-rose-400/20', border: 'border-rose-500/30', bg: 'bg-rose-500/10', text: 'text-rose-300' },
-  { id: '21m00Tcm4TlvDq8ikWAM', name: 'Sofía', desc: 'Rápida y enérgica', initial: 'S', color: 'from-fuchsia-500 to-purple-500', ring: 'ring-fuchsia-400/20', border: 'border-fuchsia-500/30', bg: 'bg-fuchsia-500/10', text: 'text-fuchsia-300' },
   { id: 'VR6AewLTigWG4xSOukaG', name: 'Santiago', desc: 'Firme y profesional', initial: 'S', color: 'from-violet-500 to-indigo-500', ring: 'ring-violet-400/20', border: 'border-violet-500/30', bg: 'bg-violet-500/10', text: 'text-violet-300' },
-  { id: 'ErXwobaYiN019PkySvjV', name: 'Mateo', desc: 'Grave y pausado', initial: 'M', color: 'from-blue-500 to-cyan-500', ring: 'ring-blue-400/20', border: 'border-blue-500/30', bg: 'bg-blue-500/10', text: 'text-blue-300' }
+  { id: 'pNInz6obpgDQGcFmaJgB', name: 'Adrián', desc: 'Profundo y sereno', initial: 'A', color: 'from-blue-500 to-cyan-500', ring: 'ring-blue-400/20', border: 'border-blue-500/30', bg: 'bg-blue-500/10', text: 'text-blue-300' },
+  { id: 'jBpfuIE2acCO8z3wKNLl', name: 'Camila', desc: 'Ágil y expresiva', initial: 'C', color: 'from-fuchsia-500 to-purple-500', ring: 'ring-fuchsia-400/20', border: 'border-fuchsia-500/30', bg: 'bg-fuchsia-500/10', text: 'text-fuchsia-300' }
 ]
 
 // ─── MicLevelBars (visual mic test feedback) ───────────────────
@@ -285,6 +285,166 @@ const MicLevelBars = ({ analyser }) => {
     return () => cancelAnimationFrame(raf)
   }, [analyser])
   return <canvas ref={canvasRef} width={200} height={40} className="mx-auto rounded-lg" />
+}
+
+// ─── RecordingBars (real analyser for recording indicator) ────────
+const RecordingBars = ({ analyser }) => {
+  const barsRef = useRef([])
+  const rafRef = useRef(null)
+  const [heights, setHeights] = useState([4, 6, 3, 5])
+  useEffect(() => {
+    if (!analyser) return
+    const data = new Uint8Array(analyser.frequencyBinCount)
+    const draw = () => {
+      analyser.getByteFrequencyData(data)
+      const step = Math.floor(data.length / 4)
+      const h = [0, 1, 2, 3].map(i => {
+        let sum = 0
+        for (let j = i * step; j < (i + 1) * step; j++) sum += data[j]
+        return Math.max(3, (sum / step / 255) * 24)
+      })
+      setHeights(h)
+      rafRef.current = requestAnimationFrame(draw)
+    }
+    draw()
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }
+  }, [analyser])
+  return (
+    <div className="flex gap-1 items-end" style={{ height: 24 }}>
+      {heights.map((h, i) => (
+        <div key={i} className="w-1.5 rounded-full bg-red-500/60 transition-all duration-75"
+          style={{ height: `${h}px`, opacity: 0.5 + (h / 24) * 0.5 }} />
+      ))}
+    </div>
+  )
+}
+
+// ─── AutoanalisisRadial: D3-powered radial mind-map of 10 sections ────────
+const AUTOANALISIS_SECTIONS = [
+  { key: 'apertura_rapport', label: 'Rapport', icon: '💜', color: '#c084fc' },
+  { key: 'forma_de_amar', label: 'Forma de amar', icon: '❤️', color: '#f472b6' },
+  { key: 'lo_que_busca_en_el_otro', label: 'Lo que buscas', icon: '🔍', color: '#60a5fa' },
+  { key: 'lo_que_reclama_afuera', label: 'Lo que reclamas', icon: '📣', color: '#fb923c' },
+  { key: 'fantasma_relacional', label: 'Fantasma', icon: '👻', color: '#a78bfa' },
+  { key: 'yo_ideal', label: 'Yo ideal', icon: '✨', color: '#fbbf24' },
+  { key: 'mecanismos_defensa', label: 'Defensas', icon: '🛡️', color: '#34d399' },
+  { key: 'tipo_pareja_que_repite', label: 'Patrón repetido', icon: '🔄', color: '#22d3ee' },
+  { key: 'nucleo_del_patron', label: 'Núcleo', icon: '🎯', color: '#f87171' },
+  { key: 'cierre_transformador', label: 'Transformación', icon: '🦋', color: '#e879f9' }
+]
+
+const AutoanalisisRadial = ({ data }) => {
+  const present = AUTOANALISIS_SECTIONS.filter(s => data[s.key])
+  const n = present.length
+  if (n === 0) return null
+  const cx = 200, cy = 200, r = 140
+  const nodes = present.map((s, i) => {
+    const angle = (i / n) * Math.PI * 2 - Math.PI / 2
+    const textLen = (data[s.key] || '').length
+    const nodeR = Math.max(18, Math.min(30, textLen / 20))
+    return { ...s, x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle), nodeR, angle }
+  })
+  return (
+    <div className="flex justify-center mb-6">
+      <svg viewBox="0 0 400 400" className="w-full max-w-sm" style={{ filter: 'drop-shadow(0 0 20px rgba(139,92,246,0.08))' }}>
+        {/* Connecting lines */}
+        {nodes.map((node, i) => (
+          <line key={`line-${i}`} x1={cx} y1={cy} x2={node.x} y2={node.y}
+            stroke={node.color} strokeOpacity={0.15} strokeWidth={1.5} />
+        ))}
+        {/* Outer ring for context */}
+        <circle cx={cx} cy={cy} r={r + 5} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth={1} strokeDasharray="4 4" />
+        {/* Center node */}
+        <circle cx={cx} cy={cy} r={32} fill="rgba(139,92,246,0.12)" stroke="rgba(139,92,246,0.3)" strokeWidth={1.5} />
+        <text x={cx} y={cy - 6} textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize="10" fontWeight="500">Tu forma</text>
+        <text x={cx} y={cy + 8} textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize="10" fontWeight="500">de amar</text>
+        {/* Nodes */}
+        {nodes.map((node, i) => (
+          <g key={`node-${i}`}>
+            <circle cx={node.x} cy={node.y} r={node.nodeR} fill={`${node.color}18`} stroke={`${node.color}40`} strokeWidth={1.5} />
+            <text x={node.x} y={node.y + 1} textAnchor="middle" dominantBaseline="central" fontSize="14">{node.icon}</text>
+            {/* Label outside the circle */}
+            <text
+              x={node.x + (node.x > cx ? node.nodeR + 6 : -(node.nodeR + 6))}
+              y={node.y + 1}
+              textAnchor={node.x > cx ? 'start' : node.x < cx - 5 ? 'end' : 'middle'}
+              dominantBaseline="central"
+              fill="rgba(255,255,255,0.5)" fontSize="9" fontWeight="400"
+            >{node.label}</text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  )
+}
+
+// ─── Spotlight Onboarding Components ──────────────────────────────
+const SpotlightCutout = ({ targetId }) => {
+  const [rect, setRect] = useState(null)
+  useEffect(() => {
+    const el = document.getElementById(targetId)
+    if (!el) return
+    const update = () => {
+      const r = el.getBoundingClientRect()
+      setRect({ top: r.top - 8, left: r.left - 8, width: r.width + 16, height: r.height + 16 })
+    }
+    update()
+    window.addEventListener('resize', update)
+    window.addEventListener('scroll', update)
+    return () => { window.removeEventListener('resize', update); window.removeEventListener('scroll', update) }
+  }, [targetId])
+  if (!rect) return null
+  return (
+    <div className="absolute pointer-events-none" style={{
+      top: rect.top, left: rect.left, width: rect.width, height: rect.height,
+      boxShadow: '0 0 0 9999px rgba(0,0,0,0.75)',
+      borderRadius: '16px', zIndex: 51
+    }} />
+  )
+}
+
+const SpotlightTooltip = ({ targetId, onboardingStep, totalSteps, step, borderColor, bgCard, dotColor, onNext, onSkip }) => {
+  const [pos, setPos] = useState(null)
+  useEffect(() => {
+    const el = document.getElementById(targetId)
+    if (!el) return
+    const update = () => {
+      const r = el.getBoundingClientRect()
+      setPos({ top: r.bottom + 16, left: Math.max(16, r.left + r.width / 2 - 160), width: 320 })
+    }
+    update()
+    window.addEventListener('resize', update)
+    window.addEventListener('scroll', update)
+    return () => { window.removeEventListener('resize', update); window.removeEventListener('scroll', update) }
+  }, [targetId])
+  if (!pos) return null
+  return (
+    <motion.div
+      key={onboardingStep}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      className={`fixed z-[52] pointer-events-auto p-5 rounded-2xl border ${borderColor} bg-gradient-to-br ${bgCard} to-zinc-900/98 shadow-2xl`}
+      style={{ top: pos.top, left: pos.left, width: pos.width, maxWidth: 'calc(100vw - 32px)' }}
+      onClick={e => e.stopPropagation()}>
+      <h3 className="text-white text-base font-medium mb-2">{step.title}</h3>
+      <p className="text-white/50 text-sm font-light leading-relaxed mb-4">{step.desc}</p>
+      <div className="flex items-center justify-between">
+        <div className="flex gap-2">
+          {Array.from({ length: totalSteps }).map((_, i) => (
+            <div key={i} className={`w-2 h-2 rounded-full transition-all ${i === onboardingStep ? `${dotColor} scale-125` : 'bg-white/15'}`} />
+          ))}
+        </div>
+        <div className="flex items-center gap-3">
+          <button onClick={onSkip} className="text-white/25 text-xs hover:text-white/50 transition-colors">Saltar</button>
+          <motion.button onClick={onNext} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+            className="px-5 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-xs font-light shadow-lg shadow-violet-600/20">
+            {onboardingStep < totalSteps - 1 ? 'Siguiente' : 'Comenzar'}
+          </motion.button>
+        </div>
+      </div>
+    </motion.div>
+  )
 }
 
 // ─── DEMO RESPONSES (for testing) ────────────────────────────────
@@ -364,6 +524,12 @@ function renderBold(text) {
   return text.split(/\*\*(.*?)\*\*/g).map((part, i) =>
     i % 2 === 1 ? <strong key={i} className="font-semibold text-white/85">{part}</strong> : part
   )
+}
+
+/* Strip bold markers — for autoanalisis sections (plain text, no negritas) */
+function stripBold(text) {
+  if (!text) return null
+  return text.replace(/\*\*(.*?)\*\*/g, '$1')
 }
 
 function getLevelColor(val) {
@@ -480,8 +646,8 @@ const RadiografiaPremiumPage = () => {
   const [selectedVoiceId, setSelectedVoiceId] = useState(VOICE_LIST[0].id)
   const [previewingVoiceId, setPreviewingVoiceId] = useState(null)
 
-  // Profile — Question 0 (name, age, date)
-  const [profileData, setProfileData] = useState({ nombre: '', edad: '', fecha: new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }) })
+  // Profile — Question 0 (name, age, date, partner)
+  const [profileData, setProfileData] = useState({ nombre: '', edad: '', nombrePareja: '', edadPareja: '', fecha: new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }) })
   const [soundTestOk, setSoundTestOk] = useState(null)
   const [micTestOk, setMicTestOk] = useState(null)
   const [micAnalyser, setMicAnalyser] = useState(null)
@@ -490,6 +656,7 @@ const RadiografiaPremiumPage = () => {
   const [audioPlaying, setAudioPlaying] = useState(false)
   const audioRef = useRef(null)
   const currentAudioRef = useRef(null)
+  const playGenerationRef = useRef(0)
 
   // Recording & Input
   const [recording, setRecording] = useState(false)
@@ -497,6 +664,8 @@ const RadiografiaPremiumPage = () => {
   const [typingMode, setTypingMode] = useState(false)
   const [textInput, setTextInput] = useState('')
   const recognitionRef = useRef(null)
+  const [recordingAnalyser, setRecordingAnalyser] = useState(null)
+  const recordingStreamRef = useRef(null)
 
   // Analysis
   const [aiAnalysis, setAiAnalysis] = useState(null)
@@ -505,10 +674,37 @@ const RadiografiaPremiumPage = () => {
   const [pdfGenerating, setPdfGenerating] = useState(false)
   const [chartViewMode, setChartViewMode] = useState('radar')
   const [cachedAnalysis, setCachedAnalysis] = useState(null)
+  const [showOnboarding, setShowOnboarding] = useState(true)
+  const [onboardingStep, setOnboardingStep] = useState(0)
 
   const question = PREGUNTAS[currentQ]
   const totalQ = PREGUNTAS.length
   const progress = ((currentQ + 1) / totalQ) * 100
+
+  // ── Restore saved progress from localStorage ──
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('radiografia_premium_progress')
+      if (saved) {
+        const data = JSON.parse(saved)
+        if (data.responses && Object.keys(data.responses).length > 0) {
+          setResponses(data.responses)
+          if (data.currentQ != null) setCurrentQ(data.currentQ)
+          if (data.profileData) setProfileData(prev => ({ ...prev, ...data.profileData }))
+          if (data.stage === 'questionnaire') setStage('questionnaire')
+        }
+      }
+    } catch { /* ignore corrupted data */ }
+  }, [])
+
+  // ── Save progress to localStorage on every change ──
+  useEffect(() => {
+    if (stage === 'questionnaire' && Object.keys(responses).length > 0) {
+      localStorage.setItem('radiografia_premium_progress', JSON.stringify({
+        responses, currentQ, profileData, stage: 'questionnaire'
+      }))
+    }
+  }, [responses, currentQ, stage, profileData])
 
   // ── Stop any currently playing audio ──
   const stopAudio = useCallback(() => {
@@ -527,6 +723,7 @@ const RadiografiaPremiumPage = () => {
     const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY
     const voiceId = overrideVoiceId || selectedVoiceId
     if (!apiKey) return
+    const thisGeneration = ++playGenerationRef.current
     try {
       setAudioPlaying(true)
       if (overrideVoiceId) setPreviewingVoiceId(overrideVoiceId)
@@ -550,6 +747,9 @@ const RadiografiaPremiumPage = () => {
         blob = await res.blob()
         audioCache.current[cacheKey] = blob
       }
+
+      // Abort if a newer playQuestion call was made while fetching
+      if (thisGeneration !== playGenerationRef.current) return
 
       const url = URL.createObjectURL(blob)
       const audio = new Audio(url)
@@ -589,7 +789,7 @@ const RadiografiaPremiumPage = () => {
 
   // ── Auto-play question when changing question + auto-mic after audio ends ──
   useEffect(() => {
-    if (stage === 'questionnaire' && question) {
+    if (stage === 'questionnaire' && question && !showOnboarding) {
       setTypingMode(false)
       playQuestion(question.mainQuestion, undefined, () => {
         // Auto-start mic after TTS ends (only if not already recording/typing)
@@ -605,13 +805,37 @@ const RadiografiaPremiumPage = () => {
       }
     }
     return () => stopAudio()
-  }, [currentQ, stage]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [currentQ, stage, showOnboarding]) // eslint-disable-line react-hooks-exhaustive-deps
+
+  // ── Spotlight narration: play TTS for each onboarding step ──
+  useEffect(() => {
+    if (!showOnboarding || stage !== 'questionnaire' || currentQ !== 0) return
+    const NARRATIONS = [
+      'Aquí verás la pregunta. Se lee en voz alta automáticamente. Solo relájate y escucha.',
+      'Si te faltó algo, aquí tienes ideas para enriquecer tu respuesta.',
+      'El micrófono se activa automáticamente. Habla con libertad. Cuando termines, toca Siguiente.'
+    ]
+    const text = NARRATIONS[onboardingStep]
+    if (text) playQuestion(text)
+    return () => stopAudio()
+  }, [onboardingStep, showOnboarding]) // eslint-disable-line react-hooks-exhaustive-deps
 
   // ── Speech recognition ──
-  const startRecording = useCallback(() => {
+  const startRecording = useCallback(async () => {
     stopAudio() // Stop audio if playing
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
     if (!SpeechRecognition) return
+    // Get mic stream for real analyser
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      recordingStreamRef.current = stream
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+      const source = audioCtx.createMediaStreamSource(stream)
+      const analyserNode = audioCtx.createAnalyser()
+      analyserNode.fftSize = 256
+      source.connect(analyserNode)
+      setRecordingAnalyser(analyserNode)
+    } catch { /* mic already granted via speech recognition */ }
     const recognition = new SpeechRecognition()
     recognition.lang = 'es-MX'
     recognition.continuous = true
@@ -634,6 +858,11 @@ const RadiografiaPremiumPage = () => {
 
   const stopRecording = useCallback(() => {
     if (recognitionRef.current) recognitionRef.current.stop()
+    if (recordingStreamRef.current) {
+      recordingStreamRef.current.getTracks().forEach(t => t.stop())
+      recordingStreamRef.current = null
+    }
+    setRecordingAnalyser(null)
     setRecording(false)
   }, [])
 
@@ -717,6 +946,7 @@ const RadiografiaPremiumPage = () => {
       setAiAnalysis(result)
       setCachedAnalysis(result) // Cache for DEV reuse
       setAnalysisDone(true)
+      localStorage.removeItem('radiografia_premium_progress')
       // Save to localStorage for later DEV access
       try { localStorage.setItem('radiografia_cached_analysis', JSON.stringify(result)) } catch {}
     } catch (err) {
@@ -1048,30 +1278,55 @@ const RadiografiaPremiumPage = () => {
               </div>
 
               <div className="space-y-4">
-                <div>
-                  <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Tu nombre</label>
-                  <input type="text" value={profileData.nombre}
-                    autoFocus
-                    onChange={(e) => setProfileData(p => ({ ...p, nombre: e.target.value }))}
-                    onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('profile-edad')?.focus() }}
-                    placeholder="Ej: Luis"
-                    className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/25 focus:border-violet-500/30 focus:outline-none transition-colors" />
+                {/* Tus datos */}
+                <p className="text-violet-300/50 text-[10px] font-medium uppercase tracking-wider">Tus datos</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Tu nombre</label>
+                    <input type="text" value={profileData.nombre}
+                      autoFocus
+                      onChange={(e) => setProfileData(p => ({ ...p, nombre: e.target.value }))}
+                      onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('profile-edad')?.focus() }}
+                      placeholder="Ej: Luis"
+                      className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/25 focus:border-violet-500/30 focus:outline-none transition-colors" />
+                  </div>
+                  <div>
+                    <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Tu edad</label>
+                    <input type="text" id="profile-edad" value={profileData.edad}
+                      onChange={(e) => setProfileData(p => ({ ...p, edad: e.target.value }))}
+                      onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('profile-nombre-pareja')?.focus() }}
+                      placeholder="Ej: 28"
+                      className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/25 focus:border-violet-500/30 focus:outline-none transition-colors" />
+                  </div>
                 </div>
-                <div>
-                  <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Tu edad</label>
-                  <input type="text" id="profile-edad" value={profileData.edad}
-                    onChange={(e) => setProfileData(p => ({ ...p, edad: e.target.value }))}
-                    onKeyDown={(e) => { if (e.key === 'Enter' && profileData.nombre.trim() && profileData.edad.trim()) setStage('questionnaire') }}
-                    placeholder="Ej: 28"
-                    className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/25 focus:border-violet-500/30 focus:outline-none transition-colors" />
+
+                {/* Datos de tu pareja */}
+                <p className="text-fuchsia-300/50 text-[10px] font-medium uppercase tracking-wider mt-2">Datos de tu pareja</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Nombre de tu pareja</label>
+                    <input type="text" id="profile-nombre-pareja" value={profileData.nombrePareja}
+                      onChange={(e) => setProfileData(p => ({ ...p, nombrePareja: e.target.value }))}
+                      onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('profile-edad-pareja')?.focus() }}
+                      placeholder="Ej: Susana"
+                      className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/25 focus:border-fuchsia-500/30 focus:outline-none transition-colors" />
+                  </div>
+                  <div>
+                    <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Edad de tu pareja</label>
+                    <input type="text" id="profile-edad-pareja" value={profileData.edadPareja}
+                      onChange={(e) => setProfileData(p => ({ ...p, edadPareja: e.target.value }))}
+                      onKeyDown={(e) => { if (e.key === 'Enter' && profileData.nombre.trim() && profileData.edad.trim() && profileData.nombrePareja.trim() && profileData.edadPareja.trim()) setStage('questionnaire') }}
+                      placeholder="Ej: 30"
+                      className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/25 focus:border-fuchsia-500/30 focus:outline-none transition-colors" />
+                  </div>
                 </div>
               </div>
 
               <motion.button
-                onClick={() => { if (profileData.nombre.trim() && profileData.edad.trim()) setStage('questionnaire') }}
+                onClick={() => { if (profileData.nombre.trim() && profileData.edad.trim() && profileData.nombrePareja.trim() && profileData.edadPareja.trim()) setStage('questionnaire') }}
                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                disabled={!profileData.nombre.trim() || !profileData.edad.trim()}
-                className={`w-full py-4 rounded-xl text-white font-light text-base transition-all shadow-lg ${profileData.nombre.trim() && profileData.edad.trim()
+                disabled={!profileData.nombre.trim() || !profileData.edad.trim() || !profileData.nombrePareja.trim() || !profileData.edadPareja.trim()}
+                className={`w-full py-4 rounded-xl text-white font-light text-base transition-all shadow-lg ${profileData.nombre.trim() && profileData.edad.trim() && profileData.nombrePareja.trim() && profileData.edadPareja.trim()
                   ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 shadow-violet-600/20'
                   : 'bg-white/10 text-white/30 cursor-not-allowed shadow-none'}`}>
                 Continuar al cuestionario <ArrowRight className="inline w-4 h-4 ml-2" />
@@ -1087,6 +1342,49 @@ const RadiografiaPremiumPage = () => {
           <motion.div key="questionnaire" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="min-h-screen pt-6 lg:pt-10 pb-20 px-6">
             <div className="max-w-2xl mx-auto">
+
+              {/* ── Spotlight Onboarding (progressive highlight + TTS narration) ── */}
+              <AnimatePresence>
+                {showOnboarding && currentQ === 0 && (() => {
+                  const SPOTLIGHT_STEPS = [
+                    { targetId: 'spotlight-question', title: 'Aquí aparece tu pregunta', desc: 'Cada pregunta se lee con la voz que elegiste. Solo escucha y prepárate.', narration: 'Aquí verás la pregunta. Se lee en voz alta automáticamente. Solo relájate y escucha.', color: 'emerald' },
+                    { targetId: 'spotlight-examples', title: 'Ideas para completar', desc: 'Si no sabes qué más decir, estas ideas te ayudan a profundizar.', narration: 'Si te faltó algo, aquí tienes ideas para enriquecer tu respuesta.', color: 'violet' },
+                    { targetId: 'spotlight-actions', title: 'Habla, escribe o avanza', desc: 'El micrófono se activa solo. Si prefieres escribir, hay un enlace abajo.', narration: 'El micrófono se activa automáticamente. Habla con libertad. Cuando termines, toca Siguiente.', color: 'fuchsia' }
+                  ]
+                  const step = SPOTLIGHT_STEPS[onboardingStep] || SPOTLIGHT_STEPS[0]
+                  const borderColor = { emerald: 'border-emerald-400/60', violet: 'border-violet-400/60', fuchsia: 'border-fuchsia-400/60' }[step.color]
+                  const bgCard = { emerald: 'from-emerald-500/[0.06]', violet: 'from-violet-500/[0.06]', fuchsia: 'from-fuchsia-500/[0.06]' }[step.color]
+                  const dotColor = { emerald: 'bg-emerald-400', violet: 'bg-violet-400', fuchsia: 'bg-fuchsia-400' }[step.color]
+
+                  return (
+                    <motion.div
+                      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                      className="fixed inset-0 z-50 pointer-events-none"
+                      style={{ background: 'transparent' }}>
+                      {/* Dark overlay with cutout */}
+                      <div className="absolute inset-0 pointer-events-auto"
+                        onClick={() => { onboardingStep < SPOTLIGHT_STEPS.length - 1 ? setOnboardingStep(s => s + 1) : setShowOnboarding(false) }}
+                        style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(2px)' }}>
+                        {/* Cutout rendered by SpotlightCutout effect */}
+                        <SpotlightCutout targetId={step.targetId} />
+                      </div>
+
+                      {/* Tooltip card — positioned below target */}
+                      <SpotlightTooltip
+                        targetId={step.targetId}
+                        onboardingStep={onboardingStep}
+                        totalSteps={SPOTLIGHT_STEPS.length}
+                        step={step}
+                        borderColor={borderColor}
+                        bgCard={bgCard}
+                        dotColor={dotColor}
+                        onNext={() => { onboardingStep < SPOTLIGHT_STEPS.length - 1 ? setOnboardingStep(s => s + 1) : setShowOnboarding(false) }}
+                        onSkip={() => setShowOnboarding(false)}
+                      />
+                    </motion.div>
+                  )
+                })()}
+              </AnimatePresence>
 
               {/* Progress bar */}
               <div className="mb-8">
@@ -1136,7 +1434,7 @@ const RadiografiaPremiumPage = () => {
               </div>
 
               {/* ── Card verde: Responde libremente + pregunta principal ── */}
-              <div className="mb-6">
+              <div id="spotlight-question" className="mb-6">
                 <div className="px-4 py-2.5 rounded-t-2xl bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-emerald-500/15 border border-b-0 border-emerald-500/15">
                   <p className="text-emerald-300/80 text-xs font-semibold uppercase tracking-widest text-center flex items-center justify-center gap-2">
                     <Heart className="w-3.5 h-3.5 text-emerald-400/60" />
@@ -1149,7 +1447,7 @@ const RadiografiaPremiumPage = () => {
               </div>
 
               {/* Examples — as completion prompts */}
-              <div className="mb-8">
+              <div id="spotlight-examples" className="mb-8">
                 <div className="px-4 py-2.5 rounded-t-2xl bg-gradient-to-r from-violet-500/15 via-fuchsia-500/10 to-violet-500/15 border border-b-0 border-violet-500/15">
                   <p className="text-violet-300/80 text-xs font-semibold uppercase tracking-widest text-center flex items-center justify-center gap-2">
                     <Lightbulb className="w-3.5 h-3.5 text-violet-400/60" />
@@ -1177,12 +1475,7 @@ const RadiografiaPremiumPage = () => {
               {recording && !typingMode && (
                 <div className="mb-6 text-center">
                   <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl border border-red-500/20 bg-red-500/[0.04]">
-                    <div className="flex gap-1">
-                      <div className="w-1.5 h-4 bg-red-500/60 rounded-full animate-pulse" />
-                      <div className="w-1.5 h-6 bg-red-500/70 rounded-full animate-pulse" style={{ animationDelay: '150ms' }} />
-                      <div className="w-1.5 h-3 bg-red-500/50 rounded-full animate-pulse" style={{ animationDelay: '300ms' }} />
-                      <div className="w-1.5 h-5 bg-red-500/60 rounded-full animate-pulse" style={{ animationDelay: '100ms' }} />
-                    </div>
+                    <RecordingBars analyser={recordingAnalyser} />
                     <span className="text-red-300/70 text-sm font-light">Escuchando… habla con libertad</span>
                   </div>
                 </div>
@@ -1236,7 +1529,7 @@ const RadiografiaPremiumPage = () => {
               )}
 
               {/* ── Action buttons: Back | Mic | Next ── */}
-              <div className="flex items-end justify-center gap-4 lg:gap-5 mb-4">
+              <div id="spotlight-actions" className="flex items-end justify-center gap-4 lg:gap-5 mb-4">
                 {/* Back */}
                 <motion.button onClick={goBack} disabled={currentQ === 0}
                   whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
@@ -1310,24 +1603,29 @@ const RadiografiaPremiumPage = () => {
                 </p>
               )}
 
-              {/* DEV: Fill demo responses */}
+              {/* DEV: Quick actions */}
               {import.meta.env.DEV && (
-                <div className="mt-8 pt-6 border-t border-white/5 flex flex-wrap gap-3 justify-center">
+                <div className="mt-8 pt-6 border-t border-white/5 flex flex-wrap gap-4 justify-center">
                   <button onClick={() => {
                     const demoText = DEMO_RESPONSES[question?.id] || ''
                     setTranscript(demoText)
                     setTextInput(demoText)
                     setResponses(prev => ({ ...prev, [question.id]: demoText }))
                   }}
-                    className="text-xs px-4 py-2 rounded-lg border border-amber-500/20 bg-amber-500/5 text-amber-300/60 hover:text-amber-300/90 transition-colors">
-                    🧪 Rellenar esta respuesta
+                    className="flex flex-col items-center gap-1" title="Rellenar esta respuesta">
+                    <div className="w-11 h-11 rounded-full border border-amber-500/25 bg-amber-500/10 flex items-center justify-center text-amber-300/70 hover:bg-amber-500/20 transition-colors">
+                      <span className="text-base">🧪</span>
+                    </div>
+                    <span className="text-[9px] text-white/30">Rellenar</span>
                   </button>
                   <button onClick={() => { setResponses({ ...DEMO_RESPONSES }); setTimeout(() => handleRunAnalysis(DEMO_RESPONSES), 200) }}
-                    className="text-xs px-4 py-2 rounded-lg border border-emerald-500/20 bg-emerald-500/5 text-emerald-300/60 hover:text-emerald-300/90 transition-colors">
-                    🚀 Rellenar todo + Lanzar análisis
+                    className="flex flex-col items-center gap-1" title="Rellenar todo y lanzar análisis">
+                    <div className="w-11 h-11 rounded-full border border-emerald-500/25 bg-emerald-500/10 flex items-center justify-center text-emerald-300/70 hover:bg-emerald-500/20 transition-colors">
+                      <span className="text-base">🚀</span>
+                    </div>
+                    <span className="text-[9px] text-white/30">Lanzar</span>
                   </button>
                   <button onClick={() => {
-                    // Priority: imported cache > localStorage > fallback to API
                     if (CACHED_PREVIEW_ANALYSIS) {
                       setAiAnalysis(CACHED_PREVIEW_ANALYSIS)
                       setCachedAnalysis(CACHED_PREVIEW_ANALYSIS)
@@ -1347,8 +1645,11 @@ const RadiografiaPremiumPage = () => {
                     setResponses({ ...DEMO_RESPONSES })
                     setTimeout(() => handleRunAnalysis(DEMO_RESPONSES), 200)
                   }}
-                    className="text-xs px-4 py-2 rounded-lg border border-fuchsia-500/20 bg-fuchsia-500/5 text-fuchsia-300/60 hover:text-fuchsia-300/90 transition-colors">
-                    ⚡ Vista previa {CACHED_PREVIEW_ANALYSIS ? '(caché real)' : localStorage.getItem('radiografia_cached_analysis') ? '(usar caché)' : '(lanzar análisis)'}
+                    className="flex flex-col items-center gap-1" title="Vista previa">
+                    <div className="w-11 h-11 rounded-full border border-fuchsia-500/25 bg-fuchsia-500/10 flex items-center justify-center text-fuchsia-300/70 hover:bg-fuchsia-500/20 transition-colors">
+                      <span className="text-base">⚡</span>
+                    </div>
+                    <span className="text-[9px] text-white/30">Preview</span>
                   </button>
                   {localStorage.getItem('radiografia_cached_analysis') && (
                     <button onClick={() => {
@@ -1357,10 +1658,27 @@ const RadiografiaPremiumPage = () => {
                       setResponses({ ...DEMO_RESPONSES })
                       setTimeout(() => handleRunAnalysis(DEMO_RESPONSES), 200)
                     }}
-                      className="text-xs px-4 py-2 rounded-lg border border-red-500/20 bg-red-500/5 text-red-300/60 hover:text-red-300/90 transition-colors">
-                      🔄 Borrar caché y relanzar DeepSeek
+                      className="flex flex-col items-center gap-1" title="Borrar caché y relanzar">
+                      <div className="w-11 h-11 rounded-full border border-red-500/25 bg-red-500/10 flex items-center justify-center text-red-300/70 hover:bg-red-500/20 transition-colors">
+                        <span className="text-base">🔄</span>
+                      </div>
+                      <span className="text-[9px] text-white/30">Caché</span>
                     </button>
                   )}
+                  <button onClick={() => setStage('instructions')}
+                    className="flex flex-col items-center gap-1" title="Ir a Instrucciones">
+                    <div className="w-11 h-11 rounded-full border border-violet-500/25 bg-violet-500/10 flex items-center justify-center text-violet-300/70 hover:bg-violet-500/20 transition-colors">
+                      <span className="text-base">📋</span>
+                    </div>
+                    <span className="text-[9px] text-white/30">Instruc.</span>
+                  </button>
+                  <button onClick={() => navigate('/tienda/diagnostico-relacional')}
+                    className="flex flex-col items-center gap-1" title="Ir a Landing">
+                    <div className="w-11 h-11 rounded-full border border-cyan-500/25 bg-cyan-500/10 flex items-center justify-center text-cyan-300/70 hover:bg-cyan-500/20 transition-colors">
+                      <span className="text-base">🏠</span>
+                    </div>
+                    <span className="text-[9px] text-white/30">Landing</span>
+                  </button>
                 </div>
               )}
 
@@ -1436,6 +1754,9 @@ const RadiografiaPremiumPage = () => {
                   {profileData.nombre && (
                     <div className="flex flex-wrap items-center justify-center gap-3 mb-4">
                       <span className="px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.04] text-white/60 text-xs font-medium">{profileData.nombre}{profileData.edad ? `, ${profileData.edad} años` : ''}</span>
+                      {profileData.nombrePareja && (
+                        <span className="px-3 py-1.5 rounded-full border border-fuchsia-500/15 bg-fuchsia-500/[0.04] text-fuchsia-300/60 text-xs font-medium">{profileData.nombrePareja}{profileData.edadPareja ? `, ${profileData.edadPareja} años` : ''}</span>
+                      )}
                       <span className="px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.04] text-white/40 text-xs font-light">{profileData.fecha}</span>
                     </div>
                   )}
@@ -1454,22 +1775,27 @@ const RadiografiaPremiumPage = () => {
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                   className="p-6 lg:p-8 rounded-2xl border border-fuchsia-500/15 bg-gradient-to-br from-fuchsia-500/[0.04] via-violet-500/[0.03] to-transparent relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-fuchsia-500/40 via-violet-500/30 to-fuchsia-500/40" />
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-fuchsia-500/15" />
-                    <h2 className="text-xs font-medium text-fuchsia-300/60 uppercase tracking-[0.2em]">Tu forma de amar</h2>
-                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-fuchsia-500/15" />
+                  <div className="text-center mb-8">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-fuchsia-500/20 to-violet-500/15 border border-fuchsia-500/25 mb-4">
+                      <Heart className="w-7 h-7 text-fuchsia-400/80" />
+                    </div>
+                    <h2 className="text-xl lg:text-2xl font-light text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-300 to-violet-300 tracking-wide">Tu forma de amar</h2>
+                    <p className="text-white/35 text-sm font-light mt-2">El análisis más profundo de quién eres cuando amas</p>
                   </div>
 
-                  <div className="space-y-6">
+                  {/* Radial mind-map */}
+                  <AutoanalisisRadial data={aiAnalysis.autoanalisis_usuario} />
+
+                  <div className="space-y-8">
                     {/* 1. Apertura y rapport */}
                     {aiAnalysis.autoanalisis_usuario.apertura_rapport && (
                       <div className="flex items-start gap-4 mb-2">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-500/20 to-violet-500/15 border border-fuchsia-500/20 flex items-center justify-center flex-shrink-0 mt-1">
                           <Heart className="w-5 h-5 text-fuchsia-400/70" />
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                           {aiAnalysis.autoanalisis_usuario.apertura_rapport.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/65 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                            <p key={i} className="text-white/80 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -1478,12 +1804,12 @@ const RadiografiaPremiumPage = () => {
                     {/* 2. Forma de amar */}
                     {aiAnalysis.autoanalisis_usuario.forma_de_amar && (
                       <div>
-                        <p className="text-fuchsia-300/50 text-[10px] font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
-                          <Flame className="w-3.5 h-3.5" /> Cómo amas y cómo esperas ser amado
+                        <p className="text-fuchsia-300/70 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
+                          <Flame className="w-4 h-4" /> Cómo amas y cómo esperas ser amado
                         </p>
-                        <div className="space-y-2 pl-3 border-l-2 border-fuchsia-500/15">
+                        <div className="space-y-3 pl-4 border-l-2 border-fuchsia-500/25">
                           {aiAnalysis.autoanalisis_usuario.forma_de_amar.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -1492,12 +1818,12 @@ const RadiografiaPremiumPage = () => {
                     {/* 3. Lo que busca en el otro */}
                     {aiAnalysis.autoanalisis_usuario.lo_que_busca_en_el_otro && (
                       <div>
-                        <p className="text-violet-300/50 text-[10px] font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
-                          <Eye className="w-3.5 h-3.5" /> Lo que buscas en el otro
+                        <p className="text-violet-300/70 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
+                          <Eye className="w-4 h-4" /> Lo que buscas en el otro
                         </p>
-                        <div className="space-y-2 pl-3 border-l-2 border-violet-500/15">
+                        <div className="space-y-3 pl-4 border-l-2 border-violet-500/25">
                           {aiAnalysis.autoanalisis_usuario.lo_que_busca_en_el_otro.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -1506,12 +1832,12 @@ const RadiografiaPremiumPage = () => {
                     {/* 4. Lo que reclama afuera */}
                     {aiAnalysis.autoanalisis_usuario.lo_que_reclama_afuera && (
                       <div>
-                        <p className="text-rose-300/50 text-[10px] font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
-                          <Compass className="w-3.5 h-3.5" /> Lo que reclamas afuera y te pertenece adentro
+                        <p className="text-rose-300/70 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
+                          <Compass className="w-4 h-4" /> Lo que reclamas afuera y te pertenece adentro
                         </p>
-                        <div className="space-y-2 pl-3 border-l-2 border-rose-500/15">
+                        <div className="space-y-3 pl-4 border-l-2 border-rose-500/25">
                           {aiAnalysis.autoanalisis_usuario.lo_que_reclama_afuera.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -1520,12 +1846,12 @@ const RadiografiaPremiumPage = () => {
                     {/* 5. Fantasma relacional */}
                     {aiAnalysis.autoanalisis_usuario.fantasma_relacional && (
                       <div>
-                        <p className="text-purple-300/50 text-[10px] font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
-                          <Anchor className="w-3.5 h-3.5" /> Tu fantasma relacional
+                        <p className="text-purple-300/70 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
+                          <Anchor className="w-4 h-4" /> Tu fantasma relacional
                         </p>
-                        <div className="space-y-2 pl-3 border-l-2 border-purple-500/15">
+                        <div className="space-y-3 pl-4 border-l-2 border-purple-500/25">
                           {aiAnalysis.autoanalisis_usuario.fantasma_relacional.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -1534,12 +1860,12 @@ const RadiografiaPremiumPage = () => {
                     {/* 6. Yo ideal vs yo real */}
                     {aiAnalysis.autoanalisis_usuario.yo_ideal && (
                       <div>
-                        <p className="text-cyan-300/50 text-[10px] font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
-                          <Target className="w-3.5 h-3.5" /> Quién crees ser vs quién eres cuando amas
+                        <p className="text-cyan-300/70 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
+                          <Target className="w-4 h-4" /> Quién crees ser vs quién eres cuando amas
                         </p>
-                        <div className="space-y-2 pl-3 border-l-2 border-cyan-500/15">
+                        <div className="space-y-3 pl-4 border-l-2 border-cyan-500/25">
                           {aiAnalysis.autoanalisis_usuario.yo_ideal.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -1548,12 +1874,12 @@ const RadiografiaPremiumPage = () => {
                     {/* 7. Mecanismos de defensa */}
                     {aiAnalysis.autoanalisis_usuario.mecanismos_defensa && (
                       <div>
-                        <p className="text-amber-300/50 text-[10px] font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
-                          <Shield className="w-3.5 h-3.5" /> Tus mecanismos de defensa
+                        <p className="text-amber-300/70 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
+                          <Shield className="w-4 h-4" /> Tus mecanismos de defensa
                         </p>
-                        <div className="space-y-2 pl-3 border-l-2 border-amber-500/15">
+                        <div className="space-y-3 pl-4 border-l-2 border-amber-500/25">
                           {aiAnalysis.autoanalisis_usuario.mecanismos_defensa.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -1562,12 +1888,12 @@ const RadiografiaPremiumPage = () => {
                     {/* 8. Tipo de pareja que repite */}
                     {aiAnalysis.autoanalisis_usuario.tipo_pareja_que_repite && (
                       <div>
-                        <p className="text-orange-300/50 text-[10px] font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
-                          <Repeat className="w-3.5 h-3.5" /> El tipo de pareja que repites
+                        <p className="text-orange-300/70 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
+                          <Repeat className="w-4 h-4" /> El tipo de pareja que repites
                         </p>
-                        <div className="space-y-2 pl-3 border-l-2 border-orange-500/15">
+                        <div className="space-y-3 pl-4 border-l-2 border-orange-500/25">
                           {aiAnalysis.autoanalisis_usuario.tipo_pareja_que_repite.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -1575,13 +1901,13 @@ const RadiografiaPremiumPage = () => {
 
                     {/* 9. Núcleo del patrón */}
                     {aiAnalysis.autoanalisis_usuario.nucleo_del_patron && (
-                      <div className="mt-2 p-5 rounded-xl border border-fuchsia-500/15 bg-fuchsia-500/[0.04]">
-                        <p className="text-fuchsia-300/60 text-[10px] font-medium uppercase tracking-wider mb-3 flex items-center gap-2">
-                          <Zap className="w-3.5 h-3.5" /> El núcleo de tu patrón
+                      <div className="mt-2 p-6 rounded-xl border border-fuchsia-500/20 bg-fuchsia-500/[0.06]">
+                        <p className="text-fuchsia-300/80 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
+                          <Zap className="w-4 h-4" /> El núcleo de tu patrón
                         </p>
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                           {aiAnalysis.autoanalisis_usuario.nucleo_del_patron.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/60 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                            <p key={i} className="text-white/80 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -1589,13 +1915,13 @@ const RadiografiaPremiumPage = () => {
 
                     {/* 10. Cierre transformador */}
                     {aiAnalysis.autoanalisis_usuario.cierre_transformador && (
-                      <div className="mt-2 p-5 rounded-xl border border-emerald-500/15 bg-emerald-500/[0.03]">
-                        <p className="text-emerald-300/60 text-[10px] font-medium uppercase tracking-wider mb-3 flex items-center gap-2">
-                          <Sparkles className="w-3.5 h-3.5" /> Tu camino transformador
+                      <div className="mt-2 p-6 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.05]">
+                        <p className="text-emerald-300/80 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
+                          <Sparkles className="w-4 h-4" /> Tu camino transformador
                         </p>
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                           {aiAnalysis.autoanalisis_usuario.cierre_transformador.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/55 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -1625,35 +1951,7 @@ const RadiografiaPremiumPage = () => {
                 </div>
               </motion.div>
 
-              {/* ═══ 1. RADAR PSICOLÓGICO DEL VÍNCULO ═══ */}
-              {aiAnalysis.dimensiones && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
-                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Mapa Psicológico</h2>
-                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
-                  </div>
-                  <div className="p-6 rounded-2xl border border-white/8 bg-white/[0.02]">
-                    <RadarChart dimensiones={aiAnalysis.dimensiones} />
-                  </div>
-                </motion.div>
-              )}
-
-              {/* ═══ 2. RADIOGRAFÍA INICIAL ═══ */}
-              {aiAnalysis.radiografia_inicial && (
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                  className="p-6 lg:p-8 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.03] to-transparent relative overflow-hidden">
-                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/30 to-fuchsia-500/30" />
-                  <h2 className="text-lg font-light text-white/70 mb-4">Radiografía Inicial</h2>
-                  <div className="space-y-3">
-                    {aiAnalysis.radiografia_inicial.split('\n\n').map((p, i) => (
-                      <p key={i} className="text-white/55 text-sm font-light leading-relaxed">{renderBold(p)}</p>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* ═══ 3. ANÁLISIS POR ENFOQUE PSICOLÓGICO (11 corrientes) ═══ */}
+              {/* ═══ 1. ANÁLISIS POR ENFOQUE PSICOLÓGICO (11 corrientes) ═══ */}
               {aiAnalysis.lecturas_por_enfoque && (() => {
                 const AUTHOR_CONFIG = [
                   { key: 'gottman', icon: Shield, border: 'border-blue-500/10', bg: 'from-blue-500/[0.02]', line: 'from-blue-500/20', iconBg: 'bg-blue-500/10 border-blue-500/15', iconColor: 'text-blue-400/60', barFill: '#3b82f6', radar: '#60a5fa' },
@@ -1673,6 +1971,7 @@ const RadiografiaPremiumPage = () => {
                   .map(a => ({
                     subject: (aiAnalysis.lecturas_por_enfoque[a.key].titulo || a.key).split('(')[0].split('–')[0].trim().split(' ').slice(0, 2).join(' '),
                     score: aiAnalysis.lecturas_por_enfoque[a.key].puntuacion ?? 50,
+                    enfoque: aiAnalysis.lecturas_por_enfoque[a.key].enfoque || '',
                     fill: a.barFill,
                     fullMark: 100
                   }))
@@ -1697,7 +1996,7 @@ const RadiografiaPremiumPage = () => {
                         <div className="flex items-center justify-center gap-2 mb-6">
                           {[
                             { id: 'radar', label: '◎ Radar' },
-                            { id: 'polar', label: '❋ Rosa polar' },
+                            { id: 'bubbles', label: '◉ Burbujas' },
                             { id: 'bars', label: '▮ Barras' }
                           ].map(tab => (
                             <button key={tab.id} onClick={() => setChartViewMode(tab.id)}
@@ -1737,37 +2036,48 @@ const RadiografiaPremiumPage = () => {
                           </ResponsiveContainer>
                         )}
 
-                        {/* Chart: Polar / Rose area — dual layer with gradient */}
-                        {chartViewMode === 'polar' && (
-                          <ResponsiveContainer width="100%" height={420}>
-                            <RechartRadar cx="50%" cy="50%" outerRadius="78%" data={radarData}>
-                              <defs>
-                                <radialGradient id="polarAreaGrad" cx="50%" cy="50%" r="50%">
-                                  <stop offset="0%" stopColor="rgba(236,72,153,0.4)" />
-                                  <stop offset="60%" stopColor="rgba(139,92,246,0.2)" />
-                                  <stop offset="100%" stopColor="rgba(139,92,246,0.02)" />
-                                </radialGradient>
-                                <linearGradient id="polarStrokeGrad" x1="0" y1="0" x2="1" y2="1">
-                                  <stop offset="0%" stopColor="rgba(236,72,153,0.9)" />
-                                  <stop offset="100%" stopColor="rgba(139,92,246,0.9)" />
-                                </linearGradient>
-                                <filter id="softGlow">
-                                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                                  <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                                </filter>
-                              </defs>
-                              <PolarGrid stroke="rgba(255,255,255,0.05)" gridType="circle" />
-                              <PolarAngleAxis dataKey="subject" tick={{ fill: 'rgba(255,255,255,0.55)', fontSize: 11, fontWeight: 400 }} />
-                              <PolarRadiusAxis angle={90} domain={[0, 100]} tick={false} axisLine={false} />
-                              <Radar name="Puntuación" dataKey="score" stroke="url(#polarStrokeGrad)" fill="url(#polarAreaGrad)" strokeWidth={3}
-                                dot={{ r: 6, fill: '#ec4899', fillOpacity: 1, stroke: 'rgba(236,72,153,0.4)', strokeWidth: 3, filter: 'url(#softGlow)' }}
-                                activeDot={{ r: 8, fill: '#f472b6', stroke: '#ec4899', strokeWidth: 2 }} />
-                              <Tooltip
-                                contentStyle={{ background: 'rgba(10,10,18,0.96)', border: '1px solid rgba(236,72,153,0.3)', borderRadius: '14px', fontSize: '13px', color: 'rgba(255,255,255,0.8)', boxShadow: '0 8px 32px rgba(236,72,153,0.15)' }}
-                                formatter={(val) => [`${val}%`, 'Puntuación']}
-                              />
-                            </RechartRadar>
-                          </ResponsiveContainer>
+                        {/* Chart: Bubbles view — D3-style packed circles */}
+                        {chartViewMode === 'bubbles' && (
+                          <div className="flex justify-center py-4">
+                            <svg viewBox="0 0 420 420" className="w-full max-w-md" style={{ filter: 'drop-shadow(0 0 20px rgba(139,92,246,0.1))' }}>
+                              {(() => {
+                                const sorted = [...radarData].sort((a, b) => b.score - a.score)
+                                const cx = 210, cy = 210
+                                const positions = []
+                                sorted.forEach((d, i) => {
+                                  const radius = 18 + (d.score / 100) * 32
+                                  let x, y, attempts = 0, placed = false
+                                  if (i === 0) { x = cx; y = cy; placed = true }
+                                  while (!placed && attempts < 200) {
+                                    const angle = (i / sorted.length) * Math.PI * 2 + attempts * 0.3
+                                    const dist = 50 + attempts * 3.5
+                                    x = cx + dist * Math.cos(angle)
+                                    y = cy + dist * Math.sin(angle)
+                                    const overlap = positions.some(p => {
+                                      const dx = x - p.x, dy = y - p.y
+                                      return Math.sqrt(dx * dx + dy * dy) < radius + p.radius + 6
+                                    })
+                                    if (!overlap && x > radius + 5 && x < 420 - radius - 5 && y > radius + 5 && y < 420 - radius - 5) placed = true
+                                    else attempts++
+                                  }
+                                  if (!placed) { x = cx + (i % 2 ? 1 : -1) * (40 + i * 20); y = cy + (i % 3 - 1) * 40 }
+                                  positions.push({ ...d, x, y, radius })
+                                })
+                                return positions.map((d, i) => (
+                                  <g key={i}>
+                                    <circle cx={d.x} cy={d.y} r={d.radius}
+                                      fill={`${d.fill}20`} stroke={`${d.fill}50`} strokeWidth={1.5} />
+                                    <text x={d.x} y={d.y - 6} textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize={d.radius > 30 ? '10' : '9'} fontWeight="400">
+                                      {d.subject}
+                                    </text>
+                                    <text x={d.x} y={d.y + 8} textAnchor="middle" fill={d.fill} fontSize="11" fontWeight="600">
+                                      {d.score}%
+                                    </text>
+                                  </g>
+                                ))
+                              })()}
+                            </svg>
+                          </div>
                         )}
 
                         {/* Chart: Bars view — horizontal with individual gradients + score labels */}
@@ -1788,9 +2098,17 @@ const RadiografiaPremiumPage = () => {
                                   tick={{ fill: 'rgba(255,255,255,0.55)', fontSize: 11, fontWeight: 400 }}
                                   axisLine={false} tickLine={false} width={115} />
                                 <Tooltip
-                                  contentStyle={{ background: 'rgba(10,10,18,0.96)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '14px', fontSize: '13px', color: 'rgba(255,255,255,0.8)', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}
+                                  content={({ active, payload }) => {
+                                    if (!active || !payload?.[0]) return null
+                                    const d = payload[0].payload
+                                    return (
+                                      <div style={{ background: 'rgba(10,10,18,0.96)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '14px', padding: '10px 14px', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}>
+                                        <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', fontWeight: 500, margin: 0 }}>{d.subject} — {d.score}%</p>
+                                        {d.enfoque && <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '11px', margin: '4px 0 0', maxWidth: '220px' }}>{d.enfoque}</p>}
+                                      </div>
+                                    )
+                                  }}
                                   cursor={{ fill: 'rgba(255,255,255,0.02)', radius: 8 }}
-                                  formatter={(val) => [`${val}%`, 'Puntuación']}
                                 />
                                 <Bar dataKey="score" radius={[0, 10, 10, 0]} maxBarSize={22} label={{ position: 'right', fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: 500, formatter: (v) => `${v}%` }}>
                                   {radarData.map((entry, i) => (
@@ -1941,50 +2259,54 @@ const RadiografiaPremiumPage = () => {
                             )}
                           </div>
 
-                          {/* Indicadores — structured as bold-initial list */}
+                          {/* Indicadores — as badges */}
                           {data.indicadores && data.indicadores.length > 0 && (
                             <div className="mb-5">
                               <p className="text-white/40 text-[10px] font-medium uppercase tracking-wider mb-3">Puntos clave</p>
-                              <ul className="space-y-2">
+                              <div className="flex flex-wrap gap-2">
                                 {data.indicadores.map((ind, i) => (
-                                  <li key={i} className="flex items-start gap-2.5 text-white/50 text-sm font-light leading-relaxed">
-                                    <span className="mt-1.5 text-[8px]" style={{ color: barFill, opacity: 0.6 }}>●</span>
-                                    <span>{renderBoldInitial(ind)}</span>
-                                  </li>
+                                  <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-light border" style={{
+                                    borderColor: `${barFill}25`,
+                                    backgroundColor: `${barFill}08`,
+                                    color: 'rgba(255,255,255,0.7)'
+                                  }}>
+                                    <span className="text-[6px]" style={{ color: barFill, opacity: 0.7 }}>●</span>
+                                    {stripBold(ind)}
+                                  </span>
                                 ))}
-                              </ul>
+                              </div>
                             </div>
                           )}
 
-                          {/* Interpretación — bold-initial style */}
+                          {/* Interpretación — clean readable text */}
                           <div className="pt-4 border-t border-white/5">
                             <p className="text-white/40 text-[10px] font-medium uppercase tracking-wider mb-3">Interpretación personalizada</p>
                             {isFreudLacan ? (
                               <div className="space-y-4">
                                 {data.interpretacion_freud && (
-                                  <div className="pl-3 border-l-2 border-purple-500/20">
+                                  <div className="pl-4 border-l-2 border-purple-500/20">
                                     <p className="text-purple-300/50 text-[10px] font-medium uppercase tracking-wider mb-1.5">Lectura freudiana</p>
-                                    <p className="text-white/50 text-sm font-light leading-relaxed">{renderBoldInitial(data.interpretacion_freud)}</p>
+                                    <p className="text-white/70 text-[15px] font-light leading-[1.8]">{stripBold(data.interpretacion_freud)}</p>
                                   </div>
                                 )}
                                 {data.interpretacion_lacan && (
-                                  <div className="pl-3 border-l-2 border-indigo-500/20">
+                                  <div className="pl-4 border-l-2 border-indigo-500/20">
                                     <p className="text-indigo-300/50 text-[10px] font-medium uppercase tracking-wider mb-1.5">Lectura lacaniana</p>
-                                    <p className="text-white/50 text-sm font-light leading-relaxed">{renderBoldInitial(data.interpretacion_lacan)}</p>
+                                    <p className="text-white/70 text-[15px] font-light leading-[1.8]">{stripBold(data.interpretacion_lacan)}</p>
                                   </div>
                                 )}
                                 {data.interpretacion && !data.interpretacion_freud && (
-                                  <div className="space-y-2">
+                                  <div className="space-y-3">
                                     {data.interpretacion.split('\n\n').map((p, i) => (
-                                      <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBoldInitial(p)}</p>
+                                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
                                     ))}
                                   </div>
                                 )}
                               </div>
                             ) : (
-                              <div className="space-y-2.5">
+                              <div className="space-y-3">
                                 {(data.interpretacion || '').split('\n\n').map((p, i) => (
-                                  <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBoldInitial(p)}</p>
+                                  <p key={i} className="text-white/70 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
                                 ))}
                               </div>
                             )}
@@ -1997,101 +2319,61 @@ const RadiografiaPremiumPage = () => {
                 )
               })()}
 
-              {/* ═══ 4. ESTADO ACTUAL ═══ */}
+              {/* ═══ 2. MAPA PSICOLÓGICO DEL VÍNCULO ═══ */}
               {aiAnalysis.dimensiones && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                   <div className="flex items-center gap-3 mb-6">
                     <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
-                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Estado Actual</h2>
+                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Mapa Psicológico del Vínculo</h2>
                     <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
                   </div>
                   <div className="p-6 rounded-2xl border border-white/8 bg-white/[0.02]">
-                    <div className="space-y-3">
-                      {['estabilidad_relacional', 'conexion_emocional', 'deseo_erotico', 'sincronia_relacional', 'resiliencia_vinculo'].map(key => {
-                        const val = aiAnalysis.dimensiones[key] ?? 0
-                        return (
-                          <div key={key}>
-                            <div className="flex justify-between mb-1">
-                              <span className="text-white/50 text-xs font-light">{DIMENSION_LABELS[key]}</span>
-                              <span className="text-white/70 text-xs font-light">{val}%</span>
-                            </div>
-                            <div className="h-2.5 bg-white/5 rounded-full overflow-hidden">
-                              <motion.div initial={{ width: 0 }} whileInView={{ width: `${val}%` }} viewport={{ once: true }}
-                                className={`h-full bg-gradient-to-r ${getBarGradient(val)} rounded-full opacity-60`} />
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                </motion.div>
-              )}
+                    <RadarChart dimensiones={aiAnalysis.dimensiones} />
 
-              {/* ═══ 5. DINÁMICA DEL CONFLICTO ═══ */}
-              {aiAnalysis.dinamica_conflicto && (
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
-                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Dinámica del Conflicto</h2>
-                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
-                  </div>
-                  <div className="p-6 rounded-2xl border border-white/8 bg-gradient-to-br from-orange-500/[0.02] to-transparent">
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02] text-center">
-                        <p className="text-2xl font-light text-white mb-1">{aiAnalysis.dinamica_conflicto.tendencia_conflicto ?? 0}%</p>
-                        <p className="text-white/40 text-xs font-light">Tendencia al conflicto</p>
-                      </div>
-                      <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02] text-center">
-                        <p className="text-2xl font-light text-white mb-1">{aiAnalysis.dinamica_conflicto.capacidad_reparacion ?? 0}%</p>
-                        <p className="text-white/40 text-xs font-light">Capacidad de reparación</p>
-                      </div>
-                    </div>
-                    {aiAnalysis.dinamica_conflicto.reaccion_usuario && (
-                      <div className="space-y-3 border-t border-white/5 pt-4">
-                        <div>
-                          <p className="text-white/50 text-xs font-light mb-1">Tu reacción al conflicto:</p>
-                          <p className="text-white/45 text-sm font-light leading-relaxed">{renderBold(aiAnalysis.dinamica_conflicto.reaccion_usuario)}</p>
-                        </div>
-                        <div>
-                          <p className="text-white/50 text-xs font-light mb-1">Reacción percibida de tu pareja:</p>
-                          <p className="text-white/45 text-sm font-light leading-relaxed">{renderBold(aiAnalysis.dinamica_conflicto.reaccion_pareja)}</p>
-                        </div>
+                    {/* ── Dimension breakdown (fused from Diagnóstico Estructural) ── */}
+                    {aiAnalysis.tabla_diagnostica && (
+                      <div className="mt-6 pt-6 border-t border-white/5 space-y-2">
+                        {aiAnalysis.tabla_diagnostica.map((row, i) => {
+                          const dimKey = Object.keys(DIMENSION_LABELS)[i]
+                          const score = aiAnalysis.dimensiones[dimKey] ?? 50
+                          const barColor = score >= 70 ? 'bg-emerald-500' : score >= 45 ? 'bg-amber-500' : 'bg-red-500'
+                          return (
+                            <div key={i} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/[0.02] transition-colors">
+                              <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: DIMENSION_COLORS[i] }} />
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="text-white/65 text-xs font-medium">{row.dimension}</span>
+                                  <span className="text-white/75 text-xs font-semibold tabular-nums ml-2">{score}%</span>
+                                </div>
+                                <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden mb-1.5">
+                                  <div className={`h-full rounded-full ${barColor} transition-all`} style={{ width: `${score}%`, opacity: 0.7 }} />
+                                </div>
+                                <p className="text-white/40 text-[11px] font-light leading-snug">{row.interpretacion}</p>
+                              </div>
+                            </div>
+                          )
+                        })}
                       </div>
                     )}
                   </div>
                 </motion.div>
               )}
 
-              {/* ═══ 6. ENERGÍA EMOCIONAL Y ERÓTICA ═══ */}
-              {aiAnalysis.energia_vinculo && (
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-pink-500/10" />
-                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Energía Emocional y Erótica</h2>
-                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-pink-500/10" />
-                  </div>
-                  <div className="p-6 rounded-2xl border border-white/8 bg-gradient-to-br from-pink-500/[0.02] to-transparent">
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                      {[
-                        { key: 'atraccion_inicial', label: 'Atracción inicial' },
-                        { key: 'atraccion_actual', label: 'Atracción actual' },
-                        { key: 'intimidad_emocional', label: 'Intimidad emocional' },
-                        { key: 'conexion_fisica', label: 'Conexión física' }
-                      ].map(({ key, label }) => {
-                        const val = aiAnalysis.energia_vinculo[key] ?? 0
-                        return (
-                          <div key={key} className="p-4 rounded-xl border border-white/5 bg-white/[0.02] text-center">
-                            <p className={`text-2xl font-light ${getLevelColor(val)} mb-1`}>{val}%</p>
-                            <p className="text-white/40 text-xs font-light">{label}</p>
-                          </div>
-                        )
-                      })}
-                    </div>
+              {/* ═══ 3. RADIOGRAFÍA INICIAL ═══ */}
+              {aiAnalysis.radiografia_inicial && (
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                  className="p-6 lg:p-8 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.03] to-transparent relative overflow-hidden">
+                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/30 to-fuchsia-500/30" />
+                  <h2 className="text-lg font-light text-white/70 mb-4">Radiografía Inicial</h2>
+                  <div className="space-y-3">
+                    {aiAnalysis.radiografia_inicial.split('\n\n').map((p, i) => (
+                      <p key={i} className="text-white/55 text-sm font-light leading-relaxed">{renderBold(p)}</p>
+                    ))}
                   </div>
                 </motion.div>
               )}
 
-              {/* ═══ 7. DIRECCIÓN PROBABLE ═══ */}
+              {/* ═══ 4. DIRECCIÓN PROBABLE — Thermometer + Gauges ═══ */}
               {aiAnalysis.direccion_probable && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                   <div className="flex items-center gap-3 mb-6">
@@ -2100,193 +2382,128 @@ const RadiografiaPremiumPage = () => {
                     <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
                   </div>
                   <div className="p-6 rounded-2xl border border-white/8 bg-white/[0.02]">
-                    <div className="grid grid-cols-3 gap-4">
+                    {/* Gauges row */}
+                    <div className="grid grid-cols-3 gap-6 mb-6">
                       <GaugeChart value={aiAnalysis.direccion_probable.estabilidad_futura} label="Estabilidad futura" />
                       <GaugeChart value={aiAnalysis.direccion_probable.riesgo_desgaste} label="Riesgo de desgaste" inverted />
                       <GaugeChart value={aiAnalysis.direccion_probable.potencial_reconexion} label="Potencial de reconexión" />
+                    </div>
+                    {/* Interpretation text */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-white/5">
+                      {[
+                        { val: aiAnalysis.direccion_probable.estabilidad_futura ?? 0, label: 'Estabilidad futura', text: val => val >= 60 ? 'El vínculo tiene bases sólidas para sostenerse en el tiempo.' : val >= 40 ? 'Hay elementos de estabilidad pero también zonas frágiles que requieren atención.' : 'La estabilidad del vínculo está comprometida y necesita trabajo activo.' },
+                        { val: aiAnalysis.direccion_probable.riesgo_desgaste ?? 0, label: 'Riesgo de desgaste', text: val => val >= 60 ? 'Se detectan señales importantes de desgaste emocional acumulado.' : val >= 40 ? 'Existe un desgaste moderado que conviene atender antes de que escale.' : 'El nivel de desgaste es bajo, lo cual es un indicador positivo.' },
+                        { val: aiAnalysis.direccion_probable.potencial_reconexion ?? 0, label: 'Potencial de reconexión', text: val => val >= 60 ? 'Hay un potencial significativo para reconectar y profundizar el vínculo.' : val >= 40 ? 'La reconexión es posible pero requerirá intención y esfuerzo de ambos.' : 'El potencial de reconexión es bajo — algo fundamental necesita cambiar primero.' }
+                      ].map(({ val, label, text }) => (
+                        <div key={label} className="text-center">
+                          <p className="text-white/45 text-xs font-light leading-relaxed">{text(val)}</p>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </motion.div>
               )}
 
-              {/* ═══ 8. TABLA DIAGNÓSTICA ═══ */}
-              {aiAnalysis.tabla_diagnostica && (
+              {/* ═══ 5. FORTALEZAS Y RIESGOS — Side by side ═══ */}
+              {(aiAnalysis.fortalezas?.length > 0 || aiAnalysis.riesgos?.length > 0) && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                   <div className="flex items-center gap-3 mb-6">
                     <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
-                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Diagnóstico Estructural</h2>
+                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Fortalezas y Señales de Riesgo</h2>
                     <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
                   </div>
-                  <div className="rounded-2xl border border-white/8 overflow-hidden">
-                    {aiAnalysis.tabla_diagnostica.map((row, i) => {
-                      const score = aiAnalysis.dimensiones ? (aiAnalysis.dimensiones[Object.keys(DIMENSION_LABELS)[i]] ?? 50) : 50
-                      const barColor = score >= 70 ? 'bg-emerald-500' : score >= 45 ? 'bg-amber-500' : 'bg-red-500'
-                      return (
-                        <div key={i} className="flex items-center gap-4 px-4 py-3 border-b border-white/[0.04] last:border-b-0">
-                          <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: DIMENSION_COLORS[i] }} />
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="text-white/65 text-xs font-light">{row.dimension}</span>
-                              <span className="text-white/75 text-xs font-medium tabular-nums ml-2">{score}%</span>
-                            </div>
-                            <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden mb-1.5">
-                              <div className={`h-full rounded-full ${barColor} transition-all`} style={{ width: `${score}%`, opacity: 0.7 }} />
-                            </div>
-                            <p className="text-white/35 text-[10px] font-light leading-snug">{row.interpretacion}</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Fortalezas — left */}
+                    <div className="space-y-3">
+                      <p className="text-emerald-300/50 text-[10px] font-medium uppercase tracking-wider flex items-center gap-2">
+                        <CheckCircle className="w-3.5 h-3.5" /> Fortalezas detectadas
+                      </p>
+                      {(aiAnalysis.fortalezas || []).map((f, i) => (
+                        <div key={i} className="p-4 rounded-xl border border-emerald-500/10 bg-emerald-500/[0.02] flex items-start gap-3">
+                          <div className="w-6 h-6 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <CheckCircle className="w-3 h-3 text-emerald-400/60" strokeWidth={1.5} />
                           </div>
+                          <p className="text-white/70 text-[14px] font-light leading-relaxed">{stripBold(f)}</p>
                         </div>
-                      )
-                    })}
+                      ))}
+                    </div>
+                    {/* Riesgos — right */}
+                    <div className="space-y-3">
+                      <p className="text-red-300/50 text-[10px] font-medium uppercase tracking-wider flex items-center gap-2">
+                        <AlertTriangle className="w-3.5 h-3.5" /> Señales de riesgo
+                      </p>
+                      {(aiAnalysis.riesgos || []).map((r, i) => (
+                        <div key={i} className="p-4 rounded-xl border border-red-500/10 bg-red-500/[0.02] flex items-start gap-3">
+                          <div className="w-6 h-6 rounded-lg bg-red-500/10 border border-red-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <AlertTriangle className="w-3 h-3 text-red-400/60" strokeWidth={1.5} />
+                          </div>
+                          <p className="text-white/70 text-[14px] font-light leading-relaxed">{stripBold(r)}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </motion.div>
               )}
 
-              {/* ═══ 9. LECTURA PROFUNDA ═══ */}
-              {aiAnalysis.analisis_profundo && (
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
-                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Lectura Profunda</h2>
-                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
-                  </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    {[
-                      { key: 'narrativa_dominante', label: 'Narrativa dominante', icon: Eye },
-                      { key: 'tensiones_estructurales', label: 'Tensiones estructurales', icon: Activity },
-                      { key: 'evolucion_deseo', label: 'Evolución del deseo', icon: Flame },
-                      { key: 'dinamica_emocional', label: 'Dinámica emocional', icon: Heart }
-                    ].map(({ key, label, icon: Icon }) => {
-                      const text = aiAnalysis.analisis_profundo[key]
-                      if (!text) return null
-                      return (
-                        <div key={key} className="p-5 rounded-2xl border border-white/8 bg-white/[0.02]">
-                          <div className="flex items-center gap-2 mb-3">
-                            <div className="w-7 h-7 rounded-lg bg-violet-500/10 border border-violet-500/15 flex items-center justify-center">
-                              <Icon className="w-3.5 h-3.5 text-violet-400/60" strokeWidth={1.5} />
+              {/* ═══ 6. TU SIGUIENTE PASO — CTA DINÁMICO ═══ */}
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                className="p-6 lg:p-8 rounded-2xl border border-violet-500/15 bg-gradient-to-br from-violet-500/[0.04] via-fuchsia-500/[0.02] to-transparent relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/30 via-fuchsia-500/20 to-violet-500/30" />
+                <div className="text-center mb-6">
+                  <h2 className="text-lg font-light text-white/80 mb-2">Tu siguiente paso</h2>
+                  <p className="text-white/40 text-sm font-light max-w-md mx-auto">
+                    {aiAnalysis.temas_para_consulta?.length > 0
+                      ? 'Basándonos en lo que compartiste, estos son los temas que más impacto tendrían en sesión.'
+                      : 'Estos son los patrones, raíces y dinámicas que exploraríamos en sesión para transformar tu vínculo.'}
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                  {aiAnalysis.temas_para_consulta?.length > 0
+                    ? aiAnalysis.temas_para_consulta.map((tema, i) => {
+                        const icons = [Eye, Anchor, Heart, Target, Compass, Brain]
+                        const TemaIcon = icons[i % icons.length]
+                        return (
+                          <div key={i} className="p-4 rounded-xl border border-white/8 bg-white/[0.02] flex items-start gap-3">
+                            <div className="w-8 h-8 rounded-lg bg-violet-500/10 border border-violet-500/15 flex items-center justify-center flex-shrink-0">
+                              <TemaIcon className="w-4 h-4 text-violet-400/60" strokeWidth={1.5} />
                             </div>
-                            <h3 className="text-white/65 text-sm font-light">{label}</h3>
+                            <p className="text-white/65 text-sm font-light leading-relaxed pt-1">{tema}</p>
                           </div>
-                          <div className="space-y-2">
-                            {text.split('\n\n').map((p, i) => (
-                              <p key={i} className="text-white/45 text-sm font-light leading-relaxed">{renderBold(p)}</p>
-                            ))}
+                        )
+                      })
+                    : [
+                        { icon: Eye, label: 'Patrones inconscientes', desc: 'Identificar y desactivar los ciclos repetitivos en tus relaciones.' },
+                        { icon: Anchor, label: 'Raíces familiares', desc: 'Explorar cómo tu historia familiar moldea tu forma de amar hoy.' },
+                        { icon: Heart, label: 'Reconexión emocional', desc: 'Reconstruir la intimidad y la presencia emocional en el vínculo.' },
+                        { icon: Target, label: 'Comunicación efectiva', desc: 'Transformar los conflictos en oportunidades de crecimiento.' }
+                      ].map(({ icon: Icon, label, desc }) => (
+                        <div key={label} className="p-4 rounded-xl border border-white/8 bg-white/[0.02] flex items-start gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-violet-500/10 border border-violet-500/15 flex items-center justify-center flex-shrink-0">
+                            <Icon className="w-4 h-4 text-violet-400/60" strokeWidth={1.5} />
                           </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* ═══ 10. LECTURA PSICOANALÍTICA ═══ */}
-              {aiAnalysis.lectura_psicoanalitica && (
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-purple-500/10" />
-                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Lectura Psicoanalítica</h2>
-                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-purple-500/10" />
-                  </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                    {[
-                      { key: 'proyecciones_inconscientes', label: 'Proyecciones inconscientes', sub: 'Freud', icon: Brain },
-                      { key: 'fantasma_relacional', label: 'Fantasma relacional', sub: 'Lacan', icon: Eye },
-                      { key: 'roles_simbolicos', label: 'Roles simbólicos', sub: 'Sistémico', icon: Users }
-                    ].map(({ key, label, sub, icon: Icon }) => {
-                      const text = aiAnalysis.lectura_psicoanalitica[key]
-                      if (!text) return null
-                      return (
-                        <div key={key} className="p-5 rounded-2xl border border-purple-500/10 bg-gradient-to-br from-purple-500/[0.02] to-transparent">
-                          <div className="flex items-center gap-2 mb-3">
-                            <div className="w-7 h-7 rounded-lg bg-purple-500/10 border border-purple-500/15 flex items-center justify-center">
-                              <Icon className="w-3.5 h-3.5 text-purple-400/60" strokeWidth={1.5} />
-                            </div>
-                            <div>
-                              <h3 className="text-purple-300/70 text-sm font-light leading-tight">{label}</h3>
-                              <p className="text-purple-300/35 text-[10px] font-light">{sub}</p>
-                            </div>
-                          </div>
-                          <div className="space-y-2">
-                            {text.split('\n\n').map((p, i) => (
-                              <p key={i} className="text-white/45 text-sm font-light leading-relaxed">{renderBold(p)}</p>
-                            ))}
+                          <div>
+                            <h3 className="text-white/70 text-sm font-medium mb-1">{label}</h3>
+                            <p className="text-white/45 text-[13px] font-light leading-relaxed">{desc}</p>
                           </div>
                         </div>
-                      )
-                    })}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* ═══ 11. FORTALEZAS ═══ */}
-              {aiAnalysis.fortalezas?.length > 0 && (
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-emerald-500/15" />
-                    <h2 className="text-xs font-medium text-emerald-300/50 uppercase tracking-[0.2em]">Fortalezas Detectadas</h2>
-                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-emerald-500/15" />
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {aiAnalysis.fortalezas.map((f, i) => (
-                      <div key={i} className="p-4 rounded-xl border border-emerald-500/10 bg-emerald-500/[0.02] flex items-start gap-3">
-                        <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center flex-shrink-0">
-                          <CheckCircle className="w-3.5 h-3.5 text-emerald-400/60" strokeWidth={1.5} />
-                        </div>
-                        <p className="text-white/55 text-sm font-light">{renderBold(f)}</p>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* ═══ 12. SEÑALES DE RIESGO ═══ */}
-              {aiAnalysis.riesgos?.length > 0 && (
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-red-500/15" />
-                    <h2 className="text-xs font-medium text-red-300/50 uppercase tracking-[0.2em]">Señales de Riesgo</h2>
-                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-red-500/15" />
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {aiAnalysis.riesgos.map((r, i) => (
-                      <div key={i} className="p-4 rounded-xl border border-red-500/10 bg-red-500/[0.02] flex items-start gap-3">
-                        <div className="w-7 h-7 rounded-lg bg-red-500/10 border border-red-500/15 flex items-center justify-center flex-shrink-0">
-                          <AlertTriangle className="w-3.5 h-3.5 text-red-400/60" strokeWidth={1.5} />
-                        </div>
-                        <p className="text-white/55 text-sm font-light">{renderBold(r)}</p>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* ═══ 13. SÍNTESIS FINAL ═══ */}
-              {aiAnalysis.sintesis_final && (
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                  className="p-6 lg:p-8 rounded-2xl border border-cyan-500/15 bg-gradient-to-br from-cyan-500/[0.03] to-transparent relative overflow-hidden">
-                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500/30 to-teal-500/30" />
-                  <h2 className="text-lg font-light text-white/70 mb-4">Síntesis Final</h2>
-                  <div className="space-y-4">
-                    {[
-                      { key: 'que_ocurre', label: '¿Qué está ocurriendo realmente?' },
-                      { key: 'posibilidades_evolucion', label: '¿Qué posibilidades de evolución existen?' },
-                      { key: 'factores_fortalecimiento', label: '¿Qué factores podrían fortalecer el vínculo?' }
-                    ].map(({ key, label }) => {
-                      const text = aiAnalysis.sintesis_final[key]
-                      if (!text) return null
-                      return (
-                        <div key={key}>
-                          <h3 className="text-cyan-300/60 text-sm font-light mb-2">{label}</h3>
-                          <div className="space-y-2">
-                            {text.split('\n\n').map((p, i) => (
-                              <p key={i} className="text-white/50 text-sm font-light leading-relaxed">{renderBold(p)}</p>
-                            ))}
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </motion.div>
-              )}
+                      ))
+                  }
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <motion.button
+                    onClick={() => navigate('/tienda/consulta-individual')}
+                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-sm font-light shadow-lg shadow-violet-600/15 hover:from-violet-500 hover:to-fuchsia-500 transition-all">
+                    <Users className="w-4 h-4" /> Terapia Individual
+                  </motion.button>
+                  <motion.button
+                    onClick={() => navigate('/tienda/consulta-pareja')}
+                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="flex items-center justify-center gap-2 px-6 py-4 rounded-xl border border-violet-500/20 bg-violet-500/10 text-violet-300/80 text-sm font-light hover:bg-violet-500/20 transition-all">
+                    <Heart className="w-4 h-4" /> Terapia de Pareja
+                  </motion.button>
+                </div>
+              </motion.div>
 
               {/* ═══ ACTIONS ═══ */}
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -2296,12 +2513,6 @@ const RadiografiaPremiumPage = () => {
                   className="flex items-center gap-2 px-6 py-3 rounded-xl border border-violet-500/20 bg-violet-500/10 text-violet-300/80 text-sm font-light hover:bg-violet-500/20 transition-all disabled:opacity-40">
                   {pdfGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                   Descargar PDF
-                </motion.button>
-                <motion.button
-                  onClick={() => window.open(`https://wa.me/527228720520?text=${encodeURIComponent('Hola, acabo de hacer la Radiografía de Pareja Premium y me gustaría agendar una sesión para profundizar.')}`, '_blank')}
-                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-sm font-light">
-                  Agendar sesión profesional
                 </motion.button>
               </motion.div>
 
