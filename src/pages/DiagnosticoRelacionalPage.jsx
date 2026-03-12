@@ -999,11 +999,36 @@ const DiagnosticoRelacionalPage = () => {
   }, [recording, startRecordingFn])
 
   // ─── PROMO CODE VALIDATION ─────────────────────────────────
+  const LOCAL_PROMO_CODES = {
+    'LUISPRO': { discount: 1.0, label: 'Acceso gratuito (código profesional)', appliesTo: ['descubre', 'solo', 'losdos'] }
+  }
+
   const handleApplyPromo = useCallback(async (type) => {
     const code = (cardPromoCodes[type] || '').trim().toUpperCase()
     if (!code) return
     setPromoValidating(type)
     setCardPromoErrors(p => ({ ...p, [type]: '' }))
+
+    // Local validation first (works without API)
+    const localPromo = LOCAL_PROMO_CODES[code]
+    if (localPromo && localPromo.appliesTo.includes(type)) {
+      const prices = { descubre: 499, solo: 499, losdos: 999 }
+      const originalPrice = prices[type]
+      const finalPrice = localPromo.discount === 1.0 ? 0 : Math.round(originalPrice * (1 - localPromo.discount))
+      setCardPromoApplied(p => ({ ...p, [type]: {
+        label: localPromo.label,
+        discount: localPromo.discount,
+        discountPercent: Math.round(localPromo.discount * 100),
+        originalPrice,
+        finalPrice,
+        free: finalPrice === 0
+      } }))
+      setCardPromoErrors(p => ({ ...p, [type]: '' }))
+      setPromoValidating(null)
+      return
+    }
+
+    // Fallback: validate via API
     try {
       const resp = await fetch(`${API_BASE}/api/validate-radiografia-promo`, {
         method: 'POST',
@@ -1019,7 +1044,7 @@ const DiagnosticoRelacionalPage = () => {
         setCardPromoErrors(p => ({ ...p, [type]: '' }))
       }
     } catch {
-      setCardPromoErrors(p => ({ ...p, [type]: 'Error de conexión' }))
+      setCardPromoErrors(p => ({ ...p, [type]: 'Código no válido' }))
     }
     setPromoValidating(null)
   }, [cardPromoCodes])
@@ -1045,6 +1070,16 @@ const DiagnosticoRelacionalPage = () => {
     }
     // Dev/test mode: bypass Stripe entirely
     if (isDevMode) {
+      setIsPurchased(true)
+      setPurchaseType(type)
+      sessionStorage.setItem('diagnostico_relacional_purchased', 'true')
+      sessionStorage.setItem('diagnostico_relacional_type', type)
+      setStage('instructions')
+      scrollToTop()
+      return
+    }
+    // If promo already applied and it's free — grant access immediately
+    if (cardPromoApplied[type]?.free) {
       setIsPurchased(true)
       setPurchaseType(type)
       sessionStorage.setItem('diagnostico_relacional_purchased', 'true')
