@@ -192,6 +192,113 @@ app.post('/api/send-results-email', async (req, res) => {
   }
 })
 
+// ─── RADIOGRAFÍA: Promo codes ─────────────────────────────────────
+
+const RADIOGRAFIA_PROMO_CODES = {
+  'LUISPRO': { discount: 1.0, label: 'Acceso gratuito (código profesional)', appliesTo: ['descubre', 'solo', 'losdos'] }
+}
+
+const RADIOGRAFIA_PRICES = {
+  descubre: { cents: 49900, name: 'Radiografía Individual', desc: 'Tu mapa de patrones amorosos' },
+  solo:     { cents: 49900, name: 'Radiografía de Pareja (Solo)', desc: 'Análisis profundo de tu relación' },
+  losdos:   { cents: 99900, name: 'Radiografía de Pareja (Los dos)', desc: '3 reportes: tuyo, suyo y cruzado' }
+}
+
+// ─── ENDPOINT: Create radiografía checkout session ────────────────
+
+// ─── ENDPOINT: Validate radiografía promo code ───────────────────
+
+app.post('/api/validate-radiografia-promo', (req, res) => {
+  const { type, promoCode } = req.body
+  if (!type || !RADIOGRAFIA_PRICES[type]) {
+    return res.status(400).json({ error: 'Tipo no válido' })
+  }
+  if (!promoCode) {
+    return res.status(400).json({ error: 'Código requerido' })
+  }
+  const code = String(promoCode).toUpperCase().trim()
+  const promo = RADIOGRAFIA_PROMO_CODES[code]
+  if (!promo || !promo.appliesTo.includes(type)) {
+    return res.status(400).json({ error: 'Código inválido o no aplicable a este producto' })
+  }
+  const product = RADIOGRAFIA_PRICES[type]
+  const originalCents = product.cents
+  const finalCents = promo.discount === 1.0 ? 0 : Math.round(originalCents * (1 - promo.discount))
+  res.json({
+    label: promo.label,
+    discount: promo.discount,
+    discountPercent: Math.round(promo.discount * 100),
+    originalPrice: originalCents / 100,
+    finalPrice: finalCents / 100,
+    free: finalCents === 0
+  })
+})
+
+app.post('/api/create-radiografia-checkout', async (req, res) => {
+  try {
+    const { type, promoCode } = req.body
+    if (!type || !RADIOGRAFIA_PRICES[type]) {
+      return res.status(400).json({ error: 'type must be descubre, solo, or losdos' })
+    }
+
+    const product = RADIOGRAFIA_PRICES[type]
+    let priceCents = product.cents
+    let promoApplied = null
+
+    if (promoCode) {
+      const code = String(promoCode).toUpperCase().trim()
+      const promo = RADIOGRAFIA_PROMO_CODES[code]
+      if (!promo || !promo.appliesTo.includes(type)) {
+        return res.status(400).json({ error: 'Código inválido o no aplicable a este producto' })
+      }
+      if (promo.discount === 1.0) {
+        priceCents = 0
+      } else {
+        priceCents = Math.round(priceCents * (1 - promo.discount))
+      }
+      promoApplied = { code, label: promo.label }
+    }
+
+    // Free path — skip Stripe
+    if (priceCents === 0) {
+      return res.json({
+        free: true,
+        type,
+        url: `${FRONTEND_URL}/tienda/radiografia-premium?free=true&type=${type}`
+      })
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      line_items: [{
+        price_data: {
+          currency: 'mxn',
+          product_data: {
+            name: product.name,
+            description: promoApplied
+              ? `${product.desc} · Código: ${promoApplied.code}`
+              : product.desc
+          },
+          unit_amount: priceCents
+        },
+        quantity: 1
+      }],
+      automatic_tax: { enabled: true },
+      success_url: `${FRONTEND_URL}/tienda/diagnostico-relacional?session_id={CHECKOUT_SESSION_ID}&type=${type}`,
+      cancel_url: `${FRONTEND_URL}/tienda/diagnostico-relacional`,
+      metadata: {
+        product_type: `radiografia_${type}`,
+        promo_applied: promoApplied ? promoApplied.code : 'none'
+      }
+    })
+
+    res.json({ url: session.url })
+  } catch (err) {
+    console.error('create-radiografia-checkout error:', err.message)
+    res.status(500).json({ error: 'Error creating checkout session' })
+  }
+})
+
 // ─── CONSULTA: Promo codes ────────────────────────────────────────
 
 const CONSULTA_PROMO_CODES = {
