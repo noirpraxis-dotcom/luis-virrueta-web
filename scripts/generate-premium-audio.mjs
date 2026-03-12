@@ -80,7 +80,8 @@ const EXTRA_AUDIO = [
   { id: 'welcome', textFn: (name) => `Te damos la bienvenida. Antes de iniciar, necesito conocer un par de datos tuyos muy rápidos. Escríbelos en los campos que aparecen a continuación y podremos comenzar.` },
   { id: 'spotlight-1', textFn: (name) => `Aquí verás la pregunta. Se lee en voz alta automáticamente. Solo relájate y escucha.` },
   { id: 'spotlight-2', textFn: (name) => `Si te faltó algo, aquí tienes ideas para enriquecer tu respuesta.` },
-  { id: 'spotlight-3', textFn: (name) => `El micrófono se activa automáticamente. Habla con libertad. Cuando termines, toca Siguiente.` }
+  { id: 'spotlight-3', textFn: (name) => `El micrófono se activa automáticamente. Habla con libertad. Cuando termines, toca Siguiente.` },
+  { id: 'email', textFn: (name) => `Perfecto. Déjanos tu correo electrónico para que podamos enviarte los resultados de tu radiografía. No te preocupes, no compartiremos tu información con nadie.` }
 ]
 
 const OUTPUT_DIR = join(process.cwd(), 'public', 'audio', 'premium')

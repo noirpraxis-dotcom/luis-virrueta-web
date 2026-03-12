@@ -1447,7 +1447,11 @@ const RadiografiaPremiumPage = () => {
         ═══════════════════════════════════════════════════════ */}
         {stage === 'email' && (
           <motion.div key="email" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="min-h-screen flex items-center justify-center px-6 pt-6 pb-12">
+            className="min-h-screen flex items-center justify-center px-6 pt-6 pb-12"
+            onAnimationComplete={() => {
+              // Play static email audio when stage appears
+              playQuestion('Déjanos tu correo electrónico para enviarte los resultados.', null, null, 'email')
+            }}>
             <div className="max-w-lg w-full space-y-8">
               <div className="text-center">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-4">
