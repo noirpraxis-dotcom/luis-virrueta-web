@@ -1080,7 +1080,7 @@ const RadiografiaPremiumPage = () => {
       <AnimatePresence mode="wait">
 
         {/* ═══════════════════════════════════════════════════════
-            STAGE: INSTRUCTIONS — Selección de voz + inicio
+            STAGE: INSTRUCTIONS — Pantalla 1: Configuración (voz + comprobaciones)
         ═══════════════════════════════════════════════════════ */}
         {stage === 'instructions' && (
           <motion.div key="instructions" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -1097,6 +1097,19 @@ const RadiografiaPremiumPage = () => {
                 <p className="text-white/50 text-sm font-light leading-relaxed max-w-md mx-auto">
                   Un análisis narrativo profundo de tu relación a través de <strong className="text-white/70">40 preguntas abiertas</strong> que exploran tu vínculo desde <strong className="text-white/70">12 dimensiones psicológicas</strong>.
                 </p>
+              </div>
+
+              {/* ── Step indicator ── */}
+              <div className="flex items-center justify-center gap-3">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/15 border border-violet-500/25">
+                  <div className="w-5 h-5 rounded-full bg-violet-500 flex items-center justify-center text-white text-[10px] font-bold">1</div>
+                  <span className="text-violet-300/80 text-xs font-medium">Configuración</span>
+                </div>
+                <div className="w-6 h-px bg-white/15" />
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/8 bg-white/[0.02]">
+                  <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-white/40 text-[10px] font-bold">2</div>
+                  <span className="text-white/30 text-xs font-medium">Instrucciones</span>
+                </div>
               </div>
 
               {/* ── Voice selector: 4 circular cards, single toggle ── */}
@@ -1144,7 +1157,97 @@ const RadiografiaPremiumPage = () => {
                 <p className="text-white/30 text-[11px] font-light">Toca una voz para seleccionarla y escuchar una prueba</p>
               </div>
 
-              {/* ── Section 1: Prepara tu espacio ── */}
+              {/* ── Comprobación de Audio y Micrófono ── */}
+              <div className="space-y-3 text-left p-6 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.04] to-transparent">
+                <p className="text-violet-300/80 text-sm font-medium flex items-center gap-2">
+                  <Headphones className="w-4 h-4 text-violet-400/50" /> Comprobación de audio y micrófono
+                </p>
+                <p className="text-white/40 text-xs font-light">Asegúrate de que todo funciona antes de iniciar el test.</p>
+                <div className="h-px bg-white/5" />
+
+                <div className="flex flex-wrap gap-3">
+                  {/* Sound test */}
+                  <button
+                    onClick={() => {
+                      playQuestion('¿Me escuchas bien? Si puedes oírme con claridad, estamos listos para comenzar.', undefined, () => setSoundTestOk(true), 'sound-test')
+                    }}
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all text-xs font-light ${
+                      soundTestOk === true ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' :
+                      soundTestOk === false ? 'border-red-500/30 bg-red-500/10 text-red-300' :
+                      'border-white/15 bg-white/[0.03] text-white/50 hover:border-white/25 hover:text-white/70'}`}>
+                    <Volume2 className="w-4 h-4" />
+                    {soundTestOk === true ? '✓ Se escucha bien' : soundTestOk === false ? 'No se escuchó' : 'Probar sonido'}
+                  </button>
+                  {/* Mic test */}
+                  <button
+                    onClick={async () => {
+                      try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+                        setMicTestOk(true)
+                        const ctx = new (window.AudioContext || window.webkitAudioContext)()
+                        const src = ctx.createMediaStreamSource(stream)
+                        const analyser = ctx.createAnalyser()
+                        analyser.fftSize = 256
+                        src.connect(analyser)
+                        setMicAnalyser(analyser)
+                        setTimeout(() => {
+                          stream.getTracks().forEach(t => t.stop())
+                          ctx.close()
+                          setMicAnalyser(null)
+                        }, 3000)
+                      } catch { setMicTestOk(false) }
+                    }}
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all text-xs font-light ${
+                      micTestOk === true ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' :
+                      micTestOk === false ? 'border-red-500/30 bg-red-500/10 text-red-300' :
+                      'border-white/15 bg-white/[0.03] text-white/50 hover:border-white/25 hover:text-white/70'}`}>
+                    <Mic className="w-4 h-4" />
+                    {micTestOk === true ? '✓ Micrófono listo' : micTestOk === false ? 'Sin acceso al mic' : 'Probar micrófono'}
+                  </button>
+                </div>
+                {micAnalyser && <MicLevelBars analyser={micAnalyser} />}
+              </div>
+
+              <motion.button
+                onClick={() => setStage('how-it-works')}
+                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
+                Siguiente: Instrucciones <ArrowRight className="inline w-4 h-4 ml-2" />
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════
+            STAGE: HOW-IT-WORKS — Pantalla 2: Instrucciones + mockup visual
+        ═══════════════════════════════════════════════════════ */}
+        {stage === 'how-it-works' && (
+          <motion.div key="how-it-works" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="min-h-screen flex items-center justify-center px-6 pt-6 pb-12">
+            <div className="max-w-xl w-full text-center space-y-8">
+
+              {/* ── Step indicator ── */}
+              <div className="flex items-center justify-center gap-3">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/8 bg-white/[0.02]">
+                  <div className="w-5 h-5 rounded-full bg-emerald-500/60 flex items-center justify-center">
+                    <Check className="w-3 h-3 text-white" />
+                  </div>
+                  <span className="text-white/40 text-xs font-medium">Configuración</span>
+                </div>
+                <div className="w-6 h-px bg-white/15" />
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/15 border border-violet-500/25">
+                  <div className="w-5 h-5 rounded-full bg-violet-500 flex items-center justify-center text-white text-[10px] font-bold">2</div>
+                  <span className="text-violet-300/80 text-xs font-medium">Instrucciones</span>
+                </div>
+              </div>
+
+              {/* ── Header ── */}
+              <div>
+                <h2 className="text-xl lg:text-2xl font-light text-white mb-2">Prepara tu espacio y relájate</h2>
+                <p className="text-white/40 text-sm font-light max-w-md mx-auto">Así es como funciona la experiencia. Lee con calma antes de empezar.</p>
+              </div>
+
+              {/* ── Prepara tu espacio ── */}
               <div className="space-y-3 text-left p-6 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.04] to-transparent">
                 <p className="text-violet-300/80 text-sm font-medium flex items-center gap-2">
                   <Headphones className="w-4 h-4 text-violet-400/50" /> Prepara tu espacio
@@ -1164,103 +1267,65 @@ const RadiografiaPremiumPage = () => {
                     <span>Reserva unos <strong className="text-white/70">20–25 minutos</strong> sin interrupciones.</span>
                   </li>
                 </ul>
+              </div>
 
-                {/* ── Audio & Mic test ── */}
-                <div className="mt-4 pt-4 border-t border-white/5 space-y-3">
-                  <p className="text-violet-300/60 text-xs font-medium uppercase tracking-wider">Comprobación rápida</p>
-                  <div className="flex flex-wrap gap-3">
-                    {/* Sound test */}
-                    <button
-                      onClick={() => {
-                        playQuestion('¿Me escuchas bien? Si puedes oírme con claridad, estamos listos para comenzar.', undefined, () => setSoundTestOk(true), 'sound-test')
-                      }}
-                      className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all text-xs font-light ${
-                        soundTestOk === true ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' :
-                        soundTestOk === false ? 'border-red-500/30 bg-red-500/10 text-red-300' :
-                        'border-white/15 bg-white/[0.03] text-white/50 hover:border-white/25 hover:text-white/70'}`}>
-                      <Volume2 className="w-4 h-4" />
-                      {soundTestOk === true ? '✓ Se escucha bien' : soundTestOk === false ? 'No se escuchó' : 'Probar sonido'}
-                    </button>
-                    {/* Mic test */}
-                    <button
-                      onClick={async () => {
-                        try {
-                          const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-                          setMicTestOk(true)
-                          // Show level bars for 2 seconds then cleanup
-                          const ctx = new (window.AudioContext || window.webkitAudioContext)()
-                          const src = ctx.createMediaStreamSource(stream)
-                          const analyser = ctx.createAnalyser()
-                          analyser.fftSize = 256
-                          src.connect(analyser)
-                          setMicAnalyser(analyser)
-                          setTimeout(() => {
-                            stream.getTracks().forEach(t => t.stop())
-                            ctx.close()
-                            setMicAnalyser(null)
-                          }, 3000)
-                        } catch { setMicTestOk(false) }
-                      }}
-                      className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all text-xs font-light ${
-                        micTestOk === true ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' :
-                        micTestOk === false ? 'border-red-500/30 bg-red-500/10 text-red-300' :
-                        'border-white/15 bg-white/[0.03] text-white/50 hover:border-white/25 hover:text-white/70'}`}>
-                      <Mic className="w-4 h-4" />
-                      {micTestOk === true ? '✓ Micrófono listo' : micTestOk === false ? 'Sin acceso al mic' : 'Probar micrófono'}
-                    </button>
+              {/* ── Mockup visual de una pregunta con flechas explicativas ── */}
+              <div className="space-y-3 text-left p-6 rounded-2xl border border-white/10 bg-white/[0.02]">
+                <p className="text-white/70 text-sm font-medium flex items-center gap-2">
+                  <Lightbulb className="w-4 h-4 text-amber-400/60" /> Así se ve cada pregunta
+                </p>
+                <div className="h-px bg-white/8" />
+
+                {/* Mock question UI */}
+                <div className="mt-3 p-4 rounded-xl border border-violet-500/15 bg-violet-500/[0.03] space-y-3">
+                  {/* Mock header */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-white/30 text-[10px] uppercase tracking-wider">Pregunta 1 de 40</span>
+                    <div className="flex gap-2">
+                      <span className="text-[10px] px-2 py-0.5 rounded-md border border-white/10 text-white/30">Repetir</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-md border border-white/10 text-white/30">Saltar</span>
+                    </div>
                   </div>
-                  {/* Mic level bars */}
-                  {micAnalyser && <MicLevelBars analyser={micAnalyser} />}
+                  {/* Mock question */}
+                  <div className="p-3 rounded-lg bg-emerald-500/[0.06] border border-emerald-500/15">
+                    <p className="text-white/60 text-xs font-light italic">"¿Cómo describirías la relación que observaste entre tus padres?"</p>
+                  </div>
+                  {/* Mock action buttons */}
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-white/10 bg-white/[0.02]">
+                      <ArrowLeft className="w-3 h-3 text-white/30" />
+                      <span className="text-[9px] text-white/30">Anterior</span>
+                    </div>
+                    <div className="w-10 h-10 rounded-full bg-violet-500/20 border-2 border-violet-500/40 flex items-center justify-center">
+                      <Mic className="w-4 h-4 text-violet-300/70" />
+                    </div>
+                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-white/10 bg-white/[0.02]">
+                      <span className="text-[9px] text-white/30">Siguiente</span>
+                      <ArrowRight className="w-3 h-3 text-white/30" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Explanation bullets */}
+                <div className="space-y-3 mt-4">
+                  {[
+                    { icon: Volume2, color: 'text-violet-400/70', bgColor: 'bg-violet-500/10 border-violet-500/20', text: 'Escucharás cada pregunta en voz alta. Al terminar la voz, tu micrófono se activa automáticamente.' },
+                    { icon: SkipForward, color: 'text-cyan-400/70', bgColor: 'bg-cyan-500/10 border-cyan-500/20', text: 'Pulsa "Saltar" para detener la voz y activar el micrófono al instante.' },
+                    { icon: Mic, color: 'text-emerald-400/70', bgColor: 'bg-emerald-500/10 border-emerald-500/20', text: 'Responde con tu voz. Verás tu transcripción al terminar. Puedes regrabar si quieres.' },
+                    { icon: PenLine, color: 'text-amber-400/70', bgColor: 'bg-amber-500/10 border-amber-500/20', text: '¿Prefieres escribir? Debajo de los botones hay un enlace "Prefiero escribir".' },
+                    { icon: Lightbulb, color: 'text-fuchsia-400/70', bgColor: 'bg-fuchsia-500/10 border-fuchsia-500/20', text: 'Debajo de cada pregunta hay ideas de apoyo para completar tu respuesta.' }
+                  ].map(({ icon: BulletIcon, color, bgColor, text }, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <div className={`w-6 h-6 rounded-lg ${bgColor} border flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                        <BulletIcon className={`w-3 h-3 ${color}`} />
+                      </div>
+                      <span className="text-white/55 text-sm font-light">{text}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              {/* ── Section 2: Cómo funciona ── */}
-              <div className="space-y-3 text-left p-6 rounded-2xl border border-white/10 bg-white/[0.02]">
-                <p className="text-white/70 text-sm font-medium flex items-center gap-2">
-                  <Lightbulb className="w-4 h-4 text-amber-400/60" /> ¿Cómo funciona?
-                </p>
-                <div className="h-px bg-white/8" />
-                <ul className="space-y-3 text-white/55 text-sm font-light">
-                  <li className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Volume2 className="w-3 h-3 text-violet-400/70" />
-                    </div>
-                    <span>Escucharás cada pregunta en voz alta. Al <strong className="text-white/70">terminar la voz, tu micrófono se activa automáticamente</strong> para que respondas de inmediato.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <SkipForward className="w-3 h-3 text-violet-400/70" />
-                    </div>
-                    <span>Si no quieres esperar, pulsa <strong className="text-white/70">"Saltar"</strong> — se detiene la voz y tu micrófono se activa al instante.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Mic className="w-3 h-3 text-violet-400/70" />
-                    </div>
-                    <span>Responde con tu voz diciendo lo primero que te venga a la mente. Verás tu <strong className="text-white/70">transcripción al terminar</strong>, y puedes <strong className="text-white/70">regrabar</strong> si quieres.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <PenLine className="w-3 h-3 text-violet-400/70" />
-                    </div>
-                    <span>¿Prefieres escribir? Debajo de los botones aparece un enlace <strong className="text-white/70">"Prefiero escribir"</strong> que abre un campo de texto.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Lightbulb className="w-3 h-3 text-violet-400/70" />
-                    </div>
-                    <span>Debajo de cada pregunta hay <strong className="text-white/70">ideas de apoyo</strong>: si sientes que te faltó algo, úsalas para completar tu respuesta.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <ArrowRight className="w-3 h-3 text-violet-400/70" />
-                    </div>
-                    <span>Son <strong className="text-white/70">40 preguntas abiertas</strong> que cubren 12 dimensiones. No hay respuestas correctas ni incorrectas.</span>
-                  </li>
-                </ul>
-              </div>
-
-              {/* ── Section 3: Para mejores resultados ── */}
+              {/* ── Para mejores resultados ── */}
               <div className="space-y-3 text-left p-6 rounded-2xl border border-amber-500/10 bg-amber-500/[0.02]">
                 <p className="text-amber-300/70 text-sm font-medium flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-amber-400/50" /> Para mejores resultados
@@ -1269,28 +1334,35 @@ const RadiografiaPremiumPage = () => {
                 <ul className="space-y-2.5 text-white/50 text-sm font-light">
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-amber-400/40 mt-2 flex-shrink-0" />
-                    <span><strong className="text-white/65">Contesta lo primero que te venga a la mente.</strong> No te preocupes si sientes que te equivocas — lo que surge primero es lo que más te define.</span>
+                    <span><strong className="text-white/65">Contesta lo primero que te venga a la mente.</strong> Lo que surge primero es lo que más te define.</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-amber-400/40 mt-2 flex-shrink-0" />
-                    <span><strong className="text-white/65">No analices demasiado.</strong> Esto no es un examen. Háblale como si fuera un psicólogo que escucha sin juzgar.</span>
+                    <span><strong className="text-white/65">No analices demasiado.</strong> Háblale como si fuera un psicólogo que escucha sin juzgar.</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-amber-400/40 mt-2 flex-shrink-0" />
-                    <span>Usar el <strong className="text-white/65">micrófono</strong> es más rápido y natural, pero escribir funciona igual de bien.</span>
+                    <span>Son <strong className="text-white/65">40 preguntas abiertas</strong> que cubren 12 dimensiones. No hay respuestas correctas ni incorrectas.</span>
                   </li>
                 </ul>
               </div>
 
-              <motion.button
-                onClick={() => {
-                  setStage('profile')
-                  playQuestion('Te damos la bienvenida. Antes de iniciar, necesito conocer un par de datos tuyos muy rápidos. Escríbelos en los campos que aparecen a continuación y podremos comenzar.', undefined, null, 'welcome')
-                }}
-                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
-                Comenzar radiografía <ArrowRight className="inline w-4 h-4 ml-2" />
-              </motion.button>
+              {/* ── Navigation ── */}
+              <div className="space-y-3">
+                <motion.button
+                  onClick={() => {
+                    setStage('profile')
+                    playQuestion('Te damos la bienvenida. Antes de iniciar, necesito conocer un par de datos tuyos muy rápidos. Escríbelos en los campos que aparecen a continuación y podremos comenzar.', undefined, null, 'welcome')
+                  }}
+                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
+                  Comenzar radiografía <ArrowRight className="inline w-4 h-4 ml-2" />
+                </motion.button>
+                <button onClick={() => setStage('instructions')}
+                  className="w-full py-3 text-center text-white/35 text-sm font-light hover:text-white/55 transition-colors">
+                  <ArrowLeft className="inline w-3.5 h-3.5 mr-1" /> Volver a configuración
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
@@ -1647,7 +1719,26 @@ const RadiografiaPremiumPage = () => {
 
               {/* DEV: Quick actions */}
               {import.meta.env.DEV && (
-                <div className="mt-8 pt-6 border-t border-white/5 flex flex-wrap gap-4 justify-center">
+                <div className="mt-8 pt-6 border-t border-white/5">
+                  <p className="text-white/20 text-[9px] font-medium uppercase tracking-wider text-center mb-3">Desarrollador</p>
+                  <div className="flex flex-wrap gap-4 justify-center">
+                  {/* 1. Landing */}
+                  <button onClick={() => navigate('/tienda/diagnostico-relacional')}
+                    className="flex flex-col items-center gap-1" title="Ir a Landing">
+                    <div className="w-11 h-11 rounded-full border border-cyan-500/25 bg-cyan-500/10 flex items-center justify-center hover:bg-cyan-500/20 transition-colors">
+                      <ArrowLeft className="w-4 h-4 text-cyan-300/70" />
+                    </div>
+                    <span className="text-[9px] text-white/30">Landing</span>
+                  </button>
+                  {/* 2. Instrucciones */}
+                  <button onClick={() => setStage('instructions')}
+                    className="flex flex-col items-center gap-1" title="Ir a Instrucciones">
+                    <div className="w-11 h-11 rounded-full border border-violet-500/25 bg-violet-500/10 flex items-center justify-center hover:bg-violet-500/20 transition-colors">
+                      <Lightbulb className="w-4 h-4 text-violet-300/70" />
+                    </div>
+                    <span className="text-[9px] text-white/30">Instruc.</span>
+                  </button>
+                  {/* 3. Rellenar (esta pregunta) */}
                   <button onClick={() => {
                     const demoText = DEMO_RESPONSES[question?.id] || ''
                     setTranscript(demoText)
@@ -1655,18 +1746,12 @@ const RadiografiaPremiumPage = () => {
                     setResponses(prev => ({ ...prev, [question.id]: demoText }))
                   }}
                     className="flex flex-col items-center gap-1" title="Rellenar esta respuesta">
-                    <div className="w-11 h-11 rounded-full border border-amber-500/25 bg-amber-500/10 flex items-center justify-center text-amber-300/70 hover:bg-amber-500/20 transition-colors">
-                      <span className="text-base">🧪</span>
+                    <div className="w-11 h-11 rounded-full border border-amber-500/25 bg-amber-500/10 flex items-center justify-center hover:bg-amber-500/20 transition-colors">
+                      <PenLine className="w-4 h-4 text-amber-300/70" />
                     </div>
                     <span className="text-[9px] text-white/30">Rellenar</span>
                   </button>
-                  <button onClick={() => { setResponses({ ...DEMO_RESPONSES }); setTimeout(() => handleRunAnalysis(DEMO_RESPONSES), 200) }}
-                    className="flex flex-col items-center gap-1" title="Rellenar todo y lanzar análisis">
-                    <div className="w-11 h-11 rounded-full border border-emerald-500/25 bg-emerald-500/10 flex items-center justify-center text-emerald-300/70 hover:bg-emerald-500/20 transition-colors">
-                      <span className="text-base">🚀</span>
-                    </div>
-                    <span className="text-[9px] text-white/30">Lanzar</span>
-                  </button>
+                  {/* 4. Preview */}
                   <button onClick={() => {
                     if (CACHED_PREVIEW_ANALYSIS) {
                       setAiAnalysis(CACHED_PREVIEW_ANALYSIS)
@@ -1687,12 +1772,13 @@ const RadiografiaPremiumPage = () => {
                     setResponses({ ...DEMO_RESPONSES })
                     setTimeout(() => handleRunAnalysis(DEMO_RESPONSES), 200)
                   }}
-                    className="flex flex-col items-center gap-1" title="Vista previa">
-                    <div className="w-11 h-11 rounded-full border border-fuchsia-500/25 bg-fuchsia-500/10 flex items-center justify-center text-fuchsia-300/70 hover:bg-fuchsia-500/20 transition-colors">
-                      <span className="text-base">⚡</span>
+                    className="flex flex-col items-center gap-1" title="Vista previa de resultados">
+                    <div className="w-11 h-11 rounded-full border border-fuchsia-500/25 bg-fuchsia-500/10 flex items-center justify-center hover:bg-fuchsia-500/20 transition-colors">
+                      <Eye className="w-4 h-4 text-fuchsia-300/70" />
                     </div>
                     <span className="text-[9px] text-white/30">Preview</span>
                   </button>
+                  {/* 5. Borrar caché */}
                   {localStorage.getItem('radiografia_cached_analysis') && (
                     <button onClick={() => {
                       localStorage.removeItem('radiografia_cached_analysis')
@@ -1701,26 +1787,13 @@ const RadiografiaPremiumPage = () => {
                       setTimeout(() => handleRunAnalysis(DEMO_RESPONSES), 200)
                     }}
                       className="flex flex-col items-center gap-1" title="Borrar caché y relanzar">
-                      <div className="w-11 h-11 rounded-full border border-red-500/25 bg-red-500/10 flex items-center justify-center text-red-300/70 hover:bg-red-500/20 transition-colors">
-                        <span className="text-base">🔄</span>
+                      <div className="w-11 h-11 rounded-full border border-red-500/25 bg-red-500/10 flex items-center justify-center hover:bg-red-500/20 transition-colors">
+                        <Repeat className="w-4 h-4 text-red-300/70" />
                       </div>
                       <span className="text-[9px] text-white/30">Caché</span>
                     </button>
                   )}
-                  <button onClick={() => setStage('instructions')}
-                    className="flex flex-col items-center gap-1" title="Ir a Instrucciones">
-                    <div className="w-11 h-11 rounded-full border border-violet-500/25 bg-violet-500/10 flex items-center justify-center text-violet-300/70 hover:bg-violet-500/20 transition-colors">
-                      <span className="text-base">📋</span>
-                    </div>
-                    <span className="text-[9px] text-white/30">Instruc.</span>
-                  </button>
-                  <button onClick={() => navigate('/tienda/diagnostico-relacional')}
-                    className="flex flex-col items-center gap-1" title="Ir a Landing">
-                    <div className="w-11 h-11 rounded-full border border-cyan-500/25 bg-cyan-500/10 flex items-center justify-center text-cyan-300/70 hover:bg-cyan-500/20 transition-colors">
-                      <span className="text-base">🏠</span>
-                    </div>
-                    <span className="text-[9px] text-white/30">Landing</span>
-                  </button>
+                </div>
                 </div>
               )}
 
@@ -1827,83 +1900,43 @@ const RadiografiaPremiumPage = () => {
                     <p className="text-white/35 text-sm font-light mt-2">El análisis más profundo de quién eres cuando amas</p>
                   </div>
 
-                  {/* Radial mind-map with visualization toggle */}
+                  {/* Flujo visual: journey map of the 10 dimensions */}
                   {aiAnalysis.autoanalisis_usuario && (() => {
                     const dataAuto = aiAnalysis.autoanalisis_usuario
-                    // Option A: Current radial layout
-                    const RadialView = () => <AutoanalisisRadial data={dataAuto} />
-                    // Option B: Force-directed network graph
-                    const ForceView = () => {
-                      const present = AUTOANALISIS_SECTIONS.filter(s => dataAuto[s.key])
-                      const n = present.length
-                      if (n === 0) return null
-                      // Create connections between related nodes
-                      const connections = [
-                        [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9],
-                        [0, 9], [1, 8], [2, 7], [4, 6], [1, 3], [5, 8]
-                      ].filter(([a, b]) => a < n && b < n)
-                      const cx = 220, cy = 220
-                      // Organic layout with slight randomization
-                      const nodesF = present.map((s, i) => {
-                        const textLen = (dataAuto[s.key] || '').length
-                        const nodeR = Math.max(22, Math.min(38, textLen / 15))
-                        const angle = (i / n) * Math.PI * 2 - Math.PI / 2
-                        const baseR = 120 + (i % 2) * 30
-                        return { ...s, x: cx + baseR * Math.cos(angle), y: cy + baseR * Math.sin(angle), nodeR }
-                      })
-                      return (
-                        <div className="flex justify-center mb-6">
-                          <svg viewBox="0 0 440 440" className="w-full max-w-md" style={{ filter: 'drop-shadow(0 0 25px rgba(139,92,246,0.06))' }}>
-                            {/* Connection lines */}
-                            {connections.map(([a, b], i) => (
-                              <line key={`c-${i}`} x1={nodesF[a].x} y1={nodesF[a].y} x2={nodesF[b].x} y2={nodesF[b].y}
-                                stroke={nodesF[a].color} strokeOpacity={0.08} strokeWidth={1} />
-                            ))}
-                            {/* Center glow */}
-                            <circle cx={cx} cy={cy} r={45} fill="rgba(139,92,246,0.06)" stroke="rgba(139,92,246,0.15)" strokeWidth={1} />
-                            <text x={cx} y={cy - 10} textAnchor="middle" fill="rgba(255,255,255,0.6)" fontSize="11" fontWeight="500">Tu forma</text>
-                            <text x={cx} y={cy + 5} textAnchor="middle" fill="rgba(255,255,255,0.6)" fontSize="11" fontWeight="500">de amar</text>
-                            <text x={cx} y={cy + 20} textAnchor="middle" fill="rgba(255,255,255,0.25)" fontSize="8">Red de vínculos</text>
-                            {/* Center connections */}
-                            {nodesF.map((node, i) => (
-                              <line key={`cl-${i}`} x1={cx} y1={cy} x2={node.x} y2={node.y}
-                                stroke={node.color} strokeOpacity={0.12} strokeWidth={1.5} strokeDasharray="4 3" />
-                            ))}
-                            {/* Nodes */}
-                            {nodesF.map((node, i) => (
-                              <g key={`n-${i}`}>
-                                <circle cx={node.x} cy={node.y} r={node.nodeR} fill={`${node.color}15`} stroke={`${node.color}40`} strokeWidth={2} />
-                                <circle cx={node.x} cy={node.y} r={node.nodeR - 4} fill={`${node.color}08`} />
-                                <text x={node.x} y={node.y - 2} textAnchor="middle" dominantBaseline="central" fontSize="16">{node.icon}</text>
-                                <text
-                                  x={node.x + (node.x > cx ? node.nodeR + 8 : -(node.nodeR + 8))}
-                                  y={node.y + 1}
-                                  textAnchor={node.x > cx ? 'start' : node.x < cx - 5 ? 'end' : 'middle'}
-                                  dominantBaseline="central"
-                                  fill="rgba(255,255,255,0.55)" fontSize="10" fontWeight="400"
-                                >{node.label}</text>
-                              </g>
-                            ))}
-                          </svg>
-                        </div>
-                      )
-                    }
+                    const present = AUTOANALISIS_SECTIONS.filter(s => dataAuto[s.key])
+                    if (present.length === 0) return null
                     return (
-                      <>
-                        <div className="flex items-center justify-center gap-2 mb-4">
-                          <button
-                            className={`px-4 py-2 rounded-xl text-xs font-medium transition-all ${chartViewMode !== 'mindmap-force' ? 'bg-fuchsia-500/20 border border-fuchsia-500/30 text-fuchsia-300/80' : 'border border-white/8 bg-white/[0.02] text-white/35 hover:text-white/55'}`}
-                            onClick={() => setChartViewMode('mindmap-radial')}>
-                            ◎ Mapa radial
-                          </button>
-                          <button
-                            className={`px-4 py-2 rounded-xl text-xs font-medium transition-all ${chartViewMode === 'mindmap-force' ? 'bg-violet-500/20 border border-violet-500/30 text-violet-300/80' : 'border border-white/8 bg-white/[0.02] text-white/35 hover:text-white/55'}`}
-                            onClick={() => setChartViewMode('mindmap-force')}>
-                            ◉ Red de vínculos
-                          </button>
+                      <div className="relative mb-8">
+                        <p className="text-center text-white/30 text-xs uppercase tracking-widest mb-6">Mapa de dimensiones analizadas</p>
+                        {/* Vertical connecting line */}
+                        <div className="absolute left-6 md:left-8 top-16 bottom-4 w-px bg-gradient-to-b from-fuchsia-500/30 via-violet-500/20 to-transparent" />
+                        <div className="space-y-3">
+                          {present.map((section, i) => {
+                            const excerpt = (dataAuto[section.key] || '').replace(/\*\*/g, '').slice(0, 90)
+                            return (
+                              <motion.div key={section.key}
+                                initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }} transition={{ delay: i * 0.06, duration: 0.4 }}
+                                className="flex items-start gap-4 relative pl-2">
+                                {/* Node dot */}
+                                <div className="flex-shrink-0 w-9 h-9 md:w-11 md:h-11 rounded-xl flex items-center justify-center text-lg border z-10"
+                                  style={{ background: `${section.color}12`, borderColor: `${section.color}30` }}>
+                                  {section.icon}
+                                </div>
+                                {/* Label + excerpt */}
+                                <div className="flex-1 pb-1">
+                                  <p className="text-white/65 text-sm font-medium leading-tight">{section.label}</p>
+                                  <p className="text-white/30 text-xs font-light leading-relaxed mt-0.5">{excerpt}{excerpt.length >= 90 ? '…' : ''}</p>
+                                </div>
+                                {/* Arrow connector to next */}
+                                {i < present.length - 1 && (
+                                  <ChevronDown className="absolute -bottom-2 left-[18px] md:left-[22px] w-3 h-3 text-violet-500/25 z-10" />
+                                )}
+                              </motion.div>
+                            )
+                          })}
                         </div>
-                        {chartViewMode === 'mindmap-force' ? <ForceView /> : <RadialView />}
-                      </>
+                      </div>
                     )
                   })()}
 
@@ -1916,7 +1949,7 @@ const RadiografiaPremiumPage = () => {
                         </div>
                         <div className="space-y-3">
                           {aiAnalysis.autoanalisis_usuario.apertura_rapport.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/80 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            <p key={i} className="text-white/80 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -1930,7 +1963,7 @@ const RadiografiaPremiumPage = () => {
                         </p>
                         <div className="space-y-3 pl-4 border-l-2 border-fuchsia-500/25">
                           {aiAnalysis.autoanalisis_usuario.forma_de_amar.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -1944,7 +1977,7 @@ const RadiografiaPremiumPage = () => {
                         </p>
                         <div className="space-y-3 pl-4 border-l-2 border-violet-500/25">
                           {aiAnalysis.autoanalisis_usuario.lo_que_busca_en_el_otro.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -1958,7 +1991,7 @@ const RadiografiaPremiumPage = () => {
                         </p>
                         <div className="space-y-3 pl-4 border-l-2 border-rose-500/25">
                           {aiAnalysis.autoanalisis_usuario.lo_que_reclama_afuera.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -1972,7 +2005,7 @@ const RadiografiaPremiumPage = () => {
                         </p>
                         <div className="space-y-3 pl-4 border-l-2 border-purple-500/25">
                           {aiAnalysis.autoanalisis_usuario.fantasma_relacional.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -1986,7 +2019,7 @@ const RadiografiaPremiumPage = () => {
                         </p>
                         <div className="space-y-3 pl-4 border-l-2 border-cyan-500/25">
                           {aiAnalysis.autoanalisis_usuario.yo_ideal.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -2000,7 +2033,7 @@ const RadiografiaPremiumPage = () => {
                         </p>
                         <div className="space-y-3 pl-4 border-l-2 border-amber-500/25">
                           {aiAnalysis.autoanalisis_usuario.mecanismos_defensa.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -2014,7 +2047,7 @@ const RadiografiaPremiumPage = () => {
                         </p>
                         <div className="space-y-3 pl-4 border-l-2 border-orange-500/25">
                           {aiAnalysis.autoanalisis_usuario.tipo_pareja_que_repite.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -2028,7 +2061,7 @@ const RadiografiaPremiumPage = () => {
                         </p>
                         <div className="space-y-3">
                           {aiAnalysis.autoanalisis_usuario.nucleo_del_patron.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/80 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            <p key={i} className="text-white/80 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -2042,7 +2075,7 @@ const RadiografiaPremiumPage = () => {
                         </p>
                         <div className="space-y-3">
                           {aiAnalysis.autoanalisis_usuario.cierre_transformador.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -2388,46 +2421,50 @@ const RadiografiaPremiumPage = () => {
                             )}
                           </div>
 
-                          {/* Indicadores — as badges */}
+                          {/* Indicadores — as descriptive cards, not just badges */}
                           {data.indicadores && data.indicadores.length > 0 && (
                             <div className="mb-5">
-                              <p className="text-white/40 text-[10px] font-medium uppercase tracking-wider mb-3">Puntos clave</p>
-                              <div className="flex flex-wrap gap-2">
+                              <p className="text-white/40 text-[10px] font-medium uppercase tracking-wider mb-3">Hallazgos clave</p>
+                              <div className="space-y-2">
                                 {data.indicadores.map((ind, i) => (
-                                  <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-light border" style={{
-                                    borderColor: `${barFill}25`,
-                                    backgroundColor: `${barFill}08`,
-                                    color: 'rgba(255,255,255,0.7)'
+                                  <div key={i} className="flex items-start gap-3 px-4 py-3 rounded-xl border bg-white/[0.01]" style={{
+                                    borderColor: `${barFill}15`
                                   }}>
-                                    <span className="text-[6px]" style={{ color: barFill, opacity: 0.7 }}>●</span>
-                                    {stripBold(ind)}
-                                  </span>
+                                    <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: `${barFill}12` }}>
+                                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: barFill, opacity: 0.6 }} />
+                                    </div>
+                                    <p className="text-white/65 text-[13px] font-light leading-relaxed">{stripBold(ind)}</p>
+                                  </div>
                                 ))}
                               </div>
                             </div>
                           )}
 
-                          {/* Interpretación — clean readable text */}
+                          {/* Interpretación — split paragraphs with first-letter styling */}
                           <div className="pt-4 border-t border-white/5">
                             <p className="text-white/40 text-[10px] font-medium uppercase tracking-wider mb-3">Interpretación personalizada</p>
                             {isFreudLacan ? (
-                              <div className="space-y-4">
+                              <div className="space-y-5">
                                 {data.interpretacion_freud && (
-                                  <div className="pl-4 border-l-2 border-purple-500/20">
+                                  <div className="pl-4 border-l-2 border-purple-500/20 space-y-3">
                                     <p className="text-purple-300/50 text-[10px] font-medium uppercase tracking-wider mb-1.5">Lectura freudiana</p>
-                                    <p className="text-white/70 text-[15px] font-light leading-[1.8]">{stripBold(data.interpretacion_freud)}</p>
+                                    {data.interpretacion_freud.split('\n\n').map((p, i) => (
+                                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.9]">{renderBold(p)}</p>
+                                    ))}
                                   </div>
                                 )}
                                 {data.interpretacion_lacan && (
-                                  <div className="pl-4 border-l-2 border-indigo-500/20">
+                                  <div className="pl-4 border-l-2 border-indigo-500/20 space-y-3">
                                     <p className="text-indigo-300/50 text-[10px] font-medium uppercase tracking-wider mb-1.5">Lectura lacaniana</p>
-                                    <p className="text-white/70 text-[15px] font-light leading-[1.8]">{stripBold(data.interpretacion_lacan)}</p>
+                                    {data.interpretacion_lacan.split('\n\n').map((p, i) => (
+                                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.9]">{renderBold(p)}</p>
+                                    ))}
                                   </div>
                                 )}
                                 {data.interpretacion && !data.interpretacion_freud && (
                                   <div className="space-y-3">
                                     {data.interpretacion.split('\n\n').map((p, i) => (
-                                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
+                                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.9]">{renderBold(p)}</p>
                                     ))}
                                   </div>
                                 )}
@@ -2435,7 +2472,7 @@ const RadiografiaPremiumPage = () => {
                             ) : (
                               <div className="space-y-3">
                                 {(data.interpretacion || '').split('\n\n').map((p, i) => (
-                                  <p key={i} className="text-white/70 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
+                                  <p key={i} className="text-white/70 text-[15px] font-light leading-[1.9]">{renderBold(p)}</p>
                                 ))}
                               </div>
                             )}
@@ -2464,24 +2501,28 @@ const RadiografiaPremiumPage = () => {
 
                     {/* ── Dimension breakdown (fused from Diagnóstico Estructural) ── */}
                     {aiAnalysis.tabla_diagnostica && (
-                      <div className="mt-6 pt-6 border-t border-white/5 space-y-2">
+                      <div className="mt-6 pt-6 border-t border-white/5 space-y-1">
+                        <p className="text-white/35 text-[10px] font-medium uppercase tracking-wider mb-4">Desglose por dimensión</p>
                         {aiAnalysis.tabla_diagnostica.map((row, i) => {
                           const dimKey = Object.keys(DIMENSION_LABELS)[i]
                           const score = aiAnalysis.dimensiones[dimKey] ?? 50
                           const barColor = score >= 70 ? 'bg-emerald-500' : score >= 45 ? 'bg-amber-500' : 'bg-red-500'
+                          const levelLabel = score >= 70 ? 'Alto' : score >= 45 ? 'Moderado' : 'Bajo'
+                          const levelColor = score >= 70 ? 'text-emerald-400/70' : score >= 45 ? 'text-amber-400/70' : 'text-red-400/70'
                           return (
-                            <div key={i} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/[0.02] transition-colors">
-                              <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: DIMENSION_COLORS[i] }} />
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center justify-between mb-1">
-                                  <span className="text-white/65 text-xs font-medium">{row.dimension}</span>
-                                  <span className="text-white/75 text-xs font-semibold tabular-nums ml-2">{score}%</span>
-                                </div>
-                                <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden mb-1.5">
-                                  <div className={`h-full rounded-full ${barColor} transition-all`} style={{ width: `${score}%`, opacity: 0.7 }} />
-                                </div>
-                                <p className="text-white/40 text-[11px] font-light leading-snug">{row.interpretacion}</p>
+                            <div key={i} className="px-4 py-4 rounded-xl hover:bg-white/[0.02] transition-colors border border-transparent hover:border-white/5">
+                              <div className="flex items-center gap-3 mb-2">
+                                <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: DIMENSION_COLORS[i] }} />
+                                <span className="text-white/70 text-sm font-medium flex-1">{row.dimension}</span>
+                                <span className={`text-xs font-medium ${levelColor}`}>{levelLabel}</span>
+                                <span className="text-white/80 text-sm font-bold tabular-nums w-12 text-right">{score}%</span>
                               </div>
+                              <div className="h-2.5 bg-white/[0.06] rounded-full overflow-hidden mb-2.5 ml-6">
+                                <motion.div initial={{ width: 0 }} whileInView={{ width: `${score}%` }} viewport={{ once: true }}
+                                  transition={{ duration: 0.8, delay: i * 0.05 }}
+                                  className={`h-full rounded-full ${barColor}`} style={{ opacity: 0.75 }} />
+                              </div>
+                              <p className="text-white/45 text-[13px] font-light leading-relaxed ml-6">{row.interpretacion}</p>
                             </div>
                           )
                         })}
@@ -2503,21 +2544,36 @@ const RadiografiaPremiumPage = () => {
                     <h2 className="text-lg font-light text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-300">Dirección Probable del Vínculo</h2>
                   </div>
                   <div className="p-6 rounded-2xl border border-white/8 bg-white/[0.02]">
+                    {/* Explanation */}
+                    <p className="text-white/40 text-xs font-light text-center mb-6 max-w-lg mx-auto">
+                      Estos indicadores proyectan la trayectoria de tu vínculo basándose en los patrones actuales detectados en tu narrativa. No son un destino fijo — representan tendencias que pueden transformarse con trabajo emocional.
+                    </p>
                     {/* Gauges row */}
                     <div className="grid grid-cols-3 gap-6 mb-6">
                       <GaugeChart value={aiAnalysis.direccion_probable.estabilidad_futura} label="Estabilidad futura" />
                       <GaugeChart value={aiAnalysis.direccion_probable.riesgo_desgaste} label="Riesgo de desgaste" inverted />
                       <GaugeChart value={aiAnalysis.direccion_probable.potencial_reconexion} label="Potencial de reconexión" />
                     </div>
-                    {/* Interpretation text */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-white/5">
+                    {/* Detailed interpretation cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6 border-t border-white/5">
                       {[
-                        { val: aiAnalysis.direccion_probable.estabilidad_futura ?? 0, label: 'Estabilidad futura', text: val => val >= 60 ? 'El vínculo tiene bases sólidas para sostenerse en el tiempo.' : val >= 40 ? 'Hay elementos de estabilidad pero también zonas frágiles que requieren atención.' : 'La estabilidad del vínculo está comprometida y necesita trabajo activo.' },
-                        { val: aiAnalysis.direccion_probable.riesgo_desgaste ?? 0, label: 'Riesgo de desgaste', text: val => val >= 60 ? 'Se detectan señales importantes de desgaste emocional acumulado.' : val >= 40 ? 'Existe un desgaste moderado que conviene atender antes de que escale.' : 'El nivel de desgaste es bajo, lo cual es un indicador positivo.' },
-                        { val: aiAnalysis.direccion_probable.potencial_reconexion ?? 0, label: 'Potencial de reconexión', text: val => val >= 60 ? 'Hay un potencial significativo para reconectar y profundizar el vínculo.' : val >= 40 ? 'La reconexión es posible pero requerirá intención y esfuerzo de ambos.' : 'El potencial de reconexión es bajo — algo fundamental necesita cambiar primero.' }
-                      ].map(({ val, label, text }) => (
-                        <div key={label} className="text-center">
-                          <p className="text-white/45 text-xs font-light leading-relaxed">{text(val)}</p>
+                        { val: aiAnalysis.direccion_probable.estabilidad_futura ?? 0, label: 'Estabilidad futura', icon: Shield, color: 'emerald',
+                          subtitle: 'Mide la solidez estructural del vínculo: consistencia emocional, resolución de conflictos y seguridad compartida.',
+                          text: val => val >= 60 ? 'El vínculo tiene bases sólidas para sostenerse en el tiempo. Los patrones de comunicación y la inversión emocional mutua sugieren un camino estable.' : val >= 40 ? 'Hay elementos de estabilidad pero también zonas frágiles. El equilibrio actual puede sostenerse si ambos trabajan las áreas de tensión detectadas.' : 'La estabilidad del vínculo está comprometida. Los patrones actuales indican que sin intervención activa, el desgaste podría profundizarse.' },
+                        { val: aiAnalysis.direccion_probable.riesgo_desgaste ?? 0, label: 'Riesgo de desgaste', icon: AlertTriangle, color: 'red',
+                          subtitle: 'Evalúa la acumulación de resentimiento, distancia emocional y conflictos no resueltos que erosionan el vínculo.',
+                          text: val => val >= 60 ? 'Se detectan señales importantes de desgaste emocional acumulado. Los conflictos no reparados y la distancia emocional están dejando huella en la relación.' : val >= 40 ? 'Existe un desgaste moderado. Hay temas pendientes que conviene abordar antes de que se cristalicen como patrones permanentes.' : 'El nivel de desgaste es bajo, lo cual indica que la relación mantiene su vitalidad emocional activa.' },
+                        { val: aiAnalysis.direccion_probable.potencial_reconexion ?? 0, label: 'Potencial de reconexión', icon: Heart, color: 'violet',
+                          subtitle: 'Indica la capacidad latente de la pareja para reencontrarse emocionalmente y reconstruir la intimidad.',
+                          text: val => val >= 60 ? 'Hay un potencial significativo para reconectar y profundizar el vínculo. La disposición emocional y los recursos internos están presentes.' : val >= 40 ? 'La reconexión es posible pero requerirá intención consciente y esfuerzo de ambos. Hay apertura pero también resistencias que trabajar.' : 'El potencial de reconexión es bajo en este momento. Algo fundamental en la dinámica necesita transformarse primero.' }
+                      ].map(({ val, label, icon: ItemIcon, color, subtitle, text }) => (
+                        <div key={label} className="p-4 rounded-xl border border-white/5 bg-white/[0.01] space-y-2">
+                          <div className="flex items-center gap-2 mb-1">
+                            <ItemIcon className={`w-4 h-4 text-${color}-400/50`} strokeWidth={1.5} />
+                            <span className={`text-${color}-300/70 text-xs font-medium`}>{label}</span>
+                          </div>
+                          <p className="text-white/30 text-[10px] font-light leading-snug">{subtitle}</p>
+                          <p className="text-white/55 text-[13px] font-light leading-relaxed">{text(val)}</p>
                         </div>
                       ))}
                     </div>
@@ -2538,34 +2594,58 @@ const RadiografiaPremiumPage = () => {
                     <p className="text-emerald-300/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-1">Diagnóstico</p>
                     <h2 className="text-lg font-light text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-cyan-300">Fortalezas y Señales de Riesgo</h2>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Fortalezas — left */}
-                    <div className="space-y-3">
-                      <p className="text-emerald-300/50 text-[10px] font-medium uppercase tracking-wider flex items-center gap-2">
-                        <CheckCircle className="w-3.5 h-3.5" /> Fortalezas detectadas
-                      </p>
-                      {(aiAnalysis.fortalezas || []).map((f, i) => (
-                        <div key={i} className="p-4 rounded-xl border border-emerald-500/10 bg-emerald-500/[0.02] flex items-start gap-3">
-                          <div className="w-6 h-6 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <CheckCircle className="w-3 h-3 text-emerald-400/60" strokeWidth={1.5} />
-                          </div>
-                          <p className="text-white/70 text-[14px] font-light leading-relaxed">{stripBold(f)}</p>
+                  <div className="space-y-6">
+                    {/* Visual balance bar */}
+                    <div className="p-5 rounded-2xl border border-white/8 bg-white/[0.02]">
+                      <p className="text-white/35 text-[10px] font-medium uppercase tracking-wider text-center mb-4">Balance general del vínculo</p>
+                      <div className="flex items-center gap-3">
+                        <span className="text-emerald-400/70 text-xs font-medium w-20 text-right">Fortalezas</span>
+                        <div className="flex-1 h-4 bg-white/[0.04] rounded-full overflow-hidden flex">
+                          <motion.div initial={{ width: 0 }} whileInView={{ width: `${Math.round(((aiAnalysis.fortalezas?.length || 0) / ((aiAnalysis.fortalezas?.length || 0) + (aiAnalysis.riesgos?.length || 0) || 1)) * 100)}%` }}
+                            viewport={{ once: true }} transition={{ duration: 1 }}
+                            className="h-full bg-gradient-to-r from-emerald-500/60 to-emerald-400/40 rounded-l-full" />
+                          <motion.div initial={{ width: 0 }} whileInView={{ width: `${Math.round(((aiAnalysis.riesgos?.length || 0) / ((aiAnalysis.fortalezas?.length || 0) + (aiAnalysis.riesgos?.length || 0) || 1)) * 100)}%` }}
+                            viewport={{ once: true }} transition={{ duration: 1 }}
+                            className="h-full bg-gradient-to-r from-red-400/40 to-red-500/60 rounded-r-full" />
                         </div>
-                      ))}
+                        <span className="text-red-400/70 text-xs font-medium w-20">Riesgos</span>
+                      </div>
+                      <div className="flex justify-between mt-2 px-24">
+                        <span className="text-emerald-400/50 text-[11px]">{aiAnalysis.fortalezas?.length || 0}</span>
+                        <span className="text-red-400/50 text-[11px]">{aiAnalysis.riesgos?.length || 0}</span>
+                      </div>
                     </div>
-                    {/* Riesgos — right */}
-                    <div className="space-y-3">
-                      <p className="text-red-300/50 text-[10px] font-medium uppercase tracking-wider flex items-center gap-2">
-                        <AlertTriangle className="w-3.5 h-3.5" /> Señales de riesgo
-                      </p>
-                      {(aiAnalysis.riesgos || []).map((r, i) => (
-                        <div key={i} className="p-4 rounded-xl border border-red-500/10 bg-red-500/[0.02] flex items-start gap-3">
-                          <div className="w-6 h-6 rounded-lg bg-red-500/10 border border-red-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <AlertTriangle className="w-3 h-3 text-red-400/60" strokeWidth={1.5} />
+
+                    {/* Cards grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Fortalezas — left */}
+                      <div className="space-y-3">
+                        <p className="text-emerald-300/50 text-[10px] font-medium uppercase tracking-wider flex items-center gap-2">
+                          <CheckCircle className="w-3.5 h-3.5" /> Fortalezas detectadas
+                        </p>
+                        {(aiAnalysis.fortalezas || []).map((f, i) => (
+                          <div key={i} className="p-4 rounded-xl border border-emerald-500/10 bg-emerald-500/[0.02] flex items-start gap-3">
+                            <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <CheckCircle className="w-3.5 h-3.5 text-emerald-400/60" strokeWidth={1.5} />
+                            </div>
+                            <p className="text-white/70 text-[14px] font-light leading-relaxed">{renderBold(f)}</p>
                           </div>
-                          <p className="text-white/70 text-[14px] font-light leading-relaxed">{stripBold(r)}</p>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
+                      {/* Riesgos — right */}
+                      <div className="space-y-3">
+                        <p className="text-red-300/50 text-[10px] font-medium uppercase tracking-wider flex items-center gap-2">
+                          <AlertTriangle className="w-3.5 h-3.5" /> Señales de riesgo
+                        </p>
+                        {(aiAnalysis.riesgos || []).map((r, i) => (
+                          <div key={i} className="p-4 rounded-xl border border-red-500/10 bg-red-500/[0.02] flex items-start gap-3">
+                            <div className="w-7 h-7 rounded-lg bg-red-500/10 border border-red-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <AlertTriangle className="w-3.5 h-3.5 text-red-400/60" strokeWidth={1.5} />
+                            </div>
+                            <p className="text-white/70 text-[14px] font-light leading-relaxed">{renderBold(r)}</p>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -2581,39 +2661,52 @@ const RadiografiaPremiumPage = () => {
                   </div>
                   <p className="text-violet-300/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Recomendación personalizada</p>
                   <h2 className="text-lg font-light text-white/80 mb-2">Tu siguiente paso</h2>
-                  <p className="text-white/40 text-sm font-light max-w-md mx-auto">
+                  <p className="text-white/40 text-sm font-light max-w-lg mx-auto">
                     {aiAnalysis.temas_para_consulta?.length > 0
-                      ? 'Basándonos en lo que compartiste, estos son los temas que más impacto tendrían en sesión.'
-                      : 'Estos son los patrones, raíces y dinámicas que exploraríamos en sesión para transformar tu vínculo.'}
+                      ? 'Basándonos en todo lo que compartiste y los patrones detectados en tu narrativa, estos son los temas que mayor impacto transformador tendrían si los trabajas en sesión.'
+                      : 'Estos son los patrones, raíces y dinámicas que exploraríamos en sesión para transformar tu vínculo y tu forma de relacionarte.'}
                   </p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+
+                {/* Intro motivational text */}
+                <div className="p-5 rounded-xl border border-violet-500/10 bg-violet-500/[0.03] mb-6">
+                  <p className="text-white/55 text-sm font-light leading-relaxed text-center">
+                    Este reporte es un mapa — no un diagnóstico que te condena. Cada patrón detectado es una puerta que se puede abrir con el acompañamiento adecuado. Lo importante no es dónde estás, sino la dirección que elijas tomar a partir de ahora.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 mb-8">
                   {aiAnalysis.temas_para_consulta?.length > 0
                     ? aiAnalysis.temas_para_consulta.map((tema, i) => {
                         const icons = [Eye, Anchor, Heart, Target, Compass, Brain]
+                        const colors = ['violet', 'cyan', 'fuchsia', 'amber', 'emerald', 'violet']
                         const TemaIcon = icons[i % icons.length]
+                        const color = colors[i % colors.length]
                         return (
-                          <div key={i} className="p-4 rounded-xl border border-white/8 bg-white/[0.02] flex items-start gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-violet-500/10 border border-violet-500/15 flex items-center justify-center flex-shrink-0">
-                              <TemaIcon className="w-4 h-4 text-violet-400/60" strokeWidth={1.5} />
+                          <div key={i} className={`p-5 rounded-xl border border-${color}-500/10 bg-${color}-500/[0.02] flex items-start gap-4`}>
+                            <div className={`w-10 h-10 rounded-xl bg-${color}-500/10 border border-${color}-500/15 flex items-center justify-center flex-shrink-0`}>
+                              <TemaIcon className={`w-5 h-5 text-${color}-400/60`} strokeWidth={1.5} />
                             </div>
-                            <p className="text-white/65 text-sm font-light leading-relaxed pt-1">{tema}</p>
+                            <div className="flex-1">
+                              <p className={`text-${color}-300/40 text-[9px] font-medium uppercase tracking-wider mb-1`}>Tema {i + 1}</p>
+                              <p className="text-white/70 text-sm font-light leading-relaxed">{renderBold(tema)}</p>
+                            </div>
                           </div>
                         )
                       })
                     : [
-                        { icon: Eye, label: 'Patrones inconscientes', desc: 'Identificar y desactivar los ciclos repetitivos en tus relaciones.' },
-                        { icon: Anchor, label: 'Raíces familiares', desc: 'Explorar cómo tu historia familiar moldea tu forma de amar hoy.' },
-                        { icon: Heart, label: 'Reconexión emocional', desc: 'Reconstruir la intimidad y la presencia emocional en el vínculo.' },
-                        { icon: Target, label: 'Comunicación efectiva', desc: 'Transformar los conflictos en oportunidades de crecimiento.' }
+                        { icon: Eye, label: 'Patrones inconscientes', desc: 'Identificar y desactivar los ciclos repetitivos que operan sin que te des cuenta, conectándolos con tu historia emocional y tus heridas no resueltas.' },
+                        { icon: Anchor, label: 'Raíces familiares', desc: 'Explorar cómo la dinámica entre tus padres y tu experiencia de amor temprana moldearon tu forma de amar hoy, y cómo dejar de repetir lo que no te sirve.' },
+                        { icon: Heart, label: 'Reconexión emocional', desc: 'Reconstruir la intimidad emocional y la presencia en el vínculo, aprendiendo a estar disponible sin perder tu identidad en el proceso.' },
+                        { icon: Target, label: 'Comunicación efectiva', desc: 'Transformar los conflictos en oportunidades de crecimiento, aprendiendo a expresar necesidades sin atacar y a escuchar sin reaccionar defensivamente.' }
                       ].map(({ icon: Icon, label, desc }) => (
-                        <div key={label} className="p-4 rounded-xl border border-white/8 bg-white/[0.02] flex items-start gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-violet-500/10 border border-violet-500/15 flex items-center justify-center flex-shrink-0">
-                            <Icon className="w-4 h-4 text-violet-400/60" strokeWidth={1.5} />
+                        <div key={label} className="p-5 rounded-xl border border-white/8 bg-white/[0.02] flex items-start gap-4">
+                          <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/15 flex items-center justify-center flex-shrink-0">
+                            <Icon className="w-5 h-5 text-violet-400/60" strokeWidth={1.5} />
                           </div>
                           <div>
-                            <h3 className="text-white/70 text-sm font-medium mb-1">{label}</h3>
-                            <p className="text-white/45 text-[13px] font-light leading-relaxed">{desc}</p>
+                            <h3 className="text-white/75 text-sm font-medium mb-1.5">{label}</h3>
+                            <p className="text-white/50 text-[13px] font-light leading-relaxed">{desc}</p>
                           </div>
                         </div>
                       ))
