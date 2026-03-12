@@ -67,7 +67,13 @@ INFERENCIA PSICOLÓGICA:
 - Diferenciación del self: alta, media, baja
 
 ANÁLISIS POR ENFOQUE — Para cada uno de los 11 enfoques:
-Cada enfoque debe incluir variables específicas medidas, indicadores con checkpoints, y una interpretación narrativa personalizada basada en el discurso real del usuario. Cita palabras del usuario entre comillas.
+Cada enfoque debe incluir variables específicas medidas, indicadores con checkpoints, y una interpretación narrativa personalizada.
+
+REGLA CLAVE PARA ESTA SECCIÓN: Cada autor debe nutrirse de DOS fuentes simultáneamente:
+1) Las RESPUESTAS CRUDAS del cuestionario (las frases textuales del usuario)
+2) Tu propio AUTOANALISIS previo (la sección autoanalisis_usuario que acabas de generar)
+Esto significa que al escribir la interpretación de cada autor, debes cruzar los patrones que ya detectaste en el autoanálisis (mecanismos de defensa, fantasma relacional, forma de amar, núcleo del patrón, etc.) con las respuestas verbales directas. El resultado debe ser una interpretación MÁS RICA, MÁS PROFUNDA y MÁS CONECTADA que si solo usaras las respuestas crudas.
+Cada interpretación debe ser de 3-4 párrafos (no 2). Cita palabras del usuario entre comillas y referencia los hallazgos de tu propio autoanálisis cuando sea relevante.
 
 INSTRUCCIONES PARA INDICADORES (MUY IMPORTANTE):
 Los indicadores NO deben ser técnicos ni en inglés. Deben ser frases cortas y claras en español que cualquier persona sin formación psicológica entienda. Formato: "Frase descriptiva clara" (no formatos como "Ratio: 1:3" ni "Bids for connection: bajo").
@@ -330,28 +336,28 @@ Devuelve el resultado en el siguiente formato JSON exacto:
     "gottman": {
       "titulo": "John Gottman",
       "enfoque": "Estabilidad relacional y dinámica del conflicto",
-      "interpretacion": "(2 párrafos: Los Cuatro Jinetes detectados, ratio positivo/negativo, bids for connection, capacidad de reparación. Cita al usuario.)",
+      "interpretacion": "(3-4 párrafos: Los Cuatro Jinetes detectados, ratio positivo/negativo, bids for connection, capacidad de reparación. Cruza con los hallazgos del autoanálisis — ¿cómo los mecanismos de defensa o el fantasma relacional afectan la dinámica Gottman? Cita al usuario.)",
       "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 indicadores, cada uno una frase corta comprensible sin jerga"],
       "puntuacion": "(0-100)"
     },
     "sue_johnson": {
       "titulo": "Sue Johnson",
       "enfoque": "Seguridad emocional y Terapia Focalizada en las Emociones",
-      "interpretacion": "(2 párrafos: ciclos de interacción negativa, accesibilidad emocional, responsividad, patrón perseguidor-evitador. Cita al usuario.)",
+      "interpretacion": "(3-4 párrafos: ciclos de interacción negativa, accesibilidad emocional, responsividad, patrón perseguidor-evitador. Conecta con la forma de amar y el estilo de apego detectado en el autoanálisis. Cita al usuario.)",
       "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "puntuacion": "(0-100)"
     },
     "perel": {
       "titulo": "Esther Perel",
       "enfoque": "Deseo erótico y tensión entre seguridad y aventura",
-      "interpretacion": "(2 párrafos: erotismo vs domesticidad, misterio, autonomía, novedad, espacio psicológico. Cita al usuario.)",
+      "interpretacion": "(3-4 párrafos: erotismo vs domesticidad, misterio, autonomía, novedad, espacio psicológico. Relaciona con el fantasma relacional y lo que reclama afuera del autoanálisis. Cita al usuario.)",
       "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "puntuacion": "(0-100)"
     },
     "levine": {
       "titulo": "Amir Levine",
       "enfoque": "Estilo de apego adulto",
-      "interpretacion": "(2 párrafos: estilo de apego detectado — seguro/ansioso/evitativo/desorganizado, ansiedad relacional, distancia emocional, tolerancia a la intimidad. Cita al usuario.)",
+      "interpretacion": "(3-4 párrafos: estilo de apego detectado — seguro/ansioso/evitativo/desorganizado, ansiedad relacional, distancia emocional, tolerancia a la intimidad. Conecta con el tipo de pareja que repite y los mecanismos de defensa del autoanálisis. Cita al usuario.)",
       "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "estilo_apego": "(Seguro | Ansioso | Evitativo | Desorganizado)",
       "puntuacion": "(0-100)"
@@ -359,21 +365,21 @@ Devuelve el resultado en el siguiente formato JSON exacto:
     "hendrix": {
       "titulo": "Harville Hendrix",
       "enfoque": "Reparación inconsciente — Terapia Imago",
-      "interpretacion": "(2 párrafos: heridas infantiles detectadas, necesidades no satisfechas, elección de pareja como intento de reparación. Cita al usuario.)",
+      "interpretacion": "(3-4 párrafos: heridas infantiles detectadas, necesidades no satisfechas, elección de pareja como intento de reparación. Cruza con el núcleo del patrón y lo que busca en el otro del autoanálisis. Cita al usuario.)",
       "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "puntuacion": "(0-100)"
     },
     "tatkin": {
       "titulo": "Stan Tatkin",
       "enfoque": "Sincronía emocional y regulación mutua",
-      "interpretacion": "(2 párrafos: co-regulación, protección mutua, respuesta al estrés, anchor/wave/island. Cita al usuario.)",
+      "interpretacion": "(3-4 párrafos: co-regulación, protección mutua, respuesta al estrés, anchor/wave/island. Relaciona con la forma de amar y yo ideal vs yo real del autoanálisis. Cita al usuario.)",
       "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "puntuacion": "(0-100)"
     },
     "chapman": {
       "titulo": "Gary Chapman",
       "enfoque": "Lenguajes del amor y comunicación afectiva",
-      "interpretacion": "(2 párrafos: lenguaje predominante del usuario y de la pareja, compatibilidad afectiva, frustraciones. Cita al usuario.)",
+      "interpretacion": "(3-4 párrafos: lenguaje predominante del usuario y de la pareja, compatibilidad afectiva, frustraciones. Conecta con lo que reclama afuera del autoanálisis y los patrones de comunicación detectados. Cita al usuario.)",
       "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "lenguaje_usuario": "(Palabras de afirmación | Actos de servicio | Contacto físico | Tiempo de calidad | Regalos)",
       "lenguaje_pareja": "(Palabras de afirmación | Actos de servicio | Contacto físico | Tiempo de calidad | Regalos)",
@@ -382,7 +388,7 @@ Devuelve el resultado en el siguiente formato JSON exacto:
     "sternberg": {
       "titulo": "Robert Sternberg",
       "enfoque": "Triángulo del amor: intimidad, pasión y compromiso",
-      "interpretacion": "(2 párrafos: balance entre los tres componentes, tipo de amor resultante. Cita al usuario.)",
+      "interpretacion": "(3-4 párrafos: balance entre los tres componentes, tipo de amor resultante. Cruza con la forma de amar y el cierre transformador del autoanálisis. Cita al usuario.)",
       "indicadores": ["(frase clara en español describiendo hallazgo)", "...3 frases cortas sin jerga técnica"],
       "puntuacion_intimidad": "(0-100)",
       "puntuacion_pasion": "(0-100)",
@@ -391,14 +397,14 @@ Devuelve el resultado en el siguiente formato JSON exacto:
     "schnarch": {
       "titulo": "David Schnarch",
       "enfoque": "Madurez relacional y diferenciación del self",
-      "interpretacion": "(2 párrafos: nivel de diferenciación, autonomía emocional, capacidad de tolerar conflicto sin perder identidad. Cita al usuario.)",
+      "interpretacion": "(3-4 párrafos: nivel de diferenciación, autonomía emocional, capacidad de tolerar conflicto sin perder identidad. Conecta con el yo ideal vs yo real y mecanismos de defensa del autoanálisis. Cita al usuario.)",
       "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "puntuacion": "(0-100)"
     },
     "real": {
       "titulo": "Terrence Real",
       "enfoque": "Dinámicas de poder y equilibrio emocional",
-      "interpretacion": "(2 párrafos: luchas de poder, vergüenza, resentimiento acumulado, dominación/sumisión emocional. Cita al usuario.)",
+      "interpretacion": "(3-4 párrafos: luchas de poder, vergüenza, resentimiento acumulado, dominación/sumisión emocional. Relaciona con lo que reclama afuera y el tipo de pareja que repite del autoanálisis. Cita al usuario.)",
       "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
       "puntuacion": "(0-100 equilibrio de poder)"
     },

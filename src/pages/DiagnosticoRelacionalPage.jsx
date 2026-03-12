@@ -1058,34 +1058,25 @@ const DiagnosticoRelacionalPage = () => {
       return
     }
     if (type === 'free') {
-      // Promo code — full free access with the selected product type
+      // Promo code — full free access → go to premium test
       const freeType = purchasingType || 'solo'
-      setIsPurchased(true)
-      setPurchaseType(freeType)
       sessionStorage.setItem('diagnostico_relacional_purchased', 'true')
       sessionStorage.setItem('diagnostico_relacional_type', freeType)
-      setStage('instructions')
-      scrollToTop()
+      navigate(`/tienda/radiografia-premium?type=${freeType}&free=true`)
       return
     }
-    // Dev/test mode: bypass Stripe entirely
+    // Dev/test mode: bypass Stripe entirely → go to premium test
     if (isDevMode) {
-      setIsPurchased(true)
-      setPurchaseType(type)
       sessionStorage.setItem('diagnostico_relacional_purchased', 'true')
       sessionStorage.setItem('diagnostico_relacional_type', type)
-      setStage('instructions')
-      scrollToTop()
+      navigate(`/tienda/radiografia-premium?type=${type}&test=true`)
       return
     }
-    // If promo already applied and it's free — grant access immediately
+    // If promo already applied and it's free — go to premium test
     if (cardPromoApplied[type]?.free) {
-      setIsPurchased(true)
-      setPurchaseType(type)
       sessionStorage.setItem('diagnostico_relacional_purchased', 'true')
       sessionStorage.setItem('diagnostico_relacional_type', type)
-      setStage('instructions')
-      scrollToTop()
+      navigate(`/tienda/radiografia-premium?type=${type}&free=true`)
       return
     }
     // Stripe Checkout API — call backend to create session
@@ -1104,13 +1095,10 @@ const DiagnosticoRelacionalPage = () => {
         return
       }
       if (data.free) {
-        // Server confirmed free access
-        setIsPurchased(true)
-        setPurchaseType(type)
+        // Server confirmed free access → go to premium test
         sessionStorage.setItem('diagnostico_relacional_purchased', 'true')
         sessionStorage.setItem('diagnostico_relacional_type', type)
-        setStage('instructions')
-        scrollToTop()
+        navigate(`/tienda/radiografia-premium?type=${type}&free=true`)
         setCheckoutLoading(null)
         return
       }
@@ -1120,7 +1108,7 @@ const DiagnosticoRelacionalPage = () => {
       setCardPromoErrors(prev => ({ ...prev, [type]: 'Error de conexión' }))
       setCheckoutLoading(null)
     }
-  }, [scrollToTop, cardPromoCodes, purchasingType, isDevMode])
+  }, [scrollToTop, cardPromoCodes, purchasingType, isDevMode, cardPromoApplied])
 
   // ─── FIRE BACKGROUND ANALYSIS ───────────────────────────────
 

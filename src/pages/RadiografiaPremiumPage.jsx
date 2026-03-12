@@ -254,9 +254,9 @@ const DIMENSION_COLORS = [
 
 const VOICE_LIST = [
   { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Valentina', desc: 'Cálida y clara', initial: 'V', color: 'from-rose-500 to-pink-500', ring: 'ring-rose-400/20', border: 'border-rose-500/30', bg: 'bg-rose-500/10', text: 'text-rose-300' },
-  { id: 'VR6AewLTigWG4xSOukaG', name: 'Santiago', desc: 'Firme y profesional', initial: 'S', color: 'from-violet-500 to-indigo-500', ring: 'ring-violet-400/20', border: 'border-violet-500/30', bg: 'bg-violet-500/10', text: 'text-violet-300' },
-  { id: 'pNInz6obpgDQGcFmaJgB', name: 'Adrián', desc: 'Profundo y sereno', initial: 'A', color: 'from-blue-500 to-cyan-500', ring: 'ring-blue-400/20', border: 'border-blue-500/30', bg: 'bg-blue-500/10', text: 'text-blue-300' },
-  { id: 'jBpfuIE2acCO8z3wKNLl', name: 'Camila', desc: 'Ágil y expresiva', initial: 'C', color: 'from-fuchsia-500 to-purple-500', ring: 'ring-fuchsia-400/20', border: 'border-fuchsia-500/30', bg: 'bg-fuchsia-500/10', text: 'text-fuchsia-300' }
+  { id: 'JBFqnCBsd6RMkjVDRZzb', name: 'Santiago', desc: 'Firme y profesional', initial: 'S', color: 'from-violet-500 to-indigo-500', ring: 'ring-violet-400/20', border: 'border-violet-500/30', bg: 'bg-violet-500/10', text: 'text-violet-300' },
+  { id: 'onwK4e9ZLuTAKqWW03F9', name: 'Adrián', desc: 'Profundo y sereno', initial: 'A', color: 'from-blue-500 to-cyan-500', ring: 'ring-blue-400/20', border: 'border-blue-500/30', bg: 'bg-blue-500/10', text: 'text-blue-300' },
+  { id: 'FGY2WhTYpPnrIDTdsKH5', name: 'Camila', desc: 'Ágil y expresiva', initial: 'C', color: 'from-fuchsia-500 to-purple-500', ring: 'ring-fuchsia-400/20', border: 'border-fuchsia-500/30', bg: 'bg-fuchsia-500/10', text: 'text-fuchsia-300' }
 ]
 
 // ─── MicLevelBars (visual mic test feedback) ───────────────────
@@ -674,8 +674,11 @@ const RadiografiaPremiumPage = () => {
   const [pdfGenerating, setPdfGenerating] = useState(false)
   const [chartViewMode, setChartViewMode] = useState('radar')
   const [cachedAnalysis, setCachedAnalysis] = useState(null)
-  const [showOnboarding, setShowOnboarding] = useState(true)
+  const [showOnboarding, setShowOnboarding] = useState(false)
   const [onboardingStep, setOnboardingStep] = useState(0)
+
+  // Email
+  const [emailData, setEmailData] = useState({ emailUsuario: '', emailPareja: '' })
 
   const question = PREGUNTAS[currentQ]
   const totalQ = PREGUNTAS.length
@@ -716,43 +719,71 @@ const RadiografiaPremiumPage = () => {
     setAudioPlaying(false)
   }, [])
 
-  // ── Play audio using ElevenLabs TTS, optional override voiceId + onEnded callback ──
+  // ── Voice ID → folder name mapping for static audio ──
+  const VOICE_FOLDER = {
+    'EXAVITQu4vr4xnSDxMaL': 'valentina',
+    'JBFqnCBsd6RMkjVDRZzb': 'santiago',
+    'onwK4e9ZLuTAKqWW03F9': 'adrian',
+    'FGY2WhTYpPnrIDTdsKH5': 'camila'
+  }
+
+  // ── Play audio: static files first, ElevenLabs API as fallback ──
   const audioCache = useRef({})
-  const playQuestion = useCallback(async (text, overrideVoiceId, onEndedCallback) => {
+  const playQuestion = useCallback(async (text, overrideVoiceId, onEndedCallback, staticId) => {
     stopAudio()
-    const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY
     const voiceId = overrideVoiceId || selectedVoiceId
-    if (!apiKey) return
     const thisGeneration = ++playGenerationRef.current
     try {
       setAudioPlaying(true)
       if (overrideVoiceId) setPreviewingVoiceId(overrideVoiceId)
 
-      // Check cache first
       const cacheKey = `${voiceId}::${text.slice(0, 80)}`
-      let blob
-      if (audioCache.current[cacheKey]) {
-        blob = audioCache.current[cacheKey]
-      } else {
-        const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'xi-api-key': apiKey },
-          body: JSON.stringify({
-            text,
-            model_id: 'eleven_multilingual_v2',
-            voice_settings: { stability: 0.35, similarity_boost: 0.85, style: 0.3, use_speaker_boost: true }
-          })
-        })
-        if (!res.ok) { setAudioPlaying(false); setPreviewingVoiceId(null); return }
-        blob = await res.blob()
-        audioCache.current[cacheKey] = blob
+
+      // Try static file first
+      const voiceFolder = VOICE_FOLDER[voiceId]
+      const currentQuestion = PREGUNTAS.find(q => q.mainQuestion === text)
+      const isPreview = text.includes('soy ') && text.includes('acompañaré')
+      const staticFile = voiceFolder && (staticId
+        ? `/audio/premium/${voiceFolder}/${staticId}.mp3`
+        : currentQuestion
+        ? `/audio/premium/${voiceFolder}/${currentQuestion.id}.mp3`
+        : isPreview ? `/audio/premium/${voiceFolder}/preview.mp3` : null)
+
+      let audioUrl = null
+
+      if (staticFile) {
+        // Use static file
+        const testRes = await fetch(staticFile, { method: 'HEAD' }).catch(() => null)
+        if (testRes?.ok) {
+          audioUrl = staticFile
+        }
       }
 
-      // Abort if a newer playQuestion call was made while fetching
+      // Fallback to cache or API
+      if (!audioUrl) {
+        let blob = audioCache.current[cacheKey]
+        if (!blob) {
+          const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY
+          if (!apiKey) { setAudioPlaying(false); setPreviewingVoiceId(null); return }
+          const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'xi-api-key': apiKey },
+            body: JSON.stringify({
+              text,
+              model_id: 'eleven_multilingual_v2',
+              voice_settings: { stability: 0.35, similarity_boost: 0.85, style: 0.3, use_speaker_boost: true }
+            })
+          })
+          if (!res.ok) { setAudioPlaying(false); setPreviewingVoiceId(null); return }
+          blob = await res.blob()
+          audioCache.current[cacheKey] = blob
+        }
+        audioUrl = URL.createObjectURL(blob)
+      }
+
       if (thisGeneration !== playGenerationRef.current) return
 
-      const url = URL.createObjectURL(blob)
-      const audio = new Audio(url)
+      const audio = new Audio(audioUrl)
       currentAudioRef.current = audio
       audio.onended = () => {
         setAudioPlaying(false)
@@ -764,8 +795,13 @@ const RadiografiaPremiumPage = () => {
     } catch { setAudioPlaying(false); setPreviewingVoiceId(null) }
   }, [selectedVoiceId, stopAudio])
 
-  // ── Preload next question audio ──
+  // ── Preload next question audio (static files don't need preloading) ──
   const preloadAudio = useCallback(async (text) => {
+    // Check if static file exists for this question — if so, no preload needed
+    const voiceFolder = VOICE_FOLDER[selectedVoiceId]
+    const q = PREGUNTAS.find(p => p.mainQuestion === text)
+    if (voiceFolder && q) return // static files preload via browser cache
+
     const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY
     if (!apiKey) return
     const cacheKey = `${selectedVoiceId}::${text.slice(0, 80)}`
@@ -1136,8 +1172,7 @@ const RadiografiaPremiumPage = () => {
                     {/* Sound test */}
                     <button
                       onClick={() => {
-                        const a = new Audio('/audio-test-chime.wav')
-                        a.play().then(() => setSoundTestOk(true)).catch(() => setSoundTestOk(false))
+                        playQuestion('¿Me escuchas bien? Si puedes oírme con claridad, estamos listos para comenzar.', undefined, () => setSoundTestOk(true), 'sound-test')
                       }}
                       className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all text-xs font-light ${
                         soundTestOk === true ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' :
@@ -1250,7 +1285,7 @@ const RadiografiaPremiumPage = () => {
               <motion.button
                 onClick={() => {
                   setStage('profile')
-                  playQuestion('¡Hola! Antes de iniciar, necesito conocer un par de datos tuyos muy rápidos. Escríbelos en los campos que aparecen a continuación y podremos comenzar.')
+                  playQuestion('Te damos la bienvenida. Antes de iniciar, necesito conocer un par de datos tuyos muy rápidos. Escríbelos en los campos que aparecen a continuación y podremos comenzar.', undefined, null, 'welcome')
                 }}
                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                 className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
@@ -1315,7 +1350,7 @@ const RadiografiaPremiumPage = () => {
                     <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Edad de tu pareja</label>
                     <input type="text" id="profile-edad-pareja" value={profileData.edadPareja}
                       onChange={(e) => setProfileData(p => ({ ...p, edadPareja: e.target.value }))}
-                      onKeyDown={(e) => { if (e.key === 'Enter' && profileData.nombre.trim() && profileData.edad.trim() && profileData.nombrePareja.trim() && profileData.edadPareja.trim()) setStage('questionnaire') }}
+                      onKeyDown={(e) => { if (e.key === 'Enter' && profileData.nombre.trim() && profileData.edad.trim() && profileData.nombrePareja.trim() && profileData.edadPareja.trim()) setStage('email') }}
                       placeholder="Ej: 30"
                       className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/25 focus:border-fuchsia-500/30 focus:outline-none transition-colors" />
                   </div>
@@ -1323,14 +1358,75 @@ const RadiografiaPremiumPage = () => {
               </div>
 
               <motion.button
-                onClick={() => { if (profileData.nombre.trim() && profileData.edad.trim() && profileData.nombrePareja.trim() && profileData.edadPareja.trim()) setStage('questionnaire') }}
+                onClick={() => { if (profileData.nombre.trim() && profileData.edad.trim() && profileData.nombrePareja.trim() && profileData.edadPareja.trim()) setStage('email') }}
                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                 disabled={!profileData.nombre.trim() || !profileData.edad.trim() || !profileData.nombrePareja.trim() || !profileData.edadPareja.trim()}
                 className={`w-full py-4 rounded-xl text-white font-light text-base transition-all shadow-lg ${profileData.nombre.trim() && profileData.edad.trim() && profileData.nombrePareja.trim() && profileData.edadPareja.trim()
                   ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 shadow-violet-600/20'
                   : 'bg-white/10 text-white/30 cursor-not-allowed shadow-none'}`}>
-                Continuar al cuestionario <ArrowRight className="inline w-4 h-4 ml-2" />
+                Continuar <ArrowRight className="inline w-4 h-4 ml-2" />
               </motion.button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════
+            STAGE: EMAIL — Correos (con opción de saltar)
+        ═══════════════════════════════════════════════════════ */}
+        {stage === 'email' && (
+          <motion.div key="email" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="min-h-screen flex items-center justify-center px-6 pt-6 pb-12">
+            <div className="max-w-lg w-full space-y-8">
+              <div className="text-center">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-4">
+                  <Send className="w-7 h-7 text-violet-400/60" strokeWidth={1.5} />
+                </div>
+                <h2 className="text-xl lg:text-2xl font-light text-white mb-2">Invitación por correo</h2>
+                <p className="text-white/50 text-sm font-light max-w-sm mx-auto">
+                  Al terminar, recibirás tu reporte completo por correo. Si deseas, también podemos enviar una invitación a tu pareja.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Tu correo electrónico</label>
+                  <input type="email" value={emailData.emailUsuario}
+                    autoFocus
+                    onChange={(e) => setEmailData(p => ({ ...p, emailUsuario: e.target.value }))}
+                    placeholder="tu@correo.com"
+                    className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/25 focus:border-violet-500/30 focus:outline-none transition-colors" />
+                </div>
+                <div>
+                  <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Correo de tu pareja <span className="text-white/25">(opcional)</span></label>
+                  <input type="email" value={emailData.emailPareja}
+                    onChange={(e) => setEmailData(p => ({ ...p, emailPareja: e.target.value }))}
+                    placeholder="pareja@correo.com"
+                    className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/25 focus:border-fuchsia-500/30 focus:outline-none transition-colors" />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <motion.button
+                  onClick={() => {
+                    // Play personalized greeting then start questionnaire
+                    const nombre = profileData.nombre.trim().split(' ')[0]
+                    playQuestion(`Hola ${nombre}, vamos a comenzar tu radiografía. Escucha cada pregunta con atención y responde con lo primero que te venga a la mente.`)
+                    setStage('questionnaire')
+                  }}
+                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
+                  Continuar <ArrowRight className="inline w-4 h-4 ml-2" />
+                </motion.button>
+                <button
+                  onClick={() => {
+                    const nombre = profileData.nombre.trim().split(' ')[0]
+                    playQuestion(`Hola ${nombre}, vamos a comenzar tu radiografía. Escucha cada pregunta con atención y responde con lo primero que te venga a la mente.`)
+                    setStage('questionnaire')
+                  }}
+                  className="w-full py-3 text-center text-white/35 text-sm font-light hover:text-white/55 transition-colors underline underline-offset-4 decoration-white/15">
+                  Saltar y comenzar directamente
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
@@ -1342,49 +1438,6 @@ const RadiografiaPremiumPage = () => {
           <motion.div key="questionnaire" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="min-h-screen pt-6 lg:pt-10 pb-20 px-6">
             <div className="max-w-2xl mx-auto">
-
-              {/* ── Spotlight Onboarding (progressive highlight + TTS narration) ── */}
-              <AnimatePresence>
-                {showOnboarding && currentQ === 0 && (() => {
-                  const SPOTLIGHT_STEPS = [
-                    { targetId: 'spotlight-question', title: 'Aquí aparece tu pregunta', desc: 'Cada pregunta se lee con la voz que elegiste. Solo escucha y prepárate.', narration: 'Aquí verás la pregunta. Se lee en voz alta automáticamente. Solo relájate y escucha.', color: 'emerald' },
-                    { targetId: 'spotlight-examples', title: 'Ideas para completar', desc: 'Si no sabes qué más decir, estas ideas te ayudan a profundizar.', narration: 'Si te faltó algo, aquí tienes ideas para enriquecer tu respuesta.', color: 'violet' },
-                    { targetId: 'spotlight-actions', title: 'Habla, escribe o avanza', desc: 'El micrófono se activa solo. Si prefieres escribir, hay un enlace abajo.', narration: 'El micrófono se activa automáticamente. Habla con libertad. Cuando termines, toca Siguiente.', color: 'fuchsia' }
-                  ]
-                  const step = SPOTLIGHT_STEPS[onboardingStep] || SPOTLIGHT_STEPS[0]
-                  const borderColor = { emerald: 'border-emerald-400/60', violet: 'border-violet-400/60', fuchsia: 'border-fuchsia-400/60' }[step.color]
-                  const bgCard = { emerald: 'from-emerald-500/[0.06]', violet: 'from-violet-500/[0.06]', fuchsia: 'from-fuchsia-500/[0.06]' }[step.color]
-                  const dotColor = { emerald: 'bg-emerald-400', violet: 'bg-violet-400', fuchsia: 'bg-fuchsia-400' }[step.color]
-
-                  return (
-                    <motion.div
-                      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                      className="fixed inset-0 z-50 pointer-events-none"
-                      style={{ background: 'transparent' }}>
-                      {/* Dark overlay with cutout */}
-                      <div className="absolute inset-0 pointer-events-auto"
-                        onClick={() => { onboardingStep < SPOTLIGHT_STEPS.length - 1 ? setOnboardingStep(s => s + 1) : setShowOnboarding(false) }}
-                        style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(2px)' }}>
-                        {/* Cutout rendered by SpotlightCutout effect */}
-                        <SpotlightCutout targetId={step.targetId} />
-                      </div>
-
-                      {/* Tooltip card — positioned below target */}
-                      <SpotlightTooltip
-                        targetId={step.targetId}
-                        onboardingStep={onboardingStep}
-                        totalSteps={SPOTLIGHT_STEPS.length}
-                        step={step}
-                        borderColor={borderColor}
-                        bgCard={bgCard}
-                        dotColor={dotColor}
-                        onNext={() => { onboardingStep < SPOTLIGHT_STEPS.length - 1 ? setOnboardingStep(s => s + 1) : setShowOnboarding(false) }}
-                        onSkip={() => setShowOnboarding(false)}
-                      />
-                    </motion.div>
-                  )
-                })()}
-              </AnimatePresence>
 
               {/* Progress bar */}
               <div className="mb-8">
@@ -1471,33 +1524,22 @@ const RadiografiaPremiumPage = () => {
 
               {/* ── Response area ── */}
 
-              {/* While recording: show animated indicator (no transcript) */}
+              {/* While recording: show animated MicLevelBars indicator */}
               {recording && !typingMode && (
                 <div className="mb-6 text-center">
-                  <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl border border-red-500/20 bg-red-500/[0.04]">
-                    <RecordingBars analyser={recordingAnalyser} />
+                  <div className="inline-flex flex-col items-center gap-3 px-6 py-4 rounded-2xl border border-red-500/20 bg-red-500/[0.04]">
+                    <MicLevelBars analyser={recordingAnalyser} />
                     <span className="text-red-300/70 text-sm font-light">Escuchando… habla con libertad</span>
                   </div>
                 </div>
               )}
 
-              {/* After stopping: "Respuesta guardada" + options (NOT showing transcript) */}
+              {/* After stopping: show "Respuesta guardada" badge (user proceeds with Next button) */}
               {!recording && currentText.trim() && !typingMode && (
                 <div className="mb-6 text-center">
                   <div className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.05]">
                     <CheckCircle className="w-4 h-4 text-emerald-400/70" />
-                    <span className="text-emerald-300/80 text-sm font-light">Respuesta guardada</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-4 mt-4">
-                    <button onClick={saveAndNext}
-                      className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-sm font-light shadow-lg shadow-violet-500/20 hover:from-violet-500 hover:to-fuchsia-500 transition-all flex items-center gap-2">
-                      {currentQ < totalQ - 1 ? <><ArrowRight className="w-4 h-4" /> Continuar</> : <><Check className="w-4 h-4" /> Finalizar</>}
-                    </button>
-                    <button
-                      onClick={() => { setTypingMode(true); setTextInput(transcript || textInput) }}
-                      className="text-xs text-white/40 hover:text-white/60 transition-colors underline underline-offset-2 decoration-white/15">
-                      Prefiero enriquecer mi respuesta
-                    </button>
+                    <span className="text-emerald-300/80 text-sm font-light">Respuesta guardada — toca Siguiente para avanzar</span>
                   </div>
                 </div>
               )}
@@ -1558,7 +1600,7 @@ const RadiografiaPremiumPage = () => {
                 {/* Regrabar — always visible when recording or when there's content */}
                 {(recording || currentText.trim()) && !typingMode && (
                   <motion.button
-                    onClick={() => { if (recording) stopRecording(); setTranscript(''); setTextInput(''); setTimeout(() => startRecording(), 200) }}
+                    onClick={() => { stopAudio(); if (recording) stopRecording(); setTranscript(''); setTextInput(''); setTimeout(() => startRecording(), 200) }}
                     whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                     className="flex flex-col items-center gap-1">
                     <div className="w-11 h-11 lg:w-12 lg:h-12 rounded-full flex items-center justify-center transition-all border-2 border-amber-500/30 bg-amber-500/[0.08] text-amber-400/70 hover:border-amber-500/50 hover:text-amber-300">
@@ -1747,6 +1789,7 @@ const RadiografiaPremiumPage = () => {
                     className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 border border-violet-500/20 flex items-center justify-center shadow-lg shadow-violet-500/10">
                     <Brain className="w-8 h-8 text-violet-400/70" />
                   </motion.div>
+                  <p className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-violet-400 text-xs font-bold uppercase tracking-[0.3em] mb-3">Reporte</p>
                   <h1 className="text-3xl lg:text-4xl font-light text-white mb-2">Tu Radiografía de Pareja</h1>
                   <p className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400 text-sm font-medium tracking-wide mb-4">Tu perfil de amor según 11 teorías</p>
 
@@ -1779,12 +1822,90 @@ const RadiografiaPremiumPage = () => {
                     <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-fuchsia-500/20 to-violet-500/15 border border-fuchsia-500/25 mb-4">
                       <Heart className="w-7 h-7 text-fuchsia-400/80" />
                     </div>
-                    <h2 className="text-xl lg:text-2xl font-light text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-300 to-violet-300 tracking-wide">Tu forma de amar</h2>
+                    <p className="text-fuchsia-300/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Reporte personalizado</p>
+                    <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-300 to-violet-300 tracking-wide">Tu forma de amar</h2>
                     <p className="text-white/35 text-sm font-light mt-2">El análisis más profundo de quién eres cuando amas</p>
                   </div>
 
-                  {/* Radial mind-map */}
-                  <AutoanalisisRadial data={aiAnalysis.autoanalisis_usuario} />
+                  {/* Radial mind-map with visualization toggle */}
+                  {aiAnalysis.autoanalisis_usuario && (() => {
+                    const dataAuto = aiAnalysis.autoanalisis_usuario
+                    // Option A: Current radial layout
+                    const RadialView = () => <AutoanalisisRadial data={dataAuto} />
+                    // Option B: Force-directed network graph
+                    const ForceView = () => {
+                      const present = AUTOANALISIS_SECTIONS.filter(s => dataAuto[s.key])
+                      const n = present.length
+                      if (n === 0) return null
+                      // Create connections between related nodes
+                      const connections = [
+                        [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9],
+                        [0, 9], [1, 8], [2, 7], [4, 6], [1, 3], [5, 8]
+                      ].filter(([a, b]) => a < n && b < n)
+                      const cx = 220, cy = 220
+                      // Organic layout with slight randomization
+                      const nodesF = present.map((s, i) => {
+                        const textLen = (dataAuto[s.key] || '').length
+                        const nodeR = Math.max(22, Math.min(38, textLen / 15))
+                        const angle = (i / n) * Math.PI * 2 - Math.PI / 2
+                        const baseR = 120 + (i % 2) * 30
+                        return { ...s, x: cx + baseR * Math.cos(angle), y: cy + baseR * Math.sin(angle), nodeR }
+                      })
+                      return (
+                        <div className="flex justify-center mb-6">
+                          <svg viewBox="0 0 440 440" className="w-full max-w-md" style={{ filter: 'drop-shadow(0 0 25px rgba(139,92,246,0.06))' }}>
+                            {/* Connection lines */}
+                            {connections.map(([a, b], i) => (
+                              <line key={`c-${i}`} x1={nodesF[a].x} y1={nodesF[a].y} x2={nodesF[b].x} y2={nodesF[b].y}
+                                stroke={nodesF[a].color} strokeOpacity={0.08} strokeWidth={1} />
+                            ))}
+                            {/* Center glow */}
+                            <circle cx={cx} cy={cy} r={45} fill="rgba(139,92,246,0.06)" stroke="rgba(139,92,246,0.15)" strokeWidth={1} />
+                            <text x={cx} y={cy - 10} textAnchor="middle" fill="rgba(255,255,255,0.6)" fontSize="11" fontWeight="500">Tu forma</text>
+                            <text x={cx} y={cy + 5} textAnchor="middle" fill="rgba(255,255,255,0.6)" fontSize="11" fontWeight="500">de amar</text>
+                            <text x={cx} y={cy + 20} textAnchor="middle" fill="rgba(255,255,255,0.25)" fontSize="8">Red de vínculos</text>
+                            {/* Center connections */}
+                            {nodesF.map((node, i) => (
+                              <line key={`cl-${i}`} x1={cx} y1={cy} x2={node.x} y2={node.y}
+                                stroke={node.color} strokeOpacity={0.12} strokeWidth={1.5} strokeDasharray="4 3" />
+                            ))}
+                            {/* Nodes */}
+                            {nodesF.map((node, i) => (
+                              <g key={`n-${i}`}>
+                                <circle cx={node.x} cy={node.y} r={node.nodeR} fill={`${node.color}15`} stroke={`${node.color}40`} strokeWidth={2} />
+                                <circle cx={node.x} cy={node.y} r={node.nodeR - 4} fill={`${node.color}08`} />
+                                <text x={node.x} y={node.y - 2} textAnchor="middle" dominantBaseline="central" fontSize="16">{node.icon}</text>
+                                <text
+                                  x={node.x + (node.x > cx ? node.nodeR + 8 : -(node.nodeR + 8))}
+                                  y={node.y + 1}
+                                  textAnchor={node.x > cx ? 'start' : node.x < cx - 5 ? 'end' : 'middle'}
+                                  dominantBaseline="central"
+                                  fill="rgba(255,255,255,0.55)" fontSize="10" fontWeight="400"
+                                >{node.label}</text>
+                              </g>
+                            ))}
+                          </svg>
+                        </div>
+                      )
+                    }
+                    return (
+                      <>
+                        <div className="flex items-center justify-center gap-2 mb-4">
+                          <button
+                            className={`px-4 py-2 rounded-xl text-xs font-medium transition-all ${chartViewMode !== 'mindmap-force' ? 'bg-fuchsia-500/20 border border-fuchsia-500/30 text-fuchsia-300/80' : 'border border-white/8 bg-white/[0.02] text-white/35 hover:text-white/55'}`}
+                            onClick={() => setChartViewMode('mindmap-radial')}>
+                            ◎ Mapa radial
+                          </button>
+                          <button
+                            className={`px-4 py-2 rounded-xl text-xs font-medium transition-all ${chartViewMode === 'mindmap-force' ? 'bg-violet-500/20 border border-violet-500/30 text-violet-300/80' : 'border border-white/8 bg-white/[0.02] text-white/35 hover:text-white/55'}`}
+                            onClick={() => setChartViewMode('mindmap-force')}>
+                            ◉ Red de vínculos
+                          </button>
+                        </div>
+                        {chartViewMode === 'mindmap-force' ? <ForceView /> : <RadialView />}
+                      </>
+                    )
+                  })()}
 
                   <div className="space-y-8">
                     {/* 1. Apertura y rapport */}
@@ -1977,12 +2098,20 @@ const RadiografiaPremiumPage = () => {
                   }))
                 return (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <div className="flex items-center gap-3 mb-8">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-violet-500/15" />
-                    <h2 className="text-xs font-medium text-violet-300/50 uppercase tracking-[0.2em]">Análisis por Enfoque Psicológico</h2>
-                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-violet-500/15" />
+                  {/* ── Premium section divider ── */}
+                  <div className="relative text-center py-10 mb-8">
+                    <div className="absolute inset-0 bg-gradient-to-b from-violet-500/[0.04] via-fuchsia-500/[0.02] to-transparent rounded-3xl" />
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-500/30 to-transparent" />
+                    <div className="relative">
+                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/15 border border-violet-500/25 mb-4">
+                        <Brain className="w-6 h-6 text-violet-400/70" />
+                      </div>
+                      <p className="text-violet-300/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Sección Premium</p>
+                      <h2 className="text-xl lg:text-2xl font-light text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-fuchsia-300 tracking-wide">Análisis por Enfoque Psicológico</h2>
+                      <p className="text-white/35 text-sm font-light mt-2 max-w-md mx-auto">11 perspectivas teóricas que iluminan cada dimensión de tu vínculo</p>
+                    </div>
+                    <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent" />
                   </div>
-                  <p className="text-white/35 text-sm font-light text-center mb-8">11 perspectivas teóricas que iluminan cada dimensión de tu vínculo</p>
 
                   {/* ── 3 Selectable chart views — professional ── */}
                   {radarData.length > 0 && (
@@ -2322,10 +2451,13 @@ const RadiografiaPremiumPage = () => {
               {/* ═══ 2. MAPA PSICOLÓGICO DEL VÍNCULO ═══ */}
               {aiAnalysis.dimensiones && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
-                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Mapa Psicológico del Vínculo</h2>
-                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
+                  <div className="relative text-center py-8 mb-6">
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+                    <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/15 to-cyan-500/10 border border-violet-500/20 mb-3">
+                      <Activity className="w-5 h-5 text-violet-400/60" />
+                    </div>
+                    <p className="text-white/30 text-[10px] font-bold uppercase tracking-[0.3em] mb-1">12 Dimensiones</p>
+                    <h2 className="text-lg font-light text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-cyan-300">Mapa Psicológico del Vínculo</h2>
                   </div>
                   <div className="p-6 rounded-2xl border border-white/8 bg-white/[0.02]">
                     <RadarChart dimensiones={aiAnalysis.dimensiones} />
@@ -2359,27 +2491,16 @@ const RadiografiaPremiumPage = () => {
                 </motion.div>
               )}
 
-              {/* ═══ 3. RADIOGRAFÍA INICIAL ═══ */}
-              {aiAnalysis.radiografia_inicial && (
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                  className="p-6 lg:p-8 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.03] to-transparent relative overflow-hidden">
-                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/30 to-fuchsia-500/30" />
-                  <h2 className="text-lg font-light text-white/70 mb-4">Radiografía Inicial</h2>
-                  <div className="space-y-3">
-                    {aiAnalysis.radiografia_inicial.split('\n\n').map((p, i) => (
-                      <p key={i} className="text-white/55 text-sm font-light leading-relaxed">{renderBold(p)}</p>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* ═══ 4. DIRECCIÓN PROBABLE — Thermometer + Gauges ═══ */}
+              {/* ═══ 4. DIRECCIÓN PROBABLE — Premium Gauges ═══ */}
               {aiAnalysis.direccion_probable && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
-                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Dirección Probable</h2>
-                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
+                  <div className="relative text-center py-8 mb-6">
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-500/25 to-transparent" />
+                    <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/15 to-blue-500/10 border border-cyan-500/20 mb-3">
+                      <TrendingUp className="w-5 h-5 text-cyan-400/60" />
+                    </div>
+                    <p className="text-cyan-300/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-1">Proyección</p>
+                    <h2 className="text-lg font-light text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-300">Dirección Probable del Vínculo</h2>
                   </div>
                   <div className="p-6 rounded-2xl border border-white/8 bg-white/[0.02]">
                     {/* Gauges row */}
@@ -2407,10 +2528,15 @@ const RadiografiaPremiumPage = () => {
               {/* ═══ 5. FORTALEZAS Y RIESGOS — Side by side ═══ */}
               {(aiAnalysis.fortalezas?.length > 0 || aiAnalysis.riesgos?.length > 0) && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
-                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Fortalezas y Señales de Riesgo</h2>
-                    <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
+                  <div className="relative text-center py-8 mb-6">
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
+                    <div className="flex items-center justify-center gap-3 mb-3">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/15 to-green-500/10 border border-emerald-500/20 flex items-center justify-center">
+                        <Shield className="w-5 h-5 text-emerald-400/60" />
+                      </div>
+                    </div>
+                    <p className="text-emerald-300/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-1">Diagnóstico</p>
+                    <h2 className="text-lg font-light text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-cyan-300">Fortalezas y Señales de Riesgo</h2>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Fortalezas — left */}
@@ -2450,6 +2576,10 @@ const RadiografiaPremiumPage = () => {
                 className="p-6 lg:p-8 rounded-2xl border border-violet-500/15 bg-gradient-to-br from-violet-500/[0.04] via-fuchsia-500/[0.02] to-transparent relative overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/30 via-fuchsia-500/20 to-violet-500/30" />
                 <div className="text-center mb-6">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/15 border border-violet-500/25 mb-4">
+                    <Sparkles className="w-6 h-6 text-violet-400/70" />
+                  </div>
+                  <p className="text-violet-300/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Recomendación personalizada</p>
                   <h2 className="text-lg font-light text-white/80 mb-2">Tu siguiente paso</h2>
                   <p className="text-white/40 text-sm font-light max-w-md mx-auto">
                     {aiAnalysis.temas_para_consulta?.length > 0
