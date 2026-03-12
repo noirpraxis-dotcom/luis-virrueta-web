@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { MessageCircle, CheckCircle2, ArrowRight, ShoppingCart, Calendar } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
+const API_BASE = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE_URL || '')
 
 const ConsultaGraciasPage = () => {
   const [searchParams] = useSearchParams()

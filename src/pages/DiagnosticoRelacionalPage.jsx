@@ -330,7 +330,8 @@ const TASK_DURATIONS_MS = [6200, 6500, 6000, 7200, 6600, 6000, 7400, 6600, 5800,
 
 // ─── STRIPE API ────────────────────────────────────────────────
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
+// In dev, use empty string so Vite proxy handles /api/* → Railway (avoids CORS)
+const API_BASE = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE_URL || '')
 
 const PRODUCT_PRICE_DESCUBRE = 499
 const PRODUCT_PRICE_SOLO = 499
