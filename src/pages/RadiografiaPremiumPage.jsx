@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect, lazy, Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   ArrowRight, ArrowLeft, Check, Sparkles, Mic, MicOff, Volume2, VolumeX,
@@ -10,9 +10,12 @@ import {
 } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, RadarChart as RechartRadar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts'
 import SEOHead from '../components/SEOHead'
-import jsPDF from 'jspdf'
+import { ResponsiveSankey } from '@nivo/sankey'
 import { analyzeRadiografiaPremium, generateFallbackAnalysis } from '../services/radiografiaPremiumService'
 import { CACHED_PREVIEW_ANALYSIS } from '../data/cachedPreviewAnalysis'
+
+// Lazy load jsPDF — only needed when user downloads report
+const loadJsPDF = () => import('jspdf').then(m => m.default)
 
 // ─── 40 PREGUNTAS NARRATIVAS — 5 BLOQUES ────────────────────
 
@@ -634,6 +637,328 @@ function GaugeChart({ value, label, inverted = false }) {
   )
 }
 
+// ─── MIND MAP RADIAL — D3-style radial layout for 12 dimensions ──
+
+function MindMapRadial({ dimensiones }) {
+  const keys = Object.keys(DIMENSION_LABELS)
+  const labels = Object.values(DIMENSION_LABELS)
+  const n = keys.length
+  const cx = 300, cy = 300
+
+  // Define dimension correlations for connecting arcs
+  const correlations = [
+    ['apego_emocional', 'conexion_emocional'],
+    ['conexion_emocional', 'intimidad'],
+    ['deseo_erotico', 'intimidad'],
+    ['patrones_inconscientes', 'fantasma_relacional'],
+    ['fantasma_relacional', 'roles_sistemicos'],
+    ['vulnerabilidad_emocional', 'apego_emocional'],
+    ['resiliencia_vinculo', 'estabilidad_relacional'],
+    ['sincronia_relacional', 'conexion_emocional'],
+    ['narrativa_futuro', 'resiliencia_vinculo'],
+    ['roles_sistemicos', 'sincronia_relacional'],
+  ]
+
+  const getPos = (i) => {
+    const angle = (Math.PI * 2 * i) / n - Math.PI / 2
+    const baseR = 160
+    return { x: cx + baseR * Math.cos(angle), y: cy + baseR * Math.sin(angle), angle }
+  }
+
+  return (
+    <div className="relative">
+      <svg viewBox="0 0 600 600" className="w-full max-w-2xl mx-auto">
+        <defs>
+          <radialGradient id="mm-center-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0" />
+          </radialGradient>
+          {DIMENSION_COLORS.map((c, i) => (
+            <radialGradient key={`dim-glow-${i}`} id={`dim-glow-${i}`} cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor={c} stopOpacity="0.25" />
+              <stop offset="100%" stopColor={c} stopOpacity="0" />
+            </radialGradient>
+          ))}
+        </defs>
+
+        {/* Background rings */}
+        {[100, 160, 220].map(r => (
+          <circle key={r} cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth={0.5} strokeDasharray="4 6" />
+        ))}
+
+        {/* Correlation arcs — curved lines between related dimensions */}
+        {correlations.map(([a, b], ci) => {
+          const ai = keys.indexOf(a), bi = keys.indexOf(b)
+          if (ai < 0 || bi < 0) return null
+          const pa = getPos(ai), pb = getPos(bi)
+          const strength = ((dimensiones[a] || 0) + (dimensiones[b] || 0)) / 200
+          const midX = (pa.x + pb.x) / 2 + (cy - (pa.y + pb.y) / 2) * 0.25
+          const midY = (pa.y + pb.y) / 2 + ((pa.x + pb.x) / 2 - cx) * 0.25
+          return (
+            <path key={`corr-${ci}`}
+              d={`M ${pa.x} ${pa.y} Q ${midX} ${midY} ${pb.x} ${pb.y}`}
+              fill="none" stroke={DIMENSION_COLORS[ai]} strokeOpacity={0.12 + strength * 0.15}
+              strokeWidth={0.5 + strength * 1.5} strokeDasharray="3 4" />
+          )
+        })}
+
+        {/* Spokes from center */}
+        {keys.map((_, i) => {
+          const p = getPos(i)
+          const val = dimensiones[keys[i]] || 0
+          const opacity = 0.06 + (val / 100) * 0.18
+          return <line key={`spoke-${i}`} x1={cx} y1={cy} x2={p.x} y2={p.y}
+            stroke={DIMENSION_COLORS[i]} strokeOpacity={opacity} strokeWidth={1 + (val / 100) * 1.5} />
+        })}
+
+        {/* Center node */}
+        <circle cx={cx} cy={cy} r={50} fill="url(#mm-center-glow)" />
+        <circle cx={cx} cy={cy} r={28} fill="rgba(139,92,246,0.08)" stroke="rgba(139,92,246,0.25)" strokeWidth={1.5} />
+        <text x={cx} y={cy - 5} textAnchor="middle" fill="rgba(255,255,255,0.7)" className="text-[10px] font-medium">Tu</text>
+        <text x={cx} y={cy + 8} textAnchor="middle" fill="rgba(255,255,255,0.5)" className="text-[8px] font-light">relación</text>
+
+        {/* Dimension nodes */}
+        {keys.map((k, i) => {
+          const p = getPos(i)
+          const val = dimensiones[k] || 0
+          const nodeR = 18 + (val / 100) * 14
+          const colorHex = DIMENSION_COLORS[i]
+          return (
+            <g key={k}>
+              <circle cx={p.x} cy={p.y} r={nodeR + 12} fill={`url(#dim-glow-${i})`} />
+              <circle cx={p.x} cy={p.y} r={nodeR}
+                fill={`${colorHex}15`} stroke={colorHex} strokeOpacity={0.4} strokeWidth={1.5} />
+              <text x={p.x} y={p.y + 1} textAnchor="middle" dominantBaseline="middle"
+                fill={colorHex} className="text-[13px] font-medium" fillOpacity={0.9}>{val}</text>
+              <text x={p.x} y={p.y + nodeR + 14} textAnchor="middle"
+                fill={colorHex} className="text-[8px] font-light" fillOpacity={0.7}>{labels[i]}</text>
+            </g>
+          )
+        })}
+      </svg>
+    </div>
+  )
+}
+
+// ─── DIMENSION SANKEY — flow diagram between clusters of dimensions ──
+
+function DimensionSankey({ dimensiones }) {
+  const keys = Object.keys(DIMENSION_LABELS)
+  const labels = Object.values(DIMENSION_LABELS)
+
+  // Group dimensions into 3 clusters for Sankey flow
+  const clusters = {
+    emocional: ['apego_emocional', 'conexion_emocional', 'vulnerabilidad_emocional', 'intimidad'],
+    estructural: ['estabilidad_relacional', 'sincronia_relacional', 'roles_sistemicos', 'resiliencia_vinculo'],
+    profundo: ['patrones_inconscientes', 'fantasma_relacional', 'deseo_erotico', 'narrativa_futuro']
+  }
+
+  const clusterLabels = { emocional: 'Esfera Emocional', estructural: 'Esfera Estructural', profundo: 'Esfera Profunda' }
+  const clusterColors = { emocional: '#ec4899', estructural: '#6366f1', profundo: '#a855f7' }
+
+  // Build sankey nodes: clusters on left, individual dimensions on right (with score in label)
+  const nodes = [
+    ...Object.keys(clusters).map(c => ({ id: clusterLabels[c], nodeColor: clusterColors[c] })),
+    ...keys.map((k, i) => ({ id: `${labels[i]} ${dimensiones[k] ?? 0}%`, nodeColor: DIMENSION_COLORS[i] }))
+  ]
+
+  // Build links: cluster → dimension with value = dimension score
+  const links = []
+  for (const [cluster, dimKeys] of Object.entries(clusters)) {
+    for (const dk of dimKeys) {
+      const idx = keys.indexOf(dk)
+      if (idx >= 0) {
+        const val = Math.max(dimensiones[dk] || 1, 5)
+        links.push({ source: clusterLabels[cluster], target: `${labels[idx]} ${dimensiones[dk] ?? 0}%`, value: val })
+      }
+    }
+  }
+
+  if (links.length === 0) return null
+
+  return (
+    <div>
+      <div className="h-[400px] sm:h-[480px]">
+        <ResponsiveSankey
+          data={{ nodes, links }}
+          margin={{ top: 20, right: 150, bottom: 20, left: 20 }}
+          align="justify"
+          colors={(node) => node.nodeColor || '#8b5cf6'}
+          nodeOpacity={0.95}
+          nodeHoverOpacity={1}
+          nodeThickness={20}
+          nodeSpacing={12}
+          nodeBorderWidth={0}
+          nodeBorderRadius={4}
+          linkOpacity={0.3}
+          linkHoverOpacity={0.6}
+          linkContract={1}
+          linkBlendMode="screen"
+          enableLinkGradient
+          labelPosition="outside"
+          labelOrientation="horizontal"
+          labelPadding={14}
+          labelTextColor={{ from: 'color', modifiers: [['brighter', 0.8]] }}
+          theme={{
+            labels: { text: { fontSize: 11, fontWeight: 400, fill: 'rgba(255,255,255,0.7)' } },
+            tooltip: {
+              container: { background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '10px', color: 'rgba(255,255,255,0.85)', fontSize: 12, fontWeight: 300, padding: '10px 14px' }
+            }
+          }}
+        />
+      </div>
+      <p className="text-white/25 text-[10px] font-light text-center mt-3 max-w-lg mx-auto leading-relaxed">
+        Este diagrama muestra cómo fluye la energía emocional desde las 3 esferas principales (emocional, estructural y profunda) hacia cada una de las 12 dimensiones analizadas. El grosor de cada flujo es proporcional a la puntuación detectada.
+      </p>
+    </div>
+  )
+}
+
+// ─── AUTHOR ANALYSIS LAYERS — 6 thematic groups ──────────
+
+const AUTHOR_LAYERS = [
+  {
+    id: 'forma',
+    title: 'Tu forma de amar',
+    subtitle: 'Intimidad, pasión, compromiso y seguridad emocional',
+    icon: Heart,
+    color: 'violet',
+    authors: ['sternberg', 'levine'],
+    chartType: 'radar'
+  },
+  {
+    id: 'conflicto',
+    title: 'Tu patrón de conflicto',
+    subtitle: '¿Por qué siempre terminamos en lo mismo?',
+    icon: Shield,
+    color: 'blue',
+    authors: ['gottman', 'sue_johnson', 'tatkin'],
+    chartType: 'sankey'
+  },
+  {
+    id: 'apego',
+    title: 'Tu estilo de apego',
+    subtitle: 'Cómo te vinculas y cuánta cercanía toleras',
+    icon: Anchor,
+    color: 'amber',
+    authors: ['levine'],
+    chartType: 'polar'
+  },
+  {
+    id: 'profundo',
+    title: 'El sistema profundo de la relación',
+    subtitle: 'Herida infantil, patrones inconscientes y repetición',
+    icon: Brain,
+    color: 'purple',
+    authors: ['freud_lacan', 'hendrix', 'schnarch'],
+    chartType: 'network'
+  },
+  {
+    id: 'erotismo',
+    title: 'Erotismo y deseo',
+    subtitle: 'La tensión entre seguridad y aventura',
+    icon: Flame,
+    color: 'pink',
+    authors: ['perel'],
+    chartType: 'lollipop'
+  },
+  {
+    id: 'lenguaje',
+    title: 'Lenguaje emocional',
+    subtitle: 'Cómo das y recibes amor, poder relacional',
+    icon: Gift,
+    color: 'red',
+    authors: ['chapman', 'real'],
+    chartType: 'bar'
+  }
+]
+
+// Layer mini-chart: Polar (for apego layer)
+function PolarMiniChart({ data }) {
+  if (!data?.puntuacion) return null
+  const score = data.puntuacion ?? 50
+  const apego = data.estilo_apego || 'No detectado'
+  const cx = 100, cy = 100, r = 70
+  const filled = (score / 100) * Math.PI * 2
+  const endX = cx + r * Math.sin(filled)
+  const endY = cy - r * Math.cos(filled)
+  const largeArc = filled > Math.PI ? 1 : 0
+  return (
+    <div className="flex items-center justify-center gap-6 py-4">
+      <svg viewBox="0 0 200 200" className="w-36 h-36">
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={12} />
+        <path d={`M ${cx} ${cy - r} A ${r} ${r} 0 ${largeArc} 1 ${endX} ${endY}`}
+          fill="none" stroke="#f59e0b" strokeWidth={12} strokeLinecap="round" strokeOpacity={0.6} />
+        <text x={cx} y={cy - 5} textAnchor="middle" fill="rgba(255,255,255,0.8)" className="text-[22px] font-light">{score}%</text>
+        <text x={cx} y={cy + 14} textAnchor="middle" fill="rgba(255,255,255,0.4)" className="text-[8px] font-light">Seguridad</text>
+      </svg>
+      <div className="text-left">
+        <p className="text-amber-300/70 text-xs font-medium">{apego}</p>
+        <p className="text-white/35 text-[10px] font-light mt-1">Estilo detectado</p>
+      </div>
+    </div>
+  )
+}
+
+// Layer mini-chart: Lollipop (for erotismo layer)
+function LollipopMiniChart({ data }) {
+  const items = [
+    { label: 'Atracción inicial', val: data?.atraccion_inicial ?? 0, color: '#f472b6' },
+    { label: 'Atracción actual', val: data?.atraccion_actual ?? 0, color: '#ec4899' },
+    { label: 'Intimidad emoc.', val: data?.intimidad_emocional ?? 0, color: '#a78bfa' },
+    { label: 'Conexión física', val: data?.conexion_fisica ?? 0, color: '#fb923c' }
+  ]
+  return (
+    <div className="py-4 px-2">
+      <svg viewBox="0 0 400 160" className="w-full max-w-md mx-auto">
+        {items.map((item, i) => {
+          const y = 20 + i * 38
+          const barW = (item.val / 100) * 260
+          return (
+            <g key={i}>
+              <text x={0} y={y + 5} fill="rgba(255,255,255,0.45)" className="text-[10px] font-light">{item.label}</text>
+              <line x1={120} y1={y} x2={120 + barW} y2={y} stroke={item.color} strokeWidth={2} strokeOpacity={0.4} />
+              <circle cx={120 + barW} cy={y} r={8} fill={`${item.color}25`} stroke={item.color} strokeWidth={1.5} strokeOpacity={0.6} />
+              <text x={120 + barW} y={y + 3.5} textAnchor="middle" fill={item.color} className="text-[9px] font-medium">{item.val}</text>
+            </g>
+          )
+        })}
+      </svg>
+    </div>
+  )
+}
+
+// Layer mini-chart: Network (for profundo layer)
+function NetworkMiniChart({ lectura }) {
+  if (!lectura) return null
+  const nodes = [
+    { id: 'fantasma', label: 'Fantasma', x: 200, y: 60, color: '#c084fc' },
+    { id: 'proyecciones', label: 'Proyecciones', x: 90, y: 130, color: '#a78bfa' },
+    { id: 'roles', label: 'Roles', x: 310, y: 130, color: '#818cf8' },
+    { id: 'defensa', label: 'Defensa', x: 150, y: 200, color: '#e879f9' },
+    { id: 'deseo', label: 'Deseo', x: 250, y: 200, color: '#f472b6' }
+  ]
+  const edges = [
+    [0, 1], [0, 2], [1, 3], [2, 4], [3, 4], [0, 3], [0, 4]
+  ]
+  return (
+    <div className="py-4">
+      <svg viewBox="0 0 400 260" className="w-full max-w-sm mx-auto">
+        {edges.map(([a, b], i) => (
+          <line key={i} x1={nodes[a].x} y1={nodes[a].y} x2={nodes[b].x} y2={nodes[b].y}
+            stroke="rgba(255,255,255,0.08)" strokeWidth={1} />
+        ))}
+        {nodes.map((n) => (
+          <g key={n.id}>
+            <circle cx={n.x} cy={n.y} r={22} fill={`${n.color}15`} stroke={n.color} strokeWidth={1.5} strokeOpacity={0.4} />
+            <text x={n.x} y={n.y + 3} textAnchor="middle" fill={n.color} className="text-[8px] font-medium" fillOpacity={0.8}>{n.label}</text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  )
+}
+
 // ─── MAIN COMPONENT ──────────────────────────────────────────────
 
 const RadiografiaPremiumPage = () => {
@@ -823,10 +1148,26 @@ const RadiografiaPremiumPage = () => {
     } catch {}
   }, [selectedVoiceId])
 
+  // ── Track if greeting audio already played to avoid replaying on stage transition ──
+  const greetingPlayedRef = useRef(false)
+
   // ── Auto-play question when changing question + auto-mic after audio ends ──
   useEffect(() => {
     if (stage === 'questionnaire' && question && !showOnboarding) {
+      // Skip auto-play if greeting is still playing (just transitioned from email)
+      if (greetingPlayedRef.current) {
+        greetingPlayedRef.current = false
+        return
+      }
       setTypingMode(false)
+      // If no voice selected, skip audio and go straight to mic
+      if (!selectedVoiceId) {
+        setTimeout(() => {
+          const sr = window.SpeechRecognition || window.webkitSpeechRecognition
+          if (sr) startRecording()
+        }, 600)
+        return
+      }
       playQuestion(question.mainQuestion, undefined, () => {
         // Auto-start mic after TTS ends (only if not already recording/typing)
         setTimeout(() => {
@@ -1005,10 +1346,11 @@ const RadiografiaPremiumPage = () => {
   }, [stage])
 
   // ── PDF ──
-  const generatePDF = useCallback(() => {
+  const generatePDF = useCallback(async () => {
     if (!aiAnalysis) return
     setPdfGenerating(true)
     try {
+      const jsPDF = await loadJsPDF()
       const doc = new jsPDF('p', 'mm', 'a4')
       const pw = doc.internal.pageSize.getWidth()
       const m = 15
@@ -1112,7 +1454,7 @@ const RadiografiaPremiumPage = () => {
                 </div>
               </div>
 
-              {/* ── Voice selector: 4 circular cards, single toggle ── */}
+              {/* ── Voice selector: 4 circular cards + no-voice option, single toggle ── */}
               <div className="space-y-4">
                 <p className="text-white/60 text-sm font-light flex items-center justify-center gap-2">
                   <Headphones className="w-4 h-4 text-violet-400/50" /> Elige la voz que te guiará
@@ -1154,18 +1496,30 @@ const RadiografiaPremiumPage = () => {
                     )
                   })}
                 </div>
-                <p className="text-white/30 text-[11px] font-light">Toca una voz para seleccionarla y escuchar una prueba</p>
+                {/* Opción sin voz */}
+                <div className="flex justify-center">
+                  <button
+                    onClick={() => { stopAudio(); setSelectedVoiceId(null) }}
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl border transition-all text-sm font-light ${
+                      selectedVoiceId === null
+                        ? 'border-white/25 bg-white/[0.08] text-white/70'
+                        : 'border-white/8 bg-white/[0.02] text-white/35 hover:border-white/15 hover:text-white/55'}`}>
+                    <VolumeX className="w-4 h-4" />
+                    {selectedVoiceId === null ? '✓ Sin voz guía' : 'Prefiero no tener voz guía'}
+                  </button>
+                </div>
+                <p className="text-white/30 text-[11px] font-light text-center">Toca una voz para seleccionarla y escuchar una prueba</p>
               </div>
 
               {/* ── Comprobación de Audio y Micrófono ── */}
-              <div className="space-y-3 text-left p-6 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.04] to-transparent">
-                <p className="text-violet-300/80 text-sm font-medium flex items-center gap-2">
-                  <Headphones className="w-4 h-4 text-violet-400/50" /> Comprobación de audio y micrófono
+              <div className="space-y-4 p-6 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.04] to-transparent">
+                <p className="text-violet-300/80 text-base font-medium flex items-center justify-center gap-2">
+                  <Headphones className="w-5 h-5 text-violet-400/50" /> Comprobación de audio y micrófono
                 </p>
-                <p className="text-white/40 text-xs font-light">Asegúrate de que todo funciona antes de iniciar el test.</p>
+                <p className="text-white/40 text-sm font-light text-center">Asegúrate de que todo funciona antes de iniciar el test.</p>
                 <div className="h-px bg-white/5" />
 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-3 justify-center">
                   {/* Sound test */}
                   <button
                     onClick={() => {
@@ -1219,7 +1573,7 @@ const RadiografiaPremiumPage = () => {
         )}
 
         {/* ═══════════════════════════════════════════════════════
-            STAGE: HOW-IT-WORKS — Pantalla 2: Instrucciones + mockup visual
+            STAGE: HOW-IT-WORKS — Pantalla 2: Instrucciones premium
         ═══════════════════════════════════════════════════════ */}
         {stage === 'how-it-works' && (
           <motion.div key="how-it-works" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -1241,110 +1595,94 @@ const RadiografiaPremiumPage = () => {
                 </div>
               </div>
 
-              {/* ── Header ── */}
+              {/* ── Header centrado y premium ── */}
               <div>
-                <h2 className="text-xl lg:text-2xl font-light text-white mb-2">Prepara tu espacio y relájate</h2>
-                <p className="text-white/40 text-sm font-light max-w-md mx-auto">Así es como funciona la experiencia. Lee con calma antes de empezar.</p>
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-4">
+                  <Headphones className="w-7 h-7 text-violet-400/60" strokeWidth={1.5} />
+                </div>
+                <h2 className="text-2xl lg:text-3xl font-light text-white mb-2">Prepara tu espacio</h2>
+                <p className="text-white/40 text-sm font-light max-w-md mx-auto">Lee estas instrucciones con calma antes de empezar tu radiografía.</p>
               </div>
 
-              {/* ── Prepara tu espacio ── */}
-              <div className="space-y-3 text-left p-6 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.04] to-transparent">
-                <p className="text-violet-300/80 text-sm font-medium flex items-center gap-2">
-                  <Headphones className="w-4 h-4 text-violet-400/50" /> Prepara tu espacio
-                </p>
-                <div className="h-px bg-white/5" />
-                <ul className="space-y-2.5 text-white/55 text-sm font-light">
-                  <li className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-violet-400/40 mt-2 flex-shrink-0" />
-                    <span><strong className="text-white/70">Sube el volumen</strong> de tu dispositivo al máximo. Usa <strong className="text-white/70">audífonos</strong> para mayor privacidad.</span>
+              {/* ── Prepara tu espacio — card centrada ── */}
+              <div className="p-6 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.04] to-transparent">
+                <ul className="space-y-3 text-white/55 text-sm font-light">
+                  <li className="flex items-start gap-3 justify-center text-center">
+                    <span>🎧 Sube el volumen al máximo y usa audífonos para mayor privacidad.</span>
                   </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-violet-400/40 mt-2 flex-shrink-0" />
-                    <span>Busca un <strong className="text-white/70">lugar privado y tranquilo</strong> donde puedas hablar con libertad.</span>
+                  <li className="flex items-start gap-3 justify-center text-center">
+                    <span>🔇 Busca un lugar privado y tranquilo donde puedas hablar con libertad.</span>
                   </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-violet-400/40 mt-2 flex-shrink-0" />
-                    <span>Reserva unos <strong className="text-white/70">20–25 minutos</strong> sin interrupciones.</span>
+                  <li className="flex items-start gap-3 justify-center text-center">
+                    <span>⏱️ Reserva unos 20–25 minutos sin interrupciones.</span>
                   </li>
                 </ul>
               </div>
 
-              {/* ── Mockup visual de una pregunta con flechas explicativas ── */}
-              <div className="space-y-3 text-left p-6 rounded-2xl border border-white/10 bg-white/[0.02]">
-                <p className="text-white/70 text-sm font-medium flex items-center gap-2">
-                  <Lightbulb className="w-4 h-4 text-amber-400/60" /> Así se ve cada pregunta
-                </p>
-                <div className="h-px bg-white/8" />
+              {/* ── Así funciona cada pregunta — con las dos tarjetas como la imagen 2 ── */}
+              <div className="space-y-4">
+                <div className="text-center">
+                  <p className="text-white/70 text-base font-medium flex items-center justify-center gap-2 mb-1">
+                    <Lightbulb className="w-5 h-5 text-amber-400/60" /> Así se ve cada pregunta
+                  </p>
+                  <p className="text-white/35 text-xs font-light">Escucharás cada pregunta en voz alta{selectedVoiceId ? '' : ' (o la leerás si no elegiste voz)'}. Al terminar, tu micrófono se activará automáticamente.</p>
+                </div>
 
-                {/* Mock question UI */}
-                <div className="mt-3 p-4 rounded-xl border border-violet-500/15 bg-violet-500/[0.03] space-y-3">
-                  {/* Mock header */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-white/30 text-[10px] uppercase tracking-wider">Pregunta 1 de 40</span>
-                    <div className="flex gap-2">
-                      <span className="text-[10px] px-2 py-0.5 rounded-md border border-white/10 text-white/30">Repetir</span>
-                      <span className="text-[10px] px-2 py-0.5 rounded-md border border-white/10 text-white/30">Saltar</span>
-                    </div>
+                {/* Card verde: Responde libremente (PRIMERO) */}
+                <div>
+                  <div className="px-4 py-2.5 rounded-t-2xl bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-emerald-500/15 border border-b-0 border-emerald-500/15">
+                    <p className="text-emerald-300/80 text-xs font-semibold uppercase tracking-widest text-center flex items-center justify-center gap-2">
+                      <Heart className="w-3.5 h-3.5 text-emerald-400/60" />
+                      Responde libremente — di lo primero que te venga a la mente
+                    </p>
                   </div>
-                  {/* Mock question */}
-                  <div className="p-3 rounded-lg bg-emerald-500/[0.06] border border-emerald-500/15">
-                    <p className="text-white/60 text-xs font-light italic">"¿Cómo describirías la relación que observaste entre tus padres?"</p>
-                  </div>
-                  {/* Mock action buttons */}
-                  <div className="flex items-center justify-center gap-3">
-                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-white/10 bg-white/[0.02]">
-                      <ArrowLeft className="w-3 h-3 text-white/30" />
-                      <span className="text-[9px] text-white/30">Anterior</span>
-                    </div>
-                    <div className="w-10 h-10 rounded-full bg-violet-500/20 border-2 border-violet-500/40 flex items-center justify-center">
-                      <Mic className="w-4 h-4 text-violet-300/70" />
-                    </div>
-                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-white/10 bg-white/[0.02]">
-                      <span className="text-[9px] text-white/30">Siguiente</span>
-                      <ArrowRight className="w-3 h-3 text-white/30" />
-                    </div>
+                  <div className="px-6 py-5 rounded-b-2xl border border-t-0 border-emerald-500/10 bg-emerald-500/[0.02]">
+                    <p className="text-white/80 text-base font-light leading-relaxed text-center">
+                      Para empezar, cuéntame un poco sobre tu vida actualmente y en qué momento te encuentras hoy.
+                    </p>
+                    <p className="text-emerald-300/60 text-xs font-light mt-3 text-center italic">
+                      ⬆ Esta es la pregunta principal. Contesta lo primero que te venga a la mente antes de leer las ideas de abajo.
+                    </p>
                   </div>
                 </div>
 
-                {/* Explanation bullets */}
-                <div className="space-y-3 mt-4">
-                  {[
-                    { icon: Volume2, color: 'text-violet-400/70', bgColor: 'bg-violet-500/10 border-violet-500/20', text: 'Escucharás cada pregunta en voz alta. Al terminar la voz, tu micrófono se activa automáticamente.' },
-                    { icon: SkipForward, color: 'text-cyan-400/70', bgColor: 'bg-cyan-500/10 border-cyan-500/20', text: 'Pulsa "Saltar" para detener la voz y activar el micrófono al instante.' },
-                    { icon: Mic, color: 'text-emerald-400/70', bgColor: 'bg-emerald-500/10 border-emerald-500/20', text: 'Responde con tu voz. Verás tu transcripción al terminar. Puedes regrabar si quieres.' },
-                    { icon: PenLine, color: 'text-amber-400/70', bgColor: 'bg-amber-500/10 border-amber-500/20', text: '¿Prefieres escribir? Debajo de los botones hay un enlace "Prefiero escribir".' },
-                    { icon: Lightbulb, color: 'text-fuchsia-400/70', bgColor: 'bg-fuchsia-500/10 border-fuchsia-500/20', text: 'Debajo de cada pregunta hay ideas de apoyo para completar tu respuesta.' }
-                  ].map(({ icon: BulletIcon, color, bgColor, text }, i) => (
-                    <div key={i} className="flex items-start gap-3">
-                      <div className={`w-6 h-6 rounded-lg ${bgColor} border flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                        <BulletIcon className={`w-3 h-3 ${color}`} />
+                {/* Card violeta: Si te faltó algo (DESPUÉS) */}
+                <div>
+                  <div className="px-4 py-2.5 rounded-t-2xl bg-gradient-to-r from-violet-500/15 via-fuchsia-500/10 to-violet-500/15 border border-b-0 border-violet-500/15">
+                    <p className="text-violet-300/80 text-xs font-semibold uppercase tracking-widest text-center flex items-center justify-center gap-2">
+                      <Lightbulb className="w-3.5 h-3.5 text-violet-400/60" />
+                      Si te faltó algo, completa con estas ideas
+                    </p>
+                  </div>
+                  <div className="px-5 py-4 rounded-b-2xl border border-t-0 border-white/10 bg-white/[0.02] space-y-2">
+                    {['¿A qué te dedicas o en qué estás enfocado actualmente?', '¿Cómo describirías el momento de vida en el que te encuentras ahora?', '¿Cuánto tiempo llevas en tu relación actual?', '¿Hay algo que esté pasando en tu vida que creas que impacta tu relación?'].map((ex, i) => (
+                      <div key={i} className="flex items-center justify-center gap-2 text-white/55 text-sm font-light">
+                        <span className="text-violet-400/50">✦</span>
+                        <span>{ex}</span>
                       </div>
-                      <span className="text-white/55 text-sm font-light">{text}</span>
-                    </div>
-                  ))}
+                    ))}
+                    <div className="h-px bg-white/5 mt-3 mb-2" />
+                    <p className="text-white/40 text-xs font-light italic flex items-center justify-center gap-1.5">
+                      <Sparkles className="w-3 h-3 text-violet-400/30" />
+                      Puedes añadir cualquier otro detalle que sientas importante
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              {/* ── Para mejores resultados ── */}
-              <div className="space-y-3 text-left p-6 rounded-2xl border border-amber-500/10 bg-amber-500/[0.02]">
-                <p className="text-amber-300/70 text-sm font-medium flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-amber-400/50" /> Para mejores resultados
-                </p>
-                <div className="h-px bg-white/5" />
-                <ul className="space-y-2.5 text-white/50 text-sm font-light">
-                  <li className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-amber-400/40 mt-2 flex-shrink-0" />
-                    <span><strong className="text-white/65">Contesta lo primero que te venga a la mente.</strong> Lo que surge primero es lo que más te define.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-amber-400/40 mt-2 flex-shrink-0" />
-                    <span><strong className="text-white/65">No analices demasiado.</strong> Háblale como si fuera un psicólogo que escucha sin juzgar.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-amber-400/40 mt-2 flex-shrink-0" />
-                    <span>Son <strong className="text-white/65">40 preguntas abiertas</strong> que cubren 12 dimensiones. No hay respuestas correctas ni incorrectas.</span>
-                  </li>
-                </ul>
+              {/* ── Instrucciones clave simplificadas ── */}
+              <div className="space-y-3">
+                {[
+                  { icon: Volume2, color: 'text-violet-400/70', bgColor: 'bg-violet-500/10 border-violet-500/20', text: selectedVoiceId ? 'Escucharás cada pregunta en voz alta. Al terminar la voz, tu micrófono se activará automáticamente. También puedes leer la pregunta si lo prefieres.' : 'Leerás cada pregunta en pantalla. Tu micrófono se activará automáticamente para que respondas.' },
+                  { icon: PenLine, color: 'text-amber-400/70', bgColor: 'bg-amber-500/10 border-amber-500/20', text: '¿Prefieres escribir? Debajo del micrófono hay un enlace "Prefiero escribir mi respuesta".' }
+                ].map(({ icon: BulletIcon, color, bgColor, text }, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <div className={`w-6 h-6 rounded-lg ${bgColor} border flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                      <BulletIcon className={`w-3 h-3 ${color}`} />
+                    </div>
+                    <span className="text-white/55 text-sm font-light text-left">{text}</span>
+                  </div>
+                ))}
               </div>
 
               {/* ── Navigation ── */}
@@ -1486,7 +1824,18 @@ const RadiografiaPremiumPage = () => {
                   onClick={() => {
                     // Play personalized greeting then start questionnaire
                     const nombre = profileData.nombre.trim().split(' ')[0]
-                    playQuestion(`Hola ${nombre}, vamos a comenzar tu radiografía. Escucha cada pregunta con atención y responde con lo primero que te venga a la mente.`)
+                    greetingPlayedRef.current = true
+                    if (selectedVoiceId) {
+                      playQuestion(`Hola ${nombre}, vamos a comenzar tu radiografía. Escucha cada pregunta con atención y responde con lo primero que te venga a la mente.`, undefined, () => {
+                        // After greeting ends, play Q1
+                        playQuestion(PREGUNTAS[0].mainQuestion, undefined, () => {
+                          setTimeout(() => {
+                            const sr = window.SpeechRecognition || window.webkitSpeechRecognition
+                            if (sr) startRecording()
+                          }, 300)
+                        })
+                      })
+                    }
                     setStage('questionnaire')
                   }}
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
@@ -1496,7 +1845,19 @@ const RadiografiaPremiumPage = () => {
                 <button
                   onClick={() => {
                     const nombre = profileData.nombre.trim().split(' ')[0]
-                    playQuestion(`Hola ${nombre}, vamos a comenzar tu radiografía. Escucha cada pregunta con atención y responde con lo primero que te venga a la mente.`)
+                    greetingPlayedRef.current = true
+                    if (selectedVoiceId) {
+                      playQuestion(`Hola ${nombre}, vamos a comenzar tu radiografía. Escucha cada pregunta con atención y responde con lo primero que te venga a la mente.`, undefined, () => {
+                        playQuestion(PREGUNTAS[0].mainQuestion, undefined, () => {
+                          setTimeout(() => {
+                            const sr = window.SpeechRecognition || window.webkitSpeechRecognition
+                            if (sr) startRecording()
+                          }, 300)
+                        })
+                      })
+                    } else {
+                      setStage('questionnaire')
+                    }
                     setStage('questionnaire')
                   }}
                   className="w-full py-3 text-center text-white/35 text-sm font-light hover:text-white/55 transition-colors underline underline-offset-4 decoration-white/15">
@@ -1646,80 +2007,88 @@ const RadiografiaPremiumPage = () => {
                 </p>
               )}
 
-              {/* ── Action buttons: Back | Mic | Next ── */}
-              <div id="spotlight-actions" className="flex items-end justify-center gap-4 lg:gap-5 mb-4">
-                {/* Back */}
+              {/* ── Action buttons: Back | Mic | Next (3 buttons only, matching purple) ── */}
+              <div id="spotlight-actions" className="flex items-end justify-center gap-5 lg:gap-6 mb-2">
+                {/* Back — purple matching */}
                 <motion.button onClick={goBack} disabled={currentQ === 0}
                   whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                  className="flex flex-col items-center gap-1">
-                  <div className={`w-11 h-11 lg:w-12 lg:h-12 rounded-full flex items-center justify-center transition-all border-2 ${currentQ === 0 ? 'opacity-20 pointer-events-none' : ''} border-white/15 bg-white/[0.04] text-white/40 hover:border-white/25 hover:text-white/60`}>
-                    <ArrowLeft className="w-4 h-4 lg:w-5 lg:h-5" />
+                  className="flex flex-col items-center gap-1.5">
+                  <div className={`w-12 h-12 lg:w-13 lg:h-13 rounded-full flex items-center justify-center transition-all border-2 ${currentQ === 0 ? 'opacity-20 pointer-events-none border-white/10 bg-white/[0.02] text-white/20' : 'border-violet-500/30 bg-violet-500/[0.08] text-violet-300/70 hover:border-violet-500/50 hover:bg-violet-500/[0.12] hover:text-violet-300'}`}>
+                    <ArrowLeft className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-light text-white/30">Anterior</span>
+                  <span className="text-[10px] font-light text-violet-300/40">Anterior</span>
                 </motion.button>
 
-                {/* Mic */}
+                {/* Mic — center, larger */}
                 <motion.button
                   onClick={() => { if (typingMode) setTypingMode(false); recording ? stopRecording() : startRecording() }}
                   whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                  className="flex flex-col items-center gap-1">
-                  <div className={`w-16 h-16 lg:w-14 lg:h-14 rounded-full flex items-center justify-center transition-all ${recording
-                    ? 'bg-red-500/20 border-2 border-red-500/50 text-red-400 animate-pulse'
+                  className="flex flex-col items-center gap-1.5">
+                  <div className={`w-16 h-16 lg:w-[4.5rem] lg:h-[4.5rem] rounded-full flex items-center justify-center transition-all ${recording
+                    ? 'bg-red-500/20 border-2 border-red-500/50 text-red-400 animate-pulse shadow-lg shadow-red-500/15'
                     : 'bg-gradient-to-br from-violet-500/20 to-fuchsia-500/15 border-2 border-violet-500/40 text-violet-400 shadow-lg shadow-violet-500/25 ring-4 ring-violet-400/10'}`}>
-                    {recording ? <MicOff className="w-6 h-6 lg:w-5 lg:h-5" /> : <Mic className="w-6 h-6 lg:w-5 lg:h-5" />}
+                    {recording ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
                   </div>
                   <span className={`text-[10px] font-light ${recording ? 'text-red-400/70' : 'text-violet-300/60'}`}>
-                    {recording ? 'Detener' : 'Micrófono'}
+                    {recording ? 'Grabando…' : 'Micrófono'}
                   </span>
                 </motion.button>
 
-                {/* Regrabar — always visible when recording or when there's content */}
-                {(recording || currentText.trim()) && !typingMode && (
-                  <motion.button
-                    onClick={() => { stopAudio(); if (recording) stopRecording(); setTranscript(''); setTextInput(''); setTimeout(() => startRecording(), 200) }}
-                    whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                    className="flex flex-col items-center gap-1">
-                    <div className="w-11 h-11 lg:w-12 lg:h-12 rounded-full flex items-center justify-center transition-all border-2 border-amber-500/30 bg-amber-500/[0.08] text-amber-400/70 hover:border-amber-500/50 hover:text-amber-300">
-                      <Repeat className="w-4 h-4 lg:w-5 lg:h-5" />
-                    </div>
-                    <span className="text-[10px] font-light text-amber-300/50">Regrabar</span>
-                  </motion.button>
-                )}
-
-                {/* Next */}
+                {/* Next — purple matching */}
                 <motion.button onClick={saveAndNext}
                   whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                  className="flex flex-col items-center gap-1">
-                  <div className={`w-11 h-11 lg:w-12 lg:h-12 rounded-full flex items-center justify-center transition-all border-2 ${currentText.trim()
+                  className="flex flex-col items-center gap-1.5">
+                  <div className={`w-12 h-12 lg:w-13 lg:h-13 rounded-full flex items-center justify-center transition-all border-2 ${currentText.trim()
                     ? 'bg-gradient-to-br from-violet-600 to-fuchsia-600 border-violet-500/50 text-white shadow-lg shadow-violet-500/25'
-                    : 'border-white/15 bg-white/[0.04] text-white/40 hover:border-white/25'}`}>
-                    {currentQ < totalQ - 1 ? <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5" /> : <Check className="w-4 h-4 lg:w-5 lg:h-5" />}
+                    : 'border-violet-500/20 bg-violet-500/[0.05] text-violet-300/40 hover:border-violet-500/30 hover:text-violet-300/60'}`}>
+                    {currentQ < totalQ - 1 ? <ArrowRight className="w-5 h-5" /> : <Check className="w-5 h-5" />}
                   </div>
-                  <span className={`text-[10px] font-light ${currentText.trim() ? 'text-violet-300/60' : 'text-white/30'}`}>
+                  <span className={`text-[10px] font-light ${currentText.trim() ? 'text-violet-300/60' : 'text-violet-300/30'}`}>
                     {currentQ < totalQ - 1 ? 'Siguiente' : 'Finalizar'}
                   </span>
                 </motion.button>
               </div>
 
-              {/* "Prefiero escribir" link — below buttons (only when no saved response showing) */}
-              {!typingMode && !recording && !currentText.trim() && (
-                <p className="text-center mb-6">
+              {/* ── Small links below buttons: detener/regrabar when recording, prefiero escribir always ── */}
+              <div className="text-center space-y-1.5 mb-6">
+                {/* Detener & Regrabar links — visible when recording or has content */}
+                {(recording || (currentText.trim() && !typingMode)) && (
+                  <div className="flex items-center justify-center gap-3">
+                    {recording && (
+                      <button
+                        onClick={stopRecording}
+                        className="text-red-300/60 text-xs font-light hover:text-red-300/90 transition-colors underline underline-offset-2 decoration-red-300/20 hover:decoration-red-300/50">
+                        Detener grabación
+                      </button>
+                    )}
+                    {(recording || currentText.trim()) && !typingMode && (
+                      <>
+                        {recording && <span className="text-white/15">·</span>}
+                        <button
+                          onClick={() => { stopAudio(); if (recording) stopRecording(); setTranscript(''); setTextInput(''); setTimeout(() => startRecording(), 200) }}
+                          className="text-amber-300/50 text-xs font-light hover:text-amber-300/80 transition-colors underline underline-offset-2 decoration-amber-300/15 hover:decoration-amber-300/40">
+                          Regrabar desde cero
+                        </button>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {/* Prefiero escribir — always visible */}
+                {!typingMode ? (
                   <button
-                    onClick={() => { setTypingMode(true); setTextInput(transcript || textInput) }}
+                    onClick={() => { if (recording) stopRecording(); setTypingMode(true); setTextInput(transcript || textInput) }}
                     className="text-white/30 text-xs font-light hover:text-white/55 transition-colors underline underline-offset-2 decoration-white/15 hover:decoration-white/30">
                     Prefiero escribir mi respuesta
                   </button>
-                </p>
-              )}
-              {typingMode && (
-                <p className="text-center mb-6">
+                ) : (
                   <button
                     onClick={() => setTypingMode(false)}
                     className="text-white/30 text-xs font-light hover:text-white/55 transition-colors underline underline-offset-2 decoration-white/15 hover:decoration-white/30">
                     Volver al micrófono
                   </button>
-                </p>
-              )}
+                )}
+              </div>
 
               {/* DEV: Quick actions */}
               {import.meta.env.DEV && (
@@ -1904,182 +2273,180 @@ const RadiografiaPremiumPage = () => {
                     <p className="text-white/35 text-sm font-light mt-2">El análisis más profundo de quién eres cuando amas</p>
                   </div>
 
-                  {/* Flujo visual: journey map of the 10 dimensions */}
+                  {/* Mind Map Radial + Sankey Diagram — replaces the old vertical list */}
                   {aiAnalysis.autoanalisis_usuario && (() => {
                     const dataAuto = aiAnalysis.autoanalisis_usuario
                     const present = AUTOANALISIS_SECTIONS.filter(s => dataAuto[s.key])
                     if (present.length === 0) return null
+                    const dims = aiAnalysis.dimensiones || {}
                     return (
-                      <div className="relative mb-8">
-                        <p className="text-center text-white/30 text-xs uppercase tracking-widest mb-6">Mapa de dimensiones analizadas</p>
-                        {/* Vertical connecting line */}
-                        <div className="absolute left-6 md:left-8 top-16 bottom-4 w-px bg-gradient-to-b from-fuchsia-500/30 via-violet-500/20 to-transparent" />
-                        <div className="space-y-3">
-                          {present.map((section, i) => {
-                            const excerpt = (dataAuto[section.key] || '').replace(/\*\*/g, '').slice(0, 90)
-                            return (
-                              <motion.div key={section.key}
-                                initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }} transition={{ delay: i * 0.06, duration: 0.4 }}
-                                className="flex items-start gap-4 relative pl-2">
-                                {/* Node dot */}
-                                <div className="flex-shrink-0 w-9 h-9 md:w-11 md:h-11 rounded-xl flex items-center justify-center text-lg border z-10"
-                                  style={{ background: `${section.color}12`, borderColor: `${section.color}30` }}>
-                                  {section.icon}
-                                </div>
-                                {/* Label + excerpt */}
-                                <div className="flex-1 pb-1">
-                                  <p className="text-white/65 text-sm font-medium leading-tight">{section.label}</p>
-                                  <p className="text-white/30 text-xs font-light leading-relaxed mt-0.5">{excerpt}{excerpt.length >= 90 ? '…' : ''}</p>
-                                </div>
-                                {/* Arrow connector to next */}
-                                {i < present.length - 1 && (
-                                  <ChevronDown className="absolute -bottom-2 left-[18px] md:left-[22px] w-3 h-3 text-violet-500/25 z-10" />
-                                )}
-                              </motion.div>
-                            )
-                          })}
+                      <div className="relative mb-10 space-y-10">
+                        {/* Mind Map Radial */}
+                        <div>
+                          <p className="text-center text-white/30 text-xs uppercase tracking-widest mb-2">Mapa radial de dimensiones</p>
+                          <p className="text-center text-white/20 text-[10px] font-light mb-4">12 dimensiones analizadas — tamaño y grosor proporcionales a la puntuación</p>
+                          <MindMapRadial dimensiones={dims} />
+                        </div>
+
+                        {/* Sankey Diagram */}
+                        <div>
+                          <p className="text-center text-white/30 text-xs uppercase tracking-widest mb-2">Flujo entre esferas</p>
+                          <p className="text-center text-white/20 text-[10px] font-light mb-4">Cómo se distribuye la energía emocional, estructural y profunda</p>
+                          <DimensionSankey dimensiones={dims} />
                         </div>
                       </div>
                     )
                   })()}
 
                   <div className="space-y-8">
-                    {/* 1. Apertura y rapport */}
+                    {/* 1. Apertura y rapport — tarjeta completa con header de color */}
                     {aiAnalysis.autoanalisis_usuario.apertura_rapport && (
-                      <div className="flex items-start gap-4 mb-2">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-500/20 to-violet-500/15 border border-fuchsia-500/20 flex items-center justify-center flex-shrink-0 mt-1">
-                          <Heart className="w-5 h-5 text-fuchsia-400/70" />
+                      <div className="rounded-2xl overflow-hidden border border-violet-500/15 bg-white/[0.02] backdrop-blur-sm">
+                        <div className="bg-gradient-to-r from-violet-600/90 to-fuchsia-600/80 px-6 py-4 flex items-center gap-3">
+                          <Heart className="w-5 h-5 text-white/90" />
+                          <h3 className="text-white font-semibold text-sm tracking-wide">Tu radiografía inicial</h3>
                         </div>
-                        <div className="space-y-3">
+                        <div className="p-6 space-y-3">
                           {aiAnalysis.autoanalisis_usuario.apertura_rapport.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/80 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
+                            <p key={i} className="text-white/80 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
                           ))}
                         </div>
                       </div>
                     )}
 
-                    {/* 2. Forma de amar */}
-                    {aiAnalysis.autoanalisis_usuario.forma_de_amar && (
-                      <div>
-                        <p className="text-fuchsia-300/70 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
-                          <Flame className="w-4 h-4" /> Cómo amas y cómo esperas ser amado
-                        </p>
-                        <div className="space-y-3 pl-4 border-l-2 border-fuchsia-500/25">
-                          {aiAnalysis.autoanalisis_usuario.forma_de_amar.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
-                          ))}
+                    {/* Secciones 2-8 en grid de 2 columnas en desktop */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* 2. Forma de amar */}
+                      {aiAnalysis.autoanalisis_usuario.forma_de_amar && (
+                        <div className="rounded-2xl overflow-hidden border border-fuchsia-500/15 bg-white/[0.02] backdrop-blur-sm">
+                          <div className="bg-gradient-to-r from-fuchsia-600/90 to-pink-600/80 px-5 py-3.5 flex items-center gap-2.5">
+                            <Flame className="w-4 h-4 text-white/90" />
+                            <h3 className="text-white font-semibold text-xs tracking-wide uppercase">Cómo amas y cómo esperas ser amado</h3>
+                          </div>
+                          <div className="p-5 space-y-3">
+                            {aiAnalysis.autoanalisis_usuario.forma_de_amar.split('\n\n').map((p, i) => (
+                              <p key={i} className="text-white/75 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
-                    {/* 3. Lo que busca en el otro */}
-                    {aiAnalysis.autoanalisis_usuario.lo_que_busca_en_el_otro && (
-                      <div>
-                        <p className="text-violet-300/70 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
-                          <Eye className="w-4 h-4" /> Lo que buscas en el otro
-                        </p>
-                        <div className="space-y-3 pl-4 border-l-2 border-violet-500/25">
-                          {aiAnalysis.autoanalisis_usuario.lo_que_busca_en_el_otro.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
-                          ))}
+                      {/* 3. Lo que busca en el otro */}
+                      {aiAnalysis.autoanalisis_usuario.lo_que_busca_en_el_otro && (
+                        <div className="rounded-2xl overflow-hidden border border-violet-500/15 bg-white/[0.02] backdrop-blur-sm">
+                          <div className="bg-gradient-to-r from-violet-600/90 to-indigo-600/80 px-5 py-3.5 flex items-center gap-2.5">
+                            <Eye className="w-4 h-4 text-white/90" />
+                            <h3 className="text-white font-semibold text-xs tracking-wide uppercase">Lo que buscas en el otro</h3>
+                          </div>
+                          <div className="p-5 space-y-3">
+                            {aiAnalysis.autoanalisis_usuario.lo_que_busca_en_el_otro.split('\n\n').map((p, i) => (
+                              <p key={i} className="text-white/75 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
-                    {/* 4. Lo que reclama afuera */}
-                    {aiAnalysis.autoanalisis_usuario.lo_que_reclama_afuera && (
-                      <div>
-                        <p className="text-rose-300/70 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
-                          <Compass className="w-4 h-4" /> Lo que reclamas afuera y te pertenece adentro
-                        </p>
-                        <div className="space-y-3 pl-4 border-l-2 border-rose-500/25">
-                          {aiAnalysis.autoanalisis_usuario.lo_que_reclama_afuera.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
-                          ))}
+                      {/* 4. Lo que reclama afuera */}
+                      {aiAnalysis.autoanalisis_usuario.lo_que_reclama_afuera && (
+                        <div className="rounded-2xl overflow-hidden border border-rose-500/15 bg-white/[0.02] backdrop-blur-sm">
+                          <div className="bg-gradient-to-r from-rose-600/90 to-red-600/80 px-5 py-3.5 flex items-center gap-2.5">
+                            <Compass className="w-4 h-4 text-white/90" />
+                            <h3 className="text-white font-semibold text-xs tracking-wide uppercase">Lo que reclamas afuera y te pertenece adentro</h3>
+                          </div>
+                          <div className="p-5 space-y-3">
+                            {aiAnalysis.autoanalisis_usuario.lo_que_reclama_afuera.split('\n\n').map((p, i) => (
+                              <p key={i} className="text-white/75 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
-                    {/* 5. Fantasma relacional */}
-                    {aiAnalysis.autoanalisis_usuario.fantasma_relacional && (
-                      <div>
-                        <p className="text-purple-300/70 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
-                          <Anchor className="w-4 h-4" /> Tu fantasma relacional
-                        </p>
-                        <div className="space-y-3 pl-4 border-l-2 border-purple-500/25">
-                          {aiAnalysis.autoanalisis_usuario.fantasma_relacional.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
-                          ))}
+                      {/* 5. Fantasma relacional */}
+                      {aiAnalysis.autoanalisis_usuario.fantasma_relacional && (
+                        <div className="rounded-2xl overflow-hidden border border-purple-500/15 bg-white/[0.02] backdrop-blur-sm">
+                          <div className="bg-gradient-to-r from-purple-600/90 to-violet-600/80 px-5 py-3.5 flex items-center gap-2.5">
+                            <Anchor className="w-4 h-4 text-white/90" />
+                            <h3 className="text-white font-semibold text-xs tracking-wide uppercase">Tu fantasma relacional</h3>
+                          </div>
+                          <div className="p-5 space-y-3">
+                            {aiAnalysis.autoanalisis_usuario.fantasma_relacional.split('\n\n').map((p, i) => (
+                              <p key={i} className="text-white/75 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
-                    {/* 6. Yo ideal vs yo real */}
-                    {aiAnalysis.autoanalisis_usuario.yo_ideal && (
-                      <div>
-                        <p className="text-cyan-300/70 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
-                          <Target className="w-4 h-4" /> Quién crees ser vs quién eres cuando amas
-                        </p>
-                        <div className="space-y-3 pl-4 border-l-2 border-cyan-500/25">
-                          {aiAnalysis.autoanalisis_usuario.yo_ideal.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
-                          ))}
+                      {/* 6. Yo ideal vs yo real */}
+                      {aiAnalysis.autoanalisis_usuario.yo_ideal && (
+                        <div className="rounded-2xl overflow-hidden border border-cyan-500/15 bg-white/[0.02] backdrop-blur-sm">
+                          <div className="bg-gradient-to-r from-cyan-600/90 to-teal-600/80 px-5 py-3.5 flex items-center gap-2.5">
+                            <Target className="w-4 h-4 text-white/90" />
+                            <h3 className="text-white font-semibold text-xs tracking-wide uppercase">Quién crees ser vs quién eres cuando amas</h3>
+                          </div>
+                          <div className="p-5 space-y-3">
+                            {aiAnalysis.autoanalisis_usuario.yo_ideal.split('\n\n').map((p, i) => (
+                              <p key={i} className="text-white/75 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
-                    {/* 7. Mecanismos de defensa */}
-                    {aiAnalysis.autoanalisis_usuario.mecanismos_defensa && (
-                      <div>
-                        <p className="text-amber-300/70 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
-                          <Shield className="w-4 h-4" /> Tus mecanismos de defensa
-                        </p>
-                        <div className="space-y-3 pl-4 border-l-2 border-amber-500/25">
-                          {aiAnalysis.autoanalisis_usuario.mecanismos_defensa.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
-                          ))}
+                      {/* 7. Mecanismos de defensa */}
+                      {aiAnalysis.autoanalisis_usuario.mecanismos_defensa && (
+                        <div className="rounded-2xl overflow-hidden border border-amber-500/15 bg-white/[0.02] backdrop-blur-sm">
+                          <div className="bg-gradient-to-r from-amber-600/90 to-yellow-600/80 px-5 py-3.5 flex items-center gap-2.5">
+                            <Shield className="w-4 h-4 text-white/90" />
+                            <h3 className="text-white font-semibold text-xs tracking-wide uppercase">Tus mecanismos de defensa</h3>
+                          </div>
+                          <div className="p-5 space-y-3">
+                            {aiAnalysis.autoanalisis_usuario.mecanismos_defensa.split('\n\n').map((p, i) => (
+                              <p key={i} className="text-white/75 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
-                    {/* 8. Tipo de pareja que repite */}
-                    {aiAnalysis.autoanalisis_usuario.tipo_pareja_que_repite && (
-                      <div>
-                        <p className="text-orange-300/70 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
-                          <Repeat className="w-4 h-4" /> El tipo de pareja que repites
-                        </p>
-                        <div className="space-y-3 pl-4 border-l-2 border-orange-500/25">
-                          {aiAnalysis.autoanalisis_usuario.tipo_pareja_que_repite.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
-                          ))}
+                      {/* 8. Tipo de pareja que repite */}
+                      {aiAnalysis.autoanalisis_usuario.tipo_pareja_que_repite && (
+                        <div className="rounded-2xl overflow-hidden border border-orange-500/15 bg-white/[0.02] backdrop-blur-sm">
+                          <div className="bg-gradient-to-r from-orange-600/90 to-amber-600/80 px-5 py-3.5 flex items-center gap-2.5">
+                            <Repeat className="w-4 h-4 text-white/90" />
+                            <h3 className="text-white font-semibold text-xs tracking-wide uppercase">El tipo de pareja que repites</h3>
+                          </div>
+                          <div className="p-5 space-y-3">
+                            {aiAnalysis.autoanalisis_usuario.tipo_pareja_que_repite.split('\n\n').map((p, i) => (
+                              <p key={i} className="text-white/75 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
 
-                    {/* 9. Núcleo del patrón */}
+                    {/* 9. Núcleo del patrón — full width con header de color */}
                     {aiAnalysis.autoanalisis_usuario.nucleo_del_patron && (
-                      <div className="mt-2 p-6 rounded-xl border border-fuchsia-500/20 bg-fuchsia-500/[0.06]">
-                        <p className="text-fuchsia-300/80 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
-                          <Zap className="w-4 h-4" /> El núcleo de tu patrón
-                        </p>
-                        <div className="space-y-3">
+                      <div className="rounded-2xl overflow-hidden border border-fuchsia-500/20 bg-white/[0.02] backdrop-blur-sm">
+                        <div className="bg-gradient-to-r from-fuchsia-600/90 to-purple-600/80 px-6 py-4 flex items-center gap-3">
+                          <Zap className="w-5 h-5 text-white/90" />
+                          <h3 className="text-white font-semibold text-sm tracking-wide">El núcleo de tu patrón</h3>
+                        </div>
+                        <div className="p-6 space-y-3">
                           {aiAnalysis.autoanalisis_usuario.nucleo_del_patron.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/80 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
+                            <p key={i} className="text-white/80 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
                           ))}
                         </div>
                       </div>
                     )}
 
-                    {/* 10. Cierre transformador */}
+                    {/* 10. Cierre transformador — full width con header de color */}
                     {aiAnalysis.autoanalisis_usuario.cierre_transformador && (
-                      <div className="mt-2 p-6 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.05]">
-                        <p className="text-emerald-300/80 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
-                          <Sparkles className="w-4 h-4" /> Tu camino transformador
-                        </p>
-                        <div className="space-y-3">
+                      <div className="rounded-2xl overflow-hidden border border-emerald-500/20 bg-white/[0.02] backdrop-blur-sm">
+                        <div className="bg-gradient-to-r from-emerald-600/90 to-teal-600/80 px-6 py-4 flex items-center gap-3">
+                          <Sparkles className="w-5 h-5 text-white/90" />
+                          <h3 className="text-white font-semibold text-sm tracking-wide">Tu camino transformador</h3>
+                        </div>
+                        <div className="p-6 space-y-3">
                           {aiAnalysis.autoanalisis_usuario.cierre_transformador.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderBold(p)}</p>
+                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -2088,26 +2455,22 @@ const RadiografiaPremiumPage = () => {
                 </motion.div>
               )}
 
-              {/* ═══ RAPPORT — BIENVENIDA EMPÁTICA ═══ */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                className="p-6 lg:p-8 rounded-2xl border border-violet-500/15 bg-gradient-to-br from-violet-500/[0.04] via-fuchsia-500/[0.02] to-transparent relative overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/40 via-fuchsia-500/30 to-violet-500/40" />
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/15 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-1">
-                    <Heart className="w-5 h-5 text-violet-400/70" />
+              {/* ═══ RAPPORT — BIENVENIDA EMPÁTICA — Tarjeta con header de color ═══ */}
+              {aiAnalysis.radiografia_inicial && (
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                  className="rounded-2xl overflow-hidden border border-indigo-500/15 bg-white/[0.02] backdrop-blur-sm">
+                  <div className="bg-gradient-to-r from-indigo-600/90 to-violet-600/80 px-6 py-4 flex items-center gap-3">
+                    <MessageCircle className="w-5 h-5 text-white/90" />
+                    <h3 className="text-white font-semibold text-sm tracking-wide">Lo que percibimos de tu relación</h3>
                   </div>
-                  <div className="space-y-3">
-                    <h2 className="text-white/80 text-base font-medium">Gracias por compartir tu historia</h2>
-                    <p className="text-white/50 text-sm font-light leading-relaxed">Lo que compartiste aquí es valioso y único. Este análisis está diseñado para ayudarte a comprender cómo amas, qué patrones se repiten en tu relación, y qué posibilidades de crecimiento existen.</p>
-                    {aiAnalysis.radiografia_inicial && (
-                      <div className="pt-3 border-t border-white/5">
-                        <p className="text-white/35 text-xs font-medium uppercase tracking-wider mb-2">Lo que percibimos de tu relación</p>
-                        <p className="text-white/50 text-sm font-light leading-relaxed italic">{renderBold(aiAnalysis.radiografia_inicial.split('\n\n')[0])}</p>
-                      </div>
-                    )}
+                  <div className="p-6 space-y-3">
+                    <p className="text-white/50 text-sm font-light leading-relaxed mb-4">Lo que compartiste aquí es valioso y único. Este análisis está diseñado para ayudarte a comprender cómo amas, qué patrones se repiten en tu relación, y qué posibilidades de crecimiento existen.</p>
+                    {aiAnalysis.radiografia_inicial.split('\n\n').map((p, i) => (
+                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
+                    ))}
                   </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              )}
 
               {/* ═══ 1. ANÁLISIS POR ENFOQUE PSICOLÓGICO (11 corrientes) ═══ */}
               {aiAnalysis.lecturas_por_enfoque && (() => {
@@ -2156,7 +2519,8 @@ const RadiografiaPremiumPage = () => {
                       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.06),transparent_70%)]" />
                       <div className="relative">
                         <p className="text-white/50 text-xs font-medium uppercase tracking-wider mb-2 text-center">Mapa Integral de Corrientes</p>
-                        <p className="text-white/30 text-[11px] font-light text-center mb-5">Elige la visualización que prefieras para explorar tu perfil</p>
+                        <p className="text-white/30 text-[11px] font-light text-center mb-1">Los 11 enfoques psicológicos que analizan tu relación — cada eje mide la puntuación según esa corriente</p>
+                        <p className="text-white/20 text-[10px] font-light text-center mb-5">Pasa el cursor sobre cada punto para ver qué mide y su puntuación</p>
 
                         {/* Chart selector tabs */}
                         <div className="flex items-center justify-center gap-2 mb-6">
@@ -2174,9 +2538,9 @@ const RadiografiaPremiumPage = () => {
                           ))}
                         </div>
 
-                        {/* Chart: Radar view — with gradient fill + glow dots */}
+                        {/* Chart: Radar view — with gradient fill + glow dots — BIGGER */}
                         {chartViewMode === 'radar' && (
-                          <ResponsiveContainer width="100%" height={420}>
+                          <ResponsiveContainer width="100%" height={520}>
                             <RechartRadar cx="50%" cy="50%" outerRadius="78%" data={radarData}>
                               <defs>
                                 <radialGradient id="radarAreaGrad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
@@ -2195,8 +2559,16 @@ const RadiografiaPremiumPage = () => {
                                 dot={{ r: 5, fill: '#a78bfa', fillOpacity: 1, stroke: '#8b5cf6', strokeWidth: 2, filter: 'url(#glow)' }}
                                 activeDot={{ r: 7, fill: '#c084fc', stroke: '#8b5cf6', strokeWidth: 2 }} />
                               <Tooltip
-                                contentStyle={{ background: 'rgba(10,10,18,0.96)', border: '1px solid rgba(139,92,246,0.3)', borderRadius: '14px', fontSize: '13px', color: 'rgba(255,255,255,0.8)', boxShadow: '0 8px 32px rgba(139,92,246,0.15)' }}
-                                formatter={(val) => [`${val}%`, 'Puntuación']}
+                                content={({ active, payload }) => {
+                                  if (!active || !payload?.[0]) return null
+                                  const d = payload[0].payload
+                                  return (
+                                    <div style={{ background: 'rgba(10,10,18,0.96)', border: '1px solid rgba(139,92,246,0.3)', borderRadius: '14px', padding: '12px 16px', boxShadow: '0 8px 32px rgba(139,92,246,0.15)', maxWidth: '250px' }}>
+                                      <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '14px', fontWeight: 600, margin: 0 }}>{d.subject} — {d.score}%</p>
+                                      {d.enfoque && <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px', margin: '6px 0 0', lineHeight: '1.5' }}>Mide: {d.enfoque}</p>}
+                                    </div>
+                                  )
+                                }}
                               />
                             </RechartRadar>
                           </ResponsiveContainer>
@@ -2289,9 +2661,90 @@ const RadiografiaPremiumPage = () => {
                     </div>
                   )}
 
-                  {/* ── Individual author cards — full-width, structured ── */}
-                  <div className="grid grid-cols-1 gap-6">
-                    {AUTHOR_CONFIG.map(({ key, icon: Icon, border, bg, line, iconBg, iconColor, barFill }) => {
+                  {/* ── Author cards grouped by 6 thematic layers ── */}
+                  {AUTHOR_LAYERS.map((layer) => {
+                    const layerAuthors = AUTHOR_CONFIG.filter(a => layer.authors.includes(a.key))
+                    const hasData = layerAuthors.some(a => aiAnalysis.lecturas_por_enfoque[a.key])
+                    if (!hasData) return null
+                    const LayerIcon = layer.icon
+                    const layerGradients = {
+                      forma: 'from-violet-600/90 to-indigo-600/80', conflicto: 'from-blue-600/90 to-cyan-600/80',
+                      apego: 'from-amber-600/90 to-yellow-600/80', profundo: 'from-purple-600/90 to-fuchsia-600/80',
+                      erotismo: 'from-pink-600/90 to-rose-600/80', lenguaje: 'from-red-600/90 to-orange-600/80'
+                    }
+                    const layerBorders = {
+                      forma: 'border-violet-500/15', conflicto: 'border-blue-500/15',
+                      apego: 'border-amber-500/15', profundo: 'border-purple-500/15',
+                      erotismo: 'border-pink-500/15', lenguaje: 'border-red-500/15'
+                    }
+                    return (
+                      <div key={layer.id} className="space-y-6">
+                        {/* Layer header — premium card style */}
+                        <div className={`rounded-2xl overflow-hidden border ${layerBorders[layer.id] || 'border-white/10'} bg-white/[0.02]`}>
+                          <div className={`bg-gradient-to-r ${layerGradients[layer.id] || 'from-violet-600/90 to-fuchsia-600/80'} px-6 py-5 text-center`}>
+                            <LayerIcon className="w-6 h-6 text-white/90 mx-auto mb-2" strokeWidth={1.5} />
+                            <h3 className="text-base font-semibold text-white tracking-wide">{layer.title}</h3>
+                            <p className="text-white/70 text-xs font-light mt-0.5">{layer.subtitle}</p>
+                          </div>
+                        </div>
+
+                        {/* Layer-specific mini-chart */}
+                        {layer.chartType === 'polar' && aiAnalysis.lecturas_por_enfoque.levine && (
+                          <div className="p-4 rounded-2xl border border-amber-500/10 bg-amber-500/[0.02]">
+                            <PolarMiniChart data={aiAnalysis.lecturas_por_enfoque.levine} />
+                          </div>
+                        )}
+                        {layer.chartType === 'lollipop' && aiAnalysis.energia_vinculo && (
+                          <div className="p-4 rounded-2xl border border-pink-500/10 bg-pink-500/[0.02]">
+                            <LollipopMiniChart data={aiAnalysis.energia_vinculo} />
+                          </div>
+                        )}
+                        {layer.chartType === 'network' && aiAnalysis.lectura_psicoanalitica && (
+                          <div className="p-4 rounded-2xl border border-purple-500/10 bg-purple-500/[0.02]">
+                            <NetworkMiniChart lectura={aiAnalysis.lectura_psicoanalitica} />
+                          </div>
+                        )}
+                        {layer.chartType === 'radar' && aiAnalysis.dimensiones && (
+                          <div className="p-4 rounded-2xl border border-blue-500/10 bg-blue-500/[0.02]">
+                            <div className="max-w-xs mx-auto">
+                              <RadarChart dimensiones={aiAnalysis.dimensiones} />
+                            </div>
+                          </div>
+                        )}
+                        {layer.chartType === 'sankey' && aiAnalysis.dimensiones && (
+                          <div className="p-4 rounded-2xl border border-orange-500/10 bg-orange-500/[0.02]">
+                            <DimensionSankey dimensiones={aiAnalysis.dimensiones} />
+                          </div>
+                        )}
+                        {layer.chartType === 'bar' && (() => {
+                          const chapmanData = aiAnalysis.lecturas_por_enfoque.chapman
+                          const realData = aiAnalysis.lecturas_por_enfoque.real
+                          const barItems = [
+                            chapmanData && { label: chapmanData.lenguaje_usuario || 'Tu lenguaje', val: chapmanData.puntuacion ?? 50, color: '#ef4444' },
+                            chapmanData && { label: chapmanData.lenguaje_pareja || 'Su lenguaje', val: chapmanData.puntuacion ?? 50, color: '#f87171' },
+                            realData && { label: 'Poder relacional', val: realData.puntuacion ?? 50, color: '#22d3ee' }
+                          ].filter(Boolean)
+                          if (barItems.length === 0) return null
+                          return (
+                            <div className="p-4 rounded-2xl border border-red-500/10 bg-red-500/[0.02]">
+                              <div className="space-y-3 py-2">
+                                {barItems.map((item, i) => (
+                                  <div key={i} className="flex items-center gap-3">
+                                    <span className="text-white/40 text-xs font-light w-28 text-right truncate">{item.label}</span>
+                                    <div className="flex-1 h-3 bg-white/[0.06] rounded-full overflow-hidden">
+                                      <div className="h-full rounded-full" style={{ width: `${item.val}%`, backgroundColor: item.color, opacity: 0.6 }} />
+                                    </div>
+                                    <span className="text-white/60 text-xs font-medium w-10 tabular-nums">{item.val}%</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )
+                        })()}
+
+                        {/* Author cards within this layer */}
+                        <div className="grid grid-cols-1 gap-6">
+                    {layerAuthors.map(({ key, icon: Icon, border, bg, line, iconBg, iconColor, barFill }) => {
                       const data = aiAnalysis.lecturas_por_enfoque[key]
                       if (!data) return null
                       const score = data.puntuacion ?? 50
@@ -2309,13 +2762,13 @@ const RadiografiaPremiumPage = () => {
                         if (!text) return null
                         const firstDot = text.indexOf('.')
                         if (firstDot > 0 && firstDot < 120) {
-                          return <><strong className="text-white/65 font-semibold">{text.slice(0, firstDot + 1)}</strong>{' '}<span>{text.slice(firstDot + 1).trim()}</span></>
+                          return <><strong className="text-white/65 font-semibold">{stripBold(text.slice(0, firstDot + 1))}</strong>{' '}<span>{stripBold(text.slice(firstDot + 1).trim())}</span></>
                         }
                         const words = text.split(' ')
                         if (words.length > 3) {
-                          return <><strong className="text-white/65 font-semibold">{words.slice(0, 3).join(' ')}:</strong>{' '}<span>{words.slice(3).join(' ')}</span></>
+                          return <><strong className="text-white/65 font-semibold">{stripBold(words.slice(0, 3).join(' '))}:</strong>{' '}<span>{stripBold(words.slice(3).join(' '))}</span></>
                         }
-                        return renderBold(text)
+                        return stripBold(text)
                       }
 
                       return (
@@ -2425,21 +2878,25 @@ const RadiografiaPremiumPage = () => {
                             )}
                           </div>
 
-                          {/* Indicadores — as descriptive cards, not just badges */}
+                          {/* Indicadores — inline badges with dynamic color coding */}
                           {data.indicadores && data.indicadores.length > 0 && (
                             <div className="mb-5">
                               <p className="text-white/40 text-[10px] font-medium uppercase tracking-wider mb-3">Hallazgos clave</p>
-                              <div className="space-y-2">
-                                {data.indicadores.map((ind, i) => (
-                                  <div key={i} className="flex items-start gap-3 px-4 py-3 rounded-xl border bg-white/[0.01]" style={{
-                                    borderColor: `${barFill}15`
-                                  }}>
-                                    <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: `${barFill}12` }}>
-                                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: barFill, opacity: 0.6 }} />
-                                    </div>
-                                    <p className="text-white/65 text-[13px] font-light leading-relaxed">{stripBold(ind)}</p>
-                                  </div>
-                                ))}
+                              <div className="flex flex-wrap gap-2">
+                                {data.indicadores.map((ind, i) => {
+                                  const cleaned = stripBold(ind)
+                                  // Dynamic color: detect level keywords
+                                  const lower = cleaned.toLowerCase()
+                                  const isHigh = lower.includes('alto') || lower.includes('fuerte') || lower.includes('intenso') || lower.includes('elevado') || score >= 70
+                                  const isLow = lower.includes('bajo') || lower.includes('débil') || lower.includes('ausente') || lower.includes('mínimo') || score <= 30
+                                  const badgeBg = isHigh ? 'bg-red-500/10 border-red-500/20 text-red-300/80' : isLow ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300/80' : 'bg-amber-500/10 border-amber-500/20 text-amber-300/80'
+                                  return (
+                                    <span key={i} className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-light ${badgeBg}`}>
+                                      <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: barFill, opacity: 0.5 }} />
+                                      {cleaned}
+                                    </span>
+                                  )
+                                })}
                               </div>
                             </div>
                           )}
@@ -2453,7 +2910,7 @@ const RadiografiaPremiumPage = () => {
                                   <div className="pl-4 border-l-2 border-purple-500/20 space-y-3">
                                     <p className="text-purple-300/50 text-[10px] font-medium uppercase tracking-wider mb-1.5">Lectura freudiana</p>
                                     {data.interpretacion_freud.split('\n\n').map((p, i) => (
-                                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.9]">{renderBold(p)}</p>
+                                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.9]">{stripBold(p)}</p>
                                     ))}
                                   </div>
                                 )}
@@ -2461,14 +2918,14 @@ const RadiografiaPremiumPage = () => {
                                   <div className="pl-4 border-l-2 border-indigo-500/20 space-y-3">
                                     <p className="text-indigo-300/50 text-[10px] font-medium uppercase tracking-wider mb-1.5">Lectura lacaniana</p>
                                     {data.interpretacion_lacan.split('\n\n').map((p, i) => (
-                                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.9]">{renderBold(p)}</p>
+                                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.9]">{stripBold(p)}</p>
                                     ))}
                                   </div>
                                 )}
                                 {data.interpretacion && !data.interpretacion_freud && (
                                   <div className="space-y-3">
                                     {data.interpretacion.split('\n\n').map((p, i) => (
-                                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.9]">{renderBold(p)}</p>
+                                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.9]">{stripBold(p)}</p>
                                     ))}
                                   </div>
                                 )}
@@ -2476,7 +2933,7 @@ const RadiografiaPremiumPage = () => {
                             ) : (
                               <div className="space-y-3">
                                 {(data.interpretacion || '').split('\n\n').map((p, i) => (
-                                  <p key={i} className="text-white/70 text-[15px] font-light leading-[1.9]">{renderBold(p)}</p>
+                                  <p key={i} className="text-white/70 text-[15px] font-light leading-[1.9]">{stripBold(p)}</p>
                                 ))}
                               </div>
                             )}
@@ -2484,28 +2941,44 @@ const RadiografiaPremiumPage = () => {
                         </motion.div>
                       )
                     })}
-                  </div>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </motion.div>
                 )
               })()}
 
-              {/* ═══ 2. MAPA PSICOLÓGICO DEL VÍNCULO ═══ */}
+              {/* ═══ 2. TU RELACIÓN EN UNA MIRADA ═══ */}
               {aiAnalysis.dimensiones && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <div className="relative text-center py-8 mb-6">
-                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
-                    <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/15 to-cyan-500/10 border border-violet-500/20 mb-3">
-                      <Activity className="w-5 h-5 text-violet-400/60" />
+                  <div className="rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02]">
+                    <div className="bg-gradient-to-r from-violet-600/90 to-cyan-600/80 px-6 py-5 text-center">
+                      <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/15 mb-3">
+                        <Eye className="w-5 h-5 text-white/90" />
+                      </div>
+                      <p className="text-white/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-1">12 Dimensiones</p>
+                      <h2 className="text-xl font-light text-white tracking-wide">Tu relación en una mirada</h2>
+                      <p className="text-white/60 text-xs font-light mt-1">Patrones de interacción y ciclos emocionales</p>
                     </div>
-                    <p className="text-white/30 text-[10px] font-bold uppercase tracking-[0.3em] mb-1">12 Dimensiones</p>
-                    <h2 className="text-lg font-light text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-cyan-300">Mapa Psicológico del Vínculo</h2>
-                  </div>
-                  <div className="p-6 rounded-2xl border border-white/8 bg-white/[0.02]">
-                    <RadarChart dimensiones={aiAnalysis.dimensiones} />
+                    <div className="p-6">
+                      <RadarChart dimensiones={aiAnalysis.dimensiones} />
+
+                      {/* Leyenda de dimensiones con colores */}
+                      <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 px-4">
+                        {Object.entries(DIMENSION_LABELS).map(([key, label], i) => (
+                          <div key={key} className="flex items-center gap-2">
+                            <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: DIMENSION_COLORS[i] }} />
+                            <span className="text-white/60 text-xs font-light">{label}</span>
+                            <span className="text-white/80 text-xs font-semibold tabular-nums">{aiAnalysis.dimensiones[key] ?? 0}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
 
                     {/* ── Dimension breakdown (fused from Diagnóstico Estructural) ── */}
                     {aiAnalysis.tabla_diagnostica && (
-                      <div className="mt-6 pt-6 border-t border-white/5 space-y-1">
+                      <div className="mt-6 pt-6 border-t border-white/5 space-y-1 px-6 pb-6">
                         <p className="text-white/35 text-[10px] font-medium uppercase tracking-wider mb-4">Desglose por dimensión</p>
                         {aiAnalysis.tabla_diagnostica.map((row, i) => {
                           const dimKey = Object.keys(DIMENSION_LABELS)[i]
@@ -2632,7 +3105,7 @@ const RadiografiaPremiumPage = () => {
                             <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
                               <CheckCircle className="w-3.5 h-3.5 text-emerald-400/60" strokeWidth={1.5} />
                             </div>
-                            <p className="text-white/70 text-[14px] font-light leading-relaxed">{renderBold(f)}</p>
+                            <p className="text-white/70 text-[14px] font-light leading-relaxed">{stripBold(f)}</p>
                           </div>
                         ))}
                       </div>
@@ -2646,7 +3119,7 @@ const RadiografiaPremiumPage = () => {
                             <div className="w-7 h-7 rounded-lg bg-red-500/10 border border-red-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
                               <AlertTriangle className="w-3.5 h-3.5 text-red-400/60" strokeWidth={1.5} />
                             </div>
-                            <p className="text-white/70 text-[14px] font-light leading-relaxed">{renderBold(r)}</p>
+                            <p className="text-white/70 text-[14px] font-light leading-relaxed">{stripBold(r)}</p>
                           </div>
                         ))}
                       </div>
@@ -2693,7 +3166,7 @@ const RadiografiaPremiumPage = () => {
                             </div>
                             <div className="flex-1">
                               <p className={`text-${color}-300/40 text-[9px] font-medium uppercase tracking-wider mb-1`}>Tema {i + 1}</p>
-                              <p className="text-white/70 text-sm font-light leading-relaxed">{renderBold(tema)}</p>
+                              <p className="text-white/70 text-sm font-light leading-relaxed">{stripBold(tema)}</p>
                             </div>
                           </div>
                         )
