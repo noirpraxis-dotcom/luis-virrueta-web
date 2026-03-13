@@ -997,7 +997,6 @@ const RadiografiaPremiumPage = () => {
   const [analysisDone, setAnalysisDone] = useState(false)
   const [completedTasks, setCompletedTasks] = useState(0)
   const [pdfGenerating, setPdfGenerating] = useState(false)
-  const [chartViewMode, setChartViewMode] = useState('radar')
   const [cachedAnalysis, setCachedAnalysis] = useState(null)
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [onboardingStep, setOnboardingStep] = useState(0)
@@ -2299,158 +2298,40 @@ const RadiografiaPremiumPage = () => {
                   })()}
 
                   <div className="space-y-8">
-                    {/* 1. Apertura y rapport — tarjeta completa con header de color */}
-                    {aiAnalysis.autoanalisis_usuario.apertura_rapport && (
-                      <div className="rounded-2xl overflow-hidden border border-violet-500/15 bg-white/[0.02] backdrop-blur-sm">
-                        <div className="bg-gradient-to-r from-violet-600/90 to-fuchsia-600/80 px-6 py-4 flex items-center gap-3">
-                          <Heart className="w-5 h-5 text-white/90" />
-                          <h3 className="text-white font-semibold text-sm tracking-wide">Tu radiografía inicial</h3>
-                        </div>
-                        <div className="p-6 space-y-3">
-                          {aiAnalysis.autoanalisis_usuario.apertura_rapport.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/80 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Secciones 2-8 en grid de 2 columnas en desktop */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* 2. Forma de amar */}
-                      {aiAnalysis.autoanalisis_usuario.forma_de_amar && (
-                        <div className="rounded-2xl overflow-hidden border border-fuchsia-500/15 bg-white/[0.02] backdrop-blur-sm">
-                          <div className="bg-gradient-to-r from-fuchsia-600/90 to-pink-600/80 px-5 py-3.5 flex items-center gap-2.5">
-                            <Flame className="w-4 h-4 text-white/90" />
-                            <h3 className="text-white font-semibold text-xs tracking-wide uppercase">Cómo amas y cómo esperas ser amado</h3>
+                    {/* Tarjetas del reporte personalizado — 1 columna, ícono centrado arriba */}
+                    {(() => {
+                      const REPORT_CARDS = [
+                        { key: 'apertura_rapport', icon: MessageCircle, title: 'Tu radiografía inicial', gradient: 'from-indigo-500 via-violet-500 to-purple-500', border: 'border-indigo-500/20', iconBg: 'from-indigo-500/30 to-violet-500/20' },
+                        { key: 'forma_de_amar', icon: Heart, title: 'Cómo amas y cómo esperas ser amado', gradient: 'from-rose-500 via-pink-500 to-fuchsia-500', border: 'border-rose-500/20', iconBg: 'from-rose-500/30 to-pink-500/20' },
+                        { key: 'lo_que_busca_en_el_otro', icon: Eye, title: 'Lo que buscas en el otro', gradient: 'from-sky-500 via-blue-500 to-indigo-500', border: 'border-sky-500/20', iconBg: 'from-sky-500/30 to-blue-500/20' },
+                        { key: 'lo_que_reclama_afuera', icon: Compass, title: 'Lo que reclamas afuera y te pertenece adentro', gradient: 'from-amber-500 via-orange-500 to-red-500', border: 'border-amber-500/20', iconBg: 'from-amber-500/30 to-orange-500/20' },
+                        { key: 'fantasma_relacional', icon: Anchor, title: 'Tu fantasma relacional', gradient: 'from-purple-500 via-fuchsia-500 to-pink-500', border: 'border-purple-500/20', iconBg: 'from-purple-500/30 to-fuchsia-500/20' },
+                        { key: 'yo_ideal', icon: Target, title: 'Quién crees ser vs quién eres cuando amas', gradient: 'from-teal-500 via-emerald-500 to-green-500', border: 'border-teal-500/20', iconBg: 'from-teal-500/30 to-emerald-500/20' },
+                        { key: 'mecanismos_defensa', icon: Shield, title: 'Tus mecanismos de defensa', gradient: 'from-cyan-500 via-sky-500 to-blue-500', border: 'border-cyan-500/20', iconBg: 'from-cyan-500/30 to-sky-500/20' },
+                        { key: 'tipo_pareja_que_repite', icon: Repeat, title: 'El tipo de pareja que repites', gradient: 'from-orange-500 via-amber-500 to-yellow-500', border: 'border-orange-500/20', iconBg: 'from-orange-500/30 to-amber-500/20' },
+                        { key: 'nucleo_del_patron', icon: Zap, title: 'El núcleo de tu patrón', gradient: 'from-fuchsia-500 via-purple-500 to-violet-500', border: 'border-fuchsia-500/20', iconBg: 'from-fuchsia-500/30 to-purple-500/20' },
+                        { key: 'cierre_transformador', icon: Sparkles, title: 'Tu camino transformador', gradient: 'from-emerald-500 via-teal-500 to-cyan-500', border: 'border-emerald-500/20', iconBg: 'from-emerald-500/30 to-teal-500/20' },
+                      ]
+                      return REPORT_CARDS.map(({ key, icon: CardIcon, title, gradient, border, iconBg }) => {
+                        const text = aiAnalysis.autoanalisis_usuario[key]
+                        if (!text) return null
+                        return (
+                          <div key={key} className={`rounded-2xl overflow-hidden border ${border} bg-white/[0.02] backdrop-blur-sm`}>
+                            <div className={`bg-gradient-to-r ${gradient} px-6 py-6 text-center`}>
+                              <div className={`inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br ${iconBg} border border-white/20 mb-3 shadow-lg`}>
+                                <CardIcon className="w-6 h-6 text-white" strokeWidth={1.5} />
+                              </div>
+                              <h3 className="text-white font-semibold text-sm tracking-wide">{title}</h3>
+                            </div>
+                            <div className="p-6 space-y-3">
+                              {text.split('\n\n').map((p, i) => (
+                                <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
+                              ))}
+                            </div>
                           </div>
-                          <div className="p-5 space-y-3">
-                            {aiAnalysis.autoanalisis_usuario.forma_de_amar.split('\n\n').map((p, i) => (
-                              <p key={i} className="text-white/75 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 3. Lo que busca en el otro */}
-                      {aiAnalysis.autoanalisis_usuario.lo_que_busca_en_el_otro && (
-                        <div className="rounded-2xl overflow-hidden border border-violet-500/15 bg-white/[0.02] backdrop-blur-sm">
-                          <div className="bg-gradient-to-r from-violet-600/90 to-indigo-600/80 px-5 py-3.5 flex items-center gap-2.5">
-                            <Eye className="w-4 h-4 text-white/90" />
-                            <h3 className="text-white font-semibold text-xs tracking-wide uppercase">Lo que buscas en el otro</h3>
-                          </div>
-                          <div className="p-5 space-y-3">
-                            {aiAnalysis.autoanalisis_usuario.lo_que_busca_en_el_otro.split('\n\n').map((p, i) => (
-                              <p key={i} className="text-white/75 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 4. Lo que reclama afuera */}
-                      {aiAnalysis.autoanalisis_usuario.lo_que_reclama_afuera && (
-                        <div className="rounded-2xl overflow-hidden border border-rose-500/15 bg-white/[0.02] backdrop-blur-sm">
-                          <div className="bg-gradient-to-r from-rose-600/90 to-red-600/80 px-5 py-3.5 flex items-center gap-2.5">
-                            <Compass className="w-4 h-4 text-white/90" />
-                            <h3 className="text-white font-semibold text-xs tracking-wide uppercase">Lo que reclamas afuera y te pertenece adentro</h3>
-                          </div>
-                          <div className="p-5 space-y-3">
-                            {aiAnalysis.autoanalisis_usuario.lo_que_reclama_afuera.split('\n\n').map((p, i) => (
-                              <p key={i} className="text-white/75 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 5. Fantasma relacional */}
-                      {aiAnalysis.autoanalisis_usuario.fantasma_relacional && (
-                        <div className="rounded-2xl overflow-hidden border border-purple-500/15 bg-white/[0.02] backdrop-blur-sm">
-                          <div className="bg-gradient-to-r from-purple-600/90 to-violet-600/80 px-5 py-3.5 flex items-center gap-2.5">
-                            <Anchor className="w-4 h-4 text-white/90" />
-                            <h3 className="text-white font-semibold text-xs tracking-wide uppercase">Tu fantasma relacional</h3>
-                          </div>
-                          <div className="p-5 space-y-3">
-                            {aiAnalysis.autoanalisis_usuario.fantasma_relacional.split('\n\n').map((p, i) => (
-                              <p key={i} className="text-white/75 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 6. Yo ideal vs yo real */}
-                      {aiAnalysis.autoanalisis_usuario.yo_ideal && (
-                        <div className="rounded-2xl overflow-hidden border border-cyan-500/15 bg-white/[0.02] backdrop-blur-sm">
-                          <div className="bg-gradient-to-r from-cyan-600/90 to-teal-600/80 px-5 py-3.5 flex items-center gap-2.5">
-                            <Target className="w-4 h-4 text-white/90" />
-                            <h3 className="text-white font-semibold text-xs tracking-wide uppercase">Quién crees ser vs quién eres cuando amas</h3>
-                          </div>
-                          <div className="p-5 space-y-3">
-                            {aiAnalysis.autoanalisis_usuario.yo_ideal.split('\n\n').map((p, i) => (
-                              <p key={i} className="text-white/75 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 7. Mecanismos de defensa */}
-                      {aiAnalysis.autoanalisis_usuario.mecanismos_defensa && (
-                        <div className="rounded-2xl overflow-hidden border border-amber-500/15 bg-white/[0.02] backdrop-blur-sm">
-                          <div className="bg-gradient-to-r from-amber-600/90 to-yellow-600/80 px-5 py-3.5 flex items-center gap-2.5">
-                            <Shield className="w-4 h-4 text-white/90" />
-                            <h3 className="text-white font-semibold text-xs tracking-wide uppercase">Tus mecanismos de defensa</h3>
-                          </div>
-                          <div className="p-5 space-y-3">
-                            {aiAnalysis.autoanalisis_usuario.mecanismos_defensa.split('\n\n').map((p, i) => (
-                              <p key={i} className="text-white/75 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 8. Tipo de pareja que repite */}
-                      {aiAnalysis.autoanalisis_usuario.tipo_pareja_que_repite && (
-                        <div className="rounded-2xl overflow-hidden border border-orange-500/15 bg-white/[0.02] backdrop-blur-sm">
-                          <div className="bg-gradient-to-r from-orange-600/90 to-amber-600/80 px-5 py-3.5 flex items-center gap-2.5">
-                            <Repeat className="w-4 h-4 text-white/90" />
-                            <h3 className="text-white font-semibold text-xs tracking-wide uppercase">El tipo de pareja que repites</h3>
-                          </div>
-                          <div className="p-5 space-y-3">
-                            {aiAnalysis.autoanalisis_usuario.tipo_pareja_que_repite.split('\n\n').map((p, i) => (
-                              <p key={i} className="text-white/75 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* 9. Núcleo del patrón — full width con header de color */}
-                    {aiAnalysis.autoanalisis_usuario.nucleo_del_patron && (
-                      <div className="rounded-2xl overflow-hidden border border-fuchsia-500/20 bg-white/[0.02] backdrop-blur-sm">
-                        <div className="bg-gradient-to-r from-fuchsia-600/90 to-purple-600/80 px-6 py-4 flex items-center gap-3">
-                          <Zap className="w-5 h-5 text-white/90" />
-                          <h3 className="text-white font-semibold text-sm tracking-wide">El núcleo de tu patrón</h3>
-                        </div>
-                        <div className="p-6 space-y-3">
-                          {aiAnalysis.autoanalisis_usuario.nucleo_del_patron.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/80 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* 10. Cierre transformador — full width con header de color */}
-                    {aiAnalysis.autoanalisis_usuario.cierre_transformador && (
-                      <div className="rounded-2xl overflow-hidden border border-emerald-500/20 bg-white/[0.02] backdrop-blur-sm">
-                        <div className="bg-gradient-to-r from-emerald-600/90 to-teal-600/80 px-6 py-4 flex items-center gap-3">
-                          <Sparkles className="w-5 h-5 text-white/90" />
-                          <h3 className="text-white font-semibold text-sm tracking-wide">Tu camino transformador</h3>
-                        </div>
-                        <div className="p-6 space-y-3">
-                          {aiAnalysis.autoanalisis_usuario.cierre_transformador.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                        )
+                      })
+                    })()}
                   </div>
                 </motion.div>
               )}
@@ -2498,335 +2379,143 @@ const RadiografiaPremiumPage = () => {
                   }))
                 return (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  {/* ── Premium section divider ── */}
-                  <div className="relative text-center py-10 mb-8">
-                    <div className="absolute inset-0 bg-gradient-to-b from-violet-500/[0.04] via-fuchsia-500/[0.02] to-transparent rounded-3xl" />
-                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-500/30 to-transparent" />
-                    <div className="relative">
-                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/15 border border-violet-500/25 mb-4">
-                        <Brain className="w-6 h-6 text-violet-400/70" />
-                      </div>
-                      <p className="text-violet-300/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Sección Premium</p>
-                      <h2 className="text-xl lg:text-2xl font-light text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-fuchsia-300 tracking-wide">Análisis por Enfoque Psicológico</h2>
-                      <p className="text-white/35 text-sm font-light mt-2 max-w-md mx-auto">11 perspectivas teóricas que iluminan cada dimensión de tu vínculo</p>
-                    </div>
-                    <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent" />
-                  </div>
+                  {/* ── 6 Capas temáticas: cada una con su gráfica y autores ── */}
 
-                  {/* ── 3 Selectable chart views — professional ── */}
-                  {radarData.length > 0 && (
-                    <div className="mb-10 p-6 lg:p-8 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.03] via-fuchsia-500/[0.02] to-transparent relative overflow-hidden">
-                      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.06),transparent_70%)]" />
-                      <div className="relative">
-                        <p className="text-white/50 text-xs font-medium uppercase tracking-wider mb-2 text-center">Mapa Integral de Corrientes</p>
-                        <p className="text-white/30 text-[11px] font-light text-center mb-1">Los 11 enfoques psicológicos que analizan tu relación — cada eje mide la puntuación según esa corriente</p>
-                        <p className="text-white/20 text-[10px] font-light text-center mb-5">Pasa el cursor sobre cada punto para ver qué mide y su puntuación</p>
-
-                        {/* Chart selector tabs */}
-                        <div className="flex items-center justify-center gap-2 mb-6">
-                          {[
-                            { id: 'radar', label: '◎ Radar' },
-                            { id: 'bubbles', label: '◉ Burbujas' },
-                            { id: 'bars', label: '▮ Barras' }
-                          ].map(tab => (
-                            <button key={tab.id} onClick={() => setChartViewMode(tab.id)}
-                              className={`px-5 py-2.5 rounded-xl text-xs font-medium transition-all duration-300 ${chartViewMode === tab.id
-                                ? 'bg-gradient-to-r from-violet-500/25 to-fuchsia-500/20 border border-violet-500/40 text-violet-200/90 shadow-lg shadow-violet-500/15'
-                                : 'border border-white/8 bg-white/[0.02] text-white/35 hover:text-white/55 hover:border-white/15'}`}>
-                              {tab.label}
-                            </button>
+                  {/* ── CAPA 1: Tu relación en una mirada ── */}
+                  {aiAnalysis.dimensiones && (
+                    <div className="space-y-6">
+                      <div className="text-center py-6">
+                        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-indigo-500/15 border border-violet-500/25 mb-4 shadow-lg shadow-violet-500/10">
+                          <Eye className="w-7 h-7 text-violet-400/80" />
+                        </div>
+                        <p className="text-violet-300/50 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Capa 1 — Impacto inmediato</p>
+                        <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-indigo-300 tracking-wide">Tu relación en una mirada</h2>
+                        <p className="text-white/40 text-sm font-light mt-2 max-w-lg mx-auto">Un retrato claro de tu vínculo. Lo que más fascina al inicio: ver tu relación reflejada en un solo mapa.</p>
+                        <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+                          {['Intimidad emocional', 'Pasión / deseo', 'Compromiso', 'Seguridad de apego', 'Regulación del conflicto', 'Diferenciación del self', 'Equilibrio de poder'].map(tag => (
+                            <span key={tag} className="px-3 py-1 rounded-full border border-violet-500/15 bg-violet-500/[0.06] text-violet-300/70 text-[11px] font-light">{tag}</span>
                           ))}
                         </div>
-
-                        {/* Chart: Radar view — with gradient fill + glow dots — BIGGER */}
-                        {chartViewMode === 'radar' && (
-                          <ResponsiveContainer width="100%" height={520}>
-                            <RechartRadar cx="50%" cy="50%" outerRadius="78%" data={radarData}>
-                              <defs>
-                                <radialGradient id="radarAreaGrad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-                                  <stop offset="0%" stopColor="rgba(139,92,246,0.35)" />
-                                  <stop offset="100%" stopColor="rgba(139,92,246,0.05)" />
-                                </radialGradient>
-                                <filter id="glow">
-                                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                                  <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                                </filter>
-                              </defs>
-                              <PolarGrid stroke="rgba(255,255,255,0.06)" radialLines={false} />
-                              <PolarAngleAxis dataKey="subject" tick={{ fill: 'rgba(255,255,255,0.55)', fontSize: 11, fontWeight: 400 }} />
-                              <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: 'rgba(255,255,255,0.12)', fontSize: 9 }} axisLine={false} />
-                              <Radar name="Puntuación" dataKey="score" stroke="rgba(139,92,246,0.9)" fill="url(#radarAreaGrad)" strokeWidth={2.5}
-                                dot={{ r: 5, fill: '#a78bfa', fillOpacity: 1, stroke: '#8b5cf6', strokeWidth: 2, filter: 'url(#glow)' }}
-                                activeDot={{ r: 7, fill: '#c084fc', stroke: '#8b5cf6', strokeWidth: 2 }} />
-                              <Tooltip
-                                content={({ active, payload }) => {
-                                  if (!active || !payload?.[0]) return null
-                                  const d = payload[0].payload
-                                  return (
-                                    <div style={{ background: 'rgba(10,10,18,0.96)', border: '1px solid rgba(139,92,246,0.3)', borderRadius: '14px', padding: '12px 16px', boxShadow: '0 8px 32px rgba(139,92,246,0.15)', maxWidth: '250px' }}>
-                                      <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '14px', fontWeight: 600, margin: 0 }}>{d.subject} — {d.score}%</p>
-                                      {d.enfoque && <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px', margin: '6px 0 0', lineHeight: '1.5' }}>Mide: {d.enfoque}</p>}
-                                    </div>
-                                  )
-                                }}
-                              />
-                            </RechartRadar>
-                          </ResponsiveContainer>
-                        )}
-
-                        {/* Chart: Bubbles view — D3-style packed circles */}
-                        {chartViewMode === 'bubbles' && (
-                          <div className="flex justify-center py-4">
-                            <svg viewBox="0 0 420 420" className="w-full max-w-md" style={{ filter: 'drop-shadow(0 0 20px rgba(139,92,246,0.1))' }}>
-                              {(() => {
-                                const sorted = [...radarData].sort((a, b) => b.score - a.score)
-                                const cx = 210, cy = 210
-                                const positions = []
-                                sorted.forEach((d, i) => {
-                                  const radius = 18 + (d.score / 100) * 32
-                                  let x, y, attempts = 0, placed = false
-                                  if (i === 0) { x = cx; y = cy; placed = true }
-                                  while (!placed && attempts < 200) {
-                                    const angle = (i / sorted.length) * Math.PI * 2 + attempts * 0.3
-                                    const dist = 50 + attempts * 3.5
-                                    x = cx + dist * Math.cos(angle)
-                                    y = cy + dist * Math.sin(angle)
-                                    const overlap = positions.some(p => {
-                                      const dx = x - p.x, dy = y - p.y
-                                      return Math.sqrt(dx * dx + dy * dy) < radius + p.radius + 6
-                                    })
-                                    if (!overlap && x > radius + 5 && x < 420 - radius - 5 && y > radius + 5 && y < 420 - radius - 5) placed = true
-                                    else attempts++
-                                  }
-                                  if (!placed) { x = cx + (i % 2 ? 1 : -1) * (40 + i * 20); y = cy + (i % 3 - 1) * 40 }
-                                  positions.push({ ...d, x, y, radius })
-                                })
-                                return positions.map((d, i) => (
-                                  <g key={i}>
-                                    <circle cx={d.x} cy={d.y} r={d.radius}
-                                      fill={`${d.fill}20`} stroke={`${d.fill}50`} strokeWidth={1.5} />
-                                    <text x={d.x} y={d.y - 6} textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize={d.radius > 30 ? '10' : '9'} fontWeight="400">
-                                      {d.subject}
-                                    </text>
-                                    <text x={d.x} y={d.y + 8} textAnchor="middle" fill={d.fill} fontSize="11" fontWeight="600">
-                                      {d.score}%
-                                    </text>
-                                  </g>
-                                ))
-                              })()}
-                            </svg>
-                          </div>
-                        )}
-
-                        {/* Chart: Bars view — horizontal with individual gradients + score labels */}
-                        {chartViewMode === 'bars' && (
-                          <div>
-                            <ResponsiveContainer width="100%" height={radarData.length * 44 + 20}>
-                              <BarChart data={radarData} margin={{ top: 5, right: 40, left: 0, bottom: 5 }} layout="vertical" barCategoryGap="20%">
-                                <defs>
-                                  {AUTHOR_CONFIG.map((a, i) => (
-                                    <linearGradient key={a.key} id={`barGrad${i}`} x1="0" y1="0" x2="1" y2="0">
-                                      <stop offset="0%" stopColor={a.barFill} stopOpacity={0.9} />
-                                      <stop offset="100%" stopColor={a.barFill} stopOpacity={0.4} />
-                                    </linearGradient>
-                                  ))}
-                                </defs>
-                                <XAxis type="number" domain={[0, 100]} tick={{ fill: 'rgba(255,255,255,0.15)', fontSize: 10 }} axisLine={false} tickLine={false} />
-                                <YAxis dataKey="subject" type="category"
-                                  tick={{ fill: 'rgba(255,255,255,0.55)', fontSize: 11, fontWeight: 400 }}
-                                  axisLine={false} tickLine={false} width={115} />
-                                <Tooltip
-                                  content={({ active, payload }) => {
-                                    if (!active || !payload?.[0]) return null
-                                    const d = payload[0].payload
-                                    return (
-                                      <div style={{ background: 'rgba(10,10,18,0.96)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '14px', padding: '10px 14px', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}>
-                                        <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', fontWeight: 500, margin: 0 }}>{d.subject} — {d.score}%</p>
-                                        {d.enfoque && <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '11px', margin: '4px 0 0', maxWidth: '220px' }}>{d.enfoque}</p>}
-                                      </div>
-                                    )
-                                  }}
-                                  cursor={{ fill: 'rgba(255,255,255,0.02)', radius: 8 }}
-                                />
-                                <Bar dataKey="score" radius={[0, 10, 10, 0]} maxBarSize={22} label={{ position: 'right', fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: 500, formatter: (v) => `${v}%` }}>
-                                  {radarData.map((entry, i) => (
-                                    <Cell key={i} fill={`url(#barGrad${i})`} />
-                                  ))}
-                                </Bar>
-                              </BarChart>
-                            </ResponsiveContainer>
-                          </div>
-                        )}
                       </div>
-                    </div>
-                  )}
 
-                  {/* ── Author cards grouped by 6 thematic layers ── */}
-                  {AUTHOR_LAYERS.map((layer) => {
-                    const layerAuthors = AUTHOR_CONFIG.filter(a => layer.authors.includes(a.key))
-                    const hasData = layerAuthors.some(a => aiAnalysis.lecturas_por_enfoque[a.key])
-                    if (!hasData) return null
-                    const LayerIcon = layer.icon
-                    const layerGradients = {
-                      forma: 'from-violet-600/90 to-indigo-600/80', conflicto: 'from-blue-600/90 to-cyan-600/80',
-                      apego: 'from-amber-600/90 to-yellow-600/80', profundo: 'from-purple-600/90 to-fuchsia-600/80',
-                      erotismo: 'from-pink-600/90 to-rose-600/80', lenguaje: 'from-red-600/90 to-orange-600/80'
-                    }
-                    const layerBorders = {
-                      forma: 'border-violet-500/15', conflicto: 'border-blue-500/15',
-                      apego: 'border-amber-500/15', profundo: 'border-purple-500/15',
-                      erotismo: 'border-pink-500/15', lenguaje: 'border-red-500/15'
-                    }
-                    return (
-                      <div key={layer.id} className="space-y-6">
-                        {/* Layer header — premium card style */}
-                        <div className={`rounded-2xl overflow-hidden border ${layerBorders[layer.id] || 'border-white/10'} bg-white/[0.02]`}>
-                          <div className={`bg-gradient-to-r ${layerGradients[layer.id] || 'from-violet-600/90 to-fuchsia-600/80'} px-6 py-5 text-center`}>
-                            <LayerIcon className="w-6 h-6 text-white/90 mx-auto mb-2" strokeWidth={1.5} />
-                            <h3 className="text-base font-semibold text-white tracking-wide">{layer.title}</h3>
-                            <p className="text-white/70 text-xs font-light mt-0.5">{layer.subtitle}</p>
-                          </div>
-                        </div>
+                      {/* Radar Chart — perfil global */}
+                      <RadarChart dimensiones={aiAnalysis.dimensiones} />
 
-                        {/* Layer-specific mini-chart */}
-                        {layer.chartType === 'polar' && aiAnalysis.lecturas_por_enfoque.levine && (
-                          <div className="p-4 rounded-2xl border border-amber-500/10 bg-amber-500/[0.02]">
-                            <PolarMiniChart data={aiAnalysis.lecturas_por_enfoque.levine} />
+                      {/* Leyenda de dimensiones */}
+                      <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 px-4">
+                        {Object.entries(DIMENSION_LABELS).map(([key, label], i) => (
+                          <div key={key} className="flex items-center gap-2">
+                            <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: DIMENSION_COLORS[i] }} />
+                            <span className="text-white/60 text-xs font-light">{label}</span>
+                            <span className="text-white/80 text-xs font-semibold tabular-nums">{aiAnalysis.dimensiones[key] ?? 0}%</span>
                           </div>
-                        )}
-                        {layer.chartType === 'lollipop' && aiAnalysis.energia_vinculo && (
-                          <div className="p-4 rounded-2xl border border-pink-500/10 bg-pink-500/[0.02]">
-                            <LollipopMiniChart data={aiAnalysis.energia_vinculo} />
-                          </div>
-                        )}
-                        {layer.chartType === 'network' && aiAnalysis.lectura_psicoanalitica && (
-                          <div className="p-4 rounded-2xl border border-purple-500/10 bg-purple-500/[0.02]">
-                            <NetworkMiniChart lectura={aiAnalysis.lectura_psicoanalitica} />
-                          </div>
-                        )}
-                        {layer.chartType === 'radar' && aiAnalysis.dimensiones && (
-                          <div className="p-4 rounded-2xl border border-blue-500/10 bg-blue-500/[0.02]">
-                            <div className="max-w-xs mx-auto">
-                              <RadarChart dimensiones={aiAnalysis.dimensiones} />
+                        ))}
+                      </div>
+
+                      {/* Autores que sustentan esta capa */}
+                      <div className="flex flex-wrap items-center justify-center gap-2 pt-4">
+                        <span className="text-white/30 text-[10px] uppercase tracking-wider font-medium">Sustentado por:</span>
+                        {['Robert Sternberg', 'Amir Levine', 'David Schnarch', 'Terrence Real'].map(a => (
+                          <span key={a} className="px-2.5 py-1 rounded-lg border border-white/8 bg-white/[0.03] text-white/50 text-[11px] font-light">{a}</span>
+                        ))}
+                      </div>
+
+                      {/* Interpretaciones de autores de esta capa */}
+                      {['sternberg', 'levine', 'schnarch', 'real'].map(authorKey => {
+                        const data = aiAnalysis.lecturas_por_enfoque?.[authorKey]
+                        if (!data) return null
+                        const cfg = AUTHOR_CONFIG.find(a => a.key === authorKey)
+                        if (!cfg) return null
+                        const AuthIcon = cfg.icon
+                        const score = data.puntuacion ?? 50
+                        return (
+                          <div key={authorKey} className={`p-6 rounded-2xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} to-transparent`}>
+                            <div className="flex items-center gap-3 mb-3">
+                              <div className={`w-9 h-9 rounded-xl ${cfg.iconBg} border flex items-center justify-center`}>
+                                <AuthIcon className={`w-4 h-4 ${cfg.iconColor}`} strokeWidth={1.5} />
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-white/80 text-sm font-semibold">{data.titulo}</h4>
+                                <p className="text-white/35 text-xs font-light">{data.enfoque}</p>
+                              </div>
+                              <span className="text-white/60 text-sm font-semibold tabular-nums">{score}%</span>
                             </div>
-                          </div>
-                        )}
-                        {layer.chartType === 'sankey' && aiAnalysis.dimensiones && (
-                          <div className="p-4 rounded-2xl border border-orange-500/10 bg-orange-500/[0.02]">
-                            <DimensionSankey dimensiones={aiAnalysis.dimensiones} />
-                          </div>
-                        )}
-                        {layer.chartType === 'bar' && (() => {
-                          const chapmanData = aiAnalysis.lecturas_por_enfoque.chapman
-                          const realData = aiAnalysis.lecturas_por_enfoque.real
-                          const barItems = [
-                            chapmanData && { label: chapmanData.lenguaje_usuario || 'Tu lenguaje', val: chapmanData.puntuacion ?? 50, color: '#ef4444' },
-                            chapmanData && { label: chapmanData.lenguaje_pareja || 'Su lenguaje', val: chapmanData.puntuacion ?? 50, color: '#f87171' },
-                            realData && { label: 'Poder relacional', val: realData.puntuacion ?? 50, color: '#22d3ee' }
-                          ].filter(Boolean)
-                          if (barItems.length === 0) return null
-                          return (
-                            <div className="p-4 rounded-2xl border border-red-500/10 bg-red-500/[0.02]">
-                              <div className="space-y-3 py-2">
-                                {barItems.map((item, i) => (
-                                  <div key={i} className="flex items-center gap-3">
-                                    <span className="text-white/40 text-xs font-light w-28 text-right truncate">{item.label}</span>
-                                    <div className="flex-1 h-3 bg-white/[0.06] rounded-full overflow-hidden">
-                                      <div className="h-full rounded-full" style={{ width: `${item.val}%`, backgroundColor: item.color, opacity: 0.6 }} />
+                            {authorKey === 'sternberg' && (
+                              <div className="grid grid-cols-3 gap-3 mb-4">
+                                {[{ label: 'Intimidad', val: data.puntuacion_intimidad ?? 50 }, { label: 'Pasión', val: data.puntuacion_pasion ?? 50 }, { label: 'Compromiso', val: data.puntuacion_compromiso ?? 50 }].map(({ label, val }) => (
+                                  <div key={label} className="text-center">
+                                    <p className="text-white/50 text-[11px] font-light mb-1">{label}</p>
+                                    <div className="h-2 bg-white/[0.06] rounded-full overflow-hidden">
+                                      <div className={`h-full rounded-full ${val >= 60 ? 'bg-emerald-500' : val >= 40 ? 'bg-amber-500' : 'bg-red-500'}`} style={{ width: `${val}%`, opacity: 0.7 }} />
                                     </div>
-                                    <span className="text-white/60 text-xs font-medium w-10 tabular-nums">{item.val}%</span>
+                                    <p className="text-white/60 text-xs font-semibold mt-1">{val}%</p>
                                   </div>
                                 ))}
                               </div>
-                            </div>
-                          )
-                        })()}
-
-                        {/* Author cards within this layer */}
-                        <div className="grid grid-cols-1 gap-6">
-                    {layerAuthors.map(({ key, icon: Icon, border, bg, line, iconBg, iconColor, barFill }) => {
-                      const data = aiAnalysis.lecturas_por_enfoque[key]
-                      if (!data) return null
-                      const score = data.puntuacion ?? 50
-                      const barColor = score >= 60 ? 'bg-emerald-500' : score >= 40 ? 'bg-amber-500' : 'bg-red-500'
-                      const isSternberg = key === 'sternberg'
-                      const isFreudLacan = key === 'freud_lacan'
-                      const isChapman = key === 'chapman'
-                      const isLevine = key === 'levine'
-                      const isGottman = key === 'gottman'
-                      const displayTitle = isFreudLacan ? 'Psicoanálisis' : data.titulo
-                      const displaySubtitle = isFreudLacan ? 'Fantasma relacional, mecanismos de defensa y patrones inconscientes' : data.enfoque
-
-                      /* Bold-initial renderer: first sentence bold, rest normal */
-                      const renderBoldInitial = (text) => {
-                        if (!text) return null
-                        const firstDot = text.indexOf('.')
-                        if (firstDot > 0 && firstDot < 120) {
-                          return <><strong className="text-white/65 font-semibold">{stripBold(text.slice(0, firstDot + 1))}</strong>{' '}<span>{stripBold(text.slice(firstDot + 1).trim())}</span></>
-                        }
-                        const words = text.split(' ')
-                        if (words.length > 3) {
-                          return <><strong className="text-white/65 font-semibold">{stripBold(words.slice(0, 3).join(' '))}:</strong>{' '}<span>{stripBold(words.slice(3).join(' '))}</span></>
-                        }
-                        return stripBold(text)
-                      }
-
-                      return (
-                        <motion.div key={key}
-                          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                          className={`p-6 md:p-8 rounded-2xl border ${border} bg-gradient-to-br ${bg} to-transparent relative overflow-hidden`}>
-                          <div className={`absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r ${line} to-transparent`} />
-
-                          {/* Header row: icon + title + score badge */}
-                          <div className="flex items-start justify-between mb-5">
-                            <div className="flex items-center gap-3">
-                              <div className={`w-10 h-10 rounded-xl ${iconBg} border flex items-center justify-center`}>
-                                <Icon className={`w-5 h-5 ${iconColor}`} strokeWidth={1.5} />
-                              </div>
-                              <div>
-                                <h3 className="text-white/80 text-base font-semibold">{displayTitle}</h3>
-                                <p className="text-white/35 text-xs font-light mt-0.5 max-w-md">{displaySubtitle}</p>
-                              </div>
-                            </div>
-                            {!isSternberg && (
-                              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border ${border} bg-white/[0.02]`}>
-                                <div className={`w-2 h-2 rounded-full ${barColor}`} style={{ opacity: 0.8 }} />
-                                <span className="text-white/65 text-sm font-semibold tabular-nums">{score}%</span>
+                            )}
+                            {data.interpretacion && (
+                              <div className="space-y-2 mt-3">
+                                {data.interpretacion.split('\n\n').map((p, i) => (
+                                  <p key={i} className="text-white/65 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
+                                ))}
                               </div>
                             )}
                           </div>
+                        )
+                      })}
+                    </div>
+                  )}
 
-                          {/* Score bar — Sternberg triple, others single */}
-                          {isSternberg ? (
-                            <div className="grid grid-cols-3 gap-3 mb-5">
-                              {[
-                                { label: 'Intimidad', val: data.puntuacion_intimidad ?? 50 },
-                                { label: 'Pasión', val: data.puntuacion_pasion ?? 50 },
-                                { label: 'Compromiso', val: data.puntuacion_compromiso ?? 50 }
-                              ].map(({ label, val }) => (
-                                <div key={label} className="text-center">
-                                  <p className="text-white/50 text-[11px] font-light mb-1.5">{label}</p>
-                                  <div className="h-2 bg-white/[0.06] rounded-full overflow-hidden">
-                                    <div className={`h-full rounded-full ${val >= 60 ? 'bg-emerald-500' : val >= 40 ? 'bg-amber-500' : 'bg-red-500'}`}
-                                      style={{ width: `${val}%`, opacity: 0.7 }} />
-                                  </div>
-                                  <p className="text-white/60 text-xs font-semibold mt-1">{val}%</p>
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <div className="flex items-center gap-3 mb-5">
-                              <div className="flex-1 h-2 bg-white/[0.06] rounded-full overflow-hidden">
-                                <div className={`h-full rounded-full ${barColor}`} style={{ width: `${score}%`, opacity: 0.7 }} />
+                  {/* ── CAPA 2: La dinámica que se repite ── */}
+                  {aiAnalysis.dimensiones && (
+                    <div className="space-y-6">
+                      <div className="text-center py-6">
+                        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/15 border border-blue-500/25 mb-4 shadow-lg shadow-blue-500/10">
+                          <Shield className="w-7 h-7 text-blue-400/80" />
+                        </div>
+                        <p className="text-blue-300/50 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Capa 2 — Mapa de procesos</p>
+                        <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-cyan-300 tracking-wide">La dinámica que se repite</h2>
+                        <p className="text-white/40 text-sm font-light mt-2 max-w-lg mx-auto">¿Por qué siempre terminamos en lo mismo? Aquí ves la secuencia de tu conflicto como un sistema visual.</p>
+                        <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+                          {['Crítica', 'Desprecio', 'Defensividad', 'Evasión', 'Persecución–retirada', 'Intentos de reparación', 'Ratio positivo/negativo'].map(tag => (
+                            <span key={tag} className="px-3 py-1 rounded-full border border-blue-500/15 bg-blue-500/[0.06] text-blue-300/70 text-[11px] font-light">{tag}</span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Sankey Diagram — flujo del conflicto */}
+                      <DimensionSankey dimensiones={aiAnalysis.dimensiones} />
+
+                      {/* Autores */}
+                      <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                        <span className="text-white/30 text-[10px] uppercase tracking-wider font-medium">Sustentado por:</span>
+                        {['John Gottman', 'Sue Johnson', 'Stan Tatkin'].map(a => (
+                          <span key={a} className="px-2.5 py-1 rounded-lg border border-white/8 bg-white/[0.03] text-white/50 text-[11px] font-light">{a}</span>
+                        ))}
+                      </div>
+
+                      {/* Interpretaciones */}
+                      {['gottman', 'sue_johnson', 'tatkin'].map(authorKey => {
+                        const data = aiAnalysis.lecturas_por_enfoque?.[authorKey]
+                        if (!data) return null
+                        const cfg = AUTHOR_CONFIG.find(a => a.key === authorKey)
+                        if (!cfg) return null
+                        const AuthIcon = cfg.icon
+                        const score = data.puntuacion ?? 50
+                        return (
+                          <div key={authorKey} className={`p-6 rounded-2xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} to-transparent`}>
+                            <div className="flex items-center gap-3 mb-3">
+                              <div className={`w-9 h-9 rounded-xl ${cfg.iconBg} border flex items-center justify-center`}>
+                                <AuthIcon className={`w-4 h-4 ${cfg.iconColor}`} strokeWidth={1.5} />
                               </div>
+                              <div className="flex-1">
+                                <h4 className="text-white/80 text-sm font-semibold">{data.titulo}</h4>
+                                <p className="text-white/35 text-xs font-light">{data.enfoque}</p>
+                              </div>
+                              <span className="text-white/60 text-sm font-semibold tabular-nums">{score}%</span>
                             </div>
-                          )}
-
-                          {/* Specialized visualizations */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-                            {/* Left column: special vis if any */}
-                            {isGottman && data.indicadores && data.indicadores.length >= 4 && (
-                              <div className="p-4 rounded-xl border border-blue-500/10 bg-blue-500/[0.03] space-y-2.5">
+                            {authorKey === 'gottman' && data.indicadores && data.indicadores.length >= 4 && (
+                              <div className="p-4 rounded-xl border border-blue-500/10 bg-blue-500/[0.03] space-y-2.5 mb-4">
                                 <p className="text-blue-300/60 text-[10px] font-medium uppercase tracking-wider">Los 4 jinetes</p>
                                 {['Crítica', 'Desprecio', 'Actitud defensiva', 'Evasión'].map((jinete, idx) => (
                                   <div key={jinete} className="flex items-center gap-2">
@@ -2838,173 +2527,350 @@ const RadiografiaPremiumPage = () => {
                                 ))}
                               </div>
                             )}
-
-                            {isSternberg && (
-                              <div className="flex justify-center items-center p-4 rounded-xl border border-violet-500/10 bg-violet-500/[0.03]">
-                                <svg viewBox="0 0 200 180" className="w-44 h-40">
-                                  <polygon points="100,15 15,165 185,165" fill="none" stroke="rgba(139,92,246,0.15)" strokeWidth="1.5" />
-                                  <polygon
-                                    points={`100,${15 + (100 - (data.puntuacion_intimidad ?? 50)) * 0.75} ${15 + (100 - (data.puntuacion_pasion ?? 50)) * 0.85},165 ${185 - (100 - (data.puntuacion_compromiso ?? 50)) * 0.85},165`}
-                                    fill="rgba(139,92,246,0.12)" stroke="rgba(139,92,246,0.5)" strokeWidth="1.5" />
-                                  <text x="100" y="10" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="9" fontWeight="300">Intimidad</text>
-                                  <text x="5" y="178" textAnchor="start" fill="rgba(255,255,255,0.4)" fontSize="9" fontWeight="300">Pasión</text>
-                                  <text x="195" y="178" textAnchor="end" fill="rgba(255,255,255,0.4)" fontSize="9" fontWeight="300">Compromiso</text>
-                                </svg>
+                            {data.interpretacion && (
+                              <div className="space-y-2 mt-3">
+                                {data.interpretacion.split('\n\n').map((p, i) => (
+                                  <p key={i} className="text-white/65 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
+                                ))}
                               </div>
                             )}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
 
-                            {isChapman && (data.lenguaje_usuario || data.lenguaje_pareja) && (
-                              <>
+                  {/* ── CAPA 3: Tu estilo de apego ── */}
+                  {aiAnalysis.lecturas_por_enfoque?.levine && (
+                    <div className="space-y-6">
+                      <div className="text-center py-6">
+                        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500/20 to-yellow-500/15 border border-amber-500/25 mb-4 shadow-lg shadow-amber-500/10">
+                          <Anchor className="w-7 h-7 text-amber-400/80" />
+                        </div>
+                        <p className="text-amber-300/50 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Capa 3 — Identidad emocional</p>
+                        <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-yellow-300 tracking-wide">Tu estilo de apego</h2>
+                        <p className="text-white/40 text-sm font-light mt-2 max-w-lg mx-auto">¿Qué tipo de pareja eres? Tu forma de vincularte y cuánta cercanía toleras.</p>
+                        <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+                          {['Ansiedad relacional', 'Evitación', 'Tolerancia a la intimidad', 'Búsqueda de seguridad'].map(tag => (
+                            <span key={tag} className="px-3 py-1 rounded-full border border-amber-500/15 bg-amber-500/[0.06] text-amber-300/70 text-[11px] font-light">{tag}</span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Polar Chart — estilo de apego */}
+                      <PolarMiniChart data={aiAnalysis.lecturas_por_enfoque.levine} />
+
+                      {/* Autores */}
+                      <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                        <span className="text-white/30 text-[10px] uppercase tracking-wider font-medium">Sustentado por:</span>
+                        {['John Bowlby', 'Amir Levine', 'Sue Johnson'].map(a => (
+                          <span key={a} className="px-2.5 py-1 rounded-lg border border-white/8 bg-white/[0.03] text-white/50 text-[11px] font-light">{a}</span>
+                        ))}
+                      </div>
+
+                      {/* Estilo detectado + interpretación */}
+                      {(() => {
+                        const data = aiAnalysis.lecturas_por_enfoque.levine
+                        if (!data) return null
+                        return (
+                          <div className="p-6 rounded-2xl border border-amber-500/10 bg-gradient-to-br from-amber-500/[0.02] to-transparent">
+                            <div className="flex items-center gap-3 mb-3">
+                              <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/15 flex items-center justify-center">
+                                <Anchor className="w-4 h-4 text-amber-400/60" strokeWidth={1.5} />
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-white/80 text-sm font-semibold">{data.titulo || 'Amir Levine'}</h4>
+                                {data.estilo_apego && <p className="text-amber-300/70 text-xs font-medium mt-0.5">Estilo detectado: {data.estilo_apego}</p>}
+                              </div>
+                              <span className="text-white/60 text-sm font-semibold tabular-nums">{data.puntuacion ?? 50}%</span>
+                            </div>
+                            {data.interpretacion && (
+                              <div className="space-y-2 mt-3">
+                                {data.interpretacion.split('\n\n').map((p, i) => (
+                                  <p key={i} className="text-white/65 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )
+                      })()}
+                    </div>
+                  )}
+
+                  {/* ── CAPA 4: El sistema profundo de la relación ── */}
+                  {(aiAnalysis.lecturas_por_enfoque?.freud_lacan || aiAnalysis.lecturas_por_enfoque?.hendrix) && (
+                    <div className="space-y-6">
+                      <div className="text-center py-6">
+                        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500/20 to-fuchsia-500/15 border border-purple-500/25 mb-4 shadow-lg shadow-purple-500/10">
+                          <Brain className="w-7 h-7 text-purple-400/80" />
+                        </div>
+                        <p className="text-purple-300/50 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Capa 4 — Inconsciente relacional</p>
+                        <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-fuchsia-300 tracking-wide">El sistema profundo</h2>
+                        <p className="text-white/40 text-sm font-light mt-2 max-w-lg mx-auto">Parece un mapa de tu inconsciente relacional: herida infantil, elección reparadora y compulsión de repetición.</p>
+                        <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+                          {['Herida infantil', 'Elección reparadora', 'Proyección parental', 'Compulsión de repetición'].map(tag => (
+                            <span key={tag} className="px-3 py-1 rounded-full border border-purple-500/15 bg-purple-500/[0.06] text-purple-300/70 text-[11px] font-light">{tag}</span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Network Graph */}
+                      {aiAnalysis.lectura_psicoanalitica && (
+                        <NetworkMiniChart lectura={aiAnalysis.lectura_psicoanalitica} />
+                      )}
+
+                      {/* Autores */}
+                      <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                        <span className="text-white/30 text-[10px] uppercase tracking-wider font-medium">Sustentado por:</span>
+                        {['Sigmund Freud', 'Jacques Lacan', 'Harville Hendrix'].map(a => (
+                          <span key={a} className="px-2.5 py-1 rounded-lg border border-white/8 bg-white/[0.03] text-white/50 text-[11px] font-light">{a}</span>
+                        ))}
+                      </div>
+
+                      {/* Interpretaciones de autores profundos */}
+                      {['freud_lacan', 'hendrix', 'schnarch'].map(authorKey => {
+                        const data = aiAnalysis.lecturas_por_enfoque?.[authorKey]
+                        if (!data) return null
+                        const cfg = AUTHOR_CONFIG.find(a => a.key === authorKey)
+                        if (!cfg) return null
+                        const AuthIcon = cfg.icon
+                        return (
+                          <div key={authorKey} className={`p-6 rounded-2xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} to-transparent`}>
+                            <div className="flex items-center gap-3 mb-3">
+                              <div className={`w-9 h-9 rounded-xl ${cfg.iconBg} border flex items-center justify-center`}>
+                                <AuthIcon className={`w-4 h-4 ${cfg.iconColor}`} strokeWidth={1.5} />
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-white/80 text-sm font-semibold">{authorKey === 'freud_lacan' ? 'Psicoanálisis' : data.titulo}</h4>
+                                <p className="text-white/35 text-xs font-light">{data.enfoque}</p>
+                              </div>
+                              <span className="text-white/60 text-sm font-semibold tabular-nums">{data.puntuacion ?? 50}%</span>
+                            </div>
+                            {authorKey === 'freud_lacan' ? (
+                              <div className="space-y-4 mt-3">
+                                {data.interpretacion_freud && (
+                                  <div className="pl-4 border-l-2 border-purple-500/20 space-y-2">
+                                    <p className="text-purple-300/50 text-[10px] font-medium uppercase tracking-wider">Lectura freudiana</p>
+                                    {data.interpretacion_freud.split('\n\n').map((p, i) => (
+                                      <p key={i} className="text-white/65 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
+                                    ))}
+                                  </div>
+                                )}
+                                {data.interpretacion_lacan && (
+                                  <div className="pl-4 border-l-2 border-indigo-500/20 space-y-2">
+                                    <p className="text-indigo-300/50 text-[10px] font-medium uppercase tracking-wider">Lectura lacaniana</p>
+                                    {data.interpretacion_lacan.split('\n\n').map((p, i) => (
+                                      <p key={i} className="text-white/65 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
+                                    ))}
+                                  </div>
+                                )}
+                                {data.interpretacion && !data.interpretacion_freud && (
+                                  <div className="space-y-2">
+                                    {data.interpretacion.split('\n\n').map((p, i) => (
+                                      <p key={i} className="text-white/65 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            ) : data.interpretacion ? (
+                              <div className="space-y-2 mt-3">
+                                {data.interpretacion.split('\n\n').map((p, i) => (
+                                  <p key={i} className="text-white/65 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
+                                ))}
+                              </div>
+                            ) : null}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+
+                  {/* ── CAPA 5: Erotismo y deseo ── */}
+                  {aiAnalysis.lecturas_por_enfoque?.perel && (
+                    <div className="space-y-6">
+                      <div className="text-center py-6">
+                        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500/20 to-rose-500/15 border border-pink-500/25 mb-4 shadow-lg shadow-pink-500/10">
+                          <Flame className="w-7 h-7 text-pink-400/80" />
+                        </div>
+                        <p className="text-pink-300/50 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Capa 5 — Vida erótica</p>
+                        <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-rose-300 tracking-wide">Erotismo y deseo</h2>
+                        <p className="text-white/40 text-sm font-light mt-2 max-w-lg mx-auto">La tensión entre seguridad y aventura. El deseo necesita misterio, novedad y autonomía para sobrevivir.</p>
+                        <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+                          {['Novedad', 'Misterio', 'Autonomía', 'Domesticidad'].map(tag => (
+                            <span key={tag} className="px-3 py-1 rounded-full border border-pink-500/15 bg-pink-500/[0.06] text-pink-300/70 text-[11px] font-light">{tag}</span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Lollipop Chart */}
+                      {aiAnalysis.energia_vinculo && (
+                        <LollipopMiniChart data={aiAnalysis.energia_vinculo} />
+                      )}
+
+                      {/* Autor */}
+                      <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                        <span className="text-white/30 text-[10px] uppercase tracking-wider font-medium">Sustentado por:</span>
+                        <span className="px-2.5 py-1 rounded-lg border border-white/8 bg-white/[0.03] text-white/50 text-[11px] font-light">Esther Perel</span>
+                      </div>
+
+                      {/* Interpretación */}
+                      {(() => {
+                        const data = aiAnalysis.lecturas_por_enfoque.perel
+                        if (!data) return null
+                        return (
+                          <div className="p-6 rounded-2xl border border-pink-500/10 bg-gradient-to-br from-pink-500/[0.02] to-transparent">
+                            <div className="flex items-center gap-3 mb-3">
+                              <div className="w-9 h-9 rounded-xl bg-pink-500/10 border border-pink-500/15 flex items-center justify-center">
+                                <Flame className="w-4 h-4 text-pink-400/60" strokeWidth={1.5} />
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-white/80 text-sm font-semibold">{data.titulo}</h4>
+                                <p className="text-white/35 text-xs font-light">{data.enfoque}</p>
+                              </div>
+                              <span className="text-white/60 text-sm font-semibold tabular-nums">{data.puntuacion ?? 50}%</span>
+                            </div>
+                            {data.interpretacion && (
+                              <div className="space-y-2 mt-3">
+                                {data.interpretacion.split('\n\n').map((p, i) => (
+                                  <p key={i} className="text-white/65 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )
+                      })()}
+                    </div>
+                  )}
+
+                  {/* ── CAPA 6: Lenguaje emocional (opcional) ── */}
+                  {aiAnalysis.lecturas_por_enfoque?.chapman && (
+                    <div className="space-y-6">
+                      <div className="text-center py-6">
+                        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500/20 to-orange-500/15 border border-red-500/25 mb-4 shadow-lg shadow-red-500/10">
+                          <Gift className="w-7 h-7 text-red-400/80" />
+                        </div>
+                        <p className="text-red-300/50 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Capa 6 — Opcional</p>
+                        <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-red-300 to-orange-300 tracking-wide">Lenguaje emocional</h2>
+                        <p className="text-white/40 text-sm font-light mt-2 max-w-lg mx-auto">Cómo das y recibes amor. Los 5 lenguajes del amor aplicados a tu relación.</p>
+                        <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+                          {['Tiempo de calidad', 'Actos de servicio', 'Contacto físico', 'Palabras', 'Regalos'].map(tag => (
+                            <span key={tag} className="px-3 py-1 rounded-full border border-red-500/15 bg-red-500/[0.06] text-red-300/70 text-[11px] font-light">{tag}</span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Bar Chart simple */}
+                      {(() => {
+                        const chapmanData = aiAnalysis.lecturas_por_enfoque.chapman
+                        const realData = aiAnalysis.lecturas_por_enfoque.real
+                        const barItems = [
+                          chapmanData && { label: chapmanData.lenguaje_usuario || 'Tu lenguaje', val: chapmanData.puntuacion ?? 50, color: '#ef4444' },
+                          chapmanData && { label: chapmanData.lenguaje_pareja || 'Su lenguaje', val: chapmanData.puntuacion ?? 50, color: '#f87171' },
+                          realData && { label: 'Poder relacional', val: realData.puntuacion ?? 50, color: '#22d3ee' }
+                        ].filter(Boolean)
+                        if (barItems.length === 0) return null
+                        return (
+                          <div className="space-y-3 py-2">
+                            {barItems.map((item, i) => (
+                              <div key={i} className="flex items-center gap-3">
+                                <span className="text-white/40 text-xs font-light w-28 text-right truncate">{item.label}</span>
+                                <div className="flex-1 h-3 bg-white/[0.06] rounded-full overflow-hidden">
+                                  <div className="h-full rounded-full" style={{ width: `${item.val}%`, backgroundColor: item.color, opacity: 0.6 }} />
+                                </div>
+                                <span className="text-white/60 text-xs font-medium w-10 tabular-nums">{item.val}%</span>
+                              </div>
+                            ))}
+                          </div>
+                        )
+                      })()}
+
+                      {/* Autores */}
+                      <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                        <span className="text-white/30 text-[10px] uppercase tracking-wider font-medium">Sustentado por:</span>
+                        {['Gary Chapman', 'Terrence Real'].map(a => (
+                          <span key={a} className="px-2.5 py-1 rounded-lg border border-white/8 bg-white/[0.03] text-white/50 text-[11px] font-light">{a}</span>
+                        ))}
+                      </div>
+
+                      {/* Interpretaciones */}
+                      {['chapman', 'real'].map(authorKey => {
+                        const data = aiAnalysis.lecturas_por_enfoque?.[authorKey]
+                        if (!data) return null
+                        const cfg = AUTHOR_CONFIG.find(a => a.key === authorKey)
+                        if (!cfg) return null
+                        const AuthIcon = cfg.icon
+                        return (
+                          <div key={authorKey} className={`p-6 rounded-2xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} to-transparent`}>
+                            <div className="flex items-center gap-3 mb-3">
+                              <div className={`w-9 h-9 rounded-xl ${cfg.iconBg} border flex items-center justify-center`}>
+                                <AuthIcon className={`w-4 h-4 ${cfg.iconColor}`} strokeWidth={1.5} />
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-white/80 text-sm font-semibold">{data.titulo}</h4>
+                                <p className="text-white/35 text-xs font-light">{data.enfoque}</p>
+                              </div>
+                              <span className="text-white/60 text-sm font-semibold tabular-nums">{data.puntuacion ?? 50}%</span>
+                            </div>
+                            {authorKey === 'chapman' && (data.lenguaje_usuario || data.lenguaje_pareja) && (
+                              <div className="grid grid-cols-2 gap-3 mb-4">
                                 {data.lenguaje_usuario && (
                                   <div className="px-4 py-3 rounded-xl border border-red-500/10 bg-red-500/[0.04]">
-                                    <p className="text-red-300/60 text-[10px] font-medium uppercase tracking-wider mb-1">Tu lenguaje de amor</p>
+                                    <p className="text-red-300/60 text-[10px] font-medium uppercase tracking-wider mb-1">Tu lenguaje</p>
                                     <p className="text-white/65 text-sm font-light">{data.lenguaje_usuario}</p>
                                   </div>
                                 )}
                                 {data.lenguaje_pareja && (
                                   <div className="px-4 py-3 rounded-xl border border-red-500/10 bg-red-500/[0.04]">
-                                    <p className="text-red-300/60 text-[10px] font-medium uppercase tracking-wider mb-1">Su lenguaje de amor</p>
+                                    <p className="text-red-300/60 text-[10px] font-medium uppercase tracking-wider mb-1">Su lenguaje</p>
                                     <p className="text-white/65 text-sm font-light">{data.lenguaje_pareja}</p>
                                   </div>
                                 )}
-                              </>
-                            )}
-
-                            {isLevine && data.estilo_apego && (
-                              <div className="px-4 py-3 rounded-xl border border-amber-500/10 bg-amber-500/[0.04]">
-                                <p className="text-amber-300/60 text-[10px] font-medium uppercase tracking-wider mb-1">Estilo de apego detectado</p>
-                                <p className="text-white/65 text-sm font-medium">{data.estilo_apego}</p>
                               </div>
                             )}
-                          </div>
-
-                          {/* Indicadores — inline badges with dynamic color coding */}
-                          {data.indicadores && data.indicadores.length > 0 && (
-                            <div className="mb-5">
-                              <p className="text-white/40 text-[10px] font-medium uppercase tracking-wider mb-3">Hallazgos clave</p>
-                              <div className="flex flex-wrap gap-2">
-                                {data.indicadores.map((ind, i) => {
-                                  const cleaned = stripBold(ind)
-                                  // Dynamic color: detect level keywords
-                                  const lower = cleaned.toLowerCase()
-                                  const isHigh = lower.includes('alto') || lower.includes('fuerte') || lower.includes('intenso') || lower.includes('elevado') || score >= 70
-                                  const isLow = lower.includes('bajo') || lower.includes('débil') || lower.includes('ausente') || lower.includes('mínimo') || score <= 30
-                                  const badgeBg = isHigh ? 'bg-red-500/10 border-red-500/20 text-red-300/80' : isLow ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300/80' : 'bg-amber-500/10 border-amber-500/20 text-amber-300/80'
-                                  return (
-                                    <span key={i} className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-light ${badgeBg}`}>
-                                      <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: barFill, opacity: 0.5 }} />
-                                      {cleaned}
-                                    </span>
-                                  )
-                                })}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Interpretación — split paragraphs with first-letter styling */}
-                          <div className="pt-4 border-t border-white/5">
-                            <p className="text-white/40 text-[10px] font-medium uppercase tracking-wider mb-3">Interpretación personalizada</p>
-                            {isFreudLacan ? (
-                              <div className="space-y-5">
-                                {data.interpretacion_freud && (
-                                  <div className="pl-4 border-l-2 border-purple-500/20 space-y-3">
-                                    <p className="text-purple-300/50 text-[10px] font-medium uppercase tracking-wider mb-1.5">Lectura freudiana</p>
-                                    {data.interpretacion_freud.split('\n\n').map((p, i) => (
-                                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.9]">{stripBold(p)}</p>
-                                    ))}
-                                  </div>
-                                )}
-                                {data.interpretacion_lacan && (
-                                  <div className="pl-4 border-l-2 border-indigo-500/20 space-y-3">
-                                    <p className="text-indigo-300/50 text-[10px] font-medium uppercase tracking-wider mb-1.5">Lectura lacaniana</p>
-                                    {data.interpretacion_lacan.split('\n\n').map((p, i) => (
-                                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.9]">{stripBold(p)}</p>
-                                    ))}
-                                  </div>
-                                )}
-                                {data.interpretacion && !data.interpretacion_freud && (
-                                  <div className="space-y-3">
-                                    {data.interpretacion.split('\n\n').map((p, i) => (
-                                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.9]">{stripBold(p)}</p>
-                                    ))}
-                                  </div>
-                                )}
-                              </div>
-                            ) : (
-                              <div className="space-y-3">
-                                {(data.interpretacion || '').split('\n\n').map((p, i) => (
-                                  <p key={i} className="text-white/70 text-[15px] font-light leading-[1.9]">{stripBold(p)}</p>
+                            {data.interpretacion && (
+                              <div className="space-y-2 mt-3">
+                                {data.interpretacion.split('\n\n').map((p, i) => (
+                                  <p key={i} className="text-white/65 text-[14px] font-light leading-[1.8]">{stripBold(p)}</p>
                                 ))}
                               </div>
                             )}
                           </div>
-                        </motion.div>
-                      )
-                    })}
-                        </div>
-                      </div>
-                    )
-                  })}
+                        )
+                      })}
+                    </div>
+                  )}
                 </motion.div>
                 )
               })()}
 
-              {/* ═══ 2. TU RELACIÓN EN UNA MIRADA ═══ */}
-              {aiAnalysis.dimensiones && (
+              {/* ═══ DESGLOSE POR DIMENSIÓN ═══ */}
+              {aiAnalysis.dimensiones && aiAnalysis.tabla_diagnostica && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <div className="rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02]">
-                    <div className="bg-gradient-to-r from-violet-600/90 to-cyan-600/80 px-6 py-5 text-center">
-                      <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/15 mb-3">
-                        <Eye className="w-5 h-5 text-white/90" />
-                      </div>
-                      <p className="text-white/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-1">12 Dimensiones</p>
-                      <h2 className="text-xl font-light text-white tracking-wide">Tu relación en una mirada</h2>
-                      <p className="text-white/60 text-xs font-light mt-1">Patrones de interacción y ciclos emocionales</p>
-                    </div>
-                    <div className="p-6">
-                      <RadarChart dimensiones={aiAnalysis.dimensiones} />
-
-                      {/* Leyenda de dimensiones con colores */}
-                      <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 px-4">
-                        {Object.entries(DIMENSION_LABELS).map(([key, label], i) => (
-                          <div key={key} className="flex items-center gap-2">
-                            <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: DIMENSION_COLORS[i] }} />
-                            <span className="text-white/60 text-xs font-light">{label}</span>
-                            <span className="text-white/80 text-xs font-semibold tabular-nums">{aiAnalysis.dimensiones[key] ?? 0}%</span>
+                  <div className="space-y-1">
+                    <p className="text-white/35 text-[10px] font-medium uppercase tracking-wider mb-4">Desglose por dimensión</p>
+                    {aiAnalysis.tabla_diagnostica.map((row, i) => {
+                      const dimKey = Object.keys(DIMENSION_LABELS)[i]
+                      const score = aiAnalysis.dimensiones[dimKey] ?? 50
+                      const barColor = score >= 70 ? 'bg-emerald-500' : score >= 45 ? 'bg-amber-500' : 'bg-red-500'
+                      const levelLabel = score >= 70 ? 'Alto' : score >= 45 ? 'Moderado' : 'Bajo'
+                      const levelColor = score >= 70 ? 'text-emerald-400/70' : score >= 45 ? 'text-amber-400/70' : 'text-red-400/70'
+                      return (
+                        <div key={i} className="px-4 py-4 rounded-xl hover:bg-white/[0.02] transition-colors border border-transparent hover:border-white/5">
+                          <div className="flex items-center gap-3 mb-2">
+                            <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: DIMENSION_COLORS[i] }} />
+                            <span className="text-white/70 text-sm font-medium flex-1">{row.dimension}</span>
+                            <span className={`text-xs font-medium ${levelColor}`}>{levelLabel}</span>
+                            <span className="text-white/80 text-sm font-bold tabular-nums w-12 text-right">{score}%</span>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* ── Dimension breakdown (fused from Diagnóstico Estructural) ── */}
-                    {aiAnalysis.tabla_diagnostica && (
-                      <div className="mt-6 pt-6 border-t border-white/5 space-y-1 px-6 pb-6">
-                        <p className="text-white/35 text-[10px] font-medium uppercase tracking-wider mb-4">Desglose por dimensión</p>
-                        {aiAnalysis.tabla_diagnostica.map((row, i) => {
-                          const dimKey = Object.keys(DIMENSION_LABELS)[i]
-                          const score = aiAnalysis.dimensiones[dimKey] ?? 50
-                          const barColor = score >= 70 ? 'bg-emerald-500' : score >= 45 ? 'bg-amber-500' : 'bg-red-500'
-                          const levelLabel = score >= 70 ? 'Alto' : score >= 45 ? 'Moderado' : 'Bajo'
-                          const levelColor = score >= 70 ? 'text-emerald-400/70' : score >= 45 ? 'text-amber-400/70' : 'text-red-400/70'
-                          return (
-                            <div key={i} className="px-4 py-4 rounded-xl hover:bg-white/[0.02] transition-colors border border-transparent hover:border-white/5">
-                              <div className="flex items-center gap-3 mb-2">
-                                <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: DIMENSION_COLORS[i] }} />
-                                <span className="text-white/70 text-sm font-medium flex-1">{row.dimension}</span>
-                                <span className={`text-xs font-medium ${levelColor}`}>{levelLabel}</span>
-                                <span className="text-white/80 text-sm font-bold tabular-nums w-12 text-right">{score}%</span>
-                              </div>
-                              <div className="h-2.5 bg-white/[0.06] rounded-full overflow-hidden mb-2.5 ml-6">
-                                <motion.div initial={{ width: 0 }} whileInView={{ width: `${score}%` }} viewport={{ once: true }}
-                                  transition={{ duration: 0.8, delay: i * 0.05 }}
-                                  className={`h-full rounded-full ${barColor}`} style={{ opacity: 0.75 }} />
-                              </div>
-                              <p className="text-white/45 text-[13px] font-light leading-relaxed ml-6">{row.interpretacion}</p>
-                            </div>
-                          )
-                        })}
-                      </div>
-                    )}
+                          <div className="h-2.5 bg-white/[0.06] rounded-full overflow-hidden mb-2.5 ml-6">
+                            <motion.div initial={{ width: 0 }} whileInView={{ width: `${score}%` }} viewport={{ once: true }}
+                              transition={{ duration: 0.8, delay: i * 0.05 }}
+                              className={`h-full rounded-full ${barColor}`} style={{ opacity: 0.75 }} />
+                          </div>
+                          <p className="text-white/45 text-[13px] font-light leading-relaxed ml-6">{row.interpretacion}</p>
+                        </div>
+                      )
+                    })}
                   </div>
                 </motion.div>
               )}
