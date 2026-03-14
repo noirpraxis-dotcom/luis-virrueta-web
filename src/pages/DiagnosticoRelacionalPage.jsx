@@ -333,6 +333,7 @@ const TASK_DURATIONS_MS = [6200, 6500, 6000, 7200, 6600, 6000, 7400, 6600, 5800,
 // Cloudflare Worker — https://radiografia-worker.noirpraxis.workers.dev
 const WORKER_URL = 'https://radiografia-worker.noirpraxis.workers.dev'
 const API_BASE = import.meta.env.DEV ? '' : WORKER_URL
+const AUDIO_BASE = import.meta.env.DEV ? '' : WORKER_URL
 
 const PRODUCT_PRICE_DESCUBRE = 499
 const PRODUCT_PRICE_SOLO = 499
@@ -941,8 +942,8 @@ const DiagnosticoRelacionalPage = () => {
       const q = QUESTIONS[currentQuestion]
       if (q) {
         const audioPath = voiceGender === 'male'
-          ? `/audio/diagnostico/male/${q.id}.mp3`
-          : `/audio/diagnostico/${q.id}.mp3`
+          ? `${AUDIO_BASE}/audio/diagnostico/male/${q.id}.mp3`
+          : `${AUDIO_BASE}/audio/diagnostico/${q.id}.mp3`
         const audio = new Audio(audioPath)
         audioRef.current = audio
         setAudioPlaying(true)

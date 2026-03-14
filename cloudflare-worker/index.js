@@ -3,6 +3,7 @@
  * luisvirrueta.com
  *
  * Rutas:
+ *   GET  /audio/*                          — Servir audio desde R2
  *   POST /api/create-radiografia-checkout  — Crea sesión Stripe Checkout
  *   POST /api/verify-payment               — Verifica sesión Stripe
  *   POST /api/validate-radiografia-promo   — Valida código promo
@@ -17,6 +18,9 @@
  *
  * Vars (wrangler.toml):
  *   PRICE_DESCUBRE / PRICE_SOLO / PRICE_LOSDOS  price_xxx
+ *
+ * R2 binding (wrangler.toml):
+ *   AUDIO_BUCKET  — luisvirrueta-audio
  */
 
 const SITE_URL       = 'https://www.luisvirrueta.com'
@@ -247,8 +251,8 @@ async function handleCreateCheckout(req, env) {
   const params = {
     mode:       'payment',
     line_items: [{ price: priceId, quantity: '1' }],
-    success_url: `${RETURN_URL}?session_id={CHECKOUT_SESSION_ID}&type=${type}`,
-    cancel_url:  RETURN_URL,
+    success_url: `${isTest ? 'http://localhost:3001' : SITE_URL}/tienda/diagnostico-relacional?session_id={CHECKOUT_SESSION_ID}&type=${type}`,
+    cancel_url:  isTest ? 'http://localhost:3001/tienda/diagnostico-relacional' : RETURN_URL,
     metadata:   { type, testMode: isTest ? 'true' : 'false' },
   }
 
@@ -350,6 +354,30 @@ async function handleWebhook(req, env) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// AUDIO — Serve MP3 files from R2
+// ═══════════════════════════════════════════════════════════════════════════════
+
+async function handleAudio(request, env, pathname) {
+  if (!env.AUDIO_BUCKET) {
+    return new Response('Audio storage not configured', { status: 503, headers: CORS })
+  }
+  // pathname = '/audio/diagnostico/q1.mp3'  →  key = 'audio/diagnostico/q1.mp3'
+  const key = pathname.slice(1)
+  const obj = await env.AUDIO_BUCKET.get(key)
+  if (!obj) {
+    return new Response('Not found', { status: 404, headers: CORS })
+  }
+  return new Response(obj.body, {
+    headers: {
+      'Content-Type': 'audio/mpeg',
+      'Cache-Control': 'public, max-age=31536000, immutable',
+      'Accept-Ranges': 'bytes',
+      ...CORS,
+    },
+  })
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // ROUTER
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -361,6 +389,9 @@ export default {
     if (method === 'OPTIONS') return new Response(null, { headers: CORS })
 
     try {
+      // ── Audio from R2 (GET /audio/*) ──────────────────────────────
+      if (method === 'GET' && pathname.startsWith('/audio/')) return handleAudio(request, env, pathname)
+
       if (method === 'POST') {
         if (pathname === '/api/create-radiografia-checkout') return handleCreateCheckout(request, env)
         if (pathname === '/api/verify-payment')              return handleVerifyPayment(request, env)

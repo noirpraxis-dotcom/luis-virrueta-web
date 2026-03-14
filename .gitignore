@@ -20,6 +20,9 @@ functions/serviceAccountKey.json
 # Cloudflare Worker — contiene claves privadas
 cloudflare-worker/deploy.ps1
 
+# Audio files — se sirven desde Cloudflare R2, no se incluyen en el build
+public/audio/
+
 # Old Railway backend — no usar, renombrado para evitar errores en Pages build
 _functions_old/
 

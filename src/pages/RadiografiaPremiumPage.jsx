@@ -254,6 +254,9 @@ const DIMENSION_COLORS = [
 
 // ─── ElevenLabs voices (Latin Spanish) ────────────
 
+const WORKER_URL = 'https://radiografia-worker.noirpraxis.workers.dev'
+const AUDIO_BASE = import.meta.env.DEV ? '' : WORKER_URL
+
 const VOICE_LIST = [
   { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Valentina', desc: 'Cálida y clara', initial: 'V', color: 'from-rose-500 to-pink-500', ring: 'ring-rose-400/20', border: 'border-rose-500/30', bg: 'bg-rose-500/10', text: 'text-rose-300' },
   { id: 'JBFqnCBsd6RMkjVDRZzb', name: 'Santiago', desc: 'Firme y profesional', initial: 'S', color: 'from-violet-500 to-indigo-500', ring: 'ring-violet-400/20', border: 'border-violet-500/30', bg: 'bg-violet-500/10', text: 'text-violet-300' },
@@ -1824,10 +1827,10 @@ const RadiografiaPremiumPage = () => {
       const currentQuestion = text && PREGUNTAS.find(q => q.mainQuestion === text)
       const isPreview = text && text.includes('soy ') && text.includes('acompañaré')
       const staticFile = voiceFolder && (staticId
-        ? `/audio/premium/${voiceFolder}/${staticId}.mp3`
+        ? `${AUDIO_BASE}/audio/premium/${voiceFolder}/${staticId}.mp3`
         : currentQuestion
-        ? `/audio/premium/${voiceFolder}/${currentQuestion.id}.mp3`
-        : isPreview ? `/audio/premium/${voiceFolder}/preview.mp3` : null)
+        ? `${AUDIO_BASE}/audio/premium/${voiceFolder}/${currentQuestion.id}.mp3`
+        : isPreview ? `${AUDIO_BASE}/audio/premium/${voiceFolder}/preview.mp3` : null)
 
       let audioUrl = null
 
