@@ -138,7 +138,18 @@ export const CACHED_PREVIEW_ANALYSIS = {
         "Evasión: Alto",
         "Ratio positivo/negativo: 1:3"
       ],
-      "puntuacion": 35
+      "puntuacion": 35,
+      "jinetes": { "critica": 78, "desprecio": 45, "actitud_defensiva": 82, "evasion": 70 },
+      "capacidad_reparacion": 35,
+      "jinetes_detalle": {
+        "critica": { "como_aparece": "Susana señala responsabilidades incumplidas como defectos de Luis: \"ella exige determinadas cosas\" que Luis vive como ataques a su identidad.", "impacto": "Luis se cierra emocionalmente y racionaliza para no sentir culpa." },
+        "desprecio": { "como_aparece": "Aparece como sarcasmo y \"racionalizar y empezar a gritar\" cuando la frustración acumulada explota.", "impacto": "Erosiona la admiración mutua que fue base de la conexión original." },
+        "actitud_defensiva": { "como_aparece": "\"Me siento evasivo, quiero irme\" — Luis se justifica o escapa en vez de escuchar; Susana insiste con más fuerza.", "impacto": "El ciclo perseguidor-evitador se intensifica sin resolución." },
+        "evasion": { "como_aparece": "\"Cada uno va por su lado\" después del conflicto — retirada emocional total como mecanismo de supervivencia.", "impacto": "Los temas críticos quedan sin resolver, acumulando resentimiento." }
+      },
+      "patron_dominante": "Crítica + defensividad: Susana exige, Luis evade, ambos se distancian",
+      "zona_riesgo": "Discusiones que escalan a gritos y terminan en retirada emocional con resentimiento",
+      "recurso_disponible": "Capacidad limitada de reparación post-conflicto y disposición de Luis a buscar ayuda"
     },
     "sue_johnson": {
       "titulo": "Sue Johnson",
@@ -284,23 +295,95 @@ export const CACHED_PREVIEW_ANALYSIS = {
     "cierre_transformador": "Luis, este análisis no es una condena, sino un mapa detallado del territorio emocional en el que te encuentras. El trabajo que te toca ahora es profundo y liberador. Debes dejar de buscar afuera, en Susana, el **reconocimiento incondicional y la validación** que solo puedes darte a ti mismo. Necesitas aprender a escucharte y a contener tu propia desesperación y evasión sin racionalizarla o huir de ella. El camino es hacia una **mayor diferenciación del self**: poder estar en pareja sin sentir que cada exigencia es una amenaza a tu identidad, y poder comprometerte con lo cotidiano sin sentir que traicionas tu esencia libre. Cultiva adentro la **autoafirmación** que buscas en los ojos de los demás. Reconcíliate con tu \"yo real\" —con sus miedos, su reactividad, su patrón evitativo— en lugar de perseguir un \"yo ideal\" espiritual que niega esas partes. Solo desde esa autenticidad y auto-compasión podrás renegociar el vínculo con Susana, transformando la dinámica de perseguidor-evitador en una de compañeros conscientes que, desde su individualidad sólida, eligen construir juntos, responsabilidades incluidas. Tienes la conciencia y la inteligencia para hacerlo, Luis. Ahora necesitas el coraje de bajar del pedestal de tu yo ideal y caminar, con pies de barro y corazón abierto, hacia la intimidad real."
   },
   "temas_para_consulta": [
-    "**Patrones inconscientes**: Identificar y desactivar los ciclos repetitivos de perseguidor-evitador que operan sin que te des cuenta.",
-    "**Raíces familiares**: Explorar cómo tu experiencia de amor temprana con una madre exigente y un padre burlón moldeó tu forma de amar hoy.",
-    "**Reconexión emocional**: Reconstruir la intimidad emocional y la presencia en el vínculo, más allá de la conexión intelectual.",
-    "**Diferenciación del self**: Fortalecer tu autonomía emocional sin perder la conexión con Susana — aprender a estar en pareja sin sentir que pierdes tu identidad.",
-    "**Regulación emocional**: Aprender a gestionar la desesperación y la evasión en momentos de conflicto relacional sin escalar a gritos ni retraerte.",
-    "**Deseo y erotismo**: Trabajar la reconexión física explorando la tensión entre seguridad y aventura que describe Esther Perel."
+    "**Patrones inconscientes**: Identificar y desactivar los ciclos repetitivos de perseguidor-evitador que operan sin que te des cuenta cada vez que Susana te exige algo.",
+    "**Raíces familiares**: Explorar cómo tu experiencia con una madre exigente y un padre burlón moldeó tu forma de amar hoy y por qué repites dinámicas que reconoces de tu infancia.",
+    "**Reconexión emocional**: Reconstruir la intimidad emocional y la presencia en el vínculo, más allá de la conexión intelectual que ha sustituido a la vulnerabilidad genuina.",
+    "**Diferenciación del self**: Fortalecer tu autonomía emocional sin perder la conexión con Susana — aprender a estar en pareja sin sentir que cada exigencia amenaza tu identidad.",
+    "**Regulación emocional**: Aprender a gestionar la desesperación y la evasión en momentos de conflicto relacional sin escalar a gritos ni retraerte al silencio.",
+    "**Deseo y erotismo**: Trabajar la reconexión física explorando la tensión entre seguridad y aventura, entendiendo por qué el deseo se activa con lo prohibido y muere con lo cotidiano.",
+    "**Comunicación en conflicto**: Transformar los desacuerdos en oportunidades de profundización, reemplazando la crítica y la defensividad por vulnerabilidad compartida.",
+    "**El fantasma relacional**: Hacer consciente la escena inconsciente que organiza tu deseo y entender qué función simbólica le asignas a Susana — y qué pasa cuando la realidad no encaja."
   ],
   "tecnicas_recomendadas": [
-    { "nombre": "Diálogo Imago (Hendrix)", "descripcion": "Técnica de escucha activa estructurada para que cada miembro de la pareja se sienta realmente escuchado y validado sin juicio." },
-    { "nombre": "EFT — Terapia Focalizada en Emociones (Johnson)", "descripcion": "Identificar y transformar el ciclo negativo perseguidor-evitador accediendo a las emociones primarias debajo del conflicto." },
-    { "nombre": "Diferenciación del Self (Schnarch)", "descripcion": "Fortalecer la capacidad de mantener tu identidad y autonomía emocional dentro de la relación sin desconectarte del vínculo." },
-    { "nombre": "Mindfulness Relacional", "descripcion": "Prácticas de atención plena aplicadas a la relación para aumentar la presencia emocional y reducir la reactividad automática." }
+    { "nombre": "Diálogo Imago (Hendrix)", "descripcion": "Técnica de escucha activa estructurada donde cada miembro se siente realmente escuchado y validado. Ideal para romper el ciclo de interrupción y defensividad que aparece en tu relación." },
+    { "nombre": "EFT — Terapia Focalizada en Emociones (Johnson)", "descripcion": "Acceder a las emociones primarias (miedo, tristeza) que se esconden debajo del enojo y la evasión. Te ayudaría a identificar qué realmente sientes cuando te distancias de Susana." },
+    { "nombre": "Diferenciación del Self (Schnarch)", "descripcion": "Fortalecer tu identidad emocional sin perder la conexión. Para que puedas sostener tu postura sin necesidad de huir ni fusionarte con el otro." },
+    { "nombre": "Mindfulness Relacional", "descripcion": "Prácticas de atención plena aplicadas a la relación para aumentar la presencia emocional y reducir la reactividad automática en momentos de tensión." },
+    { "nombre": "Ejercicios de Reparación Gottman", "descripcion": "Técnicas específicas para reparar después del conflicto: bids for connection, ritual de reencuentro y mapa del amor actualizado para reconstruir la admiración mutua." },
+    { "nombre": "Journaling Psicoanalítico Guiado", "descripcion": "Escritura reflexiva para hacer conscientes los patrones inconscientes de repetición y las proyecciones que depositas en Susana como figura parental." }
   ],
   "libros_recomendados": [
-    { "titulo": "Mantenme cerca", "autor": "Sue Johnson", "razon": "Explica cómo funciona el apego adulto y cómo reconstruir la seguridad emocional en la pareja." },
-    { "titulo": "Inteligencia erótica", "autor": "Esther Perel", "razon": "Aborda la tensión entre domesticidad y deseo, y cómo recuperar la chispa en relaciones largas." },
-    { "titulo": "Apegados", "autor": "Amir Levine y Rachel Heller", "razon": "Guía práctica sobre estilos de apego y cómo influyen en tus relaciones de pareja." },
-    { "titulo": "La pasión según Lacan", "autor": "Luciano Lutereau", "razon": "Exploración psicoanalítica del deseo, el fantasma relacional y la estructura inconsciente del amor." }
-  ]
+    { "titulo": "Mantenme cerca", "autor": "Sue Johnson", "razon": "Entender los ciclos de apego y cómo crear un vínculo seguro — el libro más claro sobre por qué nos desconectamos.", "nivel": "introductorio" },
+    { "titulo": "Apegados", "autor": "Amir Levine y Rachel Heller", "razon": "Comprender tu estilo de apego ansioso-evitativo y cómo impacta cada interacción con Susana. Práctico y revelador.", "nivel": "introductorio" },
+    { "titulo": "Inteligencia erótica", "autor": "Esther Perel", "razon": "Explorar la tensión entre seguridad y deseo — por qué la rutina de ocho años apagó la chispa y cómo reavivarla.", "nivel": "intermedio" },
+    { "titulo": "El cuerpo lleva la cuenta", "autor": "Bessel van der Kolk", "razon": "Cómo las experiencias emocionales tempranas quedan grabadas en el cuerpo y afectan tus relaciones y tu sexualidad actual.", "nivel": "intermedio" },
+    { "titulo": "La pasión según Lacan", "autor": "Luciano Lutereau", "razon": "Exploración psicoanalítica del deseo, el fantasma relacional y la estructura inconsciente del amor — por qué deseas lo prohibido.", "nivel": "avanzado" },
+    { "titulo": "Passionate Marriage", "autor": "David Schnarch", "razon": "El libro más profundo sobre diferenciación del self y cómo mantener el deseo vivo en relaciones largas sin perder tu identidad.", "nivel": "avanzado" }
+  ],
+  "graficas_autoanalisis": {
+    "barras_resumen": [
+      { "label": "Conexión emocional", "valor": 55, "color": "violet" },
+      { "label": "Estabilidad", "valor": 45, "color": "blue" },
+      { "label": "Deseo erótico", "valor": 20, "color": "rose" },
+      { "label": "Apego", "valor": 60, "color": "amber" },
+      { "label": "Resiliencia", "valor": 65, "color": "emerald" },
+      { "label": "Patrones inconscientes", "valor": 85, "color": "cyan" }
+    ],
+    "polaridades": [
+      { "izq": "Conexión emocional", "der": "Autonomía", "valor": 25 },
+      { "izq": "Entrega afectiva", "der": "Protección emocional", "valor": 75 },
+      { "izq": "Reconocimiento", "der": "Autosuficiencia", "valor": 30 },
+      { "izq": "Idealización", "der": "Realismo afectivo", "valor": 20 },
+      { "izq": "Dependencia emocional", "der": "Distancia emocional", "valor": 65 }
+    ],
+    "cuadrante_apego": { "ansiedad": 70, "evitacion": 60 },
+    "espejo": [
+      { "afuera": "Que me escuchen", "adentro": "Necesidad de validación" },
+      { "afuera": "Que estén presentes", "adentro": "Necesidad de contención" },
+      { "afuera": "Que no me juzguen", "adentro": "Miedo al propio juicio" },
+      { "afuera": "Más contacto", "adentro": "Hambre emocional" }
+    ],
+    "escena_relacional": {
+      "arriba": { "rol": "Compañero idealizado", "subtexto": "conciencia, expansión" },
+      "izquierda": { "rol": "Madre contenedora", "subtexto": "seguridad" },
+      "derecha": { "rol": "Libertad espiritual", "subtexto": "expansión" },
+      "abajo": { "rol": "Vida cotidiana / responsabilidad", "subtexto": "lo que el fantasma evita" },
+      "centro": "Luis"
+    },
+    "identity_gap": {
+      "brecha": 80,
+      "yo_ideal": ["Compañero consciente", "Espiritual", "Conectado", "Libre"],
+      "yo_real": ["Evasivo", "Defensivo", "Sarcasmo", "Distancia afectiva"]
+    },
+    "defensas": [
+      { "nombre": "Racionalización", "valor": 85 },
+      { "nombre": "Evitación", "valor": 75 },
+      { "nombre": "Humor / sarcasmo", "valor": 65 },
+      { "nombre": "Minimización", "valor": 55 },
+      { "nombre": "Proyección", "valor": 40 }
+    ],
+    "ciclo_repeticion": ["Elección de pareja idealizada", "Dinámica de rescate", "Frustración / exigencia", "Evasión y distancia", "Repetición"],
+    "nucleo_orbital": {
+      "centro": "Quiero contención sin aceptar los límites que implica",
+      "fuerzas": [
+        { "nombre": "libertad", "intensidad": 90 },
+        { "nombre": "exigencia", "intensidad": 75 },
+        { "nombre": "intimidad", "intensidad": 45 },
+        { "nombre": "seguridad", "intensidad": 70 },
+        { "nombre": "autonomía", "intensidad": 85 }
+      ]
+    },
+    "before_after": [
+      { "antes": "Evasión", "despues": "Presencia emocional" },
+      { "antes": "Defensa", "despues": "Escucha interna" },
+      { "antes": "Búsqueda de validación", "despues": "Autoafirmación" },
+      { "antes": "Distancia", "despues": "Intimidad consciente" }
+    ],
+    "timeline_relacion": [
+      { "etapa": "Conexión inicial", "subtexto": "ideas / profundidad" },
+      { "etapa": "Crecimiento", "subtexto": "proyectos / desarrollo" },
+      { "etapa": "Tensión actual", "subtexto": "exigencias / estrés" },
+      { "etapa": "Distancia emocional", "subtexto": "defensa / evasión" }
+    ]
+  }
 }

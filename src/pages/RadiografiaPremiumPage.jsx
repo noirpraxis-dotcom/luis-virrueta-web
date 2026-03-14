@@ -1259,6 +1259,416 @@ function RealBalanceChart({ data }) {
   )
 }
 
+// ─── NEW CARD CHARTS (data-driven from graficas_autoanalisis) ─────
+
+// 1. DualBarsChart — horizontal bars summary (apertura_rapport)
+function DualBarsChart({ data }) {
+  if (!data?.length) return null
+  const colorMap = { violet: '#8b5cf6', blue: '#3b82f6', rose: '#f43f5e', amber: '#f59e0b', emerald: '#10b981', cyan: '#06b6d4' }
+  const h = data.length * 44 + 10
+  return (
+    <div className="py-4 px-2">
+      <svg viewBox={`0 0 440 ${h}`} className="w-full max-w-md mx-auto">
+        {data.map((item, i) => {
+          const y = 14 + i * 44
+          const c = colorMap[item.color] || '#8b5cf6'
+          const barW = (item.valor / 100) * 210
+          return (
+            <g key={i}>
+              <text x={0} y={y + 2} fill="rgba(255,255,255,0.7)" fontSize="13" fontWeight="300">{item.label}</text>
+              <rect x={170} y={y - 9} width={210} height={16} rx={8} fill="rgba(255,255,255,0.04)" />
+              <rect x={170} y={y - 9} width={barW} height={16} rx={8} fill={c} fillOpacity={0.45} />
+              <text x={170 + barW + 10} y={y + 3} fill={c} fontSize="13" fontWeight="700">{item.valor}%</text>
+            </g>
+          )
+        })}
+      </svg>
+    </div>
+  )
+}
+
+// 2. PolarityScaleChart — horizontal polarity scales (forma_de_amar)
+function PolarityScaleChart({ data }) {
+  if (!data?.length) return null
+  const colors = ['#a78bfa', '#f472b6', '#34d399', '#fbbf24', '#60a5fa']
+  return (
+    <div className="py-4 px-3 space-y-5">
+      {data.map((item, i) => {
+        const c = colors[i % colors.length]
+        return (
+          <div key={i}>
+            <div className="flex justify-between mb-1.5">
+              <span className="text-white/65 text-[13px] font-light">{item.izq}</span>
+              <span className="text-white/65 text-[13px] font-light">{item.der}</span>
+            </div>
+            <div className="relative h-3 rounded-full bg-white/[0.06]">
+              <div className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 shadow-lg transition-all"
+                style={{ left: `calc(${item.valor}% - 8px)`, backgroundColor: `${c}30`, borderColor: c, boxShadow: `0 0 8px ${c}40` }} />
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+// 3. AttachmentQuadrantChart — 2D attachment quadrant (lo_que_busca_en_el_otro)
+function AttachmentQuadrantChart({ data }) {
+  if (!data) return null
+  const { ansiedad, evitacion } = data
+  const cx = 220, cy = 190, w = 300, h = 280
+  const px = 70 + (evitacion / 100) * w
+  const py = 40 + ((100 - ansiedad) / 100) * h
+  return (
+    <div className="flex justify-center py-4">
+      <svg viewBox="0 0 440 390" className="w-full max-w-sm">
+        {/* Background quadrants */}
+        <rect x={70} y={40} width={150} height={140} fill="rgba(16,185,129,0.06)" rx={4} />
+        <rect x={220} y={40} width={150} height={140} fill="rgba(245,158,11,0.06)" rx={4} />
+        <rect x={70} y={180} width={150} height={140} fill="rgba(99,102,241,0.06)" rx={4} />
+        <rect x={220} y={180} width={150} height={140} fill="rgba(239,68,68,0.06)" rx={4} />
+        {/* Axis lines */}
+        <line x1={70} y1={180} x2={370} y2={180} stroke="rgba(255,255,255,0.12)" strokeWidth={1} />
+        <line x1={220} y1={40} x2={220} y2={320} stroke="rgba(255,255,255,0.12)" strokeWidth={1} />
+        {/* Quadrant labels */}
+        <text x={145} y={115} textAnchor="middle" fill="rgba(16,185,129,0.75)" fontSize="14" fontWeight="500">Ansioso</text>
+        <text x={295} y={115} textAnchor="middle" fill="rgba(245,158,11,0.75)" fontSize="14" fontWeight="500">Desorganizado</text>
+        <text x={145} y={255} textAnchor="middle" fill="rgba(99,102,241,0.75)" fontSize="14" fontWeight="500">Seguro</text>
+        <text x={295} y={255} textAnchor="middle" fill="rgba(239,68,68,0.75)" fontSize="14" fontWeight="500">Evitativo</text>
+        {/* Axis labels */}
+        <text x={220} y={345} textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="12" fontWeight="300">Evitación →</text>
+        <text x={42} y={180} textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="12" fontWeight="300" transform="rotate(-90,42,180)">Ansiedad →</text>
+        {/* Data point */}
+        <circle cx={px} cy={py} r={16} fill="rgba(139,92,246,0.15)" stroke="#8b5cf6" strokeWidth={2} />
+        <circle cx={px} cy={py} r={6} fill="#8b5cf6" fillOpacity={0.9} />
+        {/* Values */}
+        <text x={px} y={py - 24} textAnchor="middle" fill="#8b5cf6" fontSize="13" fontWeight="700">A:{ansiedad} E:{evitacion}</text>
+      </svg>
+    </div>
+  )
+}
+
+// 4. MirrorGraph — two columns AFUERA→ADENTRO (lo_que_reclama_afuera)
+function MirrorGraph({ data }) {
+  if (!data?.length) return null
+  const colors = ['#fb923c', '#f472b6', '#a78bfa', '#34d399']
+  return (
+    <div className="py-4 px-3">
+      <div className="flex justify-between mb-3 px-4">
+        <span className="text-xs font-bold uppercase tracking-[0.2em] text-amber-400/70">Afuera</span>
+        <span className="text-xs font-bold uppercase tracking-[0.2em] text-violet-400/70">Adentro</span>
+      </div>
+      <div className="space-y-3">
+        {data.map((item, i) => {
+          const c = colors[i % colors.length]
+          return (
+            <div key={i} className="flex items-center gap-2">
+              <div className="flex-1 text-right p-3 rounded-lg border border-white/[0.06] bg-white/[0.02]">
+                <span className="text-white/75 text-sm font-light">{item.afuera}</span>
+              </div>
+              <div className="flex-shrink-0 w-8 flex justify-center">
+                <svg viewBox="0 0 30 12" className="w-7 h-3">
+                  <line x1={0} y1={6} x2={22} y2={6} stroke={c} strokeWidth={1.5} strokeOpacity={0.5} />
+                  <polygon points="22,2 30,6 22,10" fill={c} fillOpacity={0.6} />
+                </svg>
+              </div>
+              <div className="flex-1 p-3 rounded-lg border border-white/[0.06] bg-white/[0.02]">
+                <span className="text-white/75 text-sm font-light">{item.adentro}</span>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// 5. RelationalSceneChart — cross with 4 roles + center (fantasma_relacional)
+function RelationalSceneChart({ data }) {
+  if (!data) return null
+  return (
+    <div className="flex justify-center py-4">
+      <svg viewBox="0 0 440 400" className="w-full max-w-sm">
+        {/* Cross lines */}
+        <line x1={220} y1={50} x2={220} y2={340} stroke="rgba(255,255,255,0.08)" strokeWidth={1} strokeDasharray="4 4" />
+        <line x1={40} y1={195} x2={400} y2={195} stroke="rgba(255,255,255,0.08)" strokeWidth={1} strokeDasharray="4 4" />
+        {/* Center — persona */}
+        <circle cx={220} cy={195} r={36} fill="rgba(192,132,252,0.12)" stroke="rgba(192,132,252,0.4)" strokeWidth={2} />
+        <text x={220} y={192} textAnchor="middle" fill="rgba(255,255,255,0.85)" fontSize="14" fontWeight="700">{data.centro}</text>
+        <text x={220} y={208} textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="11" fontWeight="300">centro</text>
+        {/* Arriba */}
+        <rect x={120} y={8} width={200} height={52} rx={12} fill="rgba(139,92,246,0.08)" stroke="rgba(139,92,246,0.25)" strokeWidth={1} />
+        <text x={220} y={30} textAnchor="middle" fill="rgba(139,92,246,0.85)" fontSize="13" fontWeight="500">{data.arriba?.rol}</text>
+        <text x={220} y={48} textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="11" fontWeight="300">{data.arriba?.subtexto}</text>
+        {/* Abajo */}
+        <rect x={120} y={310} width={200} height={52} rx={12} fill="rgba(239,68,68,0.08)" stroke="rgba(239,68,68,0.25)" strokeWidth={1} />
+        <text x={220} y={332} textAnchor="middle" fill="rgba(239,68,68,0.75)" fontSize="13" fontWeight="500">{data.abajo?.rol}</text>
+        <text x={220} y={350} textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="11" fontWeight="300">{data.abajo?.subtexto}</text>
+        {/* Izquierda */}
+        <rect x={5} y={170} width={145} height={52} rx={12} fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.25)" strokeWidth={1} />
+        <text x={78} y={192} textAnchor="middle" fill="rgba(59,130,246,0.75)" fontSize="13" fontWeight="500">{data.izquierda?.rol}</text>
+        <text x={78} y={210} textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="11" fontWeight="300">{data.izquierda?.subtexto}</text>
+        {/* Derecha */}
+        <rect x={290} y={170} width={145} height={52} rx={12} fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.25)" strokeWidth={1} />
+        <text x={363} y={192} textAnchor="middle" fill="rgba(16,185,129,0.75)" fontSize="13" fontWeight="500">{data.derecha?.rol}</text>
+        <text x={363} y={210} textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="11" fontWeight="300">{data.derecha?.subtexto}</text>
+      </svg>
+    </div>
+  )
+}
+
+// 6. IdentityGapChart — horizontal gap bar yo_ideal vs yo_real (yo_ideal)
+function IdentityGapChart({ data }) {
+  if (!data) return null
+  const { brecha, yo_ideal, yo_real } = data
+  return (
+    <div className="py-4 px-3 space-y-5">
+      {/* Gap bar */}
+      <div className="text-center">
+        <span className="text-white/50 text-xs font-light uppercase tracking-widest">Brecha identitaria</span>
+        <div className="relative h-5 rounded-full bg-white/[0.06] mt-2 mx-4 overflow-hidden">
+          <div className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-emerald-500/40 to-red-500/40" style={{ width: `${brecha}%` }} />
+          <div className="absolute inset-y-0 left-0 flex items-center justify-center w-full">
+            <span className="text-white/90 text-sm font-bold">{brecha}%</span>
+          </div>
+        </div>
+      </div>
+      {/* Two columns */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="p-4 rounded-xl border border-emerald-500/15 bg-emerald-500/[0.03]">
+          <p className="text-emerald-400/80 text-xs font-bold uppercase tracking-wider mb-2">Yo ideal</p>
+          {yo_ideal?.map((t, i) => (
+            <p key={i} className="text-white/65 text-sm font-light leading-relaxed">• {t}</p>
+          ))}
+        </div>
+        <div className="p-4 rounded-xl border border-red-500/15 bg-red-500/[0.03]">
+          <p className="text-red-400/80 text-xs font-bold uppercase tracking-wider mb-2">Yo real</p>
+          {yo_real?.map((t, i) => (
+            <p key={i} className="text-white/65 text-sm font-light leading-relaxed">• {t}</p>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// 7. DefenseRadarChart — pentagon radar for defenses (mecanismos_defensa)
+function DefenseRadarChart({ data }) {
+  if (!data?.length) return null
+  const n = data.length
+  const cx = 180, cy = 175, R = 110
+  const getP = (i, v) => {
+    const a = (Math.PI * 2 * i) / n - Math.PI / 2
+    return [cx + Math.cos(a) * (v / 100) * R, cy + Math.sin(a) * (v / 100) * R]
+  }
+  const polyStr = data.map((d, i) => getP(i, d.valor).join(',')).join(' ')
+  const colors = ['#f43f5e', '#f97316', '#eab308', '#22d3ee', '#8b5cf6']
+  return (
+    <div className="flex justify-center py-4">
+      <svg viewBox="0 0 360 370" className="w-full max-w-sm">
+        <defs>
+          <radialGradient id="def-fill" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.05" />
+          </radialGradient>
+        </defs>
+        {/* Grid */}
+        {[25, 50, 75, 100].map(lv => {
+          const pts = Array.from({ length: n }, (_, i) => getP(i, lv).join(',')).join(' ')
+          return <polygon key={lv} points={pts} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="0.8" />
+        })}
+        {/* Axes */}
+        {data.map((_, i) => {
+          const [ex, ey] = getP(i, 100)
+          return <line key={i} x1={cx} y1={cy} x2={ex} y2={ey} stroke="rgba(255,255,255,0.06)" strokeWidth="0.8" />
+        })}
+        {/* Data polygon */}
+        <polygon points={polyStr} fill="url(#def-fill)" stroke="rgba(244,63,94,0.6)" strokeWidth="2" />
+        {/* Points + labels */}
+        {data.map((d, i) => {
+          const [px, py] = getP(i, d.valor)
+          const [lx, ly] = getP(i, 125)
+          const c = colors[i % colors.length]
+          return (
+            <g key={i}>
+              <circle cx={px} cy={py} r={6} fill={c} fillOpacity={0.8} />
+              <text x={lx} y={ly + 1} textAnchor="middle" dominantBaseline="central" fill={c} fontSize="12" fontWeight="500" fillOpacity={0.9}>{d.nombre}</text>
+              <text x={px} y={py - 12} textAnchor="middle" fill="rgba(255,255,255,0.8)" fontSize="12" fontWeight="700">{d.valor}</text>
+            </g>
+          )
+        })}
+      </svg>
+    </div>
+  )
+}
+
+// 8. RepetitionCycleChart — circular loop (tipo_pareja_que_repite)
+function RepetitionCycleChart({ data }) {
+  if (!data?.length) return null
+  const n = data.length
+  const cx = 210, cy = 200, r = 130
+  const colors = ['#f43f5e', '#f97316', '#eab308', '#6366f1', '#8b5cf6']
+  const nodes = data.map((label, i) => {
+    const angle = (i / n) * Math.PI * 2 - Math.PI / 2
+    return { label, x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle), angle }
+  })
+  return (
+    <div className="flex justify-center py-4">
+      <svg viewBox="0 0 420 400" className="w-full max-w-sm">
+        {/* Orbit circle */}
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={1.5} strokeDasharray="6 4" />
+        {/* Curved arrows between nodes */}
+        {nodes.map((node, i) => {
+          const next = nodes[(i + 1) % n]
+          const midAngle = ((i + 0.5) / n) * Math.PI * 2 - Math.PI / 2
+          const ctrlR = r * 0.65
+          const ctrlX = cx + ctrlR * Math.cos(midAngle)
+          const ctrlY = cy + ctrlR * Math.sin(midAngle)
+          return (
+            <path key={`arc-${i}`}
+              d={`M ${node.x} ${node.y} Q ${ctrlX} ${ctrlY} ${next.x} ${next.y}`}
+              fill="none" stroke={colors[i % colors.length]} strokeWidth={1.5} strokeOpacity={0.3}
+              markerEnd="url(#cycle-arrow)" />
+          )
+        })}
+        <defs>
+          <marker id="cycle-arrow" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+            <path d="M 0 0 L 6 2 L 0 4" fill="rgba(255,255,255,0.4)" />
+          </marker>
+        </defs>
+        {/* Nodes — full labels, no truncation */}
+        {nodes.map((node, i) => {
+          const c = colors[i % colors.length]
+          const words = node.label.split(' ')
+          const lines = []
+          let cur = ''
+          words.forEach(w => { if ((cur + ' ' + w).trim().length > 16) { lines.push(cur.trim()); cur = w } else cur = (cur + ' ' + w).trim() })
+          if (cur) lines.push(cur)
+          const nodeR = 28
+          return (
+            <g key={i}>
+              <circle cx={node.x} cy={node.y} r={nodeR} fill={`${c}15`} stroke={c} strokeWidth={1.5} strokeOpacity={0.5} />
+              {lines.slice(0, 3).map((l, li) => (
+                <text key={li} x={node.x} y={node.y - ((lines.length - 1) * 6) + li * 13} textAnchor="middle" fill="rgba(255,255,255,0.85)" fontSize="11" fontWeight="500" dominantBaseline="central">{l}</text>
+              ))}
+            </g>
+          )
+        })}
+        {/* Center label */}
+        <text x={cx} y={cy - 6} textAnchor="middle" fill="rgba(255,255,255,0.55)" fontSize="13" fontWeight="500">Ciclo</text>
+        <text x={cx} y={cy + 10} textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="11" fontWeight="300">repetición</text>
+      </svg>
+    </div>
+  )
+}
+
+// 9. OrbitalCoreChart — nucleus with orbiting forces (nucleo_del_patron)
+function OrbitalCoreChart({ data }) {
+  if (!data) return null
+  const { centro, fuerzas } = data
+  const cx = 220, cy = 210, orbitR = 130
+  const colors = ['#8b5cf6', '#f43f5e', '#10b981', '#3b82f6', '#f59e0b']
+  return (
+    <div className="py-4">
+      <svg viewBox="0 0 440 430" className="w-full max-w-md mx-auto">
+        {/* Orbit ring */}
+        <circle cx={cx} cy={cy} r={orbitR} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={1} strokeDasharray="4 6" />
+        <circle cx={cx} cy={cy} r={orbitR - 25} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth={0.5} />
+        {/* Central nucleus */}
+        <circle cx={cx} cy={cy} r={48} fill="rgba(139,92,246,0.1)" stroke="rgba(139,92,246,0.35)" strokeWidth={2} />
+        {/* Center text — wrap long text */}
+        {centro && (() => {
+          const words = centro.split(' ')
+          const lines = []
+          let current = ''
+          words.forEach(w => {
+            if ((current + ' ' + w).length > 20) { lines.push(current.trim()); current = w }
+            else current += ' ' + w
+          })
+          if (current.trim()) lines.push(current.trim())
+          return lines.slice(0, 4).map((l, i) => (
+            <text key={i} x={cx} y={cy - ((lines.length - 1) * 7) + i * 14} textAnchor="middle" fill="rgba(255,255,255,0.75)" fontSize="11" fontWeight="300">{l}</text>
+          ))
+        })()}
+        {/* Orbiting forces */}
+        {fuerzas?.map((f, i) => {
+          const angle = (i / fuerzas.length) * Math.PI * 2 - Math.PI / 2
+          const fx = cx + orbitR * Math.cos(angle)
+          const fy = cy + orbitR * Math.sin(angle)
+          const nodeR = 16 + (f.intensidad / 100) * 16
+          const c = colors[i % colors.length]
+          return (
+            <g key={i}>
+              <line x1={cx} y1={cy} x2={fx} y2={fy} stroke={c} strokeWidth={1 + (f.intensidad / 100) * 2} strokeOpacity={0.15} />
+              <circle cx={fx} cy={fy} r={nodeR} fill={`${c}18`} stroke={c} strokeWidth={1.5} strokeOpacity={0.5} />
+              <text x={fx} y={fy - 1} textAnchor="middle" dominantBaseline="central" fill="rgba(255,255,255,0.9)" fontSize="13" fontWeight="700">{f.intensidad}</text>
+              <text x={fx} y={fy + nodeR + 14} textAnchor="middle" fill={c} fontSize="12" fontWeight="500" fillOpacity={0.85}>{f.nombre}</text>
+            </g>
+          )
+        })}
+      </svg>
+    </div>
+  )
+}
+
+// 10. BeforeAfterMap — two columns antes → despues (cierre_transformador)
+function BeforeAfterMap({ data }) {
+  if (!data?.length) return null
+  return (
+    <div className="py-4 px-3">
+      <div className="flex justify-between mb-3 px-4">
+        <span className="text-xs font-bold uppercase tracking-[0.2em] text-red-400/70">Patrón actual</span>
+        <span className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-400/70">Dirección de cambio</span>
+      </div>
+      <div className="space-y-3">
+        {data.map((item, i) => (
+          <div key={i} className="flex items-center gap-2">
+            <div className="flex-1 text-right p-3 rounded-lg border border-red-500/10 bg-red-500/[0.03]">
+              <span className="text-white/75 text-sm font-light">{item.antes}</span>
+            </div>
+            <div className="flex-shrink-0 w-8 flex justify-center">
+              <svg viewBox="0 0 30 12" className="w-7 h-3">
+                <line x1={0} y1={6} x2={22} y2={6} stroke="#10b981" strokeWidth={1.5} strokeOpacity={0.5} />
+                <polygon points="22,2 30,6 22,10" fill="#10b981" fillOpacity={0.6} />
+              </svg>
+            </div>
+            <div className="flex-1 p-3 rounded-lg border border-emerald-500/10 bg-emerald-500/[0.03]">
+              <span className="text-white/75 text-sm font-light">{item.despues}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// 11. RelationshipTimeline — vertical timeline (for radiografia_inicial)
+function RelationshipTimeline({ data }) {
+  if (!data?.length) return null
+  const colors = ['#8b5cf6', '#3b82f6', '#f59e0b', '#ef4444']
+  return (
+    <div className="py-4 px-4">
+      <p className="text-xs font-bold uppercase tracking-[0.2em] text-violet-400/60 mb-4 text-center">Trayectoria de la relación</p>
+      <div className="relative pl-7">
+        {/* Vertical line */}
+        <div className="absolute left-2.5 top-1 bottom-1 w-[2px] bg-gradient-to-b from-violet-500/30 via-blue-500/20 to-red-500/30 rounded-full" />
+        {data.map((item, i) => {
+          const c = colors[i % colors.length]
+          return (
+            <div key={i} className="relative mb-5 last:mb-0">
+              <div className="absolute -left-4.5 top-1.5 w-3.5 h-3.5 rounded-full border-2" style={{ borderColor: c, backgroundColor: `${c}25` }} />
+              <div className="pl-3">
+                <p className="text-white/85 text-base font-medium">{item.etapa}</p>
+                <p className="text-white/50 text-sm font-light">{item.subtexto}</p>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 // ─── MAIN COMPONENT ──────────────────────────────────────────────
 
 const RadiografiaPremiumPage = () => {
@@ -2103,8 +2513,9 @@ const RadiografiaPremiumPage = () => {
         {stage === 'email' && (
           <motion.div key="email" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="min-h-screen flex items-center justify-center px-6 pt-6 pb-12"
-            onAnimationComplete={() => {
-              // Play static email audio when stage appears
+            onAnimationComplete={(def) => {
+              // Only play on enter animation, not exit
+              if (def === 'exit' || stage !== 'email') return
               playQuestion('Déjanos tu correo electrónico para enviarte los resultados.', null, null, 'email')
             }}>
             <div className="max-w-lg w-full space-y-8">
@@ -2618,40 +3029,41 @@ const RadiografiaPremiumPage = () => {
                     {/* Tarjetas del reporte personalizado — estilo autor: ícono centrado + gráfica del autor + texto */}
                     {(() => {
                       const REPORT_CARDS = [
-                        { key: 'apertura_rapport', icon: MessageCircle, title: 'Tu radiografía inicial', subtitle: 'Apertura y rapport', gradient: 'from-indigo-500 via-violet-500 to-purple-500', border: 'border-indigo-500/20', iconBg: 'from-indigo-500/30 to-violet-500/20', accentColor: '#818cf8', chartKey: null },
-                        { key: 'forma_de_amar', icon: Heart, title: 'Cómo amas y cómo esperas ser amado', subtitle: 'Tu forma de amar', gradient: 'from-rose-500 via-pink-500 to-fuchsia-500', border: 'border-rose-500/20', iconBg: 'from-rose-500/30 to-pink-500/20', accentColor: '#f472b6', chartKey: 'sternberg' },
-                        { key: 'lo_que_busca_en_el_otro', icon: Eye, title: 'Lo que buscas en el otro', subtitle: 'Proyección inconsciente', gradient: 'from-sky-500 via-blue-500 to-indigo-500', border: 'border-sky-500/20', iconBg: 'from-sky-500/30 to-blue-500/20', accentColor: '#38bdf8', chartKey: 'levine' },
-                        { key: 'lo_que_reclama_afuera', icon: Compass, title: 'Lo que reclamas afuera y te pertenece adentro', subtitle: 'Espejo emocional', gradient: 'from-amber-500 via-orange-500 to-red-500', border: 'border-amber-500/20', iconBg: 'from-amber-500/30 to-orange-500/20', accentColor: '#fb923c', chartKey: 'sue_johnson' },
-                        { key: 'fantasma_relacional', icon: Anchor, title: 'Tu fantasma relacional', subtitle: 'Escena inconsciente', gradient: 'from-purple-500 via-fuchsia-500 to-pink-500', border: 'border-purple-500/20', iconBg: 'from-purple-500/30 to-fuchsia-500/20', accentColor: '#c084fc', chartKey: 'freud_lacan' },
-                        { key: 'yo_ideal', icon: Target, title: 'Quién crees ser vs quién eres cuando amas', subtitle: 'Yo ideal vs yo real', gradient: 'from-teal-500 via-emerald-500 to-green-500', border: 'border-teal-500/20', iconBg: 'from-teal-500/30 to-emerald-500/20', accentColor: '#34d399', chartKey: 'hendrix' },
-                        { key: 'mecanismos_defensa', icon: Shield, title: 'Tus mecanismos de defensa', subtitle: 'Protección emocional', gradient: 'from-cyan-500 via-sky-500 to-blue-500', border: 'border-cyan-500/20', iconBg: 'from-cyan-500/30 to-sky-500/20', accentColor: '#22d3ee', chartKey: 'schnarch' },
-                        { key: 'tipo_pareja_que_repite', icon: Repeat, title: 'El tipo de pareja que repites', subtitle: 'Compulsión de repetición', gradient: 'from-orange-500 via-amber-500 to-yellow-500', border: 'border-orange-500/20', iconBg: 'from-orange-500/30 to-amber-500/20', accentColor: '#fbbf24', chartKey: 'tatkin' },
-                        { key: 'nucleo_del_patron', icon: Zap, title: 'El núcleo de tu patrón', subtitle: 'Insight central', gradient: 'from-fuchsia-500 via-purple-500 to-violet-500', border: 'border-fuchsia-500/20', iconBg: 'from-fuchsia-500/30 to-purple-500/20', accentColor: '#e879f9', chartKey: 'chapman' },
-                        { key: 'cierre_transformador', icon: Sparkles, title: 'Tu camino transformador', subtitle: 'Dirección del cambio', gradient: 'from-emerald-500 via-teal-500 to-cyan-500', border: 'border-emerald-500/20', iconBg: 'from-emerald-500/30 to-teal-500/20', accentColor: '#2dd4bf', chartKey: 'gottman' },
+                        { key: 'apertura_rapport', icon: MessageCircle, title: 'Tu radiografía inicial', subtitle: 'Inicio', gradient: 'from-indigo-500 via-violet-500 to-purple-500', border: 'border-indigo-500/20', iconBg: 'from-indigo-500/30 to-violet-500/20', accentColor: '#818cf8', chartType: null },
+                        { key: 'forma_de_amar', icon: Heart, title: 'Cómo amas y cómo esperas ser amado', subtitle: 'Tu forma de amar', gradient: 'from-rose-500 via-pink-500 to-fuchsia-500', border: 'border-rose-500/20', iconBg: 'from-rose-500/30 to-pink-500/20', accentColor: '#f472b6', chartType: 'polaridades' },
+                        { key: 'lo_que_busca_en_el_otro', icon: Eye, title: 'Lo que buscas en el otro', subtitle: 'Proyección inconsciente', gradient: 'from-sky-500 via-blue-500 to-indigo-500', border: 'border-sky-500/20', iconBg: 'from-sky-500/30 to-blue-500/20', accentColor: '#38bdf8', chartType: 'cuadrante_apego' },
+                        { key: 'lo_que_reclama_afuera', icon: Compass, title: 'Lo que reclamas afuera y te pertenece adentro', subtitle: 'Espejo emocional', gradient: 'from-amber-500 via-orange-500 to-red-500', border: 'border-amber-500/20', iconBg: 'from-amber-500/30 to-orange-500/20', accentColor: '#fb923c', chartType: 'espejo' },
+                        { key: 'fantasma_relacional', icon: Anchor, title: 'Tu fantasma relacional', subtitle: 'Escena inconsciente', gradient: 'from-purple-500 via-fuchsia-500 to-pink-500', border: 'border-purple-500/20', iconBg: 'from-purple-500/30 to-fuchsia-500/20', accentColor: '#c084fc', chartType: 'escena_relacional' },
+                        { key: 'yo_ideal', icon: Target, title: 'Quién crees ser vs quién eres cuando amas', subtitle: 'Yo ideal vs yo real', gradient: 'from-teal-500 via-emerald-500 to-green-500', border: 'border-teal-500/20', iconBg: 'from-teal-500/30 to-emerald-500/20', accentColor: '#34d399', chartType: 'identity_gap' },
+                        { key: 'mecanismos_defensa', icon: Shield, title: 'Tus mecanismos de defensa', subtitle: 'Protección emocional', gradient: 'from-cyan-500 via-sky-500 to-blue-500', border: 'border-cyan-500/20', iconBg: 'from-cyan-500/30 to-sky-500/20', accentColor: '#22d3ee', chartType: 'defensas' },
+                        { key: 'tipo_pareja_que_repite', icon: Repeat, title: 'El tipo de pareja que repites', subtitle: 'Compulsión de repetición', gradient: 'from-orange-500 via-amber-500 to-yellow-500', border: 'border-orange-500/20', iconBg: 'from-orange-500/30 to-amber-500/20', accentColor: '#fbbf24', chartType: 'ciclo_repeticion' },
+                        { key: 'nucleo_del_patron', icon: Zap, title: 'El núcleo de tu patrón', subtitle: 'Insight central', gradient: 'from-fuchsia-500 via-purple-500 to-violet-500', border: 'border-fuchsia-500/20', iconBg: 'from-fuchsia-500/30 to-purple-500/20', accentColor: '#e879f9', chartType: 'nucleo_orbital' },
+                        { key: 'cierre_transformador', icon: Sparkles, title: 'Tu camino transformador', subtitle: 'Dirección del cambio', gradient: 'from-emerald-500 via-teal-500 to-cyan-500', border: 'border-emerald-500/20', iconBg: 'from-emerald-500/30 to-teal-500/20', accentColor: '#2dd4bf', chartType: 'before_after' },
                       ]
 
-                      // Map chartKey to chart component
-                      const renderCardChart = (chartKey) => {
-                        const enfoques = aiAnalysis.lecturas_por_enfoque
-                        if (!enfoques) return null
-                        switch (chartKey) {
-                          case 'sternberg': return enfoques.sternberg ? <SternbergTriangleChart data={enfoques.sternberg} /> : null
-                          case 'levine': return enfoques.levine ? <PolarMiniChart data={enfoques.levine} /> : null
-                          case 'sue_johnson': return enfoques.sue_johnson ? <JohnsonCycleChart data={enfoques.sue_johnson} /> : null
-                          case 'freud_lacan': return enfoques.freud_lacan ? <IcebergChart data={enfoques.freud_lacan} /> : null
-                          case 'hendrix': return enfoques.hendrix ? <HendrixImagoChart data={enfoques.hendrix} /> : null
-                          case 'schnarch': return enfoques.schnarch ? <SchnarchThermometerChart data={enfoques.schnarch} /> : null
-                          case 'tatkin': return enfoques.tatkin ? <TatkinSpeedometerChart data={enfoques.tatkin} /> : null
-                          case 'chapman': return enfoques.chapman ? <ChapmanArcsChart data={enfoques.chapman} /> : null
-                          case 'gottman': return enfoques.gottman ? <GottmanHorsemenChart data={enfoques.gottman} /> : null
+                      // Map chartType to unique chart component from graficas_autoanalisis
+                      const renderCardChart = (chartType) => {
+                        const g = aiAnalysis.graficas_autoanalisis
+                        if (!g) return null
+                        switch (chartType) {
+                          case 'barras_resumen': return g.barras_resumen ? <DualBarsChart data={g.barras_resumen} /> : null
+                          case 'polaridades': return g.polaridades ? <PolarityScaleChart data={g.polaridades} /> : null
+                          case 'cuadrante_apego': return g.cuadrante_apego ? <AttachmentQuadrantChart data={g.cuadrante_apego} /> : null
+                          case 'espejo': return g.espejo ? <MirrorGraph data={g.espejo} /> : null
+                          case 'escena_relacional': return g.escena_relacional ? <RelationalSceneChart data={g.escena_relacional} /> : null
+                          case 'identity_gap': return g.identity_gap ? <IdentityGapChart data={g.identity_gap} /> : null
+                          case 'defensas': return g.defensas ? <DefenseRadarChart data={g.defensas} /> : null
+                          case 'ciclo_repeticion': return g.ciclo_repeticion ? <RepetitionCycleChart data={g.ciclo_repeticion} /> : null
+                          case 'nucleo_orbital': return g.nucleo_orbital ? <OrbitalCoreChart data={g.nucleo_orbital} /> : null
+                          case 'before_after': return g.before_after ? <BeforeAfterMap data={g.before_after} /> : null
                           default: return null
                         }
                       }
 
-                      return REPORT_CARDS.map(({ key, icon: CardIcon, title, subtitle, gradient, border, iconBg, accentColor, chartKey }, cardIdx) => {
+                      return REPORT_CARDS.map(({ key, icon: CardIcon, title, subtitle, gradient, border, iconBg, accentColor, chartType }, cardIdx) => {
                         const text = aiAnalysis.autoanalisis_usuario[key]
                         if (!text) return null
-                        const chart = chartKey ? renderCardChart(chartKey) : (aiAnalysis.autoanalisis_usuario ? <AutoanalisisRadial data={aiAnalysis.autoanalisis_usuario} /> : null)
+                        const chart = renderCardChart(chartType)
                         return (
                           <div key={key} className={`rounded-2xl overflow-hidden border ${border} bg-white/[0.02] backdrop-blur-sm`}>
                             {/* Header — centered author style */}
@@ -2689,6 +3101,10 @@ const RadiografiaPremiumPage = () => {
                   </div>
                   <div className="p-6 space-y-3">
                     <p className="text-white/50 text-sm font-light leading-relaxed mb-4">Lo que compartiste aquí es valioso y único. Este análisis está diseñado para ayudarte a comprender cómo amas, qué patrones se repiten en tu relación, y qué posibilidades de crecimiento existen.</p>
+                    {/* Timeline */}
+                    {aiAnalysis.graficas_autoanalisis?.timeline_relacion && (
+                      <RelationshipTimeline data={aiAnalysis.graficas_autoanalisis.timeline_relacion} />
+                    )}
                     {aiAnalysis.radiografia_inicial.split('\n\n').map((p, i) => (
                       <p key={i} className="text-white/70 text-[15px] font-light leading-[1.8]">{renderConceptBold(p)}</p>
                     ))}
@@ -2723,6 +3139,15 @@ const RadiografiaPremiumPage = () => {
                   {/* ── 1. JOHN GOTTMAN — Regulación del conflicto ── */}
                   {aiAnalysis.lecturas_por_enfoque?.gottman && (() => {
                     const data = aiAnalysis.lecturas_por_enfoque.gottman
+                    const jinetes = data.jinetes || { critica: 50, desprecio: 30, actitud_defensiva: 55, evasion: 45 }
+                    const reparacion = data.capacidad_reparacion ?? 40
+                    const jineteLabels = [
+                      { key: 'critica', label: 'Crítica', color: '#60a5fa', icon: '⚔️' },
+                      { key: 'desprecio', label: 'Desprecio', color: '#818cf8', icon: '😤' },
+                      { key: 'actitud_defensiva', label: 'Actitud defensiva', color: '#a78bfa', icon: '🛡️' },
+                      { key: 'evasion', label: 'Evasión', color: '#6366f1', icon: '🚶' }
+                    ]
+                    const detalle = data.jinetes_detalle || []
                     return (
                       <div className="space-y-6">
                         <div className="text-center py-6">
@@ -2731,20 +3156,135 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-blue-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Regulación del conflicto</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300 tracking-wide">Los 4 jinetes de tu relación</h2>
+                        <p className="text-white/45 text-xs font-light mt-2">John Gottman</p>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">¿Cómo manejan los desacuerdos? Los patrones de conflicto que aparecen una y otra vez revelan la salud del vínculo.</p>
                         </div>
-                        <GottmanHorsemenChart data={data} />
-                        <p className="text-center text-white/50 text-xs font-light">John Gottman</p>
-                        <div className="p-6 rounded-2xl border border-blue-500/10 bg-gradient-to-br from-blue-500/[0.03] to-transparent">
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/15 flex items-center justify-center">
-                              <Shield className="w-5 h-5 text-blue-400/60" strokeWidth={1.5} />
-                            </div>
-                            <div>
-                              <h4 className="text-white/80 text-base font-semibold">John Gottman</h4>
-                              <p className="text-blue-300/60 text-xs font-light">{data.enfoque}</p>
+
+                        {/* Side by side: Radar + Bars */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {/* LEFT — Radar chart (5 axes: 4 jinetes + reparacion) */}
+                          <div className="p-4 rounded-2xl border border-blue-500/10 bg-white/[0.02]">
+                            <p className="text-center text-white/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-3">Perfil de conflicto</p>
+                            <svg viewBox="0 0 360 360" className="w-full max-w-sm mx-auto">
+                              {(() => {
+                                const radarItems = [
+                                  { label: 'Crítica', val: jinetes.critica, color: '#60a5fa' },
+                                  { label: 'Desprecio', val: jinetes.desprecio, color: '#818cf8' },
+                                  { label: 'Defensiva', val: jinetes.actitud_defensiva, color: '#a78bfa' },
+                                  { label: 'Evasión', val: jinetes.evasion, color: '#6366f1' },
+                                  { label: 'Reparación', val: reparacion, color: '#10b981' }
+                                ]
+                                const rn = radarItems.length, rcx = 180, rcy = 175, rR = 110
+                                const rPt = (i, v) => {
+                                  const a = (Math.PI * 2 * i) / rn - Math.PI / 2
+                                  return [rcx + Math.cos(a) * (v / 100) * rR, rcy + Math.sin(a) * (v / 100) * rR]
+                                }
+                                const poly = radarItems.map((d, i) => rPt(i, d.val).join(',')).join(' ')
+                                return (
+                                  <>
+                                    {[25, 50, 75, 100].map(lv => {
+                                      const pts = Array.from({ length: rn }, (_, i) => rPt(i, lv).join(',')).join(' ')
+                                      return <polygon key={lv} points={pts} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="0.8" />
+                                    })}
+                                    {radarItems.map((_, i) => {
+                                      const [ex, ey] = rPt(i, 100)
+                                      return <line key={i} x1={rcx} y1={rcy} x2={ex} y2={ey} stroke="rgba(255,255,255,0.06)" strokeWidth="0.8" />
+                                    })}
+                                    <polygon points={poly} fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.6)" strokeWidth="2" />
+                                    {radarItems.map((d, i) => {
+                                      const [px, py] = rPt(i, d.val)
+                                      const [lx, ly] = rPt(i, 125)
+                                      return (
+                                        <g key={i}>
+                                          <circle cx={px} cy={py} r={5} fill={d.color} fillOpacity={0.8} />
+                                          <text x={lx} y={ly + 1} textAnchor="middle" dominantBaseline="central" fill={d.color} fontSize="13" fontWeight="500" fillOpacity={0.9}>{d.label}</text>
+                                          <text x={px} y={py - 11} textAnchor="middle" fill="rgba(255,255,255,0.8)" fontSize="12" fontWeight="700">{d.val}</text>
+                                        </g>
+                                      )
+                                    })}
+                                  </>
+                                )
+                              })()}
+                            </svg>
+                          </div>
+
+                          {/* RIGHT — Horizontal bars */}
+                          <div className="p-4 rounded-2xl border border-blue-500/10 bg-white/[0.02]">
+                            <p className="text-center text-white/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-3">Intensidad por jinete</p>
+                            <div className="space-y-4 mt-4">
+                              {jineteLabels.map((j) => {
+                                const val = jinetes[j.key] ?? 0
+                                return (
+                                  <div key={j.key}>
+                                    <div className="flex justify-between mb-1">
+                                      <span className="text-white/65 text-xs font-medium">{j.icon} {j.label}</span>
+                                      <span className="text-xs font-bold" style={{ color: j.color }}>{val}%</span>
+                                    </div>
+                                    <div className="h-2.5 rounded-full bg-white/[0.06] overflow-hidden">
+                                      <div className="h-full rounded-full" style={{ width: `${val}%`, backgroundColor: j.color, opacity: 0.55 }} />
+                                    </div>
+                                  </div>
+                                )
+                              })}
+                              {/* Reparacion bar (green) */}
+                              <div>
+                                <div className="flex justify-between mb-1">
+                                  <span className="text-white/65 text-xs font-medium">💚 Reparación</span>
+                                  <span className="text-xs font-bold text-emerald-400">{reparacion}%</span>
+                                </div>
+                                <div className="h-2.5 rounded-full bg-white/[0.06] overflow-hidden">
+                                  <div className="h-full rounded-full bg-emerald-500" style={{ width: `${reparacion}%`, opacity: 0.55 }} />
+                                </div>
+                              </div>
                             </div>
                           </div>
+                        </div>
+
+                        {/* Jinete detail cards */}
+                        {detalle.length > 0 && (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {detalle.map((d, i) => {
+                              const j = jineteLabels[i] || jineteLabels[0]
+                              return (
+                                <div key={i} className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <span className="text-sm">{j.icon}</span>
+                                    <span className="text-white/80 text-xs font-semibold">{j.label}</span>
+                                  </div>
+                                  {d.como_aparece && <p className="text-white/55 text-[12px] font-light leading-relaxed mb-1"><strong className="text-white/70">Cómo aparece:</strong> {d.como_aparece}</p>}
+                                  {d.impacto && <p className="text-white/55 text-[12px] font-light leading-relaxed"><strong className="text-white/70">Impacto:</strong> {d.impacto}</p>}
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
+
+                        {/* Mini-lectura: patron, zona riesgo, recurso */}
+                        {(data.patron_dominante || data.zona_riesgo || data.recurso_disponible) && (
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            {data.patron_dominante && (
+                              <div className="p-3 rounded-xl border border-blue-500/10 bg-blue-500/[0.03] text-center">
+                                <p className="text-blue-300/60 text-[9px] font-bold uppercase tracking-wider mb-1">Patrón dominante</p>
+                                <p className="text-white/70 text-xs font-light">{data.patron_dominante}</p>
+                              </div>
+                            )}
+                            {data.zona_riesgo && (
+                              <div className="p-3 rounded-xl border border-red-500/10 bg-red-500/[0.03] text-center">
+                                <p className="text-red-300/60 text-[9px] font-bold uppercase tracking-wider mb-1">Zona de riesgo</p>
+                                <p className="text-white/70 text-xs font-light">{data.zona_riesgo}</p>
+                              </div>
+                            )}
+                            {data.recurso_disponible && (
+                              <div className="p-3 rounded-xl border border-emerald-500/10 bg-emerald-500/[0.03] text-center">
+                                <p className="text-emerald-300/60 text-[9px] font-bold uppercase tracking-wider mb-1">Recurso disponible</p>
+                                <p className="text-white/70 text-xs font-light">{data.recurso_disponible}</p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        <div className="p-6 rounded-2xl border border-blue-500/10 bg-gradient-to-br from-blue-500/[0.03] to-transparent">
+                          <p className="text-blue-300/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Interpretación</p>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
                             <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
@@ -2764,20 +3304,12 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-violet-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">La geometría del amor</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-purple-300 tracking-wide">Intimidad, pasión y compromiso</h2>
+                          <p className="text-white/45 text-xs font-light mt-2">Robert Sternberg</p>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">El triángulo amoroso refleja la proporción entre los tres pilares de toda relación profunda.</p>
                         </div>
                         <SternbergTriangleChart data={data} />
-                        <p className="text-center text-white/50 text-xs font-light">Robert Sternberg</p>
                         <div className="p-6 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.03] to-transparent">
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/15 flex items-center justify-center">
-                              <Star className="w-5 h-5 text-violet-400/60" strokeWidth={1.5} />
-                            </div>
-                            <div>
-                              <h4 className="text-white/80 text-base font-semibold">Robert Sternberg</h4>
-                              <p className="text-violet-300/60 text-xs font-light">{data.enfoque}</p>
-                            </div>
-                          </div>
+                          <p className="text-violet-300/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Interpretación</p>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
                             <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
@@ -2797,20 +3329,12 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-amber-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Identidad emocional</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-yellow-300 tracking-wide">Tu estilo de apego</h2>
+                          <p className="text-white/45 text-xs font-light mt-2">Amir Levine{data.estilo_apego ? ` · Estilo detectado: ${data.estilo_apego}` : ''}</p>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">¿Qué tipo de pareja eres? Tu forma de vincularte y cuánta cercanía toleras.</p>
                         </div>
                         <PolarMiniChart data={data} />
-                        <p className="text-center text-white/50 text-xs font-light">Amir Levine</p>
                         <div className="p-6 rounded-2xl border border-amber-500/10 bg-gradient-to-br from-amber-500/[0.03] to-transparent">
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/15 flex items-center justify-center">
-                              <Anchor className="w-5 h-5 text-amber-400/60" strokeWidth={1.5} />
-                            </div>
-                            <div>
-                              <h4 className="text-white/80 text-base font-semibold">Amir Levine</h4>
-                              {data.estilo_apego && <p className="text-amber-300/60 text-xs font-medium">Estilo detectado: {data.estilo_apego}</p>}
-                            </div>
-                          </div>
+                          <p className="text-amber-300/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Interpretación</p>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
                             <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
@@ -2830,20 +3354,12 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-rose-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Ciclos emocionales</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-rose-300 to-pink-300 tracking-wide">El baile emocional de tu relación</h2>
+                          <p className="text-white/45 text-xs font-light mt-2">Sue Johnson</p>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">El ciclo perseguidor-distanciador: cómo se activan las alarmas emocionales y se perpetúan los patrones de desconexión.</p>
                         </div>
                         <JohnsonCycleChart data={data} />
-                        <p className="text-center text-white/50 text-xs font-light">Sue Johnson</p>
                         <div className="p-6 rounded-2xl border border-rose-500/10 bg-gradient-to-br from-rose-500/[0.03] to-transparent">
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/15 flex items-center justify-center">
-                              <Heart className="w-5 h-5 text-rose-400/60" strokeWidth={1.5} />
-                            </div>
-                            <div>
-                              <h4 className="text-white/80 text-base font-semibold">Sue Johnson</h4>
-                              <p className="text-rose-300/60 text-xs font-light">{data.enfoque}</p>
-                            </div>
-                          </div>
+                          <p className="text-rose-300/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Interpretación</p>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
                             <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
@@ -2863,20 +3379,12 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-pink-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Vida erótica</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-rose-300 tracking-wide">Erotismo y deseo</h2>
+                          <p className="text-white/45 text-xs font-light mt-2">Esther Perel</p>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">La tensión entre seguridad y aventura. El deseo necesita misterio, novedad y autonomía para sobrevivir.</p>
                         </div>
                         {aiAnalysis.energia_vinculo && <LollipopMiniChart data={aiAnalysis.energia_vinculo} />}
-                        <p className="text-center text-white/50 text-xs font-light">Esther Perel</p>
                         <div className="p-6 rounded-2xl border border-pink-500/10 bg-gradient-to-br from-pink-500/[0.03] to-transparent">
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-pink-500/10 border border-pink-500/15 flex items-center justify-center">
-                              <Flame className="w-5 h-5 text-pink-400/60" strokeWidth={1.5} />
-                            </div>
-                            <div>
-                              <h4 className="text-white/80 text-base font-semibold">Esther Perel</h4>
-                              <p className="text-pink-300/60 text-xs font-light">{data.enfoque}</p>
-                            </div>
-                          </div>
+                          <p className="text-pink-300/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Interpretación</p>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
                             <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
@@ -2896,20 +3404,12 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-purple-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Inconsciente relacional</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-fuchsia-300 tracking-wide">Lo que no ves, te elige</h2>
+                          <p className="text-white/45 text-xs font-light mt-2">Sigmund Freud & Jacques Lacan</p>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">Debajo de la superficie: herida infantil, pulsiones repetitivas y la búsqueda inconsciente del otro.</p>
                         </div>
                         <IcebergChart data={data} />
-                        <p className="text-center text-white/50 text-xs font-light">Sigmund Freud & Jacques Lacan</p>
                         <div className="p-6 rounded-2xl border border-purple-500/10 bg-gradient-to-br from-purple-500/[0.03] to-transparent">
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/15 flex items-center justify-center">
-                              <Brain className="w-5 h-5 text-purple-400/60" strokeWidth={1.5} />
-                            </div>
-                            <div>
-                              <h4 className="text-white/80 text-base font-semibold">Psicoanálisis</h4>
-                              <p className="text-purple-300/60 text-xs font-light">{data.enfoque}</p>
-                            </div>
-                          </div>
+                          <p className="text-purple-300/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Interpretación</p>
                           {data.interpretacion_freud && (
                             <div className="pl-4 border-l-2 border-purple-500/20 space-y-2 mb-4">
                               <p className="text-purple-300/60 text-[10px] font-medium uppercase tracking-wider">Lectura freudiana</p>
@@ -2945,20 +3445,12 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-orange-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">La elección inconsciente</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-amber-300 tracking-wide">¿Por qué elegiste a tu pareja?</h2>
+                          <p className="text-white/45 text-xs font-light mt-2">Harville Hendrix</p>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">La persona que elegimos no es casualidad. Nuestra psique busca reparar heridas de la infancia a través del Imago.</p>
                         </div>
                         <HendrixImagoChart data={data} />
-                        <p className="text-center text-white/50 text-xs font-light">Harville Hendrix</p>
                         <div className="p-6 rounded-2xl border border-orange-500/10 bg-gradient-to-br from-orange-500/[0.03] to-transparent">
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/15 flex items-center justify-center">
-                              <Repeat className="w-5 h-5 text-orange-400/60" strokeWidth={1.5} />
-                            </div>
-                            <div>
-                              <h4 className="text-white/80 text-base font-semibold">Harville Hendrix</h4>
-                              <p className="text-orange-300/60 text-xs font-light">{data.enfoque}</p>
-                            </div>
-                          </div>
+                          <p className="text-orange-300/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Interpretación</p>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
                             <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
@@ -2978,20 +3470,12 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-emerald-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Diferenciación del self</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-teal-300 tracking-wide">¿Te pierdes en la relación?</h2>
+                          <p className="text-white/45 text-xs font-light mt-2">David Schnarch</p>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">La madurez emocional se mide por tu capacidad de mantener tu identidad sin fusionarte ni distanciarte.</p>
                         </div>
                         <SchnarchThermometerChart data={data} />
-                        <p className="text-center text-white/50 text-xs font-light">David Schnarch</p>
                         <div className="p-6 rounded-2xl border border-emerald-500/10 bg-gradient-to-br from-emerald-500/[0.03] to-transparent">
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center">
-                              <Compass className="w-5 h-5 text-emerald-400/60" strokeWidth={1.5} />
-                            </div>
-                            <div>
-                              <h4 className="text-white/80 text-base font-semibold">David Schnarch</h4>
-                              <p className="text-emerald-300/60 text-xs font-light">{data.enfoque}</p>
-                            </div>
-                          </div>
+                          <p className="text-emerald-300/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Interpretación</p>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
                             <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
@@ -3011,20 +3495,12 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-teal-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Sistema nervioso</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-teal-300 to-cyan-300 tracking-wide">Tu regulación en pareja</h2>
+                          <p className="text-white/45 text-xs font-light mt-2">Stan Tatkin</p>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">Cómo tu sistema nervioso responde al estrés relacional: ¿te hiperactivás, te desconectás o te regulás con tu pareja?</p>
                         </div>
                         <TatkinSpeedometerChart data={data} />
-                        <p className="text-center text-white/50 text-xs font-light">Stan Tatkin</p>
                         <div className="p-6 rounded-2xl border border-teal-500/10 bg-gradient-to-br from-teal-500/[0.03] to-transparent">
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-teal-500/10 border border-teal-500/15 flex items-center justify-center">
-                              <Activity className="w-5 h-5 text-teal-400/60" strokeWidth={1.5} />
-                            </div>
-                            <div>
-                              <h4 className="text-white/80 text-base font-semibold">Stan Tatkin</h4>
-                              <p className="text-teal-300/60 text-xs font-light">{data.enfoque}</p>
-                            </div>
-                          </div>
+                          <p className="text-teal-300/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Interpretación</p>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
                             <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
@@ -3044,36 +3520,28 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-red-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Lenguaje emocional</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-red-300 to-orange-300 tracking-wide">Cómo das y recibes amor</h2>
+                          <p className="text-white/45 text-xs font-light mt-2">Gary Chapman</p>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">Los 5 lenguajes del amor: descubre cuál es el tuyo, cuál es el de tu pareja y por qué no siempre se entienden.</p>
                         </div>
                         <ChapmanArcsChart data={data} />
-                        <p className="text-center text-white/50 text-xs font-light">Gary Chapman</p>
-                        <div className="p-6 rounded-2xl border border-red-500/10 bg-gradient-to-br from-red-500/[0.03] to-transparent">
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/15 flex items-center justify-center">
-                              <Gift className="w-5 h-5 text-red-400/60" strokeWidth={1.5} />
-                            </div>
-                            <div>
-                              <h4 className="text-white/80 text-base font-semibold">Gary Chapman</h4>
-                              <p className="text-red-300/60 text-xs font-light">{data.enfoque}</p>
-                            </div>
+                        {(data.lenguaje_usuario || data.lenguaje_pareja) && (
+                          <div className="grid grid-cols-2 gap-3">
+                            {data.lenguaje_usuario && (
+                              <div className="px-4 py-3 rounded-xl border border-red-500/10 bg-red-500/[0.04]">
+                                <p className="text-red-300/60 text-[10px] font-medium uppercase tracking-wider mb-1">Tu lenguaje</p>
+                                <p className="text-white/70 text-sm font-light">{data.lenguaje_usuario}</p>
+                              </div>
+                            )}
+                            {data.lenguaje_pareja && (
+                              <div className="px-4 py-3 rounded-xl border border-red-500/10 bg-red-500/[0.04]">
+                                <p className="text-red-300/60 text-[10px] font-medium uppercase tracking-wider mb-1">Su lenguaje</p>
+                                <p className="text-white/70 text-sm font-light">{data.lenguaje_pareja}</p>
+                              </div>
+                            )}
                           </div>
-                          {(data.lenguaje_usuario || data.lenguaje_pareja) && (
-                            <div className="grid grid-cols-2 gap-3 mb-4">
-                              {data.lenguaje_usuario && (
-                                <div className="px-4 py-3 rounded-xl border border-red-500/10 bg-red-500/[0.04]">
-                                  <p className="text-red-300/60 text-[10px] font-medium uppercase tracking-wider mb-1">Tu lenguaje</p>
-                                  <p className="text-white/70 text-sm font-light">{data.lenguaje_usuario}</p>
-                                </div>
-                              )}
-                              {data.lenguaje_pareja && (
-                                <div className="px-4 py-3 rounded-xl border border-red-500/10 bg-red-500/[0.04]">
-                                  <p className="text-red-300/60 text-[10px] font-medium uppercase tracking-wider mb-1">Su lenguaje</p>
-                                  <p className="text-white/70 text-sm font-light">{data.lenguaje_pareja}</p>
-                                </div>
-                              )}
-                            </div>
-                          )}
+                        )}
+                        <div className="p-6 rounded-2xl border border-red-500/10 bg-gradient-to-br from-red-500/[0.03] to-transparent">
+                          <p className="text-red-300/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Interpretación</p>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
                             <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
@@ -3093,20 +3561,12 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-cyan-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Poder relacional</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-sky-300 tracking-wide">El equilibrio de fuerzas</h2>
+                          <p className="text-white/45 text-xs font-light mt-2">Terry Real</p>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">La danza entre grandiosidad y vergüenza. ¿Quién tiene más poder en la relación y cómo se negocia?</p>
                         </div>
                         <RealBalanceChart data={data} />
-                        <p className="text-center text-white/50 text-xs font-light">Terry Real</p>
                         <div className="p-6 rounded-2xl border border-cyan-500/10 bg-gradient-to-br from-cyan-500/[0.03] to-transparent">
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/15 flex items-center justify-center">
-                              <Scale className="w-5 h-5 text-cyan-400/60" strokeWidth={1.5} />
-                            </div>
-                            <div>
-                              <h4 className="text-white/80 text-base font-semibold">Terry Real</h4>
-                              <p className="text-cyan-300/60 text-xs font-light">{data.enfoque}</p>
-                            </div>
-                          </div>
+                          <p className="text-cyan-300/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Interpretación</p>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
                             <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
@@ -3265,8 +3725,8 @@ const RadiografiaPremiumPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                   {aiAnalysis.temas_para_consulta?.length > 0
                     ? aiAnalysis.temas_para_consulta.map((tema, i) => {
-                        const icons = [Eye, Anchor, Heart, Target, Compass, Brain]
-                        const colors = ['violet', 'cyan', 'fuchsia', 'amber', 'emerald', 'rose']
+                        const icons = [Eye, Anchor, Heart, Target, Compass, Brain, Activity, Sparkles]
+                        const colors = ['violet', 'cyan', 'fuchsia', 'amber', 'emerald', 'rose', 'sky', 'orange']
                         const TemaIcon = icons[i % icons.length]
                         const color = colors[i % colors.length]
                         return (
@@ -3310,9 +3770,14 @@ const RadiografiaPremiumPage = () => {
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {aiAnalysis.tecnicas_recomendadas.map((tec, i) => (
-                        <div key={i} className="p-3 rounded-xl border border-violet-500/10 bg-violet-500/[0.02] flex items-center gap-3">
-                          <div className="w-2 h-2 rounded-full bg-violet-400/50 flex-shrink-0" />
-                          <p className="text-white/65 text-[13px] font-light">{typeof tec === 'string' ? tec : tec.nombre}</p>
+                        <div key={i} className="p-4 rounded-xl border border-violet-500/10 bg-violet-500/[0.02]">
+                          <div className="flex items-center gap-3 mb-2">
+                            <div className="w-2 h-2 rounded-full bg-violet-400/50 flex-shrink-0" />
+                            <p className="text-white/75 text-sm font-medium">{typeof tec === 'string' ? tec : tec.nombre}</p>
+                          </div>
+                          {typeof tec === 'object' && tec.descripcion && (
+                            <p className="text-white/45 text-[12px] font-light leading-relaxed pl-5">{tec.descripcion}</p>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -3326,13 +3791,25 @@ const RadiografiaPremiumPage = () => {
                       📚 Lecturas recomendadas
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {aiAnalysis.libros_recomendados.map((libro, i) => (
-                        <div key={i} className="p-4 rounded-xl border border-fuchsia-500/10 bg-fuchsia-500/[0.02]">
-                          <p className="text-white/75 text-sm font-medium">{typeof libro === 'string' ? libro : libro.titulo}</p>
-                          {typeof libro === 'object' && libro.autor && <p className="text-fuchsia-300/50 text-xs font-light mt-1">{libro.autor}</p>}
-                          {typeof libro === 'object' && libro.razon && <p className="text-white/45 text-[12px] font-light mt-1">{libro.razon}</p>}
-                        </div>
-                      ))}
+                      {aiAnalysis.libros_recomendados.map((libro, i) => {
+                        const nivelColors = { introductorio: 'emerald', intermedio: 'amber', avanzado: 'rose' }
+                        const nivelLabel = typeof libro === 'object' && libro.nivel
+                        const nColor = nivelColors[nivelLabel] || 'violet'
+                        return (
+                          <div key={i} className="p-4 rounded-xl border border-fuchsia-500/10 bg-fuchsia-500/[0.02]">
+                            <div className="flex items-start justify-between gap-2">
+                              <p className="text-white/75 text-sm font-medium">{typeof libro === 'string' ? libro : libro.titulo}</p>
+                              {nivelLabel && (
+                                <span className={`text-${nColor}-400/70 text-[9px] font-bold uppercase tracking-wider bg-${nColor}-500/10 px-2 py-0.5 rounded-full border border-${nColor}-500/15 flex-shrink-0 whitespace-nowrap`}>
+                                  {nivelLabel}
+                                </span>
+                              )}
+                            </div>
+                            {typeof libro === 'object' && libro.autor && <p className="text-fuchsia-300/50 text-xs font-light mt-1">{libro.autor}</p>}
+                            {typeof libro === 'object' && libro.razon && <p className="text-white/45 text-[12px] font-light mt-2 leading-relaxed">{libro.razon}</p>}
+                          </div>
+                        )
+                      })}
                     </div>
                   </div>
                 )}

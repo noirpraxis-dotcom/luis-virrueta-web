@@ -346,7 +346,23 @@ Devuelve el resultado en el siguiente formato JSON exacto:
       "enfoque": "Estabilidad relacional y dinámica del conflicto",
       "interpretacion": "(3-4 párrafos: Los Cuatro Jinetes detectados, ratio positivo/negativo, bids for connection, capacidad de reparación. Cruza con los hallazgos del autoanálisis — ¿cómo los mecanismos de defensa o el fantasma relacional afectan la dinámica Gottman? Cita al usuario.)",
       "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 indicadores, cada uno una frase corta comprensible sin jerga"],
-      "puntuacion": "(0-100)"
+      "puntuacion": "(0-100)",
+      "jinetes": {
+        "critica": "(0-100 intensidad detectada)",
+        "desprecio": "(0-100 intensidad detectada)",
+        "actitud_defensiva": "(0-100 intensidad detectada)",
+        "evasion": "(0-100 intensidad detectada)"
+      },
+      "capacidad_reparacion": "(0-100)",
+      "jinetes_detalle": {
+        "critica": { "como_aparece": "(1-2 frases: cómo se manifiesta la crítica en ESTA relación)", "impacto": "(1 frase: efecto en el vínculo)" },
+        "desprecio": { "como_aparece": "(1-2 frases: cómo se manifiesta el desprecio en ESTA relación)", "impacto": "(1 frase: efecto en el vínculo)" },
+        "actitud_defensiva": { "como_aparece": "(1-2 frases: cómo se manifiesta la defensividad en ESTA relación)", "impacto": "(1 frase: efecto en el vínculo)" },
+        "evasion": { "como_aparece": "(1-2 frases: cómo se manifiesta la evasión en ESTA relación)", "impacto": "(1 frase: efecto en el vínculo)" }
+      },
+      "patron_dominante": "(1 frase: resumen del patrón dominante de conflicto)",
+      "zona_riesgo": "(1 frase: principal zona de riesgo detectada)",
+      "recurso_disponible": "(1 frase: recurso de reparación disponible)"
     },
     "sue_johnson": {
       "titulo": "Sue Johnson",
@@ -433,18 +449,71 @@ Devuelve el resultado en el siguiente formato JSON exacto:
   "temas_para_consulta": [
     "(Tema específico y personalizado basado en el análisis, ej: 'Tu patrón de evitar conversaciones sobre el futuro refleja una herida de abandono que podemos trabajar.')",
     "(Otro tema: describir en 1-2 frases qué se trabajaría y por qué es relevante para ESTA persona.)",
-    "(Incluir entre 4 y 6 temas derivados directamente del análisis, NO genéricos.)",
-    "(Cada tema debe conectar con algo que el usuario dijo o un patrón detectado.)"
+    "(Incluir EXACTAMENTE 8 temas derivados directamente del análisis, NO genéricos.)",
+    "(Cada tema debe conectar con algo que el usuario dijo o un patrón detectado.)",
+    "(Usa **nombre del tema**: descripción del tema. Ejemplo: **Patrón de evitación**: Tu tendencia a...)",
+    "(Los 8 temas deben cubrir: patrones inconscientes, raíces familiares, reconexión emocional, diferenciación, regulación, deseo, comunicación, y un tema sorpresa que emerja del análisis.)"
   ],
   "tecnicas_recomendadas": [
-    {"nombre": "(Nombre de técnica terapéutica específica, ej: 'Diálogo estructurado Imago')", "descripcion": "(1 frase: por qué esta técnica es relevante para ESTE usuario)"},
-    "(Incluir 3-5 técnicas derivadas del análisis: EFT, Gottman Sound House, Imago, Diferenciación de Schnarch, Mindfulness relacional, etc.)"
+    {"nombre": "(Nombre de técnica terapéutica específica, ej: 'Diálogo estructurado Imago')", "descripcion": "(1-2 frases: por qué esta técnica es relevante para ESTE usuario y qué lograría con ella)"},
+    "(Incluir 5-6 técnicas derivadas del análisis: EFT, Gottman Sound House, Imago, Diferenciación de Schnarch, Mindfulness relacional, EMDR, etc. Cada una con nombre en negrita y explicación de por qué le sirve a ESTE usuario.)"
   ],
   "libros_recomendados": [
-    {"titulo": "(Título exacto del libro)", "autor": "(Autor)", "razon": "(1 frase: por qué este libro es relevante para ESTE usuario)"},
-    "(Incluir 3-4 libros. Pueden ser de los autores del marco teórico u otros relevantes. Deben conectar con los patrones detectados.)"
-  ]
-}`
+    {"titulo": "(Título exacto del libro)", "autor": "(Autor)", "razon": "(1 frase: por qué este libro es relevante para ESTE usuario)", "nivel": "(introductorio|intermedio|avanzado)"},
+    "(Incluir 6 libros. NO solo de los 11 autores del marco — incluye libros relevantes de CUALQUIER autor de psicología, pareja o desarrollo personal. Deben conectar con los patrones detectados. Clasificar cada uno por nivel de dificultad: introductorio = accesible para cualquiera, intermedio = requiere cierta base, avanzado = lectura profunda o técnica.)"
+  ],
+  "graficas_autoanalisis": {
+    "barras_resumen": [
+      {"label": "(nombre del indicador clave, ej: 'Conexión emocional')", "valor": "(0-100)", "color": "(blue|violet|rose|amber|emerald|cyan)"},
+      "(6-8 indicadores: mezcla de dimensiones y scores de autores más relevantes para este usuario)"
+    ],
+    "polaridades": [
+      {"izq": "(polo izquierdo, ej: 'Conexión emocional')", "der": "(polo derecho, ej: 'Autonomía')", "valor": "(0-100, donde 0=total izq, 100=total der, 50=equilibrio)"},
+      "(4-6 polaridades amorosas detectadas en el análisis)"
+    ],
+    "cuadrante_apego": {
+      "ansiedad": "(0-100 nivel de ansiedad de apego)",
+      "evitacion": "(0-100 nivel de evitación de intimidad)"
+    },
+    "espejo": [
+      {"afuera": "(lo que reclama, ej: 'Que me escuchen')", "adentro": "(la necesidad real, ej: 'Necesidad de validación')"},
+      "(3-5 pares derivados del análisis)"
+    ],
+    "escena_relacional": {
+      "arriba": {"rol": "(figura idealizada, ej: 'Compañero idealizado')", "subtexto": "(ej: 'conciencia, expansión')"},
+      "izquierda": {"rol": "(figura de seguridad, ej: 'Madre contenedora')", "subtexto": "(ej: 'seguridad')"},
+      "derecha": {"rol": "(deseo de expansión, ej: 'Libertad espiritual')", "subtexto": "(ej: 'expansión')"},
+      "abajo": {"rol": "(lo que el fantasma evita, ej: 'Vida cotidiana / responsabilidad')", "subtexto": "(ej: 'lo que el fantasma evita')"},
+      "centro": "(nombre del usuario)"
+    },
+    "identity_gap": {
+      "brecha": "(0-100 distancia entre yo ideal y yo real)",
+      "yo_ideal": ["(rasgo 1, ej: 'Consciente')", "(rasgo 2)", "(rasgo 3)", "(rasgo 4)"],
+      "yo_real": ["(rasgo 1, ej: 'Evasivo')", "(rasgo 2)", "(rasgo 3)", "(rasgo 4)"]
+    },
+    "defensas": [
+      {"nombre": "(mecanismo, ej: 'Racionalización')", "valor": "(0-100 intensidad)"},
+      "(4-6 mecanismos de defensa detectados con su intensidad)"
+    ],
+    "ciclo_repeticion": ["(etapa 1, ej: 'Elección de pareja')", "(etapa 2, ej: 'Dinámica de rescate')", "(etapa 3)", "(etapa 4)", "(etapa 5, ej: 'Repetición')"],
+    "nucleo_orbital": {
+      "centro": "(insight central, ej: 'Quiero contención sin aceptar los límites que implica')",
+      "fuerzas": [
+        {"nombre": "(fuerza 1, ej: 'libertad')", "intensidad": "(0-100)"},
+        "(4-6 fuerzas que orbitan el patrón central)"
+      ]
+    },
+    "before_after": [
+      {"antes": "(patrón actual, ej: 'Evasión')", "despues": "(dirección de cambio, ej: 'Presencia emocional')"},
+      "(4-6 transformaciones propuestas)"
+    ],
+    "timeline_relacion": [
+      {"etapa": "(nombre de etapa, ej: 'Conexión inicial')", "subtexto": "(descripción breve, ej: 'ideas / profundidad')"},
+      "(3-5 etapas de evolución de la relación detectadas)"
+    ]
+  }
+}
+`
 
   return prompt
 }
@@ -596,7 +665,18 @@ export function generateFallbackAnalysis() {
         enfoque: 'Estabilidad relacional y dinámica del conflicto',
         interpretacion: 'Desde la perspectiva de Gottman, tu relación muestra señales de **desgaste en la ratio positivo/negativo**. Las interacciones negativas están comenzando a superar las positivas en ciertos momentos, lo que indica la presencia incipiente de los Cuatro Jinetes — especialmente la **crítica** y la **actitud defensiva**.\n\nSin embargo, la disposición a buscar ayuda es un indicador positivo. Gottman señala que las parejas que mantienen una ratio de 5:1 (interacciones positivas por cada negativa) tienen mayor probabilidad de estabilidad. El trabajo está en **aumentar los momentos de conexión positiva** y aprender a manejar el conflicto de forma constructiva.',
         indicadores: ['Ratio positivo/negativo: Desequilibrado', 'Crítica: presente en conflictos', 'Defensividad: moderada-alta', 'Capacidad de reparación: existe pero inconsistente', 'Bids for connection: desatendidos parcialmente'],
-        puntuacion: 55
+        puntuacion: 55,
+        jinetes: { critica: 65, desprecio: 30, actitud_defensiva: 75, evasion: 55 },
+        capacidad_reparacion: 50,
+        jinetes_detalle: {
+          critica: { como_aparece: 'La crítica aparece cuando uno de los dos señala fallos del otro como si fueran defectos de carácter.', impacto: 'Genera distanciamiento y posición defensiva.' },
+          desprecio: { como_aparece: 'El desprecio es bajo pero aparece en momentos de sarcasmo o indiferencia.', impacto: 'Erosiona el respeto mutuo lentamente.' },
+          actitud_defensiva: { como_aparece: 'La defensividad es alta — ambos tienden a justificarse en vez de escuchar.', impacto: 'Impide la resolución real del conflicto.' },
+          evasion: { como_aparece: 'La evasión aparece como retirada emocional o cambio de tema ante conflictos.', impacto: 'Los temas importantes quedan sin resolver.' }
+        },
+        patron_dominante: 'Crítica + defensividad como ciclo principal',
+        zona_riesgo: 'Discusiones que escalan y dejan tensión emocional sin resolver',
+        recurso_disponible: 'Capacidad parcial de reparación y disposición al diálogo'
       },
       sue_johnson: {
         titulo: 'Sue Johnson',
@@ -681,22 +761,96 @@ export function generateFallbackAnalysis() {
       factores_fortalecimiento: 'Los factores que pueden fortalecer el vínculo incluyen: **mejorar la comunicación durante el conflicto**, crear espacios regulares de conexión emocional, y trabajar individualmente en los patrones de apego.\n\nTambién es importante reavivar la dimensión erótica del vínculo — no como obligación sino como exploración mutua.'
     },
     temas_para_consulta: [
-      'Cómo dejar de repetir el mismo patrón de distanciamiento cuando hay conflicto',
-      'El peso de las expectativas familiares en tu forma de amar',
-      'Aprender a pedir sin sentir que eres demasiado',
-      'Reconectar la intimidad emocional antes de trabajar la física',
-      'Entender por qué eliges parejas que confirman tus miedos'
+      '**Patrones inconscientes**: Identificar y desactivar los ciclos repetitivos de distanciamiento que operan sin que te des cuenta cada vez que hay conflicto.',
+      '**Raíces familiares**: Explorar cómo tu experiencia de amor temprana moldeó tu forma de amar hoy y por qué repites dinámicas que reconoces de tu infancia.',
+      '**Reconexión emocional**: Reconstruir la intimidad emocional y la presencia en el vínculo, aprendiendo a estar disponible sin sentir que te pierdes.',
+      '**Diferenciación del self**: Fortalecer tu autonomía emocional sin perder la conexión con tu pareja — aprender a ser tú sin desconectarte del otro.',
+      '**Regulación emocional**: Aprender a gestionar la desesperación y la evasión en momentos de conflicto relacional sin escalar ni retraerte.',
+      '**Deseo y erotismo**: Trabajar la reconexión física explorando la tensión entre seguridad y aventura, sin que la rutina apague la chispa.',
+      '**Comunicación en conflicto**: Transformar los desacuerdos en oportunidades de profundización, reemplazando crítica y desprecio por vulnerabilidad compartida.',
+      '**El fantasma relacional**: Hacer consciente la escena inconsciente que organiza tu deseo y entender qué función simbólica le asignas al otro.'
     ],
     tecnicas_recomendadas: [
-      { nombre: 'Diálogo estructurado Imago', descripcion: 'Para mejorar la comunicación empática y reducir la reactividad emocional.' },
-      { nombre: 'Terapia Focalizada en Emociones (EFT)', descripcion: 'Para acceder a las emociones primarias que subyacen al ciclo de conflicto.' },
-      { nombre: 'Diferenciación del Self (Schnarch)', descripcion: 'Para fortalecer tu identidad emocional sin perder la conexión con tu pareja.' },
-      { nombre: 'Mindfulness relacional', descripcion: 'Para cultivar la presencia y la atención plena dentro del vínculo.' }
+      { nombre: 'Diálogo estructurado Imago', descripcion: 'Técnica de escucha activa estructurada donde cada miembro se siente realmente escuchado y validado. Ideal para romper el ciclo de interrupción y defensividad que aparece en tu relación.' },
+      { nombre: 'Terapia Focalizada en Emociones (EFT)', descripcion: 'Acceder a las emociones primarias (miedo, tristeza) que se esconden debajo del enojo y la evasión. Te ayudaría a identificar qué realmente sientes cuando te distancias.' },
+      { nombre: 'Diferenciación del Self (Schnarch)', descripcion: 'Fortalecer tu identidad emocional sin perder la conexión. Para que puedas sostener tu postura sin necesidad de huir ni fusionarte.' },
+      { nombre: 'Mindfulness relacional', descripcion: 'Prácticas de atención plena aplicadas a la relación para aumentar la presencia emocional y reducir la reactividad automática en momentos de tensión.' },
+      { nombre: 'Ejercicios de reparación Gottman', descripcion: 'Técnicas específicas para reparar después del conflicto: bids for connection, ritual de reencuentro y mapa del amor actualizado.' },
+      { nombre: 'Journaling psicoanalítico guiado', descripcion: 'Escritura reflexiva para hacer conscientes los patrones inconscientes de repetición y las proyecciones que depositas en tu pareja.' }
     ],
     libros_recomendados: [
-      { titulo: 'Mantenme cerca', autor: 'Sue Johnson', razon: 'Entender los ciclos de apego y cómo crear un vínculo seguro.' },
-      { titulo: 'Apegados', autor: 'Amir Levine y Rachel Heller', razon: 'Comprender tu estilo de apego y cómo impacta tus relaciones.' },
-      { titulo: 'Inteligencia erótica', autor: 'Esther Perel', razon: 'Explorar la tensión entre seguridad y deseo en la relación.' }
-    ]
+      { titulo: 'Mantenme cerca', autor: 'Sue Johnson', razon: 'Entender los ciclos de apego y cómo crear un vínculo seguro — el libro más claro sobre por qué nos desconectamos.', nivel: 'introductorio' },
+      { titulo: 'Apegados', autor: 'Amir Levine y Rachel Heller', razon: 'Comprender tu estilo de apego y cómo impacta tus relaciones. Práctico y revelador.', nivel: 'introductorio' },
+      { titulo: 'Inteligencia erótica', autor: 'Esther Perel', razon: 'Explorar la tensión entre seguridad y deseo — por qué la rutina apaga la chispa y cómo reavivarla.', nivel: 'intermedio' },
+      { titulo: 'El cuerpo lleva la cuenta', autor: 'Bessel van der Kolk', razon: 'Cómo las experiencias emocionales tempranas quedan grabadas en el cuerpo y afectan tus relaciones actuales.', nivel: 'intermedio' },
+      { titulo: 'La pasión según Lacan', autor: 'Luciano Lutereau', razon: 'Exploración psicoanalítica del deseo, el fantasma relacional y la estructura inconsciente del amor.', nivel: 'avanzado' },
+      { titulo: 'Passionate Marriage', autor: 'David Schnarch', razon: 'El libro más profundo sobre diferenciación del self y cómo mantener el deseo vivo en relaciones largas.', nivel: 'avanzado' }
+    ],
+    graficas_autoanalisis: {
+      barras_resumen: [
+        { label: 'Conexión emocional', valor: 52, color: 'violet' },
+        { label: 'Estabilidad', valor: 55, color: 'blue' },
+        { label: 'Deseo erótico', valor: 48, color: 'rose' },
+        { label: 'Apego', valor: 58, color: 'amber' },
+        { label: 'Resiliencia', valor: 62, color: 'emerald' },
+        { label: 'Patrones inconscientes', valor: 65, color: 'cyan' }
+      ],
+      polaridades: [
+        { izq: 'Conexión emocional', der: 'Autonomía', valor: 35 },
+        { izq: 'Entrega afectiva', der: 'Protección emocional', valor: 70 },
+        { izq: 'Reconocimiento', der: 'Autosuficiencia', valor: 40 },
+        { izq: 'Idealización', der: 'Realismo afectivo', valor: 30 },
+        { izq: 'Dependencia emocional', der: 'Distancia emocional', valor: 60 }
+      ],
+      cuadrante_apego: { ansiedad: 65, evitacion: 40 },
+      espejo: [
+        { afuera: 'Que me escuchen', adentro: 'Necesidad de validación' },
+        { afuera: 'Que estén presentes', adentro: 'Necesidad de contención' },
+        { afuera: 'Que no me juzguen', adentro: 'Miedo al propio juicio' },
+        { afuera: 'Más contacto', adentro: 'Hambre emocional' }
+      ],
+      escena_relacional: {
+        arriba: { rol: 'Compañero idealizado', subtexto: 'conciencia, expansión' },
+        izquierda: { rol: 'Madre contenedora', subtexto: 'seguridad' },
+        derecha: { rol: 'Libertad espiritual', subtexto: 'expansión' },
+        abajo: { rol: 'Vida cotidiana / responsabilidad', subtexto: 'lo que el fantasma evita' },
+        centro: 'Carlos'
+      },
+      identity_gap: {
+        brecha: 75,
+        yo_ideal: ['Consciente', 'Espiritual', 'Conectado', 'Libre'],
+        yo_real: ['Evasivo', 'Defensivo', 'Sarcasmo', 'Distancia afectiva']
+      },
+      defensas: [
+        { nombre: 'Racionalización', valor: 75 },
+        { nombre: 'Evitación', valor: 60 },
+        { nombre: 'Humor / sarcasmo', valor: 50 },
+        { nombre: 'Minimización', valor: 45 },
+        { nombre: 'Proyección', valor: 35 }
+      ],
+      ciclo_repeticion: ['Elección de pareja', 'Dinámica de rescate', 'Frustración / conflicto', 'Intento de reparación', 'Repetición'],
+      nucleo_orbital: {
+        centro: 'Quiero contención sin aceptar los límites que implica',
+        fuerzas: [
+          { nombre: 'libertad', intensidad: 85 },
+          { nombre: 'exigencia', intensidad: 70 },
+          { nombre: 'intimidad', intensidad: 55 },
+          { nombre: 'seguridad', intensidad: 65 },
+          { nombre: 'autonomía', intensidad: 80 }
+        ]
+      },
+      before_after: [
+        { antes: 'Evasión', despues: 'Presencia emocional' },
+        { antes: 'Defensa', despues: 'Escucha interna' },
+        { antes: 'Búsqueda de validación', despues: 'Autoafirmación' },
+        { antes: 'Distancia', despues: 'Intimidad consciente' }
+      ],
+      timeline_relacion: [
+        { etapa: 'Conexión inicial', subtexto: 'ideas / profundidad' },
+        { etapa: 'Crecimiento', subtexto: 'proyectos / desarrollo' },
+        { etapa: 'Tensión actual', subtexto: 'exigencias / estrés' },
+        { etapa: 'Distancia emocional', subtexto: 'defensa / evasión' }
+      ]
+    }
   }
 }
