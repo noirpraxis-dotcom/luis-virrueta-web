@@ -773,7 +773,7 @@ function DimensionNetworkGraph({ dimensiones }) {
 
   return (
     <div>
-      <svg viewBox="0 0 520 420" className="w-full max-w-xl mx-auto">
+      <svg viewBox="-10 -20 540 460" className="w-full max-w-xl mx-auto">
         <defs>
           <filter id="net-glow"><feGaussianBlur stdDeviation="3" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
         </defs>
@@ -799,14 +799,11 @@ function DimensionNetworkGraph({ dimensiones }) {
         {nodePositions.map((n, i) => (
           <g key={`node-${i}`}>
             <circle cx={n.x} cy={n.y} r={n.radius} fill={`${n.color}20`} stroke={n.color} strokeWidth={1.5} strokeOpacity={0.6} />
-            <text x={n.x} y={n.y - 1} textAnchor="middle" dominantBaseline="central" fill="rgba(255,255,255,0.85)" className="text-[9px] font-bold">{n.val}%</text>
-            <text x={n.x} y={n.y + n.radius + 10} textAnchor="middle" fill="rgba(255,255,255,0.5)" className="text-[6px] font-light">{n.label}</text>
+            <text x={n.x} y={n.y - 1} textAnchor="middle" dominantBaseline="central" fill="rgba(255,255,255,0.95)" className="text-[10px] font-bold">{n.val}%</text>
+            <text x={n.x} y={n.y + n.radius + 11} textAnchor="middle" fill="rgba(255,255,255,0.75)" className="text-[9px] font-medium">{n.label}</text>
           </g>
         ))}
       </svg>
-      <p className="text-white/50 text-[10px] font-light text-center mt-3 max-w-lg mx-auto leading-relaxed">
-        Red de conexiones entre las 3 esferas principales y las 12 dimensiones analizadas. El tamaño de cada nodo es proporcional a la puntuación detectada.
-      </p>
     </div>
   )
 }
@@ -906,16 +903,16 @@ function GottmanHorsemenChart({ data }) {
           const dangerZone = 150 // x position of danger threshold
           return (
             <g key={i}>
-              <text x={0} y={y + 6} fill="rgba(255,255,255,0.6)" className="text-[11px] font-light">{h.label}</text>
+              <text x={0} y={y + 6} fill="rgba(255,255,255,0.7)" className="text-[12px] font-medium">{h.label}</text>
               <rect x={130} y={y - 6} width={230} height={12} rx={6} fill="rgba(255,255,255,0.04)" />
               <rect x={130} y={y - 6} width={barW} height={12} rx={6} fill={h.color} fillOpacity={0.5} />
               <line x1={dangerZone + 130} y1={y - 10} x2={dangerZone + 130} y2={y + 10} stroke="rgba(239,68,68,0.3)" strokeWidth={1} strokeDasharray="3 3" />
               <circle cx={130 + barW} cy={y} r={10} fill={`${h.color}30`} stroke={h.color} strokeWidth={1.5} strokeOpacity={0.7} />
-              <text x={130 + barW} y={y + 3.5} textAnchor="middle" fill={h.color} className="text-[8px] font-bold">{h.intensity}</text>
+              <text x={130 + barW} y={y + 3.5} textAnchor="middle" fill={h.color} className="text-[10px] font-bold">{h.intensity}</text>
             </g>
           )
         })}
-        <text x={280} y={196} textAnchor="middle" fill="rgba(239,68,68,0.35)" className="text-[7px] font-light">zona de riesgo →</text>
+        <text x={280} y={196} textAnchor="middle" fill="rgba(239,68,68,0.4)" className="text-[9px] font-light">zona de riesgo →</text>
       </svg>
     </div>
   )
@@ -945,7 +942,7 @@ function SternbergTriangleChart({ data }) {
   const gridLevels = [0.25, 0.5, 0.75]
   return (
     <div className="flex flex-col items-center py-4 gap-2">
-      <svg viewBox="0 0 320 310" className="w-64 h-60">
+      <svg viewBox="0 0 320 310" className="w-full max-w-xs">
         <defs>
           <radialGradient id="tri-fill-v2" cx="50%" cy="60%" r="60%">
             <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.35" />
@@ -973,13 +970,13 @@ function SternbergTriangleChart({ data }) {
         <line x1={iBl[0]} y1={iBl[1]} x2={bl[0]} y2={bl[1]} stroke="rgba(236,72,153,0.12)" strokeWidth="0.8" strokeDasharray="3 3" />
         <line x1={iBr[0]} y1={iBr[1]} x2={br[0]} y2={br[1]} stroke="rgba(14,165,233,0.12)" strokeWidth="0.8" strokeDasharray="3 3" />
         {/* Edge labels (midpoints) */}
-        <text x={(top[0] + bl[0]) / 2 - 18} y={(top[1] + bl[1]) / 2} fill="rgba(236,72,153,0.35)" className="text-[7px] font-light" transform={`rotate(-56, ${(top[0] + bl[0]) / 2 - 18}, ${(top[1] + bl[1]) / 2})`}>romanticismo</text>
-        <text x={(top[0] + br[0]) / 2 + 18} y={(top[1] + br[1]) / 2} fill="rgba(14,165,233,0.35)" className="text-[7px] font-light" transform={`rotate(56, ${(top[0] + br[0]) / 2 + 18}, ${(top[1] + br[1]) / 2})`}>compañerismo</text>
-        <text x={cx} y={baseY + 12} textAnchor="middle" fill="rgba(251,191,36,0.35)" className="text-[7px] font-light">fatuo</text>
+        <text x={(top[0] + bl[0]) / 2 - 18} y={(top[1] + bl[1]) / 2} fill="rgba(236,72,153,0.45)" className="text-[9px] font-light" transform={`rotate(-56, ${(top[0] + bl[0]) / 2 - 18}, ${(top[1] + bl[1]) / 2})`}>romanticismo</text>
+        <text x={(top[0] + br[0]) / 2 + 18} y={(top[1] + br[1]) / 2} fill="rgba(14,165,233,0.45)" className="text-[9px] font-light" transform={`rotate(56, ${(top[0] + br[0]) / 2 + 18}, ${(top[1] + br[1]) / 2})`}>compañerismo</text>
+        <text x={cx} y={baseY + 12} textAnchor="middle" fill="rgba(251,191,36,0.45)" className="text-[9px] font-light">fatuo</text>
         {/* Vertex labels */}
-        <text x={cx} y={topY - 6} textAnchor="middle" fill="rgba(139,92,246,0.85)" className="text-[10px] font-semibold">Intimidad</text>
-        <text x={leftX - 4} y={baseY + 14} textAnchor="start" fill="rgba(236,72,153,0.85)" className="text-[10px] font-semibold">Pasión</text>
-        <text x={rightX + 4} y={baseY + 14} textAnchor="end" fill="rgba(14,165,233,0.85)" className="text-[10px] font-semibold">Compromiso</text>
+        <text x={cx} y={topY - 6} textAnchor="middle" fill="rgba(139,92,246,0.9)" className="text-[11px] font-semibold">Intimidad</text>
+        <text x={leftX - 4} y={baseY + 14} textAnchor="start" fill="rgba(236,72,153,0.9)" className="text-[11px] font-semibold">Pasión</text>
+        <text x={rightX + 4} y={baseY + 14} textAnchor="end" fill="rgba(14,165,233,0.9)" className="text-[11px] font-semibold">Compromiso</text>
         {/* Score badges */}
         <rect x={iTop[0] - 18} y={iTop[1] - 22} width="36" height="16" rx="8" fill="rgba(139,92,246,0.2)" stroke="rgba(139,92,246,0.4)" strokeWidth="0.8" />
         <text x={iTop[0]} y={iTop[1] - 11} textAnchor="middle" fill="rgba(255,255,255,0.9)" className="text-[10px] font-bold">{intimidad}%</text>
@@ -1046,7 +1043,7 @@ function IcebergChart({ data }) {
   const waterLine = 100 // y position of water surface
   return (
     <div className="flex justify-center py-4">
-      <svg viewBox="0 0 300 280" className="w-64 h-56">
+      <svg viewBox="0 0 300 280" className="w-full max-w-xs">
         <defs>
           <linearGradient id="ice-surface" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.25" />
@@ -1059,22 +1056,22 @@ function IcebergChart({ data }) {
         </defs>
         {/* Water surface line */}
         <line x1={0} y1={waterLine} x2={300} y2={waterLine} stroke="rgba(96,165,250,0.25)" strokeWidth={1.5} strokeDasharray="8 4" />
-        <text x={290} y={waterLine - 6} textAnchor="end" fill="rgba(96,165,250,0.5)" className="text-[7px] font-light">consciencia</text>
+        <text x={290} y={waterLine - 6} textAnchor="end" fill="rgba(96,165,250,0.6)" className="text-[9px] font-light">consciencia</text>
         {/* Above water — visible iceberg tip */}
         <polygon points="150,25 115,97 185,97" fill="url(#ice-surface)" stroke="rgba(167,139,250,0.4)" strokeWidth={1.5} />
-        <text x={150} y={68} textAnchor="middle" fill="rgba(167,139,250,0.9)" className="text-[9px] font-medium">Conducta</text>
-        <text x={150} y={82} textAnchor="middle" fill="rgba(255,255,255,0.5)" className="text-[8px] font-light">visible</text>
+        <text x={150} y={68} textAnchor="middle" fill="rgba(167,139,250,0.9)" className="text-[10px] font-medium">Conducta</text>
+        <text x={150} y={82} textAnchor="middle" fill="rgba(255,255,255,0.55)" className="text-[9px] font-light">visible</text>
         {/* Below water — huge unconscious */}
         <polygon points="90,103 50,220 150,265 250,220 210,103" fill="url(#ice-deep)" stroke="rgba(124,58,237,0.3)" strokeWidth={1.5} />
         {/* Layers inside the deep iceberg */}
         <line x1={95} y1={140} x2={205} y2={140} stroke="rgba(255,255,255,0.08)" strokeWidth={0.5} />
-        <text x={150} y={130} textAnchor="middle" fill="rgba(196,181,253,0.8)" className="text-[9px] font-medium">Preconsciente</text>
-        <text x={150} y={143} textAnchor="middle" fill="rgba(255,255,255,0.4)" className="text-[7px] font-light">deseos parciales</text>
+        <text x={150} y={130} textAnchor="middle" fill="rgba(196,181,253,0.85)" className="text-[10px] font-medium">Preconsciente</text>
+        <text x={150} y={143} textAnchor="middle" fill="rgba(255,255,255,0.5)" className="text-[9px] font-light">deseos parciales</text>
         <line x1={80} y1={180} x2={220} y2={180} stroke="rgba(255,255,255,0.08)" strokeWidth={0.5} />
-        <text x={150} y={170} textAnchor="middle" fill="rgba(192,132,252,0.8)" className="text-[9px] font-medium">Inconsciente</text>
-        <text x={150} y={183} textAnchor="middle" fill="rgba(255,255,255,0.4)" className="text-[7px] font-light">pulsiones / repetición</text>
-        <text x={150} y={228} textAnchor="middle" fill="rgba(139,92,246,0.8)" className="text-[11px] font-bold">{score}%</text>
-        <text x={150} y={245} textAnchor="middle" fill="rgba(255,255,255,0.45)" className="text-[8px] font-light">Profundidad del patrón</text>
+        <text x={150} y={170} textAnchor="middle" fill="rgba(192,132,252,0.85)" className="text-[10px] font-medium">Inconsciente</text>
+        <text x={150} y={183} textAnchor="middle" fill="rgba(255,255,255,0.5)" className="text-[9px] font-light">pulsiones / repetición</text>
+        <text x={150} y={228} textAnchor="middle" fill="rgba(139,92,246,0.85)" className="text-[12px] font-bold">{score}%</text>
+        <text x={150} y={245} textAnchor="middle" fill="rgba(255,255,255,0.5)" className="text-[9px] font-light">Profundidad del patrón</text>
       </svg>
     </div>
   )
@@ -1086,7 +1083,7 @@ function HendrixImagoChart({ data }) {
   const overlap = 20 + (score / 100) * 40 // more score = more overlap
   return (
     <div className="flex justify-center py-4">
-      <svg viewBox="0 0 320 200" className="w-64 h-40">
+      <svg viewBox="0 0 320 200" className="w-full max-w-sm">
         <defs>
           <radialGradient id="imago-left" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#f97316" stopOpacity="0.2" />
@@ -1100,12 +1097,12 @@ function HendrixImagoChart({ data }) {
         <circle cx={130 - overlap / 2} cy={100} r={70} fill="url(#imago-left)" stroke="#f97316" strokeWidth={1.5} strokeOpacity={0.3} />
         <circle cx={190 + overlap / 2} cy={100} r={70} fill="url(#imago-right)" stroke="#fb923c" strokeWidth={1.5} strokeOpacity={0.3} />
         {/* Overlap zone */}
-        <text x={160} y={88} textAnchor="middle" fill="rgba(251,146,60,0.9)" className="text-[10px] font-bold">Imago</text>
-        <text x={160} y={103} textAnchor="middle" fill="rgba(255,255,255,0.7)" className="text-[13px] font-bold">{score}%</text>
-        <text x={160} y={118} textAnchor="middle" fill="rgba(255,255,255,0.45)" className="text-[7px] font-light">herida compartida</text>
+        <text x={160} y={88} textAnchor="middle" fill="rgba(251,146,60,0.9)" className="text-[11px] font-bold">Imago</text>
+        <text x={160} y={103} textAnchor="middle" fill="rgba(255,255,255,0.75)" className="text-[14px] font-bold">{score}%</text>
+        <text x={160} y={118} textAnchor="middle" fill="rgba(255,255,255,0.5)" className="text-[9px] font-light">herida compartida</text>
         {/* Labels */}
-        <text x={90 - overlap / 2} y={103} textAnchor="middle" fill="rgba(249,115,22,0.65)" className="text-[9px] font-medium">Tú</text>
-        <text x={230 + overlap / 2} y={103} textAnchor="middle" fill="rgba(251,146,60,0.65)" className="text-[9px] font-medium">Pareja</text>
+        <text x={90 - overlap / 2} y={103} textAnchor="middle" fill="rgba(249,115,22,0.7)" className="text-[10px] font-medium">Tú</text>
+        <text x={230 + overlap / 2} y={103} textAnchor="middle" fill="rgba(251,146,60,0.7)" className="text-[10px] font-medium">Pareja</text>
       </svg>
     </div>
   )
@@ -1122,8 +1119,8 @@ function SchnarchThermometerChart({ data }) {
         { label: 'Diferenciación', value: differentiation, color: '#10b981', colorLight: 'rgba(16,185,129,0.15)' }
       ].map((bar, i) => (
         <div key={i} className="flex flex-col items-center gap-2">
-          <p className="text-white/60 text-[10px] font-medium">{bar.label}</p>
-          <svg viewBox="0 0 40 160" className="w-10 h-36">
+          <p className="text-white/65 text-[11px] font-medium">{bar.label}</p>
+          <svg viewBox="0 0 40 160" className="w-12 h-40">
             <rect x={10} y={5} width={20} height={140} rx={10} fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)" strokeWidth={1} />
             <rect x={10} y={5 + 140 * (1 - bar.value / 100)} width={20} height={140 * (bar.value / 100)} rx={10} fill={bar.colorLight} stroke={bar.color} strokeWidth={1.5} strokeOpacity={0.5} />
             <circle cx={20} cy={5 + 140 * (1 - bar.value / 100) + 10} r={6} fill={bar.color} fillOpacity={0.7} />
@@ -1148,19 +1145,19 @@ function TatkinSpeedometerChart({ data }) {
   const zoneColor = score >= 60 ? '#10b981' : score >= 35 ? '#f59e0b' : '#ef4444'
   return (
     <div className="flex flex-col items-center py-4 gap-2">
-      <svg viewBox="0 0 300 170" className="w-64 h-36">
+      <svg viewBox="0 0 300 170" className="w-full max-w-xs">
         {/* Background arc zones */}
         <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx - r * 0.5} ${cy - r * 0.866}`} fill="none" stroke="#ef4444" strokeWidth={16} strokeOpacity={0.15} strokeLinecap="round" />
         <path d={`M ${cx - r * 0.34} ${cy - r * 0.94} A ${r} ${r} 0 0 1 ${cx + r * 0.34} ${cy - r * 0.94}`} fill="none" stroke="#10b981" strokeWidth={16} strokeOpacity={0.15} strokeLinecap="round" />
         <path d={`M ${cx + r * 0.5} ${cy - r * 0.866} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`} fill="none" stroke="#3b82f6" strokeWidth={16} strokeOpacity={0.15} strokeLinecap="round" />
         {/* Zone labels */}
-        <text x={45} y={cy + 12} textAnchor="middle" fill="rgba(239,68,68,0.5)" className="text-[7px] font-light">Hiper</text>
-        <text x={150} y={30} textAnchor="middle" fill="rgba(16,185,129,0.6)" className="text-[8px] font-medium">Regulado</text>
-        <text x={255} y={cy + 12} textAnchor="middle" fill="rgba(59,130,246,0.5)" className="text-[7px] font-light">Hipo</text>
+        <text x={45} y={cy + 12} textAnchor="middle" fill="rgba(239,68,68,0.6)" className="text-[9px] font-light">Hiper</text>
+        <text x={150} y={30} textAnchor="middle" fill="rgba(16,185,129,0.7)" className="text-[10px] font-medium">Regulado</text>
+        <text x={255} y={cy + 12} textAnchor="middle" fill="rgba(59,130,246,0.6)" className="text-[9px] font-light">Hipo</text>
         {/* Needle */}
         <line x1={cx} y1={cy} x2={needleX} y2={needleY} stroke={zoneColor} strokeWidth={2.5} strokeOpacity={0.7} strokeLinecap="round" />
         <circle cx={cx} cy={cy} r={8} fill={zoneColor} fillOpacity={0.15} stroke={zoneColor} strokeWidth={2} strokeOpacity={0.5} />
-        <text x={cx} y={cy + 3} textAnchor="middle" fill="rgba(255,255,255,0.8)" className="text-[8px] font-bold">{score}</text>
+        <text x={cx} y={cy + 3} textAnchor="middle" fill="rgba(255,255,255,0.85)" className="text-[10px] font-bold">{score}</text>
       </svg>
       <div className="flex items-center gap-2">
         <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: zoneColor }} />
@@ -1192,7 +1189,7 @@ function ChapmanArcsChart({ data }) {
   const gridLevels = [25, 50, 75, 100]
   return (
     <div className="flex justify-center py-4">
-      <svg viewBox="0 0 300 300" className="w-60 h-60">
+      <svg viewBox="0 0 300 300" className="w-full max-w-xs">
         <defs>
           <radialGradient id="chap-fill" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#ec4899" stopOpacity="0.3" />
@@ -1218,13 +1215,13 @@ function ChapmanArcsChart({ data }) {
           return (
             <g key={i}>
               <circle cx={px} cy={py} r={5} fill={lang.color} fillOpacity={0.8} stroke={lang.color} strokeWidth={1} strokeOpacity={0.4} />
-              <text x={lx} y={ly + 1} textAnchor="middle" dominantBaseline="central" fill={lang.color} className="text-[8px] font-medium" fillOpacity={0.85}>{lang.shortLabel}</text>
-              <text x={px} y={py - 10} textAnchor="middle" fill="rgba(255,255,255,0.7)" className="text-[8px] font-bold">{values[i]}</text>
+              <text x={lx} y={ly + 1} textAnchor="middle" dominantBaseline="central" fill={lang.color} className="text-[10px] font-medium" fillOpacity={0.9}>{lang.shortLabel}</text>
+              <text x={px} y={py - 10} textAnchor="middle" fill="rgba(255,255,255,0.75)" className="text-[10px] font-bold">{values[i]}</text>
             </g>
           )
         })}
         <text x={cx} y={cy - 3} textAnchor="middle" fill="rgba(255,255,255,0.8)" className="text-[13px] font-bold">{data?.puntuacion ?? 50}%</text>
-        <text x={cx} y={cy + 12} textAnchor="middle" fill="rgba(255,255,255,0.4)" className="text-[7px] font-light">compatibilidad</text>
+        <text x={cx} y={cy + 12} textAnchor="middle" fill="rgba(255,255,255,0.5)" className="text-[9px] font-light">compatibilidad</text>
       </svg>
     </div>
   )
@@ -1237,7 +1234,7 @@ function RealBalanceChart({ data }) {
   const tiltAngle = ((50 - score) / 50) * 15 // degrees
   return (
     <div className="flex flex-col items-center py-4 gap-2">
-      <svg viewBox="0 0 300 180" className="w-64 h-40">
+      <svg viewBox="0 0 300 180" className="w-full max-w-xs">
         {/* Fulcrum triangle */}
         <polygon points="150,160 140,180 160,180" fill="rgba(6,182,212,0.2)" stroke="rgba(6,182,212,0.4)" strokeWidth={1.5} />
         {/* Beam — rotates based on score */}
@@ -1245,17 +1242,17 @@ function RealBalanceChart({ data }) {
           <line x1={40} y1={155} x2={260} y2={155} stroke="rgba(6,182,212,0.5)" strokeWidth={3} strokeLinecap="round" />
           {/* Left plate — Grandiosidad */}
           <rect x={25} y={140} width={50} height={30} rx={6} fill="rgba(239,68,68,0.1)" stroke="rgba(239,68,68,0.3)" strokeWidth={1} />
-          <text x={50} y={153} textAnchor="middle" fill="rgba(239,68,68,0.7)" className="text-[7px] font-medium">Grandiosidad</text>
-          <text x={50} y={164} textAnchor="middle" fill="rgba(255,255,255,0.5)" className="text-[8px] font-bold">{Math.max(0, 100 - score - 10)}%</text>
+          <text x={50} y={153} textAnchor="middle" fill="rgba(239,68,68,0.75)" className="text-[9px] font-medium">Grandiosidad</text>
+          <text x={50} y={164} textAnchor="middle" fill="rgba(255,255,255,0.55)" className="text-[10px] font-bold">{Math.max(0, 100 - score - 10)}%</text>
           {/* Right plate — Vergüenza */}
           <rect x={225} y={140} width={50} height={30} rx={6} fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.3)" strokeWidth={1} />
-          <text x={250} y={153} textAnchor="middle" fill="rgba(59,130,246,0.7)" className="text-[7px] font-medium">Vergüenza</text>
-          <text x={250} y={164} textAnchor="middle" fill="rgba(255,255,255,0.5)" className="text-[8px] font-bold">{Math.max(0, score - 10)}%</text>
+          <text x={250} y={153} textAnchor="middle" fill="rgba(59,130,246,0.75)" className="text-[9px] font-medium">Vergüenza</text>
+          <text x={250} y={164} textAnchor="middle" fill="rgba(255,255,255,0.55)" className="text-[10px] font-bold">{Math.max(0, score - 10)}%</text>
         </g>
         {/* Center score */}
         <circle cx={150} cy={130} r={18} fill="rgba(6,182,212,0.1)" stroke="rgba(6,182,212,0.4)" strokeWidth={1.5} />
         <text x={150} y={133} textAnchor="middle" fill="rgba(6,182,212,0.9)" className="text-[11px] font-bold">{score}%</text>
-        <text x={150} y={115} textAnchor="middle" fill="rgba(255,255,255,0.5)" className="text-[8px] font-light">Equilibrio relacional</text>
+        <text x={150} y={115} textAnchor="middle" fill="rgba(255,255,255,0.55)" className="text-[9px] font-light">Equilibrio relacional</text>
       </svg>
       <p className="text-white/55 text-xs font-light">{score >= 60 ? 'Buen equilibrio de poder' : score >= 40 ? 'Desequilibrio moderado' : 'Desequilibrio significativo'}</p>
     </div>
@@ -2618,40 +2615,43 @@ const RadiografiaPremiumPage = () => {
                   })()}
 
                   <div className="space-y-8">
-                    {/* Tarjetas del reporte personalizado — estilo autor: ícono centrado + gráfica SVG + texto */}
+                    {/* Tarjetas del reporte personalizado — estilo autor: ícono centrado + gráfica del autor + texto */}
                     {(() => {
                       const REPORT_CARDS = [
-                        { key: 'apertura_rapport', icon: MessageCircle, title: 'Tu radiografía inicial', subtitle: 'Apertura y rapport', gradient: 'from-indigo-500 via-violet-500 to-purple-500', border: 'border-indigo-500/20', iconBg: 'from-indigo-500/30 to-violet-500/20', accentColor: '#818cf8' },
-                        { key: 'forma_de_amar', icon: Heart, title: 'Cómo amas y cómo esperas ser amado', subtitle: 'Tu forma de amar', gradient: 'from-rose-500 via-pink-500 to-fuchsia-500', border: 'border-rose-500/20', iconBg: 'from-rose-500/30 to-pink-500/20', accentColor: '#f472b6' },
-                        { key: 'lo_que_busca_en_el_otro', icon: Eye, title: 'Lo que buscas en el otro', subtitle: 'Proyección inconsciente', gradient: 'from-sky-500 via-blue-500 to-indigo-500', border: 'border-sky-500/20', iconBg: 'from-sky-500/30 to-blue-500/20', accentColor: '#38bdf8' },
-                        { key: 'lo_que_reclama_afuera', icon: Compass, title: 'Lo que reclamas afuera y te pertenece adentro', subtitle: 'Espejo emocional', gradient: 'from-amber-500 via-orange-500 to-red-500', border: 'border-amber-500/20', iconBg: 'from-amber-500/30 to-orange-500/20', accentColor: '#fb923c' },
-                        { key: 'fantasma_relacional', icon: Anchor, title: 'Tu fantasma relacional', subtitle: 'Escena inconsciente', gradient: 'from-purple-500 via-fuchsia-500 to-pink-500', border: 'border-purple-500/20', iconBg: 'from-purple-500/30 to-fuchsia-500/20', accentColor: '#c084fc' },
-                        { key: 'yo_ideal', icon: Target, title: 'Quién crees ser vs quién eres cuando amas', subtitle: 'Yo ideal vs yo real', gradient: 'from-teal-500 via-emerald-500 to-green-500', border: 'border-teal-500/20', iconBg: 'from-teal-500/30 to-emerald-500/20', accentColor: '#34d399' },
-                        { key: 'mecanismos_defensa', icon: Shield, title: 'Tus mecanismos de defensa', subtitle: 'Protección emocional', gradient: 'from-cyan-500 via-sky-500 to-blue-500', border: 'border-cyan-500/20', iconBg: 'from-cyan-500/30 to-sky-500/20', accentColor: '#22d3ee' },
-                        { key: 'tipo_pareja_que_repite', icon: Repeat, title: 'El tipo de pareja que repites', subtitle: 'Compulsión de repetición', gradient: 'from-orange-500 via-amber-500 to-yellow-500', border: 'border-orange-500/20', iconBg: 'from-orange-500/30 to-amber-500/20', accentColor: '#fbbf24' },
-                        { key: 'nucleo_del_patron', icon: Zap, title: 'El núcleo de tu patrón', subtitle: 'Insight central', gradient: 'from-fuchsia-500 via-purple-500 to-violet-500', border: 'border-fuchsia-500/20', iconBg: 'from-fuchsia-500/30 to-purple-500/20', accentColor: '#e879f9' },
-                        { key: 'cierre_transformador', icon: Sparkles, title: 'Tu camino transformador', subtitle: 'Dirección del cambio', gradient: 'from-emerald-500 via-teal-500 to-cyan-500', border: 'border-emerald-500/20', iconBg: 'from-emerald-500/30 to-teal-500/20', accentColor: '#2dd4bf' },
+                        { key: 'apertura_rapport', icon: MessageCircle, title: 'Tu radiografía inicial', subtitle: 'Apertura y rapport', gradient: 'from-indigo-500 via-violet-500 to-purple-500', border: 'border-indigo-500/20', iconBg: 'from-indigo-500/30 to-violet-500/20', accentColor: '#818cf8', chartKey: null },
+                        { key: 'forma_de_amar', icon: Heart, title: 'Cómo amas y cómo esperas ser amado', subtitle: 'Tu forma de amar', gradient: 'from-rose-500 via-pink-500 to-fuchsia-500', border: 'border-rose-500/20', iconBg: 'from-rose-500/30 to-pink-500/20', accentColor: '#f472b6', chartKey: 'sternberg' },
+                        { key: 'lo_que_busca_en_el_otro', icon: Eye, title: 'Lo que buscas en el otro', subtitle: 'Proyección inconsciente', gradient: 'from-sky-500 via-blue-500 to-indigo-500', border: 'border-sky-500/20', iconBg: 'from-sky-500/30 to-blue-500/20', accentColor: '#38bdf8', chartKey: 'levine' },
+                        { key: 'lo_que_reclama_afuera', icon: Compass, title: 'Lo que reclamas afuera y te pertenece adentro', subtitle: 'Espejo emocional', gradient: 'from-amber-500 via-orange-500 to-red-500', border: 'border-amber-500/20', iconBg: 'from-amber-500/30 to-orange-500/20', accentColor: '#fb923c', chartKey: 'sue_johnson' },
+                        { key: 'fantasma_relacional', icon: Anchor, title: 'Tu fantasma relacional', subtitle: 'Escena inconsciente', gradient: 'from-purple-500 via-fuchsia-500 to-pink-500', border: 'border-purple-500/20', iconBg: 'from-purple-500/30 to-fuchsia-500/20', accentColor: '#c084fc', chartKey: 'freud_lacan' },
+                        { key: 'yo_ideal', icon: Target, title: 'Quién crees ser vs quién eres cuando amas', subtitle: 'Yo ideal vs yo real', gradient: 'from-teal-500 via-emerald-500 to-green-500', border: 'border-teal-500/20', iconBg: 'from-teal-500/30 to-emerald-500/20', accentColor: '#34d399', chartKey: 'hendrix' },
+                        { key: 'mecanismos_defensa', icon: Shield, title: 'Tus mecanismos de defensa', subtitle: 'Protección emocional', gradient: 'from-cyan-500 via-sky-500 to-blue-500', border: 'border-cyan-500/20', iconBg: 'from-cyan-500/30 to-sky-500/20', accentColor: '#22d3ee', chartKey: 'schnarch' },
+                        { key: 'tipo_pareja_que_repite', icon: Repeat, title: 'El tipo de pareja que repites', subtitle: 'Compulsión de repetición', gradient: 'from-orange-500 via-amber-500 to-yellow-500', border: 'border-orange-500/20', iconBg: 'from-orange-500/30 to-amber-500/20', accentColor: '#fbbf24', chartKey: 'tatkin' },
+                        { key: 'nucleo_del_patron', icon: Zap, title: 'El núcleo de tu patrón', subtitle: 'Insight central', gradient: 'from-fuchsia-500 via-purple-500 to-violet-500', border: 'border-fuchsia-500/20', iconBg: 'from-fuchsia-500/30 to-purple-500/20', accentColor: '#e879f9', chartKey: 'chapman' },
+                        { key: 'cierre_transformador', icon: Sparkles, title: 'Tu camino transformador', subtitle: 'Dirección del cambio', gradient: 'from-emerald-500 via-teal-500 to-cyan-500', border: 'border-emerald-500/20', iconBg: 'from-emerald-500/30 to-teal-500/20', accentColor: '#2dd4bf', chartKey: 'gottman' },
                       ]
 
-                      // Mini SVG sparkline for each card (based on word count of paragraphs to create a visual rhythm)
-                      const MiniSparkline = ({ text, color }) => {
-                        const paragraphs = text.split('\n\n')
-                        const points = paragraphs.map((p, i) => {
-                          const intensity = Math.min(100, p.length / 3)
-                          return [10 + (i / Math.max(paragraphs.length - 1, 1)) * 180, 40 - (intensity / 100) * 30]
-                        })
-                        const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p[0]} ${p[1]}`).join(' ')
-                        return (
-                          <svg viewBox="0 0 200 50" className="w-full h-8 opacity-40">
-                            <path d={pathD} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
-                            {points.map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r="2" fill={color} fillOpacity="0.6" />)}
-                          </svg>
-                        )
+                      // Map chartKey to chart component
+                      const renderCardChart = (chartKey) => {
+                        const enfoques = aiAnalysis.lecturas_por_enfoque
+                        if (!enfoques) return null
+                        switch (chartKey) {
+                          case 'sternberg': return enfoques.sternberg ? <SternbergTriangleChart data={enfoques.sternberg} /> : null
+                          case 'levine': return enfoques.levine ? <PolarMiniChart data={enfoques.levine} /> : null
+                          case 'sue_johnson': return enfoques.sue_johnson ? <JohnsonCycleChart data={enfoques.sue_johnson} /> : null
+                          case 'freud_lacan': return enfoques.freud_lacan ? <IcebergChart data={enfoques.freud_lacan} /> : null
+                          case 'hendrix': return enfoques.hendrix ? <HendrixImagoChart data={enfoques.hendrix} /> : null
+                          case 'schnarch': return enfoques.schnarch ? <SchnarchThermometerChart data={enfoques.schnarch} /> : null
+                          case 'tatkin': return enfoques.tatkin ? <TatkinSpeedometerChart data={enfoques.tatkin} /> : null
+                          case 'chapman': return enfoques.chapman ? <ChapmanArcsChart data={enfoques.chapman} /> : null
+                          case 'gottman': return enfoques.gottman ? <GottmanHorsemenChart data={enfoques.gottman} /> : null
+                          default: return null
+                        }
                       }
 
-                      return REPORT_CARDS.map(({ key, icon: CardIcon, title, subtitle, gradient, border, iconBg, accentColor }, cardIdx) => {
+                      return REPORT_CARDS.map(({ key, icon: CardIcon, title, subtitle, gradient, border, iconBg, accentColor, chartKey }, cardIdx) => {
                         const text = aiAnalysis.autoanalisis_usuario[key]
                         if (!text) return null
+                        const chart = chartKey ? renderCardChart(chartKey) : (aiAnalysis.autoanalisis_usuario ? <AutoanalisisRadial data={aiAnalysis.autoanalisis_usuario} /> : null)
                         return (
                           <div key={key} className={`rounded-2xl overflow-hidden border ${border} bg-white/[0.02] backdrop-blur-sm`}>
                             {/* Header — centered author style */}
@@ -2662,11 +2662,9 @@ const RadiografiaPremiumPage = () => {
                               </div>
                               <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-1.5" style={{ color: `${accentColor}99` }}>{subtitle}</p>
                               <h3 className={`text-lg font-light text-transparent bg-clip-text bg-gradient-to-r ${gradient} tracking-wide`}>{title}</h3>
-                              {/* Sparkline */}
-                              <div className="mt-3 max-w-xs mx-auto">
-                                <MiniSparkline text={text} color={accentColor} />
-                              </div>
                             </div>
+                            {/* Chart */}
+                            {chart && <div className="px-4 pb-2">{chart}</div>}
                             {/* Body */}
                             <div className="px-6 pb-6 space-y-3" style={{ background: 'linear-gradient(to bottom right, rgba(255,255,255,0.02), rgba(255,255,255,0.005))' }}>
                               {text.split('\n\n').map((p, i) => (
@@ -3121,38 +3119,6 @@ const RadiografiaPremiumPage = () => {
                 )
               })()}
 
-              {/* ═══ DESGLOSE POR DIMENSIÓN ═══ */}
-              {aiAnalysis.dimensiones && aiAnalysis.tabla_diagnostica && (
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                  <div className="space-y-1">
-                    <p className="text-white/60 text-[10px] font-medium uppercase tracking-wider mb-4">Desglose por dimensión</p>
-                    {aiAnalysis.tabla_diagnostica.map((row, i) => {
-                      const dimKey = Object.keys(DIMENSION_LABELS)[i]
-                      const score = aiAnalysis.dimensiones[dimKey] ?? 50
-                      const barColor = score >= 70 ? 'bg-emerald-500' : score >= 45 ? 'bg-amber-500' : 'bg-red-500'
-                      const levelLabel = score >= 70 ? 'Alto' : score >= 45 ? 'Moderado' : 'Bajo'
-                      const levelColor = score >= 70 ? 'text-emerald-400/70' : score >= 45 ? 'text-amber-400/70' : 'text-red-400/70'
-                      return (
-                        <div key={i} className="px-4 py-4 rounded-xl hover:bg-white/[0.02] transition-colors border border-transparent hover:border-white/5">
-                          <div className="flex items-center gap-3 mb-2">
-                            <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: DIMENSION_COLORS[i] }} />
-                            <span className="text-white/70 text-sm font-medium flex-1">{row.dimension}</span>
-                            <span className={`text-xs font-medium ${levelColor}`}>{levelLabel}</span>
-                            <span className="text-white/80 text-sm font-bold tabular-nums w-12 text-right">{score}%</span>
-                          </div>
-                          <div className="h-2.5 bg-white/[0.06] rounded-full overflow-hidden mb-2.5 ml-6">
-                            <motion.div initial={{ width: 0 }} whileInView={{ width: `${score}%` }} viewport={{ once: true }}
-                              transition={{ duration: 0.8, delay: i * 0.05 }}
-                              className={`h-full rounded-full ${barColor}`} style={{ opacity: 0.75 }} />
-                          </div>
-                          <p className="text-white/45 text-[13px] font-light leading-relaxed ml-6">{row.interpretacion}</p>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </motion.div>
-              )}
-
               {/* ═══ 4. DIRECCIÓN PROBABLE — Premium Gauges ═══ */}
               {aiAnalysis.direccion_probable && (
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -3280,7 +3246,7 @@ const RadiografiaPremiumPage = () => {
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/15 border border-violet-500/25 mb-4">
                     <Sparkles className="w-6 h-6 text-violet-400/70" />
                   </div>
-                  <p className="text-violet-300/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Recomendación personalizada</p>
+                  <p className="text-violet-300/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Recomendación final</p>
                   <h2 className="text-lg font-light text-white/80 mb-2">Tu siguiente paso</h2>
                   <p className="text-white/60 text-sm font-light max-w-lg mx-auto">
                     {aiAnalysis.temas_para_consulta?.length > 0
