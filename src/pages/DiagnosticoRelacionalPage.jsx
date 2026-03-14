@@ -788,8 +788,6 @@ const DiagnosticoRelacionalPage = () => {
 
   // Test/dev mode: URL param
   const isDevMode = searchParams.get('test') === 'true' || searchParams.get('demo') === 'true'
-  // Test mode: solo visible con ?testmode=true en la URL (para el dueño)
-  const canSeeTestToggle = searchParams.get('testmode') === 'true'
   const [stripeTestMode, setStripeTestMode] = useState(false)
 
   // ─── PREVIEW MODE: ?preview=results → skip to results with sample data ───
@@ -2507,43 +2505,34 @@ const DiagnosticoRelacionalPage = () => {
                 </div>
               </div>
 
-              {/* Demo option */}
-              <div className="text-center space-y-2">
-                <button onClick={() => handlePurchase('demo')}
-                  className="text-violet-300/40 text-sm hover:text-violet-300/70 transition-colors underline underline-offset-4">
-                  Probar demo gratuita ({DEMO_QUESTION_LIMIT} preguntas)
-                </button>
-                <br />
-                <button onClick={() => { setStage('hero'); scrollToTop() }}
-                  className="text-white/20 text-xs hover:text-white/40 transition-colors">
-                  Volver
-                </button>
-              </div>
-
-              {/* ─── TEST MODE TOGGLE (solo visible con ?testmode=true) ─── */}
-              {canSeeTestToggle && (
-                <div className="mt-6 p-4 rounded-xl border border-amber-500/30 bg-amber-500/[0.05]">
-                  <div className="flex items-center justify-between gap-4">
-                    <div>
-                      <p className="text-amber-300/80 text-sm font-medium">Modo test (Stripe)</p>
-                      <p className="text-amber-300/40 text-xs mt-0.5">
-                        {stripeTestMode
-                          ? 'Activo — usa tarjeta 4242 4242 4242 4242, exp 12/34, CVC 123'
-                          : 'Desactivado — pagos reales'}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => setStripeTestMode(p => !p)}
-                      className={`relative w-12 h-6 rounded-full transition-colors flex-shrink-0 ${
-                        stripeTestMode ? 'bg-amber-500' : 'bg-white/20'
-                      }`}>
-                      <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
-                        stripeTestMode ? 'translate-x-6' : 'translate-x-0'
-                      }`} />
-                    </button>
+              {/* Switch modo test + Volver */}
+              <div className="space-y-3">
+                <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/[0.04] flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-amber-300/70 text-sm font-medium">Modo prueba</p>
+                    <p className="text-amber-300/35 text-xs mt-0.5">
+                      {stripeTestMode
+                        ? 'Activo — tarjeta: 4242 4242 4242 4242 · 12/34 · 123'
+                        : 'Desactivado — cobros reales'}
+                    </p>
                   </div>
+                  <button
+                    onClick={() => setStripeTestMode(p => !p)}
+                    className={`relative w-12 h-6 rounded-full transition-colors flex-shrink-0 ${
+                      stripeTestMode ? 'bg-amber-500' : 'bg-white/15'
+                    }`}>
+                    <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
+                      stripeTestMode ? 'translate-x-6' : 'translate-x-0'
+                    }`} />
+                  </button>
                 </div>
-              )}
+                <div className="text-center">
+                  <button onClick={() => { setStage('hero'); scrollToTop() }}
+                    className="text-white/20 text-xs hover:text-white/40 transition-colors">
+                    Volver
+                  </button>
+                </div>
+              </div>
             </div>
           </motion.div>
         )}
