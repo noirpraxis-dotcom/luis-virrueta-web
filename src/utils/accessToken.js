@@ -17,7 +17,10 @@ export function generateAccessToken() {
 export const PRODUCT_LABELS = {
   individual: 'Individual',
   pareja: 'Pareja',
-  consulta: 'Consulta Profesional'
+  consulta: 'Consulta Profesional',
+  descubre: 'Descifra tu forma de amar',
+  solo: 'Pareja — Solo',
+  losdos: 'Pareja — Los dos'
 }
 
 /**

@@ -19,8 +19,9 @@ export async function sendAccessEmails({ purchaseId, type, emails, tokens }) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ purchaseId, type, emails, tokens })
   })
-  if (!res.ok) throw new Error('Error enviando emails')
-  return res.json()
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(data.errors?.[0]?.error || data.error || `Error ${res.status}`)
+  return data
 }
 
 /**

@@ -1760,8 +1760,12 @@ const RadiografiaPremiumPage = () => {
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [onboardingStep, setOnboardingStep] = useState(0)
 
-  // Email
-  const [emailData, setEmailData] = useState({ emailUsuario: '', emailPareja: '' })
+  // Email — pre-fill from sessionStorage if coming from purchase thankyou page
+  const [emailData, setEmailData] = useState(() => {
+    const buyerEmail = sessionStorage.getItem('radiografia_buyer_email') || ''
+    const partnerEmail = sessionStorage.getItem('radiografia_partner_email') || ''
+    return { emailUsuario: buyerEmail, emailPareja: partnerEmail }
+  })
 
   const question = PREGUNTAS[currentQ]
   const totalQ = PREGUNTAS.length

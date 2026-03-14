@@ -97,6 +97,7 @@ async function stripe(env, method, path, params = {}, isTest = false) {
 
 // ── Resend email ──────────────────────────────────────────────────────────────
 async function sendEmail(env, { to, subject, html }) {
+  if (!env.RESEND_API_KEY) throw new Error('RESEND_API_KEY no configurado en Worker')
   const res = await fetch('https://api.resend.com/emails', {
     method:  'POST',
     headers: {
@@ -105,7 +106,10 @@ async function sendEmail(env, { to, subject, html }) {
     },
     body: JSON.stringify({ from: FROM_EMAIL, to: [to], subject, html }),
   })
-  if (!res.ok) console.error('Resend error:', await res.text())
+  if (!res.ok) {
+    const errText = await res.text()
+    throw new Error(`Resend error (${res.status}): ${errText}`)
+  }
 }
 
 // ── Stripe webhook signature ──────────────────────────────────────────────────
@@ -251,8 +255,8 @@ async function handleCreateCheckout(req, env) {
   const params = {
     mode:       'payment',
     line_items: [{ price: priceId, quantity: '1' }],
-    success_url: `${isTest ? 'http://localhost:3001' : SITE_URL}/tienda/diagnostico-relacional?session_id={CHECKOUT_SESSION_ID}&type=${type}`,
-    cancel_url:  isTest ? 'http://localhost:3001/tienda/diagnostico-relacional' : RETURN_URL,
+    success_url: `${isTest ? 'http://localhost:3000' : SITE_URL}/tienda/diagnostico-relacional?session_id={CHECKOUT_SESSION_ID}&type=${type}`,
+    cancel_url:  isTest ? 'http://localhost:3000/tienda/diagnostico-relacional' : RETURN_URL,
     metadata:   { type, testMode: isTest ? 'true' : 'false' },
   }
 
@@ -298,6 +302,7 @@ async function handleValidatePromo(req, env) {
 
 async function handleSendAccessEmail(req, env) {
   const { purchaseId, type, emails, tokens } = await req.json()
+  const errors = []
   for (let i = 0; i < (emails || []).length; i++) {
     const email = emails[i]
     if (!email) continue
@@ -305,13 +310,21 @@ async function handleSendAccessEmail(req, env) {
     const accessUrl = token
       ? `${RADIOGRAFIA_URL}?token=${token}&type=${type}&pid=${purchaseId}`
       : RADIOGRAFIA_URL
-    await sendEmail(env, {
-      to:      email,
-      subject: 'Tu Radiografía Psicológica está lista',
-      html:    emailHtml({ typeLabel: getTypeLabel(type), accessUrl }),
-    })
+    try {
+      await sendEmail(env, {
+        to:      email,
+        subject: 'Tu Radiografía Psicológica está lista',
+        html:    emailHtml({ typeLabel: getTypeLabel(type), accessUrl }),
+      })
+    } catch (e) {
+      console.error(`Error enviando a ${email}:`, e.message)
+      errors.push({ email, error: e.message })
+    }
   }
-  return json({ ok: true })
+  if (errors.length > 0 && errors.length === (emails || []).filter(Boolean).length) {
+    return json({ ok: false, errors }, 500)
+  }
+  return json({ ok: true, errors: errors.length ? errors : undefined })
 }
 
 async function handleWebhook(req, env) {

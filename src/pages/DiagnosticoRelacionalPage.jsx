@@ -781,6 +781,7 @@ const DiagnosticoRelacionalPage = () => {
   const [thankyouEmails, setThankyouEmails] = useState(['', ''])
   const [emailsSent, setEmailsSent] = useState(false)
   const [sendingEmails, setSendingEmails] = useState(false)
+  const [emailSendError, setEmailSendError] = useState('')
   const [purchaseId, setPurchaseId] = useState(null)
   const [accessToken, setAccessToken] = useState(null)
   const [verifyingPayment, setVerifyingPayment] = useState(false)
@@ -2608,16 +2609,21 @@ const DiagnosticoRelacionalPage = () => {
                   <div className="text-center">
                     <Mail className="w-8 h-8 text-violet-400/50 mx-auto mb-3" />
                     <h3 className="text-xl font-light text-white mb-1">
-                      {purchaseType === 'pareja' ? 'Introduce los emails de ambos' : 'Introduce tu email'}
+                      {purchaseType === 'losdos'
+                        ? 'Envía el test a tu pareja'
+                        : purchaseType === 'pareja' ? 'Introduce los emails de ambos' : 'Introduce tu email'}
                     </h3>
                     <p className="text-white/35 text-sm font-light">
-                      {purchaseType === 'pareja'
+                      {purchaseType === 'losdos'
+                        ? 'Tu pareja recibirá un enlace personalizado para tomar su propia versión del test en privado.'
+                        : purchaseType === 'pareja'
                         ? 'Cada persona recibirá su propio enlace para tomar el test por separado.'
                         : 'Te enviaremos un enlace seguro para acceder a tu test y tus resultados.'}
                     </p>
                   </div>
 
                   <div className="space-y-3">
+                    {purchaseType !== 'losdos' && (
                     <div>
                       <label className="text-white/30 text-xs uppercase tracking-wider mb-1.5 block">
                         {purchaseType === 'pareja' ? 'Email — Persona 1' : 'Tu email'}
@@ -2627,24 +2633,31 @@ const DiagnosticoRelacionalPage = () => {
                         placeholder="email@ejemplo.com"
                         className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors" />
                     </div>
-                    {purchaseType === 'pareja' && (
+                    )}
+                    {(purchaseType === 'pareja' || purchaseType === 'losdos') && (
                       <div>
-                        <label className="text-white/30 text-xs uppercase tracking-wider mb-1.5 block">Email — Persona 2</label>
+                        <label className="text-white/30 text-xs uppercase tracking-wider mb-1.5 block">
+                          {purchaseType === 'losdos' ? 'Email de tu pareja' : 'Email — Persona 2'}
+                        </label>
                         <input type="email" value={thankyouEmails[1]}
                           onChange={e => setThankyouEmails(prev => [prev[0], e.target.value])}
-                          placeholder="email2@ejemplo.com"
+                          placeholder={purchaseType === 'losdos' ? 'email@pareja.com' : 'email2@ejemplo.com'}
                           className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors" />
+                        {purchaseType === 'losdos' && (
+                          <p className="text-white/25 text-xs font-light mt-1.5">Le enviaremos un enlace único para que tome el test de forma independiente.</p>
+                        )}
                       </div>
                     )}
                   </div>
 
                   <motion.button
                     onClick={async () => {
-                      const emails = purchaseType === 'pareja'
+                      const emails = (purchaseType === 'pareja' || purchaseType === 'losdos')
                         ? thankyouEmails.filter(e => e.includes('@'))
                         : [thankyouEmails[0]].filter(e => e.includes('@'))
                       if (emails.length === 0) return
                       setSendingEmails(true)
+                      setEmailSendError('')
                       try {
                         const tokens = emails.map(() => generateAccessToken())
                         const pid = purchaseId || generateAccessToken()
@@ -2653,24 +2666,33 @@ const DiagnosticoRelacionalPage = () => {
                         // Save purchase to Firestore
                         await savePurchase(pid, { type: purchaseType, email: emails[0], stripeSessionId: purchaseId }).catch(() => {})
                         // Send access emails via backend
-                        await sendAccessEmails({ purchaseId: pid, type: purchaseType, emails, tokens }).catch(() => {})
-                        setEmailsSent(true)
+                        const result = await sendAccessEmails({ purchaseId: pid, type: purchaseType, emails, tokens })
+                        if (result && result.ok === false) {
+                          setEmailSendError(result.errors?.[0]?.error || 'No se pudo enviar el correo. Verifica la configuración de Resend.')
+                        } else {
+                          setEmailsSent(true)
+                        }
                         // Also store email for later use
                         setEmail(emails[0])
                         sessionStorage.setItem('diagnostico_guide_email', emails[0])
+                      } catch (err) {
+                        setEmailSendError(`Error: ${err.message || 'No se pudo enviar el correo.'}`)
                       } finally {
                         setSendingEmails(false)
                       }
                     }}
-                    disabled={sendingEmails || !thankyouEmails[0]?.includes('@') || (purchaseType === 'pareja' && !thankyouEmails[1]?.includes('@'))}
+                    disabled={sendingEmails || !thankyouEmails[0]?.includes('@') || ((purchaseType === 'pareja' || purchaseType === 'losdos') && !thankyouEmails[1]?.includes('@'))}
                     whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20 disabled:opacity-40 disabled:cursor-not-allowed">
                     {sendingEmails ? (
                       <><Loader2 className="inline w-4 h-4 mr-2 animate-spin" /> Enviando...</>
                     ) : (
-                      <><Send className="inline w-4 h-4 mr-2" /> Enviar acceso{purchaseType === 'pareja' ? ' a ambos' : ''}</>
+                      <><Send className="inline w-4 h-4 mr-2" /> {purchaseType === 'losdos' ? 'Enviar enlace a mi pareja' : `Enviar acceso${purchaseType === 'pareja' ? ' a ambos' : ''}`}</>
                     )}
                   </motion.button>
+                  {emailSendError && (
+                    <p className="text-red-400/80 text-xs text-center mt-2">{emailSendError}</p>
+                  )}
                 </motion.div>
               )}
 
@@ -2681,8 +2703,10 @@ const DiagnosticoRelacionalPage = () => {
                   <div className="flex items-center gap-3">
                     <Check className="w-5 h-5 text-emerald-400/80" />
                     <p className="text-emerald-300/80 text-base font-light">
-                      {purchaseType === 'pareja'
-                        ? `¡Enlace enviado a ${thankyouEmails[0]} y ${thankyouEmails[1]}!`
+                      {(purchaseType === 'pareja' || purchaseType === 'losdos')
+                        ? purchaseType === 'losdos'
+                          ? `¡Enlace enviado a ${thankyouEmails[1]}! Tu pareja puede empezar cuando quiera.`
+                          : `¡Enlace enviado a ${thankyouEmails[0]} y ${thankyouEmails[1]}!`
                         : `¡Enlace enviado a ${thankyouEmails[0]}!`}
                     </p>
                   </div>
@@ -2701,6 +2725,9 @@ const DiagnosticoRelacionalPage = () => {
 <motion.button
                   onClick={() => {
                     if (['descubre', 'solo', 'losdos'].includes(purchaseType)) {
+                      // Pass emails to RadiografiaPremiumPage so profile form is pre-filled
+                      if (thankyouEmails[0]) sessionStorage.setItem('radiografia_buyer_email', thankyouEmails[0])
+                      if (purchaseType === 'losdos' && thankyouEmails[1]) sessionStorage.setItem('radiografia_partner_email', thankyouEmails[1])
                       navigate(`/tienda/radiografia-premium?type=${purchaseType}`)
                     } else {
                       setStage('instructions')
