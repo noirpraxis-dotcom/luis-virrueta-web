@@ -32,7 +32,12 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'https://luis-virrueta-web-production.up.railway.app',
+        target: 'https://radiografia-worker.noirpraxis.workers.dev',
+        changeOrigin: true,
+        secure: true
+      },
+      '/webhook': {
+        target: 'https://radiografia-worker.noirpraxis.workers.dev',
         changeOrigin: true,
         secure: true
       }

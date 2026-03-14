@@ -330,8 +330,9 @@ const TASK_DURATIONS_MS = [6200, 6500, 6000, 7200, 6600, 6000, 7400, 6600, 5800,
 
 // ─── STRIPE API ────────────────────────────────────────────────
 
-// In dev, use empty string so Vite proxy handles /api/* → Railway (avoids CORS)
-const API_BASE = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE_URL || '')
+// Cloudflare Worker — https://radiografia-worker.noirpraxis.workers.dev
+const WORKER_URL = 'https://radiografia-worker.noirpraxis.workers.dev'
+const API_BASE = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE_URL || WORKER_URL)
 
 const PRODUCT_PRICE_DESCUBRE = 499
 const PRODUCT_PRICE_SOLO = 499
@@ -808,7 +809,10 @@ const DiagnosticoRelacionalPage = () => {
       setVerifyingPayment(true)
       setStage('thankyou')
       verifyStripeSession(sessionId).then(data => {
-        const type = data.type || 'individual'
+        // URL ?type= is authoritative for radiografía products (backend may prefix with 'radiografia_')
+        const urlType = searchParams.get('type') || ''
+        const radiografiaTypes = ['descubre', 'solo', 'losdos']
+        const type = radiografiaTypes.includes(urlType) ? urlType : (data.type || urlType || 'solo')
         setIsPurchased(true)
         setPurchaseType(type)
         setPurchaseId(sessionId)
@@ -2090,6 +2094,51 @@ const DiagnosticoRelacionalPage = () => {
               </motion.div>
 
               {/* ═══════════════════════════════════════════════════════
+                  SECTION 5: Muestra del reporte — Sofía y Mateo
+              ═══════════════════════════════════════════════════════ */}
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                className="py-16 space-y-10">
+                <div className="text-center">
+                  <p className="text-violet-400/50 text-xs font-bold uppercase tracking-[0.25em] mb-3">Ejemplo real de análisis</p>
+                  <h3 className="text-2xl lg:text-3xl font-light text-white mb-2">Así se ve tu reporte</h3>
+                  <p className="text-white/40 text-sm font-light max-w-lg mx-auto">Extracto del análisis generado para Sofía (31) y Mateo (34), una pareja ficticia con patrones reales.</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto">
+                  {/* Card 1 — Autoanálisis */}
+                  <div className="p-6 rounded-2xl border border-violet-500/15 bg-gradient-to-br from-violet-500/[0.04] to-transparent relative overflow-hidden">
+                    <p className="text-violet-300/60 text-[10px] uppercase tracking-[0.2em] mb-2">Autoanálisis</p>
+                    <p className="text-white/70 text-sm font-light leading-relaxed mb-3">
+                      Sofía ama desde la ansiedad de perder. Necesita validación constante y confunde intensidad con intimidad. Cuando no recibe respuesta inmediata, interpreta silencio como abandono.
+                    </p>
+                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#0a0a12] to-transparent" />
+                  </div>
+
+                  {/* Card 2 — Diagnóstico Gottman */}
+                  <div className="p-6 rounded-2xl border border-fuchsia-500/15 bg-gradient-to-br from-fuchsia-500/[0.04] to-transparent relative overflow-hidden">
+                    <p className="text-fuchsia-300/60 text-[10px] uppercase tracking-[0.2em] mb-2">Diagnóstico Gottman</p>
+                    <p className="text-white/70 text-sm font-light leading-relaxed mb-3">
+                      Ratio positivo/negativo estimado: 2.8:1 (zona de riesgo). La crítica aparece disfrazada de preocupación. Mateo responde con distanciamiento defensivo — lo que Sofía lee como desinterés.
+                    </p>
+                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#0a0a12] to-transparent" />
+                  </div>
+
+                  {/* Card 3 — Estilo de apego */}
+                  <div className="p-6 rounded-2xl border border-cyan-500/15 bg-gradient-to-br from-cyan-500/[0.04] to-transparent relative overflow-hidden">
+                    <p className="text-cyan-300/60 text-[10px] uppercase tracking-[0.2em] mb-2">Estilo de apego</p>
+                    <p className="text-white/70 text-sm font-light leading-relaxed mb-3">
+                      Sofía: ansioso-preocupado. Mateo: evitativo-dismissivo. Juntos activan un ciclo de persecución–retirada que se intensifica bajo estrés y genera distancia emocional creciente.
+                    </p>
+                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#0a0a12] to-transparent" />
+                  </div>
+                </div>
+
+                <div className="text-center">
+                  <p className="text-white/30 text-xs font-light">Esto es solo una fracción. Tu reporte incluye 12 dimensiones, 11 corrientes, gráficas interactivas y recomendaciones personalizadas.</p>
+                </div>
+              </motion.div>
+
+              {/* ═══════════════════════════════════════════════════════
                   SECTION 7: PRICING — Con copy de 12 psicólogos + garantía
               ═══════════════════════════════════════════════════════ */}
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -2111,7 +2160,7 @@ const DiagnosticoRelacionalPage = () => {
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
                     <p className="text-white/40 text-sm font-light mb-5">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
                     <ul className="space-y-2 mb-6">
-                      {['Descubre por qué eliges siempre el mismo tipo de pareja', 'Mapa de tu estilo de apego y mecanismos de defensa', 'Radiografía de tus patrones inconscientes al amar', 'Reporte PDF con gráficas y análisis descargable'].map((item, i) => (
+                      {['Descubre por qué eliges siempre el mismo tipo de pareja', 'Mapa de tu estilo de apego y mecanismos de defensa', 'Radiografía de tus patrones inconscientes al amar', '40 preguntas guiadas por voz con IA', 'Análisis de 11 corrientes psicológicas sobre ti', 'Reporte PDF con gráficas y análisis descargable'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
@@ -2140,7 +2189,7 @@ const DiagnosticoRelacionalPage = () => {
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
                     <p className="text-white/40 text-sm font-light mb-5">Tú contestas · Análisis profundo de lo que está pasando en tu relación</p>
                     <ul className="space-y-2 mb-6">
-                      {['Entiende qué dinámicas invisibles están desgastando tu relación', '40 preguntas por voz + análisis de 11 corrientes psicológicas', 'Diagnóstico de hacia dónde va tu relación si nada cambia', 'Reporte PDF profesional con radar y gráficas'].map((item, i) => (
+                      {['Entiende qué dinámicas invisibles están desgastando tu relación', '40 preguntas guiadas por voz — tú contestas solo/a', 'Análisis de 11 corrientes psicológicas sobre tu caso', 'Diagnóstico de hacia dónde va tu relación si nada cambia', 'Autoanálisis: qué proyectas, qué repites, qué evitas', 'Reporte PDF profesional con radar y gráficas'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
@@ -2169,7 +2218,7 @@ const DiagnosticoRelacionalPage = () => {
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
                     <p className="text-white/40 text-sm font-light mb-5">Cada uno contesta por separado · 3 reportes: tuyo, suyo y cruzado</p>
                     <ul className="space-y-2 mb-6">
-                      {['Cada uno ve su propio mapa emocional y patrones', 'Comparación cruzada: dónde chocan y dónde se complementan', 'Diagnóstico de la dinámica invisible entre los dos', 'El punto de partida ideal antes de terapia de pareja'].map((item, i) => (
+                      {['Cada uno contesta 40 preguntas por separado, en privado', 'Reporte individual para cada uno con su propio análisis', 'Reporte cruzado: dónde chocan y dónde se complementan', 'Diagnóstico de la dinámica invisible entre los dos', 'Comparación de estilos de apego y lenguajes del amor', 'El punto de partida ideal antes de terapia de pareja'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-cyan-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
@@ -2198,7 +2247,7 @@ const DiagnosticoRelacionalPage = () => {
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
                     <p className="text-white/40 text-sm font-light mb-5">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
                     <ul className="space-y-2 mb-6">
-                      {['Descubre por qué eliges siempre el mismo tipo de pareja', 'Mapa de tu estilo de apego y mecanismos de defensa', 'Radiografía de tus patrones inconscientes al amar', 'Reporte PDF con gráficas y análisis descargable'].map((item, i) => (
+                      {['Descubre por qué eliges siempre el mismo tipo de pareja', 'Mapa de tu estilo de apego y mecanismos de defensa', 'Radiografía de tus patrones inconscientes al amar', '40 preguntas guiadas por voz con IA', 'Análisis de 11 corrientes psicológicas sobre ti', 'Reporte PDF con gráficas y análisis descargable'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
@@ -2225,7 +2274,7 @@ const DiagnosticoRelacionalPage = () => {
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
                     <p className="text-white/40 text-sm font-light mb-5">Tú contestas · Análisis profundo de lo que está pasando en tu relación</p>
                     <ul className="space-y-2 mb-6">
-                      {['Entiende qué dinámicas invisibles están desgastando tu relación', '40 preguntas por voz + análisis de 11 corrientes psicológicas', 'Diagnóstico de hacia dónde va tu relación si nada cambia', 'Reporte PDF profesional con radar y gráficas'].map((item, i) => (
+                      {['Entiende qué dinámicas invisibles están desgastando tu relación', '40 preguntas guiadas por voz — tú contestas solo/a', 'Análisis de 11 corrientes psicológicas sobre tu caso', 'Diagnóstico de hacia dónde va tu relación si nada cambia', 'Autoanálisis: qué proyectas, qué repites, qué evitas', 'Reporte PDF profesional con radar y gráficas'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
@@ -2252,7 +2301,7 @@ const DiagnosticoRelacionalPage = () => {
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
                     <p className="text-white/40 text-sm font-light mb-5">Cada uno contesta por separado · 3 reportes: tuyo, suyo y cruzado</p>
                     <ul className="space-y-2 mb-6">
-                      {['Cada uno ve su propio mapa emocional y patrones', 'Comparación cruzada: dónde chocan y dónde se complementan', 'Diagnóstico de la dinámica invisible entre los dos', 'El punto de partida ideal antes de terapia de pareja'].map((item, i) => (
+                      {['Cada uno contesta 40 preguntas por separado, en privado', 'Reporte individual para cada uno con su propio análisis', 'Reporte cruzado: dónde chocan y dónde se complementan', 'Diagnóstico de la dinámica invisible entre los dos', 'Comparación de estilos de apego y lenguajes del amor', 'El punto de partida ideal antes de terapia de pareja'].map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-cyan-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
@@ -2324,7 +2373,7 @@ const DiagnosticoRelacionalPage = () => {
                     <p className="text-white/40 text-sm font-light">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
                   </div>
                   <ul className="space-y-2">
-                    {['Descubre por qué eliges siempre el mismo tipo de pareja', 'Mapa de tu estilo de apego y mecanismos de defensa', 'Radiografía de tus patrones inconscientes al amar', 'Reporte PDF con gráficas y análisis descargable'].map((item, i) => (
+                    {['Descubre por qué eliges siempre el mismo tipo de pareja', 'Mapa de tu estilo de apego y mecanismos de defensa', 'Radiografía de tus patrones inconscientes al amar', '40 preguntas guiadas por voz con IA', 'Análisis de 11 corrientes psicológicas sobre ti', 'Reporte PDF con gráficas y análisis descargable'].map((item, i) => (
                       <li key={i} className="flex items-start gap-2 text-white/50 text-sm font-light">
                         <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                         {item}
@@ -2373,7 +2422,7 @@ const DiagnosticoRelacionalPage = () => {
                     <p className="text-white/40 text-sm font-light">Tú contestas · Análisis profundo de lo que está pasando</p>
                   </div>
                   <ul className="space-y-2">
-                    {['Entiende qué dinámicas invisibles están desgastando tu relación', '40 preguntas por voz + análisis de 11 corrientes psicológicas', 'Diagnóstico de hacia dónde va tu relación si nada cambia', 'Reporte PDF profesional con radar y gráficas'].map((item, i) => (
+                    {['Entiende qué dinámicas invisibles están desgastando tu relación', '40 preguntas guiadas por voz — tú contestas solo/a', 'Análisis de 11 corrientes psicológicas sobre tu caso', 'Diagnóstico de hacia dónde va tu relación si nada cambia', 'Autoanálisis: qué proyectas, qué repites, qué evitas', 'Reporte PDF profesional con radar y gráficas'].map((item, i) => (
                       <li key={i} className="flex items-start gap-2 text-white/50 text-sm font-light">
                         <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                         {item}
@@ -2422,7 +2471,7 @@ const DiagnosticoRelacionalPage = () => {
                     <p className="text-white/40 text-sm font-light">Cada uno contesta por separado · 3 reportes: tuyo, suyo y cruzado</p>
                   </div>
                   <ul className="space-y-2">
-                    {['Cada uno ve su propio mapa emocional y patrones', 'Comparación cruzada: dónde chocan y dónde se complementan', 'Diagnóstico de la dinámica invisible entre los dos', 'El punto de partida ideal antes de terapia de pareja'].map((item, i) => (
+                    {['Cada uno contesta 40 preguntas por separado, en privado', 'Reporte individual para cada uno con su propio análisis', 'Reporte cruzado: dónde chocan y dónde se complementan', 'Diagnóstico de la dinámica invisible entre los dos', 'Comparación de estilos de apego y lenguajes del amor', 'El punto de partida ideal antes de terapia de pareja'].map((item, i) => (
                       <li key={i} className="flex items-start gap-2 text-white/50 text-sm font-light">
                         <Check className="w-3.5 h-3.5 text-cyan-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                         {item}
@@ -2631,11 +2680,20 @@ const DiagnosticoRelacionalPage = () => {
               {purchaseType !== 'consulta' && (
               <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: emailsSent ? 0.3 : 0.8 }}
                 className="text-center space-y-4">
-                <motion.button
-                  onClick={() => { setStage('instructions'); scrollToTop() }}
+<motion.button
+                  onClick={() => {
+                    if (['descubre', 'solo', 'losdos'].includes(purchaseType)) {
+                      navigate(`/tienda/radiografia-premium?type=${purchaseType}`)
+                    } else {
+                      setStage('instructions')
+                    }
+                    scrollToTop()
+                  }}
                   whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                   className="px-10 py-5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
-                  Comenzar mi diagnóstico ahora <ArrowRight className="inline w-5 h-5 ml-2" />
+                  {['descubre', 'solo', 'losdos'].includes(purchaseType)
+                    ? <>Comenzar mi Radiografía <ArrowRight className="inline w-5 h-5 ml-2" /></>
+                    : <>Comenzar mi diagnóstico ahora <ArrowRight className="inline w-5 h-5 ml-2" /></>}
                 </motion.button>
                 <p className="text-white/20 text-xs font-light">
                   ~30 minutos · Habla por micrófono · Reporte completo al final

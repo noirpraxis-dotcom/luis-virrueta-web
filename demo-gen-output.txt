@@ -1,0 +1,20 @@
+   SYSTEM_PROMPT extra├¡do: 14801 caracteres
+­ƒÜÇ Llamando a DeepSeek API para generar demo de Sof├¡a y Mateo...
+   Perfil: Sof├¡a (31) y Mateo (34)
+   Esto puede tomar 60-120 segundos...
+
+   Prompt construido: 8733 caracteres
+   System prompt: 14801 caracteres
+   HTTP Status: 200 OK
+   Response text length: 31281 chars
+Ô£à Respuesta recibida en 354.7s
+   Tokens: prompt=7086, completion=8176, total=15262
+   Costo estimado: $0.0033 USD
+   Content length: 30317 chars
+ÔÜá´©Å  Falta lecturas_por_enfoque
+
+­ƒÆ¥ Guardado en: C:\Users\PC\Desktop\APLICACIONES\luis virrueta\p├ígina web zuzana\src\data\cachedDemoAnalysis.js
+   Tama├▒o: 30.9 KB
+
+Ô£à Demo listo. Importa con:
+   import { CACHED_DEMO_ANALYSIS } from '../data/cachedDemoAnalysis'

@@ -221,8 +221,17 @@ TONO DEL INFORME:
 IMPORTANTE: Si el usuario no respondió alguna pregunta, infiere la dimensión correspondiente del contexto general. Marca internamente menor confianza pero no omitas el análisis.
 Responde EXCLUSIVAMENTE en formato JSON válido con la estructura solicitada.`
 
-function buildPrompt(responses, questions, profileData) {
+function buildPrompt(responses, questions, profileData, packageType) {
   let prompt = '## RESPUESTAS DEL CUESTIONARIO NARRATIVO — RADIOGRAFÍA DE PAREJA PREMIUM\n\n'
+
+  // Package context
+  if (packageType === 'descubre') {
+    prompt += `### TIPO DE PAQUETE: INDIVIDUAL (Descifra tu forma de amar)\n`
+    prompt += `El usuario NO necesariamente tiene pareja actual. El enfoque principal es su PATRÓN DE AMOR: qué tipo de pareja elige, qué proyecta, qué repite inconsciente. Si menciona pareja, analízala, pero el foco es el usuario y su forma de amar.\n\n`
+  } else if (packageType === 'losdos') {
+    prompt += `### TIPO DE PAQUETE: PAREJA — LOS DOS (Reporte individual)\n`
+    prompt += `Este es el reporte INDIVIDUAL de este participante dentro del paquete Los Dos. Analiza su perspectiva individual. El reporte cruzado se generará por separado.\n\n`
+  }
 
   if (profileData && profileData.nombre) {
     prompt += `### DATOS DEL USUARIO\n`
@@ -259,8 +268,18 @@ function buildPrompt(responses, questions, profileData) {
     }
   }
 
-  prompt += `\nRealiza el análisis psicológico completo siguiendo las 6 fases del sistema.
-Devuelve el resultado en el siguiente formato JSON exacto:
+  prompt += `\nRealiza el análisis psicológico completo siguiendo las 6 fases del sistema.\n`
+
+  return prompt
+}
+
+// ─── PARALLEL ANALYSIS — 4 PART SCHEMAS ──────────────────────────────────────
+// Split the massive JSON request into 4 parallel API calls to avoid token truncation.
+// Each call gets the full SYSTEM_PROMPT + user responses, but only generates a subset of the JSON.
+
+const PART1_INSTRUCTION = `Analiza la narrativa completa y genera EXCLUSIVAMENTE las siguientes secciones en JSON válido.
+Esta es la PARTE MÁS IMPORTANTE del reporte — el autoanálisis. Dedica TODA tu capacidad analítica aquí.
+Responde SOLO con JSON válido, sin texto adicional.
 {
   "autoanalisis_usuario": {
     "apertura_rapport": "(2-3 párrafos: saludo empático usando el nombre, reconoce su valentía, genera rapport profundo. Anticipa que lo que viene será transformador.)",
@@ -276,18 +295,10 @@ Devuelve el resultado en el siguiente formato JSON exacto:
   },
   "resumen_relacion": "(2-3 párrafos: resumen narrativo del vínculo, parafraseando al usuario. Genera sensación de comprensión.)",
   "dimensiones": {
-    "estabilidad_relacional": "(0-100)",
-    "apego_emocional": "(0-100)",
-    "conexion_emocional": "(0-100)",
-    "deseo_erotico": "(0-100)",
-    "intimidad": "(0-100)",
-    "sincronia_relacional": "(0-100)",
-    "patrones_inconscientes": "(0-100, donde 100 = muchos patrones detectados)",
-    "fantasma_relacional": "(0-100, intensidad del fantasma)",
-    "roles_sistemicos": "(0-100, rigidez de roles)",
-    "resiliencia_vinculo": "(0-100)",
-    "vulnerabilidad_emocional": "(0-100)",
-    "narrativa_futuro": "(0-100)"
+    "estabilidad_relacional": "(0-100)", "apego_emocional": "(0-100)", "conexion_emocional": "(0-100)",
+    "deseo_erotico": "(0-100)", "intimidad": "(0-100)", "sincronia_relacional": "(0-100)",
+    "patrones_inconscientes": "(0-100)", "fantasma_relacional": "(0-100)", "roles_sistemicos": "(0-100)",
+    "resiliencia_vinculo": "(0-100)", "vulnerabilidad_emocional": "(0-100)", "narrativa_futuro": "(0-100)"
   },
   "diagnostico": {
     "tipo_vinculo": "(Relación compañera | Relación intelectual | Relación pasional | Relación conflictiva | Relación dependiente | Mixto)",
@@ -295,35 +306,111 @@ Devuelve el resultado en el siguiente formato JSON exacto:
     "dinamica_conflicto": "(Confrontación directa | Perseguidor-retirada | Evitación mutua | Conflicto escalado)",
     "tono_relacional": "(1 frase que describe el tono dominante de la relación)"
   },
-  "radiografia_inicial": "(2-3 párrafos: parafrasea la narrativa del usuario, señala ejes principales, genera comprensión. **Negrita** en conceptos clave.)",
+  "radiografia_inicial": "(2-3 párrafos: parafrasea la narrativa del usuario, señala ejes principales, genera comprensión. **Negrita** en conceptos clave.)"
+}`
+
+const PART2_INSTRUCTION = `Analiza la narrativa completa y genera EXCLUSIVAMENTE las siguientes secciones en JSON válido.
+Genera el análisis profundo Y las lecturas de los primeros 6 enfoques psicológicos (Gottman, Sue Johnson, Perel, Levine, Hendrix, Tatkin).
+Recuerda: cada interpretación debe ser de 3-4 párrafos con estilo Sherlock Holmes psicológico. Cita frases textuales del usuario.
+Responde SOLO con JSON válido, sin texto adicional.
+{
   "analisis_profundo": {
-    "narrativa_dominante": "(2 párrafos: cuál es la historia que el vínculo se cuenta a sí mismo)",
-    "tensiones_estructurales": "(2 párrafos: contradicciones y tensiones encontradas. Cita al usuario.)",
-    "evolucion_deseo": "(1-2 párrafos: cómo ha cambiado el deseo desde el inicio)",
-    "dinamica_emocional": "(2 párrafos: cómo se conectan y desconectan emocionalmente)"
+    "narrativa_dominante": "(2 párrafos)", "tensiones_estructurales": "(2 párrafos. Cita al usuario.)",
+    "evolucion_deseo": "(1-2 párrafos)", "dinamica_emocional": "(2 párrafos)"
   },
   "lectura_psicoanalitica": {
-    "proyecciones_inconscientes": "(1-2 párrafos: repeticiones, proyecciones, roles heredados. Enfoque freudiano.)",
-    "fantasma_relacional": "(1-2 párrafos: qué representa la pareja para el sujeto. Enfoque lacaniano.)",
-    "roles_simbolicos": "(1 párrafo: funciones psicológicas que cada miembro ocupa)"
+    "proyecciones_inconscientes": "(1-2 párrafos. Enfoque freudiano.)",
+    "fantasma_relacional": "(1-2 párrafos. Enfoque lacaniano.)",
+    "roles_simbolicos": "(1 párrafo)"
+  },
+  "lecturas_por_enfoque": {
+    "gottman": {
+      "titulo": "John Gottman", "enfoque": "Estabilidad relacional y dinámica del conflicto",
+      "interpretacion": "(3-4 párrafos. Cita al usuario.)",
+      "indicadores": ["(frase clara en español)", "...3-5 indicadores"],
+      "puntuacion": "(0-100)",
+      "jinetes": { "critica": "(0-100)", "desprecio": "(0-100)", "actitud_defensiva": "(0-100)", "evasion": "(0-100)" },
+      "capacidad_reparacion": "(0-100)",
+      "jinetes_detalle": {
+        "critica": { "como_aparece": "(1-2 frases)", "impacto": "(1 frase)" },
+        "desprecio": { "como_aparece": "(1-2 frases)", "impacto": "(1 frase)" },
+        "actitud_defensiva": { "como_aparece": "(1-2 frases)", "impacto": "(1 frase)" },
+        "evasion": { "como_aparece": "(1-2 frases)", "impacto": "(1 frase)" }
+      },
+      "patron_dominante": "(1 frase)", "zona_riesgo": "(1 frase)", "recurso_disponible": "(1 frase)"
+    },
+    "sue_johnson": {
+      "titulo": "Sue Johnson", "enfoque": "Seguridad emocional y Terapia Focalizada en las Emociones",
+      "interpretacion": "(3-4 párrafos. Cita al usuario.)",
+      "indicadores": ["(frase clara en español)", "...3-5 frases"], "puntuacion": "(0-100)"
+    },
+    "perel": {
+      "titulo": "Esther Perel", "enfoque": "Deseo erótico y tensión entre seguridad y aventura",
+      "interpretacion": "(3-4 párrafos. Cita al usuario.)",
+      "indicadores": ["(frase clara en español)", "...3-5 frases"], "puntuacion": "(0-100)"
+    },
+    "levine": {
+      "titulo": "Amir Levine", "enfoque": "Estilo de apego adulto",
+      "interpretacion": "(3-4 párrafos. Cita al usuario.)",
+      "indicadores": ["(frase clara en español)", "...3-5 frases"],
+      "estilo_apego": "(Seguro | Ansioso | Evitativo | Desorganizado)", "puntuacion": "(0-100)"
+    },
+    "hendrix": {
+      "titulo": "Harville Hendrix", "enfoque": "Reparación inconsciente — Terapia Imago",
+      "interpretacion": "(3-4 párrafos. Cita al usuario.)",
+      "indicadores": ["(frase clara en español)", "...3-5 frases"], "puntuacion": "(0-100)"
+    },
+    "tatkin": {
+      "titulo": "Stan Tatkin", "enfoque": "Sincronía emocional y regulación mutua",
+      "interpretacion": "(3-4 párrafos. Cita al usuario.)",
+      "indicadores": ["(frase clara en español)", "...3-5 frases"], "puntuacion": "(0-100)"
+    }
+  }
+}`
+
+const PART3_INSTRUCTION = `Analiza la narrativa completa y genera EXCLUSIVAMENTE las siguientes secciones en JSON válido.
+Genera las lecturas de los últimos 5 enfoques (Chapman, Sternberg, Schnarch, Real, Freud+Lacan), diagnósticos numéricos y síntesis final.
+Recuerda: cada interpretación debe ser de 3-4 párrafos con estilo Sherlock Holmes psicológico. Cita frases textuales del usuario.
+Responde SOLO con JSON válido, sin texto adicional.
+{
+  "lecturas_por_enfoque": {
+    "chapman": {
+      "titulo": "Gary Chapman", "enfoque": "Lenguajes del amor y comunicación afectiva",
+      "interpretacion": "(3-4 párrafos. Cita al usuario.)",
+      "indicadores": ["(frase clara en español)", "...3-5 frases"],
+      "lenguaje_usuario": "(Palabras de afirmación | Actos de servicio | Contacto físico | Tiempo de calidad | Regalos)",
+      "lenguaje_pareja": "(Palabras de afirmación | Actos de servicio | Contacto físico | Tiempo de calidad | Regalos)",
+      "puntuacion": "(0-100)"
+    },
+    "sternberg": {
+      "titulo": "Robert Sternberg", "enfoque": "Triángulo del amor: intimidad, pasión y compromiso",
+      "interpretacion": "(3-4 párrafos. Cita al usuario.)",
+      "indicadores": ["(frase clara en español)", "...3 frases"],
+      "puntuacion_intimidad": "(0-100)", "puntuacion_pasion": "(0-100)", "puntuacion_compromiso": "(0-100)"
+    },
+    "schnarch": {
+      "titulo": "David Schnarch", "enfoque": "Madurez relacional y diferenciación del self",
+      "interpretacion": "(3-4 párrafos. Cita al usuario.)",
+      "indicadores": ["(frase clara en español)", "...3-5 frases"], "puntuacion": "(0-100)"
+    },
+    "real": {
+      "titulo": "Terrence Real", "enfoque": "Dinámicas de poder y equilibrio emocional",
+      "interpretacion": "(3-4 párrafos. Cita al usuario.)",
+      "indicadores": ["(frase clara en español)", "...3-5 frases"], "puntuacion": "(0-100)"
+    },
+    "freud_lacan": {
+      "titulo": "Freud + Lacan", "enfoque": "Inconsciente relacional y estructura del deseo",
+      "interpretacion_freud": "(1-2 párrafos. Cita al usuario.)",
+      "interpretacion_lacan": "(1-2 párrafos. Cita al usuario.)",
+      "indicadores": ["(frase clara en español)", "...3-5 frases"], "puntuacion": "(0-100)"
+    }
   },
   "dinamica_conflicto": {
-    "tendencia_conflicto": "(0-100)",
-    "reaccion_usuario": "(1 párrafo: cómo reacciona el usuario al conflicto)",
-    "reaccion_pareja": "(1 párrafo: cómo reacciona la pareja según lo describe el usuario)",
-    "capacidad_reparacion": "(0-100)"
+    "tendencia_conflicto": "(0-100)", "reaccion_usuario": "(1 párrafo)",
+    "reaccion_pareja": "(1 párrafo)", "capacidad_reparacion": "(0-100)"
   },
-  "energia_vinculo": {
-    "atraccion_inicial": "(0-100)",
-    "atraccion_actual": "(0-100)",
-    "intimidad_emocional": "(0-100)",
-    "conexion_fisica": "(0-100)"
-  },
-  "direccion_probable": {
-    "estabilidad_futura": "(0-100)",
-    "riesgo_desgaste": "(0-100)",
-    "potencial_reconexion": "(0-100)"
-  },
+  "energia_vinculo": { "atraccion_inicial": "(0-100)", "atraccion_actual": "(0-100)", "intimidad_emocional": "(0-100)", "conexion_fisica": "(0-100)" },
+  "direccion_probable": { "estabilidad_futura": "(0-100)", "riesgo_desgaste": "(0-100)", "potencial_reconexion": "(0-100)" },
   "fortalezas": ["(fortaleza 1)", "(fortaleza 2)", "(fortaleza 3)"],
   "riesgos": ["(riesgo 1)", "(riesgo 2)", "(riesgo 3)"],
   "tabla_diagnostica": [
@@ -340,234 +427,225 @@ Devuelve el resultado en el siguiente formato JSON exacto:
     {"dimension": "Vulnerabilidad emocional", "nivel": "(Alto|Medio|Bajo)", "interpretacion": "(1 frase)"},
     {"dimension": "Narrativa de futuro", "nivel": "(Alto|Medio|Bajo)", "interpretacion": "(1 frase)"}
   ],
-  "lecturas_por_enfoque": {
-    "gottman": {
-      "titulo": "John Gottman",
-      "enfoque": "Estabilidad relacional y dinámica del conflicto",
-      "interpretacion": "(3-4 párrafos: Los Cuatro Jinetes detectados, ratio positivo/negativo, bids for connection, capacidad de reparación. Cruza con los hallazgos del autoanálisis — ¿cómo los mecanismos de defensa o el fantasma relacional afectan la dinámica Gottman? Cita al usuario.)",
-      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 indicadores, cada uno una frase corta comprensible sin jerga"],
-      "puntuacion": "(0-100)",
-      "jinetes": {
-        "critica": "(0-100 intensidad detectada)",
-        "desprecio": "(0-100 intensidad detectada)",
-        "actitud_defensiva": "(0-100 intensidad detectada)",
-        "evasion": "(0-100 intensidad detectada)"
-      },
-      "capacidad_reparacion": "(0-100)",
-      "jinetes_detalle": {
-        "critica": { "como_aparece": "(1-2 frases: cómo se manifiesta la crítica en ESTA relación)", "impacto": "(1 frase: efecto en el vínculo)" },
-        "desprecio": { "como_aparece": "(1-2 frases: cómo se manifiesta el desprecio en ESTA relación)", "impacto": "(1 frase: efecto en el vínculo)" },
-        "actitud_defensiva": { "como_aparece": "(1-2 frases: cómo se manifiesta la defensividad en ESTA relación)", "impacto": "(1 frase: efecto en el vínculo)" },
-        "evasion": { "como_aparece": "(1-2 frases: cómo se manifiesta la evasión en ESTA relación)", "impacto": "(1 frase: efecto en el vínculo)" }
-      },
-      "patron_dominante": "(1 frase: resumen del patrón dominante de conflicto)",
-      "zona_riesgo": "(1 frase: principal zona de riesgo detectada)",
-      "recurso_disponible": "(1 frase: recurso de reparación disponible)"
-    },
-    "sue_johnson": {
-      "titulo": "Sue Johnson",
-      "enfoque": "Seguridad emocional y Terapia Focalizada en las Emociones",
-      "interpretacion": "(3-4 párrafos: ciclos de interacción negativa, accesibilidad emocional, responsividad, patrón perseguidor-evitador. Conecta con la forma de amar y el estilo de apego detectado en el autoanálisis. Cita al usuario.)",
-      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
-      "puntuacion": "(0-100)"
-    },
-    "perel": {
-      "titulo": "Esther Perel",
-      "enfoque": "Deseo erótico y tensión entre seguridad y aventura",
-      "interpretacion": "(3-4 párrafos: erotismo vs domesticidad, misterio, autonomía, novedad, espacio psicológico. Relaciona con el fantasma relacional y lo que reclama afuera del autoanálisis. Cita al usuario.)",
-      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
-      "puntuacion": "(0-100)"
-    },
-    "levine": {
-      "titulo": "Amir Levine",
-      "enfoque": "Estilo de apego adulto",
-      "interpretacion": "(3-4 párrafos: estilo de apego detectado — seguro/ansioso/evitativo/desorganizado, ansiedad relacional, distancia emocional, tolerancia a la intimidad. Conecta con el tipo de pareja que repite y los mecanismos de defensa del autoanálisis. Cita al usuario.)",
-      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
-      "estilo_apego": "(Seguro | Ansioso | Evitativo | Desorganizado)",
-      "puntuacion": "(0-100)"
-    },
-    "hendrix": {
-      "titulo": "Harville Hendrix",
-      "enfoque": "Reparación inconsciente — Terapia Imago",
-      "interpretacion": "(3-4 párrafos: heridas infantiles detectadas, necesidades no satisfechas, elección de pareja como intento de reparación. Cruza con el núcleo del patrón y lo que busca en el otro del autoanálisis. Cita al usuario.)",
-      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
-      "puntuacion": "(0-100)"
-    },
-    "tatkin": {
-      "titulo": "Stan Tatkin",
-      "enfoque": "Sincronía emocional y regulación mutua",
-      "interpretacion": "(3-4 párrafos: co-regulación, protección mutua, respuesta al estrés, anchor/wave/island. Relaciona con la forma de amar y yo ideal vs yo real del autoanálisis. Cita al usuario.)",
-      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
-      "puntuacion": "(0-100)"
-    },
-    "chapman": {
-      "titulo": "Gary Chapman",
-      "enfoque": "Lenguajes del amor y comunicación afectiva",
-      "interpretacion": "(3-4 párrafos: lenguaje predominante del usuario y de la pareja, compatibilidad afectiva, frustraciones. Conecta con lo que reclama afuera del autoanálisis y los patrones de comunicación detectados. Cita al usuario.)",
-      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
-      "lenguaje_usuario": "(Palabras de afirmación | Actos de servicio | Contacto físico | Tiempo de calidad | Regalos)",
-      "lenguaje_pareja": "(Palabras de afirmación | Actos de servicio | Contacto físico | Tiempo de calidad | Regalos)",
-      "puntuacion": "(0-100 compatibilidad afectiva)"
-    },
-    "sternberg": {
-      "titulo": "Robert Sternberg",
-      "enfoque": "Triángulo del amor: intimidad, pasión y compromiso",
-      "interpretacion": "(3-4 párrafos: balance entre los tres componentes, tipo de amor resultante. Cruza con la forma de amar y el cierre transformador del autoanálisis. Cita al usuario.)",
-      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3 frases cortas sin jerga técnica"],
-      "puntuacion_intimidad": "(0-100)",
-      "puntuacion_pasion": "(0-100)",
-      "puntuacion_compromiso": "(0-100)"
-    },
-    "schnarch": {
-      "titulo": "David Schnarch",
-      "enfoque": "Madurez relacional y diferenciación del self",
-      "interpretacion": "(3-4 párrafos: nivel de diferenciación, autonomía emocional, capacidad de tolerar conflicto sin perder identidad. Conecta con el yo ideal vs yo real y mecanismos de defensa del autoanálisis. Cita al usuario.)",
-      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
-      "puntuacion": "(0-100)"
-    },
-    "real": {
-      "titulo": "Terrence Real",
-      "enfoque": "Dinámicas de poder y equilibrio emocional",
-      "interpretacion": "(3-4 párrafos: luchas de poder, vergüenza, resentimiento acumulado, dominación/sumisión emocional. Relaciona con lo que reclama afuera y el tipo de pareja que repite del autoanálisis. Cita al usuario.)",
-      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
-      "puntuacion": "(0-100 equilibrio de poder)"
-    },
-    "freud_lacan": {
-      "titulo": "Freud + Lacan",
-      "enfoque": "Inconsciente relacional y estructura del deseo",
-      "interpretacion_freud": "(1-2 párrafos: compulsión a la repetición, proyecciones inconscientes, roles heredados. Cita al usuario.)",
-      "interpretacion_lacan": "(1-2 párrafos: fantasma relacional, qué representa la pareja, demanda vs deseo. Cita al usuario.)",
-      "indicadores": ["(frase clara en español describiendo hallazgo)", "...3-5 frases cortas sin jerga técnica"],
-      "puntuacion": "(0-100 intensidad inconsciente)"
-    }
-  },
   "sintesis_final": {
-    "que_ocurre": "(1-2 párrafos: qué está ocurriendo realmente en la relación)",
-    "posibilidades_evolucion": "(1-2 párrafos: qué posibilidades de evolución existen)",
-    "factores_fortalecimiento": "(1-2 párrafos: qué factores podrían fortalecer el vínculo)"
-  },
+    "que_ocurre": "(1-2 párrafos)", "posibilidades_evolucion": "(1-2 párrafos)", "factores_fortalecimiento": "(1-2 párrafos)"
+  }
+}`
+
+const PART4_INSTRUCTION = `Analiza la narrativa completa y genera EXCLUSIVAMENTE las siguientes secciones en JSON válido.
+Genera temas para consulta, técnicas terapéuticas, libros recomendados y TODAS las gráficas del autoanálisis.
+Responde SOLO con JSON válido, sin texto adicional.
+{
   "temas_para_consulta": [
-    "(Tema específico y personalizado basado en el análisis, ej: 'Tu patrón de evitar conversaciones sobre el futuro refleja una herida de abandono que podemos trabajar.')",
-    "(Otro tema: describir en 1-2 frases qué se trabajaría y por qué es relevante para ESTA persona.)",
-    "(Incluir EXACTAMENTE 8 temas derivados directamente del análisis, NO genéricos.)",
-    "(Cada tema debe conectar con algo que el usuario dijo o un patrón detectado.)",
-    "(Usa **nombre del tema**: descripción del tema. Ejemplo: **Patrón de evitación**: Tu tendencia a...)",
-    "(Los 8 temas deben cubrir: patrones inconscientes, raíces familiares, reconexión emocional, diferenciación, regulación, deseo, comunicación, y un tema sorpresa que emerja del análisis.)"
+    "(EXACTAMENTE 8 temas. Cada uno: **Nombre del tema**: descripción personalizada de 1-2 frases conectada al análisis. Cubrir: patrones inconscientes, raíces familiares, reconexión emocional, diferenciación, regulación, deseo, comunicación, y un tema sorpresa del análisis.)"
   ],
   "tecnicas_recomendadas": [
-    {"nombre": "(Nombre de técnica terapéutica específica, ej: 'Diálogo estructurado Imago')", "descripcion": "(1-2 frases: por qué esta técnica es relevante para ESTE usuario y qué lograría con ella)"},
-    "(Incluir 5-6 técnicas derivadas del análisis: EFT, Gottman Sound House, Imago, Diferenciación de Schnarch, Mindfulness relacional, EMDR, etc. Cada una con nombre en negrita y explicación de por qué le sirve a ESTE usuario.)"
+    {"nombre": "(Nombre de técnica)", "descripcion": "(1-2 frases: por qué es relevante para ESTE usuario)"},
+    "(5-6 técnicas: EFT, Gottman Sound House, Imago, Diferenciación de Schnarch, Mindfulness relacional, EMDR, etc.)"
   ],
   "libros_recomendados": [
-    {"titulo": "(Título exacto del libro)", "autor": "(Autor)", "razon": "(1 frase: por qué este libro es relevante para ESTE usuario)", "nivel": "(introductorio|intermedio|avanzado)"},
-    "(Incluir 6 libros. NO solo de los 11 autores del marco — incluye libros relevantes de CUALQUIER autor de psicología, pareja o desarrollo personal. Deben conectar con los patrones detectados. Clasificar cada uno por nivel de dificultad: introductorio = accesible para cualquiera, intermedio = requiere cierta base, avanzado = lectura profunda o técnica.)"
+    {"titulo": "(Título exacto)", "autor": "(Autor)", "razon": "(1 frase personalizada)", "nivel": "(introductorio|intermedio|avanzado)"},
+    "(6 libros con niveles variados, conectados con los patrones detectados)"
   ],
   "graficas_autoanalisis": {
     "barras_resumen": [
-      {"label": "(nombre del indicador clave, ej: 'Conexión emocional')", "valor": "(0-100)", "color": "(blue|violet|rose|amber|emerald|cyan)"},
-      "(6-8 indicadores: mezcla de dimensiones y scores de autores más relevantes para este usuario)"
+      {"label": "(nombre indicador)", "valor": "(0-100)", "color": "(blue|violet|rose|amber|emerald|cyan)"},
+      "(6-8 indicadores)"
     ],
     "polaridades": [
-      {"izq": "(polo izquierdo, ej: 'Conexión emocional')", "der": "(polo derecho, ej: 'Autonomía')", "valor": "(0-100, donde 0=total izq, 100=total der, 50=equilibrio)"},
-      "(4-6 polaridades amorosas detectadas en el análisis)"
+      {"izq": "(polo izquierdo)", "der": "(polo derecho)", "valor": "(0-100, 50=equilibrio)"},
+      "(4-6 polaridades)"
     ],
-    "cuadrante_apego": {
-      "ansiedad": "(0-100 nivel de ansiedad de apego)",
-      "evitacion": "(0-100 nivel de evitación de intimidad)"
-    },
+    "cuadrante_apego": { "ansiedad": "(0-100)", "evitacion": "(0-100)" },
     "espejo": [
-      {"afuera": "(lo que reclama, ej: 'Que me escuchen')", "adentro": "(la necesidad real, ej: 'Necesidad de validación')"},
-      "(3-5 pares derivados del análisis)"
+      {"afuera": "(lo que reclama)", "adentro": "(la necesidad real)"},
+      "(3-5 pares)"
     ],
     "escena_relacional": {
-      "arriba": {"rol": "(figura idealizada, ej: 'Compañero idealizado')", "subtexto": "(ej: 'conciencia, expansión')"},
-      "izquierda": {"rol": "(figura de seguridad, ej: 'Madre contenedora')", "subtexto": "(ej: 'seguridad')"},
-      "derecha": {"rol": "(deseo de expansión, ej: 'Libertad espiritual')", "subtexto": "(ej: 'expansión')"},
-      "abajo": {"rol": "(lo que el fantasma evita, ej: 'Vida cotidiana / responsabilidad')", "subtexto": "(ej: 'lo que el fantasma evita')"},
+      "arriba": {"rol": "(figura idealizada)", "subtexto": "(ej: 'conciencia, expansión')"},
+      "izquierda": {"rol": "(figura de seguridad)", "subtexto": "(ej: 'seguridad')"},
+      "derecha": {"rol": "(deseo de expansión)", "subtexto": "(ej: 'expansión')"},
+      "abajo": {"rol": "(lo que el fantasma evita)", "subtexto": "(ej: 'lo que el fantasma evita')"},
       "centro": "(nombre del usuario)"
     },
     "identity_gap": {
-      "brecha": "(0-100 distancia entre yo ideal y yo real)",
-      "yo_ideal": ["(rasgo 1, ej: 'Consciente')", "(rasgo 2)", "(rasgo 3)", "(rasgo 4)"],
-      "yo_real": ["(rasgo 1, ej: 'Evasivo')", "(rasgo 2)", "(rasgo 3)", "(rasgo 4)"]
+      "brecha": "(0-100)",
+      "yo_ideal": ["(rasgo 1)", "(rasgo 2)", "(rasgo 3)", "(rasgo 4)"],
+      "yo_real": ["(rasgo 1)", "(rasgo 2)", "(rasgo 3)", "(rasgo 4)"]
     },
     "defensas": [
-      {"nombre": "(mecanismo, ej: 'Racionalización')", "valor": "(0-100 intensidad)"},
-      "(4-6 mecanismos de defensa detectados con su intensidad)"
+      {"nombre": "(mecanismo)", "valor": "(0-100)"},
+      "(4-6 mecanismos)"
     ],
-    "ciclo_repeticion": ["(etapa 1, ej: 'Elección de pareja')", "(etapa 2, ej: 'Dinámica de rescate')", "(etapa 3)", "(etapa 4)", "(etapa 5, ej: 'Repetición')"],
+    "ciclo_repeticion": ["(etapa 1)", "(etapa 2)", "(etapa 3)", "(etapa 4)", "(etapa 5)"],
     "nucleo_orbital": {
-      "centro": "(insight central, ej: 'Quiero contención sin aceptar los límites que implica')",
-      "fuerzas": [
-        {"nombre": "(fuerza 1, ej: 'libertad')", "intensidad": "(0-100)"},
-        "(4-6 fuerzas que orbitan el patrón central)"
-      ]
+      "centro": "(insight central)",
+      "fuerzas": [{"nombre": "(fuerza)", "intensidad": "(0-100)"}, "(4-6 fuerzas)"]
     },
     "before_after": [
-      {"antes": "(patrón actual, ej: 'Evasión')", "despues": "(dirección de cambio, ej: 'Presencia emocional')"},
-      "(4-6 transformaciones propuestas)"
+      {"antes": "(patrón actual)", "despues": "(dirección de cambio)"},
+      "(4-6 transformaciones)"
     ],
     "timeline_relacion": [
-      {"etapa": "(nombre de etapa, ej: 'Conexión inicial')", "subtexto": "(descripción breve, ej: 'ideas / profundidad')"},
-      "(3-5 etapas de evolución de la relación detectadas)"
+      {"etapa": "(nombre)", "subtexto": "(descripción breve)"},
+      "(3-5 etapas)"
     ]
   }
-}
-`
+}`
 
-  return prompt
+// ─── SINGLE API CALL WITH RETRY ──────────────────────────────────────────────
+
+async function callDeepSeekPart(apiKey, basePrompt, partInstruction, partName, maxTokens = 8192) {
+  const maxRetries = 3
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 300000) // 5 min timeout per part
+
+      const response = await fetch(DEEPSEEK_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+        signal: controller.signal,
+        body: JSON.stringify({
+          model: 'deepseek-chat',
+          messages: [
+            { role: 'system', content: SYSTEM_PROMPT },
+            { role: 'user', content: basePrompt + '\n\n' + partInstruction }
+          ],
+          temperature: 0.7,
+          max_tokens: maxTokens,
+          response_format: { type: 'json_object' }
+        })
+      })
+
+      clearTimeout(timeout)
+
+      if (!response.ok) {
+        const errText = await response.text()
+        console.error(`DeepSeek [${partName}] error (intento ${attempt}/${maxRetries}):`, response.status, errText)
+        if (attempt < maxRetries) { await new Promise(r => setTimeout(r, attempt * 5000)); continue }
+        throw new Error(`API error ${response.status}: ${errText}`)
+      }
+
+      const data = await response.json()
+      const content = data.choices?.[0]?.message?.content
+      if (!content) {
+        console.error(`[${partName}] respuesta vacía (intento ${attempt}/${maxRetries})`)
+        if (attempt < maxRetries) { await new Promise(r => setTimeout(r, attempt * 5000)); continue }
+        throw new Error(`Respuesta vacía para ${partName}`)
+      }
+
+      const parsed = JSON.parse(content)
+      console.log(`✅ [${partName}] completado en intento ${attempt}`)
+      return parsed
+
+    } catch (error) {
+      console.error(`[${partName}] error intento ${attempt}/${maxRetries}:`, error.message)
+      if (attempt < maxRetries) { await new Promise(r => setTimeout(r, attempt * 5000)); continue }
+      console.error(`❌ [${partName}] todos los intentos fallaron`)
+      return null
+    }
+  }
+  return null
 }
 
-export async function analyzeRadiografiaPremium({ responses, questions, profileData }) {
+// ─── MAIN ANALYSIS — 4 PARALLEL CALLS ───────────────────────────────────────
+
+export async function analyzeRadiografiaPremium({ responses, questions, profileData, packageType }) {
   const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY
 
   if (!apiKey) {
     console.warn('⚠️ VITE_DEEPSEEK_API_KEY no configurada. Usando análisis de respaldo.')
-    return generateFallbackAnalysis()
+    const fallback = generateFallbackAnalysis()
+    fallback._isFallback = true
+    return fallback
   }
 
-  const prompt = buildPrompt(responses, questions, profileData)
+  const basePrompt = buildPrompt(responses, questions, profileData, packageType)
 
-  try {
-    const response = await fetch(DEEPSEEK_API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify({
-        model: 'deepseek-chat',
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          { role: 'user', content: prompt }
-        ],
-        temperature: 0.7,
-        max_tokens: 8192,
-        response_format: { type: 'json_object' }
-      })
-    })
+  console.log('🚀 Lanzando 4 llamadas paralelas a DeepSeek...')
+  const startTime = Date.now()
 
-    if (!response.ok) {
-      const errText = await response.text()
-      console.error('DeepSeek API error:', response.status, errText)
-      return generateFallbackAnalysis()
-    }
+  // Launch all 4 parts in parallel
+  const [part1, part2, part3, part4] = await Promise.all([
+    callDeepSeekPart(apiKey, basePrompt, PART1_INSTRUCTION, 'Autoanálisis', 8192),
+    callDeepSeekPart(apiKey, basePrompt, PART2_INSTRUCTION, 'Lecturas A', 8192),
+    callDeepSeekPart(apiKey, basePrompt, PART3_INSTRUCTION, 'Lecturas B', 8192),
+    callDeepSeekPart(apiKey, basePrompt, PART4_INSTRUCTION, 'Gráficas', 8192),
+  ])
 
-    const data = await response.json()
-    const content = data.choices?.[0]?.message?.content
-    if (!content) return generateFallbackAnalysis()
+  const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
+  console.log(`⏱️ 4 llamadas completadas en ${elapsed}s`)
 
-    const parsed = JSON.parse(content)
-
-    // Clamp dimension scores
-    if (parsed.dimensiones) {
-      for (const key of Object.keys(parsed.dimensiones)) {
-        parsed.dimensiones[key] = Math.max(0, Math.min(100, Number(parsed.dimensiones[key]) || 50))
-      }
-    }
-
-    return parsed
-  } catch (error) {
-    console.error('Radiografía Premium analysis failed:', error)
-    return generateFallbackAnalysis()
+  // Check if critical part (autoanálisis) failed
+  if (!part1?.autoanalisis_usuario) {
+    console.error('❌ Part 1 (autoanálisis) falló — usando fallback completo')
+    const fallback = generateFallbackAnalysis()
+    fallback._isFallback = true
+    fallback._error = 'Autoanálisis no generado'
+    return fallback
   }
+
+  // Merge all parts
+  const merged = {
+    // Part 1 — core analysis
+    ...(part1 || {}),
+    // Part 2 — deep analysis + first 6 author readings
+    ...(part2 ? { analisis_profundo: part2.analisis_profundo, lectura_psicoanalitica: part2.lectura_psicoanalitica } : {}),
+    // Part 3 — last 5 author readings + diagnostics
+    ...(part3 ? {
+      dinamica_conflicto: part3.dinamica_conflicto,
+      energia_vinculo: part3.energia_vinculo,
+      direccion_probable: part3.direccion_probable,
+      fortalezas: part3.fortalezas,
+      riesgos: part3.riesgos,
+      tabla_diagnostica: part3.tabla_diagnostica,
+      sintesis_final: part3.sintesis_final,
+    } : {}),
+    // Part 4 — recommendations + charts
+    ...(part4 ? {
+      temas_para_consulta: part4.temas_para_consulta,
+      tecnicas_recomendadas: part4.tecnicas_recomendadas,
+      libros_recomendados: part4.libros_recomendados,
+      graficas_autoanalisis: part4.graficas_autoanalisis,
+    } : {}),
+    // Merge lecturas_por_enfoque from parts 2 and 3
+    lecturas_por_enfoque: {
+      ...(part2?.lecturas_por_enfoque || {}),
+      ...(part3?.lecturas_por_enfoque || {}),
+    },
+  }
+
+  // Clamp dimension scores
+  if (merged.dimensiones) {
+    for (const key of Object.keys(merged.dimensiones)) {
+      merged.dimensiones[key] = Math.max(0, Math.min(100, Number(merged.dimensiones[key]) || 50))
+    }
+  }
+
+  // Fill missing parts from fallback if needed
+  const fallbackData = generateFallbackAnalysis()
+  const requiredKeys = ['analisis_profundo', 'lectura_psicoanalitica', 'dinamica_conflicto', 'energia_vinculo',
+    'direccion_probable', 'fortalezas', 'riesgos', 'tabla_diagnostica', 'sintesis_final',
+    'temas_para_consulta', 'tecnicas_recomendadas', 'libros_recomendados', 'graficas_autoanalisis']
+  for (const key of requiredKeys) {
+    if (!merged[key]) {
+      console.warn(`⚠️ Sección "${key}" faltante — usando fallback`)
+      merged[key] = fallbackData[key]
+    }
+  }
+
+  // Ensure lecturas_por_enfoque has all 11 authors
+  const requiredAuthors = ['gottman', 'sue_johnson', 'perel', 'levine', 'hendrix', 'tatkin', 'chapman', 'sternberg', 'schnarch', 'real', 'freud_lacan']
+  for (const author of requiredAuthors) {
+    if (!merged.lecturas_por_enfoque?.[author]) {
+      console.warn(`⚠️ Lectura "${author}" faltante — usando fallback`)
+      merged.lecturas_por_enfoque[author] = fallbackData.lecturas_por_enfoque[author]
+    }
+  }
+
+  console.log('✅ Análisis paralelo completado y fusionado exitosamente')
+  return merged
 }
 
 export function generateFallbackAnalysis() {

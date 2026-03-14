@@ -1,0 +1,21 @@
+name            = "radiografia-worker"
+main            = "index.js"
+compatibility_date = "2024-09-23"
+
+# Variables no-sensibles (deploy.ps1 rellena los price_xxx automáticamente)
+[vars]
+PRICE_DESCUBRE = "price_1TAx9DGpKMTmfzJmpkCihX2H"
+PRICE_SOLO     = "price_1TAx9DGpKMTmfzJmA3AaPICo"
+PRICE_LOSDOS   = "price_1TAx9EGpKMTmfzJmo8Z6WY4q"
+
+# Secrets (deploy.ps1 los pone con `wrangler secret put`):
+#   STRIPE_SECRET_KEY
+#   STRIPE_WEBHOOK_SECRET
+#   RESEND_API_KEY
+#   PROMO_CODES_JSON  (opcional — JSON con códigos extra)
+
+# KV Namespace — deploy.ps1 rellena los ids
+[[kv_namespaces]]
+binding    = "PURCHASES"
+id         = "9f5ee5a5f0fc49ecaecf7e06763afd80"
+preview_id = "9f5ee5a5f0fc49ecaecf7e06763afd80"

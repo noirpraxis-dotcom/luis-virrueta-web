@@ -6,7 +6,7 @@ import {
   Loader2, ChevronDown, AlertTriangle, TrendingUp, TrendingDown, Star,
   Shield, Activity, Brain, Heart, Zap, Eye, Target, Users, Flame,
   CheckCircle, Download, PenLine, Send, MessageCircle, Lightbulb, Clock,
-  Headphones, SkipForward, Anchor, Compass, Scale, Gift, Repeat
+  Headphones, SkipForward, Anchor, Compass, Scale, Gift, Repeat, Play
 } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, RadarChart as RechartRadar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts'
 import SEOHead from '../components/SEOHead'
@@ -497,26 +497,52 @@ const DEMO_RESPONSES = {
 // ─── ANÁLISIS ANIMATION TASKS ─────────────────────────────────────
 
 const ANALYSIS_TASKS = [
+  // Lectura profunda
   { id: 1, group: 'Lectura profunda', text: 'Leyendo tu narrativa completa…' },
   { id: 2, group: 'Lectura profunda', text: 'Procesando 40 respuestas y contexto emocional…' },
   { id: 3, group: 'Lectura profunda', text: 'Detectando temas recurrentes y contradicciones…' },
-  { id: 4, group: 'Detección de patrones', text: 'Identificando tono relacional dominante…' },
-  { id: 5, group: 'Detección de patrones', text: 'Infiriendo estilo de apego (Amir Levine)…' },
-  { id: 6, group: 'Detección de patrones', text: 'Detectando lenguajes del amor (Chapman)…' },
-  { id: 7, group: 'Detección de patrones', text: 'Analizando dinámicas de poder (Terrence Real)…' },
-  { id: 8, group: 'Análisis por corriente', text: 'Evaluando los 4 jinetes de Gottman…' },
-  { id: 9, group: 'Análisis por corriente', text: 'Aplicando teoría del vínculo (Sue Johnson)…' },
-  { id: 10, group: 'Análisis por corriente', text: 'Analizando erotismo y deseo (Esther Perel)…' },
-  { id: 11, group: 'Análisis por corriente', text: 'Evaluando regulación mutua (Tatkin)…' },
-  { id: 12, group: 'Análisis por corriente', text: 'Midiendo triángulo del amor (Sternberg)…' },
-  { id: 13, group: 'Análisis por corriente', text: 'Evaluando diferenciación (Schnarch)…' },
-  { id: 14, group: 'Análisis por corriente', text: 'Interpretando desde el psicoanálisis (Freud + Lacan)…' },
-  { id: 15, group: 'Análisis por corriente', text: 'Analizando imago relacional (Hendrix)…' },
-  { id: 16, group: 'Síntesis final', text: 'Calculando 12 dimensiones psicológicas…' },
-  { id: 17, group: 'Síntesis final', text: 'Extrayendo evidencia textual…' },
-  { id: 18, group: 'Síntesis final', text: 'Estimando dirección probable del vínculo…' },
-  { id: 19, group: 'Síntesis final', text: 'Generando visualizaciones…' },
-  { id: 20, group: 'Síntesis final', text: 'Compilando informe final…' }
+  { id: 4, group: 'Lectura profunda', text: 'Analizando tono emocional y nivel de apertura…' },
+  { id: 5, group: 'Lectura profunda', text: 'Identificando omisiones significativas…' },
+  // Autoanálisis del usuario
+  { id: 6, group: 'Tu autoanálisis', text: 'Descifrando tu forma de amar…' },
+  { id: 7, group: 'Tu autoanálisis', text: 'Identificando lo que buscas en el otro…' },
+  { id: 8, group: 'Tu autoanálisis', text: 'Analizando lo que reclamas afuera…' },
+  { id: 9, group: 'Tu autoanálisis', text: 'Mapeando tu fantasma relacional (Lacan)…' },
+  { id: 10, group: 'Tu autoanálisis', text: 'Comparando tu yo ideal vs tu yo real…' },
+  { id: 11, group: 'Tu autoanálisis', text: 'Detectando mecanismos de defensa…' },
+  { id: 12, group: 'Tu autoanálisis', text: 'Rastreando el tipo de pareja que repites…' },
+  { id: 13, group: 'Tu autoanálisis', text: 'Destilando el núcleo de tu patrón…' },
+  // Detección de patrones
+  { id: 14, group: 'Detección de patrones', text: 'Identificando tono relacional dominante…' },
+  { id: 15, group: 'Detección de patrones', text: 'Infiriendo estilo de apego (Amir Levine)…' },
+  { id: 16, group: 'Detección de patrones', text: 'Detectando lenguajes del amor (Chapman)…' },
+  { id: 17, group: 'Detección de patrones', text: 'Analizando dinámicas de poder (Terrence Real)…' },
+  { id: 18, group: 'Detección de patrones', text: 'Leyendo entre líneas de tu narrativa…' },
+  // Análisis por corriente
+  { id: 19, group: 'Análisis por corriente', text: 'Evaluando los 4 jinetes de Gottman…' },
+  { id: 20, group: 'Análisis por corriente', text: 'Calculando ratio positivo/negativo…' },
+  { id: 21, group: 'Análisis por corriente', text: 'Aplicando teoría del vínculo (Sue Johnson)…' },
+  { id: 22, group: 'Análisis por corriente', text: 'Analizando erotismo y deseo (Esther Perel)…' },
+  { id: 23, group: 'Análisis por corriente', text: 'Evaluando regulación mutua (Tatkin)…' },
+  { id: 24, group: 'Análisis por corriente', text: 'Midiendo triángulo del amor (Sternberg)…' },
+  { id: 25, group: 'Análisis por corriente', text: 'Evaluando diferenciación (Schnarch)…' },
+  { id: 26, group: 'Análisis por corriente', text: 'Interpretando desde el psicoanálisis (Freud + Lacan)…' },
+  { id: 27, group: 'Análisis por corriente', text: 'Analizando imago relacional (Hendrix)…' },
+  { id: 28, group: 'Análisis por corriente', text: 'Cruzando hallazgos entre corrientes…' },
+  // Construcción de gráficas
+  { id: 29, group: 'Construcción de gráficas', text: 'Calculando 12 dimensiones psicológicas…' },
+  { id: 30, group: 'Construcción de gráficas', text: 'Construyendo mapa de apego…' },
+  { id: 31, group: 'Construcción de gráficas', text: 'Generando gráfica de polaridades…' },
+  { id: 32, group: 'Construcción de gráficas', text: 'Midiendo brecha yo-ideal vs yo-real…' },
+  { id: 33, group: 'Construcción de gráficas', text: 'Mapeando mecanismos de defensa…' },
+  { id: 34, group: 'Construcción de gráficas', text: 'Trazando ciclo de repetición…' },
+  { id: 35, group: 'Construcción de gráficas', text: 'Construyendo escena relacional…' },
+  // Síntesis final
+  { id: 36, group: 'Síntesis final', text: 'Extrayendo evidencia textual…' },
+  { id: 37, group: 'Síntesis final', text: 'Estimando dirección probable del vínculo…' },
+  { id: 38, group: 'Síntesis final', text: 'Seleccionando técnicas terapéuticas…' },
+  { id: 39, group: 'Síntesis final', text: 'Eligiendo libros personalizados…' },
+  { id: 40, group: 'Síntesis final', text: 'Compilando informe final…' },
 ]
 
 // ─── HELPERS ──────────────────────────────────────────────────
@@ -1674,6 +1700,24 @@ function RelationshipTimeline({ data }) {
 const RadiografiaPremiumPage = () => {
   const navigate = useNavigate()
 
+  // Package type: descubre | solo | losdos | demo
+  const [packageType] = useState(() => {
+    const params = new URLSearchParams(window.location.search)
+    return params.get('type') || sessionStorage.getItem('diagnostico_relacional_type') || 'solo'
+  })
+
+  // Payment gate — only allow access if paid, free promo, test/dev mode, or token link
+  const [accessGranted] = useState(() => {
+    if (import.meta.env.DEV) return true
+    const params = new URLSearchParams(window.location.search)
+    return (
+      params.get('free') === 'true' ||
+      params.get('test') === 'true' ||
+      params.get('token') !== null ||
+      sessionStorage.getItem('diagnostico_relacional_purchased') === 'true'
+    )
+  })
+
   // Stages: instructions | profile | questionnaire | analyzing | results
   const [stage, setStage] = useState('instructions')
   const [currentQ, setCurrentQ] = useState(0)
@@ -1692,12 +1736,14 @@ const RadiografiaPremiumPage = () => {
   const audioRef = useRef(null)
   const currentAudioRef = useRef(null)
   const playGenerationRef = useRef(0)
+  const resultsRef = useRef(null)
 
   // Recording & Input
   const [recording, setRecording] = useState(false)
   const [transcript, setTranscript] = useState('')
   const [typingMode, setTypingMode] = useState(false)
   const [textInput, setTextInput] = useState('')
+  const [showRegrabarModal, setShowRegrabarModal] = useState(false)
   const recognitionRef = useRef(null)
   const [recordingAnalyser, setRecordingAnalyser] = useState(null)
   const recordingStreamRef = useRef(null)
@@ -1771,12 +1817,12 @@ const RadiografiaPremiumPage = () => {
       setAudioPlaying(true)
       if (overrideVoiceId) setPreviewingVoiceId(overrideVoiceId)
 
-      const cacheKey = `${voiceId}::${text.slice(0, 80)}`
+      const cacheKey = `${voiceId}::${staticId || (text && text.slice(0, 80))}`
 
       // Try static file first
       const voiceFolder = VOICE_FOLDER[voiceId]
-      const currentQuestion = PREGUNTAS.find(q => q.mainQuestion === text)
-      const isPreview = text.includes('soy ') && text.includes('acompañaré')
+      const currentQuestion = text && PREGUNTAS.find(q => q.mainQuestion === text)
+      const isPreview = text && text.includes('soy ') && text.includes('acompañaré')
       const staticFile = voiceFolder && (staticId
         ? `/audio/premium/${voiceFolder}/${staticId}.mp3`
         : currentQuestion
@@ -1793,8 +1839,9 @@ const RadiografiaPremiumPage = () => {
         }
       }
 
-      // Fallback to cache or API
+      // Fallback to cache or API (only if we have text to synthesize)
       if (!audioUrl) {
+        if (!text) { setAudioPlaying(false); setPreviewingVoiceId(null); if (onEndedCallback) onEndedCallback(); return }
         let blob = audioCache.current[cacheKey]
         if (!blob) {
           const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY
@@ -1999,12 +2046,41 @@ const RadiografiaPremiumPage = () => {
     }
   }, [currentQ, stage]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── Fill demo responses for testing ──
+  // ── Validation: can start questionnaire from profile? ──
+  const canStartQuestionnaire = profileData.nombre.trim() && profileData.edad.trim() && profileData.nombrePareja.trim() && profileData.edadPareja.trim() && emailData.emailUsuario.trim()
+
+  // ── Start questionnaire from merged profile screen ──
+  const startQuestionnaire = useCallback(() => {
+    stopAudio()
+    const nombre = profileData.nombre.trim().split(' ')[0]
+    greetingPlayedRef.current = true
+    if (selectedVoiceId) {
+      // Only "Hola {nombre}" uses ElevenLabs API; rest is static audio
+      playQuestion(`Hola ${nombre}`, undefined, () => {
+        // Play static welcome.mp3 for the standard greeting body
+        playQuestion(null, undefined, () => {
+          playQuestion(PREGUNTAS[0].mainQuestion, undefined, () => {
+            setTimeout(() => {
+              const sr = window.SpeechRecognition || window.webkitSpeechRecognition
+              if (sr) startRecording()
+            }, 300)
+          })
+        }, 'welcome')
+      })
+    }
+    setStage('questionnaire')
+  }, [profileData.nombre, selectedVoiceId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Fill demo responses for testing (all Q1-Q40, Carlos/Ana profile, jump to Q40) ──
   const fillDemoResponses = useCallback(() => {
     setResponses({ ...DEMO_RESPONSES })
-    setTranscript(DEMO_RESPONSES[question?.id] || '')
-    setTextInput(DEMO_RESPONSES[question?.id] || '')
-  }, [question])
+    setProfileData({ nombre: 'Carlos', edad: '32', nombrePareja: 'Ana', edadPareja: '30' })
+    setEmailData(prev => ({ ...prev, emailUsuario: 'demo@test.com' }))
+    setCurrentQ(PREGUNTAS.length - 1) // jump to Q40
+    const lastQ = PREGUNTAS[PREGUNTAS.length - 1]
+    setTranscript(DEMO_RESPONSES[lastQ.id] || '')
+    setTextInput(DEMO_RESPONSES[lastQ.id] || '')
+  }, [])
 
   // ── Run AI Analysis ──
   const handleRunAnalysis = useCallback(async (finalResponses) => {
@@ -2019,16 +2095,16 @@ const RadiografiaPremiumPage = () => {
     setCompletedTasks(0)
     setAnalysisDone(false)
 
-    // Start animation — 20 tasks, fast enough to finish within typical API time
+    // Start animation — 40 tasks × 4.5s ≈ 3 min, paced for parallel API
     let taskIdx = 0
     const animInterval = setInterval(() => {
       taskIdx++
       setCompletedTasks(taskIdx)
       if (taskIdx >= ANALYSIS_TASKS.length) clearInterval(animInterval)
-    }, 2800)
+    }, 4500)
 
     try {
-      const result = await analyzeRadiografiaPremium({ responses: finalResponses, questions: PREGUNTAS, profileData })
+      const result = await analyzeRadiografiaPremium({ responses: finalResponses, questions: PREGUNTAS, profileData, packageType })
       setAiAnalysis(result)
       setCachedAnalysis(result) // Cache for DEV reuse
       setAnalysisDone(true)
@@ -2054,75 +2130,61 @@ const RadiografiaPremiumPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [stage])
 
-  // ── PDF ──
+  // ── PDF — html2canvas full visual capture ──
   const generatePDF = useCallback(async () => {
-    if (!aiAnalysis) return
+    if (!aiAnalysis || !resultsRef.current) return
     setPdfGenerating(true)
     try {
-      const jsPDF = await loadJsPDF()
+      const [jsPDF, { default: html2canvas }] = await Promise.all([
+        loadJsPDF(),
+        import('html2canvas')
+      ])
+
+      const element = resultsRef.current
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#09090b', // zinc-950
+        windowWidth: element.scrollWidth,
+      })
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.92)
       const doc = new jsPDF('p', 'mm', 'a4')
-      const pw = doc.internal.pageSize.getWidth()
-      const m = 15
-      let y = 20
-      const maxW = pw - m * 2
-      const checkPage = (needed = 30) => { if (y > 270 - needed) { doc.addPage(); y = 20 } }
-      const addTitle = (t) => { checkPage(20); doc.setFontSize(13); doc.setTextColor(40, 40, 40); doc.text(t, m, y); y += 8 }
-      const addP = (text) => {
-        doc.setFontSize(9); doc.setTextColor(60, 60, 60)
-        const lines = doc.splitTextToSize((text || '').replace(/\*\*/g, ''), maxW)
-        for (const line of lines) { checkPage(6); doc.text(line, m, y); y += 4.5 }
-        y += 3
+      const pageWidth = doc.internal.pageSize.getWidth()
+      const pageHeight = doc.internal.pageSize.getHeight()
+      const imgWidth = pageWidth
+      const imgHeight = (canvas.height * imgWidth) / canvas.width
+
+      let heightLeft = imgHeight
+      let position = 0
+
+      doc.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight)
+      heightLeft -= pageHeight
+
+      while (heightLeft > 0) {
+        position -= pageHeight
+        doc.addPage()
+        doc.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight)
+        heightLeft -= pageHeight
       }
 
-      doc.setFontSize(20); doc.setTextColor(40, 40, 40)
-      doc.text('Radiografía de Pareja Premium', pw / 2, y, { align: 'center' }); y += 8
-      doc.setFontSize(9); doc.setTextColor(120, 120, 120)
-      doc.text('40 preguntas narrativas · 12 dimensiones psicológicas · Análisis profundo', pw / 2, y, { align: 'center' }); y += 12
-
-      if (aiAnalysis.radiografia_inicial) { addTitle('Radiografía Inicial'); addP(aiAnalysis.radiografia_inicial) }
-      if (aiAnalysis.diagnostico) {
-        addTitle('Diagnóstico')
-        addP(`Tipo de vínculo: ${aiAnalysis.diagnostico.tipo_vinculo}`)
-        addP(`Estilo de apego: ${aiAnalysis.diagnostico.estilo_apego}`)
-        addP(`Dinámica de conflicto: ${aiAnalysis.diagnostico.dinamica_conflicto}`)
-      }
-      if (aiAnalysis.dimensiones) {
-        addTitle('Dimensiones Psicológicas')
-        for (const [key, label] of Object.entries(DIMENSION_LABELS)) {
-          checkPage(8); doc.setTextColor(60, 60, 60); doc.text(`${label}: ${aiAnalysis.dimensiones[key] ?? 0}%`, m, y); y += 6
-        }
-        y += 4
-      }
-      if (aiAnalysis.analisis_profundo) {
-        addTitle('Análisis Profundo')
-        addP(aiAnalysis.analisis_profundo.narrativa_dominante)
-        addP(aiAnalysis.analisis_profundo.tensiones_estructurales)
-        addP(aiAnalysis.analisis_profundo.evolucion_deseo)
-        addP(aiAnalysis.analisis_profundo.dinamica_emocional)
-      }
-      if (aiAnalysis.lectura_psicoanalitica) {
-        doc.addPage(); y = 20
-        addTitle('Lectura Psicoanalítica')
-        addP(aiAnalysis.lectura_psicoanalitica.proyecciones_inconscientes)
-        addP(aiAnalysis.lectura_psicoanalitica.fantasma_relacional)
-        addP(aiAnalysis.lectura_psicoanalitica.roles_simbolicos)
-      }
-      if (aiAnalysis.fortalezas) { addTitle('Fortalezas'); aiAnalysis.fortalezas.forEach(f => addP(`• ${f}`)) }
-      if (aiAnalysis.riesgos) { addTitle('Señales de Riesgo'); aiAnalysis.riesgos.forEach(r => addP(`• ${r}`)) }
-      if (aiAnalysis.sintesis_final) {
-        addTitle('Síntesis Final')
-        addP(aiAnalysis.sintesis_final.que_ocurre)
-        addP(aiAnalysis.sintesis_final.posibilidades_evolucion)
-        addP(aiAnalysis.sintesis_final.factores_fortalecimiento)
-      }
-      checkPage(35); y += 8
-      doc.setFillColor(245, 245, 245); doc.roundedRect(m, y, pw - m * 2, 20, 3, 3, 'F')
-      doc.setFontSize(10); doc.setTextColor(60, 60, 60)
-      doc.text('¿Te gustaría profundizar? Agenda una sesión en luisvirrueta.com', pw / 2, y + 12, { align: 'center' })
-
-      doc.save('radiografia-pareja-premium.pdf')
+      const nombre = profileData.nombre || 'Reporte'
+      doc.save(`radiografia-${nombre.toLowerCase().replace(/\s+/g, '-')}.pdf`)
+    } catch (err) {
+      console.error('PDF generation error:', err)
+      // Fallback: text-based PDF if html2canvas fails
+      try {
+        const jsPDF = await loadJsPDF()
+        const doc = new jsPDF('p', 'mm', 'a4')
+        doc.setFontSize(16)
+        doc.text('Radiografía de Pareja Premium', 15, 20)
+        doc.setFontSize(10)
+        doc.text('Error al generar PDF visual. Intenta de nuevo.', 15, 35)
+        doc.save('radiografia-pareja-premium.pdf')
+      } catch {}
     } finally { setPdfGenerating(false) }
-  }, [aiAnalysis])
+  }, [aiAnalysis, profileData.nombre])
 
   return (
     <div className="min-h-screen bg-zinc-950">
@@ -2165,9 +2227,12 @@ const RadiografiaPremiumPage = () => {
 
               {/* ── Voice selector: 4 circular cards + no-voice option, single toggle ── */}
               <div className="space-y-4">
-                <p className="text-white/60 text-sm font-light flex items-center justify-center gap-2">
-                  <Headphones className="w-4 h-4 text-violet-400/50" /> Elige la voz que te guiará
-                </p>
+                <div className="text-center">
+                  <p className="text-white/70 text-base font-light flex items-center justify-center gap-2 mb-1">
+                    <Headphones className="w-4 h-4 text-violet-400/50" /> Elige la voz que te guiará
+                  </p>
+                  <p className="text-white/45 text-sm font-light">Toca una voz para seleccionarla y escuchar una prueba</p>
+                </div>
                 <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto">
                   {VOICE_LIST.map(v => {
                     const isSelected = selectedVoiceId === v.id
@@ -2194,7 +2259,7 @@ const RadiografiaPremiumPage = () => {
                         </div>
                         <div className="text-center">
                           <span className={`text-sm font-medium block ${isSelected ? v.text : 'text-white/60'}`}>{v.name}</span>
-                          <span className="text-[11px] text-white/60 font-light">{v.desc}</span>
+                          <span className="text-xs text-white/50 font-light">{v.desc}</span>
                         </div>
                         {isPreviewing && (
                           <div className="absolute top-2 right-2">
@@ -2217,7 +2282,6 @@ const RadiografiaPremiumPage = () => {
                     {selectedVoiceId === null ? '✓ Sin voz guía' : 'Prefiero no tener voz guía'}
                   </button>
                 </div>
-                <p className="text-white/55 text-[11px] font-light text-center">Toca una voz para seleccionarla y escuchar una prueba</p>
               </div>
 
               {/* ── Comprobación de Audio y Micrófono ── */}
@@ -2310,106 +2374,94 @@ const RadiografiaPremiumPage = () => {
                   <Headphones className="w-7 h-7 text-violet-400/60" strokeWidth={1.5} />
                 </div>
                 <h2 className="text-2xl lg:text-3xl font-light text-white mb-2">Prepara tu espacio</h2>
-                <p className="text-white/60 text-sm font-light max-w-md mx-auto">Lee estas instrucciones con calma antes de empezar tu radiografía.</p>
+                <p className="text-white/55 text-sm font-light max-w-md mx-auto">Lee con calma cómo funciona antes de empezar.</p>
               </div>
 
-              {/* ── Prepara tu espacio — card centrada ── */}
-              <div className="p-6 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.04] to-transparent">
-                <ul className="space-y-3 text-white/55 text-sm font-light">
-                  <li className="flex items-start gap-3 justify-center text-center">
-                    <span>🎧 Sube el volumen al máximo y usa audífonos para mayor privacidad.</span>
-                  </li>
-                  <li className="flex items-start gap-3 justify-center text-center">
-                    <span>🔇 Busca un lugar privado y tranquilo donde puedas hablar con libertad.</span>
-                  </li>
-                  <li className="flex items-start gap-3 justify-center text-center">
-                    <span>⏱️ Reserva unos 20–25 minutos sin interrupciones.</span>
-                  </li>
-                </ul>
+              {/* ── Condiciones ideales ── */}
+              <div className="p-5 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.04] to-transparent">
+                <div className="flex flex-wrap gap-4 justify-center text-white/60 text-sm font-light">
+                  <span className="flex items-center gap-2">🎧 Usa audífonos</span>
+                  <span className="flex items-center gap-2">🔇 Busca un lugar tranquilo</span>
+                  <span className="flex items-center gap-2">⏱️ 20–25 minutos</span>
+                </div>
               </div>
 
-              {/* ── Así funciona cada pregunta — con las dos tarjetas como la imagen 2 ── */}
+              {/* ── Instrucciones numeradas ── */}
               <div className="space-y-4">
-                <div className="text-center">
-                  <p className="text-white/70 text-base font-medium flex items-center justify-center gap-2 mb-1">
-                    <Lightbulb className="w-5 h-5 text-amber-400/60" /> Así se ve cada pregunta
-                  </p>
-                  <p className="text-white/60 text-xs font-light">Escucharás cada pregunta en voz alta{selectedVoiceId ? '' : ' (o la leerás si no elegiste voz)'}. Al terminar, tu micrófono se activará automáticamente.</p>
-                </div>
+                <p className="text-white/70 text-base font-medium text-center mb-2">Así funciona cada pregunta</p>
 
-                {/* Card verde: Responde libremente (PRIMERO) */}
-                <div>
-                  {/* Label above card */}
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <span className="text-emerald-400/70 text-xs font-bold uppercase tracking-widest">① Primero</span>
-                    <span className="text-white/30 text-[10px]">— Responde con lo que te nazca</span>
+                {/* Paso 1 */}
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 rounded-full bg-violet-500/15 border border-violet-500/25 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-violet-300 text-sm font-bold">1</span>
                   </div>
-                  <div className="px-4 py-2.5 rounded-t-2xl bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-emerald-500/15 border border-b-0 border-emerald-500/15">
-                    <p className="text-emerald-300/80 text-xs font-semibold uppercase tracking-widest text-center flex items-center justify-center gap-2">
-                      <Heart className="w-3.5 h-3.5 text-emerald-400/60" />
-                      Responde libremente — di lo primero que te venga a la mente
-                    </p>
-                  </div>
-                  <div className="px-6 py-5 rounded-b-2xl border border-t-0 border-emerald-500/10 bg-emerald-500/[0.02]">
-                    <p className="text-white/80 text-base font-light leading-relaxed text-center">
-                      Para empezar, cuéntame un poco sobre tu vida actualmente y en qué momento te encuentras hoy.
-                    </p>
-                    <p className="text-emerald-300/60 text-xs font-light mt-3 text-center italic">
-                      ⬆ Esta es la pregunta principal. Contesta lo primero que te venga a la mente antes de leer las ideas de abajo.
-                    </p>
+                  <div>
+                    <p className="text-white/80 text-sm font-medium mb-1">Se te leerá la pregunta en voz alta</p>
+                    <p className="text-white/45 text-sm font-light">Puedes <strong className="text-white/60">saltar</strong> el audio o <strong className="text-white/60">repetirlo</strong> con los botones que verás junto a la pregunta.</p>
                   </div>
                 </div>
 
-                {/* Animated arrow between cards */}
-                <div className="flex justify-center py-1">
-                  <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.5 }} className="flex flex-col items-center gap-0.5">
-                    <ChevronDown className="w-5 h-5 text-violet-400/40" />
-                    <span className="text-white/25 text-[9px] font-light">después</span>
-                  </motion.div>
+                {/* Paso 2 */}
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 rounded-full bg-violet-500/15 border border-violet-500/25 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-violet-300 text-sm font-bold">2</span>
+                  </div>
+                  <div>
+                    <p className="text-white/80 text-sm font-medium mb-1">Se activará el micrófono automáticamente</p>
+                    <p className="text-white/45 text-sm font-light">Solo habla con naturalidad. Si prefieres escribir, toca "Prefiero escribir mi respuesta".</p>
+                  </div>
                 </div>
 
-                {/* Card violeta: Si te faltó algo (DESPUÉS) */}
-                <div>
-                  {/* Label above card */}
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <span className="text-violet-400/70 text-xs font-bold uppercase tracking-widest">② Después</span>
-                    <span className="text-white/30 text-[10px]">— Complementa si quieres</span>
+                {/* Paso 3 */}
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 rounded-full bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-emerald-300 text-sm font-bold">3</span>
                   </div>
-                  <div className="px-4 py-2.5 rounded-t-2xl bg-gradient-to-r from-violet-500/15 via-fuchsia-500/10 to-violet-500/15 border border-b-0 border-violet-500/15">
-                    <p className="text-violet-300/80 text-xs font-semibold uppercase tracking-widest text-center flex items-center justify-center gap-2">
-                      <Lightbulb className="w-3.5 h-3.5 text-violet-400/60" />
-                      Si te faltó algo, completa con estas ideas
-                    </p>
+                  <div>
+                    <p className="text-white/80 text-sm font-medium mb-1">Di lo primero que te venga a la mente</p>
+                    <p className="text-white/45 text-sm font-light">Lee primero la <strong className="text-emerald-300/70">pregunta verde</strong> — es la pregunta principal. Responde con lo que sientas, sin pensarlo demasiado.</p>
                   </div>
-                  <div className="px-5 py-4 rounded-b-2xl border border-t-0 border-white/10 bg-white/[0.02] space-y-2">
-                    {['¿A qué te dedicas o en qué estás enfocado actualmente?', '¿Cómo describirías el momento de vida en el que te encuentras ahora?', '¿Cuánto tiempo llevas en tu relación actual?', '¿Hay algo que esté pasando en tu vida que creas que impacta tu relación?'].map((ex, i) => (
-                      <div key={i} className="flex items-center justify-center gap-2 text-white/55 text-sm font-light">
-                        <span className="text-violet-400/50">✦</span>
-                        <span>{ex}</span>
-                      </div>
-                    ))}
-                    <div className="h-px bg-white/5 mt-3 mb-2" />
-                    <p className="text-white/60 text-xs font-light italic flex items-center justify-center gap-1.5">
-                      <Sparkles className="w-3 h-3 text-violet-400/30" />
-                      Puedes añadir cualquier otro detalle que sientas importante
-                    </p>
+                </div>
+
+                {/* Paso 4 */}
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 rounded-full bg-fuchsia-500/15 border border-fuchsia-500/25 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-fuchsia-300 text-sm font-bold">4</span>
+                  </div>
+                  <div>
+                    <p className="text-white/80 text-sm font-medium mb-1">Lee las preguntas violeta para completar</p>
+                    <p className="text-white/45 text-sm font-light">Debajo de la pregunta verde verás <strong className="text-violet-300/70">ideas en violeta</strong> que te ayudan a profundizar tu respuesta. Son opcionales.</p>
+                  </div>
+                </div>
+
+                {/* Paso 5 */}
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 rounded-full bg-amber-500/15 border border-amber-500/25 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-amber-300 text-sm font-bold">5</span>
+                  </div>
+                  <div>
+                    <p className="text-white/80 text-sm font-medium mb-1">Puedes regrabar cualquier respuesta</p>
+                    <p className="text-white/45 text-sm font-light">Si no quedaste conforme, simplemente toca <strong className="text-white/60">Regrabar</strong>. También puedes editar el texto transcrito antes de avanzar.</p>
+                  </div>
+                </div>
+
+                {/* Paso 6 */}
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 rounded-full bg-teal-500/15 border border-teal-500/25 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-teal-300 text-sm font-bold">6</span>
+                  </div>
+                  <div>
+                    <p className="text-white/80 text-sm font-medium mb-1">Tu progreso se guarda automáticamente</p>
+                    <p className="text-white/45 text-sm font-light">Si cierras la ventana o pierdes conexión, al volver encontrarás todo donde lo dejaste.</p>
                   </div>
                 </div>
               </div>
 
-              {/* ── Instrucciones clave simplificadas ── */}
-              <div className="space-y-3">
-                {[
-                  { icon: Volume2, color: 'text-violet-400/70', bgColor: 'bg-violet-500/10 border-violet-500/20', text: selectedVoiceId ? 'Escucharás cada pregunta en voz alta. Al terminar la voz, tu micrófono se activará automáticamente. También puedes leer la pregunta si lo prefieres.' : 'Leerás cada pregunta en pantalla. Tu micrófono se activará automáticamente para que respondas.' },
-                  { icon: PenLine, color: 'text-amber-400/70', bgColor: 'bg-amber-500/10 border-amber-500/20', text: '¿Prefieres escribir? Debajo del micrófono hay un enlace "Prefiero escribir mi respuesta".' }
-                ].map(({ icon: BulletIcon, color, bgColor, text }, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <div className={`w-6 h-6 rounded-lg ${bgColor} border flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                      <BulletIcon className={`w-3 h-3 ${color}`} />
-                    </div>
-                    <span className="text-white/55 text-sm font-light text-left">{text}</span>
-                  </div>
-                ))}
+              {/* ── Mensaje de confianza ── */}
+              <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/[0.06] to-teal-500/[0.04] border border-emerald-500/15 text-center">
+                <p className="text-emerald-300/80 text-sm font-light">
+                  💬 Puedes hablar como si fuera tu mejor amigo, sin filtros. Lo que digas es solo para ti.
+                </p>
               </div>
 
               {/* ── Navigation ── */}
@@ -2433,7 +2485,7 @@ const RadiografiaPremiumPage = () => {
         )}
 
         {/* ═══════════════════════════════════════════════════════
-            STAGE: PROFILE — Pregunta 0 (datos personales)
+            STAGE: PROFILE — Datos personales + correo (pantalla unificada)
         ═══════════════════════════════════════════════════════ */}
         {stage === 'profile' && (
           <motion.div key="profile" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -2445,18 +2497,27 @@ const RadiografiaPremiumPage = () => {
                 </div>
                 <h2 className="text-xl lg:text-2xl font-light text-white mb-2">Antes de empezar</h2>
                 <p className="text-white/50 text-sm font-light max-w-sm mx-auto">
-                  Escribe tus datos separados por comas o completa cada campo. Estos datos aparecerán en tu reporte personalizado.
+                  Completa estos datos para personalizar tu reporte. Al terminar recibirás los resultados en tu correo.
                 </p>
               </div>
 
               <div className="space-y-4">
                 {/* Tus datos */}
                 <p className="text-violet-300/50 text-[10px] font-medium uppercase tracking-wider">Tus datos</p>
+                <div>
+                  <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Tu correo electrónico</label>
+                  <input type="email" value={emailData.emailUsuario}
+                    autoFocus
+                    onChange={(e) => setEmailData(p => ({ ...p, emailUsuario: e.target.value }))}
+                    onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('profile-nombre')?.focus() }}
+                    placeholder="tu@correo.com"
+                    className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/50 focus:border-violet-500/30 focus:outline-none transition-colors" />
+                  <p className="text-white/35 text-[11px] font-light mt-1">Aquí recibirás tu reporte completo al terminar</p>
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Tu nombre</label>
-                    <input type="text" value={profileData.nombre}
-                      autoFocus
+                    <input type="text" id="profile-nombre" value={profileData.nombre}
                       onChange={(e) => setProfileData(p => ({ ...p, nombre: e.target.value }))}
                       onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('profile-edad')?.focus() }}
                       placeholder="Ej: Luis"
@@ -2472,8 +2533,19 @@ const RadiografiaPremiumPage = () => {
                   </div>
                 </div>
 
+                {/* Separator */}
+                <div className="h-px bg-white/5 my-1" />
+
                 {/* Datos de tu pareja */}
-                <p className="text-fuchsia-300/50 text-[10px] font-medium uppercase tracking-wider mt-2">Datos de tu pareja</p>
+                <p className="text-fuchsia-300/50 text-[10px] font-medium uppercase tracking-wider">Datos de tu pareja</p>
+                <div>
+                  <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Correo de tu pareja <span className="text-white/30">(opcional)</span></label>
+                  <input type="email" value={emailData.emailPareja}
+                    onChange={(e) => setEmailData(p => ({ ...p, emailPareja: e.target.value }))}
+                    onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('profile-nombre-pareja')?.focus() }}
+                    placeholder="pareja@correo.com"
+                    className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/50 focus:border-fuchsia-500/30 focus:outline-none transition-colors" />
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Nombre de tu pareja</label>
@@ -2487,7 +2559,11 @@ const RadiografiaPremiumPage = () => {
                     <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Edad de tu pareja</label>
                     <input type="text" id="profile-edad-pareja" value={profileData.edadPareja}
                       onChange={(e) => setProfileData(p => ({ ...p, edadPareja: e.target.value }))}
-                      onKeyDown={(e) => { if (e.key === 'Enter' && profileData.nombre.trim() && profileData.edad.trim() && profileData.nombrePareja.trim() && profileData.edadPareja.trim()) setStage('email') }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && profileData.nombre.trim() && profileData.edad.trim() && profileData.nombrePareja.trim() && profileData.edadPareja.trim() && emailData.emailUsuario.trim()) {
+                          startQuestionnaire()
+                        }
+                      }}
                       placeholder="Ej: 30"
                       className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/50 focus:border-fuchsia-500/30 focus:outline-none transition-colors" />
                   </div>
@@ -2495,109 +2571,19 @@ const RadiografiaPremiumPage = () => {
               </div>
 
               <motion.button
-                onClick={() => { if (profileData.nombre.trim() && profileData.edad.trim() && profileData.nombrePareja.trim() && profileData.edadPareja.trim()) setStage('email') }}
+                onClick={() => { if (canStartQuestionnaire) startQuestionnaire() }}
                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                disabled={!profileData.nombre.trim() || !profileData.edad.trim() || !profileData.nombrePareja.trim() || !profileData.edadPareja.trim()}
-                className={`w-full py-4 rounded-xl text-white font-light text-base transition-all shadow-lg ${profileData.nombre.trim() && profileData.edad.trim() && profileData.nombrePareja.trim() && profileData.edadPareja.trim()
+                disabled={!canStartQuestionnaire}
+                className={`w-full py-4 rounded-xl text-white font-light text-base transition-all shadow-lg ${canStartQuestionnaire
                   ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 shadow-violet-600/20'
                   : 'bg-white/10 text-white/55 cursor-not-allowed shadow-none'}`}>
-                Continuar <ArrowRight className="inline w-4 h-4 ml-2" />
+                Comenzar radiografía <ArrowRight className="inline w-4 h-4 ml-2" />
               </motion.button>
             </div>
           </motion.div>
         )}
 
-        {/* ═══════════════════════════════════════════════════════
-            STAGE: EMAIL — Correos (con opción de saltar)
-        ═══════════════════════════════════════════════════════ */}
-        {stage === 'email' && (
-          <motion.div key="email" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="min-h-screen flex items-center justify-center px-6 pt-6 pb-12"
-            onAnimationComplete={(def) => {
-              // Only play on enter animation, not exit
-              if (def === 'exit' || stage !== 'email') return
-              playQuestion('Déjanos tu correo electrónico para enviarte los resultados.', null, null, 'email')
-            }}>
-            <div className="max-w-lg w-full space-y-8">
-              <div className="text-center">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-4">
-                  <Send className="w-7 h-7 text-violet-400/60" strokeWidth={1.5} />
-                </div>
-                <h2 className="text-xl lg:text-2xl font-light text-white mb-2">Invitación por correo</h2>
-                <p className="text-white/50 text-sm font-light max-w-sm mx-auto">
-                  Al terminar, recibirás tu reporte completo por correo. Si deseas, también podemos enviar una invitación a tu pareja.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Tu correo electrónico</label>
-                  <input type="email" value={emailData.emailUsuario}
-                    autoFocus
-                    onChange={(e) => setEmailData(p => ({ ...p, emailUsuario: e.target.value }))}
-                    placeholder="tu@correo.com"
-                    className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/50 focus:border-violet-500/30 focus:outline-none transition-colors" />
-                </div>
-                <div>
-                  <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Correo de tu pareja <span className="text-white/50">(opcional)</span></label>
-                  <input type="email" value={emailData.emailPareja}
-                    onChange={(e) => setEmailData(p => ({ ...p, emailPareja: e.target.value }))}
-                    placeholder="pareja@correo.com"
-                    className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/50 focus:border-fuchsia-500/30 focus:outline-none transition-colors" />
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <motion.button
-                  onClick={() => {
-                    // Stop any email audio first
-                    stopAudio()
-                    // Play personalized greeting then start questionnaire
-                    const nombre = profileData.nombre.trim().split(' ')[0]
-                    greetingPlayedRef.current = true
-                    if (selectedVoiceId) {
-                      playQuestion(`Hola ${nombre}, vamos a comenzar tu radiografía. Escucha cada pregunta con atención y responde con lo primero que te venga a la mente.`, undefined, () => {
-                        // After greeting ends, play Q1
-                        playQuestion(PREGUNTAS[0].mainQuestion, undefined, () => {
-                          setTimeout(() => {
-                            const sr = window.SpeechRecognition || window.webkitSpeechRecognition
-                            if (sr) startRecording()
-                          }, 300)
-                        })
-                      })
-                    }
-                    setStage('questionnaire')
-                  }}
-                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                  className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
-                  Continuar <ArrowRight className="inline w-4 h-4 ml-2" />
-                </motion.button>
-                <button
-                  onClick={() => {
-                    stopAudio()
-                    const nombre = profileData.nombre.trim().split(' ')[0]
-                    greetingPlayedRef.current = true
-                    if (selectedVoiceId) {
-                      playQuestion(`Hola ${nombre}, vamos a comenzar tu radiografía. Escucha cada pregunta con atención y responde con lo primero que te venga a la mente.`, undefined, () => {
-                        playQuestion(PREGUNTAS[0].mainQuestion, undefined, () => {
-                          setTimeout(() => {
-                            const sr = window.SpeechRecognition || window.webkitSpeechRecognition
-                            if (sr) startRecording()
-                          }, 300)
-                        })
-                      })
-                    } else {
-                      setStage('questionnaire')
-                    }
-                    setStage('questionnaire')
-                  }}
-                  className="w-full py-3 text-center text-white/60 text-sm font-light hover:text-white/55 transition-colors underline underline-offset-4 decoration-white/15">
-                  Saltar y comenzar directamente
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
+        {/* Email stage removed — merged into profile stage above */}
 
         {/* ═══════════════════════════════════════════════════════
             STAGE: QUESTIONNAIRE
@@ -2796,7 +2782,7 @@ const RadiografiaPremiumPage = () => {
                       <>
                         {recording && <span className="text-white/15">·</span>}
                         <button
-                          onClick={() => { stopAudio(); if (recording) stopRecording(); setTranscript(''); setTextInput(''); setTimeout(() => startRecording(), 200) }}
+                          onClick={() => setShowRegrabarModal(true)}
                           className="text-amber-300/50 text-xs font-light hover:text-amber-300/80 transition-colors underline underline-offset-2 decoration-amber-300/15 hover:decoration-amber-300/40">
                           Regrabar desde cero
                         </button>
@@ -2821,6 +2807,27 @@ const RadiografiaPremiumPage = () => {
                 )}
               </div>
 
+              {/* ── Regrabar confirmation modal ── */}
+              {showRegrabarModal && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center px-6" onClick={() => setShowRegrabarModal(false)}>
+                  <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+                    className="bg-[#1a1a2e] border border-amber-500/20 rounded-2xl p-6 max-w-sm w-full shadow-2xl" onClick={e => e.stopPropagation()}>
+                    <h3 className="text-white text-base font-medium mb-2">¿Regrabar esta respuesta?</h3>
+                    <p className="text-white/55 text-sm font-light mb-5">Se borrará lo que llevas grabado en esta pregunta y el micrófono se activará de nuevo.</p>
+                    <div className="flex gap-3">
+                      <button onClick={() => setShowRegrabarModal(false)}
+                        className="flex-1 py-2.5 rounded-xl border border-white/10 text-white/60 text-sm font-light hover:bg-white/5 transition-colors">
+                        Cancelar
+                      </button>
+                      <button onClick={() => { setShowRegrabarModal(false); stopAudio(); if (recording) stopRecording(); setTranscript(''); setTextInput(''); setTimeout(() => startRecording(), 200) }}
+                        className="flex-1 py-2.5 rounded-xl bg-amber-500/20 border border-amber-500/25 text-amber-300 text-sm font-light hover:bg-amber-500/30 transition-colors">
+                        Sí, regrabar
+                      </button>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+
               {/* DEV: Quick actions */}
               {import.meta.env.DEV && (
                 <div className="mt-8 pt-6 border-t border-white/5">
@@ -2842,20 +2849,35 @@ const RadiografiaPremiumPage = () => {
                     </div>
                     <span className="text-[9px] text-white/55">Instruc.</span>
                   </button>
-                  {/* 3. Rellenar (esta pregunta) */}
+                  {/* 3. Rellenar TODO (Q1-Q40 + perfil Carlos/Ana → saltar a Q40) */}
                   <button onClick={() => {
-                    const demoText = DEMO_RESPONSES[question?.id] || ''
-                    setTranscript(demoText)
-                    setTextInput(demoText)
-                    setResponses(prev => ({ ...prev, [question.id]: demoText }))
+                    fillDemoResponses()
+                    if (stage !== 'questionnaire') setStage('questionnaire')
                   }}
-                    className="flex flex-col items-center gap-1" title="Rellenar esta respuesta">
+                    className="flex flex-col items-center gap-1" title="Rellenar las 40 respuestas con Carlos/Ana y saltar a Q40">
                     <div className="w-11 h-11 rounded-full border border-amber-500/25 bg-amber-500/10 flex items-center justify-center hover:bg-amber-500/20 transition-colors">
                       <PenLine className="w-4 h-4 text-amber-300/70" />
                     </div>
                     <span className="text-[9px] text-white/55">Rellenar</span>
                   </button>
-                  {/* 4. Preview */}
+                  {/* 4. Test IA completo — fill + profile + call real API */}
+                  <button onClick={() => {
+                    const demoProfile = { nombre: 'Carlos', edad: '32', nombrePareja: 'Ana', edadPareja: '30' }
+                    setProfileData(demoProfile)
+                    setEmailData(prev => ({ ...prev, emailUsuario: 'demo@test.com' }))
+                    setResponses({ ...DEMO_RESPONSES })
+                    setCachedAnalysis(null) // force real API call
+                    localStorage.removeItem('radiografia_cached_analysis')
+                    setStage('analyzing')
+                    setTimeout(() => handleRunAnalysis(DEMO_RESPONSES), 300)
+                  }}
+                    className="flex flex-col items-center gap-1" title="Rellenar todo y lanzar IA real">
+                    <div className="w-11 h-11 rounded-full border border-emerald-500/25 bg-emerald-500/10 flex items-center justify-center hover:bg-emerald-500/20 transition-colors">
+                      <Sparkles className="w-4 h-4 text-emerald-300/70" />
+                    </div>
+                    <span className="text-[9px] text-white/55">Test IA</span>
+                  </button>
+                  {/* 5. Preview (cached) */}
                   <button onClick={() => {
                     if (CACHED_PREVIEW_ANALYSIS) {
                       setAiAnalysis(CACHED_PREVIEW_ANALYSIS)
@@ -2882,7 +2904,33 @@ const RadiografiaPremiumPage = () => {
                     </div>
                     <span className="text-[9px] text-white/55">Preview</span>
                   </button>
-                  {/* 5. Borrar caché */}
+                  {/* 6. Demo para ventas */}
+                  <button onClick={async () => {
+                    setProfileData({ nombre: 'Sofía', edad: '31', nombrePareja: 'Mateo', edadPareja: '34' })
+                    setEmailData(prev => ({ ...prev, emailUsuario: 'demo@ventas.com' }))
+                    try {
+                      const { CACHED_DEMO_ANALYSIS } = await import('../data/cachedDemoAnalysis')
+                      if (CACHED_DEMO_ANALYSIS) {
+                        setAiAnalysis(CACHED_DEMO_ANALYSIS)
+                        setCachedAnalysis(CACHED_DEMO_ANALYSIS)
+                        setStage('results')
+                        return
+                      }
+                    } catch {}
+                    // If no demo file, use preview as fallback
+                    if (CACHED_PREVIEW_ANALYSIS) {
+                      setAiAnalysis(CACHED_PREVIEW_ANALYSIS)
+                      setCachedAnalysis(CACHED_PREVIEW_ANALYSIS)
+                      setStage('results')
+                    }
+                  }}
+                    className="flex flex-col items-center gap-1" title="Demo para ventas (Sofía y Mateo)">
+                    <div className="w-11 h-11 rounded-full border border-pink-500/25 bg-pink-500/10 flex items-center justify-center hover:bg-pink-500/20 transition-colors">
+                      <Play className="w-4 h-4 text-pink-300/70" />
+                    </div>
+                    <span className="text-[9px] text-white/55">Demo</span>
+                  </button>
+                  {/* 7. Borrar caché */}
                   {localStorage.getItem('radiografia_cached_analysis') && (
                     <button onClick={() => {
                       localStorage.removeItem('radiografia_cached_analysis')
@@ -2917,7 +2965,13 @@ const RadiografiaPremiumPage = () => {
                 <h2 className="text-xl font-light text-white mb-2">Analizando tu narrativa</h2>
                 <p className="text-white/60 text-sm font-light">40 respuestas × 12 dimensiones × 11 corrientes psicológicas</p>
               </div>
-              <div className="space-y-1.5">
+
+              {/* Warning banner */}
+              <div className="bg-amber-500/[0.07] border border-amber-500/15 rounded-xl px-4 py-3 text-center">
+                <p className="text-amber-300/80 text-xs font-light">⏱️ Este proceso toma aproximadamente 3-5 minutos. No cierres ni recargues esta ventana.</p>
+              </div>
+
+              <div className="space-y-1.5 max-h-[50vh] overflow-y-auto pr-1 scrollbar-thin">
                 {ANALYSIS_TASKS.map((task, i, arr) => {
                   const done = i < completedTasks
                   const active = i === completedTasks
@@ -2955,7 +3009,7 @@ const RadiografiaPremiumPage = () => {
         {stage === 'results' && aiAnalysis && (
           <motion.div key="results" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="min-h-screen pt-6 lg:pt-10 pb-20 px-6">
-            <div className="max-w-4xl mx-auto space-y-12">
+            <div ref={resultsRef} className="max-w-4xl mx-auto space-y-12">
 
               {/* Header — Ultra Premium with profile data */}
               <div className="relative text-center py-8 mb-4">
@@ -2987,7 +3041,27 @@ const RadiografiaPremiumPage = () => {
                 </div>
               </div>
 
-              {/* ═══ SECCIÓN 0: AUTOANÁLISIS — TU FORMA DE AMAR ═══ */}
+              {/* ═══ BANNER: Advertencia si el análisis es fallback ═══ */}
+              {aiAnalysis._isFallback && (
+                <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 mb-6">
+                  <p className="text-amber-300/90 text-sm font-medium flex items-center gap-2 mb-1">
+                    <AlertTriangle className="w-4 h-4" /> Análisis de demostración
+                  </p>
+                  <p className="text-amber-200/60 text-xs font-light">
+                    {aiAnalysis._error
+                      ? `La IA no pudo generar tu análisis personalizado (${aiAnalysis._error}). Se muestra un ejemplo de referencia. Puedes reintentar el análisis.`
+                      : 'Este es un análisis de ejemplo. Tu análisis personalizado se generará cuando la IA esté conectada.'}
+                  </p>
+                </div>
+              )}
+
+              {/* ═══ SEPARADOR PARTE 1 — PRIMERO, VAMOS CONTIGO ═══ */}
+              <div className="text-center mb-6">
+                <p className="text-violet-400/50 text-xs font-bold uppercase tracking-[0.25em] mb-1">Parte 1</p>
+                <p className="text-white/40 text-sm font-light">Primero, vamos contigo</p>
+              </div>
+
+              {/* ═══ SECCIÓN 0: AUTOANÁLISIS — TU RADIOGRAFÍA EMOCIONAL ═══ */}
               {aiAnalysis.autoanalisis_usuario && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                   className="p-6 lg:p-8 rounded-2xl border border-fuchsia-500/15 bg-gradient-to-br from-fuchsia-500/[0.04] via-violet-500/[0.03] to-transparent relative overflow-hidden">
@@ -2997,7 +3071,7 @@ const RadiografiaPremiumPage = () => {
                       <Heart className="w-7 h-7 text-fuchsia-400/80" />
                     </div>
                     <p className="text-fuchsia-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Reporte Psicológico</p>
-                    <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-300 to-violet-300 tracking-wide">Tu forma de amar</h2>
+                    <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-300 to-violet-300 tracking-wide">Tu radiografía emocional</h2>
                     <p className="text-white/55 text-sm font-light mt-2 max-w-md mx-auto">Un análisis integral de tu personalidad amorosa basado en tus respuestas y 11 perspectivas psicológicas</p>
                   </div>
 
@@ -3111,6 +3185,12 @@ const RadiografiaPremiumPage = () => {
                   </div>
                 </motion.div>
               )}
+
+              {/* ═══ SEPARADOR PARTE 2 — TU RELACIÓN DESDE 11 PERSPECTIVAS ═══ */}
+              <div className="text-center my-10 py-6 border-t border-b border-white/5">
+                <p className="text-violet-400/50 text-xs font-bold uppercase tracking-[0.25em] mb-1">Parte 2</p>
+                <p className="text-white/40 text-sm font-light">Ahora, tu relación analizada desde 11 corrientes psicológicas</p>
+              </div>
 
               {/* ═══ 1. ANÁLISIS POR ENFOQUE PSICOLÓGICO (11 corrientes) ═══ */}
               {aiAnalysis.lecturas_por_enfoque && (() => {
@@ -3837,6 +3917,13 @@ const RadiografiaPremiumPage = () => {
                   className="flex items-center gap-2 px-6 py-3 rounded-xl border border-violet-500/20 bg-violet-500/10 text-violet-300/80 text-sm font-light hover:bg-violet-500/20 transition-all disabled:opacity-40">
                   {pdfGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                   Descargar PDF
+                </motion.button>
+                <motion.button
+                  onClick={() => {/* TODO: connect to backend email endpoint */}}
+                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl border border-fuchsia-500/20 bg-fuchsia-500/10 text-fuchsia-300/80 text-sm font-light hover:bg-fuchsia-500/20 transition-all">
+                  <Send className="w-4 h-4" />
+                  Enviar a {emailData.emailUsuario || 'mi correo'}
                 </motion.button>
               </motion.div>
 

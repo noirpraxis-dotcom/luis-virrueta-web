@@ -17,6 +17,12 @@ dist-ssr
 functions/.env
 functions/serviceAccountKey.json
 
+# Cloudflare Worker — contiene claves privadas
+cloudflare-worker/deploy.ps1
+
+# Old Railway backend — no usar, renombrado para evitar errores en Pages build
+_functions_old/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

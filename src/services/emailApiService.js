@@ -1,8 +1,9 @@
 // ─── EMAIL API SERVICE ──────────────────────────────────────────
-// Calls Firebase Cloud Functions (or any serverless backend) to send emails
-// Set VITE_API_BASE_URL in .env to your deployed functions URL
+// Cloudflare Worker: https://radiografia-worker.noirpraxis.workers.dev
+// Configurar VITE_API_BASE_URL en .env
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
+const WORKER_URL = 'https://radiografia-worker.noirpraxis.workers.dev'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? '' : WORKER_URL)
 
 /**
  * Send access email(s) after purchase
