@@ -779,6 +779,7 @@ const DiagnosticoRelacionalPage = () => {
 
   // Smart email/token flow
   const [thankyouEmails, setThankyouEmails] = useState(['', ''])
+  const [thankYouProfile, setThankYouProfile] = useState({ nombre: '', edad: '', nombrePareja: '', edadPareja: '' })
   const [emailsSent, setEmailsSent] = useState(false)
   const [sendingEmails, setSendingEmails] = useState(false)
   const [emailSendError, setEmailSendError] = useState('')
@@ -2648,6 +2649,47 @@ const DiagnosticoRelacionalPage = () => {
                         )}
                       </div>
                     )}
+
+                    {/* Nombre + edad — needed for the AI analysis personalisation */}
+                    {['descubre', 'solo', 'losdos'].includes(purchaseType) && (
+                      <>
+                        <div className="h-px bg-white/[0.06]" />
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="text-white/30 text-xs uppercase tracking-wider mb-1.5 block">Tu nombre</label>
+                            <input type="text" value={thankYouProfile.nombre}
+                              onChange={e => setThankYouProfile(p => ({ ...p, nombre: e.target.value }))}
+                              placeholder="Ej: Luis"
+                              className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors" />
+                          </div>
+                          <div>
+                            <label className="text-white/30 text-xs uppercase tracking-wider mb-1.5 block">Tu edad</label>
+                            <input type="text" value={thankYouProfile.edad}
+                              onChange={e => setThankYouProfile(p => ({ ...p, edad: e.target.value }))}
+                              placeholder="Ej: 28"
+                              className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors" />
+                          </div>
+                        </div>
+                        {(purchaseType === 'solo' || purchaseType === 'losdos') && (
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="text-white/30 text-xs uppercase tracking-wider mb-1.5 block">Nombre de tu pareja</label>
+                              <input type="text" value={thankYouProfile.nombrePareja}
+                                onChange={e => setThankYouProfile(p => ({ ...p, nombrePareja: e.target.value }))}
+                                placeholder="Ej: Susana"
+                                className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-fuchsia-400/30 focus:outline-none transition-colors" />
+                            </div>
+                            <div>
+                              <label className="text-white/30 text-xs uppercase tracking-wider mb-1.5 block">Edad de tu pareja</label>
+                              <input type="text" value={thankYouProfile.edadPareja}
+                                onChange={e => setThankYouProfile(p => ({ ...p, edadPareja: e.target.value }))}
+                                placeholder="Ej: 30"
+                                className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-fuchsia-400/30 focus:outline-none transition-colors" />
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
                   </div>
 
                   <motion.button
@@ -2728,6 +2770,11 @@ const DiagnosticoRelacionalPage = () => {
                       // Pass emails to RadiografiaPremiumPage so profile form is pre-filled
                       if (thankyouEmails[0]) sessionStorage.setItem('radiografia_buyer_email', thankyouEmails[0])
                       if (purchaseType === 'losdos' && thankyouEmails[1]) sessionStorage.setItem('radiografia_partner_email', thankyouEmails[1])
+                      // Pass profile data so the profile stage can be skipped entirely
+                      sessionStorage.setItem('radiografia_nombre', thankYouProfile.nombre)
+                      sessionStorage.setItem('radiografia_edad', thankYouProfile.edad)
+                      sessionStorage.setItem('radiografia_nombre_pareja', thankYouProfile.nombrePareja)
+                      sessionStorage.setItem('radiografia_edad_pareja', thankYouProfile.edadPareja)
                       navigate(`/tienda/radiografia-premium?type=${purchaseType}`)
                     } else {
                       setStage('instructions')

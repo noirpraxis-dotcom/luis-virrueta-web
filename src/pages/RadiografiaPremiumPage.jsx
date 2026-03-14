@@ -1730,7 +1730,13 @@ const RadiografiaPremiumPage = () => {
   const [previewingVoiceId, setPreviewingVoiceId] = useState(null)
 
   // Profile — Question 0 (name, age, date, partner)
-  const [profileData, setProfileData] = useState({ nombre: '', edad: '', nombrePareja: '', edadPareja: '', fecha: new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }) })
+  const [profileData, setProfileData] = useState({
+    nombre:        sessionStorage.getItem('radiografia_nombre')         || '',
+    edad:          sessionStorage.getItem('radiografia_edad')           || '',
+    nombrePareja:  sessionStorage.getItem('radiografia_nombre_pareja')  || '',
+    edadPareja:    sessionStorage.getItem('radiografia_edad_pareja')    || '',
+    fecha: new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })
+  })
   const [soundTestOk, setSoundTestOk] = useState(null)
   const [micTestOk, setMicTestOk] = useState(null)
   const [micAnalyser, setMicAnalyser] = useState(null)
@@ -2072,7 +2078,10 @@ const RadiografiaPremiumPage = () => {
   }, [currentQ, stage]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Validation: can start questionnaire from profile? ──
-  const canStartQuestionnaire = profileData.nombre.trim() && profileData.edad.trim() && profileData.nombrePareja.trim() && profileData.edadPareja.trim() && emailData.emailUsuario.trim()
+  const needsPartnerData = packageType !== 'descubre'
+  const canStartQuestionnaire = profileData.nombre.trim() && profileData.edad.trim() &&
+    (!needsPartnerData || (profileData.nombrePareja.trim() && profileData.edadPareja.trim())) &&
+    emailData.emailUsuario.trim()
 
   // ── Start questionnaire from merged profile screen ──
   const startQuestionnaire = useCallback(() => {
@@ -2509,8 +2518,12 @@ const RadiografiaPremiumPage = () => {
               <div className="space-y-3">
                 <motion.button
                   onClick={() => {
-                    setStage('profile')
-                    playQuestion('Te damos la bienvenida. Antes de iniciar, necesito conocer un par de datos tuyos muy rápidos. Escríbelos en los campos que aparecen a continuación y podremos comenzar.', undefined, null, 'welcome')
+                    if (canStartQuestionnaire) {
+                      startQuestionnaire()
+                    } else {
+                      setStage('profile')
+                      playQuestion('Te damos la bienvenida. Antes de iniciar, necesito conocer un par de datos tuyos muy rápidos. Escríbelos en los campos que aparecen a continuación y podremos comenzar.', undefined, null, 'welcome')
+                    }
                   }}
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                   className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
