@@ -10,7 +10,6 @@ import {
 } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, RadarChart as RechartRadar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts'
 import SEOHead from '../components/SEOHead'
-import { ResponsiveSankey } from '@nivo/sankey'
 import { analyzeRadiografiaPremium, generateFallbackAnalysis } from '../services/radiografiaPremiumService'
 import { CACHED_PREVIEW_ANALYSIS } from '../data/cachedPreviewAnalysis'
 
@@ -529,10 +528,14 @@ function renderBold(text) {
   )
 }
 
-/* Strip bold markers — for autoanalisis sections (plain text, no negritas) */
-function stripBold(text) {
+/* Render bold markers — only concept names (text before colons) get <strong>, rest stays plain */
+function renderConceptBold(text) {
   if (!text) return null
-  return text.replace(/\*\*(.*?)\*\*/g, '$1')
+  return text.split(/\*\*(.*?)\*\*/g).map((part, i) =>
+    i % 2 === 1
+      ? <strong key={i} className="font-semibold text-white/90">{part}</strong>
+      : part
+  )
 }
 
 function getLevelColor(val) {
@@ -740,75 +743,69 @@ function MindMapRadial({ dimensiones }) {
   )
 }
 
-// ─── DIMENSION SANKEY — flow diagram between clusters of dimensions ──
+// ─── DIMENSION NETWORK GRAPH — 3 spheres connected to 12 dimensions ──
 
-function DimensionSankey({ dimensiones }) {
+function DimensionNetworkGraph({ dimensiones }) {
   const keys = Object.keys(DIMENSION_LABELS)
   const labels = Object.values(DIMENSION_LABELS)
 
-  // Group dimensions into 3 clusters for Sankey flow
   const clusters = {
-    emocional: ['apego_emocional', 'conexion_emocional', 'vulnerabilidad_emocional', 'intimidad'],
-    estructural: ['estabilidad_relacional', 'sincronia_relacional', 'roles_sistemicos', 'resiliencia_vinculo'],
-    profundo: ['patrones_inconscientes', 'fantasma_relacional', 'deseo_erotico', 'narrativa_futuro']
+    emocional: { dims: ['apego_emocional', 'conexion_emocional', 'vulnerabilidad_emocional', 'intimidad'], color: '#ec4899', label: 'Emocional', x: 120, y: 100 },
+    estructural: { dims: ['estabilidad_relacional', 'sincronia_relacional', 'roles_sistemicos', 'resiliencia_vinculo'], color: '#6366f1', label: 'Estructural', x: 400, y: 100 },
+    profundo: { dims: ['patrones_inconscientes', 'fantasma_relacional', 'deseo_erotico', 'narrativa_futuro'], color: '#a855f7', label: 'Profunda', x: 260, y: 280 }
   }
 
-  const clusterLabels = { emocional: 'Esfera Emocional', estructural: 'Esfera Estructural', profundo: 'Esfera Profunda' }
-  const clusterColors = { emocional: '#ec4899', estructural: '#6366f1', profundo: '#a855f7' }
-
-  // Build sankey nodes: clusters on left, individual dimensions on right (with score in label)
-  const nodes = [
-    ...Object.keys(clusters).map(c => ({ id: clusterLabels[c], nodeColor: clusterColors[c] })),
-    ...keys.map((k, i) => ({ id: `${labels[i]} ${dimensiones[k] ?? 0}%`, nodeColor: DIMENSION_COLORS[i] }))
-  ]
-
-  // Build links: cluster → dimension with value = dimension score
-  const links = []
-  for (const [cluster, dimKeys] of Object.entries(clusters)) {
-    for (const dk of dimKeys) {
+  // Position child nodes around each cluster center
+  const nodePositions = []
+  for (const [clusterKey, cluster] of Object.entries(clusters)) {
+    cluster.dims.forEach((dk, di) => {
       const idx = keys.indexOf(dk)
-      if (idx >= 0) {
-        const val = Math.max(dimensiones[dk] || 1, 5)
-        links.push({ source: clusterLabels[cluster], target: `${labels[idx]} ${dimensiones[dk] ?? 0}%`, value: val })
-      }
-    }
+      if (idx < 0) return
+      const angle = ((di - 1.5) / 4) * Math.PI * 0.8 + (clusterKey === 'emocional' ? -Math.PI * 0.3 : clusterKey === 'estructural' ? Math.PI * 0.3 : Math.PI * 0.5)
+      const dist = 95
+      const nx = cluster.x + Math.cos(angle) * dist
+      const ny = cluster.y + Math.sin(angle) * dist
+      const val = dimensiones[dk] ?? 0
+      const radius = 14 + (val / 100) * 14
+      nodePositions.push({ idx, key: dk, label: labels[idx], val, x: nx, y: ny, radius, color: DIMENSION_COLORS[idx], clusterX: cluster.x, clusterY: cluster.y, clusterColor: cluster.color })
+    })
   }
-
-  if (links.length === 0) return null
 
   return (
     <div>
-      <div className="h-[400px] sm:h-[480px]">
-        <ResponsiveSankey
-          data={{ nodes, links }}
-          margin={{ top: 20, right: 150, bottom: 20, left: 20 }}
-          align="justify"
-          colors={(node) => node.nodeColor || '#8b5cf6'}
-          nodeOpacity={0.95}
-          nodeHoverOpacity={1}
-          nodeThickness={20}
-          nodeSpacing={12}
-          nodeBorderWidth={0}
-          nodeBorderRadius={4}
-          linkOpacity={0.3}
-          linkHoverOpacity={0.6}
-          linkContract={1}
-          linkBlendMode="screen"
-          enableLinkGradient
-          labelPosition="outside"
-          labelOrientation="horizontal"
-          labelPadding={14}
-          labelTextColor={{ from: 'color', modifiers: [['brighter', 0.8]] }}
-          theme={{
-            labels: { text: { fontSize: 11, fontWeight: 400, fill: 'rgba(255,255,255,0.7)' } },
-            tooltip: {
-              container: { background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '10px', color: 'rgba(255,255,255,0.85)', fontSize: 12, fontWeight: 300, padding: '10px 14px' }
-            }
-          }}
-        />
-      </div>
+      <svg viewBox="0 0 520 420" className="w-full max-w-xl mx-auto">
+        <defs>
+          <filter id="net-glow"><feGaussianBlur stdDeviation="3" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+        </defs>
+        {/* Connections: cluster → dimension */}
+        {nodePositions.map((n, i) => (
+          <line key={`link-${i}`} x1={n.clusterX} y1={n.clusterY} x2={n.x} y2={n.y}
+            stroke={n.clusterColor} strokeWidth={1 + (n.val / 100) * 2.5} strokeOpacity={0.15 + (n.val / 100) * 0.2} />
+        ))}
+        {/* Inter-cluster connections */}
+        {Object.values(clusters).map((c1, i, arr) => {
+          const c2 = arr[(i + 1) % arr.length]
+          return <line key={`cc-${i}`} x1={c1.x} y1={c1.y} x2={c2.x} y2={c2.y} stroke="rgba(255,255,255,0.06)" strokeWidth="1" strokeDasharray="6 4" />
+        })}
+        {/* Cluster hubs */}
+        {Object.values(clusters).map((c, i) => (
+          <g key={`hub-${i}`}>
+            <circle cx={c.x} cy={c.y} r={32} fill={`${c.color}15`} stroke={c.color} strokeWidth={2} strokeOpacity={0.5} filter="url(#net-glow)" />
+            <circle cx={c.x} cy={c.y} r={24} fill={`${c.color}25`} />
+            <text x={c.x} y={c.y + 1} textAnchor="middle" dominantBaseline="central" fill={c.color} className="text-[9px] font-bold" fillOpacity={0.9}>{c.label}</text>
+          </g>
+        ))}
+        {/* Dimension nodes */}
+        {nodePositions.map((n, i) => (
+          <g key={`node-${i}`}>
+            <circle cx={n.x} cy={n.y} r={n.radius} fill={`${n.color}20`} stroke={n.color} strokeWidth={1.5} strokeOpacity={0.6} />
+            <text x={n.x} y={n.y - 1} textAnchor="middle" dominantBaseline="central" fill="rgba(255,255,255,0.85)" className="text-[9px] font-bold">{n.val}%</text>
+            <text x={n.x} y={n.y + n.radius + 10} textAnchor="middle" fill="rgba(255,255,255,0.5)" className="text-[6px] font-light">{n.label}</text>
+          </g>
+        ))}
+      </svg>
       <p className="text-white/50 text-[10px] font-light text-center mt-3 max-w-lg mx-auto leading-relaxed">
-        Este diagrama muestra cómo fluye la energía emocional desde las 3 esferas principales (emocional, estructural y profunda) hacia cada una de las 12 dimensiones analizadas. El grosor de cada flujo es proporcional a la puntuación detectada.
+        Red de conexiones entre las 3 esferas principales y las 12 dimensiones analizadas. El tamaño de cada nodo es proporcional a la puntuación detectada.
       </p>
     </div>
   )
@@ -819,23 +816,36 @@ function PolarMiniChart({ data }) {
   if (!data?.puntuacion) return null
   const score = data.puntuacion ?? 50
   const apego = data.estilo_apego || 'No detectado'
-  const cx = 100, cy = 100, r = 70
-  const filled = (score / 100) * Math.PI * 2
-  const endX = cx + r * Math.sin(filled)
-  const endY = cy - r * Math.cos(filled)
-  const largeArc = filled > Math.PI ? 1 : 0
+  const styles = [
+    { label: 'Seguro', color: '#10b981', icon: '🛡️' },
+    { label: 'Ansioso', color: '#f59e0b', icon: '💓' },
+    { label: 'Evitativo', color: '#6366f1', icon: '🚶' },
+    { label: 'Desorganizado', color: '#ef4444', icon: '🌀' }
+  ]
+  const detected = styles.find(s => apego.toLowerCase().includes(s.label.toLowerCase())) || styles[0]
   return (
-    <div className="flex items-center justify-center gap-6 py-4">
-      <svg viewBox="0 0 200 200" className="w-36 h-36">
-        <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={12} />
-        <path d={`M ${cx} ${cy - r} A ${r} ${r} 0 ${largeArc} 1 ${endX} ${endY}`}
-          fill="none" stroke="#f59e0b" strokeWidth={12} strokeLinecap="round" strokeOpacity={0.6} />
-        <text x={cx} y={cy - 5} textAnchor="middle" fill="rgba(255,255,255,0.8)" className="text-[22px] font-light">{score}%</text>
-        <text x={cx} y={cy + 14} textAnchor="middle" fill="rgba(255,255,255,0.4)" className="text-[8px] font-light">Seguridad</text>
-      </svg>
-      <div className="text-left">
-        <p className="text-amber-300/70 text-xs font-medium">{apego}</p>
-        <p className="text-white/60 text-[10px] font-light mt-1">Estilo detectado</p>
+    <div className="flex flex-col items-center py-4 gap-4">
+      <div className="flex items-center justify-center gap-3">
+        {styles.map((st, i) => {
+          const isActive = st.label === detected.label
+          return (
+            <div key={i} className={`flex flex-col items-center gap-1.5 px-3 py-2.5 rounded-xl transition-all ${isActive ? 'bg-white/[0.08] border border-white/15 scale-110' : 'opacity-35'}`}>
+              <span className="text-lg">{st.icon}</span>
+              <span className={`text-[9px] font-medium ${isActive ? 'text-white/90' : 'text-white/50'}`}>{st.label}</span>
+              {isActive && <span className="text-[11px] font-bold" style={{ color: st.color }}>{score}%</span>}
+            </div>
+          )
+        })}
+      </div>
+      <div className="w-full max-w-xs">
+        <div className="h-2 rounded-full bg-white/[0.06] overflow-hidden">
+          <div className="h-full rounded-full transition-all" style={{ width: `${score}%`, backgroundColor: detected.color, opacity: 0.7 }} />
+        </div>
+        <div className="flex justify-between mt-1">
+          <span className="text-white/30 text-[8px]">0%</span>
+          <span className="text-[10px] font-medium" style={{ color: detected.color }}>{apego}</span>
+          <span className="text-white/30 text-[8px]">100%</span>
+        </div>
       </div>
     </div>
   )
@@ -911,41 +921,78 @@ function GottmanHorsemenChart({ data }) {
   )
 }
 
-// ─── STERNBERG: Interactive Triangle SVG ─────────────────────────
+// ─── STERNBERG: Enhanced Triangle SVG with filled area, grid & edge labels ──
 function SternbergTriangleChart({ data }) {
   const intimidad = data?.puntuacion_intimidad ?? 50
   const pasion = data?.puntuacion_pasion ?? 50
   const compromiso = data?.puntuacion_compromiso ?? 50
-  // Outer triangle vertices
-  const top = [150, 20], bl = [20, 260], br = [280, 260]
-  // Inner triangle: vertices scale inward based on scores
-  const scale = (v) => 0.15 + (v / 100) * 0.85
-  const iTop = [150, 20 + (1 - scale(intimidad)) * 120]
-  const iBl = [20 + (1 - scale(pasion)) * 65, 260 - (1 - scale(pasion)) * 0]
-  const iBr = [280 - (1 - scale(compromiso)) * 65, 260 - (1 - scale(compromiso)) * 0]
+  // Classify love type
+  const loveType = intimidad >= 60 && pasion >= 60 && compromiso >= 60 ? 'Amor consumado'
+    : intimidad >= 60 && pasion >= 60 ? 'Amor romántico'
+    : intimidad >= 60 && compromiso >= 60 ? 'Amor compañero'
+    : pasion >= 60 && compromiso >= 60 ? 'Amor fatuo'
+    : intimidad >= 60 ? 'Cariño / Amistad' : pasion >= 60 ? 'Encaprichamiento' : compromiso >= 60 ? 'Amor vacío' : 'En desarrollo'
+  // Triangle geometry
+  const cx = 160, topY = 30, baseY = 270, leftX = 30, rightX = 290
+  const top = [cx, topY], bl = [leftX, baseY], br = [rightX, baseY]
+  // Inner triangle scaled by scores
+  const lerp = (a, b, t) => a + (b - a) * t
+  const s = (v) => 0.2 + (v / 100) * 0.8
+  const iTop = [cx, lerp(baseY, topY, s(intimidad))]
+  const iBl = [lerp(cx, leftX, s(pasion)), lerp(topY + (baseY - topY) * 0.5, baseY, s(pasion))]
+  const iBr = [lerp(cx, rightX, s(compromiso)), lerp(topY + (baseY - topY) * 0.5, baseY, s(compromiso))]
+  // Grid levels (25%, 50%, 75%)
+  const gridLevels = [0.25, 0.5, 0.75]
   return (
-    <div className="flex justify-center py-4">
-      <svg viewBox="0 0 300 290" className="w-56 h-52">
+    <div className="flex flex-col items-center py-4 gap-2">
+      <svg viewBox="0 0 320 310" className="w-64 h-60">
         <defs>
-          <linearGradient id="tri-fill" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.08" />
-          </linearGradient>
+          <radialGradient id="tri-fill-v2" cx="50%" cy="60%" r="60%">
+            <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.35" />
+            <stop offset="60%" stopColor="#8b5cf6" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#6d28d9" stopOpacity="0.06" />
+          </radialGradient>
+          <filter id="tri-glow">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
         </defs>
-        <polygon points={`${top[0]},${top[1]} ${bl[0]},${bl[1]} ${br[0]},${br[1]}`} fill="none" stroke="rgba(139,92,246,0.12)" strokeWidth="1.5" />
-        <polygon points={`${iTop[0]},${iTop[1]} ${iBl[0]},${iBl[1]} ${iBr[0]},${iBr[1]}`} fill="url(#tri-fill)" stroke="rgba(139,92,246,0.5)" strokeWidth="2" />
-        {/* Vertices labels */}
-        <text x={150} y={14} textAnchor="middle" fill="rgba(139,92,246,0.8)" className="text-[10px] font-medium">Intimidad</text>
-        <text x={150} y={iTop[1] + 16} textAnchor="middle" fill="rgba(255,255,255,0.8)" className="text-[12px] font-bold">{intimidad}%</text>
-        <text x={8} y={278} textAnchor="start" fill="rgba(236,72,153,0.8)" className="text-[10px] font-medium">Pasión</text>
-        <text x={iBl[0] + 15} y={iBl[1] - 8} textAnchor="start" fill="rgba(255,255,255,0.8)" className="text-[12px] font-bold">{pasion}%</text>
-        <text x={292} y={278} textAnchor="end" fill="rgba(14,165,233,0.8)" className="text-[10px] font-medium">Compromiso</text>
-        <text x={iBr[0] - 15} y={iBr[1] - 8} textAnchor="end" fill="rgba(255,255,255,0.8)" className="text-[12px] font-bold">{compromiso}%</text>
-        {/* Score dots at inner vertices */}
-        <circle cx={iTop[0]} cy={iTop[1]} r={5} fill="#8b5cf6" fillOpacity={0.7} />
-        <circle cx={iBl[0]} cy={iBl[1]} r={5} fill="#ec4899" fillOpacity={0.7} />
-        <circle cx={iBr[0]} cy={iBr[1]} r={5} fill="#0ea5e9" fillOpacity={0.7} />
+        {/* Grid triangles */}
+        {gridLevels.map((g, gi) => {
+          const gTop = [cx, lerp(baseY, topY, g)]
+          const gBl = [lerp(cx, leftX, g), lerp(topY + (baseY - topY) * 0.5, baseY, g)]
+          const gBr = [lerp(cx, rightX, g), lerp(topY + (baseY - topY) * 0.5, baseY, g)]
+          return <polygon key={gi} points={`${gTop[0]},${gTop[1]} ${gBl[0]},${gBl[1]} ${gBr[0]},${gBr[1]}`} fill="none" stroke="rgba(139,92,246,0.06)" strokeWidth="0.8" strokeDasharray="4 4" />
+        })}
+        {/* Outer triangle */}
+        <polygon points={`${top[0]},${top[1]} ${bl[0]},${bl[1]} ${br[0]},${br[1]}`} fill="none" stroke="rgba(139,92,246,0.15)" strokeWidth="1.5" />
+        {/* Filled inner triangle */}
+        <polygon points={`${iTop[0]},${iTop[1]} ${iBl[0]},${iBl[1]} ${iBr[0]},${iBr[1]}`} fill="url(#tri-fill-v2)" stroke="rgba(139,92,246,0.6)" strokeWidth="2" filter="url(#tri-glow)" />
+        {/* Connecting lines from inner to outer */}
+        <line x1={iTop[0]} y1={iTop[1]} x2={top[0]} y2={top[1]} stroke="rgba(139,92,246,0.12)" strokeWidth="0.8" strokeDasharray="3 3" />
+        <line x1={iBl[0]} y1={iBl[1]} x2={bl[0]} y2={bl[1]} stroke="rgba(236,72,153,0.12)" strokeWidth="0.8" strokeDasharray="3 3" />
+        <line x1={iBr[0]} y1={iBr[1]} x2={br[0]} y2={br[1]} stroke="rgba(14,165,233,0.12)" strokeWidth="0.8" strokeDasharray="3 3" />
+        {/* Edge labels (midpoints) */}
+        <text x={(top[0] + bl[0]) / 2 - 18} y={(top[1] + bl[1]) / 2} fill="rgba(236,72,153,0.35)" className="text-[7px] font-light" transform={`rotate(-56, ${(top[0] + bl[0]) / 2 - 18}, ${(top[1] + bl[1]) / 2})`}>romanticismo</text>
+        <text x={(top[0] + br[0]) / 2 + 18} y={(top[1] + br[1]) / 2} fill="rgba(14,165,233,0.35)" className="text-[7px] font-light" transform={`rotate(56, ${(top[0] + br[0]) / 2 + 18}, ${(top[1] + br[1]) / 2})`}>compañerismo</text>
+        <text x={cx} y={baseY + 12} textAnchor="middle" fill="rgba(251,191,36,0.35)" className="text-[7px] font-light">fatuo</text>
+        {/* Vertex labels */}
+        <text x={cx} y={topY - 6} textAnchor="middle" fill="rgba(139,92,246,0.85)" className="text-[10px] font-semibold">Intimidad</text>
+        <text x={leftX - 4} y={baseY + 14} textAnchor="start" fill="rgba(236,72,153,0.85)" className="text-[10px] font-semibold">Pasión</text>
+        <text x={rightX + 4} y={baseY + 14} textAnchor="end" fill="rgba(14,165,233,0.85)" className="text-[10px] font-semibold">Compromiso</text>
+        {/* Score badges */}
+        <rect x={iTop[0] - 18} y={iTop[1] - 22} width="36" height="16" rx="8" fill="rgba(139,92,246,0.2)" stroke="rgba(139,92,246,0.4)" strokeWidth="0.8" />
+        <text x={iTop[0]} y={iTop[1] - 11} textAnchor="middle" fill="rgba(255,255,255,0.9)" className="text-[10px] font-bold">{intimidad}%</text>
+        <rect x={iBl[0] - 18} y={iBl[1] + 6} width="36" height="16" rx="8" fill="rgba(236,72,153,0.2)" stroke="rgba(236,72,153,0.4)" strokeWidth="0.8" />
+        <text x={iBl[0]} y={iBl[1] + 17} textAnchor="middle" fill="rgba(255,255,255,0.9)" className="text-[10px] font-bold">{pasion}%</text>
+        <rect x={iBr[0] - 18} y={iBr[1] + 6} width="36" height="16" rx="8" fill="rgba(14,165,233,0.2)" stroke="rgba(14,165,233,0.4)" strokeWidth="0.8" />
+        <text x={iBr[0]} y={iBr[1] + 17} textAnchor="middle" fill="rgba(255,255,255,0.9)" className="text-[10px] font-bold">{compromiso}%</text>
+        {/* Glowing dots at inner vertices */}
+        <circle cx={iTop[0]} cy={iTop[1]} r={6} fill="#8b5cf6" fillOpacity={0.8} filter="url(#tri-glow)" />
+        <circle cx={iBl[0]} cy={iBl[1]} r={6} fill="#ec4899" fillOpacity={0.8} filter="url(#tri-glow)" />
+        <circle cx={iBr[0]} cy={iBr[1]} r={6} fill="#0ea5e9" fillOpacity={0.8} filter="url(#tri-glow)" />
       </svg>
+      <p className="text-violet-300/60 text-[11px] font-medium">{loveType}</p>
     </div>
   )
 }
@@ -1123,39 +1170,61 @@ function TatkinSpeedometerChart({ data }) {
   )
 }
 
-// ─── CHAPMAN: 5 Radial Arcs (love languages) ────────────────────
+// ─── CHAPMAN: Pentagon Radar (5 love languages) ─────────────────
 function ChapmanArcsChart({ data }) {
   const languages = [
-    { label: 'Tiempo de calidad', key: 'tiempo_calidad', color: '#ef4444' },
-    { label: 'Actos de servicio', key: 'actos_servicio', color: '#f97316' },
-    { label: 'Contacto físico', key: 'contacto_fisico', color: '#ec4899' },
-    { label: 'Palabras de afirmación', key: 'palabras', color: '#8b5cf6' },
-    { label: 'Regalos', key: 'regalos', color: '#f59e0b' }
+    { label: 'Tiempo de calidad', key: 'tiempo_calidad', color: '#ef4444', shortLabel: 'Tiempo' },
+    { label: 'Actos de servicio', key: 'actos_servicio', color: '#f97316', shortLabel: 'Servicio' },
+    { label: 'Contacto físico', key: 'contacto_fisico', color: '#ec4899', shortLabel: 'Contacto' },
+    { label: 'Palabras de afirmación', key: 'palabras', color: '#8b5cf6', shortLabel: 'Palabras' },
+    { label: 'Regalos', key: 'regalos', color: '#f59e0b', shortLabel: 'Regalos' }
   ]
-  const cx = 150, cy = 150
+  const cx = 150, cy = 145, R = 95, n = 5
+  const getPoint = (i, val) => {
+    const angle = (Math.PI * 2 * i) / n - Math.PI / 2
+    const dist = (val / 100) * R
+    return [cx + Math.cos(angle) * dist, cy + Math.sin(angle) * dist]
+  }
+  const values = languages.map(l => data?.[l.key] ?? (data?.puntuacion ? Math.max(15, data.puntuacion + (languages.indexOf(l) - 2) * 10) : 50))
+  const dataPoints = values.map((v, i) => getPoint(i, v))
+  const polygonStr = dataPoints.map(p => p.join(',')).join(' ')
+  // Grid levels
+  const gridLevels = [25, 50, 75, 100]
   return (
     <div className="flex justify-center py-4">
-      <svg viewBox="0 0 300 300" className="w-56 h-56">
+      <svg viewBox="0 0 300 300" className="w-60 h-60">
+        <defs>
+          <radialGradient id="chap-fill" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#ec4899" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.08" />
+          </radialGradient>
+        </defs>
+        {/* Grid pentagons */}
+        {gridLevels.map((lv, li) => {
+          const pts = Array.from({ length: n }, (_, i) => getPoint(i, lv).join(',')).join(' ')
+          return <polygon key={li} points={pts} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="0.8" />
+        })}
+        {/* Axis lines */}
+        {Array.from({ length: n }, (_, i) => {
+          const [ex, ey] = getPoint(i, 100)
+          return <line key={i} x1={cx} y1={cy} x2={ex} y2={ey} stroke="rgba(255,255,255,0.06)" strokeWidth="0.8" />
+        })}
+        {/* Filled data polygon */}
+        <polygon points={polygonStr} fill="url(#chap-fill)" stroke="rgba(236,72,153,0.6)" strokeWidth="2" />
+        {/* Data points + labels */}
         {languages.map((lang, i) => {
-          const radius = 45 + i * 20
-          const value = data?.[lang.key] ?? (data?.puntuacion ? Math.max(15, data.puntuacion + (i - 2) * 10) : 50)
-          const arcAngle = (value / 100) * Math.PI * 1.5 // max 270°
-          const startAngle = -Math.PI * 0.75
-          const endAngle = startAngle + arcAngle
-          const x1 = cx + radius * Math.cos(startAngle), y1 = cy + radius * Math.sin(startAngle)
-          const x2 = cx + radius * Math.cos(endAngle), y2 = cy + radius * Math.sin(endAngle)
-          const largeArc = arcAngle > Math.PI ? 1 : 0
+          const [px, py] = dataPoints[i]
+          const [lx, ly] = getPoint(i, 118)
           return (
             <g key={i}>
-              <circle cx={cx} cy={cy} r={radius} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth={10} />
-              <path d={`M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2}`}
-                fill="none" stroke={lang.color} strokeWidth={10} strokeOpacity={0.4} strokeLinecap="round" />
-              <text x={cx + radius + 12} y={cy - radius + 24} textAnchor="start" fill={lang.color} className="text-[7px] font-medium" fillOpacity={0.8}>{lang.label}</text>
+              <circle cx={px} cy={py} r={5} fill={lang.color} fillOpacity={0.8} stroke={lang.color} strokeWidth={1} strokeOpacity={0.4} />
+              <text x={lx} y={ly + 1} textAnchor="middle" dominantBaseline="central" fill={lang.color} className="text-[8px] font-medium" fillOpacity={0.85}>{lang.shortLabel}</text>
+              <text x={px} y={py - 10} textAnchor="middle" fill="rgba(255,255,255,0.7)" className="text-[8px] font-bold">{values[i]}</text>
             </g>
           )
         })}
         <text x={cx} y={cy - 3} textAnchor="middle" fill="rgba(255,255,255,0.8)" className="text-[13px] font-bold">{data?.puntuacion ?? 50}%</text>
-        <text x={cx} y={cy + 12} textAnchor="middle" fill="rgba(255,255,255,0.45)" className="text-[7px] font-light">conexión</text>
+        <text x={cx} y={cy + 12} textAnchor="middle" fill="rgba(255,255,255,0.4)" className="text-[7px] font-light">compatibilidad</text>
       </svg>
     </div>
   )
@@ -1863,6 +1932,11 @@ const RadiografiaPremiumPage = () => {
 
                 {/* Card verde: Responde libremente (PRIMERO) */}
                 <div>
+                  {/* Label above card */}
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <span className="text-emerald-400/70 text-xs font-bold uppercase tracking-widest">① Primero</span>
+                    <span className="text-white/30 text-[10px]">— Responde con lo que te nazca</span>
+                  </div>
                   <div className="px-4 py-2.5 rounded-t-2xl bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-emerald-500/15 border border-b-0 border-emerald-500/15">
                     <p className="text-emerald-300/80 text-xs font-semibold uppercase tracking-widest text-center flex items-center justify-center gap-2">
                       <Heart className="w-3.5 h-3.5 text-emerald-400/60" />
@@ -1879,8 +1953,21 @@ const RadiografiaPremiumPage = () => {
                   </div>
                 </div>
 
+                {/* Animated arrow between cards */}
+                <div className="flex justify-center py-1">
+                  <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.5 }} className="flex flex-col items-center gap-0.5">
+                    <ChevronDown className="w-5 h-5 text-violet-400/40" />
+                    <span className="text-white/25 text-[9px] font-light">después</span>
+                  </motion.div>
+                </div>
+
                 {/* Card violeta: Si te faltó algo (DESPUÉS) */}
                 <div>
+                  {/* Label above card */}
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <span className="text-violet-400/70 text-xs font-bold uppercase tracking-widest">② Después</span>
+                    <span className="text-white/30 text-[10px]">— Complementa si quieres</span>
+                  </div>
                   <div className="px-4 py-2.5 rounded-t-2xl bg-gradient-to-r from-violet-500/15 via-fuchsia-500/10 to-violet-500/15 border border-b-0 border-violet-500/15">
                     <p className="text-violet-300/80 text-xs font-semibold uppercase tracking-widest text-center flex items-center justify-center gap-2">
                       <Lightbulb className="w-3.5 h-3.5 text-violet-400/60" />
@@ -2055,6 +2142,8 @@ const RadiografiaPremiumPage = () => {
               <div className="space-y-3">
                 <motion.button
                   onClick={() => {
+                    // Stop any email audio first
+                    stopAudio()
                     // Play personalized greeting then start questionnaire
                     const nombre = profileData.nombre.trim().split(' ')[0]
                     greetingPlayedRef.current = true
@@ -2077,6 +2166,7 @@ const RadiografiaPremiumPage = () => {
                 </motion.button>
                 <button
                   onClick={() => {
+                    stopAudio()
                     const nombre = profileData.nombre.trim().split(' ')[0]
                     greetingPlayedRef.current = true
                     if (selectedVoiceId) {
@@ -2521,41 +2611,66 @@ const RadiografiaPremiumPage = () => {
                         <div>
                           <p className="text-center text-white/60 text-sm font-medium uppercase tracking-widest mb-3">Distribución de energía relacional</p>
                           <p className="text-center text-white/50 text-xs font-light mb-5 max-w-lg mx-auto">Este diagrama muestra cómo se distribuye la energía emocional de tu relación entre tres esferas fundamentales: la emocional, la estructural y la profunda. Cada flujo representa una dimensión analizada y su grosor es proporcional a la puntuación detectada.</p>
-                          <DimensionSankey dimensiones={dims} />
+                          <DimensionNetworkGraph dimensiones={dims} />
                         </div>
                       </div>
                     )
                   })()}
 
                   <div className="space-y-8">
-                    {/* Tarjetas del reporte personalizado — 1 columna, ícono centrado arriba */}
+                    {/* Tarjetas del reporte personalizado — estilo autor: ícono centrado + gráfica SVG + texto */}
                     {(() => {
                       const REPORT_CARDS = [
-                        { key: 'apertura_rapport', icon: MessageCircle, title: 'Tu radiografía inicial', gradient: 'from-indigo-500 via-violet-500 to-purple-500', border: 'border-indigo-500/20', iconBg: 'from-indigo-500/30 to-violet-500/20' },
-                        { key: 'forma_de_amar', icon: Heart, title: 'Cómo amas y cómo esperas ser amado', gradient: 'from-rose-500 via-pink-500 to-fuchsia-500', border: 'border-rose-500/20', iconBg: 'from-rose-500/30 to-pink-500/20' },
-                        { key: 'lo_que_busca_en_el_otro', icon: Eye, title: 'Lo que buscas en el otro', gradient: 'from-sky-500 via-blue-500 to-indigo-500', border: 'border-sky-500/20', iconBg: 'from-sky-500/30 to-blue-500/20' },
-                        { key: 'lo_que_reclama_afuera', icon: Compass, title: 'Lo que reclamas afuera y te pertenece adentro', gradient: 'from-amber-500 via-orange-500 to-red-500', border: 'border-amber-500/20', iconBg: 'from-amber-500/30 to-orange-500/20' },
-                        { key: 'fantasma_relacional', icon: Anchor, title: 'Tu fantasma relacional', gradient: 'from-purple-500 via-fuchsia-500 to-pink-500', border: 'border-purple-500/20', iconBg: 'from-purple-500/30 to-fuchsia-500/20' },
-                        { key: 'yo_ideal', icon: Target, title: 'Quién crees ser vs quién eres cuando amas', gradient: 'from-teal-500 via-emerald-500 to-green-500', border: 'border-teal-500/20', iconBg: 'from-teal-500/30 to-emerald-500/20' },
-                        { key: 'mecanismos_defensa', icon: Shield, title: 'Tus mecanismos de defensa', gradient: 'from-cyan-500 via-sky-500 to-blue-500', border: 'border-cyan-500/20', iconBg: 'from-cyan-500/30 to-sky-500/20' },
-                        { key: 'tipo_pareja_que_repite', icon: Repeat, title: 'El tipo de pareja que repites', gradient: 'from-orange-500 via-amber-500 to-yellow-500', border: 'border-orange-500/20', iconBg: 'from-orange-500/30 to-amber-500/20' },
-                        { key: 'nucleo_del_patron', icon: Zap, title: 'El núcleo de tu patrón', gradient: 'from-fuchsia-500 via-purple-500 to-violet-500', border: 'border-fuchsia-500/20', iconBg: 'from-fuchsia-500/30 to-purple-500/20' },
-                        { key: 'cierre_transformador', icon: Sparkles, title: 'Tu camino transformador', gradient: 'from-emerald-500 via-teal-500 to-cyan-500', border: 'border-emerald-500/20', iconBg: 'from-emerald-500/30 to-teal-500/20' },
+                        { key: 'apertura_rapport', icon: MessageCircle, title: 'Tu radiografía inicial', subtitle: 'Apertura y rapport', gradient: 'from-indigo-500 via-violet-500 to-purple-500', border: 'border-indigo-500/20', iconBg: 'from-indigo-500/30 to-violet-500/20', accentColor: '#818cf8' },
+                        { key: 'forma_de_amar', icon: Heart, title: 'Cómo amas y cómo esperas ser amado', subtitle: 'Tu forma de amar', gradient: 'from-rose-500 via-pink-500 to-fuchsia-500', border: 'border-rose-500/20', iconBg: 'from-rose-500/30 to-pink-500/20', accentColor: '#f472b6' },
+                        { key: 'lo_que_busca_en_el_otro', icon: Eye, title: 'Lo que buscas en el otro', subtitle: 'Proyección inconsciente', gradient: 'from-sky-500 via-blue-500 to-indigo-500', border: 'border-sky-500/20', iconBg: 'from-sky-500/30 to-blue-500/20', accentColor: '#38bdf8' },
+                        { key: 'lo_que_reclama_afuera', icon: Compass, title: 'Lo que reclamas afuera y te pertenece adentro', subtitle: 'Espejo emocional', gradient: 'from-amber-500 via-orange-500 to-red-500', border: 'border-amber-500/20', iconBg: 'from-amber-500/30 to-orange-500/20', accentColor: '#fb923c' },
+                        { key: 'fantasma_relacional', icon: Anchor, title: 'Tu fantasma relacional', subtitle: 'Escena inconsciente', gradient: 'from-purple-500 via-fuchsia-500 to-pink-500', border: 'border-purple-500/20', iconBg: 'from-purple-500/30 to-fuchsia-500/20', accentColor: '#c084fc' },
+                        { key: 'yo_ideal', icon: Target, title: 'Quién crees ser vs quién eres cuando amas', subtitle: 'Yo ideal vs yo real', gradient: 'from-teal-500 via-emerald-500 to-green-500', border: 'border-teal-500/20', iconBg: 'from-teal-500/30 to-emerald-500/20', accentColor: '#34d399' },
+                        { key: 'mecanismos_defensa', icon: Shield, title: 'Tus mecanismos de defensa', subtitle: 'Protección emocional', gradient: 'from-cyan-500 via-sky-500 to-blue-500', border: 'border-cyan-500/20', iconBg: 'from-cyan-500/30 to-sky-500/20', accentColor: '#22d3ee' },
+                        { key: 'tipo_pareja_que_repite', icon: Repeat, title: 'El tipo de pareja que repites', subtitle: 'Compulsión de repetición', gradient: 'from-orange-500 via-amber-500 to-yellow-500', border: 'border-orange-500/20', iconBg: 'from-orange-500/30 to-amber-500/20', accentColor: '#fbbf24' },
+                        { key: 'nucleo_del_patron', icon: Zap, title: 'El núcleo de tu patrón', subtitle: 'Insight central', gradient: 'from-fuchsia-500 via-purple-500 to-violet-500', border: 'border-fuchsia-500/20', iconBg: 'from-fuchsia-500/30 to-purple-500/20', accentColor: '#e879f9' },
+                        { key: 'cierre_transformador', icon: Sparkles, title: 'Tu camino transformador', subtitle: 'Dirección del cambio', gradient: 'from-emerald-500 via-teal-500 to-cyan-500', border: 'border-emerald-500/20', iconBg: 'from-emerald-500/30 to-teal-500/20', accentColor: '#2dd4bf' },
                       ]
-                      return REPORT_CARDS.map(({ key, icon: CardIcon, title, gradient, border, iconBg }) => {
+
+                      // Mini SVG sparkline for each card (based on word count of paragraphs to create a visual rhythm)
+                      const MiniSparkline = ({ text, color }) => {
+                        const paragraphs = text.split('\n\n')
+                        const points = paragraphs.map((p, i) => {
+                          const intensity = Math.min(100, p.length / 3)
+                          return [10 + (i / Math.max(paragraphs.length - 1, 1)) * 180, 40 - (intensity / 100) * 30]
+                        })
+                        const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p[0]} ${p[1]}`).join(' ')
+                        return (
+                          <svg viewBox="0 0 200 50" className="w-full h-8 opacity-40">
+                            <path d={pathD} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+                            {points.map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r="2" fill={color} fillOpacity="0.6" />)}
+                          </svg>
+                        )
+                      }
+
+                      return REPORT_CARDS.map(({ key, icon: CardIcon, title, subtitle, gradient, border, iconBg, accentColor }, cardIdx) => {
                         const text = aiAnalysis.autoanalisis_usuario[key]
                         if (!text) return null
                         return (
                           <div key={key} className={`rounded-2xl overflow-hidden border ${border} bg-white/[0.02] backdrop-blur-sm`}>
-                            <div className={`bg-gradient-to-r ${gradient} px-5 py-5 flex items-center gap-4`}>
-                              <div className={`flex-shrink-0 w-11 h-11 rounded-xl bg-gradient-to-br ${iconBg} border border-white/20 flex items-center justify-center shadow-lg`}>
-                                <CardIcon className="w-5 h-5 text-white" strokeWidth={1.5} />
+                            {/* Header — centered author style */}
+                            <div className="text-center py-6 px-5 relative">
+                              <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(to right, transparent, ${accentColor}60, transparent)` }} />
+                              <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br ${iconBg} border border-white/15 mb-3 shadow-lg`}>
+                                <CardIcon className="w-7 h-7 text-white/80" strokeWidth={1.5} />
                               </div>
-                              <h3 className="text-white font-semibold text-sm tracking-wide">{title}</h3>
+                              <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-1.5" style={{ color: `${accentColor}99` }}>{subtitle}</p>
+                              <h3 className={`text-lg font-light text-transparent bg-clip-text bg-gradient-to-r ${gradient} tracking-wide`}>{title}</h3>
+                              {/* Sparkline */}
+                              <div className="mt-3 max-w-xs mx-auto">
+                                <MiniSparkline text={text} color={accentColor} />
+                              </div>
                             </div>
-                            <div className={`p-6 space-y-3 bg-gradient-to-br ${gradient} bg-opacity-[0.03]`} style={{ background: 'linear-gradient(to bottom right, rgba(255,255,255,0.02), rgba(255,255,255,0.005))' }}>
+                            {/* Body */}
+                            <div className="px-6 pb-6 space-y-3" style={{ background: 'linear-gradient(to bottom right, rgba(255,255,255,0.02), rgba(255,255,255,0.005))' }}>
                               {text.split('\n\n').map((p, i) => (
-                                <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
+                                <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8]">{renderConceptBold(p)}</p>
                               ))}
                             </div>
                           </div>
@@ -2577,7 +2692,7 @@ const RadiografiaPremiumPage = () => {
                   <div className="p-6 space-y-3">
                     <p className="text-white/50 text-sm font-light leading-relaxed mb-4">Lo que compartiste aquí es valioso y único. Este análisis está diseñado para ayudarte a comprender cómo amas, qué patrones se repiten en tu relación, y qué posibilidades de crecimiento existen.</p>
                     {aiAnalysis.radiografia_inicial.split('\n\n').map((p, i) => (
-                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.8]">{stripBold(p)}</p>
+                      <p key={i} className="text-white/70 text-[15px] font-light leading-[1.8]">{renderConceptBold(p)}</p>
                     ))}
                   </div>
                 </motion.div>
@@ -2600,17 +2715,6 @@ const RadiografiaPremiumPage = () => {
 
                       {/* Radar Chart — perfil global */}
                       <RadarChart dimensiones={aiAnalysis.dimensiones} />
-
-                      {/* Leyenda de dimensiones */}
-                      <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 px-4">
-                        {Object.entries(DIMENSION_LABELS).map(([key, label], i) => (
-                          <div key={key} className="flex items-center gap-2">
-                            <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: DIMENSION_COLORS[i] }} />
-                            <span className="text-white/65 text-xs font-light">{label}</span>
-                            <span className="text-white/80 text-xs font-semibold tabular-nums">{aiAnalysis.dimensiones[key] ?? 0}%</span>
-                          </div>
-                        ))}
-                      </div>
                     </div>
                   )}
 
@@ -2644,7 +2748,7 @@ const RadiografiaPremiumPage = () => {
                             </div>
                           </div>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{stripBold(p)}</p>
+                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -2677,7 +2781,7 @@ const RadiografiaPremiumPage = () => {
                             </div>
                           </div>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{stripBold(p)}</p>
+                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -2710,7 +2814,7 @@ const RadiografiaPremiumPage = () => {
                             </div>
                           </div>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{stripBold(p)}</p>
+                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -2743,7 +2847,7 @@ const RadiografiaPremiumPage = () => {
                             </div>
                           </div>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{stripBold(p)}</p>
+                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -2776,7 +2880,7 @@ const RadiografiaPremiumPage = () => {
                             </div>
                           </div>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{stripBold(p)}</p>
+                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -2812,7 +2916,7 @@ const RadiografiaPremiumPage = () => {
                             <div className="pl-4 border-l-2 border-purple-500/20 space-y-2 mb-4">
                               <p className="text-purple-300/60 text-[10px] font-medium uppercase tracking-wider">Lectura freudiana</p>
                               {data.interpretacion_freud.split('\n\n').map((p, i) => (
-                                <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85]">{stripBold(p)}</p>
+                                <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85]">{renderConceptBold(p)}</p>
                               ))}
                             </div>
                           )}
@@ -2820,12 +2924,12 @@ const RadiografiaPremiumPage = () => {
                             <div className="pl-4 border-l-2 border-indigo-500/20 space-y-2 mb-4">
                               <p className="text-indigo-300/60 text-[10px] font-medium uppercase tracking-wider">Lectura lacaniana</p>
                               {data.interpretacion_lacan.split('\n\n').map((p, i) => (
-                                <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85]">{stripBold(p)}</p>
+                                <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85]">{renderConceptBold(p)}</p>
                               ))}
                             </div>
                           )}
                           {data.interpretacion && !data.interpretacion_freud && data.interpretacion.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{stripBold(p)}</p>
+                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -2858,7 +2962,7 @@ const RadiografiaPremiumPage = () => {
                             </div>
                           </div>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{stripBold(p)}</p>
+                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -2891,7 +2995,7 @@ const RadiografiaPremiumPage = () => {
                             </div>
                           </div>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{stripBold(p)}</p>
+                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -2924,7 +3028,7 @@ const RadiografiaPremiumPage = () => {
                             </div>
                           </div>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{stripBold(p)}</p>
+                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -2973,7 +3077,7 @@ const RadiografiaPremiumPage = () => {
                             </div>
                           )}
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{stripBold(p)}</p>
+                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -3006,7 +3110,7 @@ const RadiografiaPremiumPage = () => {
                             </div>
                           </div>
                           {data.interpretacion && data.interpretacion.split('\n\n').map((p, i) => (
-                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{stripBold(p)}</p>
+                            <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85] mb-2">{renderConceptBold(p)}</p>
                           ))}
                         </div>
                       </div>
@@ -3145,7 +3249,7 @@ const RadiografiaPremiumPage = () => {
                             <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
                               <CheckCircle className="w-3.5 h-3.5 text-emerald-400/60" strokeWidth={1.5} />
                             </div>
-                            <p className="text-white/70 text-[14px] font-light leading-relaxed">{stripBold(f)}</p>
+                            <p className="text-white/70 text-[14px] font-light leading-relaxed">{renderConceptBold(f)}</p>
                           </div>
                         ))}
                       </div>
@@ -3159,7 +3263,7 @@ const RadiografiaPremiumPage = () => {
                             <div className="w-7 h-7 rounded-lg bg-red-500/10 border border-red-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
                               <AlertTriangle className="w-3.5 h-3.5 text-red-400/60" strokeWidth={1.5} />
                             </div>
-                            <p className="text-white/70 text-[14px] font-light leading-relaxed">{stripBold(r)}</p>
+                            <p className="text-white/70 text-[14px] font-light leading-relaxed">{renderConceptBold(r)}</p>
                           </div>
                         ))}
                       </div>
@@ -3192,11 +3296,11 @@ const RadiografiaPremiumPage = () => {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                   {aiAnalysis.temas_para_consulta?.length > 0
                     ? aiAnalysis.temas_para_consulta.map((tema, i) => {
                         const icons = [Eye, Anchor, Heart, Target, Compass, Brain]
-                        const colors = ['violet', 'cyan', 'fuchsia', 'amber', 'emerald', 'violet']
+                        const colors = ['violet', 'cyan', 'fuchsia', 'amber', 'emerald', 'rose']
                         const TemaIcon = icons[i % icons.length]
                         const color = colors[i % colors.length]
                         return (
@@ -3206,16 +3310,18 @@ const RadiografiaPremiumPage = () => {
                             </div>
                             <div className="flex-1">
                               <p className={`text-${color}-300/40 text-[9px] font-medium uppercase tracking-wider mb-1`}>Tema {i + 1}</p>
-                              <p className="text-white/70 text-sm font-light leading-relaxed">{stripBold(tema)}</p>
+                              <p className="text-white/70 text-sm font-light leading-relaxed">{renderConceptBold(tema)}</p>
                             </div>
                           </div>
                         )
                       })
                     : [
-                        { icon: Eye, label: 'Patrones inconscientes', desc: 'Identificar y desactivar los ciclos repetitivos que operan sin que te des cuenta, conectándolos con tu historia emocional y tus heridas no resueltas.' },
-                        { icon: Anchor, label: 'Raíces familiares', desc: 'Explorar cómo la dinámica entre tus padres y tu experiencia de amor temprana moldearon tu forma de amar hoy, y cómo dejar de repetir lo que no te sirve.' },
-                        { icon: Heart, label: 'Reconexión emocional', desc: 'Reconstruir la intimidad emocional y la presencia en el vínculo, aprendiendo a estar disponible sin perder tu identidad en el proceso.' },
-                        { icon: Target, label: 'Comunicación efectiva', desc: 'Transformar los conflictos en oportunidades de crecimiento, aprendiendo a expresar necesidades sin atacar y a escuchar sin reaccionar defensivamente.' }
+                        { icon: Eye, label: 'Patrones inconscientes', desc: 'Identificar y desactivar los ciclos repetitivos que operan sin que te des cuenta.' },
+                        { icon: Anchor, label: 'Raíces familiares', desc: 'Explorar cómo tu experiencia de amor temprana moldeó tu forma de amar hoy.' },
+                        { icon: Heart, label: 'Reconexión emocional', desc: 'Reconstruir la intimidad emocional y la presencia en el vínculo.' },
+                        { icon: Target, label: 'Comunicación efectiva', desc: 'Transformar los conflictos en oportunidades de crecimiento.' },
+                        { icon: Compass, label: 'Diferenciación del self', desc: 'Fortalecer tu autonomía emocional sin perder la conexión con el otro.' },
+                        { icon: Brain, label: 'Regulación emocional', desc: 'Aprender a gestionar tus emociones en momentos de conflicto relacional.' }
                       ].map(({ icon: Icon, label, desc }) => (
                         <div key={label} className="p-5 rounded-xl border border-white/8 bg-white/[0.02] flex items-start gap-4">
                           <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/15 flex items-center justify-center flex-shrink-0">
@@ -3229,6 +3335,41 @@ const RadiografiaPremiumPage = () => {
                       ))
                   }
                 </div>
+
+                {/* Técnicas terapéuticas recomendadas */}
+                {aiAnalysis.tecnicas_recomendadas?.length > 0 && (
+                  <div className="mb-6">
+                    <p className="text-violet-300/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+                      <Activity className="w-3.5 h-3.5" /> Técnicas terapéuticas sugeridas
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {aiAnalysis.tecnicas_recomendadas.map((tec, i) => (
+                        <div key={i} className="p-3 rounded-xl border border-violet-500/10 bg-violet-500/[0.02] flex items-center gap-3">
+                          <div className="w-2 h-2 rounded-full bg-violet-400/50 flex-shrink-0" />
+                          <p className="text-white/65 text-[13px] font-light">{typeof tec === 'string' ? tec : tec.nombre}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Libros recomendados */}
+                {aiAnalysis.libros_recomendados?.length > 0 && (
+                  <div className="mb-8">
+                    <p className="text-fuchsia-300/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+                      📚 Lecturas recomendadas
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {aiAnalysis.libros_recomendados.map((libro, i) => (
+                        <div key={i} className="p-4 rounded-xl border border-fuchsia-500/10 bg-fuchsia-500/[0.02]">
+                          <p className="text-white/75 text-sm font-medium">{typeof libro === 'string' ? libro : libro.titulo}</p>
+                          {typeof libro === 'object' && libro.autor && <p className="text-fuchsia-300/50 text-xs font-light mt-1">{libro.autor}</p>}
+                          {typeof libro === 'object' && libro.razon && <p className="text-white/45 text-[12px] font-light mt-1">{libro.razon}</p>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <motion.button
                     onClick={() => navigate('/tienda/consulta-individual')}

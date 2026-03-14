@@ -105,7 +105,7 @@ Eres un detective clínico de élite combinando Freud, Lacan, Perel, Gottman y p
 
 El autoanálisis tiene 10 secciones obligatorias. Cada una debe ser PROSA CONTINUA (párrafos narrativos clínicos), no listas ni bullets. Escribe como un informe psicológico premium de alta gama — el tono es el de un psicólogo brillante que te conoce profundamente y te habla con franqueza empática.
 
-USA EL NOMBRE DEL USUARIO constantemente. Cita sus propias palabras entre comillas. Usa **negrita** para conceptos clave clínicos.
+USA EL NOMBRE DEL USUARIO constantemente. Cita sus propias palabras entre comillas. Usa **negrita** SOLO para nombres de conceptos clave clínicos antes de dos puntos (ej: "**Proyección inconsciente:** explicación..." o "**Compulsión de repetición:** cuando tú..."). NO uses negrita en todo el texto ni en frases completas — solo el nombre del concepto antes de los dos puntos.
 
 LAS 10 SECCIONES:
 
@@ -435,6 +435,14 @@ Devuelve el resultado en el siguiente formato JSON exacto:
     "(Otro tema: describir en 1-2 frases qué se trabajaría y por qué es relevante para ESTA persona.)",
     "(Incluir entre 4 y 6 temas derivados directamente del análisis, NO genéricos.)",
     "(Cada tema debe conectar con algo que el usuario dijo o un patrón detectado.)"
+  ],
+  "tecnicas_recomendadas": [
+    {"nombre": "(Nombre de técnica terapéutica específica, ej: 'Diálogo estructurado Imago')", "descripcion": "(1 frase: por qué esta técnica es relevante para ESTE usuario)"},
+    "(Incluir 3-5 técnicas derivadas del análisis: EFT, Gottman Sound House, Imago, Diferenciación de Schnarch, Mindfulness relacional, etc.)"
+  ],
+  "libros_recomendados": [
+    {"titulo": "(Título exacto del libro)", "autor": "(Autor)", "razon": "(1 frase: por qué este libro es relevante para ESTE usuario)"},
+    "(Incluir 3-4 libros. Pueden ser de los autores del marco teórico u otros relevantes. Deben conectar con los patrones detectados.)"
   ]
 }`
 
@@ -678,6 +686,17 @@ export function generateFallbackAnalysis() {
       'Aprender a pedir sin sentir que eres demasiado',
       'Reconectar la intimidad emocional antes de trabajar la física',
       'Entender por qué eliges parejas que confirman tus miedos'
+    ],
+    tecnicas_recomendadas: [
+      { nombre: 'Diálogo estructurado Imago', descripcion: 'Para mejorar la comunicación empática y reducir la reactividad emocional.' },
+      { nombre: 'Terapia Focalizada en Emociones (EFT)', descripcion: 'Para acceder a las emociones primarias que subyacen al ciclo de conflicto.' },
+      { nombre: 'Diferenciación del Self (Schnarch)', descripcion: 'Para fortalecer tu identidad emocional sin perder la conexión con tu pareja.' },
+      { nombre: 'Mindfulness relacional', descripcion: 'Para cultivar la presencia y la atención plena dentro del vínculo.' }
+    ],
+    libros_recomendados: [
+      { titulo: 'Mantenme cerca', autor: 'Sue Johnson', razon: 'Entender los ciclos de apego y cómo crear un vínculo seguro.' },
+      { titulo: 'Apegados', autor: 'Amir Levine y Rachel Heller', razon: 'Comprender tu estilo de apego y cómo impacta tus relaciones.' },
+      { titulo: 'Inteligencia erótica', autor: 'Esther Perel', razon: 'Explorar la tensión entre seguridad y deseo en la relación.' }
     ]
   }
 }
