@@ -332,7 +332,7 @@ const TASK_DURATIONS_MS = [6200, 6500, 6000, 7200, 6600, 6000, 7400, 6600, 5800,
 
 // Cloudflare Worker — https://radiografia-worker.noirpraxis.workers.dev
 const WORKER_URL = 'https://radiografia-worker.noirpraxis.workers.dev'
-const API_BASE = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE_URL || WORKER_URL)
+const API_BASE = import.meta.env.DEV ? '' : WORKER_URL
 
 const PRODUCT_PRICE_DESCUBRE = 499
 const PRODUCT_PRICE_SOLO = 499

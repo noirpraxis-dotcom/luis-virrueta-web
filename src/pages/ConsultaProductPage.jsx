@@ -8,7 +8,8 @@ import {
 } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 
-const API_BASE = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE_URL || '')
+const WORKER_URL = 'https://radiografia-worker.noirpraxis.workers.dev'
+const API_BASE = import.meta.env.DEV ? '' : WORKER_URL
 
 const STRIPE_LINKS = {
   pareja: 'https://buy.stripe.com/8x23cvgDF03of793PP9AA08'

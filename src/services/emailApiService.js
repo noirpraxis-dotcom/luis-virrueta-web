@@ -3,7 +3,7 @@
 // Configurar VITE_API_BASE_URL en .env
 
 const WORKER_URL = 'https://radiografia-worker.noirpraxis.workers.dev'
-const API_BASE = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? '' : WORKER_URL)
+const API_BASE = import.meta.env.DEV ? '' : WORKER_URL
 
 /**
  * Send access email(s) after purchase
