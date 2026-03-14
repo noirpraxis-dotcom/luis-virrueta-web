@@ -12,6 +12,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, RadarC
 import SEOHead from '../components/SEOHead'
 import { analyzeRadiografiaPremium, generateFallbackAnalysis } from '../services/radiografiaPremiumService'
 import { CACHED_PREVIEW_ANALYSIS } from '../data/cachedPreviewAnalysis'
+import { saveAnalysis, sendAnalysisEmail, getAnalysis } from '../services/emailApiService'
 
 // Lazy load jsPDF — only needed when user downloads report
 const loadJsPDF = () => import('jspdf').then(m => m.default)
@@ -1767,6 +1768,23 @@ const RadiografiaPremiumPage = () => {
     return { emailUsuario: buyerEmail, emailPareja: partnerEmail }
   })
 
+  // ── Load stored analysis when arriving via "analysis ready" email link ──
+  useEffect(() => {
+    if (import.meta.env.DEV) return
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('view') !== 'results') return
+    const token = params.get('token')
+    if (!token) return
+    getAnalysis(token)
+      .then(data => {
+        if (data?.analysis) {
+          setAiAnalysis(data.analysis)
+          setStage('results')
+        }
+      })
+      .catch(() => { /* analysis not found — proceed normally, user can redo questionnaire */ })
+  }, [])
+
   const question = PREGUNTAS[currentQ]
   const totalQ = PREGUNTAS.length
   const progress = ((currentQ + 1) / totalQ) * 100
@@ -2118,6 +2136,22 @@ const RadiografiaPremiumPage = () => {
       localStorage.removeItem('radiografia_premium_progress')
       // Save to localStorage for later DEV access
       try { localStorage.setItem('radiografia_cached_analysis', JSON.stringify(result)) } catch {}
+
+      // Save results to KV + send "analysis ready" email (fire-and-forget, never blocks UI)
+      if (!import.meta.env.DEV) {
+        const urlParams = new URLSearchParams(window.location.search)
+        const purchaseToken = urlParams.get('token')
+        if (purchaseToken) {
+          const type    = urlParams.get('type') || packageType
+          const buyer   = sessionStorage.getItem('radiografia_buyer_email')   || ''
+          const partner = sessionStorage.getItem('radiografia_partner_email') || ''
+          const emails  = [buyer, partner].filter(e => e.includes('@'))
+          saveAnalysis({ token: purchaseToken, analysis: result }).catch(() => {})
+          if (emails.length > 0) {
+            sendAnalysisEmail({ token: purchaseToken, type, emails }).catch(() => {})
+          }
+        }
+      }
     } catch (err) {
       console.error('Analysis failed:', err)
       setAnalysisDone(true)

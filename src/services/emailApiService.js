@@ -55,3 +55,54 @@ export async function verifyStripeSession(sessionId) {
   if (!res.ok) throw new Error('Error verificando pago')
   return res.json() // { type: 'individual'|'pareja', email: '...', amount: 349 }
 }
+
+/**
+ * Save analysis results to KV so they can be retrieved from the "analysis ready" email link.
+ * @param {Object} params
+ * @param {string} params.token - Purchase access token (from URL ?token=)
+ * @param {Object} params.analysis - Full analysis object returned by AI service
+ */
+export async function saveAnalysis({ token, analysis }) {
+  const res = await fetch(`${API_BASE}/api/save-analysis`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, analysis })
+  })
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    throw new Error(data.error || `Error ${res.status}`)
+  }
+  return res.json()
+}
+
+/**
+ * Send "analysis ready" email(s) with a direct link to the results page.
+ * @param {Object} params
+ * @param {string} params.token - Purchase access token
+ * @param {string} params.type  - Product type: 'descubre' | 'solo' | 'losdos'
+ * @param {string[]} params.emails - Email address(es) to notify
+ */
+export async function sendAnalysisEmail({ token, type, emails }) {
+  const res = await fetch(`${API_BASE}/api/send-analysis-email`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, type, emails })
+  })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(data.errors?.[0]?.error || data.error || `Error ${res.status}`)
+  return data
+}
+
+/**
+ * Retrieve a stored analysis by purchase token (used when loading results from email link).
+ * @param {string} token - Purchase access token
+ * @returns {{ ok: true, analysis: Object } | { error: string }}
+ */
+export async function getAnalysis(token) {
+  const res = await fetch(`${API_BASE}/api/get-analysis?token=${encodeURIComponent(token)}`)
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    throw new Error(data.error || `Error ${res.status}`)
+  }
+  return res.json()
+}
