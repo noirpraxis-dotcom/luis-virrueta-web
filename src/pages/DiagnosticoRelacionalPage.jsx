@@ -2663,8 +2663,8 @@ const DiagnosticoRelacionalPage = () => {
                         const pid = purchaseId || generateAccessToken()
                         setPurchaseId(pid)
                         sessionStorage.setItem('diagnostico_relacional_purchase_id', pid)
-                        // Save purchase to Firestore
-                        await savePurchase(pid, { type: purchaseType, email: emails[0], stripeSessionId: purchaseId }).catch(() => {})
+                        // Save purchase to Firestore (fire-and-forget — Firebase may not be configured)
+                        savePurchase(pid, { type: purchaseType, email: emails[0], stripeSessionId: purchaseId }).catch(() => {})
                         // Send access emails via backend
                         const result = await sendAccessEmails({ purchaseId: pid, type: purchaseType, emails, tokens })
                         if (result && result.ok === false) {
