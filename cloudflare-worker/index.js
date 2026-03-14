@@ -45,6 +45,15 @@ function json(data, status = 200) {
   })
 }
 
+// ── Helpers de modo test/live ───────────────────────────────────────────────
+function getStripeKey(env, isTest) {
+  return isTest ? env.STRIPE_TEST_SECRET_KEY : env.STRIPE_SECRET_KEY
+}
+function getPriceId(env, type, isTest) {
+  const suffix = isTest ? '_TEST' : ''
+  return env[`PRICE_${type?.toUpperCase()}${suffix}`]
+}
+
 // ── Stripe REST (form-encoded) ────────────────────────────────────────────────
 function flatten(obj, prefix = '') {
   return Object.entries(obj).reduce((out, [k, v]) => {
@@ -64,10 +73,10 @@ function flatten(obj, prefix = '') {
   }, {})
 }
 
-async function stripe(env, method, path, params = {}) {
+async function stripe(env, method, path, params = {}, isTest = false) {
   let url = `https://api.stripe.com/v1${path}`
   const headers = {
-    Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+    Authorization: `Bearer ${getStripeKey(env, isTest)}`,
     'Content-Type': 'application/x-www-form-urlencoded',
   }
   let body
@@ -125,9 +134,9 @@ function getTypeLabel(type) {
 }
 
 // ── Coupon (crear en Stripe si no existe) ────────────────────────────────────
-async function getOrCreateCoupon(env, code, percent) {
-  try   { const c = await stripe(env, 'GET', `/coupons/${code}`); return c.id }
-  catch { const c = await stripe(env, 'POST', '/coupons', { id: code, percent_off: percent, duration: 'once', name: code }); return c.id }
+async function getOrCreateCoupon(env, code, percent, isTest = false) {
+  try   { const c = await stripe(env, 'GET', `/coupons/${code}`, {}, isTest); return c.id }
+  catch { const c = await stripe(env, 'POST', '/coupons', { id: code, percent_off: percent, duration: 'once', name: code }, isTest); return c.id }
 }
 
 // ── Email HTML ────────────────────────────────────────────────────────────────
@@ -216,8 +225,9 @@ function emailHtml({ typeLabel, accessUrl }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 async function handleCreateCheckout(req, env) {
-  const { type, promoCode } = await req.json()
-  const priceId = env[`PRICE_${type?.toUpperCase()}`]
+  const { type, promoCode, testMode } = await req.json()
+  const isTest = testMode === true
+  const priceId = getPriceId(env, type, isTest)
   if (!priceId) return json({ error: 'Producto no encontrado' }, 400)
 
   const promos = getPromos(env)
@@ -228,7 +238,7 @@ async function handleCreateCheckout(req, env) {
     const token = makeToken()
     await env.PURCHASES?.put(
       `token:${token}`,
-      JSON.stringify({ type, email: '', createdAt: Date.now(), source: 'promo_free' }),
+      JSON.stringify({ type, email: '', createdAt: Date.now(), source: 'promo_free', isTest }),
       { expirationTtl: 86400 * 365 }
     )
     return json({ free: true, token, type })
@@ -239,26 +249,29 @@ async function handleCreateCheckout(req, env) {
     line_items: [{ price: priceId, quantity: '1' }],
     success_url: `${RETURN_URL}?session_id={CHECKOUT_SESSION_ID}&type=${type}`,
     cancel_url:  RETURN_URL,
-    metadata:   { type },
+    metadata:   { type, testMode: isTest ? 'true' : 'false' },
   }
 
   if (promo?.discountPercent) {
-    const couponId = await getOrCreateCoupon(env, promoCode.toUpperCase(), promo.discountPercent)
+    const couponId = await getOrCreateCoupon(env, promoCode.toUpperCase(), promo.discountPercent, isTest)
     params.discounts = [{ coupon: couponId }]
   }
 
-  const session = await stripe(env, 'POST', '/checkout/sessions', params)
+  const session = await stripe(env, 'POST', '/checkout/sessions', params, isTest)
   return json({ url: session.url })
 }
 
 async function handleVerifyPayment(req, env) {
   const { sessionId } = await req.json()
-  const session = await stripe(env, 'GET', `/checkout/sessions/${sessionId}`)
+  // Auto-detect test vs live by session_id prefix (cs_test_ vs cs_live_)
+  const isTest = sessionId?.startsWith('cs_test_')
+  const session = await stripe(env, 'GET', `/checkout/sessions/${sessionId}`, {}, isTest)
   return json({
-    type:  session.metadata?.type || 'solo',
-    email: session.customer_details?.email || session.customer_email || '',
-    amount: (session.amount_total || 0) / 100,
-    paid:  session.payment_status === 'paid',
+    type:     session.metadata?.type || 'solo',
+    email:    session.customer_details?.email || session.customer_email || '',
+    amount:   (session.amount_total || 0) / 100,
+    paid:     session.payment_status === 'paid',
+    isTest,
   })
 }
 

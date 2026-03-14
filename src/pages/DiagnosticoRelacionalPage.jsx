@@ -788,6 +788,9 @@ const DiagnosticoRelacionalPage = () => {
 
   // Test/dev mode: URL param
   const isDevMode = searchParams.get('test') === 'true' || searchParams.get('demo') === 'true'
+  // Test mode: solo visible con ?testmode=true en la URL (para el dueño)
+  const canSeeTestToggle = searchParams.get('testmode') === 'true'
+  const [stripeTestMode, setStripeTestMode] = useState(false)
 
   // ─── PREVIEW MODE: ?preview=results → skip to results with sample data ───
   useEffect(() => {
@@ -1090,7 +1093,7 @@ const DiagnosticoRelacionalPage = () => {
       const resp = await fetch(`${API_BASE}/api/create-radiografia-checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type, promoCode: promoCode.trim() || undefined })
+        body: JSON.stringify({ type, promoCode: promoCode.trim() || undefined, testMode: stripeTestMode })
       })
       const data = await resp.json()
       if (!resp.ok) {
@@ -1112,7 +1115,7 @@ const DiagnosticoRelacionalPage = () => {
       setCardPromoErrors(prev => ({ ...prev, [type]: 'Error de conexión' }))
       setCheckoutLoading(null)
     }
-  }, [scrollToTop, cardPromoCodes, purchasingType, isDevMode, cardPromoApplied])
+  }, [scrollToTop, cardPromoCodes, purchasingType, isDevMode, cardPromoApplied, stripeTestMode])
 
   // ─── FIRE BACKGROUND ANALYSIS ───────────────────────────────
 
@@ -2516,6 +2519,31 @@ const DiagnosticoRelacionalPage = () => {
                   Volver
                 </button>
               </div>
+
+              {/* ─── TEST MODE TOGGLE (solo visible con ?testmode=true) ─── */}
+              {canSeeTestToggle && (
+                <div className="mt-6 p-4 rounded-xl border border-amber-500/30 bg-amber-500/[0.05]">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-amber-300/80 text-sm font-medium">Modo test (Stripe)</p>
+                      <p className="text-amber-300/40 text-xs mt-0.5">
+                        {stripeTestMode
+                          ? 'Activo — usa tarjeta 4242 4242 4242 4242, exp 12/34, CVC 123'
+                          : 'Desactivado — pagos reales'}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setStripeTestMode(p => !p)}
+                      className={`relative w-12 h-6 rounded-full transition-colors flex-shrink-0 ${
+                        stripeTestMode ? 'bg-amber-500' : 'bg-white/20'
+                      }`}>
+                      <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
+                        stripeTestMode ? 'translate-x-6' : 'translate-x-0'
+                      }`} />
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </motion.div>
         )}
