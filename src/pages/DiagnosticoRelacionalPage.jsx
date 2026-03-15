@@ -2225,14 +2225,15 @@ const DiagnosticoRelacionalPage = () => {
                     </div>
                   </div>
                   {/* Radiografía de tu relación */}
+                  <div className="relative pt-4">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 px-4 py-1.5 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-600 shadow-lg shadow-fuchsia-600/40 border border-white/20 whitespace-nowrap">
+                    <span className="text-[10px] text-white font-bold uppercase tracking-widest">⭐ Más elegido</span>
+                  </div>
                   <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-8 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <div className="flex items-center gap-2">
-                          <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Solo</p>
-                          <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">1 reporte</span>
-                        </div>
-                        <span className="text-[9px] px-2.5 py-1 rounded-full bg-white text-fuchsia-700 font-bold uppercase tracking-wide">⭐ Más elegido</span>
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Solo</p>
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">1 reporte</span>
                       </div>
                       <p className="text-white text-sm font-bold leading-snug">La verdad sobre tu relación,<br/>al descubierto.</p>
                     </div>
@@ -2259,7 +2260,8 @@ const DiagnosticoRelacionalPage = () => {
                     </motion.button>
                     </div>
                   </div>
-                  {/* Radiografía cruzada de pareja */}
+                  </div>
+                  {/* Radiografía cruzada de pareja */
                   <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-8 bg-gradient-to-br from-blue-500 to-cyan-500 min-h-[90px] flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-1.5">
@@ -2326,14 +2328,15 @@ const DiagnosticoRelacionalPage = () => {
                     </div>
                   </div>
                   {/* Pareja Solo — Mobile */}
+                  <div className="relative pt-4">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 px-4 py-1.5 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-600 shadow-lg shadow-fuchsia-600/40 border border-white/20 whitespace-nowrap">
+                    <span className="text-[10px] text-white font-bold uppercase tracking-widest">⭐ Más elegido</span>
+                  </div>
                   <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-7 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <div className="flex items-center gap-2">
-                          <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Solo</p>
-                          <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">1 reporte</span>
-                        </div>
-                        <span className="text-[9px] px-2.5 py-1 rounded-full bg-white text-fuchsia-700 font-bold uppercase tracking-wide">⭐ Más elegido</span>
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Solo</p>
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">1 reporte</span>
                       </div>
                       <p className="text-white text-sm font-bold leading-snug">La verdad sobre tu relación,<br/>al descubierto.</p>
                     </div>
@@ -2358,7 +2361,8 @@ const DiagnosticoRelacionalPage = () => {
                     </motion.button>
                     </div>
                   </div>
-                  {/* Pareja Los dos — Mobile */}
+                  </div>
+                  {/* Pareja Los dos — Mobile */
                   <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-7 bg-gradient-to-br from-blue-500 to-cyan-500 min-h-[90px] flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-1.5">
@@ -2488,14 +2492,15 @@ const DiagnosticoRelacionalPage = () => {
                 </div>
 
                 {/* Pareja — Solo */}
+                <div className="relative pt-4">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 px-4 py-1.5 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-600 shadow-lg shadow-fuchsia-600/40 border border-white/20 whitespace-nowrap">
+                  <span className="text-[10px] text-white font-bold uppercase tracking-widest">⭐ Más elegido</span>
+                </div>
                 <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] overflow-hidden">
                   <div className="py-4 px-7 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
-                    <div className="flex items-center justify-between mb-1.5">
-                      <div className="flex items-center gap-2">
-                        <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Solo</p>
-                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">1 reporte</span>
-                      </div>
-                      <span className="text-[9px] px-2.5 py-1 rounded-full bg-white text-fuchsia-700 font-bold uppercase tracking-wide">⭐ Más elegido</span>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Solo</p>
+                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">1 reporte</span>
                     </div>
                     <p className="text-white text-sm font-bold leading-snug">La verdad sobre tu relación,<br/>al descubierto.</p>
                   </div>
@@ -2540,6 +2545,7 @@ const DiagnosticoRelacionalPage = () => {
                     {checkoutLoading === 'solo' ? 'Procesando...' : cardPromoApplied.solo?.free ? 'Acceder gratis' : `Pagar $${cardPromoApplied.solo?.finalPrice ?? PRODUCT_PRICE_SOLO} MXN`}
                   </motion.button>
                   </div>
+                </div>
                 </div>
 
                 {/* Pareja — Los dos */}
