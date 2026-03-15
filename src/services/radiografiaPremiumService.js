@@ -125,6 +125,18 @@ LAS 10 SECCIONES:
    - Cita frases textuales del usuario que revelen su estilo de amor.
    - 3-4 párrafos densos.
 
+2b. EL GOCE (goce_repeticion):
+   - ENFOQUE PSICOANALÍTICO: ¿Qué goce (jouissance) hay en la forma en que ama esta persona?
+   - Goce lacaniano: el sujeto repite lo que le duele porque extrae un placer inconsciente de ese sufrimiento.
+   - ¿Qué “se goza” en la queja, en la espera, en la frustración, en el conflicto?
+   - ¿Hay un goce en ser “el que da todo”, “el que sufre”, “el que sostiene”, “el que no es visto”?
+   - ¿El sufrimiento en la relación se parece al sufrimiento de la infancia? → compulsión de repetición.
+   - ¿Qué posición subjetiva ocupa: víctima, salvador, mártir, rebelde, fantasma?
+   - Identifica la “escena gozosa”: esa situación que se repite y que, aunque duele, es familiar y por eso regresa.
+   - Conecta con el fantasma relacional y los mecanismos de defensa.
+   - Sé empático pero revelador: “Hay algo en este dolor que ya conoces, [nombre]. Y es justamente porque lo conoces que regresas a él.”
+   - 2-3 párrafos.
+
 3. LO QUE BUSCA EN EL OTRO (lo_que_busca_en_el_otro):
    - ¿Qué cualidades busca en el otro que NO se ha dado a sí mismo?
    - Concepto Lacan: "Amar es dar lo que no se tiene" — ¿qué intenta completar?
@@ -284,6 +296,7 @@ Responde SOLO con JSON válido, sin texto adicional.
   "autoanalisis_usuario": {
     "apertura_rapport": "(2-3 párrafos: saludo empático usando el nombre, reconoce su valentía, genera rapport profundo. Anticipa que lo que viene será transformador.)",
     "forma_de_amar": "(3-4 párrafos: cómo ama, desde dónde ama, qué da cuando ama, qué espera recibir, si ama desde el miedo o la abundancia, si repite la forma de amar de algún padre. Cita textualmente al usuario.)",
+    "goce_repeticion": "(2-3 párrafos: qué goce inconsciente hay en su forma de amar, qué se goza en la queja o el sufrimiento, compulsión de repetición, escena gozosa que se repite, posición subjetiva. Enfoque lacaniano. Cita al usuario.)",
     "lo_que_busca_en_el_otro": "(2-3 párrafos: qué cualidades busca en el otro que no se ha dado a sí mismo, Lacan 'amar es dar lo que no se tiene', cómo la elección de pareja es un intento de reparación inconsciente. Cita al usuario.)",
     "lo_que_reclama_afuera": "(2-3 párrafos: qué le pide al otro que debería darse a sí mismo, cada queja es una radiografía de su herida no atendida. Empático pero directo. Cita al usuario.)",
     "fantasma_relacional": "(2-3 párrafos: escena inconsciente que organiza su deseo, función simbólica de la pareja, qué rol le asigna al otro, idealización, búsqueda de completud. Enfoque lacaniano.)",

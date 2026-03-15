@@ -24,7 +24,8 @@ const PREGUNTAS = [
   {
     id: 'Q1', block: 'Contexto personal y panorama general',
     mainQuestion: 'Para empezar, cuéntame un poco sobre tu vida actualmente y en qué momento te encuentras hoy.',
-    examples: ['¿A qué te dedicas o en qué estás enfocado actualmente?', '¿Cómo describirías el momento de vida en el que te encuentras ahora?', '¿Cuánto tiempo llevas en tu relación actual?', '¿Hay algo que esté pasando en tu vida que creas que impacta tu relación?']
+    examples: ['¿A qué te dedicas o en qué estás enfocado actualmente?', '¿Cómo describirías el momento de vida en el que te encuentras ahora?', '¿Cuánto tiempo llevas en tu relación actual?', '¿Hay algo que esté pasando en tu vida que creas que impacta tu relación?'],
+    examples_descubre: ['¿A qué te dedicas o en qué estás enfocado actualmente?', '¿Cómo describirías el momento de vida en el que te encuentras ahora?', '¿Has tenido relaciones importantes que hayan marcado tu forma de ver el amor?', '¿Hay algo que esté pasando en tu vida que creas que impacta tu forma de relacionarte?']
   },
   {
     id: 'Q2', block: 'Contexto personal y panorama general',
@@ -113,7 +114,9 @@ const PREGUNTAS = [
   {
     id: 'Q14', block: 'Historia emocional y patrones relacionales',
     mainQuestion: 'Antes de esta relación, cuéntame cómo fueron tus relaciones importantes anteriores y qué cosas sientes que aprendiste de ellas.',
-    examples: ['Experiencias que recuerdas de relaciones anteriores y qué aprendiste', 'Si sientes que hay patrones que se repiten entre relaciones', 'Dinámicas que reconoces que aparecen una y otra vez', 'Qué descubriste sobre lo que buscas o no buscas en una pareja']
+    examples: ['Experiencias que recuerdas de relaciones anteriores y qué aprendiste', 'Si sientes que hay patrones que se repiten entre relaciones', 'Dinámicas que reconoces que aparecen una y otra vez', 'Qué descubriste sobre lo que buscas o no buscas en una pareja'],
+    mainQuestion_descubre: 'Cuéntame cómo han sido tus relaciones importantes y qué cosas sientes que has aprendido de ellas.',
+    examples_descubre: ['Experiencias que recuerdas de tus relaciones y qué aprendiste', 'Si sientes que hay patrones que se repiten entre relaciones', 'Dinámicas que reconoces que aparecen una y otra vez', 'Qué has descubierto sobre lo que buscas o no buscas en una pareja']
   },
   {
     id: 'Q15', block: 'Identidad y autonomía dentro de la relación',
@@ -139,7 +142,9 @@ const PREGUNTAS = [
   {
     id: 'Q18', block: 'Historia emocional y patrones relacionales',
     mainQuestion: 'Cuando aparece un conflicto o una discusión en la relación, cuéntame cómo reaccionas tú normalmente en ese momento.',
-    examples: ['Qué sueles sentir primero', 'Qué haces normalmente en ese momento', 'Cómo respondes frente a la discusión', 'Cómo manejas tus emociones cuando hay tensión']
+    examples: ['Qué sueles sentir primero', 'Qué haces normalmente en ese momento', 'Cómo respondes frente a la discusión', 'Cómo manejas tus emociones cuando hay tensión'],
+    mainQuestion_descubre: 'Cuando aparece un conflicto o una discusión en tus relaciones, cuéntame cómo reaccionas tú normalmente en ese momento.',
+    examples_descubre: ['Qué sueles sentir primero', 'Qué haces normalmente en ese momento', 'Cómo respondes frente a la discusión', 'Cómo manejas tus emociones cuando hay tensión en la relación']
   },
   {
     id: 'Q19', block: 'Historia emocional y patrones relacionales',
@@ -281,7 +286,9 @@ const PREGUNTAS = [
   {
     id: 'Q38', block: 'Futuro del vínculo y sentido de la relación',
     mainQuestion: 'Pensando en todo lo que has contado hasta ahora, cuéntame qué crees que esta relación ha despertado o revelado en ti como persona.',
-    examples: ['Aspectos de tu personalidad que han cambiado o se han desarrollado', 'Cosas que has descubierto sobre ti mismo/a gracias a esta relación', 'Aprendizajes profundos que han surgido en la relación', 'Partes de ti que se han transformado o que no conocías antes']
+    examples: ['Aspectos de tu personalidad que han cambiado o se han desarrollado', 'Cosas que has descubierto sobre ti mismo/a gracias a esta relación', 'Aprendizajes profundos que han surgido en la relación', 'Partes de ti que se han transformado o que no conocías antes'],
+    mainQuestion_descubre: 'Pensando en todo lo que has contado hasta ahora, cuéntame qué crees que tus relaciones han despertado o revelado en ti como persona.',
+    examples_descubre: ['Aspectos de tu personalidad que han cambiado o se han desarrollado', 'Cosas que has descubierto sobre ti mismo/a gracias a tus relaciones', 'Aprendizajes profundos que han surgido a lo largo de tu vida sentimental', 'Partes de ti que se han transformado o que no conocías antes']
   },
   {
     id: 'Q39', block: 'Futuro del vínculo y sentido de la relación',
@@ -293,7 +300,9 @@ const PREGUNTAS = [
   {
     id: 'Q40', block: 'Futuro del vínculo y sentido de la relación',
     mainQuestion: 'Para terminar, cuéntame si hay algo importante sobre tu relación o sobre lo que estás viviendo en ella que sientas que todavía no has mencionado y que te gustaría compartir.',
-    examples: ['Algo que consideres importante decir', 'Algo que sientas que ayuda a entender la relación', 'Algo que te gustaría expresar sobre el vínculo', 'Cualquier reflexión que sientas relevante']
+    examples: ['Algo que consideres importante decir', 'Algo que sientas que ayuda a entender la relación', 'Algo que te gustaría expresar sobre el vínculo', 'Cualquier reflexión que sientas relevante'],
+    mainQuestion_descubre: 'Para terminar, cuéntame si hay algo importante sobre tu vida sentimental o sobre cómo te relacionas que sientas que todavía no has mencionado y que te gustaría compartir.',
+    examples_descubre: ['Algo que consideres importante decir sobre cómo amas', 'Algo que sientas que ayuda a entender tu forma de relacionarte', 'Algo que te gustaría expresar sobre tu vida sentimental', 'Cualquier reflexión que sientas relevante']
   }
 ]
 
@@ -395,6 +404,7 @@ const RecordingBars = ({ analyser }) => {
 const AUTOANALISIS_SECTIONS = [
   { key: 'apertura_rapport', label: 'Rapport', icon: '💜', color: '#c084fc' },
   { key: 'forma_de_amar', label: 'Forma de amar', icon: '❤️', color: '#f472b6' },
+  { key: 'goce_repeticion', label: 'Goce', icon: '🔥', color: '#ef4444' },
   { key: 'lo_que_busca_en_el_otro', label: 'Lo que buscas', icon: '🔍', color: '#60a5fa' },
   { key: 'lo_que_reclama_afuera', label: 'Lo que reclamas', icon: '📣', color: '#fb923c' },
   { key: 'fantasma_relacional', label: 'Fantasma', icon: '👻', color: '#a78bfa' },
@@ -3305,6 +3315,23 @@ const RadiografiaPremiumPage = () => {
                 </div>
               )}
 
+              {/* ═══ BANNER: Descargar resultados ═══ */}
+              <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
+                className="p-5 rounded-xl border border-violet-500/20 bg-gradient-to-r from-violet-500/[0.06] to-fuchsia-500/[0.04] mb-2">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="text-center sm:text-left">
+                    <p className="text-white/80 text-sm font-light mb-1">Te recomendamos descargar tu radiografía</p>
+                    <p className="text-white/40 text-xs font-light">Tu acceso a esta página es por tiempo limitado. Descarga tus resultados para conservarlos.</p>
+                  </div>
+                  <motion.button onClick={generatePDF} disabled={pdfGenerating}
+                    whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                    className="flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600/80 to-fuchsia-600/70 text-white text-sm font-light hover:from-violet-600 hover:to-fuchsia-600 transition-all disabled:opacity-40 shadow-lg shadow-violet-500/10">
+                    {pdfGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                    Descargar PDF
+                  </motion.button>
+                </div>
+              </motion.div>
+
               {/* ═══ SEPARADOR PARTE 1 — PRIMERO, VAMOS CONTIGO ═══ */}
               <div className="text-center mb-6">
                 <p className="text-violet-400/50 text-xs font-bold uppercase tracking-[0.25em] mb-1">Parte 1</p>
@@ -3355,6 +3382,7 @@ const RadiografiaPremiumPage = () => {
                       const REPORT_CARDS = [
                         { key: 'apertura_rapport', icon: MessageCircle, title: 'Tu radiografía inicial', subtitle: 'Inicio', gradient: 'from-indigo-500 via-violet-500 to-purple-500', border: 'border-indigo-500/20', iconBg: 'from-indigo-500/30 to-violet-500/20', accentColor: '#818cf8', chartType: null },
                         { key: 'forma_de_amar', icon: Heart, title: 'Cómo amas y cómo esperas ser amado', subtitle: 'Tu forma de amar', gradient: 'from-rose-500 via-pink-500 to-fuchsia-500', border: 'border-rose-500/20', iconBg: 'from-rose-500/30 to-pink-500/20', accentColor: '#f472b6', chartType: 'polaridades' },
+                        { key: 'goce_repeticion', icon: Flame, title: 'El goce que te ata y te repites', subtitle: 'Tu goce', gradient: 'from-red-500 via-orange-500 to-amber-500', border: 'border-red-500/20', iconBg: 'from-red-500/30 to-orange-500/20', accentColor: '#ef4444', chartType: null },
                         { key: 'lo_que_busca_en_el_otro', icon: Eye, title: 'Lo que buscas en el otro', subtitle: 'Proyección inconsciente', gradient: 'from-sky-500 via-blue-500 to-indigo-500', border: 'border-sky-500/20', iconBg: 'from-sky-500/30 to-blue-500/20', accentColor: '#38bdf8', chartType: 'cuadrante_apego' },
                         { key: 'lo_que_reclama_afuera', icon: Compass, title: 'Lo que reclamas afuera y te pertenece adentro', subtitle: 'Espejo emocional', gradient: 'from-amber-500 via-orange-500 to-red-500', border: 'border-amber-500/20', iconBg: 'from-amber-500/30 to-orange-500/20', accentColor: '#fb923c', chartType: 'espejo' },
                         { key: 'fantasma_relacional', icon: Anchor, title: 'Tu fantasma relacional', subtitle: 'Escena inconsciente', gradient: 'from-purple-500 via-fuchsia-500 to-pink-500', border: 'border-purple-500/20', iconBg: 'from-purple-500/30 to-fuchsia-500/20', accentColor: '#c084fc', chartType: 'escena_relacional' },
