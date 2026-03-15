@@ -616,6 +616,50 @@ const DEMO_RESPONSES_SOFIA = {
   Q40: 'Estoy aquí porque quiero romper el ciclo. Quiero entender por qué elijo lo que elijo y aprender a amarme primero antes de amar a alguien más.'
 }
 
+// ─── DEMO CROSS ANALYSIS DATA (for dev toolbar "LosDos" button) ───
+const DEMO_CROSS_ANALYSIS = {
+  apertura: 'Carlos y Ana respondieron las mismas 40 preguntas de forma independiente. Lo que surge al cruzar ambas perspectivas es un mapa emocional donde cada uno proyecta necesidades distintas sobre el mismo vínculo.\n\nMientras Carlos describe la relación desde la distancia reflexiva — un observador que analiza sin actuar —, Ana habla desde la urgencia emocional de quien siente que el tiempo se le escapa. Ambos se aman, pero lo hacen desde coordenadas distintas que rara vez se encuentran.',
+  resumen_cruzado: 'La relación Carlos-Ana presenta una **asimetría fundamental**: Carlos busca paz y autonomía dentro del vínculo, mientras Ana busca cercanía e intensidad emocional. Lo que Carlos interpreta como "dar espacio", Ana lo vive como abandono. Lo que Ana interpreta como "mostrar interés", Carlos lo vive como presión.\n\nEsta dinámica perseguidor-retirada se ha calcificado en un patrón donde ambos confirman lo que más temen: Carlos se retira porque siente que nada de lo que hace es suficiente, y Ana persigue porque cada silencio le confirma que no es prioridad.',
+  dimensiones_cruzadas: {
+    estabilidad_relacional: { p1: 45, p2: 55, interpretacion: 'Carlos percibe menor estabilidad que Ana — él ve fracturas donde ella ve oportunidades de reparación.' },
+    conexion_emocional: { p1: 40, p2: 65, interpretacion: 'Ana siente más conexión que Carlos, quien reporta distanciamiento emocional significativo.' },
+    deseo_erotico: { p1: 35, p2: 50, interpretacion: 'Ambos notan una baja, pero Ana mantiene más deseo activo. Carlos lo ha desplazado hacia lo intelectual.' },
+    sincronia_relacional: { p1: 30, p2: 45, interpretacion: 'Desincronización marcada: los ritmos emocionales de ambos no coinciden en momentos clave.' },
+    vulnerabilidad_emocional: { p1: 25, p2: 70, interpretacion: 'La brecha más grande: Ana se expone emocionalmente, Carlos se protege. Esto genera un desequilibrio de poder invisible.' },
+    narrativa_futuro: { p1: 50, p2: 60, interpretacion: 'Ambos imaginan un futuro juntos, pero Ana lo visualiza con más claridad y urgencia.' }
+  },
+  _individual: {
+    p1: { nombre: 'Carlos', dimensiones: { estabilidad_relacional: 45, apego_emocional: 60, conexion_emocional: 40, deseo_erotico: 35, intimidad: 30, sincronia_relacional: 30, patrones_inconscientes: 80, fantasma_relacional: 70, roles_sistemicos: 65, resiliencia_vinculo: 55, vulnerabilidad_emocional: 25, narrativa_futuro: 50 } },
+    p2: { nombre: 'Ana', dimensiones: { estabilidad_relacional: 55, apego_emocional: 75, conexion_emocional: 65, deseo_erotico: 50, intimidad: 55, sincronia_relacional: 45, patrones_inconscientes: 70, fantasma_relacional: 60, roles_sistemicos: 55, resiliencia_vinculo: 70, vulnerabilidad_emocional: 70, narrativa_futuro: 60 } }
+  },
+  puntos_ciegos: {
+    p1_no_ve: 'Carlos no registra cuánto **daño hace su silencio**. Para él, retirarse es auto-regulación; para Ana, cada silencio es una puerta que se cierra. Tampoco ve que su "flexibilidad" (ceder para evitar conflicto) en realidad **acumula resentimiento** que luego explota en frialdad emocional.',
+    p2_no_ve: 'Ana no ve que su **insistencia en hablar en el momento** es vivida por Carlos como un asalto emocional. Su necesidad de resolución inmediata reproduce la ansiedad de su madre, y su intensidad — aunque nace del amor — empuja a Carlos exactamente hacia donde ella no quiere que vaya: el silencio.'
+  },
+  dinamica_real: 'La dinámica real de esta pareja es un **loop de persecución y retirada** que se activa varias veces por semana. Ana detecta distancia → pide cercanía → Carlos se siente presionado → se retira → Ana interpreta rechazo → intensifica la demanda.\n\nEl problema no es que peleen — es que **reparan mal**. Las reconciliaciones son superficiales: se abrazan, ven una serie, pero el patrón subyacente nunca se nombra. Cada ciclo erosiona un poco más la confianza de ambos en que el otro puede darle lo que necesita.',
+  convergencias: [
+    'Ambos quieren estar juntos y ven futuro en la relación',
+    'Reconocen que la comunicación es su mayor área de mejora',
+    'Valoran la conexión intelectual y los momentos compartidos',
+    'Los dos identifican patrones de sus familias de origen en su dinámica actual'
+  ],
+  divergencias: [
+    'Carlos quiere más espacio; Ana quiere más cercanía',
+    'Carlos maneja el conflicto con silencio; Ana necesita resolverlo de inmediato',
+    'Ana expresa vulnerabilidad abiertamente; Carlos la evita activamente',
+    'Carlos siente que da suficiente; Ana siente que nunca es suficiente'
+  ],
+  lecturas_cruzadas: {
+    gottman: 'El **índice Gottman** de esta pareja muestra alta presencia de dos de los "jinetes del Apocalipsis": **defensividad** (Carlos) y **crítica** (Ana). Carlos responde a la demanda emocional de Ana levantando muros, lo que ella interpreta como desprecio. Ana responde a la evasión de Carlos con reclamos que él interpreta como ataque.\n\nLa ratio de interacciones positivas/negativas percibidas está por debajo del umbral 5:1, especialmente en la percepción de Carlos (3:1) vs la de Ana (4:1).',
+    apego: 'Carlos presenta un estilo **evitativo** que se activa ante la demanda emocional. Ana presenta un estilo **ansioso** que se activa ante la percepción de distancia. Juntos forman la combinación clásica **ansioso-evitativo**: cuanto más persigue Ana, más se retira Carlos; cuanto más se retira Carlos, más ansiosa se vuelve Ana.\n\nNinguno de los dos es "el problema" — el sistema relacional que han construido es el que necesita intervención.',
+    perel: 'Desde la perspectiva de Esther Perel, esta pareja ha **sacrificado el deseo en el altar de la seguridad**. Carlos busca previsibilidad (pero la encuentra aburrida). Ana busca intensidad emocional (pero la genera a través del conflicto, no del erotismo).\n\nEl deseo necesita misterio, y ambos se han vuelto demasiado predecibles el uno para el otro — pero por las razones equivocadas.',
+    comunicacion: 'Los **lenguajes de amor** están cruzados: Carlos da en **actos de servicio** y necesita recibir **contacto físico**. Ana da en **palabras de afirmación** y necesita recibir **tiempo de calidad**.\n\nCada uno da lo que necesita recibir (no lo que el otro necesita), generando una sensación mutua de "doy mucho y recibo poco".',
+    poder: 'El poder en esta relación es **paradójico**: Ana parece tener más poder porque es más vocal y directa. Pero el poder real lo tiene Carlos — quien se retira controla el ritmo emocional de la relación.\n\nEsta asimetría invisible genera resentimiento en ambos: Carlos siente que "ella siempre decide" (poder visible de Ana) mientras Ana siente que "nunca puedo llegar a él" (poder estructural de Carlos).'
+  },
+  mensaje_para_ambos: 'Carlos y Ana: lo que esta radiografía muestra no es una relación rota — es una relación que ha **outgrown sus herramientas de comunicación**. El amor está ahí (ambos lo dicen sin dudarlo), pero el sistema que han construido para manejarlo ya no funciona.\n\nCarlos: tu silencio no es neutralidad — es acción. Cada vez que te retiras, Ana recibe un mensaje que dice "no me importas". No es tu intención, pero es el efecto.\n\nAna: tu insistencia no es amor — es ansiedad disfrazada de cuidado. Cada vez que presionas para hablar en el momento, Carlos recibe un mensaje que dice "nunca haces nada bien".\n\nLa buena noticia: ambos quieren lo mismo (cercanía, equipo, futuro). Solo necesitan aprender a pedirlo de una forma que el otro pueda recibir.',
+  pronostico_relacional: { potencial: 72, riesgo: 45, direccion: 'La relación tiene potencial significativo si logran romper el ciclo perseguidor-retirada y aprender a reparar de forma genuina. Sin intervención, el riesgo de distanciamiento irreversible es moderado.' }
+}
+
 // ─── ANÁLISIS ANIMATION TASKS ─────────────────────────────────────
 
 const ANALYSIS_TASKS = [
@@ -2484,7 +2528,13 @@ const RadiografiaPremiumPage = () => {
       // 3. Remove interactive elements + download/email banners (not relevant offline)
       clone.querySelectorAll('button').forEach(b => b.remove())
 
-      // 4. Convert external <img> to inline data URIs (for offline viewing)
+      // 4. Fix framer-motion invisible sections: whileInView elements cloned with opacity:0
+      clone.querySelectorAll('[style]').forEach(el => {
+        el.style.removeProperty('opacity')
+        el.style.removeProperty('transform')
+      })
+
+      // 5. Convert external <img> to inline data URIs (for offline viewing)
       const imgs = clone.querySelectorAll('img[src]')
       await Promise.all([...imgs].map(async img => {
         const src = img.getAttribute('src')
@@ -3285,7 +3335,28 @@ ${clone.outerHTML}
                     </div>
                     <span className="text-[9px] text-white/55">Sofía</span>
                   </button>
-                  {/* 8. Borrar caché */}
+                  {/* 8. LosDos — preview cross-analysis with demo data */}
+                  <button onClick={() => {
+                    const url = new URL(window.location)
+                    url.searchParams.set('type', 'losdos')
+                    window.history.replaceState({}, '', url)
+                    setProfileData({ nombre: 'Carlos', edad: '32', nombrePareja: 'Ana', edadPareja: '30' })
+                    setEmailData(prev => ({ ...prev, emailUsuario: 'carlos@test.com' }))
+                    // Load individual analysis + cross analysis
+                    if (CACHED_PREVIEW_ANALYSIS) {
+                      setAiAnalysis(CACHED_PREVIEW_ANALYSIS)
+                      setCachedAnalysis(CACHED_PREVIEW_ANALYSIS)
+                    }
+                    setCrossAnalysis(DEMO_CROSS_ANALYSIS)
+                    setStage('results')
+                  }}
+                    className="flex flex-col items-center gap-1" title="Demo LosDos — análisis cruzado Carlos & Ana">
+                    <div className="w-11 h-11 rounded-full border border-emerald-500/25 bg-emerald-500/10 flex items-center justify-center hover:bg-emerald-500/20 transition-colors">
+                      <Users className="w-4 h-4 text-emerald-300/70" />
+                    </div>
+                    <span className="text-[9px] text-white/55">LosDos</span>
+                  </button>
+                  {/* 9. Borrar caché */}
                   {localStorage.getItem('radiografia_cached_analysis') && (
                     <button onClick={() => {
                       localStorage.removeItem('radiografia_cached_analysis')
