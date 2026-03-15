@@ -148,13 +148,95 @@ async function getOrCreateCoupon(env, code, percent, isTest = false) {
 }
 
 // ── Email HTML ────────────────────────────────────────────────────────────────
-function emailHtml({ typeLabel, accessUrl }) {
+// ── Email: purchase confirmation (sent right after payment) ──────────────────
+function purchaseEmailHtml({ typeLabel, accessUrl }) {
   return `<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Tu Radiografía de Pareja</title>
+  <title>Gracias por tu compra</title>
+</head>
+<body style="margin:0;padding:0;background:#080810;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#080810;">
+<tr><td align="center" style="padding:48px 16px 40px;">
+
+  <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+
+    <!-- Logotipo / wordmark -->
+    <tr><td align="center" style="padding-bottom:40px;">
+      <p style="margin:0;font-size:11px;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:rgba(167,139,250,0.7);">LUIS VIRRUETA</p>
+    </td></tr>
+
+    <!-- Separador sutil -->
+    <tr><td style="padding-bottom:40px;">
+      <div style="height:1px;background:linear-gradient(to right,transparent,rgba(124,58,237,0.4),transparent);"></div>
+    </td></tr>
+
+    <!-- Headline -->
+    <tr><td align="center" style="padding-bottom:32px;">
+      <h1 style="margin:0 0 12px;font-size:28px;font-weight:300;letter-spacing:-0.03em;color:#ffffff;line-height:1.2;">Gracias por tu compra</h1>
+      <p style="margin:0;font-size:13px;color:rgba(167,139,250,0.8);letter-spacing:0.05em;text-transform:uppercase;">${typeLabel}</p>
+    </td></tr>
+
+    <!-- Card principal -->
+    <tr><td style="padding-bottom:16px;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f0f1a;border:1px solid rgba(124,58,237,0.18);border-radius:20px;overflow:hidden;">
+        <tr><td style="padding:40px 40px 32px;">
+          <p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Tu acceso personal al cuestionario ya está activo. Usa el botón de abajo para comenzar cuando estés listo.</p>
+          <p style="margin:0 0 32px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);"><strong style="color:rgba(255,255,255,0.85);font-weight:400;">¿Cerraste el navegador o cambiaste de dispositivo?</strong> No hay problema — este mismo enlace te lleva exactamente al punto donde lo dejaste. Guarda este correo; es tu acceso permanente.</p>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr><td align="center">
+              <a href="${accessUrl}" style="display:inline-block;padding:16px 48px;background:linear-gradient(135deg,#6d28d9,#9333ea);color:#ffffff;text-decoration:none;font-size:15px;font-weight:400;letter-spacing:0.02em;border-radius:12px;">Comenzar mi cuestionario &rarr;</a>
+            </td></tr>
+          </table>
+        </td></tr>
+      </table>
+    </td></tr>
+
+    <!-- Lo que incluye -->
+    <tr><td style="padding-bottom:16px;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f0f1a;border:1px solid rgba(255,255,255,0.05);border-radius:16px;">
+        <tr><td style="padding:24px 32px;">
+          <p style="margin:0 0 16px;font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);">Tu análisis incluirá</p>
+          <table cellpadding="0" cellspacing="0">
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; 40 preguntas guiadas por voz</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; 11 marcos psicológicos aplicados a tu caso</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Mapa de 12 dimensiones de tu vínculo</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Autoanálisis de tus patrones inconscientes</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Reporte PDF para guardar o compartir</td></tr>
+          </table>
+        </td></tr>
+      </table>
+    </td></tr>
+
+    <!-- Separador -->
+    <tr><td style="padding:24px 0;">
+      <div style="height:1px;background:linear-gradient(to right,transparent,rgba(255,255,255,0.06),transparent);"></div>
+    </td></tr>
+
+    <!-- Footer -->
+    <tr><td align="center">
+      <p style="margin:0 0 6px;font-size:11px;color:rgba(255,255,255,0.2);line-height:1.7;">Este enlace es personal y no caduca. Guarda este correo.</p>
+      <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15);">luisvirrueta.com &mdash; hola@luisvirrueta.com</p>
+    </td></tr>
+
+  </table>
+</td></tr>
+</table>
+
+</body></html>`
+}
+
+// ── Email: analysis ready (sent after AI finishes generating results) ─────────
+function analysisEmailHtml({ typeLabel, accessUrl }) {
+  return `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Tu radiografía está lista</title>
 </head>
 <body style="margin:0;padding:0;background:#080810;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;">
 
@@ -183,28 +265,12 @@ function emailHtml({ typeLabel, accessUrl }) {
     <tr><td style="padding-bottom:16px;">
       <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f0f1a;border:1px solid rgba(124,58,237,0.18);border-radius:20px;overflow:hidden;">
         <tr><td style="padding:40px 40px 32px;">
-          <p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Contestaste las preguntas que pocas personas se hacen. Ahora hay un espejo frente a ti — uno que no miente ni halaga. Solo revela.</p>
-          <p style="margin:0 0 32px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Tu análisis profundo de <strong style="color:rgba(255,255,255,0.9);font-weight:400;">11 corrientes psicológicas simultáneas</strong> y 12 dimensiones relacionales te espera.</p>
+          <p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">El análisis de tus respuestas acaba de terminar. Hay un espejo frente a ti — uno que no miente ni halaga. Solo revela.</p>
+          <p style="margin:0 0 32px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Tu análisis profundo de <strong style="color:rgba(255,255,255,0.9);font-weight:400;">11 corrientes psicológicas simultáneas</strong> y 12 dimensiones relacionales está esperándote.</p>
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr><td align="center">
-              <a href="${accessUrl}" style="display:inline-block;padding:16px 48px;background:linear-gradient(135deg,#6d28d9,#9333ea);color:#ffffff;text-decoration:none;font-size:15px;font-weight:400;letter-spacing:0.02em;border-radius:12px;">Comenzar mi radiografía &rarr;</a>
+              <a href="${accessUrl}" style="display:inline-block;padding:16px 48px;background:linear-gradient(135deg,#6d28d9,#9333ea);color:#ffffff;text-decoration:none;font-size:15px;font-weight:400;letter-spacing:0.02em;border-radius:12px;">Ver mi radiografía &rarr;</a>
             </td></tr>
-          </table>
-        </td></tr>
-      </table>
-    </td></tr>
-
-    <!-- Lo que incluye -->
-    <tr><td style="padding-bottom:16px;">
-      <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f0f1a;border:1px solid rgba(255,255,255,0.05);border-radius:16px;">
-        <tr><td style="padding:24px 32px;">
-          <p style="margin:0 0 16px;font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);">Tu reporte incluye</p>
-          <table cellpadding="0" cellspacing="0">
-            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; 40 preguntas guiadas por voz</td></tr>
-            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; 11 marcos psicológicos aplicados a tu caso</td></tr>
-            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Mapa de 12 dimensiones de tu vínculo</td></tr>
-            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Autoanálisis de tus patrones inconscientes</td></tr>
-            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Reporte PDF para guardar o compartir</td></tr>
           </table>
         </td></tr>
       </table>
@@ -227,6 +293,9 @@ function emailHtml({ typeLabel, accessUrl }) {
 
 </body></html>`
 }
+
+// Legacy alias so existing call sites keep working during migration
+const emailHtml = purchaseEmailHtml
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // HANDLERS
@@ -255,8 +324,8 @@ async function handleCreateCheckout(req, env) {
   const params = {
     mode:       'payment',
     line_items: [{ price: priceId, quantity: '1' }],
-    success_url: `${isTest ? 'http://localhost:3000' : SITE_URL}/tienda/diagnostico-relacional?session_id={CHECKOUT_SESSION_ID}&type=${type}`,
-    cancel_url:  isTest ? 'http://localhost:3000/tienda/diagnostico-relacional' : RETURN_URL,
+    success_url: `${isTest ? (req.headers.get('Origin') || 'http://localhost:3000') : SITE_URL}/tienda/diagnostico-relacional?session_id={CHECKOUT_SESSION_ID}&type=${type}`,
+    cancel_url:  isTest ? `${req.headers.get('Origin') || 'http://localhost:3000'}/tienda/diagnostico-relacional` : RETURN_URL,
     metadata:   { type, testMode: isTest ? 'true' : 'false' },
   }
 
@@ -274,9 +343,41 @@ async function handleVerifyPayment(req, env) {
   // Auto-detect test vs live by session_id prefix (cs_test_ vs cs_live_)
   const isTest = sessionId?.startsWith('cs_test_')
   const session = await stripe(env, 'GET', `/checkout/sessions/${sessionId}`, {}, isTest)
+  const email   = session.customer_details?.email || session.customer_email || ''
+  const type    = session.metadata?.type || 'solo'
+
+  // Send confirmation email on verify (runs once thanks to KV dedup).
+  // This makes email delivery reliable in both test mode and live without
+  // requiring a Stripe webhook to be configured.
+  if (email && session.payment_status === 'paid' && env.PURCHASES) {
+    const dedupKey = `email_sent:${sessionId}`
+    const alreadySent = await env.PURCHASES.get(dedupKey)
+    if (!alreadySent) {
+      try {
+        const token     = makeToken()
+        const accessUrl = `${RADIOGRAFIA_URL}?token=${token}&type=${type}&pid=${sessionId}`
+        await sendEmail(env, {
+          to:      email,
+          subject: 'Tu acceso a la Radiografía Psicológica',
+          html:    purchaseEmailHtml({ typeLabel: getTypeLabel(type), accessUrl }),
+        })
+        // Save purchase + mark email sent
+        const purchase = JSON.stringify({ email, type, sessionId, token, createdAt: Date.now(), paid: true })
+        await Promise.all([
+          env.PURCHASES.put(`session:${sessionId}`, purchase, { expirationTtl: 86400 * 365 }),
+          env.PURCHASES.put(`token:${token}`,        purchase, { expirationTtl: 86400 * 365 }),
+          env.PURCHASES.put(dedupKey, '1', { expirationTtl: 86400 * 7 }),
+        ])
+      } catch (e) {
+        // Non-fatal: email fail shouldn't block verification
+        console.error('Verify email error:', e.message)
+      }
+    }
+  }
+
   return json({
-    type:     session.metadata?.type || 'solo',
-    email:    session.customer_details?.email || session.customer_email || '',
+    type,
+    email,
     amount:   (session.amount_total || 0) / 100,
     paid:     session.payment_status === 'paid',
     isTest,
@@ -313,8 +414,8 @@ async function handleSendAccessEmail(req, env) {
     try {
       await sendEmail(env, {
         to:      email,
-        subject: 'Tu Radiografía Psicológica está lista',
-        html:    emailHtml({ typeLabel: getTypeLabel(type), accessUrl }),
+        subject: 'Tu acceso a la Radiografía Psicológica',
+        html:    purchaseEmailHtml({ typeLabel: getTypeLabel(type), accessUrl }),
       })
     } catch (e) {
       console.error(`Error enviando a ${email}:`, e.message)
@@ -322,6 +423,69 @@ async function handleSendAccessEmail(req, env) {
     }
   }
   if (errors.length > 0 && errors.length === (emails || []).filter(Boolean).length) {
+    return json({ ok: false, errors }, 500)
+  }
+  return json({ ok: true, errors: errors.length ? errors : undefined })
+}
+
+// ── Save analysis results to KV (called from frontend after AI finishes) ─────
+async function handleSaveAnalysis(req, env) {
+  const { token, analysis } = await req.json()
+  if (!token || !analysis) return json({ error: 'Missing token or analysis' }, 400)
+  if (!env.PURCHASES) return json({ error: 'KV not configured' }, 500)
+
+  // Validate the token exists (security: only real purchase tokens can save)
+  const existing = await env.PURCHASES.get(`token:${token}`)
+  if (!existing && !token.startsWith('demo')) return json({ error: 'Invalid token' }, 403)
+
+  await env.PURCHASES.put(
+    `analysis:${token}`,
+    JSON.stringify(analysis),
+    { expirationTtl: 86400 * 365 }
+  )
+  return json({ ok: true })
+}
+
+// ── Retrieve stored analysis by token (called when loading results from email link) ──
+async function handleGetAnalysis(req, env) {
+  const token = new URL(req.url).searchParams.get('token')
+  if (!token) return json({ error: 'Missing token' }, 400)
+  if (!env.PURCHASES) return json({ error: 'KV not configured' }, 500)
+
+  const raw = await env.PURCHASES.get(`analysis:${token}`)
+  if (!raw) return json({ error: 'Not found' }, 404)
+
+  try {
+    return json({ ok: true, analysis: JSON.parse(raw) })
+  } catch {
+    return json({ error: 'Corrupt data' }, 500)
+  }
+}
+
+// ── Send "analysis ready" email(s) ────────────────────────────────────────────
+async function handleSendAnalysisEmail(req, env) {
+  const { token, type, emails } = await req.json()
+  if (!token || !emails?.length) return json({ error: 'Missing token or emails' }, 400)
+
+  const typeLabel = getTypeLabel(type || 'solo')
+  // All recipients get the same URL — the buyer token links to the shared analysis
+  const accessUrl = `${RADIOGRAFIA_URL}?token=${token}&type=${type || 'solo'}&view=results`
+  const errors = []
+
+  for (const email of emails.filter(Boolean)) {
+    try {
+      await sendEmail(env, {
+        to:      email,
+        subject: 'Tu radiografía psicológica está lista',
+        html:    analysisEmailHtml({ typeLabel, accessUrl }),
+      })
+    } catch (e) {
+      console.error(`Error enviando análisis a ${email}:`, e.message)
+      errors.push({ email, error: e.message })
+    }
+  }
+
+  if (errors.length > 0 && errors.length === emails.filter(Boolean).length) {
     return json({ ok: false, errors }, 500)
   }
   return json({ ok: true, errors: errors.length ? errors : undefined })
@@ -357,8 +521,8 @@ async function handleWebhook(req, env) {
       const accessUrl = `${RADIOGRAFIA_URL}?token=${token}&type=${type}&pid=${sessionId}`
       await sendEmail(env, {
         to:      email,
-        subject: 'Tu Radiografía Psicológica está lista',
-        html:    emailHtml({ typeLabel: getTypeLabel(type), accessUrl }),
+        subject: 'Tu acceso a la Radiografía Psicológica',
+        html:    purchaseEmailHtml({ typeLabel: getTypeLabel(type), accessUrl }),
       })
     }
   }
@@ -405,11 +569,15 @@ export default {
       // ── Audio from R2 (GET /audio/*) ──────────────────────────────
       if (method === 'GET' && pathname.startsWith('/audio/')) return handleAudio(request, env, pathname)
 
+      if (method === 'GET' && pathname === '/api/get-analysis') return handleGetAnalysis(request, env)
+
       if (method === 'POST') {
         if (pathname === '/api/create-radiografia-checkout') return handleCreateCheckout(request, env)
         if (pathname === '/api/verify-payment')              return handleVerifyPayment(request, env)
         if (pathname === '/api/validate-radiografia-promo')  return handleValidatePromo(request, env)
         if (pathname === '/api/send-access-email')           return handleSendAccessEmail(request, env)
+        if (pathname === '/api/save-analysis')               return handleSaveAnalysis(request, env)
+        if (pathname === '/api/send-analysis-email')         return handleSendAnalysisEmail(request, env)
         if (pathname === '/webhook')                         return handleWebhook(request, env)
       }
       return json({ ok: true, worker: 'radiografia-worker', path: pathname })

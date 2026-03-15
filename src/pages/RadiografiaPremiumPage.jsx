@@ -2086,24 +2086,8 @@ const RadiografiaPremiumPage = () => {
   // ── Start questionnaire from merged profile screen ──
   const startQuestionnaire = useCallback(() => {
     stopAudio()
-    const nombre = profileData.nombre.trim().split(' ')[0]
-    greetingPlayedRef.current = true
-    if (selectedVoiceId) {
-      // Only "Hola {nombre}" uses ElevenLabs API; rest is static audio
-      playQuestion(`Hola ${nombre}`, undefined, () => {
-        // Play static welcome.mp3 for the standard greeting body
-        playQuestion(null, undefined, () => {
-          playQuestion(PREGUNTAS[0].mainQuestion, undefined, () => {
-            setTimeout(() => {
-              const sr = window.SpeechRecognition || window.webkitSpeechRecognition
-              if (sr) startRecording()
-            }, 300)
-          })
-        }, 'welcome')
-      })
-    }
     setStage('questionnaire')
-  }, [profileData.nombre, selectedVoiceId]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [stopAudio])
 
   // ── Fill demo responses for testing (all Q1-Q40, Carlos/Ana profile, jump to Q40) ──
   const fillDemoResponses = useCallback(() => {

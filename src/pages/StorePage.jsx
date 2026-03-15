@@ -15,6 +15,27 @@ const StorePage = () => {
 
   const products = [
     {
+      id: 7,
+      name: 'Radiografía de Pareja — 11 Corrientes Psicológicas',
+      category: 'Diagnóstico Psicológico',
+      price: 'Desde $499 MXN',
+      duration: '~35 min',
+      image: '/productos/radar de pareja/imagenes 12 psicologos/fada3a35-4083-451d-939f-bf6f60a721d4.jpg',
+      description: '40 preguntas por voz analizadas por inteligencia artificial desde la perspectiva de 11 corrientes psicológicas (Gottman, Sternberg, Perel, Bowlby, Schnarch y más). Radar multidimensional, mapa de apego, indicadores compuestos y análisis clínico profundo.',
+      shortDesc: '¿Por qué siempre repites los mismos patrones en el amor? Un test que cruza 11 corrientes psicológicas para revelarte exactamente qué está pasando.',
+      benefits: [
+        'Individual ($499) o Pareja ($999) — cada quien responde por separado',
+        'Hablas por micrófono — como platicar con un psicólogo',
+        '11 corrientes: apego, conflicto, deseo, diferenciación, y más',
+        'Radar, mapa de apego, indicadores compuestos, narrativas por autor y PDF completo',
+        'Opción: sesión con el psicólogo ($1,199) para interpretar tus resultados'
+      ],
+      gradient: 'from-violet-600/20 to-fuchsia-600/20',
+      borderGradient: 'from-violet-500 to-fuchsia-500',
+      popular: true,
+      isDiagnostic: true
+    },
+    {
       id: 8,
       name: 'Consulta Individual',
       category: 'Sesión 1:1 con Luis',
@@ -56,28 +77,6 @@ const StorePage = () => {
       borderGradient: 'from-rose-500 to-pink-500',
       isNew: true
     },
-    {
-      id: 7,
-      name: 'Radiografía de Pareja — 11 Corrientes Psicológicas',
-      category: 'Diagnóstico Psicológico',
-      price: 'Desde $499 MXN',
-      duration: '~35 min',
-      image: '/productos/radar de pareja/imagenes 12 psicologos/fada3a35-4083-451d-939f-bf6f60a721d4.jpg',
-      description: '40 preguntas por voz analizadas por inteligencia artificial desde la perspectiva de 11 corrientes psicológicas (Gottman, Sternberg, Perel, Bowlby, Schnarch y más). Radar multidimensional, mapa de apego, indicadores compuestos y análisis clínico profundo.',
-      shortDesc: '¿Por qué siempre repites los mismos patrones en el amor? Un test que cruza 11 corrientes psicológicas para revelarte exactamente qué está pasando.',
-      benefits: [
-        'Individual ($499) o Pareja ($999) — cada quien responde por separado',
-        'Hablas por micrófono — como platicar con un psicólogo',
-        '11 corrientes: apego, conflicto, deseo, diferenciación, y más',
-        'Radar, mapa de apego, indicadores compuestos, narrativas por autor y PDF completo',
-        'Opción: sesión con el psicólogo ($1,199) para interpretar tus resultados'
-      ],
-      gradient: 'from-violet-600/20 to-fuchsia-600/20',
-      borderGradient: 'from-violet-500 to-fuchsia-500',
-      popular: true,
-      isDiagnostic: true
-    },
-
     {
       id: 5,
       name: 'Consultoría Empresarial',
