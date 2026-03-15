@@ -2279,8 +2279,7 @@ const DiagnosticoRelacionalPage = () => {
                     </motion.button>
                     </div>
                   </div>
-                  </div>
-                  {/* Radiografía cruzada de pareja */
+                  {/* Radiografía cruzada de pareja */}
                   <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-8 bg-gradient-to-br from-blue-500 to-cyan-500 min-h-[90px] flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-1.5">
