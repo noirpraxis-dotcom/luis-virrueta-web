@@ -2430,30 +2430,78 @@ const RadiografiaPremiumPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [stage])
 
-  // ── Download — self-contained HTML snapshot ──
+  // ── Download — self-contained HTML clone (exact visual replica) ──
   const generatePDF = useCallback(async () => {
     if (!aiAnalysis || !resultsRef.current) return
     setPdfGenerating(true)
     try {
-      const { default: html2canvas } = await import('html2canvas')
       const element = resultsRef.current
 
-      // Gather all canvases / SVG charts as images
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#09090b',
-        windowWidth: element.scrollWidth,
+      // Helper: blob → data URI
+      const blobToDataUri = blob => new Promise(resolve => {
+        const r = new FileReader()
+        r.onload = () => resolve(r.result)
+        r.readAsDataURL(blob)
       })
-      const imgDataUrl = canvas.toDataURL('image/jpeg', 0.92)
+
+      // Helper: embed external URLs inside CSS as data URIs (fonts, etc.)
+      const embedCssUrls = async (css) => {
+        const urlRe = /url\(["']?(https?:\/\/[^"')]+)["']?\)/g
+        const matches = [...css.matchAll(urlRe)]
+        const cache = new Map()
+        for (const m of matches) {
+          if (cache.has(m[1])) continue
+          try {
+            const res = await fetch(m[1])
+            cache.set(m[1], await blobToDataUri(await res.blob()))
+          } catch { cache.set(m[1], null) }
+        }
+        let result = css
+        for (const [url, dataUri] of cache) {
+          if (dataUri) result = result.replaceAll(url, dataUri)
+        }
+        return result
+      }
+
+      // 1. Collect ALL CSS — for cross-origin sheets (Google Fonts) embed font files
+      const cssChunks = []
+      for (const sheet of document.styleSheets) {
+        try {
+          cssChunks.push([...sheet.cssRules].map(r => r.cssText).join('\n'))
+        } catch {
+          if (sheet.href) {
+            try {
+              const raw = await (await fetch(sheet.href)).text()
+              cssChunks.push(await embedCssUrls(raw))
+            } catch {}
+          }
+        }
+      }
+
+      // 2. Clone the results DOM tree
+      const clone = element.cloneNode(true)
+
+      // 3. Remove interactive elements + download/email banners (not relevant offline)
+      clone.querySelectorAll('button').forEach(b => b.remove())
+
+      // 4. Convert external <img> to inline data URIs (for offline viewing)
+      const imgs = clone.querySelectorAll('img[src]')
+      await Promise.all([...imgs].map(async img => {
+        const src = img.getAttribute('src')
+        if (!src || src.startsWith('data:')) return
+        try {
+          const absUrl = src.startsWith('http') ? src : new URL(src, window.location.origin).href
+          img.setAttribute('src', await blobToDataUri(await (await fetch(absUrl, { mode: 'cors' })).blob()))
+        } catch {}
+      }))
 
       const nombre = profileData.nombre || 'Reporte'
-      const pareja = profileData.pareja || ''
+      const pareja = profileData.nombrePareja || ''
       const titulo = pareja
         ? `Radiografía de Pareja — ${nombre} & ${pareja}`
         : `Radiografía de Pareja — ${nombre}`
 
+      // Use the same Tailwind classes as the live page for pixel-perfect layout
       const htmlContent = `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -2461,16 +2509,13 @@ const RadiografiaPremiumPage = () => {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${titulo}</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #09090b; display: flex; justify-content: center; min-height: 100vh; }
-  img { max-width: 100%; height: auto; display: block; }
-  .container { max-width: 900px; width: 100%; }
-  @media print { body { background: #09090b; } img { page-break-inside: avoid; } }
+${cssChunks.join('\n')}
+@media print { html, body { background: #09090b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
 </style>
 </head>
-<body>
-<div class="container">
-  <img src="${imgDataUrl}" alt="${titulo}" />
+<body class="min-h-screen bg-zinc-950">
+<div class="min-h-screen pt-6 lg:pt-10 pb-20 px-6">
+${clone.outerHTML}
 </div>
 </body>
 </html>`
@@ -2479,7 +2524,7 @@ const RadiografiaPremiumPage = () => {
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `radiografia-${nombre.toLowerCase().replace(/\\s+/g, '-')}.html`
+      a.download = `radiografia-${nombre.toLowerCase().replace(/\s+/g, '-')}.html`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
@@ -2487,7 +2532,7 @@ const RadiografiaPremiumPage = () => {
     } catch (err) {
       console.error('HTML generation error:', err)
     } finally { setPdfGenerating(false) }
-  }, [aiAnalysis, profileData.nombre, profileData.pareja])
+  }, [aiAnalysis, profileData.nombre, profileData.nombrePareja])
 
   return (
     <div className="min-h-screen bg-zinc-950">

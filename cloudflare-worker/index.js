@@ -839,7 +839,7 @@ async function handleSendAnalysisEmail(req, env) {
 }
 
 // ── Send backup with filled questionnaire to admin ──────────────────────────
-const ADMIN_EMAIL = 'contacto@luisvirrueta.com'
+const ADMIN_EMAIL = 'luis.virrueta.contacto@gmail.com'
 
 async function handleSendBackupEmail(req, env) {
   const { token, type, profileData, questions, responses } = await req.json()
