@@ -1834,12 +1834,12 @@ const DiagnosticoRelacionalPage = () => {
                 </div>
                 <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {[
-                    { name: 'Laura y Andrés', initials: 'LA', detail: '8 años juntos', bg: 'from-pink-500/30 to-rose-500/20', text: 'Sentíamos que algo no estaba bien, pero no lográbamos entender qué estaba pasando entre nosotros.\nLa radiografía de pareja nos mostró patrones que nunca habíamos logrado ver por nuestra cuenta.\nDespués del análisis tomamos una consulta de pareja y fue mucho más fácil empezar a reparar lo que se había ido desgastando.' },
-                    { name: 'Mariana', initials: 'M', detail: '34 años', bg: 'from-violet-500/30 to-purple-500/20', text: 'Siempre discutíamos por lo mismo y pensábamos que era por cosas pequeñas.\nEl análisis reveló dinámicas emocionales que ninguno de los dos había notado.\nEso cambió completamente la forma en que empezamos a hablar de nuestra relación.' },
-                    { name: 'Carlos y Daniela', initials: 'CD', detail: '5 años juntos', bg: 'from-blue-500/30 to-cyan-500/20', text: 'Nos sorprendió lo preciso que fue el análisis.\nDetectó patrones que llevábamos años repitiendo sin darnos cuenta.\nDespués de ver los resultados decidimos tomar una sesión de pareja y nos ayudó muchísimo a entendernos mejor.' },
-                    { name: 'Andrea', initials: 'A', detail: '29 años', bg: 'from-amber-500/30 to-orange-500/20', text: 'Sentía que la relación estaba cambiando, pero no sabía explicar por qué.\nLa radiografía de pareja me ayudó a entender lo que realmente estaba pasando entre nosotros.\nFue como ver el mapa emocional de la relación por primera vez.' },
-                    { name: 'Javier y Paula', initials: 'JP', detail: '11 años juntos', bg: 'from-emerald-500/30 to-teal-500/20', text: 'Pensábamos que nuestra relación estaba bien, pero el análisis reveló pequeñas dinámicas que estaban generando distancia emocional.\nDetectarlo a tiempo nos permitió trabajar en ello antes de que se volviera un problema más grande.' },
-                    { name: 'Sofía', initials: 'S', detail: '31 años', bg: 'from-fuchsia-500/30 to-pink-500/20', text: 'El análisis mostró cosas que yo intuía, pero que nunca había podido poner en palabras.\nEntender esos patrones cambió completamente la manera en que veo mi relación.' }
+                    { name: 'Valentina C.', initials: 'V', detail: '27 años · Individual', bg: 'from-pink-500/30 to-rose-500/20', text: 'Llevaba tres relaciones seguidas con el mismo tipo de persona: alguien emocionalmente no disponible.\nHice la radiografía individual y por primera vez vi el patrón con nombre: apego ansioso, búsqueda de validación, confusión entre intensidad e intimidad.\nTener el mapa escrito cambia algo. Ya no puedo decir que no lo sabía.' },
+                    { name: 'Diego M.', initials: 'D', detail: '34 años · Individual', bg: 'from-amber-500/30 to-orange-500/20', text: 'Siempre encontraba alguna razón para terminar las cosas justo cuando se ponían bien.\nEl análisis individual lo llamó por su nombre: patrón evitativo, índice del 74%. Lo explicó desde cuatro corrientes distintas.\nFue incómodo leerlo. También fue lo más útil que he hecho por mí mismo en mucho tiempo.' },
+                    { name: 'Mariana F.', initials: 'M', detail: '31 años · Pareja Solo', bg: 'from-violet-500/30 to-purple-500/20', text: 'Mi pareja no quería hacer ningún test. Hice la radiografía desde la modalidad “solo tú”.\nEl reporte describió nuestra dinámica con una precisión que me dejó sin palabras — ciclo de persecución y retirada, distancia emocional creciente.\nHubo partes que pude mostrarle como descripción, no como acusación. Eso abrió una conversación que llevábamos meses evitando.' },
+                    { name: 'Rebeca S.', initials: 'R', detail: '29 años · Pareja Solo', bg: 'from-fuchsia-500/30 to-pink-500/20', text: 'Sabía que algo estaba pasando, pero mi pareja decía que todo estaba bien.\nHice la radiografía sola y el análisis fue claro: señales de conflicto evitado, distancia emocional creciente, patrones de Gottman que yo no había sabido nombrar.\nNo lo resolvió todo — pero me dio exactamente lo que necesitaba: claridad para tomar una decisión informada.' },
+                    { name: 'Fernanda y Luis', initials: 'FL', detail: '8 años juntos · Los dos', bg: 'from-blue-500/30 to-cyan-500/20', text: 'Hicimos el test por separado, sin ver las respuestas del otro.\nEl reporte cruzado lo nombró mejor de lo que nosotros pudimos: persecución-retirada. Ella busca cercanía, él se cierra. Llevábamos años en ese ciclo sin nombre para esto.\nDespués tomamos una consulta de pareja con Luis y fue la primera vez que hablamos del tema sin que se convirtiera en pelea.' },
+                    { name: 'Carlos y Sofía', initials: 'CS', detail: '2 años juntos · Los dos', bg: 'from-emerald-500/30 to-teal-500/20', text: 'Decidimos hacer el test antes de mudarnos juntos. Cada uno contestó por separado.\nEl reporte cruzado mostró una brecha en el componente de compromiso que los dos minimizábamos sin darnos cuenta.\nNo fue alarmante — sí fue honesto. Lo trabajamos antes de que se convirtiera en un problema real.' }
                   ].map((t, i) => (
                     <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }} transition={{ delay: i * 0.06 }}
@@ -1903,12 +1903,12 @@ const DiagnosticoRelacionalPage = () => {
                       style={{ WebkitOverflowScrolling: 'touch' }}
                     >
                       {[
-                        { name: 'Laura y Andrés', initials: 'LA', detail: '8 años juntos', bg: 'from-pink-500/30 to-rose-500/20', text: 'Sentíamos que algo no estaba bien, pero no lográbamos entender qué estaba pasando entre nosotros.\nLa radiografía de pareja nos mostró patrones que nunca habíamos logrado ver por nuestra cuenta.\nDespués del análisis tomamos una consulta de pareja y fue mucho más fácil empezar a reparar lo que se había ido desgastando.' },
-                        { name: 'Mariana', initials: 'M', detail: '34 años', bg: 'from-violet-500/30 to-purple-500/20', text: 'Siempre discutíamos por lo mismo y pensábamos que era por cosas pequeñas.\nEl análisis reveló dinámicas emocionales que ninguno de los dos había notado.\nEso cambió completamente la forma en que empezamos a hablar de nuestra relación.' },
-                        { name: 'Carlos y Daniela', initials: 'CD', detail: '5 años juntos', bg: 'from-blue-500/30 to-cyan-500/20', text: 'Nos sorprendió lo preciso que fue el análisis.\nDetectó patrones que llevábamos años repitiendo sin darnos cuenta.\nDespués de ver los resultados decidimos tomar una sesión de pareja y nos ayudó muchísimo a entendernos mejor.' },
-                        { name: 'Andrea', initials: 'A', detail: '29 años', bg: 'from-amber-500/30 to-orange-500/20', text: 'Sentía que la relación estaba cambiando, pero no sabía explicar por qué.\nLa radiografía de pareja me ayudó a entender lo que realmente estaba pasando entre nosotros.\nFue como ver el mapa emocional de la relación por primera vez.' },
-                        { name: 'Javier y Paula', initials: 'JP', detail: '11 años juntos', bg: 'from-emerald-500/30 to-teal-500/20', text: 'Pensábamos que nuestra relación estaba bien, pero el análisis reveló pequeñas dinámicas que estaban generando distancia emocional.\nDetectarlo a tiempo nos permitió trabajar en ello antes de que se volviera un problema más grande.' },
-                        { name: 'Sofía', initials: 'S', detail: '31 años', bg: 'from-fuchsia-500/30 to-pink-500/20', text: 'El análisis mostró cosas que yo intuía, pero que nunca había podido poner en palabras.\nEntender esos patrones cambió completamente la manera en que veo mi relación.' }
+                        { name: 'Valentina C.', initials: 'V', detail: '27 años · Individual', bg: 'from-pink-500/30 to-rose-500/20', text: 'Llevaba tres relaciones seguidas con el mismo tipo de persona: alguien emocionalmente no disponible.\nHice la radiografía individual y por primera vez vi el patrón con nombre: apego ansioso, búsqueda de validación, confusión entre intensidad e intimidad.\nTener el mapa escrito cambia algo. Ya no puedo decir que no lo sabía.' },
+                        { name: 'Diego M.', initials: 'D', detail: '34 años · Individual', bg: 'from-amber-500/30 to-orange-500/20', text: 'Siempre encontraba alguna razón para terminar las cosas justo cuando se ponían bien.\nEl análisis individual lo llamó por su nombre: patrón evitativo, índice del 74%. Lo explicó desde cuatro corrientes distintas.\nFue incómodo leerlo. También fue lo más útil que he hecho por mí mismo en mucho tiempo.' },
+                        { name: 'Mariana F.', initials: 'M', detail: '31 años · Pareja Solo', bg: 'from-violet-500/30 to-purple-500/20', text: 'Mi pareja no quería hacer ningún test. Hice la radiografía desde la modalidad “solo tú”.\nEl reporte describió nuestra dinámica con una precisión que me dejó sin palabras — ciclo de persecución y retirada, distancia emocional creciente.\nHubo partes que pude mostrarle como descripción, no como acusación. Eso abrió una conversación que llevábamos meses evitando.' },
+                        { name: 'Rebeca S.', initials: 'R', detail: '29 años · Pareja Solo', bg: 'from-fuchsia-500/30 to-pink-500/20', text: 'Sabía que algo estaba pasando, pero mi pareja decía que todo estaba bien.\nHice la radiografía sola y el análisis fue claro: señales de conflicto evitado, distancia emocional creciente, patrones de Gottman que yo no había sabido nombrar.\nNo lo resolvió todo — pero me dio exactamente lo que necesitaba: claridad para tomar una decisión informada.' },
+                        { name: 'Fernanda y Luis', initials: 'FL', detail: '8 años juntos · Los dos', bg: 'from-blue-500/30 to-cyan-500/20', text: 'Hicimos el test por separado, sin ver las respuestas del otro.\nEl reporte cruzado lo nombró mejor de lo que nosotros pudimos: persecución-retirada. Ella busca cercanía, él se cierra. Llevábamos años en ese ciclo sin nombre para esto.\nDespués tomamos una consulta de pareja con Luis y fue la primera vez que hablamos del tema sin que se convirtiera en pelea.' },
+                        { name: 'Carlos y Sofía', initials: 'CS', detail: '2 años juntos · Los dos', bg: 'from-emerald-500/30 to-teal-500/20', text: 'Decidimos hacer el test antes de mudarnos juntos. Cada uno contestó por separado.\nEl reporte cruzado mostró una brecha en el componente de compromiso que los dos minimizábamos sin darnos cuenta.\nNo fue alarmante — sí fue honesto. Lo trabajamos antes de que se convirtiera en un problema real.' }
                       ].map((t, i) => (
                         <div key={i} className="flex-shrink-0 w-[85vw] snap-center p-6 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
                           <div className="flex items-center gap-3 mb-3">
@@ -1953,16 +1953,28 @@ const DiagnosticoRelacionalPage = () => {
                 </p>
               </motion.div>
 
-              {/* ═══════════════════════════════════════════════════════
-                  SECTION 4: CARRUSEL DEL REPORTE — Capturas reales
-              ═══════════════════════════════════════════════════════ */}
-              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              {/* DEMO CTA */}
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center py-6">
+                <p className="text-white/40 text-sm uppercase tracking-[0.2em] mb-3">¿Cómo funciona?</p>
+                <h2 className="text-2xl lg:text-3xl font-light text-white/80 mb-4">Prueba el diagnóstico antes de comprarlo</h2>
+                <p className="text-white/45 text-base font-light mb-8 max-w-xl mx-auto">5 preguntas gratuitas. Sin registro. Responde por voz y siente cómo funciona el proceso antes de decidir.</p>
+                <motion.button
+                  onClick={() => handlePurchase('demo')}
+                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-violet-600/25 to-fuchsia-600/25 border border-violet-500/30 text-white/80 font-light text-base hover:from-violet-600/40 hover:to-fuchsia-600/40 hover:border-violet-500/50 transition-all">
+                  <Eye className="w-5 h-5 text-violet-400/70" strokeWidth={1.5} />
+                  Probar el demo gratuito
+                </motion.button>
+                <p className="text-white/25 text-xs font-light mt-3">5 preguntas · Sin tarjeta · Resultado parcial incluido</p>
+              </motion.div>
+              {/* Old carousel hidden */}
+              <div className="hidden">
                 <p className="text-center text-white/40 text-sm uppercase tracking-[0.2em] mb-2">Tu reporte incluye</p>
                 <h2 className="text-center text-2xl lg:text-3xl font-light text-white/70 mb-3">Así se ve tu diagnóstico: <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-fuchsia-300">capturas reales del reporte</span></h2>
                 <p className="text-center text-white/40 text-base font-light mb-10 max-w-2xl mx-auto">Desliza para explorar. Radar multidimensional, triángulo del amor, mapa de apego y más — todo personalizado con tus respuestas.</p>
 
                 <div className="relative max-w-3xl mx-auto">
-                  {/* Carousel container — PDF page style */}
+                  {/* Carousel container — PDF page style */}}
                   <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-zinc-950/80 backdrop-blur-sm shadow-2xl shadow-violet-900/10">
                     <div className="relative" style={{ minHeight: '420px' }}>
                       <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${carouselIdx * 100}%)` }}>
@@ -2133,7 +2145,7 @@ const DiagnosticoRelacionalPage = () => {
                   </p>
                   <div className="h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent mt-6" />
                 </div>
-              </motion.div>
+              </div>
 
               {/* ═══════════════════════════════════════════════════════
                   SECTION 5: Muestra del reporte — Sofía y Mateo
@@ -2175,8 +2187,15 @@ const DiagnosticoRelacionalPage = () => {
                   </div>
                 </div>
 
-                <div className="text-center">
+                <div className="text-center space-y-5">
                   <p className="text-white/30 text-xs font-light">Esto es solo una fracción. Tu reporte incluye 12 dimensiones, 11 corrientes, gráficas interactivas y recomendaciones personalizadas.</p>
+                  <motion.button
+                    onClick={() => handlePurchase('demo')}
+                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-violet-500/30 text-white/60 font-light text-sm hover:border-violet-500/50 hover:text-white/80 transition-all">
+                    <Eye className="w-4 h-4 text-violet-400/60" strokeWidth={1.5} />
+                    Ver demo del diagnóstico — gratis
+                  </motion.button>
                 </div>
               </motion.div>
 
@@ -2362,7 +2381,7 @@ const DiagnosticoRelacionalPage = () => {
                     </div>
                   </div>
                   </div>
-                  {/* Pareja Los dos — Mobile */
+                  {/* Pareja Los dos — Mobile */}
                   <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-7 bg-gradient-to-br from-blue-500 to-cyan-500 min-h-[90px] flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-1.5">
