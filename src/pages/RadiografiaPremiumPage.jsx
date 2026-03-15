@@ -1821,6 +1821,12 @@ const RadiografiaPremiumPage = () => {
     return params.get('type') || sessionStorage.getItem('diagnostico_relacional_type') || 'solo'
   })
 
+  // Purchase token from URL — used for localStorage namespacing and API calls
+  const [purchaseToken] = useState(() => new URLSearchParams(window.location.search).get('token') || '')
+
+  // Cross-analysis data (losdos package)
+  const [crossAnalysis, setCrossAnalysis] = useState(null)
+
   // Payment gate — only allow access if paid, free promo, test/dev mode, or token link
   const [accessGranted] = useState(() => {
     if (import.meta.env.DEV) return true
@@ -1915,6 +1921,8 @@ const RadiografiaPremiumPage = () => {
     if (params.get('view') !== 'results') return
     const token = params.get('token')
     if (!token) return
+
+    // Load individual analysis
     getAnalysis(token)
       .then(data => {
         if (data?.analysis) {
@@ -1922,7 +1930,17 @@ const RadiografiaPremiumPage = () => {
           setStage('results')
         }
       })
-      .catch(() => { /* analysis not found — proceed normally, user can redo questionnaire */ })
+      .catch(() => {})
+
+    // If cross-analysis link (?cross=pairId), also load cross-analysis
+    const crossPairId = params.get('cross')
+    if (crossPairId) {
+      getCrossAnalysis(crossPairId, token)
+        .then(data => {
+          if (data?.analysis) setCrossAnalysis(data.analysis)
+        })
+        .catch(() => {})
+    }
   }, [])
 
   // ── Public sample mode: ?demo=ventas → open same sales demo as DEV button ──
@@ -1940,10 +1958,11 @@ const RadiografiaPremiumPage = () => {
   const totalQ = PREGUNTAS.length
   const progress = ((currentQ + 1) / totalQ) * 100
 
-  // ── Restore saved progress from localStorage ──
+  // ── Restore saved progress from localStorage (namespaced by token) ──
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('radiografia_premium_progress')
+      const storageKey = purchaseToken ? `radiografia_premium_progress_${purchaseToken}` : 'radiografia_premium_progress'
+      const saved = localStorage.getItem(storageKey)
       if (saved) {
         const data = JSON.parse(saved)
         if (data.responses && Object.keys(data.responses).length > 0) {
@@ -1956,10 +1975,11 @@ const RadiografiaPremiumPage = () => {
     } catch { /* ignore corrupted data */ }
   }, [])
 
-  // ── Save progress to localStorage on every change ──
+  // ── Save progress to localStorage on every change (namespaced by token) ──
   useEffect(() => {
     if (stage === 'questionnaire' && Object.keys(responses).length > 0) {
-      localStorage.setItem('radiografia_premium_progress', JSON.stringify({
+      const storageKey = purchaseToken ? `radiografia_premium_progress_${purchaseToken}` : 'radiografia_premium_progress'
+      localStorage.setItem(storageKey, JSON.stringify({
         responses, currentQ, profileData, stage: 'questionnaire'
       }))
     }
@@ -2273,7 +2293,8 @@ const RadiografiaPremiumPage = () => {
       setAiAnalysis(result)
       setCachedAnalysis(result) // Cache for DEV reuse
       setAnalysisDone(true)
-      localStorage.removeItem('radiografia_premium_progress')
+      const storageKey = purchaseToken ? `radiografia_premium_progress_${purchaseToken}` : 'radiografia_premium_progress'
+      localStorage.removeItem(storageKey)
       // Save to localStorage for later DEV access
       try { localStorage.setItem('radiografia_cached_analysis', JSON.stringify(result)) } catch {}
 
@@ -2307,6 +2328,7 @@ const RadiografiaPremiumPage = () => {
                   })
                   if (crossResult && crossStatus.pairId) {
                     await saveCrossAnalysis({ token: purchaseToken, pairId: crossStatus.pairId, analysis: crossResult })
+                    setCrossAnalysis(crossResult)
                     await sendCrossAnalysisEmail({ pairId: crossStatus.pairId, token: purchaseToken })
                     console.log('✅ Análisis cruzado guardado y email enviado')
                   }
@@ -4136,6 +4158,261 @@ const RadiografiaPremiumPage = () => {
                   </motion.button>
                 </div>
               </motion.div>
+
+              {/* ═══════════════════════════════════════════════════════════════
+                  SECCIÓN: RADIOGRAFÍA CRUZADA (Los Dos)
+                  Solo se muestra cuando hay crossAnalysis disponible
+              ═══════════════════════════════════════════════════════════════ */}
+              {crossAnalysis && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-10">
+
+                  {/* Separator */}
+                  <div className="text-center my-10 py-8 border-t border-b border-emerald-500/10">
+                    <p className="text-emerald-400/50 text-xs font-bold uppercase tracking-[0.25em] mb-1">Radiografía Cruzada</p>
+                    <p className="text-white/40 text-sm font-light">La relación vista desde las dos perspectivas</p>
+                  </div>
+
+                  {/* Apertura */}
+                  {crossAnalysis.apertura && (
+                    <div className="p-6 lg:p-8 rounded-2xl border border-emerald-500/15 bg-gradient-to-br from-emerald-500/[0.04] via-teal-500/[0.03] to-transparent">
+                      <div className="text-center mb-6">
+                        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/15 border border-emerald-500/25 mb-4">
+                          <Users className="w-7 h-7 text-emerald-400/80" />
+                        </div>
+                        <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-teal-300 tracking-wide">Análisis Cruzado</h2>
+                      </div>
+                      {crossAnalysis.apertura.split('\n\n').map((p, i) => (
+                        <p key={i} className="text-white/70 text-[15px] font-light leading-[1.8] mb-3">{renderConceptBold(p)}</p>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Resumen cruzado */}
+                  {crossAnalysis.resumen_cruzado && (
+                    <div className="p-6 rounded-2xl border border-teal-500/15 bg-teal-500/[0.03]">
+                      <p className="text-teal-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-4">Resumen cruzado</p>
+                      {crossAnalysis.resumen_cruzado.split('\n\n').map((p, i) => (
+                        <p key={i} className="text-white/70 text-[15px] font-light leading-[1.8] mb-3">{renderConceptBold(p)}</p>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Dimensiones cruzadas — side-by-side bar chart */}
+                  {crossAnalysis.dimensiones_cruzadas && (() => {
+                    const dims = crossAnalysis.dimensiones_cruzadas
+                    const ind = crossAnalysis._individual || {}
+                    const name1 = ind.p1?.nombre || 'Participante 1'
+                    const name2 = ind.p2?.nombre || 'Participante 2'
+                    const dimKeys = Object.keys(dims)
+                    return (
+                      <div className="p-6 lg:p-8 rounded-2xl border border-emerald-500/15 bg-white/[0.02]">
+                        <div className="text-center mb-6">
+                          <p className="text-emerald-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Dimensiones cruzadas</p>
+                          <h3 className="text-xl font-light text-white/80">Cómo se ven el uno al otro</h3>
+                          <div className="flex justify-center gap-6 mt-3">
+                            <span className="flex items-center gap-2 text-xs text-emerald-300/70"><span className="w-3 h-3 rounded-full bg-emerald-500/60" />{name1}</span>
+                            <span className="flex items-center gap-2 text-xs text-sky-300/70"><span className="w-3 h-3 rounded-full bg-sky-500/60" />{name2}</span>
+                          </div>
+                        </div>
+                        <div className="space-y-4">
+                          {dimKeys.map(dimKey => {
+                            const d = dims[dimKey]
+                            const v1 = typeof d.p1 === 'number' ? d.p1 : parseInt(d.p1) || 50
+                            const v2 = typeof d.p2 === 'number' ? d.p2 : parseInt(d.p2) || 50
+                            const label = DIMENSION_LABELS[dimKey] || dimKey.replace(/_/g, ' ')
+                            return (
+                              <div key={dimKey} className="group">
+                                <div className="flex justify-between mb-1">
+                                  <span className="text-white/60 text-xs font-medium capitalize">{label}</span>
+                                  <span className="text-white/40 text-[10px]">{v1} / {v2}</span>
+                                </div>
+                                <div className="flex gap-1">
+                                  <div className="flex-1 h-3 rounded-full bg-white/[0.06] overflow-hidden">
+                                    <div className="h-full rounded-full bg-gradient-to-r from-emerald-600 to-emerald-400" style={{ width: `${v1}%`, opacity: 0.7 }} />
+                                  </div>
+                                  <div className="flex-1 h-3 rounded-full bg-white/[0.06] overflow-hidden">
+                                    <div className="h-full rounded-full bg-gradient-to-r from-sky-600 to-sky-400" style={{ width: `${v2}%`, opacity: 0.7 }} />
+                                  </div>
+                                </div>
+                                {d.interpretacion && <p className="text-white/40 text-[11px] font-light mt-1 leading-relaxed">{d.interpretacion}</p>}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )
+                  })()}
+
+                  {/* Puntos ciegos */}
+                  {crossAnalysis.puntos_ciegos && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {crossAnalysis.puntos_ciegos.p1_no_ve && (
+                        <div className="p-5 rounded-2xl border border-amber-500/15 bg-amber-500/[0.03]">
+                          <div className="flex items-center gap-2 mb-3">
+                            <Eye className="w-5 h-5 text-amber-400/70" />
+                            <p className="text-amber-300/70 text-xs font-bold uppercase tracking-wider">Lo que no ve</p>
+                          </div>
+                          {crossAnalysis.puntos_ciegos.p1_no_ve.split('\n\n').map((p, i) => (
+                            <p key={i} className="text-white/65 text-[13px] font-light leading-[1.8] mb-2">{renderConceptBold(p)}</p>
+                          ))}
+                        </div>
+                      )}
+                      {crossAnalysis.puntos_ciegos.p2_no_ve && (
+                        <div className="p-5 rounded-2xl border border-amber-500/15 bg-amber-500/[0.03]">
+                          <div className="flex items-center gap-2 mb-3">
+                            <Eye className="w-5 h-5 text-amber-400/70" />
+                            <p className="text-amber-300/70 text-xs font-bold uppercase tracking-wider">Lo que no ve</p>
+                          </div>
+                          {crossAnalysis.puntos_ciegos.p2_no_ve.split('\n\n').map((p, i) => (
+                            <p key={i} className="text-white/65 text-[13px] font-light leading-[1.8] mb-2">{renderConceptBold(p)}</p>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Dinámica real */}
+                  {crossAnalysis.dinamica_real && (
+                    <div className="p-6 rounded-2xl border border-fuchsia-500/15 bg-fuchsia-500/[0.03]">
+                      <div className="flex items-center gap-2 mb-4">
+                        <Zap className="w-5 h-5 text-fuchsia-400/70" />
+                        <p className="text-fuchsia-300/60 text-[10px] font-bold uppercase tracking-[0.3em]">La dinámica real de la pareja</p>
+                      </div>
+                      {crossAnalysis.dinamica_real.split('\n\n').map((p, i) => (
+                        <p key={i} className="text-white/70 text-[15px] font-light leading-[1.8] mb-3">{renderConceptBold(p)}</p>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Convergencias y Divergencias */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {crossAnalysis.convergencias?.length > 0 && (
+                      <div className="p-5 rounded-2xl border border-emerald-500/15 bg-emerald-500/[0.03]">
+                        <p className="text-emerald-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-3 flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4" /> Convergencias
+                        </p>
+                        <ul className="space-y-2">
+                          {crossAnalysis.convergencias.map((item, i) => (
+                            <li key={i} className="text-white/65 text-[13px] font-light leading-relaxed flex gap-2">
+                              <span className="text-emerald-400/60 mt-0.5">•</span>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {crossAnalysis.divergencias?.length > 0 && (
+                      <div className="p-5 rounded-2xl border border-rose-500/15 bg-rose-500/[0.03]">
+                        <p className="text-rose-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-3 flex items-center gap-2">
+                          <AlertTriangle className="w-4 h-4" /> Divergencias
+                        </p>
+                        <ul className="space-y-2">
+                          {crossAnalysis.divergencias.map((item, i) => (
+                            <li key={i} className="text-white/65 text-[13px] font-light leading-relaxed flex gap-2">
+                              <span className="text-rose-400/60 mt-0.5">•</span>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Lecturas cruzadas (5 enfoques) */}
+                  {crossAnalysis.lecturas_cruzadas && (() => {
+                    const lc = crossAnalysis.lecturas_cruzadas
+                    const sections = [
+                      { key: 'gottman', title: 'Regulación del conflicto', subtitle: 'Gottman cruzado', icon: Shield, gradient: 'from-blue-500 to-indigo-500', border: 'border-blue-500/15', accent: '#60a5fa' },
+                      { key: 'apego', title: 'Estilos de apego cruzados', subtitle: 'Apego interaccional', icon: Anchor, gradient: 'from-purple-500 to-fuchsia-500', border: 'border-purple-500/15', accent: '#c084fc' },
+                      { key: 'perel', title: 'El deseo desde ambas ventanas', subtitle: 'Esther Perel cruzado', icon: Flame, gradient: 'from-orange-500 to-red-500', border: 'border-orange-500/15', accent: '#fb923c' },
+                      { key: 'comunicacion', title: 'Lenguajes de amor cruzados', subtitle: 'Comunicación', icon: MessageCircle, gradient: 'from-teal-500 to-emerald-500', border: 'border-teal-500/15', accent: '#2dd4bf' },
+                      { key: 'poder', title: 'Dinámica de poder real', subtitle: 'Equilibrio de poder', icon: Scale, gradient: 'from-amber-500 to-yellow-500', border: 'border-amber-500/15', accent: '#fbbf24' },
+                    ]
+                    return (
+                      <div className="space-y-6">
+                        <div className="text-center py-4">
+                          <p className="text-emerald-400/50 text-xs font-bold uppercase tracking-[0.25em] mb-1">5 Lecturas Cruzadas</p>
+                          <p className="text-white/40 text-sm font-light">Cada corriente psicológica — ahora vista desde las dos perspectivas</p>
+                        </div>
+                        {sections.map(({ key, title, subtitle, icon: SIcon, gradient, border, accent }) => {
+                          const text = lc[key]
+                          if (!text) return null
+                          return (
+                            <div key={key} className={`rounded-2xl overflow-hidden border ${border} bg-white/[0.02]`}>
+                              <div className="text-center py-6 px-5 relative">
+                                <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(to right, transparent, ${accent}60, transparent)` }} />
+                                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 mb-3`}>
+                                  <SIcon className="w-6 h-6 text-white/70" strokeWidth={1.5} />
+                                </div>
+                                <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-1" style={{ color: `${accent}99` }}>{subtitle}</p>
+                                <h3 className={`text-lg font-light text-transparent bg-clip-text bg-gradient-to-r ${gradient} tracking-wide`}>{title}</h3>
+                              </div>
+                              <div className="px-6 pb-6 space-y-3">
+                                {text.split('\n\n').map((p, i) => (
+                                  <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85]">{renderConceptBold(p)}</p>
+                                ))}
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )
+                  })()}
+
+                  {/* Mensaje para ambos */}
+                  {crossAnalysis.mensaje_para_ambos && (
+                    <div className="p-6 lg:p-8 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.06] via-teal-500/[0.04] to-transparent">
+                      <div className="text-center mb-6">
+                        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/15 border border-emerald-500/25 mb-4">
+                          <Heart className="w-7 h-7 text-emerald-400/80" />
+                        </div>
+                        <h3 className="text-xl font-light text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-teal-300">Mensaje para ambos</h3>
+                      </div>
+                      {crossAnalysis.mensaje_para_ambos.split('\n\n').map((p, i) => (
+                        <p key={i} className="text-white/75 text-[15px] font-light leading-[1.8] mb-3 text-center">{renderConceptBold(p)}</p>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Pronóstico relacional */}
+                  {crossAnalysis.pronostico_relacional && (() => {
+                    const pr = crossAnalysis.pronostico_relacional
+                    const potencial = typeof pr.potencial === 'number' ? pr.potencial : parseInt(pr.potencial) || 50
+                    const riesgo = typeof pr.riesgo === 'number' ? pr.riesgo : parseInt(pr.riesgo) || 50
+                    return (
+                      <div className="p-6 rounded-2xl border border-violet-500/15 bg-violet-500/[0.03]">
+                        <p className="text-violet-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-4 text-center">Pronóstico relacional</p>
+                        <div className="grid grid-cols-2 gap-6 mb-4">
+                          <div className="text-center">
+                            <p className="text-emerald-400/70 text-xs uppercase tracking-wider mb-2">Potencial</p>
+                            <div className="relative w-20 h-20 mx-auto">
+                              <svg viewBox="0 0 100 100" className="w-full h-full">
+                                <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="6" />
+                                <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(16,185,129,0.6)" strokeWidth="6"
+                                  strokeDasharray={`${potencial * 2.64} 264`} strokeDashoffset="66" strokeLinecap="round" transform="rotate(-90 50 50)" />
+                              </svg>
+                              <span className="absolute inset-0 flex items-center justify-center text-emerald-300 text-lg font-bold">{potencial}</span>
+                            </div>
+                          </div>
+                          <div className="text-center">
+                            <p className="text-rose-400/70 text-xs uppercase tracking-wider mb-2">Riesgo</p>
+                            <div className="relative w-20 h-20 mx-auto">
+                              <svg viewBox="0 0 100 100" className="w-full h-full">
+                                <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="6" />
+                                <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(244,63,94,0.6)" strokeWidth="6"
+                                  strokeDasharray={`${riesgo * 2.64} 264`} strokeDashoffset="66" strokeLinecap="round" transform="rotate(-90 50 50)" />
+                              </svg>
+                              <span className="absolute inset-0 flex items-center justify-center text-rose-300 text-lg font-bold">{riesgo}</span>
+                            </div>
+                          </div>
+                        </div>
+                        {pr.direccion && <p className="text-white/60 text-sm font-light text-center leading-relaxed">{pr.direccion}</p>}
+                      </div>
+                    )
+                  })()}
+
+                </motion.div>
+              )}
 
               {/* ═══ ACTIONS ═══ */}
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
