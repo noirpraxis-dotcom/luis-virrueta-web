@@ -179,148 +179,45 @@ const SUB_SCORE_LABELS = {
   }
 }
 
-// ─── SAMPLE ANALYSIS (for ?preview=results) ────────────────────────
-
-const SAMPLE_ANALYSIS = {
-  person_info: { name: 'María', age: '32', relationship_duration: '5 años', first_impression: 'Relación con amor profundo pero con desconexión emocional progresiva' },
-  relationship_type: { label: 'Relación con desconexión emocional progresiva', explanation: 'Existe un **vínculo genuino y un amor de fondo**, pero la acumulación de conflictos no resueltos y la falta de reparación emocional ha generado una distancia que ambos sienten sin poder nombrar.\n\nEsta dinámica suele presentarse en relaciones que empezaron con mucha pasión y conexión, pero donde **la rutina, los hijos o el estrés fueron erosionando el espacio emocional** sin que ninguno de los dos se diera cuenta a tiempo.' },
-  dimension_scores: { apego: 42, interaccion_conflicto: 35, estructura_amor: 55, vinculo_emocional: 48, diferenciacion: 62, deseo: 38, patrones_inconscientes: 45, neurobiologia_amor: 52, regulacion_emocional: 40, apego_aplicado: 44, lenguaje_amor: 58, satisfaccion_mantenimiento: 47 },
-  sub_scores: {
-    apego: { seguridad_base: 38, miedo_abandono: 72, busqueda_cercania: 65 },
-    interaccion_conflicto: { critica_desprecio: 68, defensividad: 72, stonewalling: 55, capacidad_reparacion: 30 },
-    estructura_amor: { pasion: 40, intimidad: 62, compromiso: 78 },
-    deseo: { atraccion_actual: 35, espontaneidad_erotica: 28, misterio_novedad: 22 }
-  },
-  composite_scores: { salud_relacional_global: 44, sincronia_emocional: 38, riesgo_ruptura: 67, potencial_crecimiento: 72 },
-  attachment_map: { style: 'Ansioso-preocupado', anxiety_level: 68, avoidance_level: 35 },
-  dimension_narratives: {
-    apego: 'Tu estilo de apego muestra una **búsqueda intensa de cercanía emocional** que choca con un miedo profundo al abandono. Cuando tu pareja se distancia — incluso ligeramente —, se activa en ti una alarma interna que te lleva a buscar reaseguramiento de formas que pueden sentirse como persecución para el otro.',
-    interaccion_conflicto: 'Los conflictos en tu relación siguen un patrón claro: **crítica inicial que escala a defensividad mutua**. La capacidad de reparación después del conflicto es baja — ambos esperan que el otro dé el primer paso, lo que genera silencios prolongados que erosionan la confianza.',
-    estructura_amor: 'Tu relación muestra un **compromiso sólido** pero con la pasión significativamente disminuida. La intimidad emocional existe en momentos puntuales pero no fluye de forma cotidiana. Es como si el compromiso fuera el ancla que mantiene la relación, mientras que la pasión y la intimidad necesitan ser reavivadas.',
-    vinculo_emocional: 'Hay momentos de conexión genuina pero son **islas en un mar de desconexión cotidiana**. Cuando logran romper la barrera y ser vulnerables el uno con el otro, la conexión es profunda — pero esos momentos son cada vez menos frecuentes.',
-    diferenciacion: 'Muestras una **diferenciación moderadamente saludable**: puedes mantener tu identidad dentro de la relación, aunque en momentos de conflicto tiendes a fusionarte emocionalmente con el estado de tu pareja, perdiendo tu propio centro.',
-    deseo: 'El deseo se ha ido apagando progresivamente. La **atracción inicial todavía existe en el fondo**, pero la falta de novedad, espontaneidad y espacio para el misterio ha creado una rutina sexual que ambos sienten pero ninguno aborda directamente.',
-    patrones_inconscientes: 'Se detecta un **patrón transgeneracional de relaciones donde uno busca y el otro evita**. Esta dinámica probablemente se aprendió en tu familia de origen, donde la cercanía emocional era inconsistente y había que "ganársela".',
-    neurobiologia_amor: 'Las sensaciones físicas cerca de tu pareja han cambiado: donde antes había **mariposas y excitación**, ahora hay más calma y en ocasiones tensión. El sistema nervioso ya no asocia a tu pareja con novedad sino con familiaridad — lo cual puede ser seguridad o estancamiento.',
-    regulacion_emocional: 'La co-regulación emocional en la pareja es **deficiente**: cuando uno se altera, el otro tiende a alterarse también o a retirarse completamente. Falta un "puerto seguro" al que ambos puedan recurrir en momentos de tormenta emocional.',
-    apego_aplicado: 'Ante la distancia de tu pareja, tu respuesta primaria es la **ansiedad de apego**: quedarte revisando si algo está mal, buscar señales de que todo está bien, interpretar silencios como rechazo. Esto activa en tu pareja una respuesta de evitación.',
-    lenguaje_amor: 'Tu lenguaje del amor primario son las **palabras de afirmación y el tiempo de calidad**, pero tu pareja parece expresar amor a través de actos de servicio. Este desajuste hace que ambos sientan que dan mucho y reciben poco.',
-    satisfaccion_mantenimiento: 'La satisfacción relacional se encuentra en un **punto de inflexión**: no es lo suficientemente baja para provocar una ruptura, pero tampoco es alta como para sentirse plena. Hay un desequilibrio en el esfuerzo — tú sientes que inviertes más.'
-  },
-  empathic_opening: 'Lo que tus respuestas revelan no es una relación rota — es una relación que **necesita atención urgente en áreas específicas**. Hay amor, hay historia compartida, y hay un deseo genuino de que las cosas funcionen.\n\nPero también hay **patrones que se han instalado silenciosamente**: la forma en que discuten, la distancia que se ha creado en la intimidad, y una desconexión emocional que se siente como vivir juntos pero solos.\n\nLa buena noticia es que tu relación tiene un **potencial de crecimiento alto (72%)**. Los cimientos están — lo que falta es trabajar de forma consciente las áreas que este diagnóstico ha revelado.',
-  individual_insights: {
-    emotional_style: 'Tu estilo emocional es **reactivo-afectivo**: sientes con intensidad y necesitas expresar lo que sientes, pero a veces esa intensidad puede abrumar a tu pareja.\n\nEsta característica no es un defecto — es una fortaleza cuando se canaliza. El desafío está en aprender a **regular la intensidad sin apagar la emoción**.',
-    attachment_patterns: 'Tu patrón de apego muestra rasgos **ansioso-preocupados**: necesitas cercanía para sentirte seguro/a, y cuando no la obtienes, la buscas con más intensidad.\n\nEste patrón tiene raíces en experiencias tempranas donde la disponibilidad emocional de tus figuras de apego fue **inconsistente**.',
-    defense_mechanisms: 'Tu mecanismo de defensa principal es la **racionalización seguida de confrontación**: primero intentas entender lógicamente qué pasa, y cuando no puedes, confrontas directamente.\n\nEl problema es que esta confrontación a menudo llega cargada de la frustración acumulada durante la fase de racionalización.',
-    what_they_seek_in_love: 'Lo que buscas en el amor es fundamentalmente **seguridad emocional con pasión**: quieres saber que tu pareja está ahí, que te elige cada día, pero también quieres sentir que la chispa no se ha apagado.\n\nEsta combinación es posible, pero requiere un trabajo consciente de ambos.',
-    emotional_triggers: 'Tus principales detonantes emocionales son: **el silencio prolongado de tu pareja**, la sensación de que "no le importa", y los momentos donde sientes que estás haciendo todo el esfuerzo solo/a.\n\nEstos detonantes están conectados con tu patrón de apego ansioso.',
-    repeating_patterns: 'El patrón que más se repite en tu historia es: **buscas cercanía → la otra persona se aleja → tú persigues más → se crea un ciclo de tensión**. Este patrón se ha presentado en relaciones anteriores.\n\nReconocerlo es el primer paso para romperlo.',
-    hidden_needs: 'Tu necesidad oculta más profunda es ser **vista/o y validada/o emocionalmente sin tener que pedirlo**. Quieres que tu pareja note cuando algo te pasa, que pregunte, que se acerque.\n\nCuando esto no sucede, interpretas el silencio como indiferencia.',
-    role_in_relationship: 'Tu rol predominante es el de **cuidador/a emocional**: eres quien mantiene el pulso de la relación, quien nota los cambios, quien intenta reparar después de los conflictos.\n\nEste rol es agotador cuando no es compartido.',
-    differentiation_profile: 'Tu perfil de diferenciación muestra que puedes funcionar de manera independiente en lo cotidiano, pero **en momentos de estrés relacional pierdes tu centro** y te fusionas con las emociones de la relación.\n\nDesarrollar mayor diferenciación te permitiría estar presente sin perderte.'
-  },
-  couple_insights: {
-    real_relationship_dynamic: 'La dinámica real de su relación es un ciclo de **persecución-retirada**: cuando tú buscas cercanía, tu pareja percibe presión y se aleja. Cuando se aleja, tú sientes rechazo y buscas más — confirmando el ciclo.\n\nEste ciclo no es culpa de ninguno — es un sistema que se alimenta solo.',
-    unconscious_patterns: 'Ambos están repitiendo sin saberlo **dinámicas de sus familias de origen**: tú aprendiste que el amor requiere esfuerzo constante, y tu pareja aprendió que la cercanía excesiva es amenazante.\n\nEstas dos programaciones chocan inevitablemente.',
-    conflict_and_defense: 'En los conflictos, se activan los **4 jinetes de Gottman**: crítica ("siempre haces lo mismo"), desprecio (ojos en blanco, sarcasmo), defensividad ("pero tú también") y stonewalling (silencio, retirarse).\n\nLa capacidad de reparación es lo que más necesita trabajo urgente.',
-    distancing_dynamics: 'La distancia entre ustedes no es un evento — es un **proceso que se ha instalado gradualmente**. Cada conflicto no resuelto, cada conversación evitada, cada noche sin conectar ha ido sumando capas de distancia.\n\nLa buena noticia: este proceso es reversible con trabajo consciente.',
-    attachment_and_support: 'El sistema de apego de la relación está **desregulado**: en lugar de funcionar como un refugio seguro para ambos, la relación se ha convertido en una fuente de estrés. Necesitan reconstruir la sensación de que el otro está disponible emocionalmente.',
-    strengths_of_the_relationship: 'Las fortalezas de su relación incluyen: un **compromiso sólido** (78%), momentos genuinos de conexión cuando bajan la guardia, historia compartida significativa, y un potencial de crecimiento alto.\n\nEstas fortalezas son los cimientos sobre los cuales reconstruir.',
-    love_languages_analysis: 'Existe un **desajuste en los lenguajes del amor**: uno expresa cariño a través de actos de servicio ("hago cosas por ti") mientras el otro necesita palabras de afirmación ("dime que me amas"). Ambos dan amor, pero en idiomas diferentes.',
-    global_relationship_diagnosis: 'El diagnóstico global indica una relación en **fase de desgaste silencioso**: hay suficiente amor para justificar el esfuerzo de reparación, pero las dinámicas actuales están erosionando lentamente el vínculo.\n\nSin intervención, el riesgo de ruptura (67%) continuará aumentando. Con trabajo consciente, el potencial de crecimiento (72%) puede activarse plenamente.'
-  },
-  dominant_cycles: [
-    { name: 'Persecución – Retirada – Silencio – Persecución', explanation: 'Este es el ciclo central de tu relación: **tú buscas conexión, tu pareja se retira**, el silencio se instala, y la tensión acumulada te impulsa a buscar de nuevo con más urgencia.\n\nCada repetición del ciclo erosiona un poco más la confianza emocional.' },
-    { name: 'Crítica – Defensividad – Escalada – Stonewalling', explanation: 'Los conflictos siguen un patrón predecible: **una observación se convierte en crítica**, la otra persona se defiende, la conversación escala, y alguien se retira completamente.\n\nEste ciclo impide que los conflictos se resuelvan — solo se posponen.' }
-  ],
-  activated_emotional_sensitivities: [
-    { name: 'Miedo al abandono emocional', description: 'La distancia emocional de tu pareja activa un **miedo profundo de ser dejada/o o no importar**. Este miedo magnifica pequeñas señales y las convierte en amenazas.' },
-    { name: 'Necesidad de validación', description: 'Necesitas saber que **tu pareja te ve, te valora y te elige**. Cuando esta validación no llega espontáneamente, sientes que algo está mal en la relación.' },
-    { name: 'Hipervigilancia relacional', description: 'Estás constantemente **monitoreando el estado emocional de tu pareja** y de la relación. Esto te agota y a veces te hace reaccionar ante señales que no son reales.' }
-  ],
-  key_insight: 'La observación más importante de tu diagnóstico es que **el problema no es la falta de amor — es la falta de reparación después del conflicto**. Ambos se aman, pero no saben cómo volver a conectarse después de desconectarse. Cada ciclo de conflicto sin reparación deposita una capa más de distancia emocional. Aprender a reparar — no a evitar el conflicto, sino a reconectarse después — es la llave que puede transformar esta relación.',
-  recommendation: 'La recomendación principal es **iniciar un proceso de terapia de pareja enfocado en la reparación emocional** (Emotionally Focused Therapy - EFT). El nivel de riesgo actual (67%) indica que la intervención temprana es importante.\n\nAdemás, trabajar de forma individual en la regulación emocional y el reconocimiento de patrones de apego puede acelerar significativamente el proceso de reconexión.',
-  session_work_items: [
-    '**Reparación después del conflicto**: Aprender a reconectarse emocionalmente después de una discusión, en lugar de esperar que "se pase solo".',
-    '**Ciclo persecución-retirada**: Identificar en tiempo real cuándo se activa el ciclo y aprender a frenarlo antes de que escale.',
-    '**Lenguajes del amor desajustados**: Aprender el idioma emocional del otro para que el amor que se da sea el amor que se necesita.',
-    '**Regulación emocional individual**: Desarrollar la capacidad de auto-calmarse antes de buscar la regulación en el otro.',
-    '**Reconstrucción de la intimidad**: Crear espacios seguros para la vulnerabilidad emocional y la reconexión erótica.'
-  ],
-  evidence_signals: [
-    { signal: 'Uso frecuente de "siempre" y "nunca" al describir conflictos', source: 'Q13, Q14' },
-    { signal: 'Describe a la pareja con admiración en abstracto pero frustración en lo cotidiano', source: 'Q4, Q5, Q13' },
-    { signal: 'Respuesta emocional intensa ante preguntas de distancia (Q7, Q9)', source: 'Q7, Q9' }
-  ],
-  key_patterns: [
-    { title: 'Ciclo persecución-retirada activo', description: 'Cuando buscas cercanía, tu pareja percibe presión y se aleja. Cuando se aleja, tú buscas más — confirmando el ciclo.', severity: 'high' },
-    { title: 'Reparación post-conflicto ausente', description: 'Los conflictos no se resuelven — se acumulan y cada silencio deposita una capa más de distancia emocional.', severity: 'high' },
-    { title: 'Desajuste en lenguajes del amor', description: 'Uno da amor con actos de servicio, el otro necesita palabras. Ambos dan mucho pero en idiomas diferentes.', severity: 'medium' },
-    { title: 'Pasión en declive silencioso', description: 'La atracción inicial existe en el fondo, pero la rutina y la falta de novedad han apagado la espontaneidad.', severity: 'medium' }
-  ],
-  conflict_flow: {
-    nodes: [
-      { id: 'trigger', label: 'Comentario percibido como crítica' },
-      { id: 'reaction_a', label: 'Defensividad inmediata' },
-      { id: 'reaction_b', label: 'Silencio / Stonewalling' },
-      { id: 'escalation', label: 'Escalada emocional' },
-      { id: 'result', label: 'Distanciamiento prolongado' }
-    ],
-    links: [
-      { source: 'trigger', target: 'reaction_a', value: 65 },
-      { source: 'trigger', target: 'reaction_b', value: 45 },
-      { source: 'reaction_a', target: 'escalation', value: 75 },
-      { source: 'reaction_b', target: 'escalation', value: 35 },
-      { source: 'escalation', target: 'result', value: 80 }
-    ]
-  },
-  future_projection: {
-    if_continues: 'Si los patrones actuales continúan sin intervención, la **desconexión emocional se normalizará** progresivamente. Dejarán de pelear — no porque se resuelvan los conflictos, sino porque ambos dejarán de intentar.\n\nEl riesgo no es una ruptura explosiva sino un **desgaste silencioso e irreversible**. La coexistencia sin conexión es el destino más probable si no se interviene.',
-    if_changes: 'Si deciden trabajar activamente estas áreas, esta relación tiene un **potencial de transformación real del 72%**. Los cimientos están: hay compromiso sólido, momentos de conexión genuina cuando bajan la guardia, y un deseo mutuo de que funcione.\n\nCon terapia focalizada en emociones (EFT) y trabajo individual en patrones de apego, los ciclos actuales pueden **romperse y reemplazarse por dinámicas de conexión segura**.'
-  }
-}
-
-// ─── ANALYSIS ANIMATION TASKS ───────────────────────────────────────
-
 const ANALYSIS_TASK_GROUPS = [
   {
-    label: 'Procesando 44 respuestas',
+    label: 'Lectura relacional',
     color: 'violet',
     tasks: [
-      { id: 1, text: 'Reconstruyendo la narrativa de tu vínculo…' },
-      { id: 2, text: 'Analizando patrones de admiración y valoración (Gottman)…' },
-      { id: 3, text: 'Mapeando tu estilo de apego emocional (Bowlby)…' },
-      { id: 4, text: 'Evaluando la conexión emocional profunda (Sue Johnson)…' },
+      { id: 1, text: 'Leyendo narrativa emocional y contexto de la relación…' },
+      { id: 2, text: 'Detectando patrones de apego y regulación afectiva…' },
+      { id: 3, text: 'Mapeando señales de vínculo, intimidad y distancia…' },
+      { id: 4, text: 'Calculando equilibrio entre conexión y autonomía…' }
     ]
   },
   {
-    label: 'Análisis de 12 dimensiones psicológicas',
+    label: 'Dinámicas de conflicto',
     color: 'blue',
     tasks: [
-      { id: 5, text: 'Descifrando dinámicas de conflicto y reparación (Gottman)…' },
-      { id: 6, text: 'Analizando deseo, atracción y erotismo (Perel)…' },
-      { id: 7, text: 'Detectando patrones inconscientes repetitivos (Hendrix)…' },
-      { id: 8, text: 'Evaluando diferenciación e identidad personal (Schnarch)…' },
+      { id: 5, text: 'Analizando estilo de discusión y escalada emocional…' },
+      { id: 6, text: 'Estimando capacidad de reparación postconflicto…' },
+      { id: 7, text: 'Identificando ciclos repetitivos de persecución-retirada…' },
+      { id: 8, text: 'Evaluando riesgo de cronificación del conflicto…' }
     ]
   },
   {
-    label: 'Triangulación y análisis del discurso',
+    label: 'Compatibilidad profunda',
     color: 'fuchsia',
     tasks: [
-      { id: 9, text: 'Identificando contradicciones entre respuestas…' },
-      { id: 10, text: 'Analizando tono emocional y metáforas usadas…' },
-      { id: 11, text: 'Cruzando dimensiones: neurobiología, regulación, lenguajes…' },
-      { id: 12, text: 'Evaluando satisfacción relacional y potencial de crecimiento (Finkel)…' },
+      { id: 9, text: 'Comparando lenguajes del amor y necesidades implícitas…' },
+      { id: 10, text: 'Integrando deseo, intimidad y compromiso de la díada…' },
+      { id: 11, text: 'Evaluando fortalezas y recursos protectores de la pareja…' },
+      { id: 12, text: 'Modelando proyección relacional a 90 días…' }
     ]
   },
   {
-    label: 'Construyendo tu diagnóstico profundo',
+    label: 'Síntesis diagnóstica',
     color: 'pink',
     tasks: [
-      { id: 13, text: 'Calculando 12 scores dimensionales por autor…' },
-      { id: 14, text: 'Generando mapa de apego y triángulo de Sternberg…' },
+      { id: 13, text: 'Construyendo indicadores globales de salud relacional…' },
+      { id: 14, text: 'Generando recomendaciones terapéuticas personalizadas…' },
       { id: 15, text: 'Clasificando tipo de relación y ciclos dominantes…' },
-      { id: 16, text: 'Integrando todas las dimensiones en el diagnóstico final…' },
+      { id: 16, text: 'Integrando todas las dimensiones en el diagnóstico final…' }
     ]
   }
 ]
@@ -1974,7 +1871,7 @@ const DiagnosticoRelacionalPage = () => {
                 <p className="text-center text-white/40 text-base font-light mb-10 max-w-2xl mx-auto">Desliza para explorar. Radar multidimensional, triángulo del amor, mapa de apego y más — todo personalizado con tus respuestas.</p>
 
                 <div className="relative max-w-3xl mx-auto">
-                  {/* Carousel container — PDF page style */}}
+                  {/* Carousel container — PDF page style */}
                   <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-zinc-950/80 backdrop-blur-sm shadow-2xl shadow-violet-900/10">
                     <div className="relative" style={{ minHeight: '420px' }}>
                       <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${carouselIdx * 100}%)` }}>
@@ -2311,6 +2208,7 @@ const DiagnosticoRelacionalPage = () => {
                     </motion.button>
                     </div>
                   </div>
+                </div>
                 </div>
 
                 {/* Mobile: stacked pricing cards */}
