@@ -329,6 +329,9 @@ const PRODUCT_PRICE_SOLO = 499
 const PRODUCT_PRICE_LOSDOS = 999
 const PRODUCT_PRICE_CONSULTA = 1199
 const DEMO_QUESTION_LIMIT = 5
+const STRIPE_LINKS = {
+  consulta: '/tienda/9'
+}
 
 // ─── HELPER COMPONENTS ──────────────────────────────────────────────
 
@@ -797,10 +800,9 @@ const DiagnosticoRelacionalPage = () => {
   }, [])
 
   const openReportSample = useCallback(() => {
-    setAiAnalysis(SAMPLE_ANALYSIS)
-    setStage('results')
+    navigate('/tienda/diagnostico-relacional?preview=results')
     scrollToTop()
-  }, [scrollToTop])
+  }, [navigate, scrollToTop])
 
   // Restore purchase from session OR handle Stripe redirect
   useEffect(() => {
