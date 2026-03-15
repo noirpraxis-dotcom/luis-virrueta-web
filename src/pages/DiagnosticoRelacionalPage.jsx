@@ -704,6 +704,12 @@ const DiagnosticoRelacionalPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
+  const openReportSample = useCallback(() => {
+    setAiAnalysis(SAMPLE_ANALYSIS)
+    setStage('results')
+    scrollToTop()
+  }, [scrollToTop])
+
   // Restore purchase from session OR handle Stripe redirect
   useEffect(() => {
     const sessionId = searchParams.get('session_id')
@@ -1854,17 +1860,22 @@ const DiagnosticoRelacionalPage = () => {
                   SECTION 5: Muestra del reporte — Sofía y Mateo
               ═══════════════════════════════════════════════════════ */}
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                className="py-16 space-y-8">
-                <div className="text-center space-y-4 max-w-2xl mx-auto">
-                  <p className="text-violet-400/50 text-xs font-bold uppercase tracking-[0.25em] mb-3">Ejemplo real de análisis</p>
-                  <h3 className="text-2xl lg:text-3xl font-light text-white mb-2">Así se ve tu reporte</h3>
-                  <p className="text-white/40 text-sm font-light max-w-lg mx-auto">Extracto del análisis generado para Sofía (31) y Mateo (34), una pareja ficticia con patrones reales.</p>
+                className="py-16">
+                <div className="max-w-4xl mx-auto rounded-3xl border border-violet-500/20 bg-gradient-to-br from-violet-500/[0.08] via-[#0b0b14] to-cyan-500/[0.05] p-8 lg:p-10 text-center space-y-6 shadow-2xl shadow-violet-900/20">
+                  <p className="text-violet-300/65 text-[11px] font-semibold uppercase tracking-[0.3em]">Demostracion del reporte final</p>
+                  <h3 className="text-3xl lg:text-4xl font-light text-white">Mira como se entrega tu analisis</h3>
+                  <p className="text-white/55 text-base lg:text-lg font-light max-w-2xl mx-auto">Vista real del formato final: portada, interpretacion clinica, graficas y recomendaciones personalizadas.</p>
+                  <div className="flex flex-wrap items-center justify-center gap-2.5 text-[11px] text-white/45 font-light">
+                    <span className="px-3 py-1 rounded-full border border-white/10 bg-white/[0.02]">Portada profesional</span>
+                    <span className="px-3 py-1 rounded-full border border-white/10 bg-white/[0.02]">11 perspectivas psicologicas</span>
+                    <span className="px-3 py-1 rounded-full border border-white/10 bg-white/[0.02]">Graficas + recomendaciones</span>
+                  </div>
                   <motion.button
-                    onClick={() => handlePurchase('demo')}
-                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-violet-500/30 text-white/60 font-light text-sm hover:border-violet-500/50 hover:text-white/80 transition-all">
-                    <Eye className="w-4 h-4 text-violet-400/60" strokeWidth={1.5} />
-                    Ver reporte muestra
+                    onClick={openReportSample}
+                    whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-medium text-sm hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/30">
+                    <Eye className="w-4 h-4" strokeWidth={1.6} />
+                    Ver demostracion del reporte
                   </motion.button>
                 </div>
               </motion.div>
@@ -1914,10 +1925,7 @@ const DiagnosticoRelacionalPage = () => {
                     </div>
                   </div>
                   {/* Radiografía de tu relación */}
-                  <div className="relative">
-                  <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-md bg-gradient-to-r from-violet-500 to-fuchsia-600 shadow-md shadow-fuchsia-600/30 border border-white/20 whitespace-nowrap">
-                    <span className="text-[8px] text-white font-bold uppercase tracking-[0.12em]">⭐ Más elegido</span>
-                  </div>
+                  <div>
                   <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-8 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-1.5">
@@ -1948,6 +1956,7 @@ const DiagnosticoRelacionalPage = () => {
                       Radiografiar mi relación
                     </motion.button>
                     </div>
+                  </div>
                   </div>
                   {/* Radiografía cruzada de pareja */}
                   <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left overflow-hidden">
@@ -1981,7 +1990,6 @@ const DiagnosticoRelacionalPage = () => {
                     </motion.button>
                     </div>
                   </div>
-                </div>
                 </div>
 
                 {/* Mobile: stacked pricing cards */}
@@ -2017,10 +2025,7 @@ const DiagnosticoRelacionalPage = () => {
                     </div>
                   </div>
                   {/* Pareja Solo — Mobile */}
-                  <div className="relative">
-                  <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-md bg-gradient-to-r from-violet-500 to-fuchsia-600 shadow-md shadow-fuchsia-600/30 border border-white/20 whitespace-nowrap">
-                    <span className="text-[8px] text-white font-bold uppercase tracking-[0.12em]">⭐ Más elegido</span>
-                  </div>
+                  <div>
                   <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-7 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-1.5">
@@ -2181,10 +2186,7 @@ const DiagnosticoRelacionalPage = () => {
                 </div>
 
                 {/* Pareja — Solo */}
-                <div className="relative">
-                <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-md bg-gradient-to-r from-violet-500 to-fuchsia-600 shadow-md shadow-fuchsia-600/30 border border-white/20 whitespace-nowrap">
-                  <span className="text-[8px] text-white font-bold uppercase tracking-[0.12em]">⭐ Más elegido</span>
-                </div>
+                <div>
                 <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] overflow-hidden">
                   <div className="py-4 px-7 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
                     <div className="flex items-center gap-2 mb-1.5">
