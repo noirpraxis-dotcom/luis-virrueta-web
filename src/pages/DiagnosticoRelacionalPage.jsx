@@ -915,8 +915,6 @@ const DiagnosticoRelacionalPage = () => {
         const head = await fetch(staticUrl, { method: 'HEAD' })
         if (head.ok) { new Audio(staticUrl).play().catch(() => {}); return }
       } catch {}
-      const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY
-      if (!apiKey) return
       if (profileAudioBlobRef.current) {
         new Audio(URL.createObjectURL(profileAudioBlobRef.current)).play().catch(() => {})
         return
