@@ -1774,6 +1774,29 @@ const RadiografiaPremiumPage = () => {
     return { emailUsuario: buyerEmail, emailPareja: partnerEmail }
   })
 
+  // Shared sales demo loader used by DEV controls and URL-triggered sample mode.
+  const loadSalesDemoAnalysis = useCallback(async () => {
+    setProfileData({ nombre: 'Sofía', edad: '31', nombrePareja: 'Mateo', edadPareja: '34' })
+    setEmailData(prev => ({ ...prev, emailUsuario: 'demo@ventas.com' }))
+
+    try {
+      const { CACHED_DEMO_ANALYSIS } = await import('../data/cachedDemoAnalysis')
+      if (CACHED_DEMO_ANALYSIS) {
+        setAiAnalysis(CACHED_DEMO_ANALYSIS)
+        setCachedAnalysis(CACHED_DEMO_ANALYSIS)
+        setStage('results')
+        return
+      }
+    } catch {}
+
+    // If no dedicated demo file exists, fallback to preview analysis.
+    if (CACHED_PREVIEW_ANALYSIS) {
+      setAiAnalysis(CACHED_PREVIEW_ANALYSIS)
+      setCachedAnalysis(CACHED_PREVIEW_ANALYSIS)
+      setStage('results')
+    }
+  }, [])
+
   // ── Load stored analysis when arriving via "analysis ready" email link ──
   useEffect(() => {
     if (import.meta.env.DEV) return
@@ -1790,6 +1813,14 @@ const RadiografiaPremiumPage = () => {
       })
       .catch(() => { /* analysis not found — proceed normally, user can redo questionnaire */ })
   }, [])
+
+  // ── Public sample mode: ?demo=ventas → open same sales demo as DEV button ──
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('demo') === 'ventas') {
+      loadSalesDemoAnalysis()
+    }
+  }, [loadSalesDemoAnalysis])
 
   const question = PREGUNTAS[currentQ]
   const totalQ = PREGUNTAS.length
@@ -2943,25 +2974,7 @@ const RadiografiaPremiumPage = () => {
                     <span className="text-[9px] text-white/55">Preview</span>
                   </button>
                   {/* 6. Demo para ventas */}
-                  <button onClick={async () => {
-                    setProfileData({ nombre: 'Sofía', edad: '31', nombrePareja: 'Mateo', edadPareja: '34' })
-                    setEmailData(prev => ({ ...prev, emailUsuario: 'demo@ventas.com' }))
-                    try {
-                      const { CACHED_DEMO_ANALYSIS } = await import('../data/cachedDemoAnalysis')
-                      if (CACHED_DEMO_ANALYSIS) {
-                        setAiAnalysis(CACHED_DEMO_ANALYSIS)
-                        setCachedAnalysis(CACHED_DEMO_ANALYSIS)
-                        setStage('results')
-                        return
-                      }
-                    } catch {}
-                    // If no demo file, use preview as fallback
-                    if (CACHED_PREVIEW_ANALYSIS) {
-                      setAiAnalysis(CACHED_PREVIEW_ANALYSIS)
-                      setCachedAnalysis(CACHED_PREVIEW_ANALYSIS)
-                      setStage('results')
-                    }
-                  }}
+                  <button onClick={loadSalesDemoAnalysis}
                     className="flex flex-col items-center gap-1" title="Demo para ventas (Sofía y Mateo)">
                     <div className="w-11 h-11 rounded-full border border-pink-500/25 bg-pink-500/10 flex items-center justify-center hover:bg-pink-500/20 transition-colors">
                       <Play className="w-4 h-4 text-pink-300/70" />

@@ -774,6 +774,7 @@ const DiagnosticoRelacionalPage = () => {
   // Smart email/token flow
   const [thankyouEmails, setThankyouEmails] = useState(['', ''])
   const [thankYouProfile, setThankYouProfile] = useState({ nombre: '', edad: '', nombrePareja: '', edadPareja: '' })
+  const [thankYouValidationError, setThankYouValidationError] = useState('')
   const [emailsSent, setEmailsSent] = useState(false)
   const [sendingEmails, setSendingEmails] = useState(false)
   const [emailSendError, setEmailSendError] = useState('')
@@ -800,9 +801,28 @@ const DiagnosticoRelacionalPage = () => {
   }, [])
 
   const openReportSample = useCallback(() => {
-    navigate('/tienda/diagnostico-relacional?preview=results')
+    navigate('/tienda/radiografia-premium?free=true&demo=ventas')
     scrollToTop()
   }, [navigate, scrollToTop])
+
+  const isValidEmail = useCallback((value) => value?.includes('@'), [])
+  const sanitizeAge = useCallback((value) => value.replace(/\D/g, '').slice(0, 2), [])
+
+  const needsPartnerEmail = purchaseType === 'pareja' || purchaseType === 'losdos'
+  const primaryEmailValid = isValidEmail(thankyouEmails[0])
+  const partnerEmailValid = isValidEmail(thankyouEmails[1])
+  const canSendEmails = purchaseType === 'losdos'
+    ? partnerEmailValid
+    : primaryEmailValid && (!needsPartnerEmail || partnerEmailValid)
+
+  const profileEnabled = ['descubre', 'solo', 'losdos'].includes(purchaseType)
+  const requiredNamesOk = purchaseType === 'descubre'
+    ? thankYouProfile.nombre.trim().length > 1
+    : thankYouProfile.nombre.trim().length > 1 && thankYouProfile.nombrePareja.trim().length > 1
+  const requiredAgesOk = purchaseType === 'descubre'
+    ? /^\d{1,2}$/.test(thankYouProfile.edad)
+    : /^\d{1,2}$/.test(thankYouProfile.edad) && /^\d{1,2}$/.test(thankYouProfile.edadPareja)
+  const profileComplete = !profileEnabled || (requiredNamesOk && requiredAgesOk)
 
   // Restore purchase from session OR handle Stripe redirect
   useEffect(() => {
@@ -2451,11 +2471,15 @@ const DiagnosticoRelacionalPage = () => {
                   </>
                 ) : (
                   <>
-                    <h2 className="text-3xl lg:text-4xl font-light text-white mb-3">¡Gracias por tu compra!</h2>
-                    <p className="text-white/50 text-lg font-light leading-relaxed mb-2">
-                      Tu acceso a la <span className="text-violet-300/80">Radiografía de Pareja</span>{' '}
-                      — plan <span className="text-emerald-300/80">{PRODUCT_LABELS[purchaseType] || 'Individual'}</span> — está confirmado.
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-400/25 bg-emerald-500/[0.08] text-emerald-300/85 text-[11px] uppercase tracking-[0.14em] mb-4">
+                      <CheckCircle className="w-3.5 h-3.5" /> Pago confirmado
+                    </div>
+                    <h2 className="text-3xl lg:text-4xl font-light text-white mb-3 tracking-tight">Compra completada con éxito</h2>
+                    <p className="text-white/75 text-base lg:text-lg font-light leading-relaxed mb-2 max-w-xl mx-auto">
+                      Tu acceso premium a la <span className="text-violet-200">Radiografía de Pareja</span> ya quedó activado para el plan{' '}
+                      <span className="text-emerald-200">{PRODUCT_LABELS[purchaseType] || 'Individual'}</span>.
                     </p>
+                    <p className="text-white/55 text-sm font-light">Completa los datos y comienza ahora mismo.</p>
                   </>
                 )}
               </motion.div>
@@ -2487,15 +2511,15 @@ const DiagnosticoRelacionalPage = () => {
               {/* Email collection — Individual / Pareja only */}
               {purchaseType !== 'consulta' && !emailsSent && !verifyingPayment && (
                 <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
-                  className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] space-y-5">
+                  className="p-6 rounded-2xl border border-white/15 bg-white/[0.03] space-y-5 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]">
                   <div className="text-center">
-                    <Mail className="w-8 h-8 text-violet-400/50 mx-auto mb-3" />
+                    <Mail className="w-8 h-8 text-violet-300/85 mx-auto mb-3" />
                     <h3 className="text-xl font-light text-white mb-1">
                       {purchaseType === 'losdos'
                         ? 'Envía el test a tu pareja'
                         : purchaseType === 'pareja' ? 'Introduce los emails de ambos' : 'Introduce tu email'}
                     </h3>
-                    <p className="text-white/35 text-sm font-light">
+                    <p className="text-white/70 text-sm font-light leading-relaxed">
                       {purchaseType === 'losdos'
                         ? 'Tu pareja recibirá un enlace personalizado para tomar su propia versión del test en privado.'
                         : purchaseType === 'pareja'
@@ -2507,26 +2531,26 @@ const DiagnosticoRelacionalPage = () => {
                   <div className="space-y-3">
                     {purchaseType !== 'losdos' && (
                     <div>
-                      <label className="text-white/30 text-xs uppercase tracking-wider mb-1.5 block">
+                      <label className="text-white/70 text-xs uppercase tracking-wider mb-1.5 block">
                         {purchaseType === 'pareja' ? 'Email — Persona 1' : 'Tu email'}
                       </label>
                       <input type="email" value={thankyouEmails[0]}
-                        onChange={e => setThankyouEmails(prev => [e.target.value, prev[1]])}
+                        onChange={e => { setThankyouEmails(prev => [e.target.value, prev[1]]); setThankYouValidationError('') }}
                         placeholder="email@ejemplo.com"
-                        className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors" />
+                        className="w-full px-4 py-4 bg-white/[0.06] border border-white/20 rounded-xl text-white text-sm font-light placeholder:text-white/35 focus:border-violet-300/60 focus:outline-none transition-colors" />
                     </div>
                     )}
                     {(purchaseType === 'pareja' || purchaseType === 'losdos') && (
                       <div>
-                        <label className="text-white/30 text-xs uppercase tracking-wider mb-1.5 block">
+                        <label className="text-white/70 text-xs uppercase tracking-wider mb-1.5 block">
                           {purchaseType === 'losdos' ? 'Email de tu pareja' : 'Email — Persona 2'}
                         </label>
                         <input type="email" value={thankyouEmails[1]}
-                          onChange={e => setThankyouEmails(prev => [prev[0], e.target.value])}
+                          onChange={e => { setThankyouEmails(prev => [prev[0], e.target.value]); setThankYouValidationError('') }}
                           placeholder={purchaseType === 'losdos' ? 'email@pareja.com' : 'email2@ejemplo.com'}
-                          className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors" />
+                          className="w-full px-4 py-4 bg-white/[0.06] border border-white/20 rounded-xl text-white text-sm font-light placeholder:text-white/35 focus:border-violet-300/60 focus:outline-none transition-colors" />
                         {purchaseType === 'losdos' && (
-                          <p className="text-white/25 text-xs font-light mt-1.5">Le enviaremos un enlace único para que tome el test de forma independiente.</p>
+                          <p className="text-white/55 text-xs font-light mt-1.5">Le enviaremos un enlace único para que tome el test de forma independiente.</p>
                         )}
                       </div>
                     )}
@@ -2536,40 +2560,40 @@ const DiagnosticoRelacionalPage = () => {
                       <>
                         <div className="flex items-center gap-3 py-1">
                           <div className="h-px flex-1 bg-white/[0.06]" />
-                          <p className="text-white/35 text-xs uppercase tracking-[0.15em]">Personaliza tu análisis</p>
+                          <p className="text-white/70 text-xs uppercase tracking-[0.15em]">Completa tus datos para personalizarlo</p>
                           <div className="h-px flex-1 bg-white/[0.06]" />
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                           <div>
-                            <label className="text-white/50 text-xs uppercase tracking-wider mb-1.5 block">Tu nombre</label>
+                            <label className="text-white/80 text-xs uppercase tracking-wider mb-1.5 block">Tu nombre *</label>
                             <input type="text" value={thankYouProfile.nombre}
-                              onChange={e => setThankYouProfile(p => ({ ...p, nombre: e.target.value }))}
+                              onChange={e => { setThankYouProfile(p => ({ ...p, nombre: e.target.value })); setThankYouValidationError('') }}
                               placeholder="Ej: Luis"
-                              className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors" />
+                              className="w-full px-4 py-4 bg-white/[0.06] border border-white/20 rounded-xl text-white text-sm font-light placeholder:text-white/35 focus:border-violet-300/60 focus:outline-none transition-colors" />
                           </div>
                           <div>
-                            <label className="text-white/50 text-xs uppercase tracking-wider mb-1.5 block">Tu edad</label>
-                            <input type="text" value={thankYouProfile.edad}
-                              onChange={e => setThankYouProfile(p => ({ ...p, edad: e.target.value }))}
+                            <label className="text-white/80 text-xs uppercase tracking-wider mb-1.5 block">Tu edad *</label>
+                            <input type="text" inputMode="numeric" pattern="[0-9]*" value={thankYouProfile.edad}
+                              onChange={e => { setThankYouProfile(p => ({ ...p, edad: sanitizeAge(e.target.value) })); setThankYouValidationError('') }}
                               placeholder="Ej: 28"
-                              className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors" />
+                              className="w-full px-4 py-4 bg-white/[0.06] border border-white/20 rounded-xl text-white text-sm font-light placeholder:text-white/35 focus:border-violet-300/60 focus:outline-none transition-colors" />
                           </div>
                         </div>
                         {(purchaseType === 'solo' || purchaseType === 'losdos') && (
                           <div className="grid grid-cols-2 gap-3">
                             <div>
-                              <label className="text-white/50 text-xs uppercase tracking-wider mb-1.5 block">Nombre de tu pareja</label>
+                              <label className="text-white/80 text-xs uppercase tracking-wider mb-1.5 block">Nombre de tu pareja *</label>
                               <input type="text" value={thankYouProfile.nombrePareja}
-                                onChange={e => setThankYouProfile(p => ({ ...p, nombrePareja: e.target.value }))}
+                                onChange={e => { setThankYouProfile(p => ({ ...p, nombrePareja: e.target.value })); setThankYouValidationError('') }}
                                 placeholder="Ej: Susana"
-                                className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-fuchsia-400/30 focus:outline-none transition-colors" />
+                                className="w-full px-4 py-4 bg-white/[0.06] border border-white/20 rounded-xl text-white text-sm font-light placeholder:text-white/35 focus:border-fuchsia-300/60 focus:outline-none transition-colors" />
                             </div>
                             <div>
-                              <label className="text-white/50 text-xs uppercase tracking-wider mb-1.5 block">Edad de tu pareja</label>
-                              <input type="text" value={thankYouProfile.edadPareja}
-                                onChange={e => setThankYouProfile(p => ({ ...p, edadPareja: e.target.value }))}
+                              <label className="text-white/80 text-xs uppercase tracking-wider mb-1.5 block">Edad de tu pareja *</label>
+                              <input type="text" inputMode="numeric" pattern="[0-9]*" value={thankYouProfile.edadPareja}
+                                onChange={e => { setThankYouProfile(p => ({ ...p, edadPareja: sanitizeAge(e.target.value) })); setThankYouValidationError('') }}
                                 placeholder="Ej: 30"
-                                className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-fuchsia-400/30 focus:outline-none transition-colors" />
+                                className="w-full px-4 py-4 bg-white/[0.06] border border-white/20 rounded-xl text-white text-sm font-light placeholder:text-white/35 focus:border-fuchsia-300/60 focus:outline-none transition-colors" />
                             </div>
                           </div>
                         )}
@@ -2579,10 +2603,22 @@ const DiagnosticoRelacionalPage = () => {
 
                   <motion.button
                     onClick={async () => {
-                      const emails = (purchaseType === 'pareja' || purchaseType === 'losdos')
-                        ? thankyouEmails.filter(e => e.includes('@'))
-                        : [thankyouEmails[0]].filter(e => e.includes('@'))
-                      if (emails.length === 0) return
+                      setThankYouValidationError('')
+                      const emails = purchaseType === 'losdos'
+                        ? [thankyouEmails[1]].filter(isValidEmail)
+                        : purchaseType === 'pareja'
+                        ? [thankyouEmails[0], thankyouEmails[1]].filter(isValidEmail)
+                        : [thankyouEmails[0]].filter(isValidEmail)
+
+                      if (!canSendEmails) {
+                        setThankYouValidationError('Completa los correos requeridos para continuar.')
+                        return
+                      }
+                      if (!profileComplete) {
+                        setThankYouValidationError('Completa los datos obligatorios (nombre y edad numérica) para continuar.')
+                        return
+                      }
+
                       setSendingEmails(true)
                       setEmailSendError('')
                       try {
@@ -2600,8 +2636,8 @@ const DiagnosticoRelacionalPage = () => {
                           setEmailsSent(true)
                           // For losdos: immediately navigate after sending partner link
                           if (purchaseType === 'losdos') {
-                            sessionStorage.setItem('radiografia_buyer_email', emails[0])
-                            if (emails[1]) sessionStorage.setItem('radiografia_partner_email', emails[1])
+                            if (thankyouEmails[0]) sessionStorage.setItem('radiografia_buyer_email', thankyouEmails[0])
+                            if (thankyouEmails[1]) sessionStorage.setItem('radiografia_partner_email', thankyouEmails[1])
                             sessionStorage.setItem('radiografia_nombre', thankYouProfile.nombre)
                             sessionStorage.setItem('radiografia_edad', thankYouProfile.edad)
                             sessionStorage.setItem('radiografia_nombre_pareja', thankYouProfile.nombrePareja)
@@ -2611,15 +2647,18 @@ const DiagnosticoRelacionalPage = () => {
                           }
                         }
                         // Also store email for later use
-                        setEmail(emails[0])
-                        sessionStorage.setItem('diagnostico_guide_email', emails[0])
+                        const buyerEmail = thankyouEmails[0] || emails[0] || ''
+                        if (buyerEmail) {
+                          setEmail(buyerEmail)
+                          sessionStorage.setItem('diagnostico_guide_email', buyerEmail)
+                        }
                       } catch (err) {
                         setEmailSendError(`Error: ${err.message || 'No se pudo enviar el correo.'}`)
                       } finally {
                         setSendingEmails(false)
                       }
                     }}
-                    disabled={sendingEmails || !thankyouEmails[0]?.includes('@') || ((purchaseType === 'pareja' || purchaseType === 'losdos') && !thankyouEmails[1]?.includes('@'))}
+                    disabled={sendingEmails || !canSendEmails || !profileComplete}
                     whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20 disabled:opacity-40 disabled:cursor-not-allowed">
                     {sendingEmails ? (
@@ -2628,6 +2667,23 @@ const DiagnosticoRelacionalPage = () => {
                       <><Send className="inline w-4 h-4 mr-2" /> {purchaseType === 'losdos' ? 'Enviar enlace y comenzar →' : purchaseType === 'pareja' ? 'Enviar acceso a ambos' : 'Enviar acceso'}</>
                     )}
                   </motion.button>
+                  <button
+                    onClick={() => {
+                      if (thankyouEmails[0]) sessionStorage.setItem('radiografia_buyer_email', thankyouEmails[0])
+                      if (purchaseType === 'losdos' && thankyouEmails[1]) sessionStorage.setItem('radiografia_partner_email', thankyouEmails[1])
+                      sessionStorage.setItem('radiografia_nombre', thankYouProfile.nombre)
+                      sessionStorage.setItem('radiografia_edad', thankYouProfile.edad)
+                      sessionStorage.setItem('radiografia_nombre_pareja', thankYouProfile.nombrePareja)
+                      sessionStorage.setItem('radiografia_edad_pareja', thankYouProfile.edadPareja)
+                      navigate(`/tienda/radiografia-premium?type=${purchaseType}`)
+                      scrollToTop()
+                    }}
+                    className="w-full py-3 rounded-xl border border-amber-400/30 bg-amber-500/[0.08] text-amber-200/90 text-sm font-light hover:bg-amber-500/[0.14] transition-colors">
+                    Saltar este paso temporalmente (modo pruebas)
+                  </button>
+                  {thankYouValidationError && (
+                    <p className="text-amber-300/90 text-xs text-center mt-1">{thankYouValidationError}</p>
+                  )}
                   {emailSendError && (
                     <p className="text-red-400/80 text-xs text-center mt-2">{emailSendError}</p>
                   )}
@@ -2656,43 +2712,6 @@ const DiagnosticoRelacionalPage = () => {
                 </motion.div>
               )}
 
-              {/* CTA: Start now or wait for email — Individual / Pareja only */}
-              {purchaseType !== 'consulta' && (
-              <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: emailsSent ? 0.3 : 0.8 }}
-                className="text-center space-y-4">
-<motion.button
-                  onClick={() => {
-                    if (['descubre', 'solo', 'losdos'].includes(purchaseType)) {
-                      // Pass emails to RadiografiaPremiumPage so profile form is pre-filled
-                      if (thankyouEmails[0]) sessionStorage.setItem('radiografia_buyer_email', thankyouEmails[0])
-                      if (purchaseType === 'losdos' && thankyouEmails[1]) sessionStorage.setItem('radiografia_partner_email', thankyouEmails[1])
-                      // Pass profile data so the profile stage can be skipped entirely
-                      sessionStorage.setItem('radiografia_nombre', thankYouProfile.nombre)
-                      sessionStorage.setItem('radiografia_edad', thankYouProfile.edad)
-                      sessionStorage.setItem('radiografia_nombre_pareja', thankYouProfile.nombrePareja)
-                      sessionStorage.setItem('radiografia_edad_pareja', thankYouProfile.edadPareja)
-                      navigate(`/tienda/radiografia-premium?type=${purchaseType}`)
-                    } else {
-                      setStage('instructions')
-                    }
-                    scrollToTop()
-                  }}
-                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  className="px-10 py-5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
-                  {['descubre', 'solo', 'losdos'].includes(purchaseType)
-                    ? <>Comenzar mi Radiografía <ArrowRight className="inline w-5 h-5 ml-2" /></>
-                    : <>Comenzar mi diagnóstico ahora <ArrowRight className="inline w-5 h-5 ml-2" /></>}
-                </motion.button>
-                <p className="text-white/20 text-xs font-light">
-                  ~30 minutos · Habla por micrófono · Reporte completo al final
-                </p>
-                {emailsSent && (
-                  <p className="text-white/25 text-xs font-light">
-                    También puedes acceder después desde el enlace en tu email
-                  </p>
-                )}
-              </motion.div>
-              )}
             </div>
           </motion.div>
         )}

@@ -158,6 +158,15 @@ function getTypeLabel(type) {
   return { descubre: 'Individual', solo: 'Pareja — Solo', losdos: 'Pareja — Los Dos' }[type] || type
 }
 
+function escapeHtml(value = '') {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
+}
+
 // ── Coupon (crear en Stripe si no existe) ────────────────────────────────────
 async function getOrCreateCoupon(env, code, percent, isTest = false) {
   try   { const c = await stripe(env, 'GET', `/coupons/${code}`, {}, isTest); return c.id }
@@ -166,7 +175,10 @@ async function getOrCreateCoupon(env, code, percent, isTest = false) {
 
 // ── Email HTML ────────────────────────────────────────────────────────────────
 // ── Email: purchase confirmation (sent right after payment) ──────────────────
-function purchaseEmailHtml({ typeLabel, accessUrl }) {
+function purchaseEmailHtml({ typeLabel, accessUrl, customerName = '' }) {
+  const safeName = escapeHtml(customerName).trim()
+  const greetingTitle = safeName ? `Gracias, ${safeName}` : 'Gracias por tu compra'
+
   return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -193,7 +205,7 @@ function purchaseEmailHtml({ typeLabel, accessUrl }) {
 
     <!-- Headline -->
     <tr><td align="center" style="padding-bottom:32px;">
-      <h1 style="margin:0 0 12px;font-size:28px;font-weight:300;letter-spacing:-0.03em;color:#ffffff;line-height:1.2;">Gracias por tu compra</h1>
+      <h1 style="margin:0 0 12px;font-size:28px;font-weight:300;letter-spacing:-0.03em;color:#ffffff;line-height:1.2;">${greetingTitle}</h1>
       <p style="margin:0;font-size:13px;color:rgba(167,139,250,0.8);letter-spacing:0.05em;text-transform:uppercase;">${typeLabel}</p>
     </td></tr>
 
@@ -203,6 +215,16 @@ function purchaseEmailHtml({ typeLabel, accessUrl }) {
         <tr><td style="padding:40px 40px 32px;">
           <p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Tu acceso personal al cuestionario ya está activo. Usa el botón de abajo para comenzar cuando estés listo.</p>
           <p style="margin:0 0 32px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);"><strong style="color:rgba(255,255,255,0.85);font-weight:400;">¿Cerraste el navegador o cambiaste de dispositivo?</strong> No hay problema — este mismo enlace te lleva exactamente al punto donde lo dejaste. Guarda este correo; es tu acceso permanente.</p>
+
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;background:#111427;border:1px solid rgba(99,102,241,0.28);border-radius:14px;">
+            <tr><td style="padding:14px 16px;font-size:13px;color:rgba(255,255,255,0.78);line-height:1.6;">
+              <strong style="color:#ffffff;font-weight:600;">Resumen rápido</strong><br>
+              <span style="color:rgba(255,255,255,0.68);">&#10003; Acceso activado inmediatamente</span><br>
+              <span style="color:rgba(255,255,255,0.68);">&#10003; Puedes continuar en cualquier dispositivo</span><br>
+              <span style="color:rgba(255,255,255,0.68);">&#10003; Conserva este correo como llave de entrada</span>
+            </td></tr>
+          </table>
+
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr><td align="center">
               <a href="${accessUrl}" style="display:inline-block;padding:16px 48px;background:linear-gradient(135deg,#6d28d9,#9333ea);color:#ffffff;text-decoration:none;font-size:15px;font-weight:400;letter-spacing:0.02em;border-radius:12px;">Comenzar mi cuestionario &rarr;</a>
@@ -362,6 +384,7 @@ async function handleVerifyPayment(req, env) {
   const isTest = sessionId?.startsWith('cs_test_')
   const session = await stripe(env, 'GET', `/checkout/sessions/${sessionId}`, {}, isTest)
   const email   = session.customer_details?.email || session.customer_email || ''
+  const name    = session.customer_details?.name || ''
   const type    = session.metadata?.type || 'solo'
 
   // Send confirmation email on verify (runs once thanks to KV dedup).
@@ -372,17 +395,25 @@ async function handleVerifyPayment(req, env) {
     const alreadySent = await env.PURCHASES.get(dedupKey)
     if (!alreadySent) {
       try {
+        const existingPurchaseRaw = await env.PURCHASES.get(`session:${sessionId}`)
+        let existingToken = ''
+        if (existingPurchaseRaw) {
+          try {
+            existingToken = JSON.parse(existingPurchaseRaw)?.token || ''
+          } catch {}
+        }
+
         const { siteOrigin } = body
         const baseUrl = (isTest && siteOrigin) ? siteOrigin : SITE_URL
-        const token     = makeToken()
+        const token     = existingToken || makeToken()
         const accessUrl = `${baseUrl}/tienda/radiografia-premium?token=${token}&type=${type}&pid=${sessionId}`
         await sendEmail(env, {
           to:      email,
           subject: 'Tu acceso a la Radiografía Psicológica',
-          html:    purchaseEmailHtml({ typeLabel: getTypeLabel(type), accessUrl }),
+          html:    purchaseEmailHtml({ typeLabel: getTypeLabel(type), accessUrl, customerName: name }),
         })
         // Save purchase + mark email sent
-        const purchase = JSON.stringify({ email, type, sessionId, token, createdAt: Date.now(), paid: true })
+        const purchase = JSON.stringify({ email, name, type, sessionId, token, createdAt: Date.now(), paid: true })
         await Promise.all([
           env.PURCHASES.put(`session:${sessionId}`, purchase, { expirationTtl: 86400 * 365 }),
           env.PURCHASES.put(`token:${token}`,        purchase, { expirationTtl: 86400 * 365 }),
@@ -581,25 +612,38 @@ async function handleWebhook(req, env) {
   if (event.type === 'checkout.session.completed') {
     const session   = event.data.object
     const email     = session.customer_details?.email || session.customer_email || ''
+    const name      = session.customer_details?.name || ''
     const type      = session.metadata?.type || 'solo'
     const sessionId = session.id
-    const token     = makeToken()
 
-    const purchase = JSON.stringify({ email, type, sessionId, token, createdAt: Date.now(), paid: true })
     if (env.PURCHASES) {
+      const dedupKey = `email_sent:${sessionId}`
+      const alreadySent = await env.PURCHASES.get(dedupKey)
+
+      const existingPurchaseRaw = await env.PURCHASES.get(`session:${sessionId}`)
+      let token = ''
+      if (existingPurchaseRaw) {
+        try {
+          token = JSON.parse(existingPurchaseRaw)?.token || ''
+        } catch {}
+      }
+      if (!token) token = makeToken()
+
+      const purchase = JSON.stringify({ email, name, type, sessionId, token, createdAt: Date.now(), paid: true })
       await Promise.all([
         env.PURCHASES.put(`session:${sessionId}`, purchase, { expirationTtl: 86400 * 365 }),
         env.PURCHASES.put(`token:${token}`,        purchase, { expirationTtl: 86400 * 365 }),
       ])
-    }
 
-    if (email && env.RESEND_API_KEY) {
-      const accessUrl = `${RADIOGRAFIA_URL}?token=${token}&type=${type}&pid=${sessionId}`
-      await sendEmail(env, {
-        to:      email,
-        subject: 'Tu acceso a la Radiografía Psicológica',
-        html:    purchaseEmailHtml({ typeLabel: getTypeLabel(type), accessUrl }),
-      })
+      if (!alreadySent && email && env.RESEND_API_KEY) {
+        const accessUrl = `${RADIOGRAFIA_URL}?token=${token}&type=${type}&pid=${sessionId}`
+        await sendEmail(env, {
+          to:      email,
+          subject: 'Tu acceso a la Radiografía Psicológica',
+          html:    purchaseEmailHtml({ typeLabel: getTypeLabel(type), accessUrl, customerName: name }),
+        })
+        await env.PURCHASES.put(dedupKey, '1', { expirationTtl: 86400 * 7 })
+      }
     }
   }
 
