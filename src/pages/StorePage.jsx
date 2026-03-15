@@ -16,13 +16,13 @@ const StorePage = () => {
   const products = [
     {
       id: 7,
-      name: 'Radiografía de Pareja — 11 Corrientes Psicológicas',
+      name: 'Radiografía de Pareja — Diagnóstico Relacional',
       category: 'Diagnóstico Psicológico',
       price: 'Desde $499 MXN',
       duration: '~35 min',
       image: '/productos/radar de pareja/videos/imagen tienda.jpg',
       description: '40 preguntas por voz analizadas por inteligencia artificial desde la perspectiva de 11 corrientes psicológicas (Gottman, Sternberg, Perel, Bowlby, Schnarch y más). Radar multidimensional, mapa de apego, indicadores compuestos y análisis clínico profundo.',
-      shortDesc: 'No es un test de personalidad. Es una disección de cómo amas — desde 11 corrientes psicológicas. Tres modalidades: solo tú, tú sobre tu pareja, o los dos juntos. Un reporte que te cambia la perspectiva.',
+      shortDesc: 'La respuesta a por qué amas como amas. Elige tu modalidad: descubre tus patrones inconscientes, la verdad sobre tu relación o el diagnóstico completo para los dos.',
       benefits: [
         '3 opciones: Individual $499 · Pareja Solo $499 · Los dos $999',
         '40 preguntas por voz — hablas, la IA analiza desde 11 corrientes',

@@ -1850,248 +1850,21 @@ const DiagnosticoRelacionalPage = () => {
                 </p>
               </motion.div>
 
-              {/* DEMO CTA */}
-              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center py-6">
-                <p className="text-white/40 text-sm uppercase tracking-[0.2em] mb-3">¿Cómo funciona?</p>
-                <h2 className="text-2xl lg:text-3xl font-light text-white/80 mb-4">Prueba el diagnóstico antes de comprarlo</h2>
-                <p className="text-white/45 text-base font-light mb-8 max-w-xl mx-auto">5 preguntas gratuitas. Sin registro. Responde por voz y siente cómo funciona el proceso antes de decidir.</p>
-                <motion.button
-                  onClick={() => handlePurchase('demo')}
-                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-violet-600/25 to-fuchsia-600/25 border border-violet-500/30 text-white/80 font-light text-base hover:from-violet-600/40 hover:to-fuchsia-600/40 hover:border-violet-500/50 transition-all">
-                  <Eye className="w-5 h-5 text-violet-400/70" strokeWidth={1.5} />
-                  Probar el demo gratuito
-                </motion.button>
-                <p className="text-white/25 text-xs font-light mt-3">5 preguntas · Sin tarjeta · Resultado parcial incluido</p>
-              </motion.div>
-              {/* Old carousel hidden */}
-              <div className="hidden">
-                <p className="text-center text-white/40 text-sm uppercase tracking-[0.2em] mb-2">Tu reporte incluye</p>
-                <h2 className="text-center text-2xl lg:text-3xl font-light text-white/70 mb-3">Así se ve tu diagnóstico: <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-fuchsia-300">capturas reales del reporte</span></h2>
-                <p className="text-center text-white/40 text-base font-light mb-10 max-w-2xl mx-auto">Desliza para explorar. Radar multidimensional, triángulo del amor, mapa de apego y más — todo personalizado con tus respuestas.</p>
-
-                <div className="relative max-w-3xl mx-auto">
-                  {/* Carousel container — PDF page style */}
-                  <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-zinc-950/80 backdrop-blur-sm shadow-2xl shadow-violet-900/10">
-                    <div className="relative" style={{ minHeight: '420px' }}>
-                      <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${carouselIdx * 100}%)` }}>
-
-                        {/* Page 1: Radar multidimensional */}
-                        <div className="w-full flex-shrink-0">
-                          <div className="px-6 lg:px-8 pt-5 pb-3 border-b border-white/[0.06] flex items-center justify-between">
-                            <div><p className="text-white/25 text-[10px] uppercase tracking-[0.2em]">Diagnóstico Relacional · Página 1</p><p className="text-white/60 text-sm font-light mt-0.5">Radar multidimensional</p></div>
-                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-amber-500/20 bg-amber-500/[0.06]"><AlertTriangle className="w-3 h-3 text-amber-400/70" strokeWidth={1.5} /><span className="text-amber-300/60 text-[10px] font-light">Atención recomendada</span></div>
-                          </div>
-                          <div className="p-6 lg:p-8 flex flex-col items-center">
-                            <svg viewBox="0 0 260 260" className="w-full max-w-[240px] mx-auto mb-4">
-                              {[20, 40, 60, 80, 100].map(l => (<circle key={l} cx={130} cy={130} r={l * 0.95} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth={0.5} />))}
-                              {Array.from({ length: 12 }).map((_, i) => { const a = (Math.PI * 2 * i) / 12 - Math.PI / 2; return <line key={i} x1={130} y1={130} x2={130 + 95 * Math.cos(a)} y2={130 + 95 * Math.sin(a)} stroke="rgba(255,255,255,0.05)" strokeWidth={0.5} /> })}
-                              {(() => { const vals = [42,35,55,48,62,38,45,52,40,44,58,47]; const pts = vals.map((v,i) => { const a=(Math.PI*2*i)/12-Math.PI/2; const d=(v/100)*95; return `${130+d*Math.cos(a)},${130+d*Math.sin(a)}` }).join(' '); return <polygon points={pts} fill="rgba(139,92,246,0.10)" stroke="rgba(139,92,246,0.35)" strokeWidth={1} /> })()}
-                              {[42,35,55,48,62,38,45,52,40,44,58,47].map((v,i) => { const a=(Math.PI*2*i)/12-Math.PI/2; const d=(v/100)*95; return <circle key={i} cx={130+d*Math.cos(a)} cy={130+d*Math.sin(a)} r={2.5} fill={DIMENSION_COLORS[i]} /> })}
-                              {['Apego','Conflicto','Amor','Vínculo','Diferenc.','Deseo','Inconsc.','Neuro','Regulac.','Apego apl.','Lenguaje','Satisfacc.'].map((label,i) => { const a=(Math.PI*2*i)/12-Math.PI/2; const r=115; return <text key={i} x={130+r*Math.cos(a)} y={130+r*Math.sin(a)} textAnchor="middle" dominantBaseline="middle" fill="rgba(255,255,255,0.25)" fontSize="6">{label}</text> })}
-                            </svg>
-                            <p className="text-white/40 text-sm font-light text-center">Tu relación analizada desde 11 corrientes psicológicas: Gottman, Sternberg, Perel, Bowlby y más.</p>
-                          </div>
-                          <div className="px-6 lg:px-8 pb-4"><div className="h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" /><p className="text-white/15 text-[9px] font-light mt-2 text-center">Radiografía de Pareja · Luis Virrueta · Método AION©</p></div>
-                        </div>
-
-                        {/* Page 2: Triángulo de Sternberg */}
-                        <div className="w-full flex-shrink-0">
-                          <div className="px-6 lg:px-8 pt-5 pb-3 border-b border-white/[0.06]">
-                            <p className="text-white/25 text-[10px] uppercase tracking-[0.2em]">Diagnóstico Relacional · Página 2</p><p className="text-white/60 text-sm font-light mt-0.5">Triángulo del amor (Sternberg)</p>
-                          </div>
-                          <div className="p-6 lg:p-8 flex flex-col items-center">
-                            <svg viewBox="0 0 260 240" className="w-full max-w-[240px] mx-auto mb-4">
-                              <polygon points="130,20 20,215 240,215" fill="rgba(99,102,241,0.04)" stroke="rgba(99,102,241,0.15)" strokeWidth={1} />
-                              <text x="130" y="14" textAnchor="middle" fill="rgba(96,165,250,0.7)" fontSize="9" fontWeight="300">Intimidad 62%</text>
-                              <text x="10" y="230" textAnchor="middle" fill="rgba(244,114,182,0.7)" fontSize="9" fontWeight="300">Pasión 40%</text>
-                              <text x="250" y="230" textAnchor="middle" fill="rgba(52,211,153,0.7)" fontSize="9" fontWeight="300">Compromiso 78%</text>
-                              <circle cx="142" cy="150" r="7" fill="rgba(99,102,241,0.5)" />
-                              <circle cx="142" cy="150" r="14" fill="none" stroke="rgba(99,102,241,0.2)" strokeWidth={0.5} />
-                              <text x="142" y="138" textAnchor="middle" fill="rgba(99,102,241,0.6)" fontSize="7">Tu posición</text>
-                            </svg>
-                            <div className="space-y-3 w-full max-w-sm">
-                              {[{label:'Pasión',val:40,color:'from-pink-500/50 to-rose-500/50'},{label:'Intimidad',val:62,color:'from-blue-500/50 to-indigo-500/50'},{label:'Compromiso',val:78,color:'from-emerald-500/50 to-green-500/50'}].map((s,i) => (
-                                <div key={i}>
-                                  <div className="flex justify-between text-sm mb-1"><span className="text-white/50 font-light">{s.label}</span><span className="text-white/35 font-light tabular-nums">{s.val}%</span></div>
-                                  <div className="h-2 bg-white/[0.04] rounded-full overflow-hidden"><div className={`h-full bg-gradient-to-r ${s.color} rounded-full`} style={{width:`${s.val}%`}} /></div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                          <div className="px-6 lg:px-8 pb-4"><div className="h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" /><p className="text-white/15 text-[9px] font-light mt-2 text-center">Radiografía de Pareja · Luis Virrueta · Método AION©</p></div>
-                        </div>
-
-                        {/* Page 3: Los 4 jinetes de Gottman */}
-                        <div className="w-full flex-shrink-0">
-                          <div className="px-6 lg:px-8 pt-5 pb-3 border-b border-white/[0.06] flex items-center justify-between">
-                            <div><p className="text-white/25 text-[10px] uppercase tracking-[0.2em]">Diagnóstico Relacional · Página 3</p><p className="text-white/60 text-sm font-light mt-0.5">Los 4 jinetes del conflicto (Gottman)</p></div>
-                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-red-500/20 bg-red-500/[0.06]"><AlertTriangle className="w-3 h-3 text-red-400/70" strokeWidth={1.5} /><span className="text-red-300/60 text-[10px] font-light">Patrón detectado</span></div>
-                          </div>
-                          <div className="p-6 lg:p-8">
-                            <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto mb-4">
-                              {[{emoji:'🗡️',name:'Crítica / Desprecio',val:68,bad:true},{emoji:'🛡️',name:'Defensividad',val:72,bad:true},{emoji:'🧱',name:'Stonewalling',val:55,bad:true},{emoji:'🩹',name:'Reparación',val:30,bad:false}].map((h,i) => (
-                                <div key={i} className="p-3 rounded-xl border border-white/[0.06] bg-white/[0.02] text-center">
-                                  <span className="text-xl mb-1 block">{h.emoji}</span>
-                                  <p className="text-white/45 text-[11px] font-light mb-1">{h.name}</p>
-                                  <p className="text-white/70 text-lg font-light tabular-nums">{h.val}%</p>
-                                  <div className="h-1.5 bg-white/[0.04] rounded-full overflow-hidden mt-1.5">
-                                    <div className={`h-full rounded-full ${h.bad ? (h.val > 55 ? 'bg-red-500/60' : 'bg-amber-500/50') : (h.val < 40 ? 'bg-red-500/60' : 'bg-emerald-500/50')}`} style={{width:`${h.val}%`}} />
-                                  </div>
-                                  {h.bad && h.val > 55 && <p className="text-red-400/50 text-[10px] mt-1">⚠ Atención</p>}
-                                </div>
-                              ))}
-                            </div>
-                            <p className="text-white/35 text-xs font-light text-center">Los 4 jinetes predicen el deterioro relacional según la investigación de Gottman.</p>
-                          </div>
-                          <div className="px-6 lg:px-8 pb-4"><div className="h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" /><p className="text-white/15 text-[9px] font-light mt-2 text-center">Radiografía de Pareja · Luis Virrueta · Método AION©</p></div>
-                        </div>
-
-                        {/* Page 4: Indicadores compuestos */}
-                        <div className="w-full flex-shrink-0">
-                          <div className="px-6 lg:px-8 pt-5 pb-3 border-b border-white/[0.06]"><p className="text-white/25 text-[10px] uppercase tracking-[0.2em]">Diagnóstico Relacional · Página 4</p><p className="text-white/60 text-sm font-light mt-0.5">Indicadores compuestos</p></div>
-                          <div className="p-6 lg:p-8">
-                            <div className="max-w-md mx-auto space-y-5">
-                              {[{label:'Salud relacional global',val:44,color:'from-red-500 to-orange-400',icon:'❤️',desc:'Basado en las 11 corrientes combinadas'},{label:'Sincronía emocional',val:38,color:'from-red-500 to-orange-400',icon:'🔄',desc:'Conexión empática + co-regulación'},{label:'Riesgo de ruptura',val:67,color:'from-red-500 to-orange-400',icon:'⚠️',desc:'Predictores de Gottman + distancia acumulada'},{label:'Potencial de crecimiento',val:72,color:'from-emerald-500 to-green-400',icon:'🌱',desc:'Fortalezas + disposición al cambio'}].map((s,i) => (
-                                <div key={i}>
-                                  <div className="flex justify-between text-sm mb-1"><span className="text-white/55 font-light"><span className="mr-1.5">{s.icon}</span>{s.label}</span><span className="text-white/40 font-light tabular-nums">{s.val}%</span></div>
-                                  <div className="h-2.5 bg-white/[0.04] rounded-full overflow-hidden"><div className={`h-full bg-gradient-to-r ${s.color} rounded-full opacity-60`} style={{width:`${s.val}%`}} /></div>
-                                  <p className="text-white/25 text-xs font-light mt-1">{s.desc}</p>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                          <div className="px-6 lg:px-8 pb-4"><div className="h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" /><p className="text-white/15 text-[9px] font-light mt-2 text-center">Radiografía de Pareja · Luis Virrueta · Método AION©</p></div>
-                        </div>
-
-                        {/* Page 5: Mapa de apego */}
-                        <div className="w-full flex-shrink-0">
-                          <div className="px-6 lg:px-8 pt-5 pb-3 border-b border-white/[0.06]"><p className="text-white/25 text-[10px] uppercase tracking-[0.2em]">Diagnóstico Relacional · Página 5</p><p className="text-white/60 text-sm font-light mt-0.5">Mapa de apego (Bowlby + Levine)</p></div>
-                          <div className="p-6 lg:p-8 flex flex-col items-center">
-                            <svg viewBox="0 0 220 220" className="w-full max-w-[210px] mx-auto mb-4">
-                              <rect x="111" y="111" width="98" height="98" rx="6" fill="rgba(96,165,250,0.04)" stroke="rgba(96,165,250,0.12)" strokeWidth={0.5} />
-                              <text x="160" y="164" textAnchor="middle" fill="rgba(96,165,250,0.35)" fontSize="9">Seguro</text>
-                              <rect x="11" y="111" width="98" height="98" rx="6" fill="rgba(52,211,153,0.04)" stroke="rgba(52,211,153,0.12)" strokeWidth={0.5} />
-                              <text x="60" y="164" textAnchor="middle" fill="rgba(52,211,153,0.35)" fontSize="9">Ansioso</text>
-                              <rect x="111" y="11" width="98" height="98" rx="6" fill="rgba(251,191,36,0.04)" stroke="rgba(251,191,36,0.08)" strokeWidth={0.5} />
-                              <text x="160" y="64" textAnchor="middle" fill="rgba(251,191,36,0.30)" fontSize="9">Evitativo</text>
-                              <rect x="11" y="11" width="98" height="98" rx="6" fill="rgba(239,68,68,0.03)" stroke="rgba(239,68,68,0.08)" strokeWidth={0.5} />
-                              <text x="60" y="64" textAnchor="middle" fill="rgba(239,68,68,0.25)" fontSize="9">Desorganizado</text>
-                              <line x1="110" y1="8" x2="110" y2="212" stroke="rgba(255,255,255,0.06)" strokeWidth={0.5} />
-                              <line x1="8" y1="110" x2="212" y2="110" stroke="rgba(255,255,255,0.06)" strokeWidth={0.5} />
-                              <text x="110" y="5" textAnchor="middle" fill="rgba(255,255,255,0.25)" fontSize="7">+ Evitación</text>
-                              <text x="110" y="220" textAnchor="middle" fill="rgba(255,255,255,0.25)" fontSize="7">− Evitación</text>
-                              <circle cx="46" cy="140" r="7" fill="rgba(139,92,246,0.6)" />
-                              <circle cx="46" cy="140" r="14" fill="none" stroke="rgba(139,92,246,0.2)" strokeWidth={0.5} />
-                            </svg>
-                            <div className="flex flex-wrap items-center justify-center gap-3 mb-2">
-                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-violet-500/20 bg-violet-500/[0.06] text-violet-300/70 text-xs font-light">Ansioso-preocupado</span>
-                            </div>
-                            <div className="space-y-1.5 max-w-xs w-full">
-                              {[{label:'Ansiedad',pct:68},{label:'Evitación',pct:35}].map((s,i) => (
-                                <div key={i} className="flex items-center gap-3">
-                                  <span className="text-white/40 text-xs font-light w-20 flex-shrink-0">{s.label}</span>
-                                  <div className="flex-1 h-1.5 bg-white/[0.04] rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-violet-500/50 to-fuchsia-500/50 rounded-full" style={{width:`${s.pct}%`}} /></div>
-                                  <span className="text-white/30 text-xs font-light tabular-nums w-8 text-right">{s.pct}%</span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                          <div className="px-6 lg:px-8 pb-4"><div className="h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" /><p className="text-white/15 text-[9px] font-light mt-2 text-center">Radiografía de Pareja · Luis Virrueta · Método AION©</p></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Carousel navigation arrows */}
-                  <button
-                    onClick={() => setCarouselIdx(i => Math.max(0, i - 1))}
-                    className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 lg:-translate-x-6 w-10 h-10 rounded-full border border-white/10 bg-black/60 backdrop-blur-sm flex items-center justify-center transition-opacity ${carouselIdx === 0 ? 'opacity-30 cursor-default' : 'hover:border-violet-500/30 hover:bg-violet-500/10'}`}
-                    disabled={carouselIdx === 0}>
-                    <ChevronLeft className="w-5 h-5 text-white/60" strokeWidth={1.5} />
-                  </button>
-                  <button
-                    onClick={() => setCarouselIdx(i => Math.min(4, i + 1))}
-                    className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 lg:translate-x-6 w-10 h-10 rounded-full border border-white/10 bg-black/60 backdrop-blur-sm flex items-center justify-center transition-opacity ${carouselIdx === 4 ? 'opacity-30 cursor-default' : 'hover:border-violet-500/30 hover:bg-violet-500/10'}`}
-                    disabled={carouselIdx === 4}>
-                    <ChevronRight className="w-5 h-5 text-white/60" strokeWidth={1.5} />
-                  </button>
-
-                  {/* Dot indicators */}
-                  <div className="flex justify-center gap-2 mt-4">
-                    {[0,1,2,3,4].map(i => (
-                      <button key={i} onClick={() => setCarouselIdx(i)}
-                        className={`h-2 rounded-full transition-all ${carouselIdx === i ? 'bg-violet-400/70 w-6' : 'bg-white/15 hover:bg-white/25 w-2'}`} />
-                    ))}
-                  </div>
-
-                  {/* Page labels */}
-                  <div className="flex justify-center gap-4 mt-3">
-                    {['Radar','Sternberg','Gottman','Indicadores','Apego'].map((l,i) => (
-                      <button key={i} onClick={() => setCarouselIdx(i)}
-                        className={`text-[10px] font-light transition-colors ${carouselIdx === i ? 'text-violet-300/70' : 'text-white/20 hover:text-white/35'}`}>{l}</button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Reporte quote */}
-                <div className="max-w-2xl mx-auto mt-12 text-center">
-                  <div className="h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent mb-6" />
-                  <p className="text-white/55 text-lg font-light italic leading-relaxed">
-                    "Cada reporte es generado por IA a partir de tus respuestas, personalizado con 11 corrientes psicológicas, e incluye gráficas descargables en PDF."
-                  </p>
-                  <div className="h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent mt-6" />
-                </div>
-              </div>
-
               {/* ═══════════════════════════════════════════════════════
                   SECTION 5: Muestra del reporte — Sofía y Mateo
               ═══════════════════════════════════════════════════════ */}
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                className="py-16 space-y-10">
-                <div className="text-center">
+                className="py-16 space-y-8">
+                <div className="text-center space-y-4 max-w-2xl mx-auto">
                   <p className="text-violet-400/50 text-xs font-bold uppercase tracking-[0.25em] mb-3">Ejemplo real de análisis</p>
                   <h3 className="text-2xl lg:text-3xl font-light text-white mb-2">Así se ve tu reporte</h3>
                   <p className="text-white/40 text-sm font-light max-w-lg mx-auto">Extracto del análisis generado para Sofía (31) y Mateo (34), una pareja ficticia con patrones reales.</p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto">
-                  {/* Card 1 — Autoanálisis */}
-                  <div className="p-6 rounded-2xl border border-violet-500/15 bg-gradient-to-br from-violet-500/[0.04] to-transparent relative overflow-hidden">
-                    <p className="text-violet-300/60 text-[10px] uppercase tracking-[0.2em] mb-2">Autoanálisis</p>
-                    <p className="text-white/70 text-sm font-light leading-relaxed mb-3">
-                      Sofía ama desde la ansiedad de perder. Necesita validación constante y confunde intensidad con intimidad. Cuando no recibe respuesta inmediata, interpreta silencio como abandono.
-                    </p>
-                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#0a0a12] to-transparent" />
-                  </div>
-
-                  {/* Card 2 — Diagnóstico Gottman */}
-                  <div className="p-6 rounded-2xl border border-fuchsia-500/15 bg-gradient-to-br from-fuchsia-500/[0.04] to-transparent relative overflow-hidden">
-                    <p className="text-fuchsia-300/60 text-[10px] uppercase tracking-[0.2em] mb-2">Diagnóstico Gottman</p>
-                    <p className="text-white/70 text-sm font-light leading-relaxed mb-3">
-                      Ratio positivo/negativo estimado: 2.8:1 (zona de riesgo). La crítica aparece disfrazada de preocupación. Mateo responde con distanciamiento defensivo — lo que Sofía lee como desinterés.
-                    </p>
-                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#0a0a12] to-transparent" />
-                  </div>
-
-                  {/* Card 3 — Estilo de apego */}
-                  <div className="p-6 rounded-2xl border border-cyan-500/15 bg-gradient-to-br from-cyan-500/[0.04] to-transparent relative overflow-hidden">
-                    <p className="text-cyan-300/60 text-[10px] uppercase tracking-[0.2em] mb-2">Estilo de apego</p>
-                    <p className="text-white/70 text-sm font-light leading-relaxed mb-3">
-                      Sofía: ansioso-preocupado. Mateo: evitativo-dismissivo. Juntos activan un ciclo de persecución–retirada que se intensifica bajo estrés y genera distancia emocional creciente.
-                    </p>
-                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#0a0a12] to-transparent" />
-                  </div>
-                </div>
-
-                <div className="text-center space-y-5">
-                  <p className="text-white/30 text-xs font-light">Esto es solo una fracción. Tu reporte incluye 12 dimensiones, 11 corrientes, gráficas interactivas y recomendaciones personalizadas.</p>
                   <motion.button
                     onClick={() => handlePurchase('demo')}
                     whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-violet-500/30 text-white/60 font-light text-sm hover:border-violet-500/50 hover:text-white/80 transition-all">
                     <Eye className="w-4 h-4 text-violet-400/60" strokeWidth={1.5} />
-                    Ver demo del diagnóstico — gratis
+                    Ver reporte muestra
                   </motion.button>
                 </div>
               </motion.div>
@@ -2103,8 +1876,8 @@ const DiagnosticoRelacionalPage = () => {
                 className="text-center pb-20">
                 <p className="text-white/35 text-sm uppercase tracking-[0.15em] mb-3">Elige tu radiografía</p>
                 <h2 className="text-2xl lg:text-3xl font-light text-white/80 mb-3">¿Qué necesitas entender?</h2>
-                <p className="text-white/50 text-lg font-light mb-3 max-w-xl mx-auto">No es un test de compatibilidad. Es una radiografía profunda de cómo amas, qué repites y hacia dónde va tu relación.</p>
-                <p className="text-white/30 text-sm font-light mb-10 max-w-lg mx-auto">11 corrientes psicológicas analizan tu caso simultáneamente: Gottman · Perel · Sternberg · Johnson · Schnarch y más.</p>
+                <p className="text-white/50 text-lg font-light mb-3 max-w-xl mx-auto">La respuesta a por qué amas como amas: descubre tus patrones inconscientes y qué está pasando realmente en tu vínculo.</p>
+                <p className="text-white/30 text-sm font-light mb-10 max-w-lg mx-auto">Elige modalidad individual, pareja solo o los dos, y recibe un reporte claro para tomar decisiones con certeza.</p>
 
                 <div className="hidden sm:grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
                   {/* Radiografía de tu forma de amar */}
@@ -2141,9 +1914,9 @@ const DiagnosticoRelacionalPage = () => {
                     </div>
                   </div>
                   {/* Radiografía de tu relación */}
-                  <div className="relative pt-4">
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 px-4 py-1.5 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-600 shadow-lg shadow-fuchsia-600/40 border border-white/20 whitespace-nowrap">
-                    <span className="text-[10px] text-white font-bold uppercase tracking-widest">⭐ Más elegido</span>
+                  <div className="relative">
+                  <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-md bg-gradient-to-r from-violet-500 to-fuchsia-600 shadow-md shadow-fuchsia-600/30 border border-white/20 whitespace-nowrap">
+                    <span className="text-[8px] text-white font-bold uppercase tracking-[0.12em]">⭐ Más elegido</span>
                   </div>
                   <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-8 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
@@ -2244,9 +2017,9 @@ const DiagnosticoRelacionalPage = () => {
                     </div>
                   </div>
                   {/* Pareja Solo — Mobile */}
-                  <div className="relative pt-4">
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 px-4 py-1.5 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-600 shadow-lg shadow-fuchsia-600/40 border border-white/20 whitespace-nowrap">
-                    <span className="text-[10px] text-white font-bold uppercase tracking-widest">⭐ Más elegido</span>
+                  <div className="relative">
+                  <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-md bg-gradient-to-r from-violet-500 to-fuchsia-600 shadow-md shadow-fuchsia-600/30 border border-white/20 whitespace-nowrap">
+                    <span className="text-[8px] text-white font-bold uppercase tracking-[0.12em]">⭐ Más elegido</span>
                   </div>
                   <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-7 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
@@ -2408,9 +2181,9 @@ const DiagnosticoRelacionalPage = () => {
                 </div>
 
                 {/* Pareja — Solo */}
-                <div className="relative pt-4">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 px-4 py-1.5 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-600 shadow-lg shadow-fuchsia-600/40 border border-white/20 whitespace-nowrap">
-                  <span className="text-[10px] text-white font-bold uppercase tracking-widest">⭐ Más elegido</span>
+                <div className="relative">
+                <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-md bg-gradient-to-r from-violet-500 to-fuchsia-600 shadow-md shadow-fuchsia-600/30 border border-white/20 whitespace-nowrap">
+                  <span className="text-[8px] text-white font-bold uppercase tracking-[0.12em]">⭐ Más elegido</span>
                 </div>
                 <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] overflow-hidden">
                   <div className="py-4 px-7 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
