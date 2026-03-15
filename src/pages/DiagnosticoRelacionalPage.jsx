@@ -2154,9 +2154,13 @@ const DiagnosticoRelacionalPage = () => {
 
                 <div className="hidden sm:grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
                   {/* Radiografía de tu forma de amar */}
-                  <div className="p-8 rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left">
-                    <p className="text-white/40 text-xs uppercase tracking-[0.15em] mb-1">Individual</p>
-                    <p className="text-fuchsia-300/70 text-sm font-medium mb-3">Descifra tu forma de amar</p>
+                  <div className="rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left overflow-hidden">
+                    <div className="py-4 px-8 bg-amber-400">
+                      <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-semibold">Individual</p>
+                      <p className="text-zinc-900 text-sm font-bold">Descifra tu forma de amar</p>
+                    </div>
+                    <div className="p-8 pt-5">
+                    <p className="text-fuchsia-300/70 text-sm font-medium mb-3 hidden">x</p>
                     <div className="flex items-baseline gap-2 mb-1">
                       <span className="text-white/30 text-lg line-through">$999</span>
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_DESCUBRE} <span className="text-lg text-white/35">MXN</span></p>
@@ -2177,15 +2181,18 @@ const DiagnosticoRelacionalPage = () => {
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
                       Descubrir mi patrón
                     </motion.button>
+                    </div>
                   </div>
                   {/* Radiografía de tu relación */}
-                  <div className="p-8 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left relative overflow-hidden">
-                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/50 to-fuchsia-500/50" />
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="text-violet-300/60 text-xs uppercase tracking-[0.15em]">Pareja — Solo</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/20 text-violet-300/70">Más elegido</span>
+                  <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left overflow-hidden">
+                    <div className="py-4 px-8 bg-violet-600">
+                      <div className="flex items-center gap-2">
+                        <p className="text-white text-xs uppercase tracking-[0.15em] font-semibold">Pareja — Solo</p>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 text-white font-medium">Más elegido</span>
+                      </div>
+                      <p className="text-white text-sm font-bold">La verdad sobre tu relación, al descubierto</p>
                     </div>
-                    <p className="text-violet-300/70 text-sm font-medium mb-3">La verdad sobre tu relación, al descubierto</p>
+                    <div className="p-8 pt-5">
                     <div className="flex items-baseline gap-2 mb-1">
                       <span className="text-white/30 text-lg line-through">$999</span>
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_SOLO} <span className="text-lg text-white/35">MXN</span></p>
@@ -2206,15 +2213,18 @@ const DiagnosticoRelacionalPage = () => {
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
                       Radiografiar mi relación
                     </motion.button>
+                    </div>
                   </div>
                   {/* Radiografía cruzada de pareja */}
-                  <div className="p-8 rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left relative overflow-hidden">
-                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500/50 to-blue-500/50" />
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="text-cyan-300/60 text-xs uppercase tracking-[0.15em]">Pareja — Los dos</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/20 text-cyan-300/70">3 reportes</span>
+                  <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left overflow-hidden">
+                    <div className="py-4 px-8 bg-blue-600">
+                      <div className="flex items-center gap-2">
+                        <p className="text-white text-xs uppercase tracking-[0.15em] font-semibold">Pareja — Los dos</p>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 text-white font-medium">3 reportes</span>
+                      </div>
+                      <p className="text-white text-sm font-bold">El diagnóstico completo para los dos</p>
                     </div>
-                    <p className="text-cyan-300/70 text-sm font-medium mb-3">El diagnóstico completo para los dos</p>
+                    <div className="p-8 pt-5">
                     <div className="flex items-baseline gap-2 mb-1">
                       <span className="text-white/30 text-lg line-through">$1,999</span>
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_LOSDOS} <span className="text-lg text-white/35">MXN</span></p>
@@ -2235,15 +2245,19 @@ const DiagnosticoRelacionalPage = () => {
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-light text-base hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg shadow-cyan-600/20">
                       Empezar juntos
                     </motion.button>
+                    </div>
                   </div>
                 </div>
 
                 {/* Mobile: stacked pricing cards */}
                 <div className="sm:hidden flex flex-col gap-5 max-w-sm mx-auto">
                   {/* Radiografía de tu forma de amar — Mobile */}
-                  <div className="p-7 rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left">
-                    <p className="text-white/50 text-xs uppercase tracking-[0.15em] mb-1">Individual</p>
-                    <p className="text-fuchsia-300/70 text-sm font-medium mb-3">Descifra tu forma de amar</p>
+                  <div className="rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left overflow-hidden">
+                    <div className="py-4 px-7 bg-amber-400">
+                      <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-semibold">Individual</p>
+                      <p className="text-zinc-900 text-sm font-bold">Descifra tu forma de amar</p>
+                    </div>
+                    <div className="p-7 pt-5">
                     <div className="flex items-baseline gap-2 mb-1">
                       <span className="text-white/30 text-lg line-through">$999</span>
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_DESCUBRE} <span className="text-lg text-white/35">MXN</span></p>
@@ -2262,15 +2276,18 @@ const DiagnosticoRelacionalPage = () => {
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base">
                       Descubrir mi patrón
                     </motion.button>
+                    </div>
                   </div>
                   {/* Pareja Solo — Mobile */}
-                  <div className="p-7 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left relative overflow-hidden">
-                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/50 to-fuchsia-500/50" />
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="text-violet-300/60 text-xs uppercase tracking-[0.15em]">Pareja — Solo</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/20 text-violet-300/70">Más elegido</span>
+                  <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left overflow-hidden">
+                    <div className="py-4 px-7 bg-violet-600">
+                      <div className="flex items-center gap-2">
+                        <p className="text-white text-xs uppercase tracking-[0.15em] font-semibold">Pareja — Solo</p>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 text-white font-medium">Más elegido</span>
+                      </div>
+                      <p className="text-white text-sm font-bold">La verdad sobre tu relación, al descubierto</p>
                     </div>
-                    <p className="text-violet-300/70 text-sm font-medium mb-3">La verdad sobre tu relación, al descubierto</p>
+                    <div className="p-7 pt-5">
                     <div className="flex items-baseline gap-2 mb-1">
                       <span className="text-white/30 text-lg line-through">$999</span>
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_SOLO} <span className="text-lg text-white/35">MXN</span></p>
@@ -2289,15 +2306,18 @@ const DiagnosticoRelacionalPage = () => {
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base">
                       Radiografiar mi relación
                     </motion.button>
+                    </div>
                   </div>
                   {/* Pareja Los dos — Mobile */}
-                  <div className="p-7 rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left relative overflow-hidden">
-                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500/50 to-blue-500/50" />
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="text-cyan-300/60 text-xs uppercase tracking-[0.15em]">Pareja — Los dos</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/20 text-cyan-300/70">3 reportes</span>
+                  <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left overflow-hidden">
+                    <div className="py-4 px-7 bg-blue-600">
+                      <div className="flex items-center gap-2">
+                        <p className="text-white text-xs uppercase tracking-[0.15em] font-semibold">Pareja — Los dos</p>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 text-white font-medium">3 reportes</span>
+                      </div>
+                      <p className="text-white text-sm font-bold">El diagnóstico completo para los dos</p>
                     </div>
-                    <p className="text-cyan-300/70 text-sm font-medium mb-3">El diagnóstico completo para los dos</p>
+                    <div className="p-7 pt-5">
                     <div className="flex items-baseline gap-2 mb-1">
                       <span className="text-white/30 text-lg line-through">$1,999</span>
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_LOSDOS} <span className="text-lg text-white/35">MXN</span></p>
@@ -2316,6 +2336,7 @@ const DiagnosticoRelacionalPage = () => {
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-light text-base">
                       Empezar juntos
                     </motion.button>
+                    </div>
                   </div>
                 </div>
 
@@ -2365,10 +2386,13 @@ const DiagnosticoRelacionalPage = () => {
               {/* Pricing Cards with per-card promo codes */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 {/* Radiografía Individual */}
-                <div className="p-7 rounded-2xl border border-white/10 bg-zinc-950/60 space-y-5">
+                <div className="rounded-2xl border border-white/10 bg-zinc-950/60 overflow-hidden">
+                  <div className="py-4 px-7 bg-amber-400">
+                    <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-semibold">Individual</p>
+                    <p className="text-zinc-900 text-sm font-bold">Descifra tu forma de amar</p>
+                  </div>
+                  <div className="p-7 pt-5 space-y-5">
                   <div>
-                    <p className="text-white/40 text-xs uppercase tracking-[0.15em] mb-1">Individual</p>
-                    <p className="text-fuchsia-300/70 text-sm font-medium mb-3">Descifra tu forma de amar</p>
                     <div className="flex items-baseline gap-2 mb-1">
                       <span className="text-white/30 text-lg line-through">$999</span>
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_DESCUBRE} <span className="text-lg text-white/35">MXN</span></p>
@@ -2407,17 +2431,20 @@ const DiagnosticoRelacionalPage = () => {
                     className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20 disabled:opacity-50">
                     {checkoutLoading === 'descubre' ? 'Procesando...' : cardPromoApplied.descubre?.free ? 'Acceder gratis' : `Pagar $${cardPromoApplied.descubre?.finalPrice ?? PRODUCT_PRICE_DESCUBRE} MXN`}
                   </motion.button>
+                  </div>
                 </div>
 
                 {/* Pareja — Solo */}
-                <div className="p-7 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] space-y-5 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/50 to-fuchsia-500/50" />
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="text-violet-300/60 text-xs uppercase tracking-[0.15em]">Pareja — Solo</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/20 text-violet-300/70">Más elegido</span>
+                <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] overflow-hidden">
+                  <div className="py-4 px-7 bg-violet-600">
+                    <div className="flex items-center gap-2">
+                      <p className="text-white text-xs uppercase tracking-[0.15em] font-semibold">Pareja — Solo</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 text-white font-medium">Más elegido</span>
                     </div>
-                    <p className="text-violet-300/70 text-sm font-medium mb-3">La verdad sobre tu relación, al descubierto</p>
+                    <p className="text-white text-sm font-bold">La verdad sobre tu relación, al descubierto</p>
+                  </div>
+                  <div className="p-7 pt-5 space-y-5">
+                  <div>
                     <div className="flex items-baseline gap-2 mb-1">
                       <span className="text-white/30 text-lg line-through">$999</span>
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_SOLO} <span className="text-lg text-white/35">MXN</span></p>
@@ -2456,17 +2483,20 @@ const DiagnosticoRelacionalPage = () => {
                     className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20 disabled:opacity-50">
                     {checkoutLoading === 'solo' ? 'Procesando...' : cardPromoApplied.solo?.free ? 'Acceder gratis' : `Pagar $${cardPromoApplied.solo?.finalPrice ?? PRODUCT_PRICE_SOLO} MXN`}
                   </motion.button>
+                  </div>
                 </div>
 
                 {/* Pareja — Los dos */}
-                <div className="p-7 rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] space-y-5 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500/50 to-blue-500/50" />
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="text-cyan-300/60 text-xs uppercase tracking-[0.15em]">Pareja — Los dos</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/20 text-cyan-300/70">3 reportes</span>
+                <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] overflow-hidden">
+                  <div className="py-4 px-7 bg-blue-600">
+                    <div className="flex items-center gap-2">
+                      <p className="text-white text-xs uppercase tracking-[0.15em] font-semibold">Pareja — Los dos</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 text-white font-medium">3 reportes</span>
                     </div>
-                    <p className="text-cyan-300/70 text-sm font-medium mb-3">El diagnóstico completo para los dos</p>
+                    <p className="text-white text-sm font-bold">El diagnóstico completo para los dos</p>
+                  </div>
+                  <div className="p-7 pt-5 space-y-5">
+                  <div>
                     <div className="flex items-baseline gap-2 mb-1">
                       <span className="text-white/30 text-lg line-through">$1,999</span>
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_LOSDOS} <span className="text-lg text-white/35">MXN</span></p>
@@ -2505,6 +2535,7 @@ const DiagnosticoRelacionalPage = () => {
                     className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-light text-base hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg shadow-cyan-600/20 disabled:opacity-50">
                     {checkoutLoading === 'losdos' ? 'Procesando...' : cardPromoApplied.losdos?.free ? 'Acceder gratis' : `Pagar $${cardPromoApplied.losdos?.finalPrice ?? PRODUCT_PRICE_LOSDOS} MXN`}
                   </motion.button>
+                  </div>
                 </div>
               </div>
 

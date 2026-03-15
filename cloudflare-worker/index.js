@@ -339,7 +339,8 @@ async function handleCreateCheckout(req, env) {
 }
 
 async function handleVerifyPayment(req, env) {
-  const { sessionId } = await req.json()
+  const body = await req.json()
+  const { sessionId } = body
   // Auto-detect test vs live by session_id prefix (cs_test_ vs cs_live_)
   const isTest = sessionId?.startsWith('cs_test_')
   const session = await stripe(env, 'GET', `/checkout/sessions/${sessionId}`, {}, isTest)
@@ -354,8 +355,10 @@ async function handleVerifyPayment(req, env) {
     const alreadySent = await env.PURCHASES.get(dedupKey)
     if (!alreadySent) {
       try {
+        const { siteOrigin } = body
+        const baseUrl = (isTest && siteOrigin) ? siteOrigin : SITE_URL
         const token     = makeToken()
-        const accessUrl = `${RADIOGRAFIA_URL}?token=${token}&type=${type}&pid=${sessionId}`
+        const accessUrl = `${baseUrl}/tienda/radiografia-premium?token=${token}&type=${type}&pid=${sessionId}`
         await sendEmail(env, {
           to:      email,
           subject: 'Tu acceso a la Radiografía Psicológica',

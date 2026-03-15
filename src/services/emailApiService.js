@@ -50,7 +50,7 @@ export async function verifyStripeSession(sessionId) {
   const res = await fetch(`${API_BASE}/api/verify-payment`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sessionId })
+    body: JSON.stringify({ sessionId, siteOrigin: window.location.origin })
   })
   if (!res.ok) throw new Error('Error verificando pago')
   return res.json() // { type: 'individual'|'pareja', email: '...', amount: 349 }
