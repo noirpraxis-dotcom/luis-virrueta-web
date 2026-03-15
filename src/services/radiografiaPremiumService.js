@@ -932,3 +932,131 @@ export function generateFallbackAnalysis() {
     }
   }
 }
+
+// ─── CROSS-ANALYSIS PROMPT (LOSDOS) ─────────────────────────────────────────
+// Compares both partners' individual analyses side by side
+
+const CROSS_ANALYSIS_SYSTEM = `Eres un sistema avanzado de análisis psicológico relacional llamado "Radiografía Cruzada de Pareja".
+
+Tu objetivo es cruzar los resultados INDIVIDUALES de dos personas que están en la MISMA relación, revelando:
+- Lo que ambos ven igual y lo que ven de forma radicalmente distinta
+- Puntos ciegos de cada uno que el otro revela
+- Dinámicas inconscientes complementarias o colisionantes
+- La relación REAL vs la relación que cada uno cree tener
+
+MARCO TEÓRICO — Mismas 11 corrientes del análisis individual (Gottman, Johnson, Perel, Levine, Hendrix, Tatkin, Chapman, Sternberg, Schnarch, Real, Freud+Lacan) pero ahora aplicadas AL CRUCE entre dos perspectivas.
+
+ESTILO: Sherlock Holmes psicológico — conecta pistas de ambos lados, revela lo que ninguno de los dos puede ver por sí solo. Empático pero incisivo.
+
+REGLAS:
+- USA LOS NOMBRES DE AMBOS constantemente
+- Cita frases textuales de AMBOS entre comillas, contrastándolas
+- Usa **negrita** solo para conceptos clave antes de dos puntos
+- NUNCA inventes datos — todo debe derivarse de los análisis individuales
+- La profundidad debe ser MAYOR que la individual, porque tienes dos perspectivas
+
+Responde EXCLUSIVAMENTE en formato JSON válido con la estructura solicitada.`
+
+function buildCrossAnalysisPrompt(analysis1, analysis2, profile1, profile2) {
+  const name1 = profile1?.nombre || 'Participante 1'
+  const name2 = profile2?.nombre || 'Participante 2'
+
+  let prompt = `## RADIOGRAFÍA CRUZADA — ${name1} y ${name2}\n\n`
+  prompt += `Tienes ante ti los análisis INDIVIDUALES de dos personas que están en la MISMA relación.\n`
+  prompt += `Tu tarea: cruzar ambas perspectivas para revelar la dinámica REAL de la pareja.\n\n`
+
+  prompt += `### ANÁLISIS INDIVIDUAL DE ${name1.toUpperCase()}\n`
+  prompt += `**Autoanálisis:**\n`
+  if (analysis1.autoanalisis_usuario) {
+    for (const [key, val] of Object.entries(analysis1.autoanalisis_usuario)) {
+      if (typeof val === 'string') prompt += `- ${key}: ${val.slice(0, 500)}...\n`
+    }
+  }
+  prompt += `\n**Dimensiones:** ${JSON.stringify(analysis1.dimensiones || {})}\n`
+  prompt += `**Diagnóstico:** ${JSON.stringify(analysis1.diagnostico || {})}\n`
+  prompt += `**Resumen:** ${analysis1.resumen_relacion || ''}\n`
+  prompt += `**Fortalezas:** ${JSON.stringify(analysis1.fortalezas || [])}\n`
+  prompt += `**Riesgos:** ${JSON.stringify(analysis1.riesgos || [])}\n\n`
+
+  prompt += `### ANÁLISIS INDIVIDUAL DE ${name2.toUpperCase()}\n`
+  prompt += `**Autoanálisis:**\n`
+  if (analysis2.autoanalisis_usuario) {
+    for (const [key, val] of Object.entries(analysis2.autoanalisis_usuario)) {
+      if (typeof val === 'string') prompt += `- ${key}: ${val.slice(0, 500)}...\n`
+    }
+  }
+  prompt += `\n**Dimensiones:** ${JSON.stringify(analysis2.dimensiones || {})}\n`
+  prompt += `**Diagnóstico:** ${JSON.stringify(analysis2.diagnostico || {})}\n`
+  prompt += `**Resumen:** ${analysis2.resumen_relacion || ''}\n`
+  prompt += `**Fortalezas:** ${JSON.stringify(analysis2.fortalezas || [])}\n`
+  prompt += `**Riesgos:** ${JSON.stringify(analysis2.riesgos || [])}\n\n`
+
+  return prompt
+}
+
+const CROSS_INSTRUCTION = `Genera el análisis cruzado completo. Responde SOLO con JSON válido.
+{
+  "apertura": "(2-3 párrafos: saludo a ambos, reconoce que ambos completaron el cuestionario, genera rapport. Anticipa que van a ver su relación como nunca antes.)",
+  "resumen_cruzado": "(3-4 párrafos: resumen narrativo de la relación vista desde las DOS perspectivas. Señala inmediatamente los puntos de convergencia y divergencia más impactantes.)",
+  "dimensiones_cruzadas": {
+    "estabilidad_relacional": {"p1": "(0-100)", "p2": "(0-100)", "interpretacion": "(1-2 frases comparativas)"},
+    "apego_emocional": {"p1": "(0-100)", "p2": "(0-100)", "interpretacion": "(1-2 frases)"},
+    "conexion_emocional": {"p1": "(0-100)", "p2": "(0-100)", "interpretacion": "(1-2 frases)"},
+    "deseo_erotico": {"p1": "(0-100)", "p2": "(0-100)", "interpretacion": "(1-2 frases)"},
+    "intimidad": {"p1": "(0-100)", "p2": "(0-100)", "interpretacion": "(1-2 frases)"},
+    "sincronia_relacional": {"p1": "(0-100)", "p2": "(0-100)", "interpretacion": "(1-2 frases)"},
+    "patrones_inconscientes": {"p1": "(0-100)", "p2": "(0-100)", "interpretacion": "(1-2 frases)"},
+    "fantasma_relacional": {"p1": "(0-100)", "p2": "(0-100)", "interpretacion": "(1-2 frases)"},
+    "roles_sistemicos": {"p1": "(0-100)", "p2": "(0-100)", "interpretacion": "(1-2 frases)"},
+    "resiliencia_vinculo": {"p1": "(0-100)", "p2": "(0-100)", "interpretacion": "(1-2 frases)"},
+    "vulnerabilidad_emocional": {"p1": "(0-100)", "p2": "(0-100)", "interpretacion": "(1-2 frases)"},
+    "narrativa_futuro": {"p1": "(0-100)", "p2": "(0-100)", "interpretacion": "(1-2 frases)"}
+  },
+  "puntos_ciegos": {
+    "p1_no_ve": "(2-3 párrafos: lo que P1 no ve sobre sí mismo/a que P2 revela indirectamente. Cita de ambos.)",
+    "p2_no_ve": "(2-3 párrafos: lo que P2 no ve sobre sí mismo/a que P1 revela indirectamente. Cita de ambos.)"
+  },
+  "dinamica_real": "(3-4 párrafos: la dinámica REAL de la pareja — no la que cada uno cree tener, sino la que emerge del cruce. Incluye quién persigue, quién evita, qué ciclos se repiten, qué rol juega cada uno.)",
+  "convergencias": ["(3-5 puntos donde ambos coinciden — señal de fortaleza o de punto ciego compartido)"],
+  "divergencias": ["(3-5 puntos donde difieren radicalmente — fuente de conflicto o complementariedad)"],
+  "lecturas_cruzadas": {
+    "gottman": "(2-3 párrafos: dinámica Gottman vista desde ambos lados — los jinetes, la reparación, el ratio.)",
+    "apego": "(2-3 párrafos: cómo los estilos de apego de ambos interactúan — complementarios o colisionantes.)",
+    "perel": "(2-3 párrafos: el deseo visto por ambos — el mismo fuego desde dos ventanas.)",
+    "comunicacion": "(2-3 párrafos: los lenguajes de amor cruzados — qué da cada uno y qué necesita recibir.)",
+    "poder": "(2-3 párrafos: la dinámica de poder real — quién tiene más poder emocional y por qué.)"
+  },
+  "mensaje_para_ambos": "(2-3 párrafos: cierre transformador dirigido a los DOS. Qué necesitan trabajar juntos, qué pueden celebrar, qué está en juego. Tono empático e inspirador.)",
+  "pronostico_relacional": {
+    "potencial": "(0-100)",
+    "riesgo": "(0-100)",
+    "direccion": "(1-2 frases: hacia dónde va esta relación si nada cambia vs si trabajan conscientemente)"
+  }
+}`
+
+export async function analyzeCrossRadiografia({ analysis1, analysis2, profile1, profile2 }) {
+  const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY
+  if (!apiKey) {
+    console.warn('⚠️ VITE_DEEPSEEK_API_KEY no configurada para cross-analysis.')
+    return null
+  }
+
+  const basePrompt = buildCrossAnalysisPrompt(analysis1, analysis2, profile1, profile2)
+
+  console.log('🚀 Lanzando análisis cruzado a DeepSeek...')
+  const result = await callDeepSeekPart(apiKey, basePrompt, CROSS_INSTRUCTION, 'Cross-Analysis', 8192)
+
+  if (!result) {
+    console.error('❌ Cross-analysis falló')
+    return null
+  }
+
+  // Inject individual dimensions for side-by-side charts
+  result._individual = {
+    p1: { nombre: profile1?.nombre, dimensiones: analysis1.dimensiones },
+    p2: { nombre: profile2?.nombre, dimensiones: analysis2.dimensiones },
+  }
+
+  console.log('✅ Análisis cruzado completado')
+  return result
+}

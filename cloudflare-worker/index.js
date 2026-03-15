@@ -5,7 +5,18 @@
  * Rutas:
  *   GET  /audio/*                          — Servir audio desde R2
  *   POST /api/create-radiografia-checkout  — Crea sesión Stripe Checkout
- *   POST /api/verify-payment               — Verifica sesión Stripe
+ *   POST /api/verify-payment               — Verifica sesión Stripe (returns token)
+ *   POST /api/validate-radiografia-promo   — Valida código promo
+ *   POST /api/send-access-email            — Envía email de acceso + link pairs (losdos)
+ *   POST /api/save-analysis                — Guarda análisis en KV
+ *   POST /api/send-analysis-email          — Envía email "resultados listos"
+ *   POST /api/check-cross-status           — Verifica si ambos terminaron (losdos)
+ *   POST /api/mark-partner-done            — Marca partner como completado
+ *   POST /api/save-cross-analysis          — Guarda análisis cruzado en KV
+ *   POST /api/send-cross-analysis-email    — Envía email "cruzado listo"
+ *   GET  /api/get-analysis                 — Recupera análisis por token
+ *   GET  /api/get-cross-analysis           — Recupera análisis cruzado por pairId
+ *   POST /webhook                          — Recibe eventos Stripe
  *   POST /api/validate-radiografia-promo   — Valida código promo
  *   POST /api/send-access-email            — Envía email de acceso (Resend)
  *   POST /webhook                          — Recibe eventos Stripe
@@ -175,9 +186,36 @@ async function getOrCreateCoupon(env, code, percent, isTest = false) {
 
 // ── Email HTML ────────────────────────────────────────────────────────────────
 // ── Email: purchase confirmation (sent right after payment) ──────────────────
-function purchaseEmailHtml({ typeLabel, accessUrl, customerName = '' }) {
+function purchaseEmailHtml({ typeLabel, accessUrl, customerName = '', packageType = 'solo' }) {
   const safeName = escapeHtml(customerName).trim()
   const greetingTitle = safeName ? `Gracias, ${safeName}` : 'Gracias por tu compra'
+
+  // Package-specific body text
+  const bodyText = packageType === 'descubre'
+    ? `<p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Tu acceso al cuestionario de autoconocimiento ya está activo. Responde a tu ritmo — no hay respuestas correctas ni incorrectas, solo tu verdad.</p>`
+    : packageType === 'losdos'
+    ? `<p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Tu acceso personal al cuestionario ya está activo. Tu pareja también recibirá su propio enlace. Cada uno responde por separado — cuando ambos terminen, recibirán un <strong style="color:rgba(255,255,255,0.85);font-weight:400;">análisis cruzado</strong> con la radiografía de la relación vista desde los dos lados.</p>`
+    : `<p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Tu acceso personal al cuestionario ya está activo. Usa el botón de abajo para comenzar cuando estés listo.</p>`
+
+  // Package-specific analysis includes
+  const includesItems = packageType === 'descubre'
+    ? `<tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; 40 preguntas guiadas por voz</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; 11 marcos psicológicos aplicados a tu caso</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Mapa profundo de tus patrones emocionales</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Autoanálisis de tus dinámicas inconscientes</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Reporte PDF para guardar o compartir</td></tr>`
+    : packageType === 'losdos'
+    ? `<tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; 40 preguntas guiadas por voz (cada uno)</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; 11 marcos psicológicos aplicados a cada perspectiva</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Radiografía individual de cada uno</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Análisis cruzado comparativo de ambos</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Gráficas lado a lado de 12 dimensiones</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Reporte PDF para ambos</td></tr>`
+    : `<tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; 40 preguntas guiadas por voz</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; 11 marcos psicológicos aplicados a tu caso</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Mapa de 12 dimensiones de tu vínculo</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Autoanálisis de tus patrones inconscientes</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Reporte PDF para guardar o compartir</td></tr>`
 
   return `<!DOCTYPE html>
 <html lang="es">
@@ -213,7 +251,7 @@ function purchaseEmailHtml({ typeLabel, accessUrl, customerName = '' }) {
     <tr><td style="padding-bottom:16px;">
       <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f0f1a;border:1px solid rgba(124,58,237,0.18);border-radius:20px;overflow:hidden;">
         <tr><td style="padding:40px 40px 32px;">
-          <p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Tu acceso personal al cuestionario ya está activo. Usa el botón de abajo para comenzar cuando estés listo.</p>
+          ${bodyText}
           <p style="margin:0 0 32px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);"><strong style="color:rgba(255,255,255,0.85);font-weight:400;">¿Cerraste el navegador o cambiaste de dispositivo?</strong> No hay problema — este mismo enlace te lleva exactamente al punto donde lo dejaste. Guarda este correo; es tu acceso permanente.</p>
 
           <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;background:#111427;border:1px solid rgba(99,102,241,0.28);border-radius:14px;">
@@ -240,11 +278,7 @@ function purchaseEmailHtml({ typeLabel, accessUrl, customerName = '' }) {
         <tr><td style="padding:24px 32px;">
           <p style="margin:0 0 16px;font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);">Tu análisis incluirá</p>
           <table cellpadding="0" cellspacing="0">
-            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; 40 preguntas guiadas por voz</td></tr>
-            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; 11 marcos psicológicos aplicados a tu caso</td></tr>
-            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Mapa de 12 dimensiones de tu vínculo</td></tr>
-            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Autoanálisis de tus patrones inconscientes</td></tr>
-            <tr><td style="padding:4px 0;font-size:13px;color:rgba(255,255,255,0.5);">&mdash;&nbsp; Reporte PDF para guardar o compartir</td></tr>
+            ${includesItems}
           </table>
         </td></tr>
       </table>
@@ -269,7 +303,19 @@ function purchaseEmailHtml({ typeLabel, accessUrl, customerName = '' }) {
 }
 
 // ── Email: analysis ready (sent after AI finishes generating results) ─────────
-function analysisEmailHtml({ typeLabel, accessUrl }) {
+function analysisEmailHtml({ typeLabel, accessUrl, packageType = 'solo' }) {
+  const headline = packageType === 'descubre'
+    ? 'Tu radiografía de<br>autoconocimiento está lista'
+    : 'Tu radiografía psicológica<br>está lista'
+
+  const bodyParagraphs = packageType === 'losdos'
+    ? `<p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">El análisis de tus respuestas acaba de terminar. Tu radiografía individual ya está lista.</p>
+          <p style="margin:0 0 32px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Cuando tu pareja también termine su cuestionario, recibirán ambos un <strong style="color:rgba(255,255,255,0.9);font-weight:400;">análisis cruzado</strong> — la radiografía de su relación vista desde los dos lados.</p>`
+    : packageType === 'descubre'
+    ? `<p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Tu análisis de autoconocimiento acaba de terminar. Hay un espejo frente a ti — uno que no miente ni halaga. Solo revela.</p>
+          <p style="margin:0 0 32px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Tu análisis profundo de <strong style="color:rgba(255,255,255,0.9);font-weight:400;">11 corrientes psicológicas simultáneas</strong> y tus patrones emocionales está esperándote.</p>`
+    : `<p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">El análisis de tus respuestas acaba de terminar. Hay un espejo frente a ti — uno que no miente ni halaga. Solo revela.</p>
+          <p style="margin:0 0 32px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Tu análisis profundo de <strong style="color:rgba(255,255,255,0.9);font-weight:400;">11 corrientes psicológicas simultáneas</strong> y 12 dimensiones relacionales está esperándote.</p>`
   return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -296,7 +342,7 @@ function analysisEmailHtml({ typeLabel, accessUrl }) {
 
     <!-- Headline -->
     <tr><td align="center" style="padding-bottom:32px;">
-      <h1 style="margin:0 0 12px;font-size:28px;font-weight:300;letter-spacing:-0.03em;color:#ffffff;line-height:1.2;">Tu radiografía psicológica<br>está lista</h1>
+      <h1 style="margin:0 0 12px;font-size:28px;font-weight:300;letter-spacing:-0.03em;color:#ffffff;line-height:1.2;">${headline}</h1>
       <p style="margin:0;font-size:13px;color:rgba(167,139,250,0.8);letter-spacing:0.05em;text-transform:uppercase;">${typeLabel}</p>
     </td></tr>
 
@@ -304,8 +350,7 @@ function analysisEmailHtml({ typeLabel, accessUrl }) {
     <tr><td style="padding-bottom:16px;">
       <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f0f1a;border:1px solid rgba(124,58,237,0.18);border-radius:20px;overflow:hidden;">
         <tr><td style="padding:40px 40px 32px;">
-          <p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">El análisis de tus respuestas acaba de terminar. Hay un espejo frente a ti — uno que no miente ni halaga. Solo revela.</p>
-          <p style="margin:0 0 32px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Tu análisis profundo de <strong style="color:rgba(255,255,255,0.9);font-weight:400;">11 corrientes psicológicas simultáneas</strong> y 12 dimensiones relacionales está esperándote.</p>
+          ${bodyParagraphs}
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr><td align="center">
               <a href="${accessUrl}" style="display:inline-block;padding:16px 48px;background:linear-gradient(135deg,#6d28d9,#9333ea);color:#ffffff;text-decoration:none;font-size:15px;font-weight:400;letter-spacing:0.02em;border-radius:12px;">Ver mi radiografía &rarr;</a>
@@ -321,6 +366,65 @@ function analysisEmailHtml({ typeLabel, accessUrl }) {
     </td></tr>
 
     <!-- Footer -->
+    <tr><td align="center">
+      <p style="margin:0 0 6px;font-size:11px;color:rgba(255,255,255,0.2);line-height:1.7;">Este enlace es personal. Caduca en 1 año.</p>
+      <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15);">luisvirrueta.com &mdash; hola@luisvirrueta.com</p>
+    </td></tr>
+
+  </table>
+</td></tr>
+</table>
+
+</body></html>`
+}
+
+// ── Email: cross-analysis ready (sent when both partners finish) ─────────────
+function crossAnalysisEmailHtml({ accessUrl }) {
+  return `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Tu radiografía cruzada está lista</title>
+</head>
+<body style="margin:0;padding:0;background:#080810;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#080810;">
+<tr><td align="center" style="padding:48px 16px 40px;">
+
+  <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+
+    <tr><td align="center" style="padding-bottom:40px;">
+      <p style="margin:0;font-size:11px;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:rgba(167,139,250,0.7);">LUIS VIRRUETA</p>
+    </td></tr>
+
+    <tr><td style="padding-bottom:40px;">
+      <div style="height:1px;background:linear-gradient(to right,transparent,rgba(236,72,153,0.5),transparent);"></div>
+    </td></tr>
+
+    <tr><td align="center" style="padding-bottom:32px;">
+      <h1 style="margin:0 0 12px;font-size:28px;font-weight:300;letter-spacing:-0.03em;color:#ffffff;line-height:1.2;">La radiografía cruzada<br>de su relación está lista</h1>
+      <p style="margin:0;font-size:13px;color:rgba(236,72,153,0.8);letter-spacing:0.05em;text-transform:uppercase;">Pareja &mdash; Los Dos</p>
+    </td></tr>
+
+    <tr><td style="padding-bottom:16px;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f0f1a;border:1px solid rgba(236,72,153,0.18);border-radius:20px;overflow:hidden;">
+        <tr><td style="padding:40px 40px 32px;">
+          <p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Los dos han completado su cuestionario. Ahora tienen algo que muy pocas parejas logran: <strong style="color:rgba(255,255,255,0.9);font-weight:400;">una fotografía cruzada de su vínculo</strong> a través de los ojos de ambos.</p>
+          <p style="margin:0 0 32px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Este reporte cruza las respuestas de los dos para revelar patrones compartidos, puntos ciegos, y la dinámica real de la relación — vista desde las dos perspectivas.</p>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr><td align="center">
+              <a href="${accessUrl}" style="display:inline-block;padding:16px 48px;background:linear-gradient(135deg,#db2777,#9333ea);color:#ffffff;text-decoration:none;font-size:15px;font-weight:400;letter-spacing:0.02em;border-radius:12px;">Ver radiografía cruzada &rarr;</a>
+            </td></tr>
+          </table>
+        </td></tr>
+      </table>
+    </td></tr>
+
+    <tr><td style="padding:24px 0;">
+      <div style="height:1px;background:linear-gradient(to right,transparent,rgba(255,255,255,0.06),transparent);"></div>
+    </td></tr>
+
     <tr><td align="center">
       <p style="margin:0 0 6px;font-size:11px;color:rgba(255,255,255,0.2);line-height:1.7;">Este enlace es personal. Caduca en 1 año.</p>
       <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15);">luisvirrueta.com &mdash; hola@luisvirrueta.com</p>
@@ -410,7 +514,7 @@ async function handleVerifyPayment(req, env) {
         await sendEmail(env, {
           to:      email,
           subject: 'Tu acceso a la Radiografía Psicológica',
-          html:    purchaseEmailHtml({ typeLabel: getTypeLabel(type), accessUrl, customerName: name }),
+          html:    purchaseEmailHtml({ typeLabel: getTypeLabel(type), accessUrl, customerName: name, packageType: type }),
         })
         // Save purchase + mark email sent
         const purchase = JSON.stringify({ email, name, type, sessionId, token, createdAt: Date.now(), paid: true })
@@ -426,9 +530,19 @@ async function handleVerifyPayment(req, env) {
     }
   }
 
+  // Retrieve the token so the frontend can use it for save/send operations
+  let purchaseToken = ''
+  if (env.PURCHASES) {
+    const purchaseRaw = await env.PURCHASES.get(`session:${sessionId}`)
+    if (purchaseRaw) {
+      try { purchaseToken = JSON.parse(purchaseRaw)?.token || '' } catch {}
+    }
+  }
+
   return json({
     type,
     email,
+    token: purchaseToken,
     amount:   (session.amount_total || 0) / 100,
     paid:     session.payment_status === 'paid',
     isTest,
@@ -453,30 +567,60 @@ async function handleValidatePromo(req, env) {
 }
 
 async function handleSendAccessEmail(req, env) {
-  const { purchaseId, type, emails, tokens } = await req.json()
+  const { purchaseId, type, emails, tokens, buyerToken, buyerEmail } = await req.json()
   const errors = []
+  const generatedTokens = []
+
   for (let i = 0; i < (emails || []).length; i++) {
     const email = emails[i]
     if (!email) continue
-    const token     = tokens?.[i]
-    const accessUrl = token
-      ? `${RADIOGRAFIA_URL}?token=${token}&type=${type}&pid=${purchaseId}`
-      : RADIOGRAFIA_URL
+    const token     = tokens?.[i] || makeToken()
+    generatedTokens.push(token)
+    const accessUrl = `${RADIOGRAFIA_URL}?token=${token}&type=${type}&pid=${purchaseId}`
     try {
+      // Save token → purchase mapping so this token is valid for save-analysis
+      if (env.PURCHASES) {
+        const purchase = JSON.stringify({ email, type, sessionId: purchaseId, token, createdAt: Date.now(), paid: true })
+        await env.PURCHASES.put(`token:${token}`, purchase, { expirationTtl: 86400 * 365 })
+      }
       await sendEmail(env, {
         to:      email,
         subject: 'Tu acceso a la Radiografía Psicológica',
-        html:    purchaseEmailHtml({ typeLabel: getTypeLabel(type), accessUrl }),
+        html:    purchaseEmailHtml({ typeLabel: getTypeLabel(type), accessUrl, packageType: type }),
       })
     } catch (e) {
       console.error(`Error enviando a ${email}:`, e.message)
       errors.push({ email, error: e.message })
     }
   }
+
+  // For 'losdos': link buyer and partner tokens as a pair
+  if (type === 'losdos' && buyerToken && generatedTokens.length > 0 && env.PURCHASES) {
+    const partnerToken = generatedTokens[0]
+    const pairId = `pair_${Date.now()}_${buyerToken.slice(0, 8)}`
+    const pairData = JSON.stringify({
+      pairId,
+      token1: buyerToken,
+      email1: buyerEmail || '',
+      token2: partnerToken,
+      email2: emails[0] || '',
+      purchaseId,
+      partner1_done: false,
+      partner2_done: false,
+      cross_analysis_done: false,
+      createdAt: Date.now(),
+    })
+    await Promise.all([
+      env.PURCHASES.put(`pair:${pairId}`, pairData, { expirationTtl: 86400 * 365 }),
+      env.PURCHASES.put(`pair_by_token:${buyerToken}`, pairId, { expirationTtl: 86400 * 365 }),
+      env.PURCHASES.put(`pair_by_token:${partnerToken}`, pairId, { expirationTtl: 86400 * 365 }),
+    ])
+  }
+
   if (errors.length > 0 && errors.length === (emails || []).filter(Boolean).length) {
     return json({ ok: false, errors }, 500)
   }
-  return json({ ok: true, errors: errors.length ? errors : undefined })
+  return json({ ok: true, tokens: generatedTokens, errors: errors.length ? errors : undefined })
 }
 
 // ── Save analysis results to KV (called from frontend after AI finishes) ─────
@@ -513,6 +657,158 @@ async function handleGetAnalysis(req, env) {
   }
 }
 
+// ── Check cross-analysis status for 'losdos' pair ────────────────────────────
+async function handleCheckCrossStatus(req, env) {
+  const { token } = await req.json()
+  if (!token) return json({ error: 'Missing token' }, 400)
+  if (!env.PURCHASES) return json({ error: 'KV not configured' }, 500)
+
+  const pairId = await env.PURCHASES.get(`pair_by_token:${token}`)
+  if (!pairId) return json({ paired: false })
+
+  const pairRaw = await env.PURCHASES.get(`pair:${pairId}`)
+  if (!pairRaw) return json({ paired: false })
+
+  const pair = JSON.parse(pairRaw)
+  const isPartner1 = pair.token1 === token
+  const myRole = isPartner1 ? 'partner1' : 'partner2'
+  const otherRole = isPartner1 ? 'partner2' : 'partner1'
+  const otherToken = isPartner1 ? pair.token2 : pair.token1
+  const otherDone = pair[`${otherRole}_done`]
+
+  // Check if other partner's analysis exists in KV
+  let otherAnalysis = null
+  if (otherDone) {
+    const raw = await env.PURCHASES.get(`analysis:${otherToken}`)
+    if (raw) {
+      try { otherAnalysis = JSON.parse(raw) } catch {}
+    }
+  }
+
+  return json({
+    paired: true,
+    pairId,
+    myRole,
+    myToken: token,
+    otherToken,
+    bothDone: pair.partner1_done && pair.partner2_done,
+    otherDone,
+    crossAnalysisDone: pair.cross_analysis_done || false,
+    otherAnalysis,
+  })
+}
+
+// ── Mark partner as done and update pair status ──────────────────────────────
+async function handleMarkPartnerDone(req, env) {
+  const { token } = await req.json()
+  if (!token) return json({ error: 'Missing token' }, 400)
+  if (!env.PURCHASES) return json({ error: 'KV not configured' }, 500)
+
+  const pairId = await env.PURCHASES.get(`pair_by_token:${token}`)
+  if (!pairId) return json({ ok: true, paired: false })
+
+  const pairRaw = await env.PURCHASES.get(`pair:${pairId}`)
+  if (!pairRaw) return json({ ok: true, paired: false })
+
+  const pair = JSON.parse(pairRaw)
+  const isPartner1 = pair.token1 === token
+
+  if (isPartner1) pair.partner1_done = true
+  else pair.partner2_done = true
+
+  await env.PURCHASES.put(`pair:${pairId}`, JSON.stringify(pair), { expirationTtl: 86400 * 365 })
+
+  return json({
+    ok: true,
+    paired: true,
+    bothDone: pair.partner1_done && pair.partner2_done,
+  })
+}
+
+// ── Save cross-analysis results ──────────────────────────────────────────────
+async function handleSaveCrossAnalysis(req, env) {
+  const { token, pairId, analysis } = await req.json()
+  if (!pairId || !analysis) return json({ error: 'Missing pairId or analysis' }, 400)
+  if (!env.PURCHASES) return json({ error: 'KV not configured' }, 500)
+
+  // Validate the token belongs to this pair
+  const storedPairId = await env.PURCHASES.get(`pair_by_token:${token}`)
+  if (storedPairId !== pairId) return json({ error: 'Token does not belong to this pair' }, 403)
+
+  await env.PURCHASES.put(
+    `cross_analysis:${pairId}`,
+    JSON.stringify(analysis),
+    { expirationTtl: 86400 * 365 }
+  )
+
+  // Mark cross analysis as done
+  const pairRaw = await env.PURCHASES.get(`pair:${pairId}`)
+  if (pairRaw) {
+    const pair = JSON.parse(pairRaw)
+    pair.cross_analysis_done = true
+    await env.PURCHASES.put(`pair:${pairId}`, JSON.stringify(pair), { expirationTtl: 86400 * 365 })
+  }
+
+  return json({ ok: true })
+}
+
+// ── Send cross-analysis ready email to both partners ─────────────────────────
+async function handleSendCrossAnalysisEmail(req, env) {
+  const { pairId, token } = await req.json()
+  if (!pairId) return json({ error: 'Missing pairId' }, 400)
+  if (!env.PURCHASES) return json({ error: 'KV not configured' }, 500)
+
+  const pairRaw = await env.PURCHASES.get(`pair:${pairId}`)
+  if (!pairRaw) return json({ error: 'Pair not found' }, 404)
+
+  const pair = JSON.parse(pairRaw)
+  // Validate caller belongs to this pair
+  if (token !== pair.token1 && token !== pair.token2) return json({ error: 'Unauthorized' }, 403)
+
+  const emails = [pair.email1, pair.email2].filter(e => e && e.includes('@'))
+  const errors = []
+
+  for (const email of emails) {
+    // Each partner gets their own link with their token (which will load cross-analysis section)
+    const partnerToken = email === pair.email1 ? pair.token1 : pair.token2
+    const accessUrl = `${RADIOGRAFIA_URL}?token=${partnerToken}&type=losdos&view=results&cross=${pairId}`
+    try {
+      await sendEmail(env, {
+        to: email,
+        subject: 'Tu radiografía cruzada de pareja está lista',
+        html: crossAnalysisEmailHtml({ accessUrl }),
+      })
+    } catch (e) {
+      console.error(`Error enviando cross-analysis a ${email}:`, e.message)
+      errors.push({ email, error: e.message })
+    }
+  }
+
+  return json({ ok: true, errors: errors.length ? errors : undefined })
+}
+
+// ── Retrieve stored cross-analysis by pairId ─────────────────────────────────
+async function handleGetCrossAnalysis(req, env) {
+  const url = new URL(req.url)
+  const pairId = url.searchParams.get('pairId')
+  const token = url.searchParams.get('token')
+  if (!pairId || !token) return json({ error: 'Missing pairId or token' }, 400)
+  if (!env.PURCHASES) return json({ error: 'KV not configured' }, 500)
+
+  // Validate token belongs to pair
+  const storedPairId = await env.PURCHASES.get(`pair_by_token:${token}`)
+  if (storedPairId !== pairId) return json({ error: 'Unauthorized' }, 403)
+
+  const raw = await env.PURCHASES.get(`cross_analysis:${pairId}`)
+  if (!raw) return json({ error: 'Not found' }, 404)
+
+  try {
+    return json({ ok: true, analysis: JSON.parse(raw) })
+  } catch {
+    return json({ error: 'Corrupt data' }, 500)
+  }
+}
+
 // ── Send "analysis ready" email(s) ────────────────────────────────────────────
 async function handleSendAnalysisEmail(req, env) {
   const { token, type, emails } = await req.json()
@@ -527,8 +823,8 @@ async function handleSendAnalysisEmail(req, env) {
     try {
       await sendEmail(env, {
         to:      email,
-        subject: 'Tu radiografía psicológica está lista',
-        html:    analysisEmailHtml({ typeLabel, accessUrl }),
+        subject: (type || 'solo') === 'descubre' ? 'Tu radiografía de autoconocimiento está lista' : 'Tu radiografía psicológica está lista',
+        html:    analysisEmailHtml({ typeLabel, accessUrl, packageType: type || 'solo' }),
       })
     } catch (e) {
       console.error(`Error enviando análisis a ${email}:`, e.message)
@@ -640,7 +936,7 @@ async function handleWebhook(req, env) {
         await sendEmail(env, {
           to:      email,
           subject: 'Tu acceso a la Radiografía Psicológica',
-          html:    purchaseEmailHtml({ typeLabel: getTypeLabel(type), accessUrl, customerName: name }),
+          html:    purchaseEmailHtml({ typeLabel: getTypeLabel(type), accessUrl, customerName: name, packageType: type }),
         })
         await env.PURCHASES.put(dedupKey, '1', { expirationTtl: 86400 * 7 })
       }
@@ -689,7 +985,8 @@ export default {
       // ── Audio from R2 (GET /audio/*) ──────────────────────────────
       if (method === 'GET' && pathname.startsWith('/audio/')) return handleAudio(request, env, pathname)
 
-      if (method === 'GET' && pathname === '/api/get-analysis') return handleGetAnalysis(request, env)
+      if (method === 'GET' && pathname === '/api/get-analysis')       return handleGetAnalysis(request, env)
+      if (method === 'GET' && pathname === '/api/get-cross-analysis')  return handleGetCrossAnalysis(request, env)
 
       if (method === 'POST') {
         if (pathname === '/api/create-radiografia-checkout') return handleCreateCheckout(request, env)
@@ -698,6 +995,10 @@ export default {
         if (pathname === '/api/send-access-email')           return handleSendAccessEmail(request, env)
         if (pathname === '/api/save-analysis')               return handleSaveAnalysis(request, env)
         if (pathname === '/api/send-analysis-email')         return handleSendAnalysisEmail(request, env)
+        if (pathname === '/api/check-cross-status')          return handleCheckCrossStatus(request, env)
+        if (pathname === '/api/mark-partner-done')           return handleMarkPartnerDone(request, env)
+        if (pathname === '/api/save-cross-analysis')         return handleSaveCrossAnalysis(request, env)
+        if (pathname === '/api/send-cross-analysis-email')   return handleSendCrossAnalysisEmail(request, env)
         if (pathname === '/api/create-consulta-checkout')    return handleCreateConsultaCheckout(request, env)
         if (pathname === '/api/validate-consulta-promo')     return handleValidateConsultaPromo(request, env)
         if (pathname === '/api/notify-consulta-purchase')    return handleNotifyConsulta(request, env)

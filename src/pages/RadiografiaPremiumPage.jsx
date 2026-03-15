@@ -6,13 +6,13 @@ import {
   Loader2, ChevronDown, AlertTriangle, TrendingUp, TrendingDown, Star,
   Shield, Activity, Brain, Heart, Zap, Eye, Target, Users, Flame,
   CheckCircle, Download, PenLine, Send, MessageCircle, Lightbulb, Clock,
-  Headphones, SkipForward, Anchor, Compass, Scale, Gift, Repeat, Play
+  Headphones, SkipForward, Anchor, Compass, Scale, Gift, Repeat, Play, Mail
 } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, RadarChart as RechartRadar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts'
 import SEOHead from '../components/SEOHead'
-import { analyzeRadiografiaPremium, generateFallbackAnalysis } from '../services/radiografiaPremiumService'
+import { analyzeRadiografiaPremium, generateFallbackAnalysis, analyzeCrossRadiografia } from '../services/radiografiaPremiumService'
 import { CACHED_PREVIEW_ANALYSIS } from '../data/cachedPreviewAnalysis'
-import { saveAnalysis, sendAnalysisEmail, getAnalysis } from '../services/emailApiService'
+import { saveAnalysis, sendAnalysisEmail, getAnalysis, checkCrossStatus, markPartnerDone, saveCrossAnalysis, sendCrossAnalysisEmail, getCrossAnalysis } from '../services/emailApiService'
 
 // Lazy load jsPDF — only needed when user downloads report
 const loadJsPDF = () => import('jspdf').then(m => m.default)
@@ -29,49 +29,67 @@ const PREGUNTAS = [
   {
     id: 'Q2', block: 'Contexto personal y panorama general',
     mainQuestion: 'Cuéntame la historia de tu relación desde el principio hasta hoy, como si estuvieras resumiendo el camino que han recorrido juntos.',
-    examples: ['Cómo se conocieron', 'Cómo empezó la conexión entre ustedes', 'Qué momentos recuerdas como importantes', 'Qué etapas o cambios han vivido', 'Cómo ha evolucionado la relación con el tiempo']
+    examples: ['Cómo se conocieron', 'Cómo empezó la conexión entre ustedes', 'Qué momentos recuerdas como importantes', 'Qué etapas o cambios han vivido', 'Cómo ha evolucionado la relación con el tiempo'],
+    mainQuestion_descubre: 'Cuéntame sobre tus relaciones pasadas más significativas, como si estuvieras resumiendo tu historia sentimental hasta hoy.',
+    examples_descubre: ['Cuáles han sido tus relaciones más importantes', 'Cómo empezaron o terminaron', 'Qué momentos recuerdas como clave', 'Cómo ha sido tu camino sentimental en general']
   },
   {
     id: 'Q3', block: 'Contexto personal y panorama general',
     mainQuestion: 'Pensando en el presente, cuéntame cómo describirías tu relación actualmente y cómo sientes que están las cosas entre ustedes en este momento.',
-    examples: ['Cómo te sientes en la relación actualmente', 'Qué cosas están funcionando bien entre ustedes', 'Qué cosas se han vuelto más difíciles', 'Qué ha cambiado con el tiempo']
+    examples: ['Cómo te sientes en la relación actualmente', 'Qué cosas están funcionando bien entre ustedes', 'Qué cosas se han vuelto más difíciles', 'Qué ha cambiado con el tiempo'],
+    mainQuestion_descubre: 'Pensando en tu vida sentimental hasta hoy, cuéntame cómo describirías tu situación actual y cómo te sientes respecto a las relaciones.',
+    examples_descubre: ['Cómo te sientes en este momento respecto al amor', 'Qué has aprendido de tus experiencias pasadas', 'Qué cosas se te han hecho difíciles en tus relaciones', 'Cómo ha ido cambiando lo que buscas']
   },
   {
     id: 'Q4', block: 'Contexto personal y panorama general',
     mainQuestion: 'Háblame de cómo es la vida cotidiana entre ustedes y cómo suelen relacionarse en el día a día.',
-    examples: ['Cómo pasan el tiempo juntos normalmente', 'Cómo se cuidan o se apoyan mutuamente en el día a día', 'Cómo suelen comunicarse cuando necesitan algo del otro', 'Si sienten que se protegen mutuamente o si cada uno va por su lado']
+    examples: ['Cómo pasan el tiempo juntos normalmente', 'Cómo se cuidan o se apoyan mutuamente en el día a día', 'Cómo suelen comunicarse cuando necesitan algo del otro', 'Si sienten que se protegen mutuamente o si cada uno va por su lado'],
+    mainQuestion_descubre: 'Cuando has estado en pareja, cuéntame cómo ha sido tu forma de convivir en el día a día con esa persona.',
+    examples_descubre: ['Cómo solías pasar el tiempo con tu pareja', 'Cómo te comunicabas cuando necesitabas algo', 'Si tendías a cuidar al otro o a ir más por tu lado', 'Cómo era tu rutina en pareja']
   },
   {
     id: 'Q5', block: 'Contexto personal y panorama general',
     mainQuestion: 'Cuando miras todo lo que han vivido juntos hasta ahora, cuéntame qué sientes que han construido o desarrollado como pareja a lo largo del tiempo.',
-    examples: ['Experiencias importantes que han vivido juntos', 'Cosas que sienten que han logrado como pareja', 'Aprendizajes que han tenido en la relación', 'Cómo ha influido esta relación en tu vida']
+    examples: ['Experiencias importantes que han vivido juntos', 'Cosas que sienten que han logrado como pareja', 'Aprendizajes que han tenido en la relación', 'Cómo ha influido esta relación en tu vida'],
+    mainQuestion_descubre: 'Mirando tus experiencias sentimentales en conjunto, cuéntame qué sientes que has construido o aprendido sobre ti mismo a lo largo del tiempo.',
+    examples_descubre: ['Experiencias importantes que has vivido en pareja', 'Cosas que sientes que has logrado o aprendido', 'Cómo han influido esas relaciones en quien eres hoy', 'Qué te han dejado esas experiencias']
   },
 
   // BLOQUE 2 — Origen del vínculo y atracción inicial (Q6–Q10)
   {
     id: 'Q6', block: 'Origen del vínculo y atracción inicial',
     mainQuestion: 'Regresando al inicio de la relación, cuéntame qué fue lo que más te llamó la atención de tu pareja cuando empezaron a conocerse.',
-    examples: ['Qué fue lo primero que te atrajo físicamente o emocionalmente', 'Qué cualidades o rasgos de personalidad te llamaban la atención', 'Qué despertó tu curiosidad, admiración o interés', 'Qué tenía esa persona que la hacía especial o diferente para ti']
+    examples: ['Qué fue lo primero que te atrajo físicamente o emocionalmente', 'Qué cualidades o rasgos de personalidad te llamaban la atención', 'Qué despertó tu curiosidad, admiración o interés', 'Qué tenía esa persona que la hacía especial o diferente para ti'],
+    mainQuestion_descubre: 'Pensando en las personas que te han atraído, cuéntame qué suele llamarte la atención al inicio de conocer a alguien.',
+    examples_descubre: ['Qué te suele atraer físicamente o emocionalmente de alguien', 'Qué cualidades o rasgos te llaman más la atención', 'Qué despierta tu curiosidad o interés en una persona', 'Qué hace que alguien sea especial o diferente para ti']
   },
   {
     id: 'Q7', block: 'Expresión afectiva y lenguajes del amor',
     mainQuestion: 'Cuéntame cómo se demuestran cariño o amor entre ustedes en el día a día, y cómo te gusta a ti que te lo demuestren.',
-    examples: ['Si se expresan más con palabras, con gestos, con tiempo juntos o con contacto físico', 'Cómo te gusta que te demuestren que te quieren', 'Cómo le demuestras tú a tu pareja que la quieres', 'Si hay diferencias en la forma en que cada uno expresa o necesita recibir amor']
+    examples: ['Si se expresan más con palabras, con gestos, con tiempo juntos o con contacto físico', 'Cómo te gusta que te demuestren que te quieren', 'Cómo le demuestras tú a tu pareja que la quieres', 'Si hay diferencias en la forma en que cada uno expresa o necesita recibir amor'],
+    mainQuestion_descubre: 'Cuéntame cómo sueles demostrar cariño o amor en una relación, y cómo te gusta que te lo demuestren a ti.',
+    examples_descubre: ['Si te expresas más con palabras, gestos, tiempo o contacto físico', 'Cómo te gusta que te demuestren que te quieren', 'Cómo sueles demostrarle tú a la otra persona', 'Si has notado diferencias entre lo que necesitas y lo que das']
   },
   {
     id: 'Q8', block: 'Origen del vínculo y atracción inicial',
     mainQuestion: 'Mirando la historia de la relación, cuéntame qué momentos o etapas recuerdas como especialmente importantes o significativas en el camino que han recorrido juntos.',
-    examples: ['Momentos felices o significativos', 'Momentos difíciles que recuerdas', 'Etapas que cambiaron la relación', 'Situaciones que marcaron el vínculo']
+    examples: ['Momentos felices o significativos', 'Momentos difíciles que recuerdas', 'Etapas que cambiaron la relación', 'Situaciones que marcaron el vínculo'],
+    mainQuestion_descubre: 'Mirando tu historia sentimental, cuéntame qué momentos o etapas recuerdas como especialmente importantes o significativos.',
+    examples_descubre: ['Momentos felices o significativos en tus relaciones', 'Momentos difíciles que recuerdas', 'Etapas que cambiaron tu forma de ver el amor', 'Situaciones que marcaron tus vínculos']
   },
   {
     id: 'Q9', block: 'Origen del vínculo y atracción inicial',
     mainQuestion: 'Cuando la relación estaba comenzando, cuéntame cómo imaginabas que podría ser el futuro entre ustedes o hacia dónde sentías que podía ir la relación.',
-    examples: ['Qué imaginabas que podría pasar entre ustedes', 'Qué esperabas de la relación en ese momento', 'Qué tipo de relación pensabas que podrían tener', 'Qué futuro imaginabas posible']
+    examples: ['Qué imaginabas que podría pasar entre ustedes', 'Qué esperabas de la relación en ese momento', 'Qué tipo de relación pensabas que podrían tener', 'Qué futuro imaginabas posible'],
+    mainQuestion_descubre: 'Cuando empezabas una relación, cuéntame cómo solías imaginar el futuro con esa persona o qué esperabas que pasara.',
+    examples_descubre: ['Qué solías imaginar que podría pasar', 'Qué esperabas de esas relaciones', 'Qué tipo de relación pensabas que podrías tener', 'Qué futuro visualizabas']
   },
   {
     id: 'Q10', block: 'Origen del vínculo y atracción inicial',
     mainQuestion: 'Pensando en lo que sentías por tu pareja en ese momento, cuéntame qué representaba esa persona para ti o qué sentías que encontrabas en esa relación.',
-    examples: ['Qué significaba esa persona en tu vida', 'Qué te hacía sentir esa relación', 'Qué creías que esa persona aportaba a tu vida', 'Qué encontrabas en esa conexión']
+    examples: ['Qué significaba esa persona en tu vida', 'Qué te hacía sentir esa relación', 'Qué creías que esa persona aportaba a tu vida', 'Qué encontrabas en esa conexión'],
+    mainQuestion_descubre: 'Pensando en las personas que han sido importantes para ti, cuéntame qué solías encontrar en esos vínculos o qué representaban para ti.',
+    examples_descubre: ['Qué significaban esas personas en tu vida', 'Qué te hacían sentir esas relaciones', 'Qué creías que aportaban a tu vida', 'Qué buscabas en esas conexiones']
   },
 
   // BLOQUE 3 — Historia emocional y patrones relacionales (Q11–Q20)
@@ -88,7 +106,9 @@ const PREGUNTAS = [
   {
     id: 'Q13', block: 'Historia emocional y patrones relacionales',
     mainQuestion: 'Hoy que estás en una relación, cuéntame si hay algo de la forma en que se relacionaban las personas de tu familia que sientas que de alguna manera también aparece en tu forma de relacionarte con tu pareja.',
-    examples: ['Comportamientos que reconoces repetir', 'Formas de reaccionar que te recuerdan a tu familia', 'Dinámicas que se parecen a lo que viste crecer', 'Cosas que te sorprende notar en ti mismo']
+    examples: ['Comportamientos que reconoces repetir', 'Formas de reaccionar que te recuerdan a tu familia', 'Dinámicas que se parecen a lo que viste crecer', 'Cosas que te sorprende notar en ti mismo'],
+    mainQuestion_descubre: 'Cuéntame si hay algo de la forma en que se relacionaban las personas de tu familia que sientas que aparece en tu forma de relacionarte en pareja.',
+    examples_descubre: ['Comportamientos que reconoces repetir en tus relaciones', 'Formas de reaccionar que te recuerdan a tu familia', 'Dinámicas que se parecen a lo que viste crecer', 'Cosas que te sorprende notar en ti cuando estás con alguien']
   },
   {
     id: 'Q14', block: 'Historia emocional y patrones relacionales',
@@ -98,17 +118,23 @@ const PREGUNTAS = [
   {
     id: 'Q15', block: 'Identidad y autonomía dentro de la relación',
     mainQuestion: 'Dentro de tu relación, cuéntame qué tanto sientes que puedes ser tú mismo/a sin perder tu identidad o tus propios espacios.',
-    examples: ['Si sientes que puedes expresar lo que piensas y sientes libremente', 'Si mantienes actividades, amistades o intereses propios fuera de la relación', 'Si alguna vez sientes que te adaptas demasiado para evitar conflicto', 'Qué tanto espacio personal necesitas y qué tanto sientes que tienes']
+    examples: ['Si sientes que puedes expresar lo que piensas y sientes libremente', 'Si mantienes actividades, amistades o intereses propios fuera de la relación', 'Si alguna vez sientes que te adaptas demasiado para evitar conflicto', 'Qué tanto espacio personal necesitas y qué tanto sientes que tienes'],
+    mainQuestion_descubre: 'Cuando has estado en pareja, cuéntame qué tanto has sentido que puedes ser tú mismo/a sin perder tu identidad o tus propios espacios.',
+    examples_descubre: ['Si sentías que podías expresarte libremente', 'Si mantenías tus actividades e intereses propios', 'Si te adaptabas demasiado para evitar conflicto', 'Qué tanto necesitas tu espacio personal en una relación']
   },
   {
     id: 'Q16', block: 'Regulación emocional y equipo de pareja',
     mainQuestion: 'Cuéntame si sienten que funcionan como equipo cuando las cosas se ponen difíciles, o si cada uno tiende a manejar las cosas por su lado.',
-    examples: ['Cómo se cuidan o protegen mutuamente en momentos de estrés', 'Si cuando uno está mal el otro lo nota y responde', 'Si sienten que se regulan emocionalmente juntos o cada uno por su cuenta', 'Si hay momentos en que uno necesita al otro y no lo encuentra disponible']
+    examples: ['Cómo se cuidan o protegen mutuamente en momentos de estrés', 'Si cuando uno está mal el otro lo nota y responde', 'Si sienten que se regulan emocionalmente juntos o cada uno por su cuenta', 'Si hay momentos en que uno necesita al otro y no lo encuentra disponible'],
+    mainQuestion_descubre: 'En tus relaciones pasadas, cuéntame si sentías que funcionaban como equipo cuando las cosas se ponían difíciles, o si cada uno manejaba las cosas por su lado.',
+    examples_descubre: ['Cómo se cuidaban mutuamente en momentos difíciles', 'Si tu pareja notaba cuando estabas mal y respondía', 'Si regulaban sus emociones juntos o por separado', 'Si hubo momentos en que necesitabas al otro y no estaba disponible']
   },
   {
     id: 'Q17', block: 'Historia emocional y patrones relacionales',
     mainQuestion: 'En tu relación actual, cuéntame cómo suelen empezar los desacuerdos o discusiones cuando aparecen.',
-    examples: ['Qué situaciones suelen generar conflicto', 'Cómo empieza normalmente una discusión', 'Qué suele ocurrir al principio del conflicto', 'Qué suele pasar entre ustedes cuando surge una diferencia']
+    examples: ['Qué situaciones suelen generar conflicto', 'Cómo empieza normalmente una discusión', 'Qué suele ocurrir al principio del conflicto', 'Qué suele pasar entre ustedes cuando surge una diferencia'],
+    mainQuestion_descubre: 'En tus relaciones pasadas, cuéntame cómo solían empezar los desacuerdos o discusiones cuando aparecían.',
+    examples_descubre: ['Qué situaciones solían generar conflicto', 'Cómo empezaba normalmente una discusión', 'Qué solía ocurrir al principio del conflicto', 'Qué patrones reconoces que se repetían']
   },
   {
     id: 'Q18', block: 'Historia emocional y patrones relacionales',
@@ -118,101 +144,139 @@ const PREGUNTAS = [
   {
     id: 'Q19', block: 'Historia emocional y patrones relacionales',
     mainQuestion: 'Cuando hay un desacuerdo o una discusión entre ustedes, cuéntame cómo suele reaccionar tu pareja.',
-    examples: ['Cómo responde tu pareja al conflicto', 'Qué suele hacer o decir', 'Cómo maneja sus emociones en esos momentos', 'Qué suele ocurrir después de una discusión']
+    examples: ['Cómo responde tu pareja al conflicto', 'Qué suele hacer o decir', 'Cómo maneja sus emociones en esos momentos', 'Qué suele ocurrir después de una discusión'],
+    mainQuestion_descubre: 'En tus relaciones pasadas, cuéntame cómo solían reaccionar tus parejas al conflicto.',
+    examples_descubre: ['Cómo respondían al conflicto normalmente', 'Qué solían hacer o decir', 'Cómo manejaban sus emociones en esos momentos', 'Si notas un patrón en la forma de reaccionar de tus parejas']
   },
   {
     id: 'Q20', block: 'Historia emocional y patrones relacionales',
     mainQuestion: 'Pensando en los conflictos que han tenido, cuéntame qué suele pasar después de una discusión o desacuerdo entre ustedes.',
-    examples: ['Cómo termina normalmente una discusión', 'Si suelen hablar después del conflicto', 'Si alguien suele dar el primer paso para resolverlo', 'Qué pasa entre ustedes después de esos momentos']
+    examples: ['Cómo termina normalmente una discusión', 'Si suelen hablar después del conflicto', 'Si alguien suele dar el primer paso para resolverlo', 'Qué pasa entre ustedes después de esos momentos'],
+    mainQuestion_descubre: 'Pensando en los conflictos que has tenido en pareja, cuéntame qué solía pasar después de una discusión o desacuerdo.',
+    examples_descubre: ['Cómo terminaban normalmente las discusiones', 'Si solías hablar después del conflicto', 'Quién solía dar el primer paso', 'Qué pasaba entre ustedes después de esos momentos']
   },
 
   // BLOQUE 4 — Deseo, intimidad y dinámica emocional (Q21–Q30)
   {
     id: 'Q21', block: 'Deseo, intimidad y dinámica emocional',
     mainQuestion: 'Cuéntame qué cosas de tu pareja siguen despertando atracción o deseo en ti hoy en día.',
-    examples: ['Aspectos físicos que te siguen atrayendo', 'Formas de ser o actitudes que te generan deseo', 'Momentos en los que sientes atracción o erotismo', 'Situaciones que reactivan la atracción entre ustedes']
+    examples: ['Aspectos físicos que te siguen atrayendo', 'Formas de ser o actitudes que te generan deseo', 'Momentos en los que sientes atracción o erotismo', 'Situaciones que reactivan la atracción entre ustedes'],
+    mainQuestion_descubre: 'Cuéntame qué cosas de una persona suelen despertarte atracción o deseo, y cómo has vivido eso en tus relaciones.',
+    examples_descubre: ['Aspectos físicos que te suelen atraer', 'Formas de ser o actitudes que te generan deseo', 'Momentos en los que has sentido atracción fuerte', 'Qué hace que mantengas o pierdas el deseo con el tiempo']
   },
   {
     id: 'Q22', block: 'Deseo, intimidad y dinámica emocional',
     mainQuestion: 'Cuéntame cómo describirías la cercanía emocional que existe entre ustedes actualmente.',
-    examples: ['Momentos en los que se sienten conectados', 'Conversaciones o experiencias que los acercan', 'Situaciones en las que se sienten comprendidos', 'Momentos en que sienten distancia emocional']
+    examples: ['Momentos en los que se sienten conectados', 'Conversaciones o experiencias que los acercan', 'Situaciones en las que se sienten comprendidos', 'Momentos en que sienten distancia emocional'],
+    mainQuestion_descubre: 'Cuéntame cómo has vivido la cercanía emocional en tus relaciones y cómo describes esas conexiones.',
+    examples_descubre: ['Momentos en los que te has sentido realmente conectado con alguien', 'Conversaciones o experiencias que te han acercado a otra persona', 'Si te has sentido comprendido en pareja', 'Momentos en que has sentido distancia emocional']
   },
   {
     id: 'Q23', block: 'Deseo, intimidad y dinámica emocional',
     mainQuestion: 'Háblame de cómo se vive actualmente la intimidad física o sexual entre ustedes en la relación.',
-    examples: ['Cómo se sienten en ese aspecto de la relación', 'Si sienten cercanía o distancia física', 'Si ambos parecen vivirlo de forma similar o diferente', 'Cómo ha cambiado con el tiempo']
+    examples: ['Cómo se sienten en ese aspecto de la relación', 'Si sienten cercanía o distancia física', 'Si ambos parecen vivirlo de forma similar o diferente', 'Cómo ha cambiado con el tiempo'],
+    mainQuestion_descubre: 'Háblame de cómo has vivido la intimidad física o sexual en tus relaciones y qué papel juega para ti.',
+    examples_descubre: ['Cómo te has sentido en ese aspecto de tus relaciones', 'Si has sentido cercanía o distancia física', 'Si tus parejas lo vivían de forma similar o diferente a ti', 'Cómo ha cambiado tu relación con la intimidad física']
   },
   {
     id: 'Q24', block: 'Deseo, intimidad y dinámica emocional',
     mainQuestion: 'Pensando en el tiempo que llevan juntos, cuéntame cómo ha cambiado el deseo o la atracción entre ustedes desde el inicio de la relación hasta hoy.',
-    examples: ['Cómo era el deseo al inicio', 'Cómo lo percibes ahora', 'Qué situaciones han influido en esos cambios', 'Qué cosas parecen reactivar o disminuir el deseo']
+    examples: ['Cómo era el deseo al inicio', 'Cómo lo percibes ahora', 'Qué situaciones han influido en esos cambios', 'Qué cosas parecen reactivar o disminuir el deseo'],
+    mainQuestion_descubre: 'Pensando en tus relaciones, cuéntame cómo ha cambiado el deseo o la atracción a lo largo del tiempo en ellas.',
+    examples_descubre: ['Cómo era el deseo al inicio de tus relaciones', 'Cómo evolucionaba con el tiempo', 'Qué situaciones hacían que cambiara', 'Qué cosas reactivaban o disminuían tu deseo']
   },
   {
     id: 'Q25', block: 'Deseo, intimidad y dinámica emocional',
     mainQuestion: 'Cuéntame qué cosas o situaciones suelen hacer que se sientan más cercanos o conectados dentro de la relación.',
-    examples: ['Cómo suelen demostrarse cariño o amor en los momentos buenos', 'Si se conectan más con palabras, con gestos, con tiempo juntos o con contacto físico', 'Momentos en los que sienten que funcionan como equipo', 'Qué cosas hace tu pareja que te hacen sentir querido/a o valorado/a']
+    examples: ['Cómo suelen demostrarse cariño o amor en los momentos buenos', 'Si se conectan más con palabras, con gestos, con tiempo juntos o con contacto físico', 'Momentos en los que sienten que funcionan como equipo', 'Qué cosas hace tu pareja que te hacen sentir querido/a o valorado/a'],
+    mainQuestion_descubre: 'Cuéntame qué cosas o situaciones suelen hacerte sentir más cercano o conectado con alguien en una relación.',
+    examples_descubre: ['Cómo sueles demostrar cariño en los buenos momentos', 'Si te conectas más con palabras, gestos, tiempo o contacto físico', 'Momentos en que has sentido que funcionaban como equipo', 'Qué te hace sentir querido/a o valorado/a']
   },
   {
     id: 'Q26', block: 'Deseo, intimidad y dinámica emocional',
     mainQuestion: 'Cuéntame si hay momentos o situaciones en los que sientes más distancia entre ustedes dentro de la relación.',
-    examples: ['Momentos en los que cada uno parece estar en su propio mundo', 'Situaciones que generan distancia emocional', 'Momentos en que la relación parece enfriarse', 'Circunstancias que los separan o desconectan']
+    examples: ['Momentos en los que cada uno parece estar en su propio mundo', 'Situaciones que generan distancia emocional', 'Momentos en que la relación parece enfriarse', 'Circunstancias que los separan o desconectan'],
+    mainQuestion_descubre: 'Cuéntame si hay momentos o situaciones en los que sueles sentir distancia emocional con la persona con la que estás.',
+    examples_descubre: ['Momentos en los que sientes que cada uno está en su mundo', 'Situaciones que generan distancia emocional para ti', 'Cuándo sientes que una relación se enfría', 'Qué circunstancias te desconectan del otro']
   },
   {
     id: 'Q27', block: 'Deseo, intimidad y dinámica emocional',
     mainQuestion: 'Cuando tienen que tomar decisiones importantes dentro de la relación, cuéntame cómo suelen manejar esas situaciones entre ustedes.',
-    examples: ['Cómo toman decisiones importantes', 'Cómo manejan las diferencias de opinión', 'Cómo llegan a acuerdos', 'Qué suele pasar cuando no están de acuerdo']
+    examples: ['Cómo toman decisiones importantes', 'Cómo manejan las diferencias de opinión', 'Cómo llegan a acuerdos', 'Qué suele pasar cuando no están de acuerdo'],
+    mainQuestion_descubre: 'Cuando has tenido que tomar decisiones importantes en pareja, cuéntame cómo solías manejar esas situaciones.',
+    examples_descubre: ['Cómo tomabas decisiones importantes con tu pareja', 'Cómo manejabas las diferencias de opinión', 'Cómo llegaban a acuerdos', 'Qué pasaba cuando no estaban de acuerdo']
   },
   {
     id: 'Q28', block: 'Dinámicas de poder y equilibrio emocional',
     mainQuestion: 'Cuéntame si dentro de la relación sientes que hay un equilibrio en el poder y la influencia entre ustedes, o si alguno de los dos suele tener más peso.',
-    examples: ['Si alguno suele ceder más que el otro en las decisiones o conflictos', 'Si hay resentimientos acumulados que no se han expresado abiertamente', 'Si alguna vez te has sentido menos escuchado/a o invisible en la relación', 'Si hay momentos de dominación o sumisión emocional entre ustedes']
+    examples: ['Si alguno suele ceder más que el otro en las decisiones o conflictos', 'Si hay resentimientos acumulados que no se han expresado abiertamente', 'Si alguna vez te has sentido menos escuchado/a o invisible en la relación', 'Si hay momentos de dominación o sumisión emocional entre ustedes'],
+    mainQuestion_descubre: 'En tus relaciones pasadas, cuéntame si sentías que había equilibrio en el poder y la influencia, o si alguno de los dos solía tener más peso.',
+    examples_descubre: ['Si solías ceder más que el otro en decisiones o conflictos', 'Si acumulabas resentimientos sin expresarlos', 'Si te has sentido menos escuchado/a o invisible', 'Si había dinámicas de dominación o sumisión emocional']
   },
   {
     id: 'Q29', block: 'Deseo, intimidad y dinámica emocional',
     mainQuestion: 'Pensando en tu pareja, cuéntame qué crees que es importante para ella dentro de la relación o qué cosas parece esperar de ti.',
-    examples: ['Qué cosas parece valorar más', 'Qué crees que espera de ti', 'Qué cosas parecen importantes para ella', 'Qué cosas le gustaría que fueran diferentes']
+    examples: ['Qué cosas parece valorar más', 'Qué crees que espera de ti', 'Qué cosas parecen importantes para ella', 'Qué cosas le gustaría que fueran diferentes'],
+    mainQuestion_descubre: 'Pensando en tus parejas pasadas, cuéntame qué crees que era importante para ellas o qué esperaban de ti en la relación.',
+    examples_descubre: ['Qué cosas valoraban más tus parejas', 'Qué crees que esperaban de ti', 'Qué cosas parecían importantes para ellas', 'Qué les hubiera gustado que fuera diferente']
   },
   {
     id: 'Q30', block: 'Deseo, intimidad y dinámica emocional',
     mainQuestion: 'Ahora piensa en lo que tú esperas dentro de la relación y cuéntame qué cosas son importantes para ti.',
-    examples: ['Qué tipo de muestras de amor o cariño necesitas para sentirte bien', 'Si necesitas más palabras, más presencia, más contacto o más acciones concretas', 'Qué tanto espacio personal necesitas dentro de la relación para sentirte tú mismo/a', 'Qué cosas te gustaría que fueran diferentes en cómo se demuestran amor']
+    examples: ['Qué tipo de muestras de amor o cariño necesitas para sentirte bien', 'Si necesitas más palabras, más presencia, más contacto o más acciones concretas', 'Qué tanto espacio personal necesitas dentro de la relación para sentirte tú mismo/a', 'Qué cosas te gustaría que fueran diferentes en cómo se demuestran amor'],
+    mainQuestion_descubre: 'Cuéntame qué es lo que necesitas y esperas de una relación, qué cosas son realmente importantes para ti.',
+    examples_descubre: ['Qué tipo de muestras de amor necesitas para sentirte bien', 'Si necesitas más palabras, presencia, contacto o acciones concretas', 'Qué tanto espacio personal necesitas en una relación', 'Qué cosas te gustaría que fueran diferentes en tus vínculos']
   },
 
   // BLOQUE 5 — Futuro del vínculo y sentido (Q31–Q40)
   {
     id: 'Q31', block: 'Futuro del vínculo y sentido de la relación',
     mainQuestion: 'Pensando en todo lo que han vivido juntos, cuéntame qué significa hoy esta relación para ti dentro de tu vida.',
-    examples: ['Qué lugar ocupa esta relación en tu vida y qué representa para ti', 'Qué te hace sentir que vale la pena seguir construyendo este vínculo', 'Cualidades de tu pareja que aprecias profundamente', 'Razones por las que sientes que esta relación es importante en tu vida']
+    examples: ['Qué lugar ocupa esta relación en tu vida y qué representa para ti', 'Qué te hace sentir que vale la pena seguir construyendo este vínculo', 'Cualidades de tu pareja que aprecias profundamente', 'Razones por las que sientes que esta relación es importante en tu vida'],
+    mainQuestion_descubre: 'Pensando en todas tus experiencias sentimentales, cuéntame qué significan hoy las relaciones de pareja dentro de tu vida.',
+    examples_descubre: ['Qué lugar ocupa el amor de pareja en tu vida', 'Qué te haría sentir que vale la pena construir un vínculo', 'Qué cualidades aprecias profundamente en una pareja', 'Qué hace que una relación sea importante para ti']
   },
   {
     id: 'Q32', block: 'Futuro del vínculo y sentido de la relación',
     mainQuestion: 'Cuando piensas en el futuro, cuéntame cómo imaginas o visualizas la relación entre ustedes con el paso del tiempo.',
-    examples: ['Cómo imaginas la relación en los próximos años', 'Qué cambios o mejoras te gustaría ver en la relación', 'Dinámicas que te gustaría fortalecer o transformar', 'Qué cosas te gustaría construir juntos hacia adelante']
+    examples: ['Cómo imaginas la relación en los próximos años', 'Qué cambios o mejoras te gustaría ver en la relación', 'Dinámicas que te gustaría fortalecer o transformar', 'Qué cosas te gustaría construir juntos hacia adelante'],
+    mainQuestion_descubre: 'Cuando piensas en el futuro, cuéntame cómo imaginas o visualizas tu vida sentimental con el paso del tiempo.',
+    examples_descubre: ['Cómo imaginas tu vida de pareja en los próximos años', 'Qué cambios o mejoras te gustaría hacer en tu forma de relacionarte', 'Qué tipo de relación te gustaría construir', 'Qué te gustaría experimentar en el amor hacia adelante']
   },
   {
     id: 'Q33', block: 'Seguridad emocional y expresión de amor',
     mainQuestion: 'Cuéntame qué cosas concretas hace tu pareja que te hacen sentir amado/a o seguro/a, y cuáles sientes que te faltan.',
-    examples: ['Acciones específicas que te hacen sentir valorado/a y querido/a', 'Cosas que tu pareja hacía antes y que ya no hace', 'Qué necesitarías recibir más de tu pareja para sentirte seguro/a', 'Momentos en que te sientes realmente querido/a vs. momentos en que no']
+    examples: ['Acciones específicas que te hacen sentir valorado/a y querido/a', 'Cosas que tu pareja hacía antes y que ya no hace', 'Qué necesitarías recibir más de tu pareja para sentirte seguro/a', 'Momentos en que te sientes realmente querido/a vs. momentos en que no'],
+    mainQuestion_descubre: 'Cuéntame qué cosas concretas te han hecho sentir amado/a o seguro/a en tus relaciones, y qué has sentido que te faltaba.',
+    examples_descubre: ['Acciones específicas que te han hecho sentir valorado/a', 'Cosas que tus parejas hacían y que extrañas', 'Qué necesitarías recibir de alguien para sentirte seguro/a', 'Momentos en que te has sentido querido/a vs. momentos en que no']
   },
   {
     id: 'Q34', block: 'Futuro del vínculo y sentido de la relación',
     mainQuestion: 'Cuéntame si hay cosas dentro de la relación que a veces te generan dudas, preocupación o incertidumbre.',
-    examples: ['Situaciones que te generan inquietud', 'Cosas que te hacen pensar o reflexionar sobre la relación', 'Aspectos que te gustaría que fueran diferentes', 'Momentos donde aparecen dudas']
+    examples: ['Situaciones que te generan inquietud', 'Cosas que te hacen pensar o reflexionar sobre la relación', 'Aspectos que te gustaría que fueran diferentes', 'Momentos donde aparecen dudas'],
+    mainQuestion_descubre: 'Cuéntame si hay cosas de tu vida sentimental que a veces te generan dudas, preocupación o incertidumbre.',
+    examples_descubre: ['Situaciones que te generan inquietud sobre el amor', 'Cosas que te hacen pensar o reflexionar sobre tus relaciones', 'Aspectos que te gustaría cambiar cuando estás en pareja', 'Patrones emocionales que te preocupan']
   },
   {
     id: 'Q35', block: 'Futuro del vínculo y sentido de la relación',
     mainQuestion: 'Pensando en los momentos difíciles que han vivido como pareja, cuéntame cómo han logrado atravesarlos o qué suele ayudar a que la relación continúe después de esos momentos.',
-    examples: ['Cómo superan momentos complicados', 'Qué ayuda a que se reconcilien', 'Qué fortalezas aparecen en la relación', 'Qué hace posible que sigan adelante']
+    examples: ['Cómo superan momentos complicados', 'Qué ayuda a que se reconcilien', 'Qué fortalezas aparecen en la relación', 'Qué hace posible que sigan adelante'],
+    mainQuestion_descubre: 'Pensando en los momentos difíciles que has vivido en tus relaciones, cuéntame cómo los has atravesado o qué suele ayudarte a seguir adelante.',
+    examples_descubre: ['Cómo has superado momentos complicados en pareja', 'Qué te ha ayudado a reconciliarte o seguir adelante', 'Qué fortalezas reconoces en ti', 'Qué te hace resiliente en las relaciones']
   },
   {
     id: 'Q36', block: 'Novedad, rutina y deseo',
     mainQuestion: 'Cuéntame si sienten que la relación tiene momentos de novedad o sorpresa, o si se ha vuelto más predecible y rutinaria.',
-    examples: ['Si hay espacio para la sorpresa o lo inesperado entre ustedes', 'Si extrañas la emoción o la aventura que sentían al principio', 'Si han buscado formas de romper la rutina juntos', 'Qué tanto la estabilidad les da paz vs. aburrimiento']
+    examples: ['Si hay espacio para la sorpresa o lo inesperado entre ustedes', 'Si extrañas la emoción o la aventura que sentían al principio', 'Si han buscado formas de romper la rutina juntos', 'Qué tanto la estabilidad les da paz vs. aburrimiento'],
+    mainQuestion_descubre: 'Cuéntame cómo has vivido el balance entre novedad y rutina en tus relaciones pasadas.',
+    examples_descubre: ['Si había espacio para la sorpresa en tus relaciones', 'Si extrañabas la emoción del principio conforme avanzaba la relación', 'Si buscabas formas de romper la rutina', 'Qué tanto la estabilidad te da paz vs. aburrimiento']
   },
   {
     id: 'Q37', block: 'Futuro del vínculo y sentido de la relación',
     mainQuestion: 'Si tuvieras que decir qué está buscando cada uno dentro de esta relación, cuéntame qué crees que busca tu pareja y qué crees que estás buscando tú.',
-    examples: ['Qué parece necesitar o desear tu pareja en la relación', 'Qué crees que intenta encontrar contigo', 'Qué sientes que tú buscas dentro del vínculo', 'Qué necesidades profundas aparecen en la relación']
+    examples: ['Qué parece necesitar o desear tu pareja en la relación', 'Qué crees que intenta encontrar contigo', 'Qué sientes que tú buscas dentro del vínculo', 'Qué necesidades profundas aparecen en la relación'],
+    mainQuestion_descubre: 'Si tuvieras que decir qué estás buscando realmente en una relación, cuéntame qué crees que necesitas y qué tipo de persona crees que buscas.',
+    examples_descubre: ['Qué necesitas realmente de una relación', 'Qué tipo de persona sientes que buscas', 'Qué necesidades profundas aparecen cuando te relacionas', 'Qué intentas encontrar en el amor']
   },
   {
     id: 'Q38', block: 'Futuro del vínculo y sentido de la relación',
@@ -222,7 +286,9 @@ const PREGUNTAS = [
   {
     id: 'Q39', block: 'Futuro del vínculo y sentido de la relación',
     mainQuestion: 'Si tuvieras que explicar qué hace única o particular tu relación con esta persona, cuéntame cómo la describirías.',
-    examples: ['Qué hace diferente esta relación de otras', 'Qué tipo de conexión sienten', 'Qué rasgos definen su vínculo', 'Qué características hacen especial la relación']
+    examples: ['Qué hace diferente esta relación de otras', 'Qué tipo de conexión sienten', 'Qué rasgos definen su vínculo', 'Qué características hacen especial la relación'],
+    mainQuestion_descubre: 'Si tuvieras que explicar qué hace única tu forma de relacionarte, cuéntame cómo la describirías.',
+    examples_descubre: ['Qué te hace diferente como pareja', 'Qué tipo de conexiones sueles crear', 'Qué rasgos definen tus vínculos', 'Qué hace especial tu forma de amar']
   },
   {
     id: 'Q40', block: 'Futuro del vínculo y sentido de la relación',
@@ -455,6 +521,7 @@ const SpotlightTooltip = ({ targetId, onboardingStep, totalSteps, step, borderCo
 
 // ─── DEMO RESPONSES (for testing) ────────────────────────────────
 
+// Demo: Carlos & Ana — solo package (relationship analysis)
 const DEMO_RESPONSES = {
   Q1: 'Me llamo Carlos, tengo 32 años, soy diseñador gráfico freelance. Llevo 4 años con mi pareja Ana. Estoy en un momento de mucha reflexión personal, buscando estabilidad.',
   Q2: 'Nos conocimos en una fiesta de amigos en común hace como 5 años. Al principio fue algo casual, nos caímos bien, empezamos a salir y poco a poco se fue haciendo más serio. Llevamos viviendo juntos dos años.',
@@ -496,6 +563,50 @@ const DEMO_RESPONSES = {
   Q38: 'He descubierto que soy más sensible de lo que creía. También que tengo miedo al abandono.',
   Q39: 'Lo único de nuestra relación es la intensidad. Nos amamos mucho pero también nos hacemos daño. Es apasionada.',
   Q40: 'Creo que lo más importante es que ambos estamos aquí porque queremos mejorar. Eso dice mucho.'
+}
+
+// Demo: Sofía — descubre package (self-discovery, no current partner)
+const DEMO_RESPONSES_SOFIA = {
+  Q1: 'Me llamo Sofía, tengo 28 años, soy psicóloga clínica. Actualmente estoy soltera, llevo un año sin relación formal. Estoy en un momento de mucho autoconocimiento.',
+  Q2: 'Mi última relación duró 3 años, terminó hace un año. Antes de eso tuve dos relaciones cortas en la universidad. Siempre elijo hombres inteligentes y un poco emocionalmente distantes.',
+  Q3: 'Actualmente me siento tranquila pero a veces extraño la compañía. Me cuestiono si estoy sola porque lo elijo o porque tengo miedo de repetir patrones.',
+  Q4: 'Cuando estaba en pareja, el día a día era muy fusional al principio y luego se volvía distante. Yo cocinaba, planeaba todo, y él se dejaba llevar. Me convertía en la que sostenía todo.',
+  Q5: 'He aprendido que soy fuerte, que puedo amar intensamente, pero también que tiendo a perderme en las relaciones. Cada relación me dejó algo valioso pero también heridas.',
+  Q6: 'Me atraen hombres con algo misterioso, inteligentes, que me desafíen intelectualmente. El humor es fundamental. También me atrae cierta vulnerabilidad que solo yo puedo ver.',
+  Q7: 'Demuestro cariño con palabras y tiempo de calidad. Me encanta escribir cartas, mensajes largos. Necesito recibir presencia física y que me elijan activamente cada día.',
+  Q8: 'El momento más significativo fue cuando mi ex me dijo que me amaba por primera vez — sentí que por fin alguien me veía. Y el momento más doloroso fue cuando entendí que me amaba pero no podía darme lo que necesitaba.',
+  Q9: 'Siempre imagino un futuro donde somos un equipo, donde hay conversaciones profundas y risas. Donde el amor es una elección diaria, no una obligación.',
+  Q10: 'En mis parejas buscaba sentirme completa, sentir que alguien me elegía. Ahora entiendo que estaba buscando afuera lo que me faltaba adentro.',
+  Q11: 'Mi mamá era muy cariñosa pero ansiosa. Mi papá viajaba mucho por trabajo, era amoroso cuando estaba pero estaba poco. Ellos se querían pero había mucha soledad en mi mamá.',
+  Q12: 'Aprendí que el amor viene con ausencia. Que amar es esperar. Que quien te quiere puede no estar. Eso marcó mucho mi forma de relacionarme.',
+  Q13: 'Sí, repito el patrón de mi mamá: me enamoro de hombres que están pero no están del todo. Y yo compenso dando más y más hasta que me agoto.',
+  Q14: 'Tuve tres relaciones importantes. En todas fui la que daba más emocionalmente. En todas terminé sintiéndome invisible a pesar de dar todo.',
+  Q15: 'Tiendo a fusionarme demasiado. Pierdo amistades, dejo hobbies, me vuelvo la relación. Cuando termina, tengo que reconstruirme desde cero.',
+  Q16: 'En momentos difíciles yo buscaba hablar, resolver, entender. Mis parejas tendían a cerrarse, necesitar espacio. Eso me desesperaba.',
+  Q17: 'Los conflictos solían ser por falta de presencia emocional. Yo sentía que no me priorizaban, ellos sentían que yo era demasiado intensa.',
+  Q18: 'Cuando hay conflicto me vuelvo verbal, necesito resolver en el momento. Me cuesta dar espacio porque el silencio me recuerda a la ausencia de mi papá.',
+  Q19: 'Mis parejas solían callarse, distanciarse, necesitar tiempo. Uno se iba literalmente de la casa. Otro se dormía. La evasión me enloquecía.',
+  Q20: 'Las reconciliaciones eran intensas, a veces con sexo, a veces llorando juntos. Pero el tema de fondo nunca se resolvía.',
+  Q21: 'Me atrae la conexión intelectual y la vulnerabilidad. Cuando alguien me muestra su lado frágil, me enamoro. También me atrae la ambición y la pasión por lo que hacen.',
+  Q22: 'Me conectaba profundamente a través de conversaciones largas, de contacto físico, de planes juntos. Pero la conexión se perdía cuando sentía que yo era la única que la buscaba.',
+  Q23: 'La intimidad física ha sido importante para mí pero siempre vinculada a la emocional. Sin conexión emocional, el sexo me parecía vacío.',
+  Q24: 'El deseo era intenso al inicio, se mantenía mientras me sentía elegida. Se apagaba cuando sentía negligencia emocional.',
+  Q25: 'Los viajes, las cenas a solas, las noches hablando hasta las 3am. Ahí me sentía viva y conectada.',
+  Q26: 'La rutina, el trabajo, y sobre todo cuando sentía que él prefería estar en su celular que conmigo. La indiferencia me destruía.',
+  Q27: 'Yo tendía a organizar, proponer, decidir. Ellos dejaban que yo llevara el timón. Parecía que yo tenía el poder pero en realidad estaba compensando su desinterés.',
+  Q28: 'El poder emocional lo tenía quien menos invertía. Yo daba más y por eso me sentía más vulnerable. Hay resentimiento acumulado de sentir que siempre puse más.',
+  Q29: 'Creo que buscaban una mujer fuerte que los cuidara sin pedirles demasiado. Alguien que los amara sin condiciones. Y yo les daba exactamente eso.',
+  Q30: 'Necesito sentirme prioridad, no opción. Necesito palabras, presencia, y que me elijan con acciones, no solo con palabras. Necesito mi espacio pero también sentirme buscada.',
+  Q31: 'Las relaciones han sido lo más importante y lo más doloroso de mi vida. Me definen de alguna forma, aunque estoy aprendiendo a no dejar que lo hagan.',
+  Q32: 'Quiero una relación donde no tenga que perderme para amar. Donde el amor sea recíproco, sostenido, elegido. Donde pueda ser yo sin miedo.',
+  Q33: 'Me sentía amada cuando me escribía sin que yo lo buscara, cuando me abrazaba al despertar, cuando hablaba de mí con orgullo. Me faltaba consistencia.',
+  Q34: 'Me preocupa repetir el mismo patrón: elegir a alguien que no puede estar disponible emocionalmente y romperme intentando compensarlo.',
+  Q35: 'He salido adelante gracias a terapia, amigas increíbles, y mi capacidad de reflexión. Siempre me levanto, pero cada vez cuesta más.',
+  Q36: 'En mis relaciones la rutina mataba el deseo. Al principio todo era aventura, luego se volvía predecible. Yo intentaba mantener la chispa pero sola no podía.',
+  Q37: 'Busco a alguien que esté emocionalmente presente, que me desafíe intelectualmente, que tenga su propia vida pero que me haga parte importante de ella.',
+  Q38: 'He descubierto que mi mayor fortaleza es también mi debilidad: amo con todo, sin reservas, y eso me hace increíblemente vulnerable.',
+  Q39: 'Mi forma de amar es intensa, generosa, a veces excesiva. Amo como si cada vez fuera la última. Eso intimida a algunos pero es lo más honesto que tengo.',
+  Q40: 'Estoy aquí porque quiero romper el ciclo. Quiero entender por qué elijo lo que elijo y aprender a amarme primero antes de amar a alguien más.'
 }
 
 // ─── ANÁLISIS ANIMATION TASKS ─────────────────────────────────────
@@ -1823,6 +1934,9 @@ const RadiografiaPremiumPage = () => {
   }, [loadSalesDemoAnalysis])
 
   const question = PREGUNTAS[currentQ]
+  const isDescubre = packageType === 'descubre'
+  const questionText = isDescubre && question?.mainQuestion_descubre ? question.mainQuestion_descubre : question?.mainQuestion
+  const questionExamples = isDescubre && question?.examples_descubre ? question.examples_descubre : question?.examples
   const totalQ = PREGUNTAS.length
   const progress = ((currentQ + 1) / totalQ) * 100
 
@@ -1883,12 +1997,13 @@ const RadiografiaPremiumPage = () => {
 
       // Try static file first
       const voiceFolder = VOICE_FOLDER[voiceId]
-      const currentQuestion = text && PREGUNTAS.find(q => q.mainQuestion === text)
+      const currentQuestion = text && (PREGUNTAS.find(q => q.mainQuestion === text) || PREGUNTAS.find(q => q.mainQuestion_descubre === text))
+      const isDescubreText = currentQuestion && currentQuestion.mainQuestion_descubre === text
       const isPreview = text && text.includes('soy ') && text.includes('acompañaré')
       const staticFile = voiceFolder && (staticId
         ? `${AUDIO_BASE}/audio/premium/${voiceFolder}/${staticId}.mp3`
         : currentQuestion
-        ? `${AUDIO_BASE}/audio/premium/${voiceFolder}/${currentQuestion.id}.mp3`
+        ? `${AUDIO_BASE}/audio/premium/${voiceFolder}/${currentQuestion.id}${isDescubreText ? '_descubre' : ''}.mp3`
         : isPreview ? `${AUDIO_BASE}/audio/premium/${voiceFolder}/preview.mp3` : null)
 
       let audioUrl = null
@@ -1942,7 +2057,7 @@ const RadiografiaPremiumPage = () => {
   const preloadAudio = useCallback(async (text) => {
     // Check if static file exists for this question — if so, no preload needed
     const voiceFolder = VOICE_FOLDER[selectedVoiceId]
-    const q = PREGUNTAS.find(p => p.mainQuestion === text)
+    const q = PREGUNTAS.find(p => p.mainQuestion === text) || PREGUNTAS.find(p => p.mainQuestion_descubre === text)
     if (voiceFolder && q) return // static files preload via browser cache
 
     const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY
@@ -1986,7 +2101,7 @@ const RadiografiaPremiumPage = () => {
         }, 600)
         return
       }
-      playQuestion(question.mainQuestion, undefined, () => {
+      playQuestion(questionText, undefined, () => {
         // Auto-start mic after TTS ends (only if not already recording/typing)
         setTimeout(() => {
           const sr = window.SpeechRecognition || window.webkitSpeechRecognition
@@ -1996,7 +2111,8 @@ const RadiografiaPremiumPage = () => {
       // Preload next question
       if (currentQ < totalQ - 1) {
         const nextQ = PREGUNTAS[currentQ + 1]
-        if (nextQ) preloadAudio(nextQ.mainQuestion)
+        const nextText = isDescubre && nextQ?.mainQuestion_descubre ? nextQ.mainQuestion_descubre : nextQ?.mainQuestion
+        if (nextText) preloadAudio(nextText)
       }
     }
     return () => stopAudio()
@@ -2173,6 +2289,34 @@ const RadiografiaPremiumPage = () => {
           saveAnalysis({ token: purchaseToken, analysis: result }).catch(() => {})
           if (emails.length > 0) {
             sendAnalysisEmail({ token: purchaseToken, type, emails }).catch(() => {})
+          }
+
+          // Cross-analysis flow for "losdos" — fire-and-forget
+          if (type === 'losdos') {
+            ;(async () => {
+              try {
+                await markPartnerDone(purchaseToken)
+                const crossStatus = await checkCrossStatus(purchaseToken)
+                if (crossStatus?.bothDone && crossStatus.otherAnalysis) {
+                  console.log('🔄 Ambos terminaron — generando análisis cruzado...')
+                  const crossResult = await analyzeCrossRadiografia({
+                    analysis1: result,
+                    analysis2: crossStatus.otherAnalysis,
+                    profile1: profileData,
+                    profile2: { nombre: profileData.nombrePareja || 'Pareja' },
+                  })
+                  if (crossResult && crossStatus.pairId) {
+                    await saveCrossAnalysis({ token: purchaseToken, pairId: crossStatus.pairId, analysis: crossResult })
+                    await sendCrossAnalysisEmail({ pairId: crossStatus.pairId, token: purchaseToken })
+                    console.log('✅ Análisis cruzado guardado y email enviado')
+                  }
+                } else {
+                  console.log('⏳ Esperando a que la otra persona termine su cuestionario')
+                }
+              } catch (e) {
+                console.error('Cross-analysis error (non-blocking):', e)
+              }
+            })()
           }
         }
       }
@@ -2681,7 +2825,7 @@ const RadiografiaPremiumPage = () => {
                   <button
                     onClick={() => {
                       if (recording) stopRecording()
-                      playQuestion(question.mainQuestion, undefined, () => {
+                      playQuestion(questionText, undefined, () => {
                         const sr = window.SpeechRecognition || window.webkitSpeechRecognition
                         if (sr && !typingMode) startRecording()
                       })
@@ -2718,7 +2862,7 @@ const RadiografiaPremiumPage = () => {
                   </p>
                 </div>
                 <div className="px-6 py-6 rounded-b-2xl border border-t-0 border-emerald-500/10 bg-emerald-500/[0.02]">
-                  <p className="text-white/90 text-lg lg:text-xl font-light leading-relaxed text-center max-w-xl mx-auto">{question.mainQuestion}</p>
+                  <p className="text-white/90 text-lg lg:text-xl font-light leading-relaxed text-center max-w-xl mx-auto">{questionText}</p>
                 </div>
               </div>
 
@@ -2731,7 +2875,7 @@ const RadiografiaPremiumPage = () => {
                   </p>
                 </div>
                 <div className="px-5 py-4 rounded-b-2xl border border-t-0 border-white/10 bg-white/[0.02] space-y-2">
-                  {question.examples.map((ex, i) => (
+                  {questionExamples.map((ex, i) => (
                     <div key={i} className="flex items-center justify-center gap-2 text-white/55 text-sm font-light">
                       <span className="text-violet-400/50">✦</span>
                       <span>{ex}</span>
@@ -2981,7 +3125,28 @@ const RadiografiaPremiumPage = () => {
                     </div>
                     <span className="text-[9px] text-white/55">Demo</span>
                   </button>
-                  {/* 7. Borrar caché */}
+                  {/* 7. Demo Sofía (descubre) — test AI with single person profile */}
+                  <button onClick={() => {
+                    const sofiaProfile = { nombre: 'Sofía', edad: '28', nombrePareja: '', edadPareja: '' }
+                    // Override packageType via URL for this session
+                    const url = new URL(window.location)
+                    url.searchParams.set('type', 'descubre')
+                    window.history.replaceState({}, '', url)
+                    setProfileData(sofiaProfile)
+                    setEmailData(prev => ({ ...prev, emailUsuario: 'sofia@test.com' }))
+                    setResponses({ ...DEMO_RESPONSES_SOFIA })
+                    setCachedAnalysis(null)
+                    localStorage.removeItem('radiografia_cached_analysis')
+                    setStage('analyzing')
+                    setTimeout(() => handleRunAnalysis(DEMO_RESPONSES_SOFIA), 300)
+                  }}
+                    className="flex flex-col items-center gap-1" title="Demo Sofía — descubre (soltera, autoconocimiento)">
+                    <div className="w-11 h-11 rounded-full border border-cyan-500/25 bg-cyan-500/10 flex items-center justify-center hover:bg-cyan-500/20 transition-colors">
+                      <Compass className="w-4 h-4 text-cyan-300/70" />
+                    </div>
+                    <span className="text-[9px] text-white/55">Sofía</span>
+                  </button>
+                  {/* 8. Borrar caché */}
                   {localStorage.getItem('radiografia_cached_analysis') && (
                     <button onClick={() => {
                       localStorage.removeItem('radiografia_cached_analysis')
@@ -3091,6 +3256,18 @@ const RadiografiaPremiumPage = () => {
                   )}
                 </div>
               </div>
+
+              {/* ═══ BANNER: Email con resultados enviado ═══ */}
+              {!import.meta.env.DEV && (
+                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+                  className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] mb-2">
+                  <p className="text-emerald-300/90 text-sm font-light text-center flex items-center justify-center gap-2">
+                    <Mail className="w-4 h-4 text-emerald-400/60" />
+                    Tus resultados también llegarán a tu correo — guarda este enlace para acceder cuando quieras.
+                    {packageType === 'losdos' && <span className="block text-emerald-200/60 text-xs mt-1">Cuando tu pareja también termine, recibirán ambos el análisis cruzado por email.</span>}
+                  </p>
+                </motion.div>
+              )}
 
               {/* ═══ BANNER: Advertencia si el análisis es fallback ═══ */}
               {aiAnalysis._isFallback && (

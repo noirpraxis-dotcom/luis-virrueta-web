@@ -839,6 +839,10 @@ const DiagnosticoRelacionalPage = () => {
         setIsPurchased(true)
         setPurchaseType(type)
         setPurchaseId(sessionId)
+        if (data.token) {
+          setAccessToken(data.token)
+          sessionStorage.setItem('diagnostico_relacional_token', data.token)
+        }
         sessionStorage.setItem('diagnostico_relacional_purchased', 'true')
         sessionStorage.setItem('diagnostico_relacional_type', type)
         sessionStorage.setItem('diagnostico_relacional_purchase_id', sessionId)
@@ -2628,8 +2632,17 @@ const DiagnosticoRelacionalPage = () => {
                         sessionStorage.setItem('diagnostico_relacional_purchase_id', pid)
                         // Save purchase to Firestore (fire-and-forget — Firebase may not be configured)
                         savePurchase(pid, { type: purchaseType, email: emails[0], stripeSessionId: purchaseId }).catch(() => {})
-                        // Send access emails via backend
-                        const result = await sendAccessEmails({ purchaseId: pid, type: purchaseType, emails, tokens })
+                        // Get buyer's token (from Stripe verify) for pair linking
+                        const buyerTk = accessToken || sessionStorage.getItem('diagnostico_relacional_token') || ''
+                        // Send access emails via backend (Worker links pair for losdos)
+                        const result = await sendAccessEmails({
+                          purchaseId: pid,
+                          type: purchaseType,
+                          emails,
+                          tokens,
+                          buyerToken: purchaseType === 'losdos' ? buyerTk : undefined,
+                          buyerEmail: purchaseType === 'losdos' ? thankyouEmails[0] : undefined,
+                        })
                         if (result && result.ok === false) {
                           setEmailSendError(result.errors?.[0]?.error || 'No se pudo enviar el correo. Verifica la configuración de Resend.')
                         } else {
@@ -2642,7 +2655,8 @@ const DiagnosticoRelacionalPage = () => {
                             sessionStorage.setItem('radiografia_edad', thankYouProfile.edad)
                             sessionStorage.setItem('radiografia_nombre_pareja', thankYouProfile.nombrePareja)
                             sessionStorage.setItem('radiografia_edad_pareja', thankYouProfile.edadPareja)
-                            navigate(`/tienda/radiografia-premium?type=${purchaseType}`)
+                            const navToken = buyerTk ? `&token=${buyerTk}` : ''
+                            navigate(`/tienda/radiografia-premium?type=${purchaseType}${navToken}`)
                             scrollToTop()
                           }
                         }
@@ -2675,7 +2689,9 @@ const DiagnosticoRelacionalPage = () => {
                       sessionStorage.setItem('radiografia_edad', thankYouProfile.edad)
                       sessionStorage.setItem('radiografia_nombre_pareja', thankYouProfile.nombrePareja)
                       sessionStorage.setItem('radiografia_edad_pareja', thankYouProfile.edadPareja)
-                      navigate(`/tienda/radiografia-premium?type=${purchaseType}`)
+                      const tk = accessToken || sessionStorage.getItem('diagnostico_relacional_token') || ''
+                      const navToken = tk ? `&token=${tk}` : ''
+                      navigate(`/tienda/radiografia-premium?type=${purchaseType}${navToken}`)
                       scrollToTop()
                     }}
                     className="w-full py-3 rounded-xl border border-amber-400/30 bg-amber-500/[0.08] text-amber-200/90 text-sm font-light hover:bg-amber-500/[0.14] transition-colors">
