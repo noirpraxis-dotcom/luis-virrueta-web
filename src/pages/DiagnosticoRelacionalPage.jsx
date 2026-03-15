@@ -225,6 +225,98 @@ const ANALYSIS_TASK_GROUPS = [
 const ALL_ANALYSIS_TASKS = ANALYSIS_TASK_GROUPS.flatMap(g => g.tasks)
 const TASK_DURATIONS_MS = [6200, 6500, 6000, 7200, 6600, 6000, 7400, 6600, 5800, 7000, 6400, 7300, 6600, 8200, 6400, 7500]
 
+const SAMPLE_ANALYSIS = {
+  relationship_type: {
+    label: 'Relacion con desgaste emocional acumulado',
+    explanation: 'Existe vinculo y deseo de seguir, pero se repiten patrones que elevan la distancia emocional y desgastan la relacion.'
+  },
+  key_patterns: [
+    { title: 'Ciclo persecucion-retirada', description: 'Uno busca acercamiento y el otro se cierra; el conflicto se repite sin reparacion.', severity: 'high' },
+    { title: 'Critica y defensividad', description: 'Aparecen respuestas defensivas que bloquean conversaciones profundas.', severity: 'medium' }
+  ],
+  composite_scores: {
+    salud_relacional_global: 46,
+    sincronia_emocional: 39,
+    riesgo_ruptura: 64,
+    potencial_crecimiento: 73
+  },
+  dimension_scores: {
+    apego: 44,
+    interaccion_conflicto: 37,
+    estructura_amor: 57,
+    vinculo_emocional: 42,
+    diferenciacion: 61,
+    deseo: 41,
+    patrones_inconscientes: 48,
+    neurobiologia_amor: 50,
+    regulacion_emocional: 43,
+    apego_aplicado: 46,
+    lenguaje_amor: 55,
+    satisfaccion_mantenimiento: 45
+  },
+  sub_scores: {
+    apego: { seguridad_base: 40, miedo_abandono: 69, busqueda_cercania: 64 },
+    interaccion_conflicto: { critica_desprecio: 67, defensividad: 71, stonewalling: 56, capacidad_reparacion: 34 },
+    estructura_amor: { pasion: 43, intimidad: 58, compromiso: 70 },
+    deseo: { atraccion_actual: 44, espontaneidad_erotica: 36, misterio_novedad: 31 }
+  },
+  attachment_map: { style: 'Ansioso-evitativo', anxiety_level: 66, avoidance_level: 38 },
+  dimension_narratives: {
+    apego: 'Se observa necesidad alta de cercania con sensibilidad al silencio emocional.',
+    interaccion_conflicto: 'El conflicto escala rapido y la reparacion llega tarde o no llega.',
+    estructura_amor: 'Hay compromiso, pero intimidad y pasion necesitan trabajo consciente.',
+    vinculo_emocional: 'La conexion aparece por momentos, pero no se sostiene.',
+    diferenciacion: 'Hay recursos de autonomia, aunque bajo estres se pierde centro emocional.',
+    deseo: 'El deseo se afecta por rutina, distancia y conversaciones pendientes.',
+    patrones_inconscientes: 'Se repiten guiones antiguos de busqueda y evitacion.',
+    neurobiologia_amor: 'Predomina familiaridad con baja novedad emocional.',
+    regulacion_emocional: 'Falta co-regulacion en momentos de tension.',
+    apego_aplicado: 'La distancia activa ansiedad y respuestas de control o sobrebusqueda.',
+    lenguaje_amor: 'Hay desajuste entre como uno da amor y como el otro necesita recibirlo.',
+    satisfaccion_mantenimiento: 'La relacion esta en punto de inflexion: aun recuperable con intervencion.'
+  },
+  empathic_opening: 'Tu historia no muestra una relacion perdida, muestra una relacion que necesita direccion. Hay base emocional para reconstruir si se trabaja con claridad.',
+  individual_insights: {
+    emotional_style: 'Estilo emocional intenso con alta necesidad de confirmacion afectiva.',
+    attachment_patterns: 'Patron de apego ansioso con activacion ante distancia.',
+    defense_mechanisms: 'Predomina defensividad cuando aparece sensacion de critica.',
+    what_they_seek_in_love: 'Buscas seguridad emocional y cercania constante.',
+    emotional_triggers: 'Silencio prolongado y mensajes ambiguos activan ansiedad relacional.',
+    repeating_patterns: 'Se repite insistencia -> retiro -> distancia -> insistencia.',
+    hidden_needs: 'Necesidad de reconocimiento y validacion emocional sostenida.',
+    role_in_relationship: 'Rol frecuente de sostener la relacion aun con desgaste personal.',
+    differentiation_profile: 'Buena autonomia funcional, baja autonomia bajo conflicto.'
+  },
+  couple_insights: {
+    real_relationship_dynamic: 'La dinamica principal es persecucion-retirada.',
+    unconscious_patterns: 'Ambos activan aprendizajes afectivos tempranos en conflicto.',
+    conflict_and_defense: 'Aparecen critica, defensividad y desconexion tras discusiones.',
+    distancing_dynamics: 'La distancia no es evento unico, es acumulativa.',
+    attachment_and_support: 'El sistema de apoyo mutuo es inestable bajo estres.',
+    strengths_of_the_relationship: 'Hay deseo de continuidad, historia compartida y compromiso.',
+    love_languages_analysis: 'Existe desajuste entre expresion y recepcion del afecto.',
+    global_relationship_diagnosis: 'Con cambios concretos, la relacion tiene alta probabilidad de mejora.'
+  },
+  dominant_cycles: [
+    { name: 'Insistencia - Retiro - Distancia', explanation: 'Ciclo principal detectado en la mayoria de conflictos relevantes.' }
+  ],
+  activated_emotional_sensitivities: [
+    { name: 'Miedo al abandono', description: 'Se activa ante senales de distancia o ambiguedad.' },
+    { name: 'Hipervigilancia relacional', description: 'Se monitorea la relacion con tension sostenida.' }
+  ],
+  future_projection: {
+    if_continues: 'Sin cambios, aumenta la desconexion y el desgaste emocional.',
+    if_changes: 'Con intervencion y acuerdos claros, la vinculación puede fortalecerse.'
+  },
+  key_insight: 'El problema no es falta de amor: es falta de reparacion y coordinacion emocional.',
+  recommendation: 'Prioriza conversaciones guiadas, reglas de conflicto y practicas de reparacion temprana.',
+  session_work_items: [
+    'Definir protocolo de reparacion postconflicto',
+    'Alinear lenguajes del amor y necesidades primarias',
+    'Reducir patrones de critica-defensividad con comunicacion estructurada'
+  ]
+}
+
 // ─── STRIPE API ────────────────────────────────────────────────
 
 // Cloudflare Worker — https://radiografia-worker.noirpraxis.workers.dev
@@ -1885,20 +1977,22 @@ const DiagnosticoRelacionalPage = () => {
               ═══════════════════════════════════════════════════════ */}
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 className="text-center pb-20">
-                <p className="text-white/35 text-sm uppercase tracking-[0.15em] mb-3">Elige tu radiografía</p>
-                <h2 className="text-2xl lg:text-3xl font-light text-white/80 mb-3">¿Qué necesitas entender?</h2>
-                <p className="text-white/50 text-lg font-light mb-3 max-w-xl mx-auto">La respuesta a por qué amas como amas: descubre tus patrones inconscientes y qué está pasando realmente en tu vínculo.</p>
-                <p className="text-white/30 text-sm font-light mb-10 max-w-lg mx-auto">Elige modalidad individual, pareja solo o los dos, y recibe un reporte claro para tomar decisiones con certeza.</p>
+                <div className="max-w-4xl mx-auto mb-10 p-6 lg:p-8 rounded-2xl border border-violet-500/20 bg-gradient-to-r from-violet-600/[0.16] via-fuchsia-600/[0.12] to-cyan-600/[0.10]">
+                  <p className="text-violet-200/80 text-sm uppercase tracking-[0.15em] mb-3">Elige tu radiografía</p>
+                  <h2 className="text-3xl lg:text-4xl font-light text-white mb-3">¿Qué tipo de radiografía necesitas hoy?</h2>
+                  <p className="text-white/80 text-lg font-light mb-2 max-w-2xl mx-auto">La respuesta a por qué amas como amas: descubre tus patrones inconscientes y qué está pasando realmente en tu vínculo.</p>
+                  <p className="text-white/65 text-base font-light max-w-2xl mx-auto">Elige modalidad individual, pareja solo o los dos, y recibe un reporte claro para tomar decisiones con certeza.</p>
+                </div>
 
                 <div className="hidden sm:grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
                   {/* Radiografía de tu forma de amar */}
                   <div className="rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left overflow-hidden">
                     <div className="py-4 px-8 bg-gradient-to-br from-amber-400 to-orange-500 min-h-[90px] flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-1.5">
-                        <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-bold">Individual</p>
+                        <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-bold">Individual — Sin pareja</p>
                         <span className="text-[9px] px-2 py-0.5 rounded-full bg-black/15 text-zinc-900 font-semibold">1 reporte</span>
                       </div>
-                      <p className="text-zinc-900 text-sm font-bold leading-snug">Descubre los patrones inconscientes<br/>que gobiernan cómo amas.</p>
+                      <p className="text-zinc-900 text-sm font-bold leading-snug">Empieza por ti:<br/>entiende tu forma de amar.</p>
                     </div>
                     <div className="p-8 pt-5">
                     <p className="text-fuchsia-300/70 text-sm font-medium mb-3 hidden">x</p>
@@ -1929,10 +2023,10 @@ const DiagnosticoRelacionalPage = () => {
                   <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-8 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-1.5">
-                        <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Solo</p>
+                        <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Respondes tú</p>
                         <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">1 reporte</span>
                       </div>
-                      <p className="text-white text-sm font-bold leading-snug">La verdad sobre tu relación,<br/>al descubierto.</p>
+                      <p className="text-white text-sm font-bold leading-snug">Tienes pareja, pero tú haces<br/>todo el análisis.</p>
                     </div>
                     <div className="p-8 pt-5">
                     <div className="flex items-baseline gap-2 mb-1">
@@ -1962,10 +2056,10 @@ const DiagnosticoRelacionalPage = () => {
                   <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-8 bg-gradient-to-br from-blue-500 to-cyan-500 min-h-[90px] flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-1.5">
-                        <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Los dos</p>
+                        <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Responden los dos</p>
                         <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">3 reportes</span>
                       </div>
-                      <p className="text-white text-sm font-bold leading-snug">El diagnóstico completo<br/>para los dos.</p>
+                      <p className="text-white text-sm font-bold leading-snug">Diagnóstico cruzado completo<br/>de ambos.</p>
                     </div>
                     <div className="p-8 pt-5">
                     <div className="flex items-baseline gap-2 mb-1">
@@ -1998,10 +2092,10 @@ const DiagnosticoRelacionalPage = () => {
                   <div className="rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left overflow-hidden">
                     <div className="py-4 px-7 bg-gradient-to-br from-amber-400 to-orange-500 min-h-[90px] flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-1.5">
-                        <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-bold">Individual</p>
+                        <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-bold">Individual — Sin pareja</p>
                         <span className="text-[9px] px-2 py-0.5 rounded-full bg-black/15 text-zinc-900 font-semibold">1 reporte</span>
                       </div>
-                      <p className="text-zinc-900 text-sm font-bold leading-snug">Descubre los patrones inconscientes<br/>que gobiernan cómo amas.</p>
+                      <p className="text-zinc-900 text-sm font-bold leading-snug">Empieza por ti:<br/>entiende tu forma de amar.</p>
                     </div>
                     <div className="p-7 pt-5">
                     <div className="flex items-baseline gap-2 mb-1">
@@ -2029,10 +2123,10 @@ const DiagnosticoRelacionalPage = () => {
                   <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-7 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-1.5">
-                        <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Solo</p>
+                        <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Respondes tú</p>
                         <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">1 reporte</span>
                       </div>
-                      <p className="text-white text-sm font-bold leading-snug">La verdad sobre tu relación,<br/>al descubierto.</p>
+                      <p className="text-white text-sm font-bold leading-snug">Tienes pareja, pero tú haces<br/>todo el análisis.</p>
                     </div>
                     <div className="p-7 pt-5">
                     <div className="flex items-baseline gap-2 mb-1">
@@ -2060,10 +2154,10 @@ const DiagnosticoRelacionalPage = () => {
                   <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-7 bg-gradient-to-br from-blue-500 to-cyan-500 min-h-[90px] flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-1.5">
-                        <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Los dos</p>
+                        <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Responden los dos</p>
                         <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">3 reportes</span>
                       </div>
-                      <p className="text-white text-sm font-bold leading-snug">El diagnóstico completo<br/>para los dos.</p>
+                      <p className="text-white text-sm font-bold leading-snug">Diagnóstico cruzado completo<br/>de ambos.</p>
                     </div>
                     <div className="p-7 pt-5">
                     <div className="flex items-baseline gap-2 mb-1">
@@ -2125,10 +2219,11 @@ const DiagnosticoRelacionalPage = () => {
           <motion.div key="checkout" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="min-h-screen flex items-center justify-center px-6 pt-12 pb-20">
             <div className="max-w-4xl w-full space-y-8">
-              <div className="text-center">
+              <div className="text-center max-w-4xl mx-auto p-6 lg:p-8 rounded-2xl border border-violet-500/20 bg-gradient-to-r from-violet-600/[0.16] via-fuchsia-600/[0.12] to-cyan-600/[0.10]">
                 <CreditCard className="w-10 h-10 text-violet-400/50 mx-auto mb-4" />
-                <h2 className="text-2xl font-light text-white mb-2">Elige tu radiografía</h2>
-                <p className="text-white/65 text-sm font-light">La respuesta a por qué amas como amas — a un clic de distancia.</p>
+                <h2 className="text-3xl font-light text-white mb-2">¿Qué tipo de radiografía necesitas hoy?</h2>
+                <p className="text-white/80 text-base font-light mb-1">La respuesta a por qué amas como amas: descubre tus patrones inconscientes y qué está pasando realmente en tu vínculo.</p>
+                <p className="text-white/65 text-sm font-light">Elige modalidad individual, pareja solo o los dos, y recibe un reporte claro para tomar decisiones con certeza.</p>
               </div>
 
               {/* Pricing Cards with per-card promo codes */}
@@ -2137,10 +2232,10 @@ const DiagnosticoRelacionalPage = () => {
                 <div className="rounded-2xl border border-white/10 bg-zinc-950/60 overflow-hidden">
                   <div className="py-4 px-7 bg-gradient-to-br from-amber-400 to-orange-500 min-h-[90px] flex flex-col justify-center">
                     <div className="flex items-center gap-2 mb-1.5">
-                      <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-bold">Individual</p>
+                      <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-bold">Individual — Sin pareja</p>
                       <span className="text-[9px] px-2 py-0.5 rounded-full bg-black/15 text-zinc-900 font-semibold">1 reporte</span>
                     </div>
-                    <p className="text-zinc-900 text-sm font-bold leading-snug">Descubre los patrones inconscientes<br/>que gobiernan cómo amas.</p>
+                    <p className="text-zinc-900 text-sm font-bold leading-snug">Empieza por ti:<br/>entiende tu forma de amar.</p>
                   </div>
                   <div className="p-7 pt-5 space-y-5">
                   <div>
@@ -2190,10 +2285,10 @@ const DiagnosticoRelacionalPage = () => {
                 <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] overflow-hidden">
                   <div className="py-4 px-7 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
                     <div className="flex items-center gap-2 mb-1.5">
-                      <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Solo</p>
+                      <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Respondes tú</p>
                       <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">1 reporte</span>
                     </div>
-                    <p className="text-white text-sm font-bold leading-snug">La verdad sobre tu relación,<br/>al descubierto.</p>
+                    <p className="text-white text-sm font-bold leading-snug">Tienes pareja, pero tú haces<br/>todo el análisis.</p>
                   </div>
                   <div className="p-7 pt-5 space-y-5">
                   <div>
@@ -2243,10 +2338,10 @@ const DiagnosticoRelacionalPage = () => {
                 <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] overflow-hidden">
                   <div className="py-4 px-7 bg-gradient-to-br from-blue-500 to-cyan-500 min-h-[90px] flex flex-col justify-center">
                     <div className="flex items-center gap-2 mb-1.5">
-                      <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Los dos</p>
+                      <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Responden los dos</p>
                       <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">3 reportes</span>
                     </div>
-                    <p className="text-white text-sm font-bold leading-snug">El diagnóstico completo<br/>para los dos.</p>
+                    <p className="text-white text-sm font-bold leading-snug">Diagnóstico cruzado completo<br/>de ambos.</p>
                   </div>
                   <div className="p-7 pt-5 space-y-5">
                   <div>
