@@ -12,7 +12,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, RadarC
 import SEOHead from '../components/SEOHead'
 import { analyzeRadiografiaPremium, generateFallbackAnalysis, analyzeCrossRadiografia } from '../services/radiografiaPremiumService'
 import { CACHED_PREVIEW_ANALYSIS } from '../data/cachedPreviewAnalysis'
-import { saveAnalysis, sendAnalysisEmail, getAnalysis, checkCrossStatus, markPartnerDone, saveCrossAnalysis, sendCrossAnalysisEmail, getCrossAnalysis } from '../services/emailApiService'
+import { saveAnalysis, sendAnalysisEmail, sendBackupEmail, getAnalysis, checkCrossStatus, markPartnerDone, saveCrossAnalysis, sendCrossAnalysisEmail, getCrossAnalysis } from '../services/emailApiService'
 
 // ─── 40 PREGUNTAS NARRATIVAS — 5 BLOQUES ────────────────────
 
@@ -2372,6 +2372,11 @@ const RadiografiaPremiumPage = () => {
           const partner = sessionStorage.getItem('radiografia_partner_email') || ''
           const emails  = [buyer, partner].filter(e => e.includes('@'))
           saveAnalysis({ token: purchaseToken, analysis: result }).catch(() => {})
+          sendBackupEmail({
+            token: purchaseToken, type, profileData,
+            questions: PREGUNTAS.map(q => ({ id: q.id, mainQuestion: q.mainQuestion })),
+            responses: finalResponses
+          }).catch(() => {})
           if (emails.length > 0) {
             sendAnalysisEmail({ token: purchaseToken, type, emails }).catch(() => {})
           }

@@ -109,6 +109,18 @@ export async function getAnalysis(token) {
   return res.json()
 }
 
+/**
+ * Send backup email with filled questionnaire to admin.
+ */
+export async function sendBackupEmail({ token, type, profileData, questions, responses }) {
+  const res = await fetch(`${API_BASE}/api/send-backup-email`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, type, profileData, questions, responses })
+  })
+  return res.json().catch(() => ({}))
+}
+
 // ── Cross-analysis (losdos) endpoints ────────────────────────────────────────
 
 /** Check if both partners have finished their questionnaires */

@@ -838,6 +838,75 @@ async function handleSendAnalysisEmail(req, env) {
   return json({ ok: true, errors: errors.length ? errors : undefined })
 }
 
+// ── Send backup with filled questionnaire to admin ──────────────────────────
+const ADMIN_EMAIL = 'contacto@luisvirrueta.com'
+
+async function handleSendBackupEmail(req, env) {
+  const { token, type, profileData, questions, responses } = await req.json()
+  if (!token || !responses) return json({ error: 'Missing data' }, 400)
+
+  const nombre = profileData?.nombre || 'Sin nombre'
+  const edad   = profileData?.edad   || '?'
+  const pareja = profileData?.pareja || ''
+  const typeLabel = getTypeLabel(type || 'solo')
+
+  // Build HTML table of questions + answers
+  let rows = ''
+  if (questions && Array.isArray(questions)) {
+    for (const q of questions) {
+      const answer = responses[q.id] || '(sin respuesta)'
+      const safeQ = (q.mainQuestion || q.id).replace(/</g, '&lt;')
+      const safeA = String(answer).replace(/</g, '&lt;').replace(/\n/g, '<br>')
+      rows += `<tr style="border-bottom:1px solid #333">
+        <td style="padding:10px;vertical-align:top;color:#a78bfa;font-weight:600;width:40%;font-size:14px">${q.id}. ${safeQ}</td>
+        <td style="padding:10px;color:#e2e8f0;font-size:14px">${safeA}</td>
+      </tr>`
+    }
+  } else {
+    // Fallback: just list responses by key
+    for (const [key, val] of Object.entries(responses)) {
+      const safeA = String(val).replace(/</g, '&lt;').replace(/\n/g, '<br>')
+      rows += `<tr style="border-bottom:1px solid #333">
+        <td style="padding:10px;color:#a78bfa;font-weight:600">${key}</td>
+        <td style="padding:10px;color:#e2e8f0">${safeA}</td>
+      </tr>`
+    }
+  }
+
+  const accessUrl = `${RADIOGRAFIA_URL}?token=${token}&type=${type || 'solo'}&view=results`
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
+<body style="background:#09090b;color:#e2e8f0;font-family:system-ui,sans-serif;padding:20px">
+  <div style="max-width:700px;margin:0 auto">
+    <h1 style="color:#a78bfa;font-size:22px;margin-bottom:4px">Respaldo: Cuestionario completado</h1>
+    <p style="color:#9ca3af;margin-bottom:20px">${typeLabel} — Token: ${token.slice(0,12)}…</p>
+    <table style="margin-bottom:16px;color:#e2e8f0;font-size:14px">
+      <tr><td style="padding:4px 12px 4px 0;color:#9ca3af">Nombre:</td><td>${nombre}, ${edad} años</td></tr>
+      ${pareja ? `<tr><td style="padding:4px 12px 4px 0;color:#9ca3af">Pareja:</td><td>${pareja}</td></tr>` : ''}
+      <tr><td style="padding:4px 12px 4px 0;color:#9ca3af">Fecha:</td><td>${new Date().toISOString().slice(0,16).replace('T',' ')}</td></tr>
+    </table>
+    <p style="margin-bottom:8px"><a href="${accessUrl}" style="color:#a78bfa">Ver resultados →</a></p>
+    <table style="width:100%;border-collapse:collapse;margin-top:16px;background:#111;border-radius:8px;overflow:hidden">
+      <thead><tr style="background:#1e1b4b"><th style="padding:10px;text-align:left;color:#c4b5fd">Pregunta</th><th style="padding:10px;text-align:left;color:#c4b5fd">Respuesta</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <p style="color:#6b7280;font-size:12px;margin-top:20px">Este correo es un respaldo automático. Las respuestas también están guardadas en KV con el token.</p>
+  </div>
+</body></html>`
+
+  try {
+    await sendEmail(env, {
+      to:      ADMIN_EMAIL,
+      subject: `[Respaldo] Cuestionario ${typeLabel} — ${nombre}`,
+      html,
+    })
+    return json({ ok: true })
+  } catch (e) {
+    console.error('Backup email error:', e.message)
+    return json({ ok: false, error: e.message }, 500)
+  }
+}
+
 // ── Crear sesión Stripe Checkout para Consultas ─────────────────────────────
 async function handleCreateConsultaCheckout(req, env) {
   const { type, quantity = 1, promoCode, siteOrigin } = await req.json()
@@ -1053,6 +1122,7 @@ export default {
         if (pathname === '/api/send-access-email')           return handleSendAccessEmail(request, env)
         if (pathname === '/api/save-analysis')               return handleSaveAnalysis(request, env)
         if (pathname === '/api/send-analysis-email')         return handleSendAnalysisEmail(request, env)
+        if (pathname === '/api/send-backup-email')           return handleSendBackupEmail(request, env)
         if (pathname === '/api/check-cross-status')          return handleCheckCrossStatus(request, env)
         if (pathname === '/api/mark-partner-done')           return handleMarkPartnerDone(request, env)
         if (pathname === '/api/save-cross-analysis')         return handleSaveCrossAnalysis(request, env)
