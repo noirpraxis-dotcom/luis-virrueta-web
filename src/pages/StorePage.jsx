@@ -76,42 +76,6 @@ const StorePage = () => {
       gradient: 'from-rose-600/20 to-pink-600/20',
       borderGradient: 'from-rose-500 to-pink-500',
       isNew: true
-    },
-    {
-      id: 5,
-      name: 'Consultoría Empresarial',
-      category: 'Organizacional',
-      price: '$2,500 MXN',
-      duration: '90 min',
-      image: '/empresa imagen.jpg',
-      description: 'Psicología organizacional para equipos. Mejora el clima desde el inconsciente colectivo.',
-      shortDesc: 'Transforma tu organización',
-      benefits: [
-        'Análisis organizacional',
-        'Dinámicas grupales',
-        'Plan de acción',
-        'Seguimiento trimestral'
-      ],
-      gradient: 'from-indigo-600/20 to-purple-600/20',
-      borderGradient: 'from-indigo-500 to-purple-500'
-    },
-    {
-      id: 6,
-      name: 'Taller Método AION©',
-      category: 'Desarrollo Personal',
-      price: '$2,650 MXN',
-      duration: '3 horas',
-      image: '/taller aion imagen.jpg',
-      description: 'Taller grupal del Método AION©. Aprende a identificar y transformar tus filtros.',
-      shortDesc: 'Aprende el método completo',
-      benefits: [
-        'Comprende tus filtros',
-        'Herramientas aplicables',
-        'Material descargable',
-        'Comunidad de práctica'
-      ],
-      gradient: 'from-amber-600/20 to-orange-600/20',
-      borderGradient: 'from-amber-500 to-orange-500'
     }
   ]
 
