@@ -4,6 +4,8 @@
 // Gottman · Sue Johnson · Perel · Levine · Hendrix · Tatkin · Chapman · Sternberg · Schnarch · Real · Freud+Lacan
 
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions'
+const WORKER_URL = 'https://radiografia-worker.noirpraxis.workers.dev'
+const API_BASE = import.meta.env.DEV ? '' : WORKER_URL
 
 const SYSTEM_PROMPT = `Eres un sistema avanzado de análisis psicológico llamado "Radiografía de Pareja".
 
@@ -515,12 +517,11 @@ async function callDeepSeekPart(apiKey, basePrompt, partInstruction, partName, m
       const controller = new AbortController()
       const timeout = setTimeout(() => controller.abort(), 300000) // 5 min timeout per part
 
-      const response = await fetch(DEEPSEEK_API_URL, {
+      const response = await fetch(`${API_BASE}/api/deepseek-proxy`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+        headers: { 'Content-Type': 'application/json' },
         signal: controller.signal,
         body: JSON.stringify({
-          model: 'deepseek-chat',
           messages: [
             { role: 'system', content: SYSTEM_PROMPT },
             { role: 'user', content: basePrompt + '\n\n' + partInstruction }
@@ -565,15 +566,7 @@ async function callDeepSeekPart(apiKey, basePrompt, partInstruction, partName, m
 // ─── MAIN ANALYSIS — 4 PARALLEL CALLS ───────────────────────────────────────
 
 export async function analyzeRadiografiaPremium({ responses, questions, profileData, packageType }) {
-  const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY
-
-  if (!apiKey) {
-    console.warn('⚠️ VITE_DEEPSEEK_API_KEY no configurada. Usando análisis de respaldo.')
-    const fallback = generateFallbackAnalysis()
-    fallback._isFallback = true
-    return fallback
-  }
-
+  // API key is now server-side in the Worker — no key needed here
   const basePrompt = buildPrompt(responses, questions, profileData, packageType)
 
   console.log('🚀 Lanzando 4 llamadas paralelas a DeepSeek...')
@@ -581,10 +574,10 @@ export async function analyzeRadiografiaPremium({ responses, questions, profileD
 
   // Launch all 4 parts in parallel
   const [part1, part2, part3, part4] = await Promise.all([
-    callDeepSeekPart(apiKey, basePrompt, PART1_INSTRUCTION, 'Autoanálisis', 8192),
-    callDeepSeekPart(apiKey, basePrompt, PART2_INSTRUCTION, 'Lecturas A', 8192),
-    callDeepSeekPart(apiKey, basePrompt, PART3_INSTRUCTION, 'Lecturas B', 8192),
-    callDeepSeekPart(apiKey, basePrompt, PART4_INSTRUCTION, 'Gráficas', 8192),
+    callDeepSeekPart(null, basePrompt, PART1_INSTRUCTION, 'Autoanálisis', 8192),
+    callDeepSeekPart(null, basePrompt, PART2_INSTRUCTION, 'Lecturas A', 8192),
+    callDeepSeekPart(null, basePrompt, PART3_INSTRUCTION, 'Lecturas B', 8192),
+    callDeepSeekPart(null, basePrompt, PART4_INSTRUCTION, 'Gráficas', 8192),
   ])
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
@@ -1048,16 +1041,11 @@ const CROSS_INSTRUCTION = `Genera el análisis cruzado completo. Responde SOLO c
 }`
 
 export async function analyzeCrossRadiografia({ analysis1, analysis2, profile1, profile2 }) {
-  const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY
-  if (!apiKey) {
-    console.warn('⚠️ VITE_DEEPSEEK_API_KEY no configurada para cross-analysis.')
-    return null
-  }
-
+  // API key is now server-side in the Worker
   const basePrompt = buildCrossAnalysisPrompt(analysis1, analysis2, profile1, profile2)
 
   console.log('🚀 Lanzando análisis cruzado a DeepSeek...')
-  const result = await callDeepSeekPart(apiKey, basePrompt, CROSS_INSTRUCTION, 'Cross-Analysis', 8192)
+  const result = await callDeepSeekPart(null, basePrompt, CROSS_INSTRUCTION, 'Cross-Analysis', 8192)
 
   if (!result) {
     console.error('❌ Cross-analysis falló')

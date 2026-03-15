@@ -18,6 +18,8 @@ PRICE_LOSDOS_TEST   = "price_1TAyi4GpKMTmfzJmHW6aJejf"
 #   STRIPE_TEST_SECRET_KEY   — test sk_test_xxx
 #   STRIPE_WEBHOOK_SECRET    — whsec_xxx (live webhook)
 #   RESEND_API_KEY
+#   DEEPSEEK_API_KEY         — sk-xxx (DeepSeek chat API)
+#   ELEVENLABS_API_KEY       — sk_xxx (ElevenLabs TTS API)
 #   PROMO_CODES_JSON  (opcional — JSON con códigos extra)
 
 # KV Namespace — deploy.ps1 rellena los ids

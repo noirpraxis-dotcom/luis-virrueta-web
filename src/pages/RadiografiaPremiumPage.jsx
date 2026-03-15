@@ -2051,12 +2051,11 @@ const RadiografiaPremiumPage = () => {
         if (!text) { setAudioPlaying(false); setPreviewingVoiceId(null); if (onEndedCallback) onEndedCallback(); return }
         let blob = audioCache.current[cacheKey]
         if (!blob) {
-          const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY
-          if (!apiKey) { setAudioPlaying(false); setPreviewingVoiceId(null); return }
-          const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+          const res = await fetch(`${WORKER_URL}/api/tts-proxy`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'xi-api-key': apiKey },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+              voice_id: voiceId,
               text,
               model_id: 'eleven_multilingual_v2',
               voice_settings: { stability: 0.35, similarity_boost: 0.85, style: 0.3, use_speaker_boost: true }
@@ -2090,15 +2089,14 @@ const RadiografiaPremiumPage = () => {
     const q = PREGUNTAS.find(p => p.mainQuestion === text) || PREGUNTAS.find(p => p.mainQuestion_descubre === text)
     if (voiceFolder && q) return // static files preload via browser cache
 
-    const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY
-    if (!apiKey) return
     const cacheKey = `${selectedVoiceId}::${text.slice(0, 80)}`
     if (audioCache.current[cacheKey]) return
     try {
-      const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selectedVoiceId}`, {
+      const res = await fetch(`${WORKER_URL}/api/tts-proxy`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'xi-api-key': apiKey },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          voice_id: selectedVoiceId,
           text,
           model_id: 'eleven_multilingual_v2',
           voice_settings: { stability: 0.35, similarity_boost: 0.85, style: 0.3, use_speaker_boost: true }

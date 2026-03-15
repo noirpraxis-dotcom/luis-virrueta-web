@@ -970,6 +970,64 @@ async function handleAudio(request, env, pathname) {
   })
 }
 
+// ══ DEEPSEEK PROXY (protects API key) ═══════════════════════════════════════════════════════════
+
+async function handleDeepSeekProxy(req, env) {
+  const apiKey = env.DEEPSEEK_API_KEY
+  if (!apiKey) return json({ error: 'DeepSeek API key not configured' }, 500)
+
+  const body = await req.json()
+  // Only allow the specific model and enforce limits
+  const payload = {
+    model: 'deepseek-chat',
+    messages: body.messages,
+    temperature: Math.min(body.temperature ?? 0.7, 1.5),
+    max_tokens: Math.min(body.max_tokens ?? 8192, 16384),
+    response_format: body.response_format || undefined,
+  }
+
+  const response = await fetch('https://api.deepseek.com/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify(payload),
+  })
+
+  const data = await response.text()
+  return new Response(data, {
+    status: response.status,
+    headers: { 'Content-Type': 'application/json', ...CORS },
+  })
+}
+
+// ══ ELEVENLABS TTS PROXY (protects API key) ═════════════════════════════════════════════════
+
+async function handleTTSProxy(req, env) {
+  const apiKey = env.ELEVENLABS_API_KEY
+  if (!apiKey) return json({ error: 'ElevenLabs API key not configured' }, 500)
+
+  const { voice_id, text, model_id, voice_settings } = await req.json()
+  if (!voice_id || !text) return json({ error: 'Missing voice_id or text' }, 400)
+
+  const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voice_id)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'xi-api-key': apiKey },
+    body: JSON.stringify({
+      text: text.slice(0, 5000),
+      model_id: model_id || 'eleven_multilingual_v2',
+      voice_settings: voice_settings || { stability: 0.35, similarity_boost: 0.85, style: 0.3, use_speaker_boost: true },
+    }),
+  })
+
+  if (!response.ok) {
+    const err = await response.text().catch(() => '')
+    return new Response(err, { status: response.status, headers: CORS })
+  }
+
+  return new Response(response.body, {
+    headers: { 'Content-Type': 'audio/mpeg', ...CORS },
+  })
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // ROUTER
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1003,6 +1061,8 @@ export default {
         if (pathname === '/api/validate-consulta-promo')     return handleValidateConsultaPromo(request, env)
         if (pathname === '/api/notify-consulta-purchase')    return handleNotifyConsulta(request, env)
         if (pathname === '/webhook')                         return handleWebhook(request, env)
+        if (pathname === '/api/deepseek-proxy')               return handleDeepSeekProxy(request, env)
+        if (pathname === '/api/tts-proxy')                    return handleTTSProxy(request, env)
       }
       return json({ ok: true, worker: 'radiografia-worker', path: pathname })
     } catch (err) {

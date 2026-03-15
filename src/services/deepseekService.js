@@ -1,9 +1,8 @@
 // ─── SERVICIO DE ANÁLISIS CON DEEPSEEK ────────────────────────────
-// ⚠️ SEGURIDAD: En producción, mover esta llamada a un Supabase Edge Function
-// o Cloudflare Worker para no exponer la API key en el navegador del cliente.
-// Actualmente usa VITE_DEEPSEEK_API_KEY del archivo .env
+// API key is server-side in the Cloudflare Worker (proxied via /api/deepseek-proxy)
 
-const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions'
+const WORKER_URL = 'https://radiografia-worker.noirpraxis.workers.dev'
+const API_BASE = import.meta.env.DEV ? '' : WORKER_URL
 
 const SYSTEM_PROMPT = `Eres un psicólogo especialista en relaciones de pareja con enfoque profundo en dinámicas vinculares y patrones de comportamiento en el vínculo amoroso.
 
@@ -133,24 +132,15 @@ function buildPrompt(areaLabels, philosophicalAnswers, philosophicalQuestions, f
 }
 
 export async function analyzeRelationship({ areaLabels, philosophicalAnswers, philosophicalQuestions, flashAnswers, flashQuestions }) {
-  const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY
-
-  if (!apiKey) {
-    console.warn('⚠️ VITE_DEEPSEEK_API_KEY no configurada. Usando análisis de respaldo.')
-    return generateFallbackAnalysis()
-  }
-
   const prompt = buildPrompt(areaLabels, philosophicalAnswers, philosophicalQuestions, flashAnswers || {}, flashQuestions || [])
 
   try {
-    const response = await fetch(DEEPSEEK_API_URL, {
+    const response = await fetch(`${API_BASE}/api/deepseek-proxy`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'deepseek-chat',
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user', content: prompt }

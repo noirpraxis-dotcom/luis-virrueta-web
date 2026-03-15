@@ -922,10 +922,11 @@ const DiagnosticoRelacionalPage = () => {
         return
       }
       try {
-        const res = await fetch('https://api.elevenlabs.io/v1/text-to-speech/EXAVITQu4vr4xnSDxMaL', {
+        const res = await fetch(`${WORKER_URL}/api/tts-proxy`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'xi-api-key': apiKey },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            voice_id: 'EXAVITQu4vr4xnSDxMaL',
             text: 'Hola, ya casi terminas. Completa estos datos — te toman solo un segundo y hacen que tu análisis sea completamente personalizado.',
             model_id: 'eleven_multilingual_v2',
             voice_settings: { stability: 0.35, similarity_boost: 0.85, style: 0.3, use_speaker_boost: true }

@@ -3,7 +3,8 @@
 // 12 dimensiones basadas en los autores más importantes en psicología del amor
 // Soporta modo individual y de pareja
 
-const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions'
+const WORKER_URL = 'https://radiografia-worker.noirpraxis.workers.dev'
+const API_BASE = import.meta.env.DEV ? '' : WORKER_URL
 
 const SYSTEM_PROMPT = `Actúa como un analista experto en relaciones de pareja.
 
@@ -223,24 +224,15 @@ function buildPrompt(responses, questions, analysisMode) {
 }
 
 export async function analyzeDiagnostic({ responses, questions, analysisMode = 'individual' }) {
-  const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY
-
-  if (!apiKey) {
-    console.warn('⚠️ VITE_DEEPSEEK_API_KEY no configurada. Usando análisis de respaldo.')
-    return generateFallbackAnalysis(analysisMode)
-  }
-
   const prompt = buildPrompt(responses, questions, analysisMode)
 
   try {
-    const response = await fetch(DEEPSEEK_API_URL, {
+    const response = await fetch(`${API_BASE}/api/deepseek-proxy`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'deepseek-chat',
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user', content: prompt }

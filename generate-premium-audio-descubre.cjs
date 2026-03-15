@@ -6,7 +6,7 @@ const fs = require('fs')
 const path = require('path')
 
 // ── ElevenLabs config ──
-const API_KEY = process.env.ELEVENLABS_API_KEY || 'sk_4ce72fab3e2037dee0cfdf510d9197b083712de6179c34ac'
+const API_KEY = process.env.ELEVENLABS_API_KEY || 'sk_2d7abb8cb42ffe853dbdff695349b7d1fb7d1c919aef03a9'
 const MODEL = 'eleven_multilingual_v2'
 
 const VOICES = {
