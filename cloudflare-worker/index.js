@@ -29,10 +29,27 @@ const RADIOGRAFIA_URL = `${SITE_URL}/tienda/radiografia-premium`     // Email ac
 const FROM_EMAIL     = 'Luis Virrueta <hola@luisvirrueta.com>'
 const BASE_PRICES = { descubre: 499, solo: 499, losdos: 999 }
 
-// Códigos promo integrados. Añade más con la env var PROMO_CODES_JSON (JSON string).
+// Códigos promo integrados para Radiografía. Añade más con la env var PROMO_CODES_JSON.
 const BUILT_IN_PROMOS = {
   LANZAMIENTO50: { discountPercent: 50, label: 'Lanzamiento -50%' },
   BETA100:       { free: true,          label: 'Acceso beta gratuito' },
+}
+
+// Códigos promo para Consultas. Almacenados solo en el Worker (no en el frontend).
+const CONSULTA_PROMOS = {
+  individual: {
+    MENTELIBRE: { discountAmount: 200, finalPrice: 500, label: '$500 MXN — código MENTELIBRE aplicado' },
+  },
+  pareja: {
+    DOSPUERTAS: { discountAmount: 250, finalPrice: 1000, label: '$1,000 MXN — código DOSPUERTAS aplicado' },
+  },
+}
+
+// Precios base de consultas en centavos MXN
+const CONSULTA_PRICES = { individual: 70000, pareja: 125000 }
+const CONSULTA_NAMES  = {
+  individual: 'Consulta Individual — Luis Virrueta · 60 min',
+  pareja:     'Consulta de Pareja — Luis Virrueta · 90 min',
 }
 
 // ── CORS ─────────────────────────────────────────────────────────────────────
@@ -494,6 +511,62 @@ async function handleSendAnalysisEmail(req, env) {
   return json({ ok: true, errors: errors.length ? errors : undefined })
 }
 
+// ── Crear sesión Stripe Checkout para Consultas ─────────────────────────────
+async function handleCreateConsultaCheckout(req, env) {
+  const { type, quantity = 1, promoCode, siteOrigin } = await req.json()
+  const isTest = !!(siteOrigin && siteOrigin.includes('localhost'))
+
+  const basePrice = CONSULTA_PRICES[type]
+  if (!basePrice) return json({ error: 'Tipo de consulta inválido' }, 400)
+
+  const qty       = Math.max(1, parseInt(quantity) || 1)
+  const promo     = promoCode ? CONSULTA_PROMOS[type]?.[promoCode.toUpperCase()] : null
+  const unitAmt   = promo ? promo.finalPrice * 100 : basePrice
+
+  const origin    = siteOrigin || SITE_URL
+  const params = {
+    mode:         'payment',
+    line_items:   [{ price_data: {
+      currency:     'mxn',
+      unit_amount:  String(unitAmt),
+      product_data: { name: CONSULTA_NAMES[type] },
+    }, quantity: String(qty) }],
+    success_url:  `${origin}/tienda/consulta-gracias?type=${type}&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url:   `${origin}/tienda/${type === 'pareja' ? '9' : '8'}`,
+    metadata:     { type, quantity: String(qty) },
+  }
+
+  const session = await stripe(env, 'POST', '/checkout/sessions', params, isTest)
+  return json({ url: session.url })
+}
+
+// ── Validar código promo de Consultas ─────────────────────────────────────────
+async function handleValidateConsultaPromo(req, env) {
+  const { type, promoCode } = await req.json()
+  if (!type || !promoCode) return json({ valid: false })
+  const code  = promoCode.toUpperCase().trim()
+  const promo = CONSULTA_PROMOS[type]?.[code]
+  if (!promo) return json({ valid: false, error: 'Código inválido' })
+  return json({ valid: true, ...promo })
+}
+
+// ── Notificación de compra de Consulta ────────────────────────────────────────
+async function handleNotifyConsulta(req, env) {
+  // Fire-and-forget: si hay email configurado, notifica a Luis
+  try {
+    const { sessionId, type } = await req.json()
+    if (env.RESEND_API_KEY && sessionId) {
+      const label = type === 'pareja' ? 'Consulta de Pareja' : 'Consulta Individual'
+      await sendEmail(env, {
+        to:      'luisvirruetap@gmail.com',
+        subject: `Nueva ${label} vendida`,
+        html:    `<p>Se vendió una <strong>${label}</strong>.<br/>Session ID: ${sessionId}</p>`,
+      })
+    }
+  } catch { /* non-critical */ }
+  return json({ ok: true })
+}
+
 async function handleWebhook(req, env) {
   const rawBody = await req.text()
   const sig     = req.headers.get('stripe-signature')
@@ -581,6 +654,9 @@ export default {
         if (pathname === '/api/send-access-email')           return handleSendAccessEmail(request, env)
         if (pathname === '/api/save-analysis')               return handleSaveAnalysis(request, env)
         if (pathname === '/api/send-analysis-email')         return handleSendAnalysisEmail(request, env)
+        if (pathname === '/api/create-consulta-checkout')    return handleCreateConsultaCheckout(request, env)
+        if (pathname === '/api/validate-consulta-promo')     return handleValidateConsultaPromo(request, env)
+        if (pathname === '/api/notify-consulta-purchase')    return handleNotifyConsulta(request, env)
         if (pathname === '/webhook')                         return handleWebhook(request, env)
       }
       return json({ ok: true, worker: 'radiografia-worker', path: pathname })

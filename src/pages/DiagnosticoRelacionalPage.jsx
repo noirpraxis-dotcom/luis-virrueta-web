@@ -757,6 +757,8 @@ const DiagnosticoRelacionalPage = () => {
   const [voiceGender, setVoiceGender] = useState('female') // 'female' = Charlotte MP3, 'male' = male MP3
   const recognitionRef = useRef(null)
   const audioRef = useRef(null)
+  const profileAudioPlayedRef = useRef(false)
+  const profileAudioBlobRef = useRef(null)
   const currentQuestionRef = useRef(currentQuestion)
   currentQuestionRef.current = currentQuestion
 
@@ -880,6 +882,42 @@ const DiagnosticoRelacionalPage = () => {
       }
     }
   }, [searchParams, scrollToTop, purchaseId])
+
+  // Profile form intro audio — Valentina voice plays once when post-purchase form appears
+  useEffect(() => {
+    if (!purchaseId || emailsSent || profileAudioPlayedRef.current) return
+    if (!['descubre', 'solo', 'losdos'].includes(purchaseType)) return
+    profileAudioPlayedRef.current = true
+    const playIntro = async () => {
+      const staticUrl = `${AUDIO_BASE}/audio/diagnostico/intro-valentina.mp3`
+      try {
+        const head = await fetch(staticUrl, { method: 'HEAD' })
+        if (head.ok) { new Audio(staticUrl).play().catch(() => {}); return }
+      } catch {}
+      const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY
+      if (!apiKey) return
+      if (profileAudioBlobRef.current) {
+        new Audio(URL.createObjectURL(profileAudioBlobRef.current)).play().catch(() => {})
+        return
+      }
+      try {
+        const res = await fetch('https://api.elevenlabs.io/v1/text-to-speech/EXAVITQu4vr4xnSDxMaL', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'xi-api-key': apiKey },
+          body: JSON.stringify({
+            text: 'Hola, ya casi terminas. Completa estos datos — te toman solo un segundo y hacen que tu análisis sea completamente personalizado.',
+            model_id: 'eleven_multilingual_v2',
+            voice_settings: { stability: 0.35, similarity_boost: 0.85, style: 0.3, use_speaker_boost: true }
+          })
+        })
+        if (!res.ok) return
+        const blob = await res.blob()
+        profileAudioBlobRef.current = blob
+        new Audio(URL.createObjectURL(blob)).play().catch(() => {})
+      } catch {}
+    }
+    playIntro()
+  }, [purchaseId, purchaseType, emailsSent])
 
   // Start mic recording (used by auto-play flow and toggleMic)
   // Track whether user manually stopped recording
@@ -2155,9 +2193,12 @@ const DiagnosticoRelacionalPage = () => {
                 <div className="hidden sm:grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
                   {/* Radiografía de tu forma de amar */}
                   <div className="rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left overflow-hidden">
-                    <div className="py-4 px-8 bg-amber-400">
-                      <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-semibold">Individual</p>
-                      <p className="text-zinc-900 text-sm font-bold">Descifra tu forma de amar</p>
+                    <div className="py-4 px-8 bg-gradient-to-br from-amber-400 to-orange-500 min-h-[90px] flex flex-col justify-center">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-bold">Individual</p>
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-black/15 text-zinc-900 font-semibold">1 reporte</span>
+                      </div>
+                      <p className="text-zinc-900 text-sm font-bold leading-snug">Descubre los patrones inconscientes<br/>que gobiernan cómo amas.</p>
                     </div>
                     <div className="p-8 pt-5">
                     <p className="text-fuchsia-300/70 text-sm font-medium mb-3 hidden">x</p>
@@ -2166,10 +2207,10 @@ const DiagnosticoRelacionalPage = () => {
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_DESCUBRE} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light mb-5">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
+                    <p className="text-white/65 text-sm font-light mb-5">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
                     <ul className="space-y-2 mb-6">
                       {['Descubre por qué eliges siempre el mismo tipo de pareja', 'Mapa de tu estilo de apego y mecanismos de defensa', 'Radiografía de tus patrones inconscientes al amar', '40 preguntas guiadas por voz con IA', 'Análisis de 11 corrientes psicológicas sobre ti', 'Reporte PDF con gráficas y análisis descargable'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
+                        <li key={i} className="flex items-start gap-2 text-white/65 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
@@ -2178,19 +2219,22 @@ const DiagnosticoRelacionalPage = () => {
                     <motion.button
                       onClick={() => { setStage('checkout'); scrollToTop() }}
                       whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                      className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-zinc-900 font-semibold text-base hover:from-amber-300 hover:to-orange-400 transition-all shadow-lg shadow-amber-600/20">
                       Descubrir mi patrón
                     </motion.button>
                     </div>
                   </div>
                   {/* Radiografía de tu relación */}
                   <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left overflow-hidden">
-                    <div className="py-4 px-8 bg-violet-600">
-                      <div className="flex items-center gap-2">
-                        <p className="text-white text-xs uppercase tracking-[0.15em] font-semibold">Pareja — Solo</p>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 text-white font-medium">Más elegido</span>
+                    <div className="py-4 px-8 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <div className="flex items-center gap-2">
+                          <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Solo</p>
+                          <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">1 reporte</span>
+                        </div>
+                        <span className="text-[9px] px-2.5 py-1 rounded-full bg-white text-fuchsia-700 font-bold uppercase tracking-wide">⭐ Más elegido</span>
                       </div>
-                      <p className="text-white text-sm font-bold">La verdad sobre tu relación, al descubierto</p>
+                      <p className="text-white text-sm font-bold leading-snug">La verdad sobre tu relación,<br/>al descubierto.</p>
                     </div>
                     <div className="p-8 pt-5">
                     <div className="flex items-baseline gap-2 mb-1">
@@ -2198,10 +2242,10 @@ const DiagnosticoRelacionalPage = () => {
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_SOLO} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light mb-5">Tú contestas · Análisis profundo de lo que está pasando en tu relación</p>
+                    <p className="text-white/65 text-sm font-light mb-5">Tú contestas · Análisis profundo de lo que está pasando en tu relación</p>
                     <ul className="space-y-2 mb-6">
                       {['Entiende qué dinámicas invisibles están desgastando tu relación', '40 preguntas guiadas por voz — tú contestas solo/a', 'Análisis de 11 corrientes psicológicas sobre tu caso', 'Diagnóstico de hacia dónde va tu relación si nada cambia', 'Autoanálisis: qué proyectas, qué repites, qué evitas', 'Reporte PDF profesional con radar y gráficas'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
+                        <li key={i} className="flex items-start gap-2 text-white/65 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
@@ -2217,12 +2261,12 @@ const DiagnosticoRelacionalPage = () => {
                   </div>
                   {/* Radiografía cruzada de pareja */}
                   <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left overflow-hidden">
-                    <div className="py-4 px-8 bg-blue-600">
-                      <div className="flex items-center gap-2">
-                        <p className="text-white text-xs uppercase tracking-[0.15em] font-semibold">Pareja — Los dos</p>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 text-white font-medium">3 reportes</span>
+                    <div className="py-4 px-8 bg-gradient-to-br from-blue-500 to-cyan-500 min-h-[90px] flex flex-col justify-center">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Los dos</p>
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">3 reportes</span>
                       </div>
-                      <p className="text-white text-sm font-bold">El diagnóstico completo para los dos</p>
+                      <p className="text-white text-sm font-bold leading-snug">El diagnóstico completo<br/>para los dos.</p>
                     </div>
                     <div className="p-8 pt-5">
                     <div className="flex items-baseline gap-2 mb-1">
@@ -2230,10 +2274,10 @@ const DiagnosticoRelacionalPage = () => {
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_LOSDOS} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light mb-5">Cada uno contesta por separado · 3 reportes: tuyo, suyo y cruzado</p>
+                    <p className="text-white/65 text-sm font-light mb-5">Cada uno contesta por separado · 3 reportes: tuyo, suyo y cruzado</p>
                     <ul className="space-y-2 mb-6">
                       {['Cada uno contesta 40 preguntas por separado, en privado', 'Reporte individual para cada uno con su propio análisis', 'Reporte cruzado: dónde chocan y dónde se complementan', 'Diagnóstico de la dinámica invisible entre los dos', 'Comparación de estilos de apego y lenguajes del amor', 'El punto de partida ideal antes de terapia de pareja'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
+                        <li key={i} className="flex items-start gap-2 text-white/65 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-cyan-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
@@ -2242,7 +2286,7 @@ const DiagnosticoRelacionalPage = () => {
                     <motion.button
                       onClick={() => { setStage('checkout'); scrollToTop() }}
                       whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                      className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-light text-base hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg shadow-cyan-600/20">
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-light text-base hover:from-blue-400 hover:to-cyan-400 transition-all shadow-lg shadow-cyan-600/20">
                       Empezar juntos
                     </motion.button>
                     </div>
@@ -2253,9 +2297,12 @@ const DiagnosticoRelacionalPage = () => {
                 <div className="sm:hidden flex flex-col gap-5 max-w-sm mx-auto">
                   {/* Radiografía de tu forma de amar — Mobile */}
                   <div className="rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left overflow-hidden">
-                    <div className="py-4 px-7 bg-amber-400">
-                      <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-semibold">Individual</p>
-                      <p className="text-zinc-900 text-sm font-bold">Descifra tu forma de amar</p>
+                    <div className="py-4 px-7 bg-gradient-to-br from-amber-400 to-orange-500 min-h-[90px] flex flex-col justify-center">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-bold">Individual</p>
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-black/15 text-zinc-900 font-semibold">1 reporte</span>
+                      </div>
+                      <p className="text-zinc-900 text-sm font-bold leading-snug">Descubre los patrones inconscientes<br/>que gobiernan cómo amas.</p>
                     </div>
                     <div className="p-7 pt-5">
                     <div className="flex items-baseline gap-2 mb-1">
@@ -2263,29 +2310,32 @@ const DiagnosticoRelacionalPage = () => {
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_DESCUBRE} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light mb-5">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
+                    <p className="text-white/65 text-sm font-light mb-5">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
                     <ul className="space-y-2 mb-6">
                       {['Descubre por qué eliges siempre el mismo tipo de pareja', 'Mapa de tu estilo de apego y mecanismos de defensa', 'Radiografía de tus patrones inconscientes al amar', '40 preguntas guiadas por voz con IA', 'Análisis de 11 corrientes psicológicas sobre ti', 'Reporte PDF con gráficas y análisis descargable'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
+                        <li key={i} className="flex items-start gap-2 text-white/65 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
                       ))}
                     </ul>
                     <motion.button onClick={() => { setStage('checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                      className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base">
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-zinc-900 font-semibold text-base">
                       Descubrir mi patrón
                     </motion.button>
                     </div>
                   </div>
                   {/* Pareja Solo — Mobile */}
                   <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left overflow-hidden">
-                    <div className="py-4 px-7 bg-violet-600">
-                      <div className="flex items-center gap-2">
-                        <p className="text-white text-xs uppercase tracking-[0.15em] font-semibold">Pareja — Solo</p>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 text-white font-medium">Más elegido</span>
+                    <div className="py-4 px-7 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <div className="flex items-center gap-2">
+                          <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Solo</p>
+                          <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">1 reporte</span>
+                        </div>
+                        <span className="text-[9px] px-2.5 py-1 rounded-full bg-white text-fuchsia-700 font-bold uppercase tracking-wide">⭐ Más elegido</span>
                       </div>
-                      <p className="text-white text-sm font-bold">La verdad sobre tu relación, al descubierto</p>
+                      <p className="text-white text-sm font-bold leading-snug">La verdad sobre tu relación,<br/>al descubierto.</p>
                     </div>
                     <div className="p-7 pt-5">
                     <div className="flex items-baseline gap-2 mb-1">
@@ -2293,10 +2343,10 @@ const DiagnosticoRelacionalPage = () => {
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_SOLO} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light mb-5">Tú contestas · Análisis profundo de lo que está pasando en tu relación</p>
+                    <p className="text-white/65 text-sm font-light mb-5">Tú contestas · Análisis profundo de lo que está pasando en tu relación</p>
                     <ul className="space-y-2 mb-6">
                       {['Entiende qué dinámicas invisibles están desgastando tu relación', '40 preguntas guiadas por voz — tú contestas solo/a', 'Análisis de 11 corrientes psicológicas sobre tu caso', 'Diagnóstico de hacia dónde va tu relación si nada cambia', 'Autoanálisis: qué proyectas, qué repites, qué evitas', 'Reporte PDF profesional con radar y gráficas'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
+                        <li key={i} className="flex items-start gap-2 text-white/65 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
@@ -2310,12 +2360,12 @@ const DiagnosticoRelacionalPage = () => {
                   </div>
                   {/* Pareja Los dos — Mobile */}
                   <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left overflow-hidden">
-                    <div className="py-4 px-7 bg-blue-600">
-                      <div className="flex items-center gap-2">
-                        <p className="text-white text-xs uppercase tracking-[0.15em] font-semibold">Pareja — Los dos</p>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 text-white font-medium">3 reportes</span>
+                    <div className="py-4 px-7 bg-gradient-to-br from-blue-500 to-cyan-500 min-h-[90px] flex flex-col justify-center">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Los dos</p>
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">3 reportes</span>
                       </div>
-                      <p className="text-white text-sm font-bold">El diagnóstico completo para los dos</p>
+                      <p className="text-white text-sm font-bold leading-snug">El diagnóstico completo<br/>para los dos.</p>
                     </div>
                     <div className="p-7 pt-5">
                     <div className="flex items-baseline gap-2 mb-1">
@@ -2323,17 +2373,17 @@ const DiagnosticoRelacionalPage = () => {
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_LOSDOS} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light mb-5">Cada uno contesta por separado · 3 reportes: tuyo, suyo y cruzado</p>
+                    <p className="text-white/65 text-sm font-light mb-5">Cada uno contesta por separado · 3 reportes: tuyo, suyo y cruzado</p>
                     <ul className="space-y-2 mb-6">
                       {['Cada uno contesta 40 preguntas por separado, en privado', 'Reporte individual para cada uno con su propio análisis', 'Reporte cruzado: dónde chocan y dónde se complementan', 'Diagnóstico de la dinámica invisible entre los dos', 'Comparación de estilos de apego y lenguajes del amor', 'El punto de partida ideal antes de terapia de pareja'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/55 text-sm font-light">
+                        <li key={i} className="flex items-start gap-2 text-white/65 text-sm font-light">
                           <Check className="w-3.5 h-3.5 text-cyan-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
                       ))}
                     </ul>
                     <motion.button onClick={() => { setStage('checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                      className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-light text-base">
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-light text-base">
                       Empezar juntos
                     </motion.button>
                     </div>
@@ -2380,16 +2430,19 @@ const DiagnosticoRelacionalPage = () => {
               <div className="text-center">
                 <CreditCard className="w-10 h-10 text-violet-400/50 mx-auto mb-4" />
                 <h2 className="text-2xl font-light text-white mb-2">Elige tu radiografía</h2>
-                <p className="text-white/40 text-sm font-light">40 preguntas por voz · 12 dimensiones psicológicas · 11 corrientes · Reporte descargable</p>
+                <p className="text-white/65 text-sm font-light">La respuesta a por qué amas como amas — a un clic de distancia.</p>
               </div>
 
               {/* Pricing Cards with per-card promo codes */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 {/* Radiografía Individual */}
                 <div className="rounded-2xl border border-white/10 bg-zinc-950/60 overflow-hidden">
-                  <div className="py-4 px-7 bg-amber-400">
-                    <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-semibold">Individual</p>
-                    <p className="text-zinc-900 text-sm font-bold">Descifra tu forma de amar</p>
+                  <div className="py-4 px-7 bg-gradient-to-br from-amber-400 to-orange-500 min-h-[90px] flex flex-col justify-center">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-bold">Individual</p>
+                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-black/15 text-zinc-900 font-semibold">1 reporte</span>
+                    </div>
+                    <p className="text-zinc-900 text-sm font-bold leading-snug">Descubre los patrones inconscientes<br/>que gobiernan cómo amas.</p>
                   </div>
                   <div className="p-7 pt-5 space-y-5">
                   <div>
@@ -2428,7 +2481,7 @@ const DiagnosticoRelacionalPage = () => {
                   )}
                   <motion.button onClick={() => handlePurchase('descubre')} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     disabled={checkoutLoading === 'descubre'}
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20 disabled:opacity-50">
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-zinc-900 font-semibold text-base hover:from-amber-300 hover:to-orange-400 transition-all shadow-lg shadow-amber-600/20 disabled:opacity-50">
                     {checkoutLoading === 'descubre' ? 'Procesando...' : cardPromoApplied.descubre?.free ? 'Acceder gratis' : `Pagar $${cardPromoApplied.descubre?.finalPrice ?? PRODUCT_PRICE_DESCUBRE} MXN`}
                   </motion.button>
                   </div>
@@ -2436,12 +2489,15 @@ const DiagnosticoRelacionalPage = () => {
 
                 {/* Pareja — Solo */}
                 <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] overflow-hidden">
-                  <div className="py-4 px-7 bg-violet-600">
-                    <div className="flex items-center gap-2">
-                      <p className="text-white text-xs uppercase tracking-[0.15em] font-semibold">Pareja — Solo</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 text-white font-medium">Más elegido</span>
+                  <div className="py-4 px-7 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <div className="flex items-center gap-2">
+                        <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Solo</p>
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">1 reporte</span>
+                      </div>
+                      <span className="text-[9px] px-2.5 py-1 rounded-full bg-white text-fuchsia-700 font-bold uppercase tracking-wide">⭐ Más elegido</span>
                     </div>
-                    <p className="text-white text-sm font-bold">La verdad sobre tu relación, al descubierto</p>
+                    <p className="text-white text-sm font-bold leading-snug">La verdad sobre tu relación,<br/>al descubierto.</p>
                   </div>
                   <div className="p-7 pt-5 space-y-5">
                   <div>
@@ -2488,12 +2544,12 @@ const DiagnosticoRelacionalPage = () => {
 
                 {/* Pareja — Los dos */}
                 <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] overflow-hidden">
-                  <div className="py-4 px-7 bg-blue-600">
-                    <div className="flex items-center gap-2">
-                      <p className="text-white text-xs uppercase tracking-[0.15em] font-semibold">Pareja — Los dos</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 text-white font-medium">3 reportes</span>
+                  <div className="py-4 px-7 bg-gradient-to-br from-blue-500 to-cyan-500 min-h-[90px] flex flex-col justify-center">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Los dos</p>
+                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">3 reportes</span>
                     </div>
-                    <p className="text-white text-sm font-bold">El diagnóstico completo para los dos</p>
+                    <p className="text-white text-sm font-bold leading-snug">El diagnóstico completo<br/>para los dos.</p>
                   </div>
                   <div className="p-7 pt-5 space-y-5">
                   <div>
@@ -2532,7 +2588,7 @@ const DiagnosticoRelacionalPage = () => {
                   )}
                   <motion.button onClick={() => handlePurchase('losdos')} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     disabled={checkoutLoading === 'losdos'}
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-light text-base hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg shadow-cyan-600/20 disabled:opacity-50">
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-light text-base hover:from-blue-400 hover:to-cyan-400 transition-all shadow-lg shadow-cyan-600/20 disabled:opacity-50">
                     {checkoutLoading === 'losdos' ? 'Procesando...' : cardPromoApplied.losdos?.free ? 'Acceder gratis' : `Pagar $${cardPromoApplied.losdos?.finalPrice ?? PRODUCT_PRICE_LOSDOS} MXN`}
                   </motion.button>
                   </div>
@@ -2684,17 +2740,21 @@ const DiagnosticoRelacionalPage = () => {
                     {/* Nombre + edad — needed for the AI analysis personalisation */}
                     {['descubre', 'solo', 'losdos'].includes(purchaseType) && (
                       <>
-                        <div className="h-px bg-white/[0.06]" />
+                        <div className="flex items-center gap-3 py-1">
+                          <div className="h-px flex-1 bg-white/[0.06]" />
+                          <p className="text-white/35 text-xs uppercase tracking-[0.15em]">Personaliza tu análisis</p>
+                          <div className="h-px flex-1 bg-white/[0.06]" />
+                        </div>
                         <div className="grid grid-cols-2 gap-3">
                           <div>
-                            <label className="text-white/30 text-xs uppercase tracking-wider mb-1.5 block">Tu nombre</label>
+                            <label className="text-white/50 text-xs uppercase tracking-wider mb-1.5 block">Tu nombre</label>
                             <input type="text" value={thankYouProfile.nombre}
                               onChange={e => setThankYouProfile(p => ({ ...p, nombre: e.target.value }))}
                               placeholder="Ej: Luis"
                               className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors" />
                           </div>
                           <div>
-                            <label className="text-white/30 text-xs uppercase tracking-wider mb-1.5 block">Tu edad</label>
+                            <label className="text-white/50 text-xs uppercase tracking-wider mb-1.5 block">Tu edad</label>
                             <input type="text" value={thankYouProfile.edad}
                               onChange={e => setThankYouProfile(p => ({ ...p, edad: e.target.value }))}
                               placeholder="Ej: 28"
@@ -2704,14 +2764,14 @@ const DiagnosticoRelacionalPage = () => {
                         {(purchaseType === 'solo' || purchaseType === 'losdos') && (
                           <div className="grid grid-cols-2 gap-3">
                             <div>
-                              <label className="text-white/30 text-xs uppercase tracking-wider mb-1.5 block">Nombre de tu pareja</label>
+                              <label className="text-white/50 text-xs uppercase tracking-wider mb-1.5 block">Nombre de tu pareja</label>
                               <input type="text" value={thankYouProfile.nombrePareja}
                                 onChange={e => setThankYouProfile(p => ({ ...p, nombrePareja: e.target.value }))}
                                 placeholder="Ej: Susana"
                                 className="w-full px-4 py-4 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-fuchsia-400/30 focus:outline-none transition-colors" />
                             </div>
                             <div>
-                              <label className="text-white/30 text-xs uppercase tracking-wider mb-1.5 block">Edad de tu pareja</label>
+                              <label className="text-white/50 text-xs uppercase tracking-wider mb-1.5 block">Edad de tu pareja</label>
                               <input type="text" value={thankYouProfile.edadPareja}
                                 onChange={e => setThankYouProfile(p => ({ ...p, edadPareja: e.target.value }))}
                                 placeholder="Ej: 30"
@@ -2744,6 +2804,17 @@ const DiagnosticoRelacionalPage = () => {
                           setEmailSendError(result.errors?.[0]?.error || 'No se pudo enviar el correo. Verifica la configuración de Resend.')
                         } else {
                           setEmailsSent(true)
+                          // For losdos: immediately navigate after sending partner link
+                          if (purchaseType === 'losdos') {
+                            sessionStorage.setItem('radiografia_buyer_email', emails[0])
+                            if (emails[1]) sessionStorage.setItem('radiografia_partner_email', emails[1])
+                            sessionStorage.setItem('radiografia_nombre', thankYouProfile.nombre)
+                            sessionStorage.setItem('radiografia_edad', thankYouProfile.edad)
+                            sessionStorage.setItem('radiografia_nombre_pareja', thankYouProfile.nombrePareja)
+                            sessionStorage.setItem('radiografia_edad_pareja', thankYouProfile.edadPareja)
+                            navigate(`/tienda/radiografia-premium?type=${purchaseType}`)
+                            scrollToTop()
+                          }
                         }
                         // Also store email for later use
                         setEmail(emails[0])
@@ -2760,7 +2831,7 @@ const DiagnosticoRelacionalPage = () => {
                     {sendingEmails ? (
                       <><Loader2 className="inline w-4 h-4 mr-2 animate-spin" /> Enviando...</>
                     ) : (
-                      <><Send className="inline w-4 h-4 mr-2" /> {purchaseType === 'losdos' ? 'Enviar enlace a mi pareja' : `Enviar acceso${purchaseType === 'pareja' ? ' a ambos' : ''}`}</>
+                      <><Send className="inline w-4 h-4 mr-2" /> {purchaseType === 'losdos' ? 'Enviar enlace y comenzar →' : purchaseType === 'pareja' ? 'Enviar acceso a ambos' : 'Enviar acceso'}</>
                     )}
                   </motion.button>
                   {emailSendError && (

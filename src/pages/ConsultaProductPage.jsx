@@ -11,21 +11,9 @@ import SEOHead from '../components/SEOHead'
 const WORKER_URL = 'https://radiografia-worker.noirpraxis.workers.dev'
 const API_BASE = import.meta.env.DEV ? '' : WORKER_URL
 
-const STRIPE_LINKS = {
-  pareja: 'https://buy.stripe.com/8x23cvgDF03of793PP9AA08'
-}
+const STRIPE_LINKS = {} // all flows now use the Worker
 
-const PROMO_CODES = {
-  individual: {
-    'MENTELIBRE':  { label: '$500 MXN',   priceAmount: 500  },
-    'VINCULOS650': { label: '$650 MXN',   priceAmount: 650  },
-    'LUISPRAXIS':  { label: 'GRATIS',     priceAmount: 0    }
-  },
-  pareja: {
-    'DOSPUERTAS':  { label: '$1,000 MXN', priceAmount: 1000 },
-    'LUISPRAXIS':  { label: 'GRATIS',     priceAmount: 0    }
-  }
-}
+const PROMO_CODES = {} // promo validation is server-side via /api/validate-consulta-promo
 
 const PAREJA_IMAGES = {
   conexion: [
@@ -217,8 +205,8 @@ const PRODUCT_DATA = {
     tagline: 'Para lo que solos no pueden atravesar.',
     hook: 'Las parejas no pelean por lo que creen que pelean.',
     duration: '90 min',
-    regularPrice: 1199,
-    regularPriceLabel: '$1,199 MXN',
+    regularPrice: 1250,
+    regularPriceLabel: '$1,250 MXN',
     image: '/productos/consulta pareja/cONEXIÓN/0.jpg',
     accentColor: 'text-rose-400',
     accentBg: 'bg-rose-500',
@@ -331,6 +319,8 @@ const ConsultaProductPage = ({ type }) => {
   const [promoError, setPromoError] = useState('')
   const [loading, setLoading] = useState(false)
   const [showPromo, setShowPromo] = useState(false)
+  const [validatingPromo, setValidatingPromo] = useState(false)
+  const [quantity, setQuantity] = useState(1)
 
   const product = PRODUCT_DATA[type]
   const codes = PROMO_CODES[type]
@@ -341,92 +331,107 @@ const ConsultaProductPage = ({ type }) => {
     t => t.type === type || t.type === 'both'
   ).slice(0, isPareja ? 9 : 6)
 
-  const applyPromo = () => {
+  const applyPromo = async () => {
     const code = promoInput.toUpperCase().trim()
-    const promo = codes[code]
-    if (promo) {
-      setPromoApplied({ code, ...promo })
-      setPromoError('')
-    } else {
-      setPromoError('Código inválido o no aplica para este producto.')
-      setPromoApplied(null)
+    if (!code) return
+    setValidatingPromo(true)
+    setPromoError('')
+    try {
+      const res = await fetch(`${API_BASE}/api/validate-consulta-promo`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, promoCode: code })
+      })
+      const data = await res.json()
+      if (data.valid) {
+        setPromoApplied({ code, ...data })
+      } else {
+        setPromoError('Código inválido o no aplica para este producto.')
+        setPromoApplied(null)
+      }
+    } catch {
+      setPromoError('Error al validar el código. Intenta de nuevo.')
+    } finally {
+      setValidatingPromo(false)
     }
   }
 
   const handlePay = async () => {
     if (loading) return
     setLoading(true)
-    if (promoApplied) {
-      try {
-        const res = await fetch(`${API_BASE}/api/create-consulta-checkout`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type, promoCode: promoApplied.code })
+    try {
+      const res = await fetch(`${API_BASE}/api/create-consulta-checkout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type,
+          quantity,
+          promoCode: promoApplied?.code || null,
+          siteOrigin: window.location.origin,
         })
-        const data = await res.json()
-        if (data.url) { window.location.href = data.url; return }
-      } catch { /* fall through */ }
-      setLoading(false)
-      return
-    }
-    const link = STRIPE_LINKS[type]
-    if (link) {
-      window.location.href = link
-    } else {
-      try {
-        const res = await fetch(`${API_BASE}/api/create-consulta-checkout`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type })
-        })
-        const data = await res.json()
-        if (data.url) { window.location.href = data.url; return }
-      } catch { /* fall through */ }
-      setLoading(false)
-    }
+      })
+      const data = await res.json()
+      if (data.url) { window.location.href = data.url; return }
+    } catch { /* fall through */ }
+    setLoading(false)
   }
 
-  const ctaLabel = promoApplied?.priceAmount === 0
+  const totalPrice = promoApplied ? promoApplied.finalPrice * quantity : product.regularPrice * quantity
+  const totalPriceLabel = `$${totalPrice.toLocaleString('es-MX')} MXN`
+
+  const ctaLabel = quantity > 1
+    ? `Reservar ${quantity} sesiones — ${totalPriceLabel}`
+    : promoApplied?.finalPrice === 0
     ? 'Continuar sin costo →'
-    : `Reservar sesión — ${currentPriceLabel}`
+    : `Reservar sesión — ${totalPriceLabel}`
 
   const PayBlock = () => (
     <div className="space-y-4">
-      <button onClick={() => setShowPromo(!showPromo)} className="flex items-center gap-2 text-white/40 hover:text-white/70 transition-colors text-sm font-light">
-        <Tag className="w-4 h-4" />
-        <span>{'¿'}Tienes un código de descuento?</span>
-        {showPromo ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-      </button>
-      {showPromo && (
-        <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-          <div className="flex gap-2">
-            <input type="text" value={promoInput} onChange={e => { setPromoInput(e.target.value); setPromoError('') }}
-              placeholder="Ingresa tu código"
-              className="flex-1 px-4 py-3 bg-zinc-900 border border-white/20 rounded-lg text-white placeholder-white/30 font-light focus:outline-none focus:border-white/40 uppercase tracking-wider text-sm"
-              onKeyDown={e => e.key === 'Enter' && applyPromo()} />
-            <button onClick={applyPromo} className="px-5 py-3 bg-zinc-800 hover:bg-zinc-700 text-white font-light rounded-lg transition-colors text-sm">Aplicar</button>
-          </div>
-          {promoError && <p className="text-red-400 text-sm font-light">{promoError}</p>}
-          {promoApplied && (
-            <div className={`flex items-center gap-2 text-sm font-light ${product.accentColor}`}>
-              <CheckCircle2 className="w-4 h-4" />
-              <span>{'¡'}Código <strong>{promoApplied.code}</strong> aplicado! Precio: <strong>{promoApplied.label}</strong></span>
-            </div>
-          )}
-        </motion.div>
+      {/* Quantity selector */}
+      <div className="flex items-center justify-between">
+        <span className="text-white/50 text-sm font-light">Número de sesiones</span>
+        <div className="flex items-center gap-3">
+          <button onClick={() => setQuantity(q => Math.max(1, q - 1))}
+            className="w-8 h-8 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-white text-lg flex items-center justify-center transition-colors">-</button>
+          <span className="text-white text-lg font-light w-5 text-center">{quantity}</span>
+          <button onClick={() => setQuantity(q => q + 1)}
+            className="w-8 h-8 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-white text-lg flex items-center justify-center transition-colors">+</button>
+        </div>
+      </div>
+
+      {/* Promo code */}
+      <div className="relative">
+        <input type="text" value={promoInput}
+          onChange={e => { setPromoInput(e.target.value.toUpperCase()); setPromoError(''); setPromoApplied(null) }}
+          onKeyDown={e => e.key === 'Enter' && applyPromo()}
+          placeholder="Código de descuento"
+          className="w-full px-4 py-3 pr-24 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors uppercase tracking-wider" />
+        <button onClick={applyPromo} disabled={!promoInput.trim() || validatingPromo}
+          className="absolute right-1.5 top-1.5 bottom-1.5 px-4 rounded-lg bg-zinc-700 hover:bg-zinc-600 text-white text-xs font-medium transition-colors disabled:opacity-30 disabled:cursor-default">
+          {validatingPromo ? '...' : 'Aplicar'}
+        </button>
+      </div>
+      {promoError && <p className="text-red-400/80 text-xs">{promoError}</p>}
+      {promoApplied && (
+        <div className={`flex items-center gap-2 text-sm font-light ${product.accentColor}`}>
+          <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+          <span>{promoApplied.label}</span>
+        </div>
       )}
+
+      {/* Price display */}
       <div className="flex items-center gap-4 flex-wrap">
         {promoApplied ? (
           <>
-            <span className="text-white/30 line-through text-2xl font-light">{product.regularPriceLabel}</span>
-            <span className={`text-4xl font-light ${product.accentColor}`}>{currentPriceLabel}</span>
+            <span className="text-white/30 line-through text-2xl font-light">${(product.regularPrice * quantity).toLocaleString('es-MX')} MXN</span>
+            <span className={`text-4xl font-light ${product.accentColor}`}>{totalPriceLabel}</span>
           </>
         ) : (
-          <span className="text-4xl font-light text-white">{product.regularPriceLabel}</span>
+          <span className="text-4xl font-light text-white">{totalPriceLabel}</span>
         )}
         <div className="flex items-center gap-2 text-white/40">
           <Clock className="w-4 h-4" />
-          <span className="font-light text-sm">{product.duration}</span>
+          <span className="font-light text-sm">{product.duration}{quantity > 1 ? ` × ${quantity}` : ''}</span>
         </div>
       </div>
       <motion.button onClick={handlePay} disabled={loading} whileHover={!loading ? { scale: 1.02 } : {}} whileTap={!loading ? { scale: 0.98 } : {}}
