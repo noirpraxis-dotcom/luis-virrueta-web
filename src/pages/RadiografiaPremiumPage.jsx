@@ -14,9 +14,6 @@ import { analyzeRadiografiaPremium, generateFallbackAnalysis, analyzeCrossRadiog
 import { CACHED_PREVIEW_ANALYSIS } from '../data/cachedPreviewAnalysis'
 import { saveAnalysis, sendAnalysisEmail, getAnalysis, checkCrossStatus, markPartnerDone, saveCrossAnalysis, sendCrossAnalysisEmail, getCrossAnalysis } from '../services/emailApiService'
 
-// Lazy load jsPDF — only needed when user downloads report
-const loadJsPDF = () => import('jspdf').then(m => m.default)
-
 // ─── 40 PREGUNTAS NARRATIVAS — 5 BLOQUES ────────────────────
 
 const PREGUNTAS = [
@@ -1793,7 +1790,66 @@ function BeforeAfterMap({ data }) {
   )
 }
 
-// 11. RelationshipTimeline — vertical timeline (for radiografia_inicial)
+// 11b. JouissanceChart — goce repetition pattern (goce_repeticion)
+function JouissanceChart({ data }) {
+  if (!data) return null
+  const { posicion, escena, intensidades } = data
+  if (!intensidades?.length) return null
+  const cx = 200, cy = 200, maxR = 140
+  const colors = ['#ef4444', '#f97316', '#eab308', '#a855f7', '#ec4899']
+  const n = intensidades.length
+  const points = intensidades.map((item, i) => {
+    const angle = (i / n) * Math.PI * 2 - Math.PI / 2
+    const r = (item.nivel / 100) * maxR
+    return { ...item, x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle), lx: cx + (maxR + 30) * Math.cos(angle), ly: cy + (maxR + 30) * Math.sin(angle) }
+  })
+  const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ') + ' Z'
+  return (
+    <div className="py-4">
+      <svg viewBox="0 0 400 430" className="w-full max-w-sm mx-auto">
+        {/* Grid circles */}
+        {[0.25, 0.5, 0.75, 1].map(f => (
+          <circle key={f} cx={cx} cy={cy} r={maxR * f} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth={1} />
+        ))}
+        {/* Axis lines */}
+        {points.map((p, i) => (
+          <line key={i} x1={cx} y1={cy} x2={cx + maxR * Math.cos((i / n) * Math.PI * 2 - Math.PI / 2)} y2={cy + maxR * Math.sin((i / n) * Math.PI * 2 - Math.PI / 2)} stroke="rgba(255,255,255,0.06)" strokeWidth={1} />
+        ))}
+        {/* Area fill */}
+        <path d={pathD} fill="rgba(239,68,68,0.08)" stroke="#ef4444" strokeWidth={2} strokeOpacity={0.5} />
+        {/* Data points + labels */}
+        {points.map((p, i) => {
+          const c = colors[i % colors.length]
+          return (
+            <g key={i}>
+              <circle cx={p.x} cy={p.y} r={5} fill={c} fillOpacity={0.8} stroke={c} strokeWidth={1.5} strokeOpacity={0.3} />
+              <text x={p.lx} y={p.ly} textAnchor="middle" dominantBaseline="central" fill="rgba(255,255,255,0.75)" fontSize="11" fontWeight="400">{p.area}</text>
+              <text x={p.x} y={p.y - 12} textAnchor="middle" fill={c} fontSize="12" fontWeight="700">{p.nivel}%</text>
+            </g>
+          )
+        })}
+        {/* Center */}
+        <circle cx={cx} cy={cy} r={28} fill="rgba(239,68,68,0.1)" stroke="rgba(239,68,68,0.3)" strokeWidth={1.5} />
+        <text x={cx} y={cy - 4} textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize="11" fontWeight="600">Goce</text>
+        <text x={cx} y={cy + 10} textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="9">repetición</text>
+      </svg>
+      {posicion && (
+        <div className="text-center mt-2">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-red-400/70">Posición subjetiva: </span>
+          <span className="text-white/70 text-sm font-light">{posicion}</span>
+        </div>
+      )}
+      {escena && (
+        <div className="text-center mt-1">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-orange-400/60">Escena gozosa: </span>
+          <span className="text-white/60 text-xs font-light italic">{escena}</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// 12. RelationshipTimeline — vertical timeline (for radiografia_inicial)
 function RelationshipTimeline({ data }) {
   if (!data?.length) return null
   const colors = ['#8b5cf6', '#3b82f6', '#f59e0b', '#ef4444']
@@ -2369,61 +2425,64 @@ const RadiografiaPremiumPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [stage])
 
-  // ── PDF — html2canvas full visual capture ──
+  // ── Download — self-contained HTML snapshot ──
   const generatePDF = useCallback(async () => {
     if (!aiAnalysis || !resultsRef.current) return
     setPdfGenerating(true)
     try {
-      const [jsPDF, { default: html2canvas }] = await Promise.all([
-        loadJsPDF(),
-        import('html2canvas')
-      ])
-
+      const { default: html2canvas } = await import('html2canvas')
       const element = resultsRef.current
+
+      // Gather all canvases / SVG charts as images
       const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
         logging: false,
-        backgroundColor: '#09090b', // zinc-950
+        backgroundColor: '#09090b',
         windowWidth: element.scrollWidth,
       })
-
-      const imgData = canvas.toDataURL('image/jpeg', 0.92)
-      const doc = new jsPDF('p', 'mm', 'a4')
-      const pageWidth = doc.internal.pageSize.getWidth()
-      const pageHeight = doc.internal.pageSize.getHeight()
-      const imgWidth = pageWidth
-      const imgHeight = (canvas.height * imgWidth) / canvas.width
-
-      let heightLeft = imgHeight
-      let position = 0
-
-      doc.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight)
-      heightLeft -= pageHeight
-
-      while (heightLeft > 0) {
-        position -= pageHeight
-        doc.addPage()
-        doc.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight)
-        heightLeft -= pageHeight
-      }
+      const imgDataUrl = canvas.toDataURL('image/jpeg', 0.92)
 
       const nombre = profileData.nombre || 'Reporte'
-      doc.save(`radiografia-${nombre.toLowerCase().replace(/\s+/g, '-')}.pdf`)
+      const pareja = profileData.pareja || ''
+      const titulo = pareja
+        ? `Radiografía de Pareja — ${nombre} & ${pareja}`
+        : `Radiografía de Pareja — ${nombre}`
+
+      const htmlContent = `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${titulo}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #09090b; display: flex; justify-content: center; min-height: 100vh; }
+  img { max-width: 100%; height: auto; display: block; }
+  .container { max-width: 900px; width: 100%; }
+  @media print { body { background: #09090b; } img { page-break-inside: avoid; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <img src="${imgDataUrl}" alt="${titulo}" />
+</div>
+</body>
+</html>`
+
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `radiografia-${nombre.toLowerCase().replace(/\\s+/g, '-')}.html`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
     } catch (err) {
-      console.error('PDF generation error:', err)
-      // Fallback: text-based PDF if html2canvas fails
-      try {
-        const jsPDF = await loadJsPDF()
-        const doc = new jsPDF('p', 'mm', 'a4')
-        doc.setFontSize(16)
-        doc.text('Radiografía de Pareja Premium', 15, 20)
-        doc.setFontSize(10)
-        doc.text('Error al generar PDF visual. Intenta de nuevo.', 15, 35)
-        doc.save('radiografia-pareja-premium.pdf')
-      } catch {}
+      console.error('HTML generation error:', err)
     } finally { setPdfGenerating(false) }
-  }, [aiAnalysis, profileData.nombre])
+  }, [aiAnalysis, profileData.nombre, profileData.pareja])
 
   return (
     <div className="min-h-screen bg-zinc-950">
@@ -3325,7 +3384,7 @@ const RadiografiaPremiumPage = () => {
                     whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                     className="flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600/80 to-fuchsia-600/70 text-white text-sm font-light hover:from-violet-600 hover:to-fuchsia-600 transition-all disabled:opacity-40 shadow-lg shadow-violet-500/10">
                     {pdfGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                    Descargar PDF
+                    Descargar Radiografía
                   </motion.button>
                 </div>
               </motion.div>
@@ -3380,7 +3439,7 @@ const RadiografiaPremiumPage = () => {
                       const REPORT_CARDS = [
                         { key: 'apertura_rapport', icon: MessageCircle, title: 'Tu radiografía inicial', subtitle: 'Inicio', gradient: 'from-indigo-500 via-violet-500 to-purple-500', border: 'border-indigo-500/20', iconBg: 'from-indigo-500/30 to-violet-500/20', accentColor: '#818cf8', chartType: null },
                         { key: 'forma_de_amar', icon: Heart, title: 'Cómo amas y cómo esperas ser amado', subtitle: 'Tu forma de amar', gradient: 'from-rose-500 via-pink-500 to-fuchsia-500', border: 'border-rose-500/20', iconBg: 'from-rose-500/30 to-pink-500/20', accentColor: '#f472b6', chartType: 'polaridades' },
-                        { key: 'goce_repeticion', icon: Flame, title: 'El goce que te ata y te repites', subtitle: 'Tu goce', gradient: 'from-red-500 via-orange-500 to-amber-500', border: 'border-red-500/20', iconBg: 'from-red-500/30 to-orange-500/20', accentColor: '#ef4444', chartType: null },
+                        { key: 'goce_repeticion', icon: Flame, title: 'El goce que te ata y te repites', subtitle: 'Tu goce', gradient: 'from-red-500 via-orange-500 to-amber-500', border: 'border-red-500/20', iconBg: 'from-red-500/30 to-orange-500/20', accentColor: '#ef4444', chartType: 'goce_jouissance' },
                         { key: 'lo_que_busca_en_el_otro', icon: Eye, title: 'Lo que buscas en el otro', subtitle: 'Proyección inconsciente', gradient: 'from-sky-500 via-blue-500 to-indigo-500', border: 'border-sky-500/20', iconBg: 'from-sky-500/30 to-blue-500/20', accentColor: '#38bdf8', chartType: 'cuadrante_apego' },
                         { key: 'lo_que_reclama_afuera', icon: Compass, title: 'Lo que reclamas afuera y te pertenece adentro', subtitle: 'Espejo emocional', gradient: 'from-amber-500 via-orange-500 to-red-500', border: 'border-amber-500/20', iconBg: 'from-amber-500/30 to-orange-500/20', accentColor: '#fb923c', chartType: 'espejo' },
                         { key: 'fantasma_relacional', icon: Anchor, title: 'Tu fantasma relacional', subtitle: 'Escena inconsciente', gradient: 'from-purple-500 via-fuchsia-500 to-pink-500', border: 'border-purple-500/20', iconBg: 'from-purple-500/30 to-fuchsia-500/20', accentColor: '#c084fc', chartType: 'escena_relacional' },
@@ -3406,6 +3465,7 @@ const RadiografiaPremiumPage = () => {
                           case 'ciclo_repeticion': return g.ciclo_repeticion ? <RepetitionCycleChart data={g.ciclo_repeticion} /> : null
                           case 'nucleo_orbital': return g.nucleo_orbital ? <OrbitalCoreChart data={g.nucleo_orbital} /> : null
                           case 'before_after': return g.before_after ? <BeforeAfterMap data={g.before_after} /> : null
+                          case 'goce_jouissance': return g.goce_jouissance ? <JouissanceChart data={g.goce_jouissance} /> : null
                           default: return null
                         }
                       }
@@ -4447,7 +4507,7 @@ const RadiografiaPremiumPage = () => {
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                   className="flex items-center gap-2 px-6 py-3 rounded-xl border border-violet-500/20 bg-violet-500/10 text-violet-300/80 text-sm font-light hover:bg-violet-500/20 transition-all disabled:opacity-40">
                   {pdfGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                  Descargar PDF
+                  Descargar Radiografía
                 </motion.button>
                 <motion.button
                   onClick={() => {/* TODO: connect to backend email endpoint */}}

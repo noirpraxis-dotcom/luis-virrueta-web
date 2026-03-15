@@ -501,6 +501,14 @@ Responde SOLO con JSON válido, sin texto adicional.
       {"antes": "(patrón actual)", "despues": "(dirección de cambio)"},
       "(4-6 transformaciones)"
     ],
+    "goce_jouissance": {
+      "posicion": "(posición subjetiva dominante: víctima, salvador, mártir, rebelde, fantasma, sostenedor, invisible)",
+      "escena": "(breve descripción de la escena gozosa que se repite)",
+      "intensidades": [
+        {"area": "(nombre del área de goce)", "nivel": "(0-100)"},
+        "(5-6 áreas: ej. Queja, Sacrificio, Espera, Conflicto, Control, Fusión)"
+      ]
+    },
     "timeline_relacion": [
       {"etapa": "(nombre)", "subtexto": "(descripción breve)"},
       "(3-5 etapas)"
@@ -929,6 +937,18 @@ export function generateFallbackAnalysis() {
         { antes: 'Búsqueda de validación', despues: 'Autoafirmación' },
         { antes: 'Distancia', despues: 'Intimidad consciente' }
       ],
+      goce_jouissance: {
+        posicion: 'Salvador-sostenedor',
+        escena: 'Dar todo esperando ser visto, y repetir cuando no ocurre',
+        intensidades: [
+          { area: 'Queja', nivel: 65 },
+          { area: 'Sacrificio', nivel: 80 },
+          { area: 'Espera', nivel: 55 },
+          { area: 'Conflicto', nivel: 40 },
+          { area: 'Control', nivel: 50 },
+          { area: 'Fusión', nivel: 70 }
+        ]
+      },
       timeline_relacion: [
         { etapa: 'Conexión inicial', subtexto: 'ideas / profundidad' },
         { etapa: 'Crecimiento', subtexto: 'proyectos / desarrollo' },

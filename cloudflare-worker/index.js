@@ -34,7 +34,7 @@
  *   AUDIO_BUCKET  — luisvirrueta-audio
  */
 
-const SITE_URL       = 'https://www.luisvirrueta.com'
+const SITE_URL       = 'https://luisvirrueta.com'
 const RETURN_URL     = `${SITE_URL}/tienda/diagnostico-relacional`   // Stripe success redirect
 const RADIOGRAFIA_URL = `${SITE_URL}/tienda/radiografia-premium`     // Email access link
 const FROM_EMAIL     = 'Luis Virrueta <hola@luisvirrueta.com>'
