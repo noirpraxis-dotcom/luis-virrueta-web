@@ -15,11 +15,11 @@ const API_BASE = import.meta.env.DEV ? '' : WORKER_URL
  * @param {string} [params.buyerToken] - Buyer's token (for linking losdos pairs)
  * @param {string} [params.buyerEmail] - Buyer's email (for linking losdos pairs)
  */
-export async function sendAccessEmails({ purchaseId, type, emails, tokens, buyerToken, buyerEmail }) {
+export async function sendAccessEmails({ purchaseId, type, emails, tokens, buyerToken, buyerEmail, profileData }) {
   const res = await fetch(`${API_BASE}/api/send-access-email`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ purchaseId, type, emails, tokens, buyerToken, buyerEmail })
+    body: JSON.stringify({ purchaseId, type, emails, tokens, buyerToken, buyerEmail, profileData })
   })
   const data = await res.json().catch(() => ({}))
   if (!res.ok) throw new Error(data.errors?.[0]?.error || data.error || `Error ${res.status}`)
@@ -172,4 +172,23 @@ export async function getCrossAnalysis(pairId, token) {
   const res = await fetch(`${API_BASE}/api/get-cross-analysis?pairId=${encodeURIComponent(pairId)}&token=${encodeURIComponent(token)}`)
   if (!res.ok) throw new Error('Error retrieving cross analysis')
   return res.json()
+}
+
+/** Save profile data to KV (for recovery on another device) */
+export async function saveProfile({ token, profileData }) {
+  const res = await fetch(`${API_BASE}/api/save-profile`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, profileData })
+  })
+  if (!res.ok) return { ok: false }
+  return res.json()
+}
+
+/** Retrieve stored profile by token */
+export async function getProfile(token) {
+  const res = await fetch(`${API_BASE}/api/get-profile?token=${encodeURIComponent(token)}`)
+  if (!res.ok) return null
+  const data = await res.json().catch(() => null)
+  return data?.profileData || null
 }

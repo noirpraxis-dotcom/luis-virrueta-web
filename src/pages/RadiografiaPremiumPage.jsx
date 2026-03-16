@@ -12,7 +12,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, RadarC
 import SEOHead from '../components/SEOHead'
 import { analyzeRadiografiaPremium, generateFallbackAnalysis, analyzeCrossRadiografia } from '../services/radiografiaPremiumService'
 import { CACHED_PREVIEW_ANALYSIS } from '../data/cachedPreviewAnalysis'
-import { saveAnalysis, sendAnalysisEmail, sendBackupEmail, getAnalysis, checkCrossStatus, markPartnerDone, saveCrossAnalysis, sendCrossAnalysisEmail, getCrossAnalysis } from '../services/emailApiService'
+import { saveAnalysis, sendAnalysisEmail, sendBackupEmail, getAnalysis, checkCrossStatus, markPartnerDone, saveCrossAnalysis, sendCrossAnalysisEmail, getCrossAnalysis, getProfile } from '../services/emailApiService'
 
 // ─── 40 PREGUNTAS NARRATIVAS — 5 BLOQUES ────────────────────
 
@@ -328,7 +328,8 @@ const DIMENSION_COLORS = [
 // ─── ElevenLabs voices (Latin Spanish) ────────────
 
 const WORKER_URL = 'https://radiografia-worker.noirpraxis.workers.dev'
-const AUDIO_BASE = import.meta.env.DEV ? '' : WORKER_URL
+// Audio files live on Cloudflare Pages (luisvirrueta.com/audio/...), not on the Worker/R2
+const AUDIO_BASE = ''
 
 const VOICE_LIST = [
   { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Valentina', desc: 'Cálida y clara', initial: 'V', color: 'from-rose-500 to-pink-500', ring: 'ring-rose-400/20', border: 'border-rose-500/30', bg: 'bg-rose-500/10', text: 'text-rose-300' },
@@ -1936,6 +1937,8 @@ const RadiografiaPremiumPage = () => {
 
   // Cross-analysis data (losdos package)
   const [crossAnalysis, setCrossAnalysis] = useState(null)
+  // Tab state for results: 'individual' or 'cruzado'
+  const [resultTab, setResultTab] = useState('individual')
 
   // Payment gate — only allow access if paid, free promo, test/dev mode, or token link
   const [accessGranted] = useState(() => {
@@ -2047,7 +2050,65 @@ const RadiografiaPremiumPage = () => {
     if (crossPairId) {
       getCrossAnalysis(crossPairId, token)
         .then(data => {
-          if (data?.analysis) setCrossAnalysis(data.analysis)
+          if (data?.analysis) {
+            setCrossAnalysis(data.analysis)
+            setResultTab('cruzado')
+          }
+        })
+        .catch(() => {})
+    } else {
+      // Cross-analysis resilience: if no cross link yet, check if both partners are done
+      // and trigger cross-analysis generation if needed
+      checkCrossStatus(token)
+        .then(async (crossStatus) => {
+          if (!crossStatus?.bothDone) return
+          // Check if cross-analysis already exists
+          if (crossStatus.pairId) {
+            try {
+              const existing = await getCrossAnalysis(crossStatus.pairId, token)
+              if (existing?.analysis) {
+                setCrossAnalysis(existing.analysis)
+                return
+              }
+            } catch {}
+          }
+          // Both done but no cross-analysis yet → generate it
+          if (crossStatus.otherAnalysis) {
+            try {
+              const myAnalysis = await getAnalysis(token)
+              if (!myAnalysis?.analysis) return
+              const crossResult = await analyzeCrossRadiografia({
+                analysis1: myAnalysis.analysis,
+                analysis2: crossStatus.otherAnalysis,
+                profile1: { nombre: 'Participante 1' },
+                profile2: { nombre: 'Participante 2' },
+              })
+              if (crossResult && crossStatus.pairId) {
+                await saveCrossAnalysis({ token, pairId: crossStatus.pairId, analysis: crossResult })
+                setCrossAnalysis(crossResult)
+                await sendCrossAnalysisEmail({ pairId: crossStatus.pairId, token })
+              }
+            } catch (e) { console.error('Cross-analysis resilience error:', e) }
+          }
+        })
+        .catch(() => {})
+    }
+
+    // Recover profile data from KV if not in sessionStorage
+    if (!sessionStorage.getItem('radiografia_nombre')) {
+      getProfile(token)
+        .then(p => {
+          if (p) {
+            setProfileData(prev => ({
+              ...prev,
+              nombre: p.nombre || prev.nombre,
+              edad: p.edad || prev.edad,
+              nombrePareja: p.nombrePareja || prev.nombrePareja,
+              edadPareja: p.edadPareja || prev.edadPareja,
+            }))
+            if (p.email) setEmailData(prev => ({ ...prev, emailUsuario: p.email || prev.emailUsuario }))
+            if (p.partnerEmail) setEmailData(prev => ({ ...prev, emailPareja: p.partnerEmail || prev.emailPareja }))
+          }
         })
         .catch(() => {})
     }
@@ -2354,9 +2415,10 @@ const RadiografiaPremiumPage = () => {
 
   // ── Validation: can start questionnaire from profile? ──
   const needsPartnerData = packageType !== 'descubre'
+  const prefilledFromPurchase = sessionStorage.getItem('radiografia_prefilled') === 'true'
   const canStartQuestionnaire = profileData.nombre.trim() && profileData.edad.trim() &&
     (!needsPartnerData || (profileData.nombrePareja.trim() && profileData.edadPareja.trim())) &&
-    emailData.emailUsuario.trim()
+    (emailData.emailUsuario.trim() || prefilledFromPurchase)
 
   // ── Start questionnaire from merged profile screen ──
   const startQuestionnaire = useCallback(() => {
@@ -2865,14 +2927,7 @@ ${clone.outerHTML}
               {/* ── Navigation ── */}
               <div className="space-y-3">
                 <motion.button
-                  onClick={() => {
-                    if (canStartQuestionnaire) {
-                      startQuestionnaire()
-                    } else {
-                      setStage('profile')
-                      playQuestion('Te damos la bienvenida. Antes de iniciar, necesito conocer un par de datos tuyos muy rápidos. Escríbelos en los campos que aparecen a continuación y podremos comenzar.', undefined, null, 'welcome')
-                    }
-                  }}
+                  onClick={() => startQuestionnaire()}
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                   className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
                   Comenzar radiografía <ArrowRight className="inline w-4 h-4 ml-2" />
@@ -2886,106 +2941,7 @@ ${clone.outerHTML}
           </motion.div>
         )}
 
-        {/* ═══════════════════════════════════════════════════════
-            STAGE: PROFILE — Datos personales + correo (pantalla unificada)
-        ═══════════════════════════════════════════════════════ */}
-        {stage === 'profile' && (
-          <motion.div key="profile" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="min-h-screen flex items-center justify-center px-6 pt-6 pb-12">
-            <div className="max-w-lg w-full space-y-8">
-              <div className="text-center">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-4">
-                  <Users className="w-7 h-7 text-violet-400/60" strokeWidth={1.5} />
-                </div>
-                <h2 className="text-xl lg:text-2xl font-light text-white mb-2">Antes de empezar</h2>
-                <p className="text-white/50 text-sm font-light max-w-sm mx-auto">
-                  Completa estos datos para personalizar tu reporte. Al terminar recibirás los resultados en tu correo.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                {/* Tus datos */}
-                <p className="text-violet-300/50 text-[10px] font-medium uppercase tracking-wider">Tus datos</p>
-                <div>
-                  <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Tu correo electrónico</label>
-                  <input type="email" value={emailData.emailUsuario}
-                    autoFocus
-                    onChange={(e) => setEmailData(p => ({ ...p, emailUsuario: e.target.value }))}
-                    onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('profile-nombre')?.focus() }}
-                    placeholder="tu@correo.com"
-                    className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/50 focus:border-violet-500/30 focus:outline-none transition-colors" />
-                  <p className="text-white/35 text-[11px] font-light mt-1">Aquí recibirás tu reporte completo al terminar</p>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Tu nombre</label>
-                    <input type="text" id="profile-nombre" value={profileData.nombre}
-                      onChange={(e) => setProfileData(p => ({ ...p, nombre: e.target.value }))}
-                      onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('profile-edad')?.focus() }}
-                      placeholder="Ej: Luis"
-                      className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/50 focus:border-violet-500/30 focus:outline-none transition-colors" />
-                  </div>
-                  <div>
-                    <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Tu edad</label>
-                    <input type="text" id="profile-edad" value={profileData.edad}
-                      onChange={(e) => setProfileData(p => ({ ...p, edad: e.target.value }))}
-                      onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('profile-nombre-pareja')?.focus() }}
-                      placeholder="Ej: 28"
-                      className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/50 focus:border-violet-500/30 focus:outline-none transition-colors" />
-                  </div>
-                </div>
-
-                {/* Separator */}
-                <div className="h-px bg-white/5 my-1" />
-
-                {/* Datos de tu pareja */}
-                <p className="text-fuchsia-300/50 text-[10px] font-medium uppercase tracking-wider">Datos de tu pareja</p>
-                <div>
-                  <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Correo de tu pareja <span className="text-white/30">(opcional)</span></label>
-                  <input type="email" value={emailData.emailPareja}
-                    onChange={(e) => setEmailData(p => ({ ...p, emailPareja: e.target.value }))}
-                    onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('profile-nombre-pareja')?.focus() }}
-                    placeholder="pareja@correo.com"
-                    className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/50 focus:border-fuchsia-500/30 focus:outline-none transition-colors" />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Nombre de tu pareja</label>
-                    <input type="text" id="profile-nombre-pareja" value={profileData.nombrePareja}
-                      onChange={(e) => setProfileData(p => ({ ...p, nombrePareja: e.target.value }))}
-                      onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('profile-edad-pareja')?.focus() }}
-                      placeholder="Ej: Susana"
-                      className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/50 focus:border-fuchsia-500/30 focus:outline-none transition-colors" />
-                  </div>
-                  <div>
-                    <label className="text-white/50 text-xs font-medium uppercase tracking-wider mb-1.5 block">Edad de tu pareja</label>
-                    <input type="text" id="profile-edad-pareja" value={profileData.edadPareja}
-                      onChange={(e) => setProfileData(p => ({ ...p, edadPareja: e.target.value }))}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && profileData.nombre.trim() && profileData.edad.trim() && profileData.nombrePareja.trim() && profileData.edadPareja.trim() && emailData.emailUsuario.trim()) {
-                          startQuestionnaire()
-                        }
-                      }}
-                      placeholder="Ej: 30"
-                      className="w-full px-4 py-3 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/50 focus:border-fuchsia-500/30 focus:outline-none transition-colors" />
-                  </div>
-                </div>
-              </div>
-
-              <motion.button
-                onClick={() => { if (canStartQuestionnaire) startQuestionnaire() }}
-                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                disabled={!canStartQuestionnaire}
-                className={`w-full py-4 rounded-xl text-white font-light text-base transition-all shadow-lg ${canStartQuestionnaire
-                  ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 shadow-violet-600/20'
-                  : 'bg-white/10 text-white/55 cursor-not-allowed shadow-none'}`}>
-                Comenzar radiografía <ArrowRight className="inline w-4 h-4 ml-2" />
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Email stage removed — merged into profile stage above */}
+        {/* Profile stage removed — data collected in purchase screen */}
 
         {/* ═══════════════════════════════════════════════════════
             STAGE: QUESTIONNAIRE
@@ -3510,7 +3466,32 @@ ${clone.outerHTML}
                 </div>
               </motion.div>
 
+              {/* ═══ TABS: Individual / Cruzado (only when crossAnalysis available) ═══ */}
+              {crossAnalysis && (
+                <div className="flex items-center justify-center gap-2 py-2">
+                  <button
+                    onClick={() => setResultTab('individual')}
+                    className={`px-5 py-2.5 rounded-xl text-sm font-light transition-all ${
+                      resultTab === 'individual'
+                        ? 'bg-gradient-to-r from-violet-600/80 to-fuchsia-600/70 text-white shadow-lg shadow-violet-500/15 border border-violet-500/30'
+                        : 'text-white/45 border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:text-white/65'
+                    }`}>
+                    Tu Radiografía Individual
+                  </button>
+                  <button
+                    onClick={() => setResultTab('cruzado')}
+                    className={`px-5 py-2.5 rounded-xl text-sm font-light transition-all ${
+                      resultTab === 'cruzado'
+                        ? 'bg-gradient-to-r from-emerald-600/80 to-teal-600/70 text-white shadow-lg shadow-emerald-500/15 border border-emerald-500/30'
+                        : 'text-white/45 border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:text-white/65'
+                    }`}>
+                    Radiografía Cruzada
+                  </button>
+                </div>
+              )}
+
               {/* ═══ SEPARADOR PARTE 1 — PRIMERO, VAMOS CONTIGO ═══ */}
+              {resultTab === 'individual' && (<>
               <div className="text-center mb-6">
                 <p className="text-violet-400/50 text-xs font-bold uppercase tracking-[0.25em] mb-1">Parte 1</p>
                 <p className="text-white/40 text-sm font-light">Primero, vamos contigo</p>
@@ -4350,27 +4331,106 @@ ${clone.outerHTML}
                     </div>
                   </div>
                 )}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <motion.button
-                    onClick={() => navigate('/tienda/consulta-individual')}
-                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-sm font-light shadow-lg shadow-violet-600/15 hover:from-violet-500 hover:to-fuchsia-500 transition-all">
-                    <Users className="w-4 h-4" /> Terapia Individual
-                  </motion.button>
-                  <motion.button
-                    onClick={() => navigate('/tienda/consulta-pareja')}
-                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="flex items-center justify-center gap-2 px-6 py-4 rounded-xl border border-violet-500/20 bg-violet-500/10 text-violet-300/80 text-sm font-light hover:bg-violet-500/20 transition-all">
-                    <Heart className="w-4 h-4" /> Terapia de Pareja
-                  </motion.button>
+                {/* ═══ CTA TERAPIA PREMIUM ═══ */}
+                <div className="mt-6 mb-2">
+                  <div className="text-center mb-6">
+                    <p className="text-violet-400/50 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Da el siguiente paso</p>
+                    <p className="text-white/50 text-sm font-light">Tu radiografía detectó patrones que se pueden transformar — con guía profesional.</p>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    {/* Terapia Individual */}
+                    <div className="rounded-2xl border border-white/10 bg-zinc-950/60 overflow-hidden">
+                      <div className="py-4 px-6 bg-gradient-to-br from-amber-400 to-orange-500 min-h-[80px] flex flex-col justify-center">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Users className="w-4 h-4 text-zinc-900/80" />
+                          <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-bold">Terapia Individual</p>
+                        </div>
+                        <p className="text-zinc-900/80 text-sm font-semibold leading-snug">
+                          {aiAnalysis.cta_terapia_individual?.titular || 'Trabaja tus patrones uno a uno'}
+                        </p>
+                      </div>
+                      <div className="p-6 pt-5 space-y-4">
+                        <p className="text-white/55 text-[13px] font-light leading-relaxed">
+                          {aiAnalysis.cta_terapia_individual?.descripcion || 'Sesión enfocada en los patrones detectados en tu radiografía para que puedas transformar tu forma de vincularte.'}
+                        </p>
+                        <ul className="space-y-2">
+                          {(aiAnalysis.cta_terapia_individual?.puntos || [
+                            'Explorar los patrones detectados en tu narrativa',
+                            'Trabajar las raíces emocionales de tus dinámicas',
+                            'Construir nuevas formas de vincularte',
+                            'Sesión personalizada basada en tu radiografía'
+                          ]).map((item, i) => (
+                            <li key={i} className="flex items-start gap-2 text-white/50 text-[13px] font-light">
+                              <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="flex items-baseline gap-2">
+                          <p className="text-2xl font-light text-white">$700 <span className="text-base text-white/35">MXN</span></p>
+                        </div>
+                        <motion.a
+                          href={`https://wa.me/527228720520?text=${encodeURIComponent('Hola, acabo de hacer mi Radiografía de Pareja y me gustaría agendar una sesión de terapia individual para trabajar los patrones que detectó el análisis.')}`}
+                          target="_blank" rel="noopener noreferrer"
+                          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                          className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-zinc-900 font-semibold text-sm hover:from-amber-300 hover:to-orange-400 transition-all shadow-lg shadow-amber-600/20">
+                          <MessageCircle className="w-4 h-4" /> Agendar por WhatsApp
+                        </motion.a>
+                      </div>
+                    </div>
+                    {/* Terapia de Pareja — Highlighted */}
+                    <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] overflow-hidden relative">
+                      <div className="absolute top-3 right-3 z-10">
+                        <span className="text-[9px] px-2.5 py-1 rounded-full bg-white/15 text-white/80 font-semibold uppercase tracking-wider backdrop-blur-sm">Recomendado</span>
+                      </div>
+                      <div className="py-4 px-6 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[80px] flex flex-col justify-center">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Heart className="w-4 h-4 text-white/80" />
+                          <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Terapia de Pareja</p>
+                        </div>
+                        <p className="text-white/90 text-sm font-semibold leading-snug">
+                          {aiAnalysis.cta_terapia_pareja?.titular || 'Transformen su dinámica juntos'}
+                        </p>
+                      </div>
+                      <div className="p-6 pt-5 space-y-4">
+                        <p className="text-white/55 text-[13px] font-light leading-relaxed">
+                          {aiAnalysis.cta_terapia_pareja?.descripcion || 'Sesión para los dos, enfocada en las dinámicas detectadas en la radiografía para reconectar desde un lugar seguro.'}
+                        </p>
+                        <ul className="space-y-2">
+                          {(aiAnalysis.cta_terapia_pareja?.puntos || [
+                            'Trabajar las dinámicas de pareja detectadas',
+                            'Romper ciclos de conflicto que se repiten',
+                            'Reconectar emocionalmente con herramientas concretas',
+                            'Sesión guiada con base en ambas perspectivas'
+                          ]).map((item, i) => (
+                            <li key={i} className="flex items-start gap-2 text-white/50 text-[13px] font-light">
+                              <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="flex items-baseline gap-2">
+                          <p className="text-2xl font-light text-white">$1,250 <span className="text-base text-white/35">MXN</span></p>
+                        </div>
+                        <motion.a
+                          href={`https://wa.me/527228720520?text=${encodeURIComponent('Hola, acabo de hacer mi Radiografía de Pareja y me gustaría agendar una sesión de terapia de pareja para trabajar las dinámicas que detectó el análisis.')}`}
+                          target="_blank" rel="noopener noreferrer"
+                          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                          className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-semibold text-sm hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
+                          <MessageCircle className="w-4 h-4" /> Agendar por WhatsApp
+                        </motion.a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
+              </>)}
 
               {/* ═══════════════════════════════════════════════════════════════
                   SECCIÓN: RADIOGRAFÍA CRUZADA (Los Dos)
                   Solo se muestra cuando hay crossAnalysis disponible
               ═══════════════════════════════════════════════════════════════ */}
-              {crossAnalysis && (
+              {resultTab === 'cruzado' && crossAnalysis && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-10">
 
                   {/* Separator */}
@@ -4618,26 +4678,101 @@ ${clone.outerHTML}
                     )
                   })()}
 
+                  {/* ═══ CTA TERAPIA PREMIUM (Cruzado) ═══ */}
+                  <div className="mt-6 mb-2">
+                    <div className="text-center mb-6">
+                      <p className="text-emerald-400/50 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Da el siguiente paso — juntos</p>
+                      <p className="text-white/50 text-sm font-light">La radiografía cruzada reveló dinámicas que se pueden transformar — con guía profesional.</p>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      {/* Terapia Individual */}
+                      <div className="rounded-2xl border border-white/10 bg-zinc-950/60 overflow-hidden">
+                        <div className="py-4 px-6 bg-gradient-to-br from-amber-400 to-orange-500 min-h-[80px] flex flex-col justify-center">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Users className="w-4 h-4 text-zinc-900/80" />
+                            <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-bold">Terapia Individual</p>
+                          </div>
+                          <p className="text-zinc-900/80 text-sm font-semibold leading-snug">
+                            {aiAnalysis.cta_terapia_individual?.titular || 'Trabaja tus patrones uno a uno'}
+                          </p>
+                        </div>
+                        <div className="p-6 pt-5 space-y-4">
+                          <p className="text-white/55 text-[13px] font-light leading-relaxed">
+                            {aiAnalysis.cta_terapia_individual?.descripcion || 'Sesión enfocada en los patrones detectados en tu radiografía para que puedas transformar tu forma de vincularte.'}
+                          </p>
+                          <ul className="space-y-2">
+                            {(aiAnalysis.cta_terapia_individual?.puntos || [
+                              'Explorar los patrones detectados en tu narrativa',
+                              'Trabajar las raíces emocionales de tus dinámicas',
+                              'Construir nuevas formas de vincularte',
+                              'Sesión personalizada basada en tu radiografía'
+                            ]).map((item, i) => (
+                              <li key={i} className="flex items-start gap-2 text-white/50 text-[13px] font-light">
+                                <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="flex items-baseline gap-2">
+                            <p className="text-2xl font-light text-white">$700 <span className="text-base text-white/35">MXN</span></p>
+                          </div>
+                          <motion.a
+                            href={`https://wa.me/527228720520?text=${encodeURIComponent('Hola, acabo de hacer mi Radiografía de Pareja y me gustaría agendar una sesión de terapia individual para trabajar los patrones que detectó el análisis.')}`}
+                            target="_blank" rel="noopener noreferrer"
+                            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                            className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-zinc-900 font-semibold text-sm hover:from-amber-300 hover:to-orange-400 transition-all shadow-lg shadow-amber-600/20">
+                            <MessageCircle className="w-4 h-4" /> Agendar por WhatsApp
+                          </motion.a>
+                        </div>
+                      </div>
+                      {/* Terapia de Pareja — Highlighted */}
+                      <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] overflow-hidden relative">
+                        <div className="absolute top-3 right-3 z-10">
+                          <span className="text-[9px] px-2.5 py-1 rounded-full bg-white/15 text-white/80 font-semibold uppercase tracking-wider backdrop-blur-sm">Recomendado</span>
+                        </div>
+                        <div className="py-4 px-6 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[80px] flex flex-col justify-center">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Heart className="w-4 h-4 text-white/80" />
+                            <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Terapia de Pareja</p>
+                          </div>
+                          <p className="text-white/90 text-sm font-semibold leading-snug">
+                            {aiAnalysis.cta_terapia_pareja?.titular || 'Transformen su dinámica juntos'}
+                          </p>
+                        </div>
+                        <div className="p-6 pt-5 space-y-4">
+                          <p className="text-white/55 text-[13px] font-light leading-relaxed">
+                            {aiAnalysis.cta_terapia_pareja?.descripcion || 'Sesión para los dos, enfocada en las dinámicas detectadas en la radiografía para reconectar desde un lugar seguro.'}
+                          </p>
+                          <ul className="space-y-2">
+                            {(aiAnalysis.cta_terapia_pareja?.puntos || [
+                              'Trabajar las dinámicas de pareja detectadas',
+                              'Romper ciclos de conflicto que se repiten',
+                              'Reconectar emocionalmente con herramientas concretas',
+                              'Sesión guiada con base en ambas perspectivas'
+                            ]).map((item, i) => (
+                              <li key={i} className="flex items-start gap-2 text-white/50 text-[13px] font-light">
+                                <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="flex items-baseline gap-2">
+                            <p className="text-2xl font-light text-white">$1,250 <span className="text-base text-white/35">MXN</span></p>
+                          </div>
+                          <motion.a
+                            href={`https://wa.me/527228720520?text=${encodeURIComponent('Hola, acabo de hacer mi Radiografía de Pareja y me gustaría agendar una sesión de terapia de pareja para trabajar las dinámicas que detectó el análisis.')}`}
+                            target="_blank" rel="noopener noreferrer"
+                            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                            className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-semibold text-sm hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
+                            <MessageCircle className="w-4 h-4" /> Agendar por WhatsApp
+                          </motion.a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </motion.div>
               )}
-
-              {/* ═══ ACTIONS ═══ */}
-              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                className="flex flex-col sm:flex-row items-center gap-4 justify-center pt-8 border-t border-white/5">
-                <motion.button onClick={generatePDF} disabled={pdfGenerating}
-                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl border border-violet-500/20 bg-violet-500/10 text-violet-300/80 text-sm font-light hover:bg-violet-500/20 transition-all disabled:opacity-40">
-                  {pdfGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                  Descargar Radiografía
-                </motion.button>
-                <motion.button
-                  onClick={() => {/* TODO: connect to backend email endpoint */}}
-                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl border border-fuchsia-500/20 bg-fuchsia-500/10 text-fuchsia-300/80 text-sm font-light hover:bg-fuchsia-500/20 transition-all">
-                  <Send className="w-4 h-4" />
-                  Enviar a {emailData.emailUsuario || 'mi correo'}
-                </motion.button>
-              </motion.div>
 
               {/* Back */}
               <div className="text-center pt-4">

@@ -567,7 +567,7 @@ async function handleValidatePromo(req, env) {
 }
 
 async function handleSendAccessEmail(req, env) {
-  const { purchaseId, type, emails, tokens, buyerToken, buyerEmail } = await req.json()
+  const { purchaseId, type, emails, tokens, buyerToken, buyerEmail, profileData } = await req.json()
   const errors = []
   const generatedTokens = []
 
@@ -592,6 +592,15 @@ async function handleSendAccessEmail(req, env) {
       console.error(`Error enviando a ${email}:`, e.message)
       errors.push({ email, error: e.message })
     }
+  }
+
+  // Save profile data for buyer token + generated tokens so it can be recovered on another device
+  if (profileData && env.PURCHASES) {
+    const profileStr = JSON.stringify(profileData)
+    const profileTokens = [...new Set([buyerToken, ...generatedTokens].filter(Boolean))]
+    await Promise.all(profileTokens.map(t =>
+      env.PURCHASES.put(`profile:${t}`, profileStr, { expirationTtl: 86400 * 365 }).catch(() => {})
+    ))
   }
 
   // For 'losdos': link buyer and partner tokens as a pair
@@ -652,6 +661,35 @@ async function handleGetAnalysis(req, env) {
 
   try {
     return json({ ok: true, analysis: JSON.parse(raw) })
+  } catch {
+    return json({ error: 'Corrupt data' }, 500)
+  }
+}
+
+// ── Save profile data to KV (called from frontend after purchase) ────────────
+async function handleSaveProfile(req, env) {
+  const { token, profileData } = await req.json()
+  if (!token || !profileData) return json({ error: 'Missing token or profileData' }, 400)
+  if (!env.PURCHASES) return json({ error: 'KV not configured' }, 500)
+
+  const existing = await env.PURCHASES.get(`token:${token}`)
+  if (!existing && !token.startsWith('demo')) return json({ error: 'Invalid token' }, 403)
+
+  await env.PURCHASES.put(`profile:${token}`, JSON.stringify(profileData), { expirationTtl: 86400 * 365 })
+  return json({ ok: true })
+}
+
+// ── Retrieve stored profile by token ─────────────────────────────────────────
+async function handleGetProfile(req, env) {
+  const token = new URL(req.url).searchParams.get('token')
+  if (!token) return json({ error: 'Missing token' }, 400)
+  if (!env.PURCHASES) return json({ error: 'KV not configured' }, 500)
+
+  const raw = await env.PURCHASES.get(`profile:${token}`)
+  if (!raw) return json({ error: 'Not found' }, 404)
+
+  try {
+    return json({ ok: true, profileData: JSON.parse(raw) })
   } catch {
     return json({ error: 'Corrupt data' }, 500)
   }
@@ -1114,6 +1152,7 @@ export default {
 
       if (method === 'GET' && pathname === '/api/get-analysis')       return handleGetAnalysis(request, env)
       if (method === 'GET' && pathname === '/api/get-cross-analysis')  return handleGetCrossAnalysis(request, env)
+      if (method === 'GET' && pathname === '/api/get-profile')         return handleGetProfile(request, env)
 
       if (method === 'POST') {
         if (pathname === '/api/create-radiografia-checkout') return handleCreateCheckout(request, env)
@@ -1121,6 +1160,7 @@ export default {
         if (pathname === '/api/validate-radiografia-promo')  return handleValidatePromo(request, env)
         if (pathname === '/api/send-access-email')           return handleSendAccessEmail(request, env)
         if (pathname === '/api/save-analysis')               return handleSaveAnalysis(request, env)
+        if (pathname === '/api/save-profile')                return handleSaveProfile(request, env)
         if (pathname === '/api/send-analysis-email')         return handleSendAnalysisEmail(request, env)
         if (pathname === '/api/send-backup-email')           return handleSendBackupEmail(request, env)
         if (pathname === '/api/check-cross-status')          return handleCheckCrossStatus(request, env)

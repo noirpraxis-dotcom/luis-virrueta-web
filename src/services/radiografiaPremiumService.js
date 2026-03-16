@@ -513,6 +513,26 @@ Responde SOLO con JSON válido, sin texto adicional.
       {"etapa": "(nombre)", "subtexto": "(descripción breve)"},
       "(3-5 etapas)"
     ]
+  },
+  "cta_terapia_individual": {
+    "titular": "(Título persuasivo de 5-8 palabras conectado a lo detectado, ej: 'Desactiva el patrón que te frena')",
+    "descripcion": "(2-3 oraciones dirigidas a la persona: 'Detectamos X patrón. En terapia individual podemos trabajar Y para que logres Z.')",
+    "puntos": [
+      "(beneficio concreto 1 basado en el análisis — ej: 'Entender por qué repites relaciones con el mismo perfil')",
+      "(beneficio concreto 2 — ej: 'Desactivar el ciclo ansioso-evitativo detectado en tu narrativa')",
+      "(beneficio concreto 3 — ej: 'Construir una base emocional más sólida para tu próxima relación')",
+      "(beneficio concreto 4 — ej: 'Trabajar las heridas de apego que aparecen en tus respuestas')"
+    ]
+  },
+  "cta_terapia_pareja": {
+    "titular": "(Título persuasivo de 5-8 palabras, ej: 'Transformen su dinámica antes de que sea tarde')",
+    "descripcion": "(2-3 oraciones: 'Se detectó X dinámica entre ustedes. En terapia de pareja podemos desactivar ese ciclo y construir Y.')",
+    "puntos": [
+      "(beneficio concreto 1 — ej: 'Romper el ciclo persecución-retirada que detectamos')",
+      "(beneficio concreto 2 — ej: 'Reconectar emocionalmente desde un lugar seguro')",
+      "(beneficio concreto 3 — ej: 'Aprender a comunicar necesidades sin activar defensas')",
+      "(beneficio concreto 4 — ej: 'Construir un vínculo donde los dos se sientan vistos')"
+    ]
   }
 }`
 

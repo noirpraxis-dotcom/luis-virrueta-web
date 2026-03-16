@@ -2641,6 +2641,14 @@ const DiagnosticoRelacionalPage = () => {
                           tokens,
                           buyerToken: purchaseType === 'losdos' ? buyerTk : undefined,
                           buyerEmail: purchaseType === 'losdos' ? thankyouEmails[0] : undefined,
+                          profileData: {
+                            nombre: thankYouProfile.nombre,
+                            edad: thankYouProfile.edad,
+                            nombrePareja: thankYouProfile.nombrePareja,
+                            edadPareja: thankYouProfile.edadPareja,
+                            email: thankyouEmails[0] || '',
+                            partnerEmail: thankyouEmails[1] || '',
+                          },
                         })
                         if (result && result.ok === false) {
                           setEmailSendError(result.errors?.[0]?.error || 'No se pudo enviar el correo. Verifica la configuración de Resend.')
@@ -2648,23 +2656,33 @@ const DiagnosticoRelacionalPage = () => {
                           setEmailsSent(true)
                           // For losdos: immediately navigate after sending partner link
                           if (purchaseType === 'losdos') {
-                            if (thankyouEmails[0]) sessionStorage.setItem('radiografia_buyer_email', thankyouEmails[0])
+                            // Always save buyer email — use Stripe email, state fallback, or partner as last resort
+                            const buyerEmailToSave = thankyouEmails[0] || email || thankyouEmails[1] || ''
+                            if (buyerEmailToSave) sessionStorage.setItem('radiografia_buyer_email', buyerEmailToSave)
                             if (thankyouEmails[1]) sessionStorage.setItem('radiografia_partner_email', thankyouEmails[1])
                             sessionStorage.setItem('radiografia_nombre', thankYouProfile.nombre)
                             sessionStorage.setItem('radiografia_edad', thankYouProfile.edad)
                             sessionStorage.setItem('radiografia_nombre_pareja', thankYouProfile.nombrePareja)
                             sessionStorage.setItem('radiografia_edad_pareja', thankYouProfile.edadPareja)
+                            sessionStorage.setItem('radiografia_prefilled', 'true')
                             const navToken = buyerTk ? `&token=${buyerTk}` : ''
                             navigate(`/tienda/radiografia-premium?type=${purchaseType}${navToken}`)
                             scrollToTop()
                           }
                         }
-                        // Also store email for later use
+                        // Also store profile data + email for later use (all plan types)
                         const buyerEmail = thankyouEmails[0] || emails[0] || ''
                         if (buyerEmail) {
                           setEmail(buyerEmail)
                           sessionStorage.setItem('diagnostico_guide_email', buyerEmail)
+                          sessionStorage.setItem('radiografia_buyer_email', buyerEmail)
                         }
+                        if (thankyouEmails[1]) sessionStorage.setItem('radiografia_partner_email', thankyouEmails[1])
+                        sessionStorage.setItem('radiografia_nombre', thankYouProfile.nombre)
+                        sessionStorage.setItem('radiografia_edad', thankYouProfile.edad)
+                        sessionStorage.setItem('radiografia_nombre_pareja', thankYouProfile.nombrePareja)
+                        sessionStorage.setItem('radiografia_edad_pareja', thankYouProfile.edadPareja)
+                        sessionStorage.setItem('radiografia_prefilled', 'true')
                       } catch (err) {
                         setEmailSendError(`Error: ${err.message || 'No se pudo enviar el correo.'}`)
                       } finally {
@@ -2682,12 +2700,14 @@ const DiagnosticoRelacionalPage = () => {
                   </motion.button>
                   <button
                     onClick={() => {
-                      if (thankyouEmails[0]) sessionStorage.setItem('radiografia_buyer_email', thankyouEmails[0])
-                      if (purchaseType === 'losdos' && thankyouEmails[1]) sessionStorage.setItem('radiografia_partner_email', thankyouEmails[1])
+                      const buyerEmailToSave = thankyouEmails[0] || email || ''
+                      if (buyerEmailToSave) sessionStorage.setItem('radiografia_buyer_email', buyerEmailToSave)
+                      if ((purchaseType === 'losdos' || purchaseType === 'pareja') && thankyouEmails[1]) sessionStorage.setItem('radiografia_partner_email', thankyouEmails[1])
                       sessionStorage.setItem('radiografia_nombre', thankYouProfile.nombre)
                       sessionStorage.setItem('radiografia_edad', thankYouProfile.edad)
                       sessionStorage.setItem('radiografia_nombre_pareja', thankYouProfile.nombrePareja)
                       sessionStorage.setItem('radiografia_edad_pareja', thankYouProfile.edadPareja)
+                      sessionStorage.setItem('radiografia_prefilled', 'true')
                       const tk = accessToken || sessionStorage.getItem('diagnostico_relacional_token') || ''
                       const navToken = tk ? `&token=${tk}` : ''
                       navigate(`/tienda/radiografia-premium?type=${purchaseType}${navToken}`)
