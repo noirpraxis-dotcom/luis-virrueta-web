@@ -2206,12 +2206,8 @@ const RadiografiaPremiumPage = () => {
       let audioUrl = null
 
       if (staticFile) {
-        // Use static file — verify it's actually audio (not SPA fallback HTML)
-        const testRes = await fetch(staticFile, { method: 'HEAD' }).catch(() => null)
-        const ct = testRes?.headers?.get('content-type') || ''
-        if (testRes?.ok && ct.startsWith('audio/')) {
-          audioUrl = staticFile
-        }
+        // R2 via Worker always serves audio/mpeg — use directly, no HEAD check needed
+        audioUrl = staticFile
       }
 
       // Fallback to cache or API (only if we have text to synthesize)
@@ -3315,15 +3311,17 @@ const RadiografiaPremiumPage = () => {
                     </button>
                   )}
                   {/* 10. PDF — descargar resultados como PDF */}
-                  {aiAnalysis && (
-                    <button onClick={generatePDF} disabled={pdfGenerating}
-                      className="flex flex-col items-center gap-1" title="Descargar PDF de resultados">
-                      <div className="w-11 h-11 rounded-full border border-teal-500/25 bg-teal-500/10 flex items-center justify-center hover:bg-teal-500/20 transition-colors">
-                        {pdfGenerating ? <Loader2 className="w-4 h-4 text-teal-300/70 animate-spin" /> : <Download className="w-4 h-4 text-teal-300/70" />}
-                      </div>
-                      <span className="text-[9px] text-white/55">PDF</span>
-                    </button>
-                  )}
+                  <button onClick={generatePDF} disabled={pdfGenerating || !aiAnalysis}
+                    className="flex flex-col items-center gap-1" title={aiAnalysis ? 'Descargar PDF de resultados' : 'Genera un análisis primero'}>
+                    <div className={`w-11 h-11 rounded-full border transition-colors ${
+                      aiAnalysis
+                        ? 'border-teal-500/25 bg-teal-500/10 hover:bg-teal-500/20'
+                        : 'border-white/10 bg-white/[0.03] opacity-40 cursor-not-allowed'
+                    } flex items-center justify-center`}>
+                      {pdfGenerating ? <Loader2 className="w-4 h-4 text-teal-300/70 animate-spin" /> : <Download className="w-4 h-4 text-teal-300/70" />}
+                    </div>
+                    <span className="text-[9px] text-white/55">PDF</span>
+                  </button>
                 </div>
                 </div>
               )}
