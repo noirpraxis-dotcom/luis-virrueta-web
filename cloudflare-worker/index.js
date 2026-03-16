@@ -569,9 +569,10 @@ async function handleValidatePromo(req, env) {
 async function handleSendAccessEmail(req, env) {
   const { purchaseId, type, emails, tokens, buyerToken, buyerEmail, profileData } = await req.json()
 
-  // Dedup: prevent sending duplicate access emails for the same purchase
-  if (purchaseId && env.PURCHASES) {
-    const dedupKey = `email_sent:${purchaseId}`
+  // Dedup: prevent sending duplicate access emails for the same purchase + same recipients
+  const validEmails = (emails || []).filter(Boolean).map(e => e.toLowerCase().trim()).sort()
+  if (purchaseId && validEmails.length && env.PURCHASES) {
+    const dedupKey = `email_sent:${purchaseId}:${validEmails.join(',')}`
     const already = await env.PURCHASES.get(dedupKey)
     if (already) {
       const prev = JSON.parse(already)
@@ -641,9 +642,10 @@ async function handleSendAccessEmail(req, env) {
     return json({ ok: false, errors }, 500)
   }
 
-  // Save dedup marker
-  if (purchaseId && env.PURCHASES) {
-    await env.PURCHASES.put(`email_sent:${purchaseId}`, JSON.stringify({ tokens: generatedTokens, sentAt: Date.now() }), { expirationTtl: 86400 * 7 }).catch(() => {})
+  // Save dedup marker (keyed by purchaseId + recipients so different email sets don't collide)
+  if (purchaseId && validEmails.length && env.PURCHASES) {
+    const dedupKey = `email_sent:${purchaseId}:${validEmails.join(',')}`
+    await env.PURCHASES.put(dedupKey, JSON.stringify({ tokens: generatedTokens, sentAt: Date.now() }), { expirationTtl: 86400 * 7 }).catch(() => {})
   }
 
   return json({ ok: true, tokens: generatedTokens, errors: errors.length ? errors : undefined })

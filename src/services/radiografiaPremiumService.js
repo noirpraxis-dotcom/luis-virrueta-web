@@ -538,7 +538,7 @@ Responde SOLO con JSON válido, sin texto adicional.
 
 // ─── SINGLE API CALL WITH RETRY ──────────────────────────────────────────────
 
-async function callDeepSeekPart(apiKey, basePrompt, partInstruction, partName, maxTokens = 8192) {
+async function callDeepSeekPart(apiKey, basePrompt, partInstruction, partName, maxTokens = 8192, systemPrompt = null) {
   const maxRetries = 3
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
@@ -551,7 +551,7 @@ async function callDeepSeekPart(apiKey, basePrompt, partInstruction, partName, m
         signal: controller.signal,
         body: JSON.stringify({
           messages: [
-            { role: 'system', content: SYSTEM_PROMPT },
+            { role: 'system', content: systemPrompt || SYSTEM_PROMPT },
             { role: 'user', content: basePrompt + '\n\n' + partInstruction }
           ],
           temperature: 0.7,
@@ -1040,7 +1040,9 @@ function buildCrossAnalysisPrompt(analysis1, analysis2, profile1, profile2) {
   return prompt
 }
 
-const CROSS_INSTRUCTION = `Genera el análisis cruzado completo. Responde SOLO con JSON válido.
+const CROSS_PART_A = `Genera la PRIMERA PARTE del análisis cruzado. Responde SOLO con JSON válido.
+Incluye: apertura, resumen cruzado, dimensiones cruzadas (12), puntos ciegos, dinámica real, convergencias, divergencias, y las primeras 6 lecturas cruzadas.
+Cada lectura cruzada debe tener 2-3 párrafos con estilo Sherlock Holmes psicológico, citando a AMBOS.
 {
   "apertura": "(2-3 párrafos: saludo a ambos, reconoce que ambos completaron el cuestionario, genera rapport. Anticipa que van a ver su relación como nunca antes.)",
   "resumen_cruzado": "(3-4 párrafos: resumen narrativo de la relación vista desde las DOS perspectivas. Señala inmediatamente los puntos de convergencia y divergencia más impactantes.)",
@@ -1066,51 +1068,220 @@ const CROSS_INSTRUCTION = `Genera el análisis cruzado completo. Responde SOLO c
   "convergencias": ["(3-5 puntos donde ambos coinciden — señal de fortaleza o de punto ciego compartido)"],
   "divergencias": ["(3-5 puntos donde difieren radicalmente — fuente de conflicto o complementariedad)"],
   "lecturas_cruzadas": {
-    "gottman": "(2-3 párrafos: dinámica Gottman vista desde ambos lados — los jinetes, la reparación, el ratio.)",
-    "apego": "(2-3 párrafos: cómo los estilos de apego de ambos interactúan — complementarios o colisionantes.)",
-    "perel": "(2-3 párrafos: el deseo visto por ambos — el mismo fuego desde dos ventanas.)",
-    "comunicacion": "(2-3 párrafos: los lenguajes de amor cruzados — qué da cada uno y qué necesita recibir.)",
-    "poder": "(2-3 párrafos: la dinámica de poder real — quién tiene más poder emocional y por qué.)"
+    "gottman": {
+      "titulo": "John Gottman — Regulación del conflicto",
+      "interpretacion": "(2-3 párrafos: dinámica Gottman vista desde ambos lados — los jinetes, la reparación, el ratio. Cita frases de AMBOS.)",
+      "indicadores": ["(3-5 indicadores cruzados)"],
+      "puntuacion": "(0-100)"
+    },
+    "sue_johnson": {
+      "titulo": "Sue Johnson — Seguridad emocional cruzada",
+      "interpretacion": "(2-3 párrafos: ¿ambos se sienten emocionalmente seguros con el otro? ¿Qué ciclos de desconexión emergen al cruzar? Cita frases.)",
+      "indicadores": ["(3-5 indicadores)"],
+      "puntuacion": "(0-100)"
+    },
+    "perel": {
+      "titulo": "Esther Perel — El deseo desde ambas ventanas",
+      "interpretacion": "(2-3 párrafos: el deseo erótico visto por ambos — el mismo fuego desde dos perspectivas. Tensión seguridad/aventura cruzada.)",
+      "indicadores": ["(3-5 indicadores)"],
+      "puntuacion": "(0-100)"
+    },
+    "levine": {
+      "titulo": "Amir Levine — Apego interaccional",
+      "interpretacion": "(2-3 párrafos: cómo los estilos de apego de ambos interactúan — complementarios, colisionantes, o sincronizados.)",
+      "indicadores": ["(3-5 indicadores)"],
+      "estilo_p1": "(Seguro|Ansioso|Evitativo|Desorganizado)",
+      "estilo_p2": "(Seguro|Ansioso|Evitativo|Desorganizado)",
+      "puntuacion": "(0-100)"
+    },
+    "hendrix": {
+      "titulo": "Harville Hendrix — Imago cruzado",
+      "interpretacion": "(2-3 párrafos: ¿qué busca cada uno reparar inconscientemente en el otro? ¿Cómo encajan sus imagos?)",
+      "indicadores": ["(3-5 indicadores)"],
+      "puntuacion": "(0-100)"
+    },
+    "tatkin": {
+      "titulo": "Stan Tatkin — Sincronía y regulación mutua",
+      "interpretacion": "(2-3 párrafos: ¿se regulan mutuamente o se desregulan? ¿Quién es la isla, la ola, o el ancla?)",
+      "indicadores": ["(3-5 indicadores)"],
+      "puntuacion": "(0-100)"
+    }
+  }
+}`
+
+const CROSS_PART_B = `Genera la SEGUNDA PARTE del análisis cruzado. Responde SOLO con JSON válido.
+Incluye las últimas 5 lecturas cruzadas, análisis profundo cruzado, lectura psicoanalítica cruzada, y la dinámica de conflicto cruzada.
+Cada lectura cruzada debe tener 2-3 párrafos con estilo Sherlock Holmes psicológico, citando a AMBOS.
+{
+  "lecturas_cruzadas": {
+    "chapman": {
+      "titulo": "Gary Chapman — Lenguajes de amor cruzados",
+      "interpretacion": "(2-3 párrafos: qué da cada uno y qué necesita recibir — los lenguajes de amor cruzados revelan por qué ambos sienten que dan mucho y reciben poco.)",
+      "indicadores": ["(3-5 indicadores)"],
+      "lenguaje_p1": "(Palabras de afirmación|Actos de servicio|Contacto físico|Tiempo de calidad|Regalos)",
+      "lenguaje_p2": "(Palabras de afirmación|Actos de servicio|Contacto físico|Tiempo de calidad|Regalos)",
+      "puntuacion": "(0-100)"
+    },
+    "sternberg": {
+      "titulo": "Robert Sternberg — Triángulo del amor cruzado",
+      "interpretacion": "(2-3 párrafos: intimidad, pasión y compromiso vistos por ambos — ¿coinciden en qué componentes están presentes?)",
+      "indicadores": ["(3 indicadores)"],
+      "p1_intimidad": "(0-100)", "p1_pasion": "(0-100)", "p1_compromiso": "(0-100)",
+      "p2_intimidad": "(0-100)", "p2_pasion": "(0-100)", "p2_compromiso": "(0-100)",
+      "puntuacion": "(0-100)"
+    },
+    "schnarch": {
+      "titulo": "David Schnarch — Diferenciación cruzada",
+      "interpretacion": "(2-3 párrafos: ¿qué tan diferenciado está cada uno? ¿La relación permite la individualidad o exige fusión?)",
+      "indicadores": ["(3-5 indicadores)"],
+      "puntuacion": "(0-100)"
+    },
+    "real": {
+      "titulo": "Terrence Real — Dinámica de poder real",
+      "interpretacion": "(2-3 párrafos: la dinámica de poder real — quién tiene más poder emocional, quién estructural, y por qué.)",
+      "indicadores": ["(3-5 indicadores)"],
+      "puntuacion": "(0-100)"
+    },
+    "freud_lacan": {
+      "titulo": "Freud + Lacan — Inconsciente relacional cruzado",
+      "interpretacion_freud": "(1-2 párrafos: proyecciones cruzadas — lo que cada uno proyecta en el otro sin saber.)",
+      "interpretacion_lacan": "(1-2 párrafos: el deseo inconsciente de ambos — ¿qué gozan repetir juntos?)",
+      "indicadores": ["(3-5 indicadores)"],
+      "puntuacion": "(0-100)"
+    }
   },
+  "analisis_profundo_cruzado": {
+    "narrativa_dominante": "(2 párrafos: la narrativa que ambos co-construyen, vista desde el cruce)",
+    "tensiones_estructurales": "(2 párrafos: las tensiones que emergen al comparar ambas perspectivas. Cita a ambos.)",
+    "evolucion_deseo_cruzada": "(1-2 párrafos: cómo ha evolucionado el deseo visto por ambos)",
+    "dinamica_emocional_cruzada": "(2 párrafos: el clima emocional real de la relación)"
+  },
+  "lectura_psicoanalitica_cruzada": {
+    "proyecciones_mutuas": "(1-2 párrafos: lo que cada uno proyecta en el otro, enfoque freudiano cruzado.)",
+    "fantasma_relacional_compartido": "(1-2 párrafos: el fantasma que ambos co-alimentan, enfoque lacaniano.)",
+    "goce_compartido": "(1 párrafo: qué gozan repetir juntos aunque les duela)"
+  },
+  "dinamica_conflicto_cruzada": {
+    "tendencia_conflicto_p1": "(0-100)", "tendencia_conflicto_p2": "(0-100)",
+    "patron_dominante": "(1 frase: persecución-retirada, escalada mutua, evitación mutua, etc.)",
+    "capacidad_reparacion": "(0-100)",
+    "ciclo_repeticion": ["(etapa 1)", "(etapa 2)", "(etapa 3)", "(etapa 4)", "(etapa 5)"]
+  }
+}`
+
+const CROSS_PART_C = `Genera la TERCERA PARTE del análisis cruzado. Responde SOLO con JSON válido.
+Incluye: tabla diagnóstica cruzada, energía del vínculo, índices de compatibilidad para las 11 corrientes, brechas críticas, pronóstico, mensaje para ambos, temas para consulta y CTAs personalizados.
+{
+  "tabla_diagnostica_cruzada": [
+    {"dimension": "Estabilidad relacional", "nivel_p1": "(Alto|Medio|Bajo)", "nivel_p2": "(Alto|Medio|Bajo)", "interpretacion_cruzada": "(1 frase comparativa)"},
+    {"dimension": "Apego emocional", "nivel_p1": "(Alto|Medio|Bajo)", "nivel_p2": "(Alto|Medio|Bajo)", "interpretacion_cruzada": "(1 frase)"},
+    {"dimension": "Conexión emocional", "nivel_p1": "(Alto|Medio|Bajo)", "nivel_p2": "(Alto|Medio|Bajo)", "interpretacion_cruzada": "(1 frase)"},
+    {"dimension": "Deseo erótico", "nivel_p1": "(Alto|Medio|Bajo)", "nivel_p2": "(Alto|Medio|Bajo)", "interpretacion_cruzada": "(1 frase)"},
+    {"dimension": "Intimidad", "nivel_p1": "(Alto|Medio|Bajo)", "nivel_p2": "(Alto|Medio|Bajo)", "interpretacion_cruzada": "(1 frase)"},
+    {"dimension": "Sincronía relacional", "nivel_p1": "(Alto|Medio|Bajo)", "nivel_p2": "(Alto|Medio|Bajo)", "interpretacion_cruzada": "(1 frase)"},
+    {"dimension": "Patrones inconscientes", "nivel_p1": "(Alto|Medio|Bajo)", "nivel_p2": "(Alto|Medio|Bajo)", "interpretacion_cruzada": "(1 frase)"},
+    {"dimension": "Fantasma relacional", "nivel_p1": "(Alto|Medio|Bajo)", "nivel_p2": "(Alto|Medio|Bajo)", "interpretacion_cruzada": "(1 frase)"},
+    {"dimension": "Roles sistémicos", "nivel_p1": "(Alto|Medio|Bajo)", "nivel_p2": "(Alto|Medio|Bajo)", "interpretacion_cruzada": "(1 frase)"},
+    {"dimension": "Resiliencia del vínculo", "nivel_p1": "(Alto|Medio|Bajo)", "nivel_p2": "(Alto|Medio|Bajo)", "interpretacion_cruzada": "(1 frase)"},
+    {"dimension": "Vulnerabilidad emocional", "nivel_p1": "(Alto|Medio|Bajo)", "nivel_p2": "(Alto|Medio|Bajo)", "interpretacion_cruzada": "(1 frase)"},
+    {"dimension": "Narrativa de futuro", "nivel_p1": "(Alto|Medio|Bajo)", "nivel_p2": "(Alto|Medio|Bajo)", "interpretacion_cruzada": "(1 frase)"}
+  ],
+  "energia_vinculo_cruzada": {
+    "atraccion_inicial": "(0-100)", "atraccion_actual": "(0-100)",
+    "intimidad_emocional": "(0-100)", "conexion_fisica": "(0-100)",
+    "seguridad_percibida_p1": "(0-100)", "seguridad_percibida_p2": "(0-100)"
+  },
+  "indice_sincronia_global": "(0-100, promedio ponderado de cercanía entre las 12 dimensiones de ambos. 100 = percepción idéntica)",
+  "compatibilidad_corrientes": {
+    "gottman": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
+    "sue_johnson": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
+    "perel": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
+    "levine": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
+    "hendrix": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
+    "tatkin": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
+    "chapman": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
+    "sternberg": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
+    "schnarch": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
+    "real": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
+    "freud_lacan": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"}
+  },
+  "brechas_criticas": [
+    {"dimension": "(nombre de la dimensión con mayor brecha)", "diferencia": "(0-100)", "interpretacion": "(1-2 frases)"},
+    {"dimension": "(segunda mayor brecha)", "diferencia": "(0-100)", "interpretacion": "(1-2 frases)"},
+    {"dimension": "(tercera mayor brecha)", "diferencia": "(0-100)", "interpretacion": "(1-2 frases)"}
+  ],
   "mensaje_para_ambos": "(2-3 párrafos: cierre transformador dirigido a los DOS. Qué necesitan trabajar juntos, qué pueden celebrar, qué está en juego. Tono empático e inspirador.)",
   "pronostico_relacional": {
     "potencial": "(0-100)",
     "riesgo": "(0-100)",
     "direccion": "(1-2 frases: hacia dónde va esta relación si nada cambia vs si trabajan conscientemente)"
   },
-  "indice_sincronia_global": "(0-100, promedio ponderado de cercanía entre las 12 dimensiones de ambos. 100 = percepción idéntica, 0 = percepción opuesta)",
-  "compatibilidad_corrientes": {
-    "gottman": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
-    "apego": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
-    "perel": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
-    "comunicacion": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
-    "poder": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"}
-  },
-  "brechas_criticas": [
-    {"dimension": "(nombre de la dimensión con mayor brecha)", "diferencia": "(0-100, diferencia absoluta entre p1 y p2)", "interpretacion": "(1-2 frases explicando por qué esta brecha importa)"},
-    {"dimension": "(segunda mayor brecha)", "diferencia": "(0-100)", "interpretacion": "(1-2 frases)"},
-    {"dimension": "(tercera mayor brecha)", "diferencia": "(0-100)", "interpretacion": "(1-2 frases)"}
-  ]
+  "temas_para_consulta_cruzada": [
+    "(EXACTAMENTE 8 temas para terapia de pareja. Cada uno: **Nombre del tema**: descripción personalizada de 1-2 frases derivada del cruce de ambas perspectivas.)"
+  ],
+  "tecnicas_recomendadas_cruzada": [
+    {"nombre": "(Nombre de técnica de pareja)", "descripcion": "(1-2 frases: por qué es relevante para ESTA pareja)"},
+    "(5-6 técnicas especializadas en pareja: EFT parejas, Gottman Sound House, Imago Diálogo, Hold Me Tight, etc.)"
+  ],
+  "cta_terapia_pareja": {
+    "titular": "(Título persuasivo de 5-8 palabras conectado a la dinámica cruzada detectada)",
+    "descripcion": "(2-3 oraciones dirigidas a AMBOS: 'Detectamos X dinámica entre ustedes. En terapia de pareja podemos Y para que logren Z.')",
+    "puntos": [
+      "(beneficio concreto 1 basado en el cruce — ej: 'Romper el ciclo perseguidor-retirada detectado')",
+      "(beneficio concreto 2 — ej: 'Crear un espacio seguro para que ambos se expresen')",
+      "(beneficio concreto 3 — ej: 'Aprender a reparar después del conflicto')",
+      "(beneficio concreto 4 — ej: 'Reconectar el deseo desde ambas perspectivas')"
+    ]
+  }
 }`
 
 export async function analyzeCrossRadiografia({ analysis1, analysis2, profile1, profile2 }) {
-  // API key is now server-side in the Worker
   const basePrompt = buildCrossAnalysisPrompt(analysis1, analysis2, profile1, profile2)
 
-  console.log('🚀 Lanzando análisis cruzado a DeepSeek...')
-  const result = await callDeepSeekPart(null, basePrompt, CROSS_INSTRUCTION, 'Cross-Analysis', 10000)
+  console.log('🚀 Lanzando 3 llamadas paralelas de análisis cruzado a DeepSeek...')
+  const [partA, partB, partC] = await Promise.all([
+    callDeepSeekPart(null, basePrompt, CROSS_PART_A, 'Cross-A', 10000, CROSS_ANALYSIS_SYSTEM),
+    callDeepSeekPart(null, basePrompt, CROSS_PART_B, 'Cross-B', 10000, CROSS_ANALYSIS_SYSTEM),
+    callDeepSeekPart(null, basePrompt, CROSS_PART_C, 'Cross-C', 10000, CROSS_ANALYSIS_SYSTEM),
+  ])
 
-  if (!result) {
-    console.error('❌ Cross-analysis falló')
+  if (!partA) {
+    console.error('❌ Cross-analysis Part A falló')
     return null
   }
 
+  // Merge all parts
+  const merged = { ...partA }
+
+  if (partB) {
+    // Merge lecturas_cruzadas from Part B into Part A's
+    if (partB.lecturas_cruzadas) {
+      merged.lecturas_cruzadas = { ...(merged.lecturas_cruzadas || {}), ...partB.lecturas_cruzadas }
+    }
+    if (partB.analisis_profundo_cruzado) merged.analisis_profundo_cruzado = partB.analisis_profundo_cruzado
+    if (partB.lectura_psicoanalitica_cruzada) merged.lectura_psicoanalitica_cruzada = partB.lectura_psicoanalitica_cruzada
+    if (partB.dinamica_conflicto_cruzada) merged.dinamica_conflicto_cruzada = partB.dinamica_conflicto_cruzada
+  }
+
+  if (partC) {
+    if (partC.tabla_diagnostica_cruzada) merged.tabla_diagnostica_cruzada = partC.tabla_diagnostica_cruzada
+    if (partC.energia_vinculo_cruzada) merged.energia_vinculo_cruzada = partC.energia_vinculo_cruzada
+    if (partC.indice_sincronia_global != null) merged.indice_sincronia_global = partC.indice_sincronia_global
+    if (partC.compatibilidad_corrientes) merged.compatibilidad_corrientes = partC.compatibilidad_corrientes
+    if (partC.brechas_criticas) merged.brechas_criticas = partC.brechas_criticas
+    if (partC.mensaje_para_ambos) merged.mensaje_para_ambos = partC.mensaje_para_ambos
+    if (partC.pronostico_relacional) merged.pronostico_relacional = partC.pronostico_relacional
+    if (partC.temas_para_consulta_cruzada) merged.temas_para_consulta_cruzada = partC.temas_para_consulta_cruzada
+    if (partC.tecnicas_recomendadas_cruzada) merged.tecnicas_recomendadas_cruzada = partC.tecnicas_recomendadas_cruzada
+    if (partC.cta_terapia_pareja) merged.cta_terapia_pareja = partC.cta_terapia_pareja
+  }
+
   // Inject individual dimensions for side-by-side charts
-  result._individual = {
+  merged._individual = {
     p1: { nombre: profile1?.nombre, dimensiones: analysis1.dimensiones },
     p2: { nombre: profile2?.nombre, dimensiones: analysis2.dimensiones },
   }
 
-  console.log('✅ Análisis cruzado completado')
-  return result
+  console.log('✅ Análisis cruzado completado (3 partes)')
+  return merged
 }

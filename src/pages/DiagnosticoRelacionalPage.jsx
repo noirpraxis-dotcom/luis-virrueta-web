@@ -2652,6 +2652,24 @@ const DiagnosticoRelacionalPage = () => {
                         })
                         if (result && result.ok === false) {
                           setEmailSendError(result.errors?.[0]?.error || 'No se pudo enviar el correo. Verifica la configuración de Resend.')
+                        } else if (result && result.dedup) {
+                          // Dedup hit — emails were already sent, warn user but still navigate
+                          console.warn('⚠️ Dedup: emails ya enviados para esta compra')
+                          setEmailSendError('Los correos de acceso ya fueron enviados anteriormente para esta compra. Revisa tu bandeja de entrada o spam.')
+                          setEmailsSent(true)
+                          if (purchaseType === 'losdos') {
+                            const buyerEmailToSave = thankyouEmails[0] || email || thankyouEmails[1] || ''
+                            if (buyerEmailToSave) sessionStorage.setItem('radiografia_buyer_email', buyerEmailToSave)
+                            if (thankyouEmails[1]) sessionStorage.setItem('radiografia_partner_email', thankyouEmails[1])
+                            sessionStorage.setItem('radiografia_nombre', thankYouProfile.nombre)
+                            sessionStorage.setItem('radiografia_edad', thankYouProfile.edad)
+                            sessionStorage.setItem('radiografia_nombre_pareja', thankYouProfile.nombrePareja)
+                            sessionStorage.setItem('radiografia_edad_pareja', thankYouProfile.edadPareja)
+                            sessionStorage.setItem('radiografia_prefilled', 'true')
+                            const navToken = buyerTk ? `&token=${buyerTk}` : ''
+                            navigate(`/tienda/radiografia-premium?type=${purchaseType}${navToken}`)
+                            scrollToTop()
+                          }
                         } else {
                           setEmailsSent(true)
                           // For losdos: immediately navigate after sending partner link

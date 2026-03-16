@@ -624,9 +624,15 @@ const DEMO_CROSS_ANALYSIS = {
   resumen_cruzado: 'La relación Carlos-Ana presenta una **asimetría fundamental**: Carlos busca paz y autonomía dentro del vínculo, mientras Ana busca cercanía e intensidad emocional. Lo que Carlos interpreta como "dar espacio", Ana lo vive como abandono. Lo que Ana interpreta como "mostrar interés", Carlos lo vive como presión.\n\nEsta dinámica perseguidor-retirada se ha calcificado en un patrón donde ambos confirman lo que más temen: Carlos se retira porque siente que nada de lo que hace es suficiente, y Ana persigue porque cada silencio le confirma que no es prioridad.',
   dimensiones_cruzadas: {
     estabilidad_relacional: { p1: 45, p2: 55, interpretacion: 'Carlos percibe menor estabilidad que Ana — él ve fracturas donde ella ve oportunidades de reparación.' },
+    apego_emocional: { p1: 60, p2: 75, interpretacion: 'Ana siente un apego más fuerte; Carlos mantiene distancia emocional como mecanismo de protección.' },
     conexion_emocional: { p1: 40, p2: 65, interpretacion: 'Ana siente más conexión que Carlos, quien reporta distanciamiento emocional significativo.' },
     deseo_erotico: { p1: 35, p2: 50, interpretacion: 'Ambos notan una baja, pero Ana mantiene más deseo activo. Carlos lo ha desplazado hacia lo intelectual.' },
+    intimidad: { p1: 30, p2: 55, interpretacion: 'Ana busca intimidad profunda; Carlos se siente invadido por la cercanía constante.' },
     sincronia_relacional: { p1: 30, p2: 45, interpretacion: 'Desincronización marcada: los ritmos emocionales de ambos no coinciden en momentos clave.' },
+    patrones_inconscientes: { p1: 80, p2: 70, interpretacion: 'Ambos tienen alta presencia de patrones inconscientes heredados, pero Carlos los intelectualiza mientras Ana los actúa.' },
+    fantasma_relacional: { p1: 70, p2: 60, interpretacion: 'Carlos repite el fantasma del padre ausente; Ana el de la madre que pedía afecto sin recibirlo.' },
+    roles_sistemicos: { p1: 65, p2: 55, interpretacion: 'Carlos ocupa el rol de regulador racional; Ana el de termómetro emocional del vínculo.' },
+    resiliencia_vinculo: { p1: 55, p2: 70, interpretacion: 'Ana cree más en la capacidad del vínculo de repararse. Carlos es más escéptico.' },
     vulnerabilidad_emocional: { p1: 25, p2: 70, interpretacion: 'La brecha más grande: Ana se expone emocionalmente, Carlos se protege. Esto genera un desequilibrio de poder invisible.' },
     narrativa_futuro: { p1: 50, p2: 60, interpretacion: 'Ambos imaginan un futuro juntos, pero Ana lo visualiza con más claridad y urgencia.' }
   },
@@ -652,14 +658,100 @@ const DEMO_CROSS_ANALYSIS = {
     'Carlos siente que da suficiente; Ana siente que nunca es suficiente'
   ],
   lecturas_cruzadas: {
-    gottman: 'El **índice Gottman** de esta pareja muestra alta presencia de dos de los "jinetes del Apocalipsis": **defensividad** (Carlos) y **crítica** (Ana). Carlos responde a la demanda emocional de Ana levantando muros, lo que ella interpreta como desprecio. Ana responde a la evasión de Carlos con reclamos que él interpreta como ataque.\n\nLa ratio de interacciones positivas/negativas percibidas está por debajo del umbral 5:1, especialmente en la percepción de Carlos (3:1) vs la de Ana (4:1).',
-    apego: 'Carlos presenta un estilo **evitativo** que se activa ante la demanda emocional. Ana presenta un estilo **ansioso** que se activa ante la percepción de distancia. Juntos forman la combinación clásica **ansioso-evitativo**: cuanto más persigue Ana, más se retira Carlos; cuanto más se retira Carlos, más ansiosa se vuelve Ana.\n\nNinguno de los dos es "el problema" — el sistema relacional que han construido es el que necesita intervención.',
-    perel: 'Desde la perspectiva de Esther Perel, esta pareja ha **sacrificado el deseo en el altar de la seguridad**. Carlos busca previsibilidad (pero la encuentra aburrida). Ana busca intensidad emocional (pero la genera a través del conflicto, no del erotismo).\n\nEl deseo necesita misterio, y ambos se han vuelto demasiado predecibles el uno para el otro — pero por las razones equivocadas.',
-    comunicacion: 'Los **lenguajes de amor** están cruzados: Carlos da en **actos de servicio** y necesita recibir **contacto físico**. Ana da en **palabras de afirmación** y necesita recibir **tiempo de calidad**.\n\nCada uno da lo que necesita recibir (no lo que el otro necesita), generando una sensación mutua de "doy mucho y recibo poco".',
-    poder: 'El poder en esta relación es **paradójico**: Ana parece tener más poder porque es más vocal y directa. Pero el poder real lo tiene Carlos — quien se retira controla el ritmo emocional de la relación.\n\nEsta asimetría invisible genera resentimiento en ambos: Carlos siente que "ella siempre decide" (poder visible de Ana) mientras Ana siente que "nunca puedo llegar a él" (poder estructural de Carlos).'
+    gottman: { titulo: 'John Gottman — Regulación del conflicto', interpretacion: 'El **índice Gottman** de esta pareja muestra alta presencia de dos de los "jinetes del Apocalipsis": **defensividad** (Carlos) y **crítica** (Ana). Carlos responde a la demanda emocional de Ana levantando muros, lo que ella interpreta como desprecio. Ana responde a la evasión de Carlos con reclamos que él interpreta como ataque.\n\nLa ratio de interacciones positivas/negativas percibidas está por debajo del umbral 5:1, especialmente en la percepción de Carlos (3:1) vs la de Ana (4:1).', indicadores: ['Alta defensividad en Carlos', 'Crítica recurrente en Ana', 'Ratio positivo/negativo bajo', 'Reparación superficial'], puntuacion: 38 },
+    sue_johnson: { titulo: 'Sue Johnson — Seguridad emocional cruzada', interpretacion: 'Desde la TFE (Terapia Focalizada en Emociones), Carlos y Ana están atrapados en un **ciclo de desconexión emocional**. Ana busca desesperadamente la señal de "estoy aquí contigo" que Carlos no logra emitir. Carlos percibe la demanda de Ana como una amenaza a su autonomía.\n\nEl vínculo seguro que ambos necesitan está ahí en potencia — los dos lo desean — pero ninguno sabe cómo acceder a él sin activar las defensas del otro.', indicadores: ['Ciclo de desconexión activo', 'Ana busca señales de presencia', 'Carlos se retira bajo presión', 'Vínculo seguro en potencia'], puntuacion: 42 },
+    perel: { titulo: 'Esther Perel — El deseo desde ambas ventanas', interpretacion: 'Desde la perspectiva de Esther Perel, esta pareja ha **sacrificado el deseo en el altar de la seguridad**. Carlos busca previsibilidad (pero la encuentra aburrida). Ana busca intensidad emocional (pero la genera a través del conflicto, no del erotismo).\n\nEl deseo necesita misterio, y ambos se han vuelto demasiado predecibles el uno para el otro — pero por las razones equivocadas.', indicadores: ['Deseo desplazado al conflicto', 'Previsibilidad erosiona atracción', 'Falta de misterio mutuo'], puntuacion: 35 },
+    levine: { titulo: 'Amir Levine — Apego interaccional', interpretacion: 'Carlos presenta un estilo **evitativo** que se activa ante la demanda emocional. Ana presenta un estilo **ansioso** que se activa ante la percepción de distancia. Juntos forman la combinación clásica **ansioso-evitativo**: cuanto más persigue Ana, más se retira Carlos; cuanto más se retira Carlos, más ansiosa se vuelve Ana.\n\nNinguno de los dos es "el problema" — el sistema relacional que han construido es el que necesita intervención.', indicadores: ['Estilo evitativo activado en Carlos', 'Estilo ansioso activado en Ana', 'Combinación ansioso-evitativo clásica', 'Sistema relacional disfuncional'], estilo_p1: 'Evitativo', estilo_p2: 'Ansioso', puntuacion: 40 },
+    hendrix: { titulo: 'Harville Hendrix — Imago cruzado', interpretacion: 'Desde la terapia Imago, Carlos eligió inconscientemente a Ana porque su intensidad emocional le prometía la vitalidad que su familia de origen suprimió. Ana eligió a Carlos porque su calma intelectual le prometía la estabilidad que su hogar caótico nunca ofreció.\n\nParadójicamente, lo que los atrajo ahora es exactamente lo que los frustra: Carlos necesita que Ana sea más tranquila (lo que eliminaría lo que lo atrajo), y Ana necesita que Carlos sea más expresivo (lo que eliminaría lo que la atrajo).', indicadores: ['Imagos complementarios', 'Lo que atrae ahora frustra', 'Proyecciones cruzadas activas'], puntuacion: 55 },
+    tatkin: { titulo: 'Stan Tatkin — Sincronía y regulación mutua', interpretacion: 'Según el modelo de Tatkin, Carlos funciona como **isla** (necesita procesar solo) y Ana como **ola** (necesita procesar en voz alta y en contacto). Esta diferencia de regulación es la fuente de los malentendidos más dolorosos.\n\nCarlos interpreta el silencio como paz; Ana lo interpreta como rechazo. Ana interpreta hablar como conexión; Carlos lo interpreta como invasión. No están hablando idiomas distintos — están en **sistemas nerviosos** distintos.', indicadores: ['Carlos = isla, Ana = ola', 'Sistemas de regulación opuestos', 'Malentendidos por ritmo nervioso'], puntuacion: 32 },
+    chapman: { titulo: 'Gary Chapman — Lenguajes de amor cruzados', interpretacion: 'Los **lenguajes de amor** están cruzados: Carlos da en **actos de servicio** y necesita recibir **contacto físico**. Ana da en **palabras de afirmación** y necesita recibir **tiempo de calidad**.\n\nCada uno da lo que necesita recibir (no lo que el otro necesita), generando una sensación mutua de "doy mucho y recibo poco".', indicadores: ['Lenguajes cruzados', 'Ambos dan lo que necesitan, no lo que el otro necesita', 'Sensación de desbalance mutuo'], lenguaje_p1: 'Actos de servicio', lenguaje_p2: 'Palabras de afirmación', puntuacion: 38 },
+    sternberg: { titulo: 'Robert Sternberg — Triángulo del amor cruzado', interpretacion: 'El **triángulo del amor** de esta pareja está desequilibrado: el compromiso es el componente más fuerte en ambos (65/70), la intimidad es moderada pero divergente (40 Carlos / 60 Ana), y la pasión es el punto más débil (30/45).\n\nSternberg diría que están en un "amor compañero" que tiende a enfriarse si no se reactiva la pasión conscientemente.', indicadores: ['Compromiso alto en ambos', 'Intimidad divergente', 'Pasión en declive'], p1_intimidad: 40, p1_pasion: 30, p1_compromiso: 65, p2_intimidad: 60, p2_pasion: 45, p2_compromiso: 70, puntuacion: 48 },
+    schnarch: { titulo: 'David Schnarch — Diferenciación cruzada', interpretacion: 'Desde la perspectiva de Schnarch, tanto Carlos como Ana tienen baja **diferenciación del self**: Carlos se diferencia a través de la distancia (pseudo-diferenciación), y Ana a través de la fusión (baja diferenciación explícita).\n\nNinguno puede mantener su propio centro emocional mientras está en contacto íntimo con el otro. La tarea de crecimiento es aprender a estar **conectados y diferenciados** simultáneamente.', indicadores: ['Carlos: pseudo-diferenciación por distancia', 'Ana: baja diferenciación por fusión', 'Necesitan diferenciación auténtica'], puntuacion: 35 },
+    real: { titulo: 'Terrence Real — Dinámica de poder real', interpretacion: 'El poder en esta relación es **paradójico**: Ana parece tener más poder porque es más vocal y directa. Pero el poder real lo tiene Carlos — quien se retira controla el ritmo emocional de la relación.\n\nEsta asimetría invisible genera resentimiento en ambos: Carlos siente que "ella siempre decide" (poder visible de Ana) mientras Ana siente que "nunca puedo llegar a él" (poder estructural de Carlos).', indicadores: ['Poder paradójico', 'Ana: poder visible', 'Carlos: poder estructural'], puntuacion: 40 },
+    freud_lacan: { titulo: 'Freud + Lacan — Inconsciente relacional cruzado', interpretacion_freud: 'Carlos proyecta en Ana la **madre demandante** que nunca pudo satisfacer. Ana proyecta en Carlos al **padre emocionalmente ausente** al que nunca pudo alcanzar. Ambos repiten con el otro la escena primaria que no pudieron resolver solos.', interpretacion_lacan: 'El **goce compartido** de esta pareja es la queja: Carlos goza de su posición de incomprendido silencioso, Ana goza de su posición de heroína emocional insatisfecha. Ambos necesitan este dolor para confirmar su identidad relacional.', indicadores: ['Proyecciones cruzadas activas', 'Goce compartido en la queja', 'Escenas primarias repetidas', 'Identidad relacional atada al sufrimiento'], puntuacion: 45 },
   },
+  analisis_profundo_cruzado: {
+    narrativa_dominante: 'Carlos y Ana co-construyen una narrativa de **"amor bajo amenaza"**: ambos sienten que el vínculo es valioso pero frágil. Carlos lo protege retirándose; Ana lo protege presionando. Paradójicamente, sus estrategias de protección son las que más lo dañan.\n\nLa narrativa compartida dice: "nos queremos pero no sabemos cómo llegar al otro sin hacernos daño."',
+    tensiones_estructurales: 'La tensión principal es entre **autonomía y conexión**. Carlos necesita sentir que puede ser él mismo sin que eso signifique abandonar a Ana. Ana necesita sentir que puede acercarse sin que Carlos desaparezca.\n\nCarlos dice: "necesito aire para pensar." Ana dice: "¿cuánto aire necesitas antes de que me ahogue?"',
+    evolucion_deseo_cruzada: 'El deseo ha migrado del cuerpo al conflicto. En los primeros años, la conexión física era natural. Ahora, la única intensidad que comparten es la del desacuerdo. El erotismo necesita ser re-descubierto fuera de la pelea.',
+    dinamica_emocional_cruzada: 'El clima emocional real de la relación oscila entre una calma tensa y estallidos breves. Carlos describe un paisaje gris; Ana describe una montaña rusa. Ambos tienen razón — pero están describiendo capas distintas del mismo fenómeno.'
+  },
+  lectura_psicoanalitica_cruzada: {
+    proyecciones_mutuas: 'Carlos proyecta en Ana la madre exigente; Ana proyecta en Carlos el padre ausente. Ambas proyecciones se retroalimentan: cuanto más "exigente" se muestra Ana, más "ausente" se retira Carlos, y viceversa.',
+    fantasma_relacional_compartido: 'El fantasma compartido de esta pareja es la **escena del abandono**: ambos temen ser dejados, pero lo expresan de forma opuesta. Carlos se adelanta al abandono retirándose primero. Ana intenta prevenirlo aferrándose más.',
+    goce_compartido: 'Lo que gozan repetir juntos es el ciclo de demanda-retirada-reconciliación superficial. Hay un placer inconsciente en la intensidad del reencuentro después de cada mini-ruptura.'
+  },
+  dinamica_conflicto_cruzada: {
+    tendencia_conflicto_p1: 35,
+    tendencia_conflicto_p2: 72,
+    patron_dominante: 'Persecución (Ana) — Retirada (Carlos)',
+    capacidad_reparacion: 45,
+    ciclo_repeticion: ['Ana detecta distancia', 'Ana pide cercanía/reclama', 'Carlos se siente presionado', 'Carlos se retira/calla', 'Reconciliación superficial']
+  },
+  tabla_diagnostica_cruzada: [
+    { dimension: 'Estabilidad relacional', nivel_p1: 'Medio', nivel_p2: 'Medio', interpretacion_cruzada: 'Percepción similar: ambos sienten que la base es inestable pero reparable.' },
+    { dimension: 'Apego emocional', nivel_p1: 'Medio', nivel_p2: 'Alto', interpretacion_cruzada: 'Ana se siente más apegada; Carlos mantiene distancia protectora.' },
+    { dimension: 'Conexión emocional', nivel_p1: 'Bajo', nivel_p2: 'Medio', interpretacion_cruzada: 'Brecha significativa: Carlos se siente desconectado, Ana siente conexión parcial.' },
+    { dimension: 'Deseo erótico', nivel_p1: 'Bajo', nivel_p2: 'Medio', interpretacion_cruzada: 'El deseo ha migrado del cuerpo al conflicto en ambos.' },
+    { dimension: 'Intimidad', nivel_p1: 'Bajo', nivel_p2: 'Medio', interpretacion_cruzada: 'Ana busca más intimidad; Carlos la experimenta como invasión.' },
+    { dimension: 'Sincronía relacional', nivel_p1: 'Bajo', nivel_p2: 'Medio', interpretacion_cruzada: 'Ritmos emocionales desalineados.' },
+    { dimension: 'Patrones inconscientes', nivel_p1: 'Alto', nivel_p2: 'Alto', interpretacion_cruzada: 'Ambos reconocen patrones heredados, pero los manejan distinto.' },
+    { dimension: 'Fantasma relacional', nivel_p1: 'Alto', nivel_p2: 'Medio', interpretacion_cruzada: 'Carlos más consciente de sus fantasmas; Ana los actúa sin verlos.' },
+    { dimension: 'Roles sistémicos', nivel_p1: 'Medio', nivel_p2: 'Medio', interpretacion_cruzada: 'Roles complementarios cristalizados: racional vs emocional.' },
+    { dimension: 'Resiliencia del vínculo', nivel_p1: 'Medio', nivel_p2: 'Alto', interpretacion_cruzada: 'Ana es más optimista sobre el futuro del vínculo.' },
+    { dimension: 'Vulnerabilidad emocional', nivel_p1: 'Bajo', nivel_p2: 'Alto', interpretacion_cruzada: 'La mayor brecha: desequilibrio total de exposición emocional.' },
+    { dimension: 'Narrativa de futuro', nivel_p1: 'Medio', nivel_p2: 'Medio', interpretacion_cruzada: 'Ambos ven futuro, pero con distinta claridad y urgencia.' }
+  ],
+  energia_vinculo_cruzada: { atraccion_inicial: 85, atraccion_actual: 45, intimidad_emocional: 40, conexion_fisica: 35, seguridad_percibida_p1: 50, seguridad_percibida_p2: 55 },
+  indice_sincronia_global: 42,
+  compatibilidad_corrientes: {
+    gottman: { score: 38, nivel: 'bajo', resumen: 'Dos jinetes activos: defensividad y crítica.' },
+    sue_johnson: { score: 42, nivel: 'medio', resumen: 'Ciclo de desconexión activo, pero potencial de reparación.' },
+    perel: { score: 35, nivel: 'bajo', resumen: 'Deseo desplazado al conflicto, falta de misterio.' },
+    levine: { score: 40, nivel: 'medio', resumen: 'Combinación ansioso-evitativo requiere trabajo.' },
+    hendrix: { score: 55, nivel: 'medio', resumen: 'Imagos complementarios — potencial de reparación mutua.' },
+    tatkin: { score: 32, nivel: 'bajo', resumen: 'Isla vs ola: regulación opuesta genera malentendidos.' },
+    chapman: { score: 38, nivel: 'bajo', resumen: 'Lenguajes cruzados: dan lo que necesitan, no lo que el otro necesita.' },
+    sternberg: { score: 48, nivel: 'medio', resumen: 'Compromiso alto, pero pasión e intimidad divergen.' },
+    schnarch: { score: 35, nivel: 'bajo', resumen: 'Baja diferenciación auténtica en ambos.' },
+    real: { score: 40, nivel: 'medio', resumen: 'Poder paradójico: Ana visible, Carlos estructural.' },
+    freud_lacan: { score: 45, nivel: 'medio', resumen: 'Proyecciones cruzadas activas; goce compartido en la queja.' },
+  },
+  brechas_criticas: [
+    { dimension: 'vulnerabilidad_emocional', diferencia: 45, interpretacion: 'La brecha más crítica: Ana se expone y Carlos se protege, generando una asimetría de poder invisible.' },
+    { dimension: 'conexion_emocional', diferencia: 25, interpretacion: 'Carlos se siente desconectado; Ana cree que hay más conexión de la que Carlos percibe.' },
+    { dimension: 'intimidad', diferencia: 25, interpretacion: 'Ana busca intimidad profunda constante; Carlos la siente como invasión a su espacio.' }
+  ],
   mensaje_para_ambos: 'Carlos y Ana: lo que esta radiografía muestra no es una relación rota — es una relación que ha **outgrown sus herramientas de comunicación**. El amor está ahí (ambos lo dicen sin dudarlo), pero el sistema que han construido para manejarlo ya no funciona.\n\nCarlos: tu silencio no es neutralidad — es acción. Cada vez que te retiras, Ana recibe un mensaje que dice "no me importas". No es tu intención, pero es el efecto.\n\nAna: tu insistencia no es amor — es ansiedad disfrazada de cuidado. Cada vez que presionas para hablar en el momento, Carlos recibe un mensaje que dice "nunca haces nada bien".\n\nLa buena noticia: ambos quieren lo mismo (cercanía, equipo, futuro). Solo necesitan aprender a pedirlo de una forma que el otro pueda recibir.',
-  pronostico_relacional: { potencial: 72, riesgo: 45, direccion: 'La relación tiene potencial significativo si logran romper el ciclo perseguidor-retirada y aprender a reparar de forma genuina. Sin intervención, el riesgo de distanciamiento irreversible es moderado.' }
+  pronostico_relacional: { potencial: 72, riesgo: 45, direccion: 'La relación tiene potencial significativo si logran romper el ciclo perseguidor-retirada y aprender a reparar de forma genuina. Sin intervención, el riesgo de distanciamiento irreversible es moderado.' },
+  temas_para_consulta_cruzada: [
+    '**Ciclo perseguidor-retirada**: identificar y desactivar el patrón que se repite cada vez que surge una demanda emocional',
+    '**Regulación emocional cruzada**: aprender a co-regular cuando los sistemas nerviosos de ambos se activan simultáneamente',
+    '**Lenguajes de amor traducidos**: practicar dar en el lenguaje que el otro necesita recibir, no en el propio',
+    '**Proyecciones parentales**: reconocer cuándo Carlos responde a su "madre exigente" y Ana a su "padre ausente" — no al otro real',
+    '**Diferenciación del self**: mantener la identidad propia sin que la cercanía se sienta como invasión o el espacio como abandono',
+    '**Reparación genuina**: crear rituales de reconexión que vayan más allá del abrazo superficial',
+    '**Reactivación del deseo**: recuperar la intensidad erótica que migró al conflicto',
+    '**Narrativa compartida de futuro**: construir juntos una visión que integre las necesidades de ambos'
+  ],
+  tecnicas_recomendadas_cruzada: [
+    { nombre: 'EFT para parejas (Johnson)', descripcion: 'Desactivar el ciclo de desconexión y crear conversaciones de vínculo seguro.' },
+    { nombre: 'Gottman Sound Relationship House', descripcion: 'Reconstruir los mapas de amor y fortalecer la ratio 5:1 de interacciones.' },
+    { nombre: 'Diálogo Imago (Hendrix)', descripcion: 'Espaciar los tiempos de comunicación para que cada uno se sienta escuchado sin reactividad.' },
+    { nombre: 'Hold Me Tight (Johnson)', descripcion: 'Protocolo de 7 conversaciones diseñado para parejas con ciclo ansioso-evitativo.' },
+    { nombre: 'Regulación PACT (Tatkin)', descripcion: 'Ejercicios de co-regulación basados en la neurobiología del apego.' },
+    { nombre: 'Diferenciación de Schnarch', descripcion: 'Aprender a mantener el centro propio estando en contacto íntimo con el otro.' }
+  ],
+  cta_terapia_pareja: {
+    titular: 'Rompan el ciclo antes de que se cristalice',
+    descripcion: 'Detectamos un patrón de persecución-retirada que erosiona el vínculo sigilosamente. En terapia de pareja podemos desactivarlo y reconectar desde un lugar seguro para ambos.',
+    puntos: [
+      'Desactivar el ciclo perseguidor-retirada que detectamos en el cruce',
+      'Crear un espacio seguro donde ambos puedan expresar vulnerabilidad',
+      'Traducir los lenguajes de amor para que dejen de hablar idiomas distintos',
+      'Reconectar el deseo erótico que migró hacia el conflicto'
+    ]
+  },
 }
 
 // ─── ANÁLISIS ANIMATION TASKS ─────────────────────────────────────
@@ -1998,6 +2090,7 @@ const RadiografiaPremiumPage = () => {
   const [analysisDone, setAnalysisDone] = useState(false)
   const [completedTasks, setCompletedTasks] = useState(0)
   const [pdfGenerating, setPdfGenerating] = useState(false)
+  const [autoPdf, setAutoPdf] = useState(false)
   const [cachedAnalysis, setCachedAnalysis] = useState(null)
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [onboardingStep, setOnboardingStep] = useState(0)
@@ -2549,6 +2642,17 @@ const RadiografiaPremiumPage = () => {
       console.error('PDF generation error:', err)
     } finally { setPdfGenerating(false) }
   }, [aiAnalysis, profileData, crossAnalysis])
+
+  // Auto-generate PDF after demo data is loaded and DOM is rendered
+  useEffect(() => {
+    if (autoPdf && aiAnalysis && stage === 'results') {
+      const timer = setTimeout(() => {
+        setAutoPdf(false)
+        generatePDF()
+      }, 1500)
+      return () => clearTimeout(timer)
+    }
+  }, [autoPdf, aiAnalysis, stage, generatePDF])
 
   return (
     <div className="min-h-screen bg-zinc-950">
@@ -3321,6 +3425,39 @@ const RadiografiaPremiumPage = () => {
                       {pdfGenerating ? <Loader2 className="w-4 h-4 text-teal-300/70 animate-spin" /> : <Download className="w-4 h-4 text-teal-300/70" />}
                     </div>
                     <span className="text-[9px] text-white/55">PDF</span>
+                  </button>
+                  {/* 11. PDF Ind. — Load individual demo → auto-generate PDF */}
+                  <button onClick={() => {
+                    setProfileData({ nombre: 'Sofía', edad: '28', nombrePareja: 'Mateo', edadPareja: '31' })
+                    setAiAnalysis(CACHED_PREVIEW_ANALYSIS)
+                    setCachedAnalysis(CACHED_PREVIEW_ANALYSIS)
+                    setCrossAnalysis(null)
+                    setStage('results')
+                    setAutoPdf(true)
+                  }}
+                    className="flex flex-col items-center gap-1" title="Generar PDF demo individual (Sofía)">
+                    <div className="w-11 h-11 rounded-full border border-orange-500/25 bg-orange-500/10 flex items-center justify-center hover:bg-orange-500/20 transition-colors">
+                      <Download className="w-4 h-4 text-orange-300/70" />
+                    </div>
+                    <span className="text-[9px] text-white/55">PDF Ind.</span>
+                  </button>
+                  {/* 12. PDF Cruz. — Load cross demo → auto-generate PDF */}
+                  <button onClick={() => {
+                    const url = new URL(window.location)
+                    url.searchParams.set('type', 'losdos')
+                    window.history.replaceState({}, '', url)
+                    setProfileData({ nombre: 'Carlos', edad: '32', nombrePareja: 'Ana', edadPareja: '30' })
+                    setAiAnalysis(CACHED_PREVIEW_ANALYSIS)
+                    setCachedAnalysis(CACHED_PREVIEW_ANALYSIS)
+                    setCrossAnalysis(DEMO_CROSS_ANALYSIS)
+                    setStage('results')
+                    setAutoPdf(true)
+                  }}
+                    className="flex flex-col items-center gap-1" title="Generar PDF demo cruzado (Carlos & Ana)">
+                    <div className="w-11 h-11 rounded-full border border-rose-500/25 bg-rose-500/10 flex items-center justify-center hover:bg-rose-500/20 transition-colors">
+                      <Download className="w-4 h-4 text-rose-300/70" />
+                    </div>
+                    <span className="text-[9px] text-white/55">PDF Cruz.</span>
                   </button>
                 </div>
                 </div>
@@ -4610,16 +4747,22 @@ const RadiografiaPremiumPage = () => {
                     const cc = crossAnalysis.compatibilidad_corrientes
                     const corrientes = [
                       { key: 'gottman', label: 'Gottman', icon: Shield, desc: 'Regulación del conflicto' },
-                      { key: 'apego', label: 'Apego', icon: Anchor, desc: 'Vínculo emocional' },
+                      { key: 'sue_johnson', label: 'Sue Johnson', icon: Heart, desc: 'Seguridad emocional' },
                       { key: 'perel', label: 'Perel', icon: Flame, desc: 'Deseo erótico' },
-                      { key: 'comunicacion', label: 'Comunicación', icon: MessageCircle, desc: 'Lenguajes de amor' },
-                      { key: 'poder', label: 'Poder', icon: Scale, desc: 'Equilibrio de poder' },
+                      { key: 'levine', label: 'Levine', icon: Anchor, desc: 'Apego interaccional' },
+                      { key: 'hendrix', label: 'Hendrix', icon: Target, desc: 'Imago relacional' },
+                      { key: 'tatkin', label: 'Tatkin', icon: Activity, desc: 'Sincronía mutua' },
+                      { key: 'chapman', label: 'Chapman', icon: MessageCircle, desc: 'Lenguajes de amor' },
+                      { key: 'sternberg', label: 'Sternberg', icon: Star, desc: 'Triángulo del amor' },
+                      { key: 'schnarch', label: 'Schnarch', icon: Compass, desc: 'Diferenciación' },
+                      { key: 'real', label: 'Real', icon: Scale, desc: 'Equilibrio de poder' },
+                      { key: 'freud_lacan', label: 'Freud+Lacan', icon: Brain, desc: 'Inconsciente relacional' },
                     ]
                     return (
                       <div className="p-6 lg:p-8 rounded-2xl border border-violet-500/15 bg-white/[0.02]">
                         <div className="text-center mb-6">
                           <p className="text-violet-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Compatibilidad por corriente</p>
-                          <h3 className="text-xl font-light text-white/80">5 marcos teóricos, 5 diagnósticos</h3>
+                          <h3 className="text-xl font-light text-white/80">11 marcos teóricos, 11 diagnósticos</h3>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                           {corrientes.map(({ key, label, icon: CIcon, desc }) => {
@@ -4746,25 +4889,162 @@ const RadiografiaPremiumPage = () => {
                     )}
                   </div>
 
-                  {/* Lecturas cruzadas (5 enfoques) */}
+                  {/* ═══ ANÁLISIS PROFUNDO CRUZADO ═══ */}
+                  {crossAnalysis.analisis_profundo_cruzado && (() => {
+                    const ap = crossAnalysis.analisis_profundo_cruzado
+                    const secs = [
+                      { key: 'narrativa_dominante', label: 'Narrativa dominante', icon: Lightbulb },
+                      { key: 'tensiones_estructurales', label: 'Tensiones estructurales', icon: AlertTriangle },
+                      { key: 'evolucion_deseo_cruzada', label: 'Evolución del deseo', icon: Flame },
+                      { key: 'dinamica_emocional_cruzada', label: 'Dinámica emocional', icon: Activity },
+                    ]
+                    return (
+                      <div className="p-6 lg:p-8 rounded-2xl border border-violet-500/15 bg-gradient-to-br from-violet-500/[0.03] to-fuchsia-500/[0.02]">
+                        <div className="text-center mb-6">
+                          <p className="text-violet-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Análisis profundo cruzado</p>
+                          <h3 className="text-xl font-light text-white/80">Lo que emerge al cruzar ambas narrativas</h3>
+                        </div>
+                        <div className="space-y-5">
+                          {secs.map(({ key, label, icon: SecIcon }) => {
+                            const val = ap[key]
+                            if (!val) return null
+                            return (
+                              <div key={key}>
+                                <div className="flex items-center gap-2 mb-2">
+                                  <SecIcon className="w-4 h-4 text-violet-400/60" />
+                                  <p className="text-violet-300/70 text-xs font-bold uppercase tracking-wider">{label}</p>
+                                </div>
+                                {val.split('\n\n').map((p, i) => (
+                                  <p key={i} className="text-white/70 text-[14px] font-light leading-[1.8] mb-2">{renderConceptBold(p)}</p>
+                                ))}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )
+                  })()}
+
+                  {/* ═══ LECTURA PSICOANALÍTICA CRUZADA ═══ */}
+                  {crossAnalysis.lectura_psicoanalitica_cruzada && (() => {
+                    const lp = crossAnalysis.lectura_psicoanalitica_cruzada
+                    return (
+                      <div className="p-6 lg:p-8 rounded-2xl border border-rose-500/15 bg-gradient-to-br from-rose-500/[0.03] to-pink-500/[0.02]">
+                        <div className="text-center mb-6">
+                          <Brain className="w-8 h-8 text-rose-400/60 mx-auto mb-2" />
+                          <p className="text-rose-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Lectura psicoanalítica cruzada</p>
+                          <h3 className="text-xl font-light text-white/80">El inconsciente compartido</h3>
+                        </div>
+                        <div className="space-y-5">
+                          {lp.proyecciones_mutuas && (
+                            <div>
+                              <p className="text-rose-300/70 text-xs font-bold uppercase tracking-wider mb-2">Proyecciones mutuas</p>
+                              {lp.proyecciones_mutuas.split('\n\n').map((p, i) => (
+                                <p key={i} className="text-white/70 text-[14px] font-light leading-[1.8] mb-2">{renderConceptBold(p)}</p>
+                              ))}
+                            </div>
+                          )}
+                          {lp.fantasma_relacional_compartido && (
+                            <div>
+                              <p className="text-rose-300/70 text-xs font-bold uppercase tracking-wider mb-2">Fantasma relacional compartido</p>
+                              {lp.fantasma_relacional_compartido.split('\n\n').map((p, i) => (
+                                <p key={i} className="text-white/70 text-[14px] font-light leading-[1.8] mb-2">{renderConceptBold(p)}</p>
+                              ))}
+                            </div>
+                          )}
+                          {lp.goce_compartido && (
+                            <div>
+                              <p className="text-rose-300/70 text-xs font-bold uppercase tracking-wider mb-2">Goce compartido (jouissance)</p>
+                              <p className="text-white/70 text-[14px] font-light leading-[1.8]">{renderConceptBold(lp.goce_compartido)}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })()}
+
+                  {/* ═══ DINÁMICA DE CONFLICTO CRUZADA ═══ */}
+                  {crossAnalysis.dinamica_conflicto_cruzada && (() => {
+                    const dc = crossAnalysis.dinamica_conflicto_cruzada
+                    const t1 = typeof dc.tendencia_conflicto_p1 === 'number' ? dc.tendencia_conflicto_p1 : parseInt(dc.tendencia_conflicto_p1) || 50
+                    const t2 = typeof dc.tendencia_conflicto_p2 === 'number' ? dc.tendencia_conflicto_p2 : parseInt(dc.tendencia_conflicto_p2) || 50
+                    const cap = typeof dc.capacidad_reparacion === 'number' ? dc.capacidad_reparacion : parseInt(dc.capacidad_reparacion) || 50
+                    const ind = crossAnalysis._individual || {}
+                    const name1 = ind.p1?.nombre || 'P1'
+                    const name2 = ind.p2?.nombre || 'P2'
+                    return (
+                      <div className="p-6 lg:p-8 rounded-2xl border border-red-500/15 bg-white/[0.02]">
+                        <div className="text-center mb-6">
+                          <p className="text-red-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Dinámica de conflicto cruzada</p>
+                          <h3 className="text-xl font-light text-white/80">Cómo pelean y cómo reparan</h3>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+                          <div className="p-4 rounded-xl border border-white/10 bg-white/[0.03] text-center">
+                            <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1">{name1} conflicto</p>
+                            <p className={`text-2xl font-bold ${t1 >= 60 ? 'text-rose-400' : t1 >= 40 ? 'text-amber-400' : 'text-emerald-400'}`}>{t1}</p>
+                          </div>
+                          <div className="p-4 rounded-xl border border-white/10 bg-white/[0.03] text-center">
+                            <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1">{name2} conflicto</p>
+                            <p className={`text-2xl font-bold ${t2 >= 60 ? 'text-rose-400' : t2 >= 40 ? 'text-amber-400' : 'text-emerald-400'}`}>{t2}</p>
+                          </div>
+                          <div className="p-4 rounded-xl border border-white/10 bg-white/[0.03] text-center">
+                            <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1">Reparación</p>
+                            <p className={`text-2xl font-bold ${cap >= 60 ? 'text-emerald-400' : cap >= 40 ? 'text-amber-400' : 'text-rose-400'}`}>{cap}</p>
+                          </div>
+                        </div>
+                        {dc.patron_dominante && <p className="text-white/60 text-sm text-center mb-4"><span className="text-white/40 text-xs uppercase tracking-wider">Patrón: </span>{dc.patron_dominante}</p>}
+                        {dc.ciclo_repeticion?.length > 0 && (
+                          <div className="flex flex-wrap items-center justify-center gap-2 mt-3">
+                            {dc.ciclo_repeticion.map((etapa, i) => (
+                              <span key={i} className="flex items-center gap-2">
+                                <span className="text-[12px] px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/15 text-white/60">{etapa}</span>
+                                {i < dc.ciclo_repeticion.length - 1 && <ArrowRight className="w-3 h-3 text-red-400/40" />}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })()}
+
+                  {/* Lecturas cruzadas (11 enfoques) */}
                   {crossAnalysis.lecturas_cruzadas && (() => {
                     const lc = crossAnalysis.lecturas_cruzadas
                     const sections = [
-                      { key: 'gottman', title: 'Regulación del conflicto', subtitle: 'Gottman cruzado', icon: Shield, gradient: 'from-blue-500 to-indigo-500', border: 'border-blue-500/15', accent: '#60a5fa' },
-                      { key: 'apego', title: 'Estilos de apego cruzados', subtitle: 'Apego interaccional', icon: Anchor, gradient: 'from-purple-500 to-fuchsia-500', border: 'border-purple-500/15', accent: '#c084fc' },
-                      { key: 'perel', title: 'El deseo desde ambas ventanas', subtitle: 'Esther Perel cruzado', icon: Flame, gradient: 'from-orange-500 to-red-500', border: 'border-orange-500/15', accent: '#fb923c' },
-                      { key: 'comunicacion', title: 'Lenguajes de amor cruzados', subtitle: 'Comunicación', icon: MessageCircle, gradient: 'from-teal-500 to-emerald-500', border: 'border-teal-500/15', accent: '#2dd4bf' },
-                      { key: 'poder', title: 'Dinámica de poder real', subtitle: 'Equilibrio de poder', icon: Scale, gradient: 'from-amber-500 to-yellow-500', border: 'border-amber-500/15', accent: '#fbbf24' },
+                      { key: 'gottman', fallbackTitle: 'Regulación del conflicto', fallbackSubtitle: 'Gottman cruzado', icon: Shield, gradient: 'from-blue-500 to-indigo-500', border: 'border-blue-500/15', accent: '#60a5fa' },
+                      { key: 'sue_johnson', fallbackTitle: 'Seguridad emocional cruzada', fallbackSubtitle: 'Sue Johnson cruzado', icon: Heart, gradient: 'from-pink-500 to-rose-500', border: 'border-pink-500/15', accent: '#f472b6' },
+                      { key: 'perel', fallbackTitle: 'El deseo desde ambas ventanas', fallbackSubtitle: 'Esther Perel cruzado', icon: Flame, gradient: 'from-orange-500 to-red-500', border: 'border-orange-500/15', accent: '#fb923c' },
+                      { key: 'levine', fallbackTitle: 'Apego interaccional', fallbackSubtitle: 'Amir Levine cruzado', icon: Anchor, gradient: 'from-purple-500 to-fuchsia-500', border: 'border-purple-500/15', accent: '#c084fc' },
+                      { key: 'hendrix', fallbackTitle: 'Imago cruzado', fallbackSubtitle: 'Harville Hendrix cruzado', icon: Target, gradient: 'from-lime-500 to-green-500', border: 'border-lime-500/15', accent: '#a3e635' },
+                      { key: 'tatkin', fallbackTitle: 'Sincronía y regulación mutua', fallbackSubtitle: 'Stan Tatkin cruzado', icon: Activity, gradient: 'from-cyan-500 to-blue-500', border: 'border-cyan-500/15', accent: '#22d3ee' },
+                      { key: 'chapman', fallbackTitle: 'Lenguajes de amor cruzados', fallbackSubtitle: 'Gary Chapman cruzado', icon: MessageCircle, gradient: 'from-teal-500 to-emerald-500', border: 'border-teal-500/15', accent: '#2dd4bf' },
+                      { key: 'sternberg', fallbackTitle: 'Triángulo del amor cruzado', fallbackSubtitle: 'Robert Sternberg cruzado', icon: Star, gradient: 'from-yellow-500 to-amber-500', border: 'border-yellow-500/15', accent: '#facc15' },
+                      { key: 'schnarch', fallbackTitle: 'Diferenciación cruzada', fallbackSubtitle: 'David Schnarch cruzado', icon: Compass, gradient: 'from-indigo-500 to-violet-500', border: 'border-indigo-500/15', accent: '#818cf8' },
+                      { key: 'real', fallbackTitle: 'Dinámica de poder real', fallbackSubtitle: 'Terrence Real cruzado', icon: Scale, gradient: 'from-amber-500 to-yellow-500', border: 'border-amber-500/15', accent: '#fbbf24' },
+                      { key: 'freud_lacan', fallbackTitle: 'Inconsciente relacional cruzado', fallbackSubtitle: 'Freud + Lacan cruzado', icon: Brain, gradient: 'from-rose-500 to-pink-500', border: 'border-rose-500/15', accent: '#fb7185' },
                     ]
                     return (
                       <div className="space-y-6">
                         <div className="text-center py-4">
-                          <p className="text-emerald-400/50 text-xs font-bold uppercase tracking-[0.25em] mb-1">5 Lecturas Cruzadas</p>
+                          <p className="text-emerald-400/50 text-xs font-bold uppercase tracking-[0.25em] mb-1">11 Lecturas Cruzadas</p>
                           <p className="text-white/40 text-sm font-light">Cada corriente psicológica — ahora vista desde las dos perspectivas</p>
                         </div>
-                        {sections.map(({ key, title, subtitle, icon: SIcon, gradient, border, accent }) => {
-                          const text = lc[key]
-                          if (!text) return null
+                        {sections.map(({ key, fallbackTitle, fallbackSubtitle, icon: SIcon, gradient, border, accent }) => {
+                          const entry = lc[key]
+                          if (!entry) return null
+                          // Support both old string format and new object format
+                          const isObj = typeof entry === 'object'
+                          const text = isObj ? (entry.interpretacion || '') : entry
+                          const textFreud = isObj ? entry.interpretacion_freud : null
+                          const textLacan = isObj ? entry.interpretacion_lacan : null
+                          const title = isObj && entry.titulo ? entry.titulo : fallbackTitle
+                          const subtitle = fallbackSubtitle
+                          const score = isObj ? entry.puntuacion : null
+                          const indicadores = isObj ? entry.indicadores : null
+                          const allText = key === 'freud_lacan' && (textFreud || textLacan)
+                            ? [textFreud, textLacan].filter(Boolean).join('\n\n')
+                            : text
+                          if (!allText) return null
                           return (
                             <div key={key} className={`rounded-2xl overflow-hidden border ${border} bg-white/[0.02]`}>
                               <div className="text-center py-6 px-5 relative">
@@ -4774,15 +5054,102 @@ const RadiografiaPremiumPage = () => {
                                 </div>
                                 <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-1" style={{ color: `${accent}99` }}>{subtitle}</p>
                                 <h3 className={`text-lg font-light text-transparent bg-clip-text bg-gradient-to-r ${gradient} tracking-wide`}>{title}</h3>
+                                {score != null && (
+                                  <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.05] border border-white/10">
+                                    <span className={`text-sm font-bold ${parseInt(score) >= 60 ? 'text-emerald-400' : parseInt(score) >= 40 ? 'text-amber-400' : 'text-rose-400'}`}>{score}</span>
+                                    <span className="text-white/30 text-[10px]">/ 100</span>
+                                  </div>
+                                )}
                               </div>
                               <div className="px-6 pb-6 space-y-3">
-                                {text.split('\n\n').map((p, i) => (
+                                {allText.split('\n\n').map((p, i) => (
                                   <p key={i} className="text-white/70 text-[14px] font-light leading-[1.85]">{renderConceptBold(p)}</p>
                                 ))}
+                                {indicadores?.length > 0 && (
+                                  <div className="mt-4 flex flex-wrap gap-2">
+                                    {indicadores.map((ind, i) => (
+                                      <span key={i} className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/10 text-white/50">{ind}</span>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                             </div>
                           )
                         })}
+                      </div>
+                    )
+                  })()}
+
+                  {/* ═══ TABLA DIAGNÓSTICA CRUZADA ═══ */}
+                  {crossAnalysis.tabla_diagnostica_cruzada?.length > 0 && (() => {
+                    const ind = crossAnalysis._individual || {}
+                    const name1 = ind.p1?.nombre || 'P1'
+                    const name2 = ind.p2?.nombre || 'P2'
+                    const levelColor = (lvl) => {
+                      const l = (lvl || '').toLowerCase()
+                      if (l.includes('alto') || l.includes('alta') || l.includes('óptim')) return 'text-emerald-400'
+                      if (l.includes('bajo') || l.includes('baja') || l.includes('déficit') || l.includes('crític')) return 'text-rose-400'
+                      return 'text-amber-400'
+                    }
+                    return (
+                      <div className="p-6 lg:p-8 rounded-2xl border border-white/10 bg-white/[0.02] overflow-x-auto">
+                        <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-4 text-center">Tabla diagnóstica cruzada</p>
+                        <table className="w-full text-left text-sm">
+                          <thead>
+                            <tr className="border-b border-white/10">
+                              <th className="py-2 pr-4 text-white/50 text-xs uppercase tracking-wider font-medium">Dimensión</th>
+                              <th className="py-2 px-4 text-white/50 text-xs uppercase tracking-wider font-medium text-center">{name1}</th>
+                              <th className="py-2 pl-4 text-white/50 text-xs uppercase tracking-wider font-medium text-center">{name2}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {crossAnalysis.tabla_diagnostica_cruzada.map((row, i) => (
+                              <tr key={i} className="border-b border-white/[0.04]">
+                                <td className="py-2.5 pr-4 text-white/60 font-light">{row.dimension || row.area}</td>
+                                <td className={`py-2.5 px-4 text-center font-medium ${levelColor(row.nivel_p1)}`}>{row.nivel_p1}</td>
+                                <td className={`py-2.5 pl-4 text-center font-medium ${levelColor(row.nivel_p2)}`}>{row.nivel_p2}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )
+                  })()}
+
+                  {/* ═══ ENERGÍA DEL VÍNCULO CRUZADA ═══ */}
+                  {crossAnalysis.energia_vinculo_cruzada && (() => {
+                    const ev = crossAnalysis.energia_vinculo_cruzada
+                    const metrics = [
+                      { key: 'conexion_emocional', label: 'Conexión emocional', color: 'from-pink-500 to-rose-500' },
+                      { key: 'deseo_mutuo', label: 'Deseo mutuo', color: 'from-red-500 to-orange-500' },
+                      { key: 'confianza', label: 'Confianza', color: 'from-emerald-500 to-teal-500' },
+                      { key: 'comunicacion', label: 'Comunicación', color: 'from-blue-500 to-cyan-500' },
+                      { key: 'proyecto_compartido', label: 'Proyecto compartido', color: 'from-violet-500 to-purple-500' },
+                      { key: 'autonomia_saludable', label: 'Autonomía saludable', color: 'from-amber-500 to-yellow-500' },
+                    ]
+                    return (
+                      <div className="p-6 lg:p-8 rounded-2xl border border-cyan-500/15 bg-gradient-to-br from-cyan-500/[0.03] to-blue-500/[0.02]">
+                        <div className="text-center mb-6">
+                          <Activity className="w-7 h-7 text-cyan-400/60 mx-auto mb-2" />
+                          <p className="text-cyan-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Energía del vínculo</p>
+                          <h3 className="text-xl font-light text-white/80">6 pilares de la relación</h3>
+                        </div>
+                        <div className="space-y-4">
+                          {metrics.map(({ key, label, color }) => {
+                            const val = typeof ev[key] === 'number' ? ev[key] : parseInt(ev[key]) || 0
+                            return (
+                              <div key={key}>
+                                <div className="flex justify-between mb-1">
+                                  <span className="text-white/60 text-sm font-light">{label}</span>
+                                  <span className="text-white/40 text-sm">{val}/100</span>
+                                </div>
+                                <div className="h-2.5 rounded-full bg-white/[0.06] overflow-hidden">
+                                  <div className={`h-full rounded-full bg-gradient-to-r ${color}`} style={{ width: `${Math.min(100, Math.max(0, val))}%`, transition: 'width 1s ease' }} />
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
                       </div>
                     )
                   })()}
@@ -4839,11 +5206,48 @@ const RadiografiaPremiumPage = () => {
                     )
                   })()}
 
+                  {/* ═══ TEMAS PARA CONSULTA CRUZADA ═══ */}
+                  {crossAnalysis.temas_para_consulta_cruzada?.length > 0 && (
+                    <div className="p-6 lg:p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+                      <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-4 text-center">Temas para consulta de pareja</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {crossAnalysis.temas_para_consulta_cruzada.map((tema, i) => (
+                          <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                            <span className="text-violet-400/60 text-sm font-bold mt-0.5">{i + 1}</span>
+                            <p className="text-white/65 text-sm font-light leading-relaxed">{typeof tema === 'string' ? tema : tema.tema || tema.titulo || tema.descripcion || JSON.stringify(tema)}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ═══ TÉCNICAS RECOMENDADAS CRUZADA ═══ */}
+                  {crossAnalysis.tecnicas_recomendadas_cruzada?.length > 0 && (
+                    <div className="p-6 lg:p-8 rounded-2xl border border-teal-500/15 bg-gradient-to-br from-teal-500/[0.03] to-emerald-500/[0.02]">
+                      <p className="text-teal-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-4 text-center">Técnicas recomendadas para la pareja</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {crossAnalysis.tecnicas_recomendadas_cruzada.map((tec, i) => {
+                          const nombre = typeof tec === 'string' ? tec : tec.nombre || tec.tecnica || tec.titulo
+                          const desc = typeof tec === 'string' ? null : tec.descripcion || tec.explicacion
+                          return (
+                            <div key={i} className="p-4 rounded-xl bg-white/[0.03] border border-teal-500/10">
+                              <div className="flex items-center gap-2 mb-1.5">
+                                <Sparkles className="w-4 h-4 text-teal-400/50" />
+                                <p className="text-white/70 text-sm font-medium">{nombre}</p>
+                              </div>
+                              {desc && <p className="text-white/50 text-xs font-light leading-relaxed pl-6">{desc}</p>}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )}
+
                   {/* ═══ CTA TERAPIA PREMIUM (Cruzado) ═══ */}
                   <div className="mt-6 mb-2">
                     <div className="text-center mb-6">
                       <p className="text-emerald-400/50 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Da el siguiente paso — juntos</p>
-                      <p className="text-white/50 text-sm font-light">La radiografía cruzada reveló dinámicas que se pueden transformar — con guía profesional.</p>
+                      <p className="text-white/50 text-sm font-light">{crossAnalysis.cta_terapia_pareja?.frase_cierre || 'La radiografía cruzada reveló dinámicas que se pueden transformar — con guía profesional.'}</p>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       {/* Terapia Individual */}
