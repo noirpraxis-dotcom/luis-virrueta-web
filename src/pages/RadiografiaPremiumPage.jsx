@@ -12,7 +12,8 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, RadarC
 import SEOHead from '../components/SEOHead'
 import { analyzeRadiografiaPremium, generateFallbackAnalysis, analyzeCrossRadiografia } from '../services/radiografiaPremiumService'
 import { CACHED_PREVIEW_ANALYSIS } from '../data/cachedPreviewAnalysis'
-import { saveAnalysis, sendAnalysisEmail, sendBackupEmail, getAnalysis, checkCrossStatus, markPartnerDone, saveCrossAnalysis, sendCrossAnalysisEmail, getCrossAnalysis, getProfile } from '../services/emailApiService'
+import { saveAnalysis, sendAnalysisEmail, sendBackupEmail, getAnalysis, checkCrossStatus, markPartnerDone, saveCrossAnalysis, sendCrossAnalysisEmail, getCrossAnalysis, getProfile, saveProfile } from '../services/emailApiService'
+import { downloadRadiografiaPDF } from '../services/pdfGenerationService'
 
 // ─── 40 PREGUNTAS NARRATIVAS — 5 BLOQUES ────────────────────
 
@@ -328,8 +329,8 @@ const DIMENSION_COLORS = [
 // ─── ElevenLabs voices (Latin Spanish) ────────────
 
 const WORKER_URL = 'https://radiografia-worker.noirpraxis.workers.dev'
-// Audio files live on Cloudflare Pages (luisvirrueta.com/audio/...), not on the Worker/R2
-const AUDIO_BASE = ''
+// Audio files live on R2 served via the Worker (/audio/premium/...)
+const AUDIO_BASE = WORKER_URL
 
 const VOICE_LIST = [
   { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Valentina', desc: 'Cálida y clara', initial: 'V', color: 'from-rose-500 to-pink-500', ring: 'ring-rose-400/20', border: 'border-rose-500/30', bg: 'bg-rose-500/10', text: 'text-rose-300' },
@@ -1967,6 +1968,10 @@ const RadiografiaPremiumPage = () => {
     edadPareja:    sessionStorage.getItem('radiografia_edad_pareja')    || '',
     fecha: new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })
   })
+  // Profile gate: if user arrives via email link without profile data, show form first
+  const [profileGateDone, setProfileGateDone] = useState(() => {
+    return !!(sessionStorage.getItem('radiografia_nombre'))
+  })
   const [soundTestOk, setSoundTestOk] = useState(null)
   const [micTestOk, setMicTestOk] = useState(null)
   const [micAnalyser, setMicAnalyser] = useState(null)
@@ -2098,7 +2103,7 @@ const RadiografiaPremiumPage = () => {
     if (!sessionStorage.getItem('radiografia_nombre')) {
       getProfile(token)
         .then(p => {
-          if (p) {
+          if (p && p.nombre) {
             setProfileData(prev => ({
               ...prev,
               nombre: p.nombre || prev.nombre,
@@ -2108,6 +2113,7 @@ const RadiografiaPremiumPage = () => {
             }))
             if (p.email) setEmailData(prev => ({ ...prev, emailUsuario: p.email || prev.emailUsuario }))
             if (p.partnerEmail) setEmailData(prev => ({ ...prev, emailPareja: p.partnerEmail || prev.emailPareja }))
+            setProfileGateDone(true)
           }
         })
         .catch(() => {})
@@ -2200,9 +2206,10 @@ const RadiografiaPremiumPage = () => {
       let audioUrl = null
 
       if (staticFile) {
-        // Use static file
+        // Use static file — verify it's actually audio (not SPA fallback HTML)
         const testRes = await fetch(staticFile, { method: 'HEAD' }).catch(() => null)
-        if (testRes?.ok) {
+        const ct = testRes?.headers?.get('content-type') || ''
+        if (testRes?.ok && ct.startsWith('audio/')) {
           audioUrl = staticFile
         }
       }
@@ -2541,110 +2548,11 @@ const RadiografiaPremiumPage = () => {
     if (!aiAnalysis || !resultsRef.current) return
     setPdfGenerating(true)
     try {
-      const element = resultsRef.current
-
-      // Helper: blob → data URI
-      const blobToDataUri = blob => new Promise(resolve => {
-        const r = new FileReader()
-        r.onload = () => resolve(r.result)
-        r.readAsDataURL(blob)
-      })
-
-      // Helper: embed external URLs inside CSS as data URIs (fonts, etc.)
-      const embedCssUrls = async (css) => {
-        const urlRe = /url\(["']?(https?:\/\/[^"')]+)["']?\)/g
-        const matches = [...css.matchAll(urlRe)]
-        const cache = new Map()
-        for (const m of matches) {
-          if (cache.has(m[1])) continue
-          try {
-            const res = await fetch(m[1])
-            cache.set(m[1], await blobToDataUri(await res.blob()))
-          } catch { cache.set(m[1], null) }
-        }
-        let result = css
-        for (const [url, dataUri] of cache) {
-          if (dataUri) result = result.replaceAll(url, dataUri)
-        }
-        return result
-      }
-
-      // 1. Collect ALL CSS — for cross-origin sheets (Google Fonts) embed font files
-      const cssChunks = []
-      for (const sheet of document.styleSheets) {
-        try {
-          cssChunks.push([...sheet.cssRules].map(r => r.cssText).join('\n'))
-        } catch {
-          if (sheet.href) {
-            try {
-              const raw = await (await fetch(sheet.href)).text()
-              cssChunks.push(await embedCssUrls(raw))
-            } catch {}
-          }
-        }
-      }
-
-      // 2. Clone the results DOM tree
-      const clone = element.cloneNode(true)
-
-      // 3. Remove interactive elements + download/email banners (not relevant offline)
-      clone.querySelectorAll('button').forEach(b => b.remove())
-
-      // 4. Fix framer-motion invisible sections: whileInView elements cloned with opacity:0
-      clone.querySelectorAll('[style]').forEach(el => {
-        el.style.removeProperty('opacity')
-        el.style.removeProperty('transform')
-      })
-
-      // 5. Convert external <img> to inline data URIs (for offline viewing)
-      const imgs = clone.querySelectorAll('img[src]')
-      await Promise.all([...imgs].map(async img => {
-        const src = img.getAttribute('src')
-        if (!src || src.startsWith('data:')) return
-        try {
-          const absUrl = src.startsWith('http') ? src : new URL(src, window.location.origin).href
-          img.setAttribute('src', await blobToDataUri(await (await fetch(absUrl, { mode: 'cors' })).blob()))
-        } catch {}
-      }))
-
-      const nombre = profileData.nombre || 'Reporte'
-      const pareja = profileData.nombrePareja || ''
-      const titulo = pareja
-        ? `Radiografía de Pareja — ${nombre} & ${pareja}`
-        : `Radiografía de Pareja — ${nombre}`
-
-      // Use the same Tailwind classes as the live page for pixel-perfect layout
-      const htmlContent = `<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${titulo}</title>
-<style>
-${cssChunks.join('\n')}
-@media print { html, body { background: #09090b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
-</style>
-</head>
-<body class="min-h-screen bg-zinc-950">
-<div class="min-h-screen pt-6 lg:pt-10 pb-20 px-6">
-${clone.outerHTML}
-</div>
-</body>
-</html>`
-
-      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `radiografia-${nombre.toLowerCase().replace(/\s+/g, '-')}.html`
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
+      await downloadRadiografiaPDF(resultsRef.current, profileData, { crossAnalysis })
     } catch (err) {
-      console.error('HTML generation error:', err)
+      console.error('PDF generation error:', err)
     } finally { setPdfGenerating(false) }
-  }, [aiAnalysis, profileData.nombre, profileData.nombrePareja])
+  }, [aiAnalysis, profileData, crossAnalysis])
 
   return (
     <div className="min-h-screen bg-zinc-950">
@@ -2685,7 +2593,85 @@ ${clone.outerHTML}
                 </div>
               </div>
 
+              {/* ── Profile gate: inline form if profile data is missing ── */}
+              {!profileGateDone && !import.meta.env.DEV && (
+                <div className="space-y-4 p-6 rounded-2xl border border-violet-500/20 bg-violet-500/[0.04]">
+                  <div className="text-center mb-2">
+                    <p className="text-white/70 text-base font-light mb-1">Antes de empezar, cuéntanos un poco sobre ti</p>
+                    <p className="text-white/45 text-xs font-light">Esta información personaliza tu análisis y aparecerá en tu reporte</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto">
+                    <div>
+                      <label className="text-white/50 text-xs font-light mb-1 block">Tu nombre *</label>
+                      <input type="text" value={profileData.nombre} maxLength={50}
+                        onChange={e => setProfileData(p => ({ ...p, nombre: e.target.value }))}
+                        className="w-full px-3 py-2.5 rounded-xl bg-white/[0.06] border border-white/10 text-white text-sm font-light placeholder:text-white/25 focus:outline-none focus:border-violet-500/40"
+                        placeholder="Tu nombre" />
+                    </div>
+                    <div>
+                      <label className="text-white/50 text-xs font-light mb-1 block">Tu edad</label>
+                      <input type="number" value={profileData.edad} min={16} max={99}
+                        onChange={e => setProfileData(p => ({ ...p, edad: e.target.value }))}
+                        className="w-full px-3 py-2.5 rounded-xl bg-white/[0.06] border border-white/10 text-white text-sm font-light placeholder:text-white/25 focus:outline-none focus:border-violet-500/40"
+                        placeholder="Edad" />
+                    </div>
+                  </div>
+                  {(packageType === 'solo' || packageType === 'losdos') && (
+                    <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto">
+                      <div>
+                        <label className="text-white/50 text-xs font-light mb-1 block">Nombre de tu pareja</label>
+                        <input type="text" value={profileData.nombrePareja} maxLength={50}
+                          onChange={e => setProfileData(p => ({ ...p, nombrePareja: e.target.value }))}
+                          className="w-full px-3 py-2.5 rounded-xl bg-white/[0.06] border border-white/10 text-white text-sm font-light placeholder:text-white/25 focus:outline-none focus:border-violet-500/40"
+                          placeholder="Su nombre" />
+                      </div>
+                      <div>
+                        <label className="text-white/50 text-xs font-light mb-1 block">Edad de tu pareja</label>
+                        <input type="number" value={profileData.edadPareja} min={16} max={99}
+                          onChange={e => setProfileData(p => ({ ...p, edadPareja: e.target.value }))}
+                          className="w-full px-3 py-2.5 rounded-xl bg-white/[0.06] border border-white/10 text-white text-sm font-light placeholder:text-white/25 focus:outline-none focus:border-violet-500/40"
+                          placeholder="Edad" />
+                      </div>
+                    </div>
+                  )}
+                  {!emailData.emailUsuario && (
+                    <div className="max-w-sm mx-auto">
+                      <label className="text-white/50 text-xs font-light mb-1 block">Tu email *</label>
+                      <input type="email" value={emailData.emailUsuario}
+                        onChange={e => setEmailData(p => ({ ...p, emailUsuario: e.target.value }))}
+                        className="w-full px-3 py-2.5 rounded-xl bg-white/[0.06] border border-white/10 text-white text-sm font-light placeholder:text-white/25 focus:outline-none focus:border-violet-500/40"
+                        placeholder="tu@email.com" />
+                    </div>
+                  )}
+                  <div className="text-center pt-2">
+                    <motion.button
+                      whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                      disabled={!profileData.nombre.trim()}
+                      onClick={() => {
+                        // Save to sessionStorage
+                        sessionStorage.setItem('radiografia_nombre', profileData.nombre)
+                        if (profileData.edad) sessionStorage.setItem('radiografia_edad', profileData.edad)
+                        if (profileData.nombrePareja) sessionStorage.setItem('radiografia_nombre_pareja', profileData.nombrePareja)
+                        if (profileData.edadPareja) sessionStorage.setItem('radiografia_edad_pareja', profileData.edadPareja)
+                        // Save to KV (fire and forget)
+                        if (purchaseToken) {
+                          saveProfile({ token: purchaseToken, profileData: {
+                            nombre: profileData.nombre, edad: profileData.edad,
+                            nombrePareja: profileData.nombrePareja, edadPareja: profileData.edadPareja,
+                            email: emailData.emailUsuario
+                          }}).catch(() => {})
+                        }
+                        setProfileGateDone(true)
+                      }}
+                      className="px-8 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-sm font-medium hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-500/15 disabled:opacity-40 disabled:cursor-not-allowed">
+                      Continuar <ArrowRight className="w-4 h-4 inline ml-1" />
+                    </motion.button>
+                  </div>
+                </div>
+              )}
+
               {/* ── Voice selector: 4 circular cards + no-voice option, single toggle ── */}
+              {(profileGateDone || import.meta.env.DEV) && (<>
               <div className="space-y-4">
                 <div className="text-center">
                   <p className="text-white/70 text-base font-light flex items-center justify-center gap-2 mb-1">
@@ -2801,6 +2787,7 @@ ${clone.outerHTML}
                 className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
                 Siguiente: Instrucciones <ArrowRight className="inline w-4 h-4 ml-2" />
               </motion.button>
+              </>)}
             </div>
           </motion.div>
         )}
@@ -3325,6 +3312,16 @@ ${clone.outerHTML}
                         <Repeat className="w-4 h-4 text-red-300/70" />
                       </div>
                       <span className="text-[9px] text-white/55">Caché</span>
+                    </button>
+                  )}
+                  {/* 10. PDF — descargar resultados como PDF */}
+                  {aiAnalysis && (
+                    <button onClick={generatePDF} disabled={pdfGenerating}
+                      className="flex flex-col items-center gap-1" title="Descargar PDF de resultados">
+                      <div className="w-11 h-11 rounded-full border border-teal-500/25 bg-teal-500/10 flex items-center justify-center hover:bg-teal-500/20 transition-colors">
+                        {pdfGenerating ? <Loader2 className="w-4 h-4 text-teal-300/70 animate-spin" /> : <Download className="w-4 h-4 text-teal-300/70" />}
+                      </div>
+                      <span className="text-[9px] text-white/55">PDF</span>
                     </button>
                   )}
                 </div>
@@ -4509,6 +4506,172 @@ ${clone.outerHTML}
                       </div>
                     )
                   })()}
+
+                  {/* ═══ RADAR DUAL — Perfil de ambos superpuesto ═══ */}
+                  {crossAnalysis.dimensiones_cruzadas && (() => {
+                    const dims = crossAnalysis.dimensiones_cruzadas
+                    const ind = crossAnalysis._individual || {}
+                    const name1 = ind.p1?.nombre || 'Participante 1'
+                    const name2 = ind.p2?.nombre || 'Participante 2'
+                    const radarData = Object.keys(dims).map(k => ({
+                      dim: DIMENSION_LABELS[k] || k.replace(/_/g, ' '),
+                      p1: typeof dims[k].p1 === 'number' ? dims[k].p1 : parseInt(dims[k].p1) || 50,
+                      p2: typeof dims[k].p2 === 'number' ? dims[k].p2 : parseInt(dims[k].p2) || 50,
+                    }))
+                    return (
+                      <div className="p-6 lg:p-8 rounded-2xl border border-violet-500/15 bg-white/[0.02]">
+                        <div className="text-center mb-4">
+                          <p className="text-violet-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Perfil dual</p>
+                          <h3 className="text-xl font-light text-white/80">Radar comparativo de las 12 dimensiones</h3>
+                          <div className="flex justify-center gap-6 mt-3">
+                            <span className="flex items-center gap-2 text-xs text-emerald-300/70"><span className="w-3 h-3 rounded-full bg-emerald-500/60" />{name1}</span>
+                            <span className="flex items-center gap-2 text-xs text-sky-300/70"><span className="w-3 h-3 rounded-full bg-sky-500/60" />{name2}</span>
+                          </div>
+                        </div>
+                        <div className="w-full max-w-lg mx-auto" style={{ height: 360 }}>
+                          <ResponsiveContainer width="100%" height="100%">
+                            <RechartRadar data={radarData}>
+                              <PolarGrid stroke="rgba(255,255,255,0.08)" />
+                              <PolarAngleAxis dataKey="dim" tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 10 }} />
+                              <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
+                              <Radar name={name1} dataKey="p1" stroke="#10b981" fill="#10b981" fillOpacity={0.15} strokeWidth={2} />
+                              <Radar name={name2} dataKey="p2" stroke="#38bdf8" fill="#38bdf8" fillOpacity={0.15} strokeWidth={2} />
+                            </RechartRadar>
+                          </ResponsiveContainer>
+                        </div>
+                      </div>
+                    )
+                  })()}
+
+                  {/* ═══ BRECHAS CRÍTICAS — Gap chart ═══ */}
+                  {crossAnalysis.dimensiones_cruzadas && (() => {
+                    const dims = crossAnalysis.dimensiones_cruzadas
+                    const gaps = Object.keys(dims).map(k => {
+                      const v1 = typeof dims[k].p1 === 'number' ? dims[k].p1 : parseInt(dims[k].p1) || 50
+                      const v2 = typeof dims[k].p2 === 'number' ? dims[k].p2 : parseInt(dims[k].p2) || 50
+                      return { dim: DIMENSION_LABELS[k] || k.replace(/_/g, ' '), gap: Math.abs(v1 - v2), v1, v2 }
+                    }).sort((a, b) => b.gap - a.gap)
+                    return (
+                      <div className="p-6 lg:p-8 rounded-2xl border border-rose-500/15 bg-white/[0.02]">
+                        <div className="text-center mb-6">
+                          <p className="text-rose-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Brechas de percepción</p>
+                          <h3 className="text-xl font-light text-white/80">Dónde más difieren sus mundos</h3>
+                        </div>
+                        <div className="space-y-3">
+                          {gaps.map((g, i) => (
+                            <div key={i} className="group">
+                              <div className="flex justify-between mb-1">
+                                <span className="text-white/60 text-xs font-medium">{g.dim}</span>
+                                <span className={`text-[10px] font-bold ${g.gap >= 30 ? 'text-rose-400/80' : g.gap >= 15 ? 'text-amber-400/70' : 'text-emerald-400/70'}`}>
+                                  {g.gap} pts
+                                </span>
+                              </div>
+                              <div className="h-2.5 rounded-full bg-white/[0.06] overflow-hidden">
+                                <div className={`h-full rounded-full transition-all ${g.gap >= 30 ? 'bg-gradient-to-r from-rose-600 to-rose-400' : g.gap >= 15 ? 'bg-gradient-to-r from-amber-600 to-amber-400' : 'bg-gradient-to-r from-emerald-600 to-emerald-400'}`}
+                                  style={{ width: `${g.gap}%`, opacity: 0.8 }} />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  })()}
+
+                  {/* ═══ ÍNDICE DE SINCRONÍA GLOBAL — Gauge ═══ */}
+                  {crossAnalysis.indice_sincronia_global != null && (() => {
+                    const sincronia = typeof crossAnalysis.indice_sincronia_global === 'number'
+                      ? crossAnalysis.indice_sincronia_global
+                      : parseInt(crossAnalysis.indice_sincronia_global) || 50
+                    const color = sincronia >= 70 ? '#10b981' : sincronia >= 45 ? '#fbbf24' : '#f43f5e'
+                    const label = sincronia >= 70 ? 'Alta sincronía' : sincronia >= 45 ? 'Sincronía moderada' : 'Baja sincronía'
+                    return (
+                      <div className="p-6 lg:p-8 rounded-2xl border border-emerald-500/15 bg-white/[0.02]">
+                        <div className="text-center mb-4">
+                          <p className="text-emerald-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Índice de sincronía global</p>
+                          <h3 className="text-xl font-light text-white/80">¿Qué tan alineadas están sus percepciones?</h3>
+                        </div>
+                        <div className="flex flex-col items-center">
+                          <div className="relative w-32 h-32">
+                            <svg viewBox="0 0 100 100" className="w-full h-full">
+                              <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="8" />
+                              <circle cx="50" cy="50" r="42" fill="none" stroke={color} strokeWidth="8"
+                                strokeDasharray={`${sincronia * 2.64} 264`} strokeDashoffset="66" strokeLinecap="round"
+                                transform="rotate(-90 50 50)" style={{ filter: `drop-shadow(0 0 8px ${color}40)` }} />
+                            </svg>
+                            <span className="absolute inset-0 flex items-center justify-center text-3xl font-bold" style={{ color }}>{sincronia}</span>
+                          </div>
+                          <p className="text-sm font-medium mt-3" style={{ color }}>{label}</p>
+                          <p className="text-white/40 text-xs font-light mt-1">De 100 posibles</p>
+                        </div>
+                      </div>
+                    )
+                  })()}
+
+                  {/* ═══ COMPATIBILIDAD POR CORRIENTES — Semáforo ═══ */}
+                  {crossAnalysis.compatibilidad_corrientes && (() => {
+                    const cc = crossAnalysis.compatibilidad_corrientes
+                    const corrientes = [
+                      { key: 'gottman', label: 'Gottman', icon: Shield, desc: 'Regulación del conflicto' },
+                      { key: 'apego', label: 'Apego', icon: Anchor, desc: 'Vínculo emocional' },
+                      { key: 'perel', label: 'Perel', icon: Flame, desc: 'Deseo erótico' },
+                      { key: 'comunicacion', label: 'Comunicación', icon: MessageCircle, desc: 'Lenguajes de amor' },
+                      { key: 'poder', label: 'Poder', icon: Scale, desc: 'Equilibrio de poder' },
+                    ]
+                    return (
+                      <div className="p-6 lg:p-8 rounded-2xl border border-violet-500/15 bg-white/[0.02]">
+                        <div className="text-center mb-6">
+                          <p className="text-violet-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Compatibilidad por corriente</p>
+                          <h3 className="text-xl font-light text-white/80">5 marcos teóricos, 5 diagnósticos</h3>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {corrientes.map(({ key, label, icon: CIcon, desc }) => {
+                            const item = cc[key]
+                            if (!item) return null
+                            const score = typeof item.score === 'number' ? item.score : parseInt(item.score) || 50
+                            const nivel = (item.nivel || '').toLowerCase()
+                            const semColor = nivel === 'alto' ? '#10b981' : nivel === 'medio' ? '#fbbf24' : '#f43f5e'
+                            const semBg = nivel === 'alto' ? 'bg-emerald-500/10 border-emerald-500/20' : nivel === 'medio' ? 'bg-amber-500/10 border-amber-500/20' : 'bg-rose-500/10 border-rose-500/20'
+                            return (
+                              <div key={key} className={`p-4 rounded-xl border ${semBg}`}>
+                                <div className="flex items-center gap-2 mb-2">
+                                  <CIcon className="w-4 h-4" style={{ color: semColor }} />
+                                  <span className="text-white/70 text-sm font-medium">{label}</span>
+                                  <span className="ml-auto text-lg font-bold" style={{ color: semColor }}>{score}</span>
+                                </div>
+                                <p className="text-white/40 text-[10px] uppercase tracking-wider mb-1">{desc}</p>
+                                {item.resumen && <p className="text-white/55 text-xs font-light leading-relaxed">{item.resumen}</p>}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )
+                  })()}
+
+                  {/* ═══ BRECHAS CRÍTICAS CARDS ═══ */}
+                  {crossAnalysis.brechas_criticas?.length > 0 && (
+                    <div className="p-6 lg:p-8 rounded-2xl border border-amber-500/15 bg-white/[0.02]">
+                      <div className="text-center mb-6">
+                        <p className="text-amber-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Brechas críticas</p>
+                        <h3 className="text-xl font-light text-white/80">Las 3 dimensiones donde más urge trabajar</h3>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {crossAnalysis.brechas_criticas.map((b, i) => {
+                          const diff = typeof b.diferencia === 'number' ? b.diferencia : parseInt(b.diferencia) || 0
+                          return (
+                            <div key={i} className="p-4 rounded-xl border border-amber-500/15 bg-amber-500/[0.03] text-center">
+                              <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+                                <span className="text-amber-400 text-lg font-bold">{i + 1}</span>
+                              </div>
+                              <p className="text-white/70 text-sm font-medium mb-1 capitalize">{b.dimension?.replace(/_/g, ' ')}</p>
+                              <p className="text-amber-400/80 text-2xl font-bold mb-2">{diff}<span className="text-sm font-light text-amber-400/50"> pts</span></p>
+                              {b.interpretacion && <p className="text-white/50 text-xs font-light leading-relaxed">{b.interpretacion}</p>}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Puntos ciegos */}
                   {crossAnalysis.puntos_ciegos && (

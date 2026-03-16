@@ -568,6 +568,17 @@ async function handleValidatePromo(req, env) {
 
 async function handleSendAccessEmail(req, env) {
   const { purchaseId, type, emails, tokens, buyerToken, buyerEmail, profileData } = await req.json()
+
+  // Dedup: prevent sending duplicate access emails for the same purchase
+  if (purchaseId && env.PURCHASES) {
+    const dedupKey = `email_sent:${purchaseId}`
+    const already = await env.PURCHASES.get(dedupKey)
+    if (already) {
+      const prev = JSON.parse(already)
+      return json({ ok: true, tokens: prev.tokens || [], dedup: true })
+    }
+  }
+
   const errors = []
   const generatedTokens = []
 
@@ -629,6 +640,12 @@ async function handleSendAccessEmail(req, env) {
   if (errors.length > 0 && errors.length === (emails || []).filter(Boolean).length) {
     return json({ ok: false, errors }, 500)
   }
+
+  // Save dedup marker
+  if (purchaseId && env.PURCHASES) {
+    await env.PURCHASES.put(`email_sent:${purchaseId}`, JSON.stringify({ tokens: generatedTokens, sentAt: Date.now() }), { expirationTtl: 86400 * 7 }).catch(() => {})
+  }
+
   return json({ ok: true, tokens: generatedTokens, errors: errors.length ? errors : undefined })
 }
 

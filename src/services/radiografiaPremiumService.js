@@ -1077,7 +1077,20 @@ const CROSS_INSTRUCTION = `Genera el análisis cruzado completo. Responde SOLO c
     "potencial": "(0-100)",
     "riesgo": "(0-100)",
     "direccion": "(1-2 frases: hacia dónde va esta relación si nada cambia vs si trabajan conscientemente)"
-  }
+  },
+  "indice_sincronia_global": "(0-100, promedio ponderado de cercanía entre las 12 dimensiones de ambos. 100 = percepción idéntica, 0 = percepción opuesta)",
+  "compatibilidad_corrientes": {
+    "gottman": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
+    "apego": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
+    "perel": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
+    "comunicacion": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"},
+    "poder": {"score": "(0-100)", "nivel": "alto|medio|bajo", "resumen": "(1 frase)"}
+  },
+  "brechas_criticas": [
+    {"dimension": "(nombre de la dimensión con mayor brecha)", "diferencia": "(0-100, diferencia absoluta entre p1 y p2)", "interpretacion": "(1-2 frases explicando por qué esta brecha importa)"},
+    {"dimension": "(segunda mayor brecha)", "diferencia": "(0-100)", "interpretacion": "(1-2 frases)"},
+    {"dimension": "(tercera mayor brecha)", "diferencia": "(0-100)", "interpretacion": "(1-2 frases)"}
+  ]
 }`
 
 export async function analyzeCrossRadiografia({ analysis1, analysis2, profile1, profile2 }) {
@@ -1085,7 +1098,7 @@ export async function analyzeCrossRadiografia({ analysis1, analysis2, profile1, 
   const basePrompt = buildCrossAnalysisPrompt(analysis1, analysis2, profile1, profile2)
 
   console.log('🚀 Lanzando análisis cruzado a DeepSeek...')
-  const result = await callDeepSeekPart(null, basePrompt, CROSS_INSTRUCTION, 'Cross-Analysis', 8192)
+  const result = await callDeepSeekPart(null, basePrompt, CROSS_INSTRUCTION, 'Cross-Analysis', 10000)
 
   if (!result) {
     console.error('❌ Cross-analysis falló')
