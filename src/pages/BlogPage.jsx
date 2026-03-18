@@ -380,7 +380,7 @@ const BlogPage = () => {
       <SEOHead 
         title={t('blogPage.seo.title')}
         description={t('blogPage.seo.description')}
-        image="/portada.webp"
+        image="https://radiografia-worker.noirpraxis.workers.dev/media/products/portada.webp"
         url="/blog"
         type="website"
         tags={['blog', 'psicología', 'psicoanálisis', 'filosofía', 'inconsciente', 'percepción', 'consciencia', 'transformación']}
@@ -437,7 +437,7 @@ const BlogPage = () => {
               objectPosition: 'center'
             }}
           >
-            <source src="/ajedrez video.mp4" type="video/mp4" />
+            <source src="https://radiografia-worker.noirpraxis.workers.dev/media/headers/ajedrez-video.mp4" type="video/mp4" />
           </video>
         </div>
         {/* Gradiente inferior que se mezcla con el contenido */}

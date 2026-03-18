@@ -1742,17 +1742,17 @@ const DiagnosticoRelacionalPage = () => {
                       <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/[0.06] z-10 pointer-events-none" />
                       <video autoPlay loop muted playsInline preload="auto"
                         className="w-full aspect-[4/3] object-cover">
-                        <source src="/productos/radar de pareja/videos/radiografia.mp4" type="video/mp4" />
+                        <source src="https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/radiografia.mp4" type="video/mp4" />
                       </video>
                     </div>
                     <div className="absolute -inset-4 bg-gradient-to-r from-violet-600/10 via-fuchsia-600/5 to-transparent rounded-3xl blur-2xl -z-10" />
                     {/* Complementary images — desktop 2×2 */}
                     <div className="hidden lg:grid grid-cols-2 gap-3 mt-4">
                       {[
-                        '/productos/radar de pareja/videos/descarga - 2026-03-10T110453.071.jpg',
-                        '/productos/radar de pareja/videos/descarga - 2026-03-10T110632.365.jpg',
-                        '/productos/radar de pareja/videos/descarga - 2026-03-10T110652.870.jpg',
-                        '/productos/radar de pareja/videos/descarga - 2026-03-10T115325.221.jpg'
+                        'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/descarga---2026-03-10T110453.071.jpg',
+                        'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/descarga---2026-03-10T110632.365.jpg',
+                        'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/descarga---2026-03-10T110652.870.jpg',
+                        'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/descarga---2026-03-10T115325.221.jpg'
                       ].map((src, i) => (
                         <div key={i} className="aspect-[16/9] rounded-lg overflow-hidden border border-white/[0.06]">
                           <img src={src} alt="" className="w-full h-full object-cover opacity-60 hover:opacity-80 transition-opacity" loading="lazy" />
@@ -1763,10 +1763,10 @@ const DiagnosticoRelacionalPage = () => {
                   {/* Complementary images — mobile 2×2 */}
                   <div className="order-3 lg:hidden grid grid-cols-2 gap-2">
                     {[
-                      '/productos/radar de pareja/videos/descarga - 2026-03-10T110453.071.jpg',
-                      '/productos/radar de pareja/videos/descarga - 2026-03-10T110632.365.jpg',
-                      '/productos/radar de pareja/videos/descarga - 2026-03-10T110652.870.jpg',
-                      '/productos/radar de pareja/videos/descarga - 2026-03-10T115325.221.jpg'
+                      'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/descarga---2026-03-10T110453.071.jpg',
+                      'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/descarga---2026-03-10T110632.365.jpg',
+                      'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/descarga---2026-03-10T110652.870.jpg',
+                      'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/descarga---2026-03-10T115325.221.jpg'
                     ].map((src, i) => (
                       <div key={i} className="aspect-[16/9] rounded-lg overflow-hidden border border-white/[0.06]">
                         <img src={src} alt="" className="w-full h-full object-cover opacity-60" loading="lazy" />
@@ -1805,9 +1805,9 @@ const DiagnosticoRelacionalPage = () => {
                 {/* Top photos — 3 horizontal images */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-12">
                   {[
-                    '/productos/radar de pareja/imagenes 12 psicologos/1a338099-8fd4-47e8-a4a5-086b916fd2a2.jpg',
-                    '/productos/radar de pareja/imagenes 12 psicologos/2c970695-4438-4cc2-9a03-8086654f7008.jpg',
-                    '/productos/radar de pareja/imagenes 12 psicologos/374629a4-00e3-40ba-8898-83748eab483e.jpg'
+                    'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/1a338099-8fd4-47e8-a4a5-086b916fd2a2.jpg',
+                    'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/2c970695-4438-4cc2-9a03-8086654f7008.jpg',
+                    'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/374629a4-00e3-40ba-8898-83748eab483e.jpg'
                   ].map((src, i) => (
                     <motion.div key={i} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }} transition={{ delay: i * 0.08 }}
@@ -1880,10 +1880,10 @@ const DiagnosticoRelacionalPage = () => {
                 {/* Bottom photos — 4 horizontal images */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                   {[
-                    '/productos/radar de pareja/imagenes 12 psicologos/1eedb718-c8fe-4cbc-a33a-10cecad714fe.jpg',
-                    '/productos/radar de pareja/imagenes 12 psicologos/descarga - 2026-03-10T121820.168.jpg',
-                    '/productos/radar de pareja/imagenes 12 psicologos/f101da9f-0f74-4afc-bc07-2ae275384bbd.jpg',
-                    '/productos/radar de pareja/imagenes 12 psicologos/fada3a35-4083-451d-939f-bf6f60a721d4.jpg'
+                    'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/1eedb718-c8fe-4cbc-a33a-10cecad714fe.jpg',
+                    'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/descarga---2026-03-10T121820.168.jpg',
+                    'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/f101da9f-0f74-4afc-bc07-2ae275384bbd.jpg',
+                    'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/fada3a35-4083-451d-939f-bf6f60a721d4.jpg'
                   ].map((src, i) => (
                     <motion.div key={i} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }} transition={{ delay: i * 0.08 }}

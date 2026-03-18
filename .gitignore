@@ -36,3 +36,6 @@ _functions_old/
 *.njsproj
 *.sln
 *.sw?
+
+# Wrangler local R2 emulator state
+.wrangler/

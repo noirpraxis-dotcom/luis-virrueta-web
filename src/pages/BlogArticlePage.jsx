@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useInView } from 'framer-motion'
+﻿import { AnimatePresence, motion, useInView } from 'framer-motion'
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { ACCENT_PRESETS } from '../utils/accentPresets'
 import { useParams, Link } from 'react-router-dom'
@@ -115,7 +115,7 @@ const getArticleBySlug = (slug) => {
       category: 'Psicología',
       tags: ['Neuroscience', 'Logo Design', 'Brand Recognition', 'Psychology'],
       gradient: 'from-pink-500 to-rose-500',
-      heroImage: '/IMAGENES BLOG/cerebro decide antes de que tu.webp',
+      heroImage: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/cerebro-decide-antes-de-que-tu.webp',
       sections: [
         {
           type: 'intro',
@@ -219,7 +219,7 @@ const getArticleBySlug = (slug) => {
       category: 'Tecnología × Diseño',
       tags: ['AI', 'Generative Design', 'Emotional Design', 'Psychology'],
       gradient: 'from-purple-500 to-fuchsia-500',
-      heroImage: '/IMAGENES BLOG/branding con ia.webp',
+      heroImage: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/branding-con-ia.webp',
       sections: [
         {
           type: 'intro',
@@ -295,7 +295,7 @@ const getArticleBySlug = (slug) => {
       category: 'Branding',
       tags: ['StoryBrand', 'Storytelling', 'Brand Strategy', 'Marketing'],
       gradient: 'from-amber-500 to-orange-500',
-      heroImage: '/IMAGENES BLOG/cliente es heroe.webp',
+      heroImage: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/cliente-es-heroe.webp',
       sections: [
         {
           type: 'intro',
@@ -457,7 +457,7 @@ const getArticleBySlug = (slug) => {
       category: 'Branding × Psicología',
       tags: ['Pre-Suasion', 'Persuasion', 'Brand Strategy', 'Neuromarketing'],
       gradient: 'from-indigo-500 to-purple-500',
-      heroImage: '/IMAGENES BLOG/presuacion.webp',
+      heroImage: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/presuacion.webp',
       sections: [
         {
           type: 'intro',
@@ -613,7 +613,7 @@ const getArticleBySlug = (slug) => {
       category: 'Branding × Psicología',
       tags: ['Influence', 'Persuasion', 'Psychology', 'Brand Strategy'],
       gradient: 'from-rose-500 to-pink-500',
-      heroImage: '/IMAGENES BLOG/persuacion.webp',
+      heroImage: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/persuacion.webp',
       sections: [
         {
           type: 'intro',
@@ -914,7 +914,7 @@ const getArticleBySlug = (slug) => {
       category: 'Branding × Psicología',
       tags: ['Choice Paradox', 'Psychology', 'Conversion', 'Strategy'],
       gradient: 'from-sky-500 to-blue-500',
-      heroImage: '/IMAGENES BLOG/paralisis-de-eleccion.webp',
+      heroImage: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/paralisis-de-eleccion.webp',
       sections: [
         {
           type: 'intro',
@@ -1211,7 +1211,7 @@ const getArticleBySlug = (slug) => {
       category: 'UX × Tecnología',
       tags: ['Machine Learning', 'UX Design', 'User Psychology', 'Technology'],
       gradient: 'from-cyan-500 to-blue-500',
-      heroImage: '/IMAGENES BLOG/cerebro decide antes de que tu.webp',
+      heroImage: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/cerebro-decide-antes-de-que-tu.webp',
       sections: [
         {
           type: 'intro',
@@ -1308,7 +1308,7 @@ const getArticleBySlug = (slug) => {
       category: 'Psicología × Branding',
       tags: ['Color Theory', 'Luxury Branding', 'Psychology', 'Visual Identity'],
       gradient: 'from-emerald-500 to-teal-500',
-      heroImage: '/IMAGENES BLOG/12 arquitipos.webp',
+      heroImage: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/12-arquitipos.webp',
       sections: [
         {
           type: 'intro',
@@ -1420,7 +1420,7 @@ const getArticleBySlug = (slug) => {
       category: 'Tendencias × Diseño',
       tags: ['Trends 2025', 'Minimalism', 'Visual Design', 'Innovation'],
       gradient: 'from-violet-500 to-purple-500',
-      heroImage: '/IMAGENES BLOG/trend y key.webp',
+      heroImage: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/trend-y-key.webp',
       sections: [
         {
           type: 'intro',
@@ -1547,7 +1547,7 @@ const getArticleBySlug = (slug) => {
       category: 'Branding × Estrategia',
       tags: ['Brand Identity', 'Strategy', 'Visual Systems', 'Psychology'],
       gradient: 'from-amber-500 to-orange-500',
-      heroImage: '/IMAGENES BLOG/tu logo no funciona.webp',
+      heroImage: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/tu-logo-no-funciona.webp',
       sections: [
         {
           type: 'intro',
@@ -1705,7 +1705,7 @@ const getArticleBySlug = (slug) => {
       category: 'Psicoanálisis',
       tags: ['Pensamiento', 'Psicoanálisis', 'Filosofía', 'Vida'],
       gradient: 'from-purple-500 to-fuchsia-500',
-      heroImage: '/IMAGENES BLOG/SUDOKU HUMANO.jpg',
+      heroImage: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/SUDOKU-HUMANO.jpg',
       sections: [
         {
           type: 'intro',
@@ -2399,7 +2399,7 @@ const BlogArticlePage = () => {
     if (trimmed.startsWith('/')) return encodeURI(trimmed)
 
     // Legacy content uses only filename; map to public folder path
-    return encodeURI(`/IMAGENES BLOG/${trimmed}`)
+    return encodeURI(`https://radiografia-worker.noirpraxis.workers.dev/media/blog/${trimmed}`)
   }
 
   // Intentar obtener artículo traducido, si no existe usar el código original
@@ -2438,8 +2438,8 @@ const BlogArticlePage = () => {
     category: 'philosophy',
     tags: [],
     gradient: 'from-purple-500 to-fuchsia-500',
-    heroImage: '/portada.webp',
-    image: '/portada.webp',
+    heroImage: 'https://radiografia-worker.noirpraxis.workers.dev/media/products/portada.webp',
+    image: 'https://radiografia-worker.noirpraxis.workers.dev/media/products/portada.webp',
     sections: []
   } : null
   
@@ -2506,7 +2506,7 @@ const BlogArticlePage = () => {
       resolvePublicImageUrl(article.heroImage),
       resolvePublicImageUrl(article.image),
       // Last resort: site cover
-      '/portada.webp'
+      'https://radiografia-worker.noirpraxis.workers.dev/media/products/portada.webp'
     ].filter(Boolean)
 
     // Unique preserve order
@@ -2936,7 +2936,7 @@ const BlogArticlePage = () => {
       resolvePublicImageUrl(preferredRaw) ||
       resolvePublicImageUrl(effectiveHeroImage) ||
       resolvePublicImageUrl(heroBackgroundImage) ||
-      '/portada.webp'
+      'https://radiografia-worker.noirpraxis.workers.dev/media/products/portada.webp'
 
     if (candidate.startsWith('http://') || candidate.startsWith('https://')) return candidate
     return `${window.location.origin}${candidate.startsWith('/') ? candidate : `/${candidate}`}`

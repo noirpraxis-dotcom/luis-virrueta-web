@@ -1302,6 +1302,75 @@ async function handleDeletePromoCode(req, env) {
   return json({ ok: true })
 }
 
+// ── Media R2: upload, serve, list, delete ────────────────────────────────────
+
+const MEDIA_CONTENT_TYPES = {
+  mp4: 'video/mp4', webm: 'video/webm', mov: 'video/quicktime',
+  jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp',
+  gif: 'image/gif', svg: 'image/svg+xml', avif: 'image/avif',
+}
+
+async function handleMediaUpload(req, env) {
+  const url = new URL(req.url)
+  const adminSecret = url.searchParams.get('secret') || req.headers.get('x-admin-secret')
+  if (!adminSecret || adminSecret !== env.ADMIN_SECRET) return json({ error: 'No autorizado' }, 403)
+
+  const folder = url.searchParams.get('folder') || 'misc'
+  const filename = url.searchParams.get('filename')
+  if (!filename) return json({ error: 'filename requerido' }, 400)
+
+  // Sanitize: only allow safe chars in folder/filename
+  const safeFolder = folder.replace(/[^a-zA-Z0-9_\-]/g, '')
+  const safeFilename = filename.replace(/[^a-zA-Z0-9_\-\.]/g, '')
+  const key = `${safeFolder}/${safeFilename}`
+  const ext = safeFilename.split('.').pop()?.toLowerCase()
+  const contentType = MEDIA_CONTENT_TYPES[ext] || 'application/octet-stream'
+
+  await env.MEDIA_BUCKET.put(key, req.body, {
+    httpMetadata: { contentType, cacheControl: 'public, max-age=31536000, immutable' },
+  })
+
+  return json({ ok: true, key, url: `/media/${key}`, contentType })
+}
+
+async function handleMediaServe(req, env, pathname) {
+  const key = pathname.replace('/media/', '')
+  if (!key) return json({ error: 'key requerido' }, 400)
+
+  const object = await env.MEDIA_BUCKET.get(key)
+  if (!object) return new Response('Not found', { status: 404, headers: CORS })
+
+  const headers = new Headers(CORS)
+  headers.set('Content-Type', object.httpMetadata?.contentType || 'application/octet-stream')
+  headers.set('Cache-Control', 'public, max-age=31536000, immutable')
+  headers.set('ETag', object.httpEtag)
+
+  return new Response(object.body, { headers })
+}
+
+async function handleMediaList(req, env) {
+  const { folder, adminSecret } = await req.json()
+  if (!adminSecret || adminSecret !== env.ADMIN_SECRET) return json({ error: 'No autorizado' }, 403)
+
+  const prefix = folder ? `${folder}/` : ''
+  const listed = await env.MEDIA_BUCKET.list({ prefix, limit: 500 })
+  const files = listed.objects.map(o => ({
+    key: o.key,
+    size: o.size,
+    uploaded: o.uploaded,
+    url: `/media/${o.key}`,
+  }))
+  return json({ files, truncated: listed.truncated })
+}
+
+async function handleMediaDelete(req, env) {
+  const { key, adminSecret } = await req.json()
+  if (!adminSecret || adminSecret !== env.ADMIN_SECRET) return json({ error: 'No autorizado' }, 403)
+  if (!key) return json({ error: 'key requerido' }, 400)
+  await env.MEDIA_BUCKET.delete(key)
+  return json({ ok: true })
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // ROUTER
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1317,11 +1386,17 @@ export default {
       // ── Audio from R2 (GET /audio/*) ──────────────────────────────
       if (method === 'GET' && pathname.startsWith('/audio/')) return handleAudio(request, env, pathname)
 
+      // ── Media from R2 (GET /media/*) ──────────────────────────────
+      if (method === 'GET' && pathname.startsWith('/media/')) return handleMediaServe(request, env, pathname)
+
       if (method === 'GET' && pathname === '/api/get-analysis')       return handleGetAnalysis(request, env)
       if (method === 'GET' && pathname === '/api/get-cross-analysis')  return handleGetCrossAnalysis(request, env)
       if (method === 'GET' && pathname === '/api/get-profile')         return handleGetProfile(request, env)
 
-      if (method === 'POST') {
+      if (method === 'POST' || method === 'PUT') {
+        if (method === 'PUT' && pathname === '/api/media-upload')    return handleMediaUpload(request, env)
+        if (pathname === '/api/media-list')                          return handleMediaList(request, env)
+        if (pathname === '/api/media-delete')                        return handleMediaDelete(request, env)
         if (pathname === '/api/create-radiografia-checkout') return handleCreateCheckout(request, env)
         if (pathname === '/api/create-custom-checkout')     return handleCreateCustomCheckout(request, env)
         if (pathname === '/api/create-promo-code')         return handleCreatePromoCode(request, env)

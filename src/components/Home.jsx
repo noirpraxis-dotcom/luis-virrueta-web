@@ -29,7 +29,7 @@ const Home = () => {
           maxHeight: '100vh'
         }}
       >
-        <source src="/header psicologia.mp4" type="video/mp4" />
+        <source src="https://radiografia-worker.noirpraxis.workers.dev/media/headers/header-psicologia.mp4" type="video/mp4" />
       </video>
 
       {/* Degradado sutil en la parte inferior para transición suave - MAS PRONUNCIADO */}

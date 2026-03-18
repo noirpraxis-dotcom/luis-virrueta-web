@@ -31,3 +31,7 @@ preview_id = "9f5ee5a5f0fc49ecaecf7e06763afd80"
 [[r2_buckets]]
 binding     = "AUDIO_BUCKET"
 bucket_name = "luisvirrueta-audio"
+
+[[r2_buckets]]
+binding     = "MEDIA_BUCKET"
+bucket_name = "luisvirrueta-media"

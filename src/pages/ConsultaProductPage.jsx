@@ -15,60 +15,62 @@ const STRIPE_LINKS = {} // all flows now use the Worker
 
 const PROMO_CODES = {} // promo validation is server-side via /api/validate-consulta-promo
 
+const CDN = 'https://radiografia-worker.noirpraxis.workers.dev/media'
+
 const PAREJA_IMAGES = {
   conexion: [
-    '/productos/consulta pareja/cONEXIÓN/0.jpg',
-    '/productos/consulta pareja/cONEXIÓN/1.jpg',
-    '/productos/consulta pareja/cONEXIÓN/2.jpg',
-    '/productos/consulta pareja/cONEXIÓN/3.jpg',
-    '/productos/consulta pareja/cONEXIÓN/4.jpg',
-    '/productos/consulta pareja/cONEXIÓN/5.jpg'
+    `${CDN}/products/consulta-pareja/conexion/0.jpg`,
+    `${CDN}/products/consulta-pareja/conexion/1.jpg`,
+    `${CDN}/products/consulta-pareja/conexion/2.jpg`,
+    `${CDN}/products/consulta-pareja/conexion/3.jpg`,
+    `${CDN}/products/consulta-pareja/conexion/4.jpg`,
+    `${CDN}/products/consulta-pareja/conexion/5.jpg`
   ],
   sesion: [
-    '/productos/consulta pareja/imagenes pareja/1.jpg',
-    '/productos/consulta pareja/imagenes pareja/2.jpg',
-    '/productos/consulta pareja/imagenes pareja/3.jpg',
-    '/productos/consulta pareja/imagenes pareja/4.jpg',
-    '/productos/consulta pareja/imagenes pareja/5.jpg',
-    '/productos/consulta pareja/imagenes pareja/6.jpg',
-    '/productos/consulta pareja/imagenes pareja/7.jpg',
-    '/productos/consulta pareja/imagenes pareja/8.jpg',
+    `${CDN}/products/consulta-pareja/imagenes-pareja/1.jpg`,
+    `${CDN}/products/consulta-pareja/imagenes-pareja/2.jpg`,
+    `${CDN}/products/consulta-pareja/imagenes-pareja/3.jpg`,
+    `${CDN}/products/consulta-pareja/imagenes-pareja/4.jpg`,
+    `${CDN}/products/consulta-pareja/imagenes-pareja/5.jpg`,
+    `${CDN}/products/consulta-pareja/imagenes-pareja/6.jpg`,
+    `${CDN}/products/consulta-pareja/imagenes-pareja/7.jpg`,
+    `${CDN}/products/consulta-pareja/imagenes-pareja/8.jpg`,
   ],
   patrones: [
-    '/productos/consulta pareja/TRAUMA Y PATRONES/descarga - 2026-03-09T114026.738.jpg',
-    '/productos/consulta pareja/TRAUMA Y PATRONES/descarga - 2026-03-09T114339.887.jpg',
-    '/productos/consulta pareja/TRAUMA Y PATRONES/descarga - 2026-03-09T114838.359.jpg',
-    '/productos/consulta pareja/TRAUMA Y PATRONES/descarga - 2026-03-09T115234.811.jpg',
-    '/productos/consulta pareja/TRAUMA Y PATRONES/descarga - 2026-03-09T115335.554.jpg',
-    '/productos/consulta pareja/TRAUMA Y PATRONES/descarga - 2026-03-09T115441.513.jpg',
-    '/productos/consulta pareja/TRAUMA Y PATRONES/IMAGEN (2).jpg',
-    '/productos/consulta pareja/TRAUMA Y PATRONES/IMAGEN (3).jpg',
-    '/productos/consulta pareja/TRAUMA Y PATRONES/IMAGEN (4).jpg',
+    `${CDN}/products/consulta-pareja/trauma-patrones/descarga---2026-03-09T114026.738.jpg`,
+    `${CDN}/products/consulta-pareja/trauma-patrones/descarga---2026-03-09T114339.887.jpg`,
+    `${CDN}/products/consulta-pareja/trauma-patrones/descarga---2026-03-09T114838.359.jpg`,
+    `${CDN}/products/consulta-pareja/trauma-patrones/descarga---2026-03-09T115234.811.jpg`,
+    `${CDN}/products/consulta-pareja/trauma-patrones/descarga---2026-03-09T115335.554.jpg`,
+    `${CDN}/products/consulta-pareja/trauma-patrones/descarga---2026-03-09T115441.513.jpg`,
+    `${CDN}/products/consulta-pareja/trauma-patrones/IMAGEN-2.jpg`,
+    `${CDN}/products/consulta-pareja/trauma-patrones/IMAGEN-3.jpg`,
+    `${CDN}/products/consulta-pareja/trauma-patrones/IMAGEN-4.jpg`,
   ],
-  video: '/productos/consulta pareja/VIDEO AMOR.mp4'
+  video: `${CDN}/products/consulta-pareja/video-amor.mp4`
 }
 
 const INDIVIDUAL_IMAGES = {
   consulta: [
-    '/productos/consulta individual/imagenes consulta/descarga - 2026-03-09T134637.679.jpg',
-    '/productos/consulta individual/imagenes consulta/descarga - 2026-03-09T134644.527.jpg',
-    '/productos/consulta individual/imagenes consulta/descarga - 2026-03-09T134658.040.jpg',
-    '/productos/consulta individual/imagenes consulta/descarga - 2026-03-09T134821.193.jpg',
-    '/productos/consulta individual/imagenes consulta/descarga - 2026-03-09T134855.466.jpg',
-    '/productos/consulta individual/imagenes consulta/descarga - 2026-03-09T134946.693.jpg'
+    `${CDN}/products/consulta-individual/imagenes-consulta/descarga---2026-03-09T134637.679.jpg`,
+    `${CDN}/products/consulta-individual/imagenes-consulta/descarga---2026-03-09T134644.527.jpg`,
+    `${CDN}/products/consulta-individual/imagenes-consulta/descarga---2026-03-09T134658.040.jpg`,
+    `${CDN}/products/consulta-individual/imagenes-consulta/descarga---2026-03-09T134821.193.jpg`,
+    `${CDN}/products/consulta-individual/imagenes-consulta/descarga---2026-03-09T134855.466.jpg`,
+    `${CDN}/products/consulta-individual/imagenes-consulta/descarga---2026-03-09T134946.693.jpg`
   ],
   inconsciente: [
-    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133224.311.jpg',
-    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133335.376.jpg',
-    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133450.122.jpg',
-    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133707.091.jpg',
-    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133738.021.jpg',
-    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133806.854.jpg',
-    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133923.890.jpg',
-    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T134000.375.jpg',
-    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T134142.952.jpg',
-    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T134409.894.jpg',
-    '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T134437.255.jpg'
+    `${CDN}/products/consulta-individual/traumas-inconsciente/descarga---2026-03-09T133224.311.jpg`,
+    `${CDN}/products/consulta-individual/traumas-inconsciente/descarga---2026-03-09T133335.376.jpg`,
+    `${CDN}/products/consulta-individual/traumas-inconsciente/descarga---2026-03-09T133450.122.jpg`,
+    `${CDN}/products/consulta-individual/traumas-inconsciente/descarga---2026-03-09T133707.091.jpg`,
+    `${CDN}/products/consulta-individual/traumas-inconsciente/descarga---2026-03-09T133738.021.jpg`,
+    `${CDN}/products/consulta-individual/traumas-inconsciente/descarga---2026-03-09T133806.854.jpg`,
+    `${CDN}/products/consulta-individual/traumas-inconsciente/descarga---2026-03-09T133923.890.jpg`,
+    `${CDN}/products/consulta-individual/traumas-inconsciente/descarga---2026-03-09T134000.375.jpg`,
+    `${CDN}/products/consulta-individual/traumas-inconsciente/descarga---2026-03-09T134142.952.jpg`,
+    `${CDN}/products/consulta-individual/traumas-inconsciente/descarga---2026-03-09T134409.894.jpg`,
+    `${CDN}/products/consulta-individual/traumas-inconsciente/descarga---2026-03-09T134437.255.jpg`
   ]
 }
 
@@ -78,77 +80,77 @@ const TESTIMONIALS = [
     type: 'pareja',
     time: '4 meses en proceso',
     text: 'Llegamos pensando que el problema era la comunicación. Luis nos mostró que realmente estábamos repitiendo los patrones de nuestros padres. Fue incómodo pero transformador.',
-    image: '/productos/consulta pareja/imagenes pareja/3.jpg'
+    image: `${CDN}/products/consulta-pareja/imagenes-pareja/3.jpg`
   },
   {
     name: 'Carlos R.',
     type: 'individual',
     time: '6 sesiones',
     text: 'Pensé que necesitaba motivación. Lo que necesitaba era alguien que me hiciera las preguntas que yo no me atrevía a hacerme. En una hora entendí más que en años de terapia convencional.',
-    image: '/productos/consulta individual/imagenes consulta/descarga - 2026-03-09T134637.679.jpg'
+    image: `${CDN}/products/consulta-individual/imagenes-consulta/descarga---2026-03-09T134637.679.jpg`
   },
   {
     name: 'Mariana y Javier',
     type: 'pareja',
     time: '3 meses en proceso',
     text: 'Llevamos 8 años juntos y sentíamos que ya no había nada que hacer. Luis no nos dio consejos — nos devolvió algo que no podíamos ver solos. Hoy seguimos juntos y con otra claridad.',
-    image: '/productos/consulta pareja/cONEXIÓN/2.jpg'
+    image: `${CDN}/products/consulta-pareja/conexion/2.jpg`
   },
   {
     name: 'Diego L.',
     type: 'individual',
     time: '2 sesiones',
     text: 'No sabía ni por dónde empezar. Solo sabía que algo no estaba bien. Luis lo identificó en los primeros 15 minutos. No es magia — es alguien que realmente escucha lo que no dices.',
-    image: '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133335.376.jpg'
+    image: `${CDN}/products/consulta-individual/traumas-inconsciente/descarga---2026-03-09T133335.376.jpg`
   },
   {
     name: 'Sofía y Andrés',
     type: 'pareja',
     time: '5 meses en proceso',
     text: 'La misma pelea, distinto disfraz. Así fue durante años. En la primera sesión Luis nombró exactamente el patrón que repetíamos. Fue como encender la luz en un cuarto oscuro.',
-    image: '/productos/consulta pareja/cONEXIÓN/4.jpg'
+    image: `${CDN}/products/consulta-pareja/conexion/4.jpg`
   },
   {
     name: 'Valentina G.',
     type: 'individual',
     time: '8 sesiones',
     text: 'Llevaba años con ansiedad y no entendía de dónde venía. Con el Método AION© empecé a ver los filtros que estaban operando sin que yo lo supiera. Hoy no necesito estrategias para "controlar" nada.',
-    image: '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133707.091.jpg'
+    image: `${CDN}/products/consulta-individual/traumas-inconsciente/descarga---2026-03-09T133707.091.jpg`
   },
   {
     name: 'Roberto y Ana',
     type: 'pareja',
     time: '2 meses en proceso',
     text: 'Veníamos de otra terapia de pareja donde nos enseñaban "técnicas de comunicación". Aquí fue distinto. Luis trabaja lo que pasa debajo. Eso cambió todo.',
-    image: '/productos/consulta pareja/imagenes pareja/5.jpg'
+    image: `${CDN}/products/consulta-pareja/imagenes-pareja/5.jpg`
   },
   {
     name: 'Fernanda T.',
     type: 'individual',
     time: '3 sesiones',
     text: 'Mi vida estaba "bien" pero yo no. Una sesión con Luis bastó para darme cuenta de que estaba viviendo una vida que no elegí. Duro pero necesario.',
-    image: '/productos/consulta individual/imagenes consulta/descarga - 2026-03-09T134855.466.jpg'
+    image: `${CDN}/products/consulta-individual/imagenes-consulta/descarga---2026-03-09T134855.466.jpg`
   },
   {
     name: 'Alejandro P.',
     type: 'individual',
     time: '5 sesiones',
     text: 'Siempre fui "el fuerte" de la familia. Con el Método AION© descubrí que esa fortaleza era una armadura que no me dejaba sentir. Cuando la vi, dejó de controlarme.',
-    image: '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T133923.890.jpg'
+    image: `${CDN}/products/consulta-individual/traumas-inconsciente/descarga---2026-03-09T133923.890.jpg`
   },
   {
     name: 'Daniela S.',
     type: 'individual',
     time: '4 sesiones',
     text: 'Vine por un problema de pareja y terminé descubriendo que el problema era conmigo. Luis no juzga — solo ilumina lo que no puedes ver solo. Eso lo cambia todo.',
-    image: '/productos/consulta individual/imagenes traumas e inconsciente/descarga - 2026-03-09T134142.952.jpg'
+    image: `${CDN}/products/consulta-individual/traumas-inconsciente/descarga---2026-03-09T134142.952.jpg`
   },
   {
     name: 'Patricia y Luis E.',
     type: 'pareja',
     time: '6 meses en proceso',
     text: 'Pensamos que íbamos a terminar. La terapia con Luis fue lo único que nos permitió ver qué estaba pasando realmente. No es motivación — es claridad. Y eso es lo que salva una relación.',
-    image: '/productos/consulta pareja/imagenes pareja/7.jpg'
+    image: `${CDN}/products/consulta-pareja/imagenes-pareja/7.jpg`
   }
 ]
 
@@ -162,7 +164,7 @@ const PRODUCT_DATA = {
     duration: '60 min',
     regularPrice: 700,
     regularPriceLabel: '$700 MXN',
-    image: '/individual imagen.jpg',
+    image: `${CDN}/products/individual-imagen.jpg`,
     accentColor: 'text-emerald-400',
     accentBg: 'bg-emerald-500',
     borderAccent: 'border-emerald-500/30',
@@ -207,7 +209,7 @@ const PRODUCT_DATA = {
     duration: '90 min',
     regularPrice: 1250,
     regularPriceLabel: '$1,250 MXN',
-    image: '/productos/consulta pareja/cONEXIÓN/0.jpg',
+    image: `${CDN}/products/consulta-pareja/conexion/0.jpg`,
     accentColor: 'text-rose-400',
     accentBg: 'bg-rose-500',
     borderAccent: 'border-rose-500/30',

@@ -2155,7 +2155,7 @@ const FraseDelDiaPage = () => {
             className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full object-cover opacity-60"
             style={{ minWidth: '100vw', minHeight: '100%', objectFit: 'cover', objectPosition: 'center' }}
           >
-            <source src="/Frases.mp4" type="video/mp4" />
+            <source src="https://radiografia-worker.noirpraxis.workers.dev/media/headers/frases.mp4" type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black" />
         </div>

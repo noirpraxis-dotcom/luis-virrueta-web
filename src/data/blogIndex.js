@@ -1,4 +1,4 @@
-// Canonical index of legacy/hardcoded blog posts shown in the public Blog.
+﻿// Canonical index of legacy/hardcoded blog posts shown in the public Blog.
 // This is intentionally separate from CMS/Supabase posts.
 
 export const getLegacyBlogIndex = (language = 'es') => {
@@ -17,7 +17,7 @@ export const getLegacyBlogIndex = (language = 'es') => {
       borderGradient: 'from-emerald-600 via-teal-600 to-cyan-600',
       tags: ['Filosofía', 'Psicoanálisis', 'Foucault', 'Adorno', 'Althusser', 'Gramsci', 'Byung-Chul Han', 'Hannah Arendt', 'Lacan', 'Deleuze', 'Nietzsche', 'Kierkegaard'],
       slug: 'reino-erudito',
-      image: '/IMAGENES BLOG/REINO ERUDITO.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/REINO-ERUDITO.jpg',
       rating: 4.9,
       featured: true,
       accent: 'emerald'
@@ -34,7 +34,7 @@ export const getLegacyBlogIndex = (language = 'es') => {
       borderGradient: 'from-indigo-600 via-purple-600 to-fuchsia-600',
       tags: ['Psicoanálisis', 'Jacques Lacan', 'Sigmund Freud', 'Jean-Paul Sartre', 'Walter Benjamin', 'Mirada', 'Deseo', 'Percepción'],
       slug: 'fabrica-percepciones-identidades-imaginadas',
-      image: '/blog-compressed/blog-22-fabrica.webp',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/blog-22-fabrica.webp',
       rating: 4.9,
       featured: true
     },
@@ -54,7 +54,7 @@ export const getLegacyBlogIndex = (language = 'es') => {
         ? ['Psychoanalysis', 'Jacques Lacan', 'Thinking', 'Decision fatigue', 'Negation', 'Philosophy']
         : ['Psicoanálisis', 'Jacques Lacan', 'Pensamiento', 'Decisión', 'Vía negativa', 'Filosofía'],
       slug: 'sudoku',
-      image: '/IMAGENES BLOG/SUDOKU HUMANO.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/SUDOKU-HUMANO.jpg',
       rating: 5.0,
       featured: true
     },
@@ -74,7 +74,7 @@ export const getLegacyBlogIndex = (language = 'es') => {
         ? ['Psychoanalysis', 'Jacques Lacan', 'Sigmund Freud', 'Slavoj Žižek', 'Desire', 'Jouissance', 'Projection']
         : ['Psicoanálisis', 'Jacques Lacan', 'Sigmund Freud', 'Slavoj Žižek', 'Deseo', 'Goce', 'Proyección'],
       slug: 'puta-panico-usurpacion-terror-autonomia',
-      image: '/IMAGENES BLOG/puta.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/puta.jpg',
       rating: 4.9,
       featured: true
     },
@@ -94,7 +94,7 @@ export const getLegacyBlogIndex = (language = 'es') => {
         ? ['Philosophy', 'Ethics', 'Jacques Lacan', 'Slavoj Žižek', 'Language', 'Responsibility', 'Symbolic order']
         : ['Filosofía', 'Ética', 'Jacques Lacan', 'Slavoj Žižek', 'Lenguaje', 'Responsabilidad', 'Orden simbólico'],
       slug: 'el-juego-que-nadie-confiesa-estar-jugando',
-      image: '/IMAGENES BLOG/ajedrez.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/ajedrez.jpg',
       rating: 4.8,
       featured: true
     },
@@ -114,7 +114,7 @@ export const getLegacyBlogIndex = (language = 'es') => {
         ? ['Consciousness', 'Dark night of the soul', 'Meditation', 'Presence', 'Spirituality', 'Transformation']
         : ['Conciencia', 'Noche oscura del alma', 'Meditación', 'Presencia', 'Transformación', 'Espiritualidad'],
       slug: 'la-ruptura-de-la-ruptura',
-      image: '/IMAGENES BLOG/ruptura.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/ruptura.jpg',
       rating: 4.9,
       featured: true
     },
@@ -134,7 +134,7 @@ export const getLegacyBlogIndex = (language = 'es') => {
         ? ['Pain', 'Merleau-Ponty', 'Lacan', 'The Real', 'Body', 'Consciousness', 'Psychoanalysis', 'Phenomenology']
         : ['Dolor', 'Merleau-Ponty', 'Lacan', 'Lo Real', 'Cuerpo', 'Conciencia', 'Psicoanálisis', 'Fenomenología'],
       slug: 'no-duele-porque-algo-se-rompe',
-      image: '/IMAGENES BLOG/no duele.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/no-duele.jpg',
       rating: 4.7,
       featured: true
     },
@@ -154,7 +154,7 @@ export const getLegacyBlogIndex = (language = 'es') => {
         ? ['Body', 'Perception', 'Merleau-Ponty', 'Lacan', 'Kybalion', 'Consciousness', 'Psychoanalysis']
         : ['Cuerpo', 'Percepción', 'Merleau-Ponty', 'Lacan', 'Kybalion', 'Conciencia', 'Psicoanálisis'],
       slug: 'donde-esta-el-cuerpo-cuando-todo-funciona',
-      image: '/IMAGENES BLOG/gas.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/gas.jpg',
       rating: 4.8,
       featured: true
     },
@@ -174,7 +174,7 @@ export const getLegacyBlogIndex = (language = 'es') => {
         ? ['Love', 'Unity', 'Falling in Love', 'Lack', 'Psychoanalysis', 'Ontology', 'Relationship']
         : ['Amor', 'Unidad', 'Enamoramiento', 'Falta', 'Psicoanálisis', 'Ontología', 'Relación'],
       slug: 'el-desgarro-de-la-unidad',
-      image: '/IMAGENES BLOG/desgarro.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/desgarro.jpg',
       rating: 4.9,
       featured: true
     },
@@ -194,7 +194,7 @@ export const getLegacyBlogIndex = (language = 'es') => {
         ? ['Žižek', 'Lacan', 'Bond', 'Listening', 'Relationships', 'Desire of the Other', 'Psychoanalysis']
         : ['Žižek', 'Lacan', 'Vínculo', 'Escucha', 'Relaciones', 'Deseo del Otro', 'Psicoanálisis'],
       slug: 'el-pez-que-no-se-come',
-      image: '/IMAGENES BLOG/gaviota.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/gaviota.jpg',
       rating: 4.8,
       featured: true
     },
@@ -214,7 +214,7 @@ export const getLegacyBlogIndex = (language = 'es') => {
         ? ['Love', 'Lacan', 'Lack', 'Desire', 'Bond', 'Constitutive Wound', 'Psychoanalysis']
         : ['Amor', 'Lacan', 'Falta', 'Deseo', 'Vínculo', 'Herida constitutiva', 'Psicoanálisis'],
       slug: 'amar-desde-la-herida',
-      image: '/IMAGENES BLOG/herida.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/herida.jpg',
       rating: 4.9,
       featured: true
     },
@@ -236,7 +236,7 @@ export const getLegacyBlogIndex = (language = 'es') => {
         ? ['Freedom', 'Hegel', 'Lacan', 'Žižek', 'Symptom', 'Repetition', 'Subjective Act', 'Psychoanalysis']
         : ['Libertad', 'Hegel', 'Lacan', 'Žižek', 'Síntoma', 'Repetición', 'Acto subjetivo', 'Psicoanálisis'],
       slug: 'ser-libre-no-es-elegir-es-no-poder-dejar-de-repetir',
-      image: '/IMAGENES BLOG/ser libres.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/ser-libres.jpg',
       rating: 4.7,
       featured: true
     },
@@ -256,7 +256,7 @@ export const getLegacyBlogIndex = (language = 'es') => {
         ? ['Psychoanalysis', 'Lacan', 'Nostalgia', 'Identity', 'Constitutive Wound', 'Point Zero', 'Subjectivity']
         : ['Psicoanálisis', 'Lacan', 'Nostalgia', 'Identidad', 'Herida constitutiva', 'Punto cero', 'Subjetividad'],
       slug: 'antes-era-feliz-el-punto-cero',
-      image: '/IMAGENES BLOG/ANTES ERA 0.png',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/ANTES-ERA-0.png',
       rating: 4.9,
       featured: true
     },
@@ -278,7 +278,7 @@ export const getLegacyBlogIndex = (language = 'es') => {
         ? ['Lacan', 'Nisargadatta Maharaj', 'Simone Weil', 'Nietzsche', 'Existential Void', 'Psychoanalysis', 'Non-duality']
         : ['Lacan', 'Nisargadatta Maharaj', 'Simone Weil', 'Nietzsche', 'Vacío Existencial', 'Psicoanálisis', 'No-dualidad'],
       slug: 'del-perro-que-me-ama-al-vacio-que-me-habita',
-      image: '/IMAGENES BLOG/PERRO.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/PERRO.jpg',
       rating: 4.8,
       featured: true
     }

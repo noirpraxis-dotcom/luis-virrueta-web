@@ -23,7 +23,7 @@ const AboutCreator = () => {
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
         >
-          <source src="/hero Sobre mi.mp4" type="video/mp4" />
+          <source src="https://radiografia-worker.noirpraxis.workers.dev/media/headers/hero-sobre-mi.mp4" type="video/mp4" />
         </video>
 
         {/* Degradado en la parte inferior */}

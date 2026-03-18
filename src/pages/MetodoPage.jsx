@@ -80,7 +80,7 @@ const MetodoPage = () => {
                 objectPosition: 'center'
               }}
             >
-              <source src="/tiempo metodo.mp4" type="video/mp4" />
+              <source src="https://radiografia-worker.noirpraxis.workers.dev/media/headers/tiempo-metodo.mp4" type="video/mp4" />
             </video>
           </div>
           

@@ -1,4 +1,4 @@
-import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle, Fish, Flame, Users, Link, Activity, Radio, Wind, Focus, Moon, Crown, CircleAlert, UserX, Skull, Siren } from 'lucide-react'
+﻿import { Brain, Zap, Sparkles, Award, Check, Shield, Eye, Lock, Repeat, Target, Unlock, Heart, AlertCircle, Fish, Flame, Users, Link, Activity, Radio, Wind, Focus, Moon, Crown, CircleAlert, UserX, Skull, Siren } from 'lucide-react'
 
 // Contenido completo de todos los artículos del blog en ES + EN
 // Este archivo centraliza el contenido para facilitar mantenimiento y traducciones
@@ -5617,7 +5617,7 @@ const blogArticlesContent = {
     gradient: 'from-indigo-600 via-purple-600 to-fuchsia-600',
     extract: 'El contenido viral falla porque no distingue entre capturar atención (trends) y capturar intención (keyword gaps). Descubre la estrategia híbrida 70/30 que usan marcas líderes para dominar su mercado combinando tráfico garantizado con autoridad de marca.',
     metaDescription: 'Descubre la diferencia entre capturar atención (trends) y capturar intención (keyword gaps). La estrategia híbrida 70/30 que usan las marcas líderes para dominar su mercado.',
-    heroImage: '/blog-compressed/blog-21-trend-keyword-gap.webp',
+    heroImage: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/blog-21-trend-keyword-gap.webp',
     sections: [
       {
         type: 'intro',
@@ -6058,7 +6058,7 @@ const blogArticlesContent = {
     gradient: 'from-indigo-600 via-purple-600 to-fuchsia-600',
     extract: '¿Deseas lo que miras… o deseas la emoción que tu fantasía fabrica? Este ensayo explora cómo la mirada, el deseo y el Otro construyen percepciones que luego confundimos con realidad e identidad.',
     metaDescription: 'Ensayo psicoanalítico y filosófico sobre la mirada, el deseo y la percepción: cómo el Otro y la fantasía fabrican realidades e identidades imaginadas.',
-    heroImage: '/blog-compressed/blog-22-fabrica.webp',
+    heroImage: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/blog-22-fabrica.webp',
     sections: [
       {
         type: 'intro',
@@ -6325,7 +6325,7 @@ const blogArticlesContent = {
     accent: 'emerald',
     extract: 'A veces el conocimiento no nos libera; nos domestica. Nos volvemos guardianes del prestigio intelectual antes que amantes de la verdad. Este blog es una rebelión contra el “no estás listo todavía”.\n❓Pregunta: ¿Aprendemos para pensar… o para obedecer?',
     metaDescription: 'A veces el conocimiento no nos libera; nos domestica. Rebelión contra el “no estás listo todavía”. ¿Aprendemos para pensar… o para obedecer?',
-    heroImage: '/IMAGENES BLOG/REINO ERUDITO.jpg',
+    heroImage: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/REINO-ERUDITO.jpg',
     image: 'REINO ERUDITO.jpg',
     sections: [
       {
@@ -9693,7 +9693,7 @@ const blogArticlesContent = {
       gradient: 'from-indigo-600 via-purple-600 to-fuchsia-600',
       extract: 'Viral content fails because it doesn\'t distinguish between capturing attention (trends) and capturing intention (keyword gaps). Discover the 70/30 hybrid strategy leading brands use to dominate their market combining guaranteed traffic with brand authority.',
       metaDescription: 'Discover the difference between capturing attention (trends) and capturing intention (keyword gaps). The 70/30 hybrid strategy that leading brands use to dominate their market.',
-      heroImage: '/blog-compressed/blog-21-trend-keyword-gap.webp',
+      heroImage: 'https://radiografia-worker.noirpraxis.workers.dev/media/blog/blog-21-trend-keyword-gap.webp',
       sections: [
         {
           type: 'intro',

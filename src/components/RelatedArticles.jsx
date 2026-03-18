@@ -24,7 +24,7 @@ const RelatedArticles = ({ currentSlug, allArticles, language = 'es', isEditMode
     if (!v) return ''
     if (/^https?:\/\//i.test(v)) return v
     if (v.startsWith('/')) return encodeURI(v)
-    return encodeURI(`/IMAGENES BLOG/${v}`)
+    return encodeURI(`https://radiografia-worker.noirpraxis.workers.dev/media/blog/${v.replace(/ /g, '-')}`)
   }
 
   const getArticleImage = (article) => {

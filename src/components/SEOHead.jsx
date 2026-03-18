@@ -24,10 +24,10 @@ const SEOHead = ({
   })()
 
   const fullImage = (() => {
-    if (!image) return `${siteUrl}/portada.webp`
-    if (typeof image !== 'string') return `${siteUrl}/portada.webp`
+    if (!image) return 'https://radiografia-worker.noirpraxis.workers.dev/media/products/portada.webp'
+    if (typeof image !== 'string') return 'https://radiografia-worker.noirpraxis.workers.dev/media/products/portada.webp'
     const trimmed = image.trim()
-    if (!trimmed) return `${siteUrl}/portada.webp`
+    if (!trimmed) return 'https://radiografia-worker.noirpraxis.workers.dev/media/products/portada.webp'
     if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed
     return `${siteUrl}${trimmed.startsWith('/') ? trimmed : `/${trimmed}`}`
   })()

@@ -336,7 +336,7 @@ const LaboratorioEticoPage = () => {
             playsInline
             className="absolute inset-0 w-full h-full object-cover"
           >
-            <source src="/dilema.mp4" type="video/mp4" />
+            <source src="https://radiografia-worker.noirpraxis.workers.dev/media/headers/dilema.mp4" type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/80 to-[#0a0a0f]" />
           

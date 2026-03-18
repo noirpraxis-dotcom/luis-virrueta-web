@@ -18,7 +18,7 @@ const StoreProductPage = () => {
       category: 'Psicoterapia',
       price: '$750 MXN',
       duration: '60 min',
-      image: '/individual imagen.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/products/individual-imagen.jpg',
       description: 'Sesión de psicoterapia individual donde trabajamos desde el inconsciente, no desde los síntomas. A través del método AION© identificamos los filtros que están creando tu realidad actual y comenzamos el proceso de transformación.',
       longDescription: 'Esta no es una sesión tradicional. No venimos a tapar síntomas ni a "sentirnos mejor". Venimos a atravesar lo que te sostiene atrapado. Trabajo desde el psicoanálisis, la neurociencia y la filosofía de la conciencia. Si buscas respuestas rápidas, este no es el espacio. Si buscas transformación real, bienvenido.',
       benefits: [
@@ -43,7 +43,7 @@ const StoreProductPage = () => {
       category: 'Terapia de Pareja',
       price: '$1,500 MXN',
       duration: '90 min',
-      image: '/pareja imagen.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/products/pareja-imagen.jpg',
       description: 'Terapia de pareja desde el psicoanálisis. No venimos a "mejorar la comunicación". Venimos a desmontar las ilusiones que sostienen el conflicto.',
       longDescription: 'Las parejas no pelean por lo que creen que pelean. Pelean por lo que proyectan en el otro. Trabajamos desde ahí: desde el inconsciente que cada uno trae, desde los filtros heredados, desde las fantasías no dichas. Si buscan consejos o técnicas, este no es el espacio. Si están listos para atravesar lo que los sostiene atrapados, bienvenidos.',
       benefits: [
@@ -68,7 +68,7 @@ const StoreProductPage = () => {
       category: 'Terapia Familiar',
       price: '$1,750 MXN',
       duration: '90 min',
-      image: '/familia imagen.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/products/familia-imagen.jpg',
       description: 'Terapia familiar sistémica. Trabajamos los patrones transgeneracionales que se repiten sin que nadie los nombre.',
       longDescription: 'Las familias no son solo las personas que están. Son también las historias no dichas, los roles heredados, los mandatos silenciosos. Trabajamos desde ahí: desde lo que se transmite sin palabras, desde lo que nadie dijo pero todos sienten. No venimos a "llevarnos mejor". Venimos a atravesar lo que nos sostiene atrapados en dinámicas que no elegimos.',
       benefits: [
@@ -94,7 +94,7 @@ const StoreProductPage = () => {
       category: 'Proceso Terapéutico',
       price: 'Elige tu modalidad',
       duration: '4 sesiones',
-      image: '/paquete 4 sesiones imagen.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/products/paquete-4-sesiones-imagen.jpg',
       description: 'Paquete de 4 sesiones con 20% de descuento. Elige entre Individual, Pareja, Familiar o Empresarial. La transformación real requiere continuidad.',
       longDescription: 'Este paquete te permite trabajar con continuidad en la modalidad que necesites. Cada sesión construye sobre la anterior. No es acumulativo: es estructural. Cada encuentro desarma una capa más profunda. Con 20% de ahorro, inviertes en un proceso real, no en un parche.',
       packageOptions: [
@@ -152,7 +152,7 @@ const StoreProductPage = () => {
       category: 'Organizacional',
       price: '$2,500 MXN',
       duration: '90 min',
-      image: '/empresa imagen.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/products/empresa-imagen.jpg',
       description: 'Psicología organizacional aplicada. Trabajamos el clima laboral desde el inconsciente colectivo. No es team building: es reestructuración de dinámicas.',
       longDescription: 'Las empresas no son máquinas. Son organismos vivos con dinámicas inconscientes. Trabajamos desde ahí: conflictos no expresados, jerarquías ocultas, comunicación rota. Si quieres un equipo que funcione de verdad, no eventos motivacionales, esto es lo que necesitas.',
       benefits: [
@@ -178,7 +178,7 @@ const StoreProductPage = () => {
       category: 'Desarrollo Personal',
       price: '$2,650 MXN',
       duration: '3 horas intensivas',
-      image: '/taller aion imagen.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/products/taller-aion-imagen.jpg',
       description: 'Taller grupal donde aprenderás las bases completas del Método AION©. Identificarás tus filtros y aprenderás a transformarlos de forma autónoma.',
       longDescription: 'Este taller no es informativo: es experiencial. No saldrás con "conocimiento", saldrás con herramientas aplicadas. Trabajamos en vivo tus filtros, los desmontamos, y te llevas un mapa claro de tu proceso. Incluye comunidad privada para seguimiento.',
       benefits: [

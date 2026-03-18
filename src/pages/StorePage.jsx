@@ -20,7 +20,7 @@ const StorePage = () => {
       category: 'Diagnóstico Psicológico',
       price: 'Desde $499 MXN',
       duration: '~35 min',
-      image: '/productos/radar de pareja/videos/imagen tienda.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/imagen-tienda.jpg',
       description: '40 preguntas por voz analizadas por inteligencia artificial desde la perspectiva de 11 corrientes psicológicas (Gottman, Sternberg, Perel, Bowlby, Schnarch y más). Radar multidimensional, mapa de apego, indicadores compuestos y análisis clínico profundo.',
       shortDesc: 'La respuesta a por qué amas como amas. Elige tu modalidad: descubre tus patrones inconscientes, la verdad sobre tu relación o el diagnóstico completo para los dos.',
       benefits: [
@@ -41,7 +41,7 @@ const StorePage = () => {
       category: 'Sesión 1:1 con Luis',
       price: '$700 MXN',
       duration: '60 min',
-      image: '/productos/consulta individual/imagenes consulta/portada tarjeta.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/products/consulta-individual/imagenes-consulta/portada-tarjeta.jpg',
       description:
         'No venimos a hablar de síntomas. Venimos a ver qué hay por debajo. ' +
         'Trabajo los filtros inconscientes que moldean tu realidad y comenzamos a atravesarlos.',
@@ -62,7 +62,7 @@ const StorePage = () => {
       category: 'Sesión para dos',
       price: '$1,250 MXN',
       duration: '90 min',
-      image: '/productos/consulta pareja/imagenes pareja/portada pareja.jpg',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/products/consulta-pareja/imagenes-pareja/portada-pareja.jpg',
       description:
         'Detrás de cada conflicto hay un patrón: heredado, proyectado, repetido sin que nadie lo nombre. ' +
         'En esta sesión empezamos a nombrarlo.',
@@ -84,7 +84,7 @@ const StorePage = () => {
       <SEOHead 
         title="Tienda - Luis Virrueta | Servicios Psicológicos"
         description="Sesiones de psicoterapia, talleres del método AION©, consultoría organizacional y programas de transformación personal."
-        image="/carrito-compra.mp4"
+        image="https://radiografia-worker.noirpraxis.workers.dev/media/headers/carrito-compra.mp4"
         url="/tienda"
         type="website"
         tags={['terapia', 'psicología', 'método AION', 'transformación personal', 'consultoría']}
@@ -108,7 +108,7 @@ const StorePage = () => {
               objectPosition: 'center'
             }}
           >
-            <source src="/carrito-compra.mp4" type="video/mp4" />
+            <source src="https://radiografia-worker.noirpraxis.workers.dev/media/headers/carrito-compra.mp4" type="video/mp4" />
           </video>
         </div>
         

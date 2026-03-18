@@ -60,7 +60,7 @@ const AboutPage = () => {
               objectPosition: 'center'
             }}
           >
-            <source src="/sobre mi vid.mp4" type="video/mp4" />
+            <source src="https://radiografia-worker.noirpraxis.workers.dev/media/headers/sobre-mi-vid.mp4" type="video/mp4" />
           </video>
         </div>
         

@@ -49,7 +49,7 @@ const FasesPage = () => {
                 objectPosition: 'center'
               }}
             >
-              <source src="/metodologia fases.mp4" type="video/mp4" />
+              <source src="https://radiografia-worker.noirpraxis.workers.dev/media/headers/metodologia-fases.mp4" type="video/mp4" />
             </video>
           </div>
           

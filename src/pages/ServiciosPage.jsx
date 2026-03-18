@@ -66,7 +66,7 @@ const ServiciosPage = () => {
       <SEOHead 
         title="Servicios de Branding, Diseño Web y Apps Premium"
         description="Identidad de marca, logos, arquetipos de Jung, desarrollo web y apps, motion graphics, avatares IA. Psicología + Diseño + IA para marcas que conectan."
-        image="/hero servicios.mp4"
+        image="https://radiografia-worker.noirpraxis.workers.dev/media/headers/hero-servicios.mp4"
         url="/servicios"
         type="website"
         tags={['branding', 'diseño web', 'apps', 'motion graphics', 'avatares IA', 'identidad de marca']}
@@ -90,7 +90,7 @@ const ServiciosPage = () => {
               objectPosition: 'center'
             }}
           >
-            <source src="/servicios videos.mp4" type="video/mp4" />
+            <source src="https://radiografia-worker.noirpraxis.workers.dev/media/headers/servicios-videos.mp4" type="video/mp4" />
           </video>
         </div>
         
