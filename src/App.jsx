@@ -39,7 +39,7 @@ const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage'))
 const FraseDelDiaPage = lazy(() => import('./pages/FraseDelDiaPage'))
 const AtlasHumanidadPage = lazy(() => import('./pages/AtlasHumanidadPage'))
 const LaboratorioEticoPage = lazy(() => import('./pages/LaboratorioEticoPage'))
-// DiagnosticoRelacionalPage removed
+const DiagnosticoRelacionalPage = lazy(() => import('./pages/DiagnosticoRelacionalPage'))
 const ConsultaProductPage = lazy(() => import('./pages/ConsultaProductPage'))
 const ConsultaGraciasPage = lazy(() => import('./pages/ConsultaGraciasPage'))
 const RadiografiaPremiumPage = lazy(() => import('./pages/RadiografiaPremiumPage'))
@@ -193,7 +193,12 @@ const AppContent = () => {
                 <StorePage />
               } />
 
-              {/* Radiografía Premium */}
+              {/* Diagnóstico Relacional (landing + checkout) */}
+              <Route path="/tienda/diagnostico-relacional" element={
+                <DiagnosticoRelacionalPage />
+              } />
+
+              {/* Radiografía Premium (cuestionario) */}
               <Route path="/tienda/radiografia-premium" element={
                 <RadiografiaPremiumPage />
               } />
