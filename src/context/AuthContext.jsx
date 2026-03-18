@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import { onAuthStateChanged, signInWithRedirect, getRedirectResult, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile, deleteUser, EmailAuthProvider, reauthenticateWithCredential, reauthenticateWithPopup } from 'firebase/auth'
+import { onAuthStateChanged, signInWithRedirect, signInWithPopup, getRedirectResult, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile, deleteUser, EmailAuthProvider, reauthenticateWithCredential, reauthenticateWithPopup } from 'firebase/auth'
 import { doc, getDoc, setDoc, deleteDoc, collection, getDocs, serverTimestamp } from 'firebase/firestore'
 import { auth, db } from '../config/firebase'
 
@@ -52,10 +52,15 @@ export function AuthProvider({ children }) {
     return () => unsubscribe()
   }, [])
 
-  // Google Sign-In (redirect flow — avoids COOP popup issues)
+  // Google Sign-In — popup on localhost, redirect on production
   const loginWithGoogle = async () => {
     try {
-      await signInWithRedirect(auth, googleProvider)
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      if (isLocalhost) {
+        await signInWithPopup(auth, googleProvider)
+      } else {
+        await signInWithRedirect(auth, googleProvider)
+      }
       return { success: true }
     } catch (err) {
       return { success: false, error: err?.message || 'Error al iniciar sesión con Google' }
@@ -78,15 +83,27 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // Email/Password Sign-In
+  // Email/Password Sign-In (auto-creates account if not found)
   const loginWithEmail = async (email, password) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password)
       return { success: true, user: result.user }
     } catch (err) {
-      const msg = err.code === 'auth/user-not-found' ? 'No existe una cuenta con ese correo'
-        : err.code === 'auth/wrong-password' ? 'Contraseña incorrecta'
-        : err.code === 'auth/invalid-credential' ? 'Credenciales inválidas'
+      // Auto-register if account doesn't exist
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+        try {
+          const result = await createUserWithEmailAndPassword(auth, email, password)
+          return { success: true, user: result.user }
+        } catch (regErr) {
+          if (regErr.code === 'auth/email-already-in-use') {
+            return { success: false, error: 'Contraseña incorrecta' }
+          }
+          const msg = regErr.code === 'auth/weak-password' ? 'La contraseña debe tener al menos 6 caracteres'
+            : regErr?.message || 'Error al crear cuenta'
+          return { success: false, error: msg }
+        }
+      }
+      const msg = err.code === 'auth/wrong-password' ? 'Contraseña incorrecta'
         : err?.message || 'Error al iniciar sesión'
       return { success: false, error: msg }
     }
