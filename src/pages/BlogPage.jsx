@@ -9,7 +9,7 @@ import { useAuth } from '../context/AuthContext'
 import DeleteConfirmModal from '../components/DeleteConfirmModal'
 import { getArticleContent } from '../data/blogArticlesContent'
 import { getLegacyBlogIndex } from '../data/blogIndex'
-import { supabase } from '../lib/supabase'
+import { getBlogArticles, deleteBlogArticle } from '../lib/supabase'
 // Updated: Dec 17, 2025 - New images for articles 17-20
 
 const HIDDEN_BLOG_SLUGS = new Set([
@@ -37,27 +37,8 @@ const BlogPage = () => {
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)
   }
 
-  const tryRemoveStorageByPublicUrl = async (publicUrl) => {
-    if (!publicUrl || typeof publicUrl !== 'string') return
-
-    try {
-      const u = new URL(publicUrl)
-      const marker = '/storage/v1/object/public/'
-      const idx = u.pathname.indexOf(marker)
-      if (idx === -1) return
-
-      const rest = u.pathname.slice(idx + marker.length)
-      const parts = rest.split('/').filter(Boolean)
-      if (parts.length < 2) return
-
-      const bucket = parts[0]
-      const objectPath = parts.slice(1).join('/')
-      if (!bucket || !objectPath) return
-
-      await supabase.storage.from(bucket).remove([objectPath])
-    } catch {
-      // Best-effort only
-    }
+  const tryRemoveStorageByPublicUrl = async () => {
+    // Images are now on R2 CDN, no automatic cleanup needed
   }
 
   // Datos iniciales de blog posts (se cargan en useEffect)
@@ -108,22 +89,15 @@ const BlogPage = () => {
     setIsDeleting(true)
     
     try {
-      // Solo se pueden eliminar artículos creados en Supabase.
+      // Solo se pueden eliminar artículos creados en el CMS.
       if (!isUuid(deletingArticle.id)) {
-        alert('Este artículo es legacy/hardcoded y no se puede eliminar desde el CMS. Solo se pueden eliminar artículos creados en Supabase.')
+        alert('Este artículo es legacy/hardcoded y no se puede eliminar desde el CMS.')
         handleCancelDelete()
         return
       }
 
-      // Best-effort: borrar también la imagen en Storage si es una URL pública de Supabase
-      await tryRemoveStorageByPublicUrl(deletingArticle.image || deletingArticle.image_url)
-
-      const { error } = await supabase
-        .from('blog_articles')
-        .delete()
-        .eq('id', deletingArticle.id)
-      
-      if (error) throw error
+      await tryRemoveStorageByPublicUrl()
+      await deleteBlogArticle(deletingArticle.id)
 
       // Eliminar del estado local
       setBlogPosts((prev) => prev.filter(post => post.id !== deletingArticle.id))
@@ -244,17 +218,11 @@ const BlogPage = () => {
           return merged
         }
 
-        const { data, error } = await supabase
-          .from('blog_articles')
-          .select('*')
-          .eq('language', currentLanguage)
-          .order('published_at', { ascending: false, nullsFirst: false })
-          .order('created_at', { ascending: false })
+        const data = await getBlogArticles(false, currentLanguage)
 
-        if (error) throw error
         if (isCancelled) return
 
-        const supabasePosts = (data || []).map((row) => {
+        const firestorePosts = (data || []).map((row) => {
           const bestDateIso = row.published_at || row.created_at
           return {
             id: row.id,
@@ -283,12 +251,12 @@ const BlogPage = () => {
 
         const filteredInitialBlogs = initialBlogs.filter((post) => !HIDDEN_BLOG_SLUGS.has(post.slug))
 
-        // Merge: supabase posts ganan sobre los hardcodeados por (slug, language)
+        // Merge: firestore posts ganan sobre los hardcodeados por (slug, language)
         const merged = new Map()
         filteredInitialBlogs.forEach((post) => {
           merged.set(`${post.slug}:${currentLanguage}`, post)
         })
-        supabasePosts.forEach((post) => {
+        firestorePosts.forEach((post) => {
           const key = `${post.slug}:${currentLanguage}`
           const legacy = merged.get(key)
           merged.set(key, mergePreferLegacyMeta(legacy, post))

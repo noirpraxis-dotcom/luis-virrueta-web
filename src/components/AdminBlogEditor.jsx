@@ -7,7 +7,7 @@ import {
   Crown, Moon, Diamond, Star, Bookmark
 } from 'lucide-react'
 import RichTextEditor from './RichTextEditor'
-import { supabase } from '../lib/supabase'
+import { uploadBlogImage, updateBlogArticle, createBlogArticle } from '../lib/supabase'
 
 /**
  * Editor principal de blogs con todas las funcionalidades
@@ -255,28 +255,13 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
   }
 
   /**
-   * Subir imagen a Supabase Storage
+   * Subir imagen via R2 CDN Worker
    */
-  const uploadImageToSupabase = async () => {
+  const uploadImageToR2 = async () => {
     if (!imageFile) return imageUrl
 
     try {
-      const fileName = `blog-${Date.now()}-${imageFile.name}`
-      const { data, error } = await supabase.storage
-        .from('blog-images')
-        .upload(fileName, imageFile, {
-          cacheControl: '3600',
-          upsert: false
-        })
-
-      if (error) throw error
-
-      // Obtener URL pública
-      const { data: { publicUrl } } = supabase.storage
-        .from('blog-images')
-        .getPublicUrl(fileName)
-
-      return publicUrl
+      return await uploadBlogImage(imageFile)
     } catch (error) {
       console.error('Error subiendo imagen:', error)
       throw new Error('Error al subir imagen')
@@ -310,7 +295,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
       let finalImageUrl = imageUrl
       if (imageFile) {
         setMessage({ type: 'info', text: 'Subiendo imagen...' })
-        finalImageUrl = await uploadImageToSupabase()
+        finalImageUrl = await uploadImageToR2()
       }
 
       // Preparar datos del artículo
@@ -377,31 +362,17 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
         articleData.created_at = new Date().toISOString()
       }
 
-      const saveToSupabase = async (dataToSave) => {
+      const saveToFirestore = async (dataToSave) => {
         if (article?.id) {
-          const { data, error } = await supabase
-            .from('blog_articles')
-            .update(dataToSave)
-            .eq('id', article.id)
-            .select()
-            .single()
-          if (error) throw error
-          return data
+          return await updateBlogArticle(article.id, dataToSave)
         }
-
-        const { data, error } = await supabase
-          .from('blog_articles')
-          .insert([dataToSave])
-          .select()
-          .single()
-        if (error) throw error
-        return data
+        return await createBlogArticle(dataToSave)
       }
 
-      // Guardar en Supabase (compat: si la columna 'accent' no existe, reintentar sin ella)
+      // Guardar en Firestore
       let result
       try {
-        result = await saveToSupabase(articleData)
+        result = await saveToFirestore(articleData)
       } catch (err) {
         const message = String(err?.message || '')
         const isAccentSchemaCache =
@@ -411,7 +382,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
         if (!isAccentSchemaCache) throw err
 
         const { accent: _accent, ...fallbackData } = articleData
-        result = await saveToSupabase(fallbackData)
+        result = await saveToFirestore(fallbackData)
       }
 
       setMessage({ 

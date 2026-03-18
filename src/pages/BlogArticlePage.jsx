@@ -19,7 +19,7 @@ import AdminLogin from '../components/AdminLogin'
 import RichTextEditor from '../components/RichTextEditor'
 import { getArticleContent } from '../data/blogArticlesContent'
 import { getLegacyBlogIndex } from '../data/blogIndex'
-import { supabase } from '../lib/supabase'
+import { getBlogArticles, getBlogArticleBySlug } from '../lib/supabase'
 import { uploadBlogImage, updateBlogArticle, createBlogArticle } from '../lib/supabase'
 
 const HIDDEN_BLOG_SLUGS = new Set([
@@ -1913,14 +1913,8 @@ const BlogArticlePage = () => {
 
     const loadAllArticles = async () => {
       try {
-        const { data, error } = await supabase
-          .from('blog_articles')
-          .select('*')
-          .eq('language', currentLanguage)
-          .order('published_at', { ascending: false, nullsFirst: false })
-          .order('created_at', { ascending: false })
+        const data = await getBlogArticles(false, currentLanguage)
 
-        if (error) throw error
         if (isCancelled) return
 
         const supabaseArticles = (data || []).map((row) => {
@@ -2072,14 +2066,10 @@ const BlogArticlePage = () => {
     const loadFromSupabase = async () => {
       try {
         setCmsLoading(true)
-        const { data, error } = await supabase
-          .from('blog_articles')
-          .select('*')
-          .eq('slug', slug)
-          .eq('language', currentLanguage)
-          .maybeSingle()
+        // Query by slug + language using Firestore
+        const allArticles = await getBlogArticles(false, currentLanguage)
+        const data = (allArticles || []).find(a => a.slug === slug) || null
 
-        if (error) throw error
         if (isCancelled) return
 
         setCmsRow(data || null)
@@ -2758,13 +2748,9 @@ const BlogArticlePage = () => {
       if (!silent) setSaveStatus(publish ? 'Publicado' : 'Borrador guardado')
 
       // Recargar lista de artículos para actualizar relacionados
-      const { data: freshArticles } = await supabase
-        .from('blog_articles')
-        .select('id, slug, title, excerpt, category, accent, author, published_at, created_at, read_time, tags, image_url, rating, featured, language, is_published')
-        .eq('language', currentLanguage)
-        .order('published_at', { ascending: false, nullsFirst: false })
+      const freshArticles = await getBlogArticles(false, currentLanguage)
       
-      if (freshArticles) {
+      if (freshArticles && freshArticles.length) {
         const supabaseArticles = freshArticles.map((row) => {
           const bestDateIso = row.published_at || row.created_at
           const formatDate = (iso) => {
