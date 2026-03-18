@@ -1,5 +1,5 @@
 import {
-  doc, setDoc, getDoc, getDocs, updateDoc, deleteField,
+  doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, deleteField,
   collection, query, where, orderBy, serverTimestamp, limit
 } from 'firebase/firestore'
 import { db } from '../config/firebase'
@@ -158,4 +158,49 @@ export async function getAdminUserDetail(uid) {
     ...userSnap.data(),
     purchases: purchasesSnap.docs.map(d => ({ id: d.id, ...d.data() }))
   }
+}
+
+// ─── ADMIN: GIFT / REMOVE PRODUCTS ──────────────────────────────
+
+export async function giftProduct(email, product, packageType) {
+  // Find user by email
+  const usersSnap = await getDocs(
+    query(collection(db, 'users'), where('email', '==', email), limit(1))
+  )
+  let uid
+  if (!usersSnap.empty) {
+    uid = usersSnap.docs[0].id
+  } else {
+    // Create placeholder user doc keyed by email hash so it merges when they sign up
+    // We'll use a deterministic ID based on email
+    uid = 'pending_' + btoa(email).replace(/[^a-zA-Z0-9]/g, '').slice(0, 20)
+    await setDoc(doc(db, 'users', uid), {
+      email,
+      displayName: null,
+      pendingGift: true,
+      createdAt: serverTimestamp()
+    })
+  }
+
+  const purchaseRef = doc(collection(db, 'users', uid, 'purchases'))
+  await setDoc(purchaseRef, {
+    product,
+    packageType,
+    stripeSessionId: null,
+    status: 'paid',
+    source: 'gift',
+    voiceSelection: null,
+    profileData: null,
+    currentQuestion: 0,
+    responses: {},
+    analysis: null,
+    crossAnalysis: null,
+    createdAt: serverTimestamp(),
+    completedAt: null
+  })
+  return purchaseRef.id
+}
+
+export async function removeProduct(uid, purchaseId) {
+  await deleteDoc(doc(db, 'users', uid, 'purchases', purchaseId))
 }

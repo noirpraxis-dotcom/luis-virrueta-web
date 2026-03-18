@@ -1,6 +1,10 @@
 # Cloudflare Headers Configuration
 # https://developers.cloudflare.com/pages/platform/headers
 
+# Allow Firebase Auth redirect flow
+/*
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+
 # Cache all assets for 1 year
 /assets/*
   Cache-Control: public, max-age=31536000, immutable

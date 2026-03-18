@@ -104,7 +104,7 @@ export default function RegistroPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center px-4 py-20">
-      <SEOHead title="Crear cuenta — Luis Virrueta" description="Crea tu cuenta para acceder a tus productos" />
+      <SEOHead title="Mi perfil — Luis Virrueta" description="Accede a tu perfil personal para ver tus productos, reportes y progreso" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -124,12 +124,12 @@ export default function RegistroPage() {
           ) : (
             <>
               <h1 className="text-2xl font-light text-white mb-2">
-                {mode === 'register' ? 'Crea tu cuenta' : 'Inicia sesión'}
+                {mode === 'register' ? 'Crea tu perfil' : 'Accede a tu perfil'}
               </h1>
               <p className="text-gray-400 text-sm">
                 {mode === 'register'
-                  ? 'Aquí se guardará todo tu progreso y resultados'
-                  : 'Accede a tu perfil y productos'}
+                  ? 'Tu espacio personal donde se guardan tus productos, reportes y progreso'
+                  : 'Entra a tu dashboard para ver tus productos y resultados'}
               </p>
             </>
           )}
@@ -255,7 +255,7 @@ export default function RegistroPage() {
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
-                  {mode === 'register' ? 'Crear cuenta' : 'Iniciar sesión'}
+                  {mode === 'register' ? 'Crear mi perfil' : 'Entrar'}
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
@@ -268,7 +268,7 @@ export default function RegistroPage() {
               onClick={() => { setMode(mode === 'register' ? 'login' : 'register'); setError('') }}
               className="text-xs text-gray-400 hover:text-purple-300 transition-colors"
             >
-              {mode === 'register' ? '¿Ya tienes cuenta? Inicia sesión' : '¿No tienes cuenta? Regístrate'}
+              {mode === 'register' ? '¿Ya tienes perfil? Inicia sesión' : '¿No tienes perfil? Créalo aquí'}
             </button>
           </div>
         </div>
