@@ -11,6 +11,7 @@
   "dependencies": {
     "@nivo/core": "^0.99.0",
     "@nivo/sankey": "^0.99.0",
+    "@react-pdf/renderer": "^4.3.2",
     "@studio-freight/lenis": "^1.0.42",
     "@supabase/supabase-js": "^2.89.0",
     "d3": "^7.9.0",

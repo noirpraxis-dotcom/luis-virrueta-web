@@ -898,6 +898,75 @@ async function handleSendAnalysisEmail(req, env) {
 // ── Send backup with filled questionnaire to admin ──────────────────────────
 const ADMIN_EMAIL = 'luis.virrueta.contacto@gmail.com'
 
+// ── Email: partner invitation (sent to partner for "losdos" package) ─────────
+function partnerInviteEmailHtml({ buyerName, partnerName, registroUrl }) {
+  const safeBuyer   = escapeHtml(buyerName).trim() || 'Tu pareja'
+  const safePartner = escapeHtml(partnerName).trim()
+  const greeting    = safePartner ? `Hola, ${safePartner}` : 'Hola'
+
+  return `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Te han invitado a la Radiografía de Pareja</title></head>
+<body style="margin:0;padding:0;background:#080810;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#080810;">
+<tr><td align="center" style="padding:48px 16px 40px;">
+  <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+    <tr><td align="center" style="padding-bottom:40px;">
+      <p style="margin:0;font-size:11px;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:rgba(167,139,250,0.7);">LUIS VIRRUETA</p>
+    </td></tr>
+    <tr><td style="padding-bottom:40px;">
+      <div style="height:1px;background:linear-gradient(to right,transparent,rgba(236,72,153,0.5),transparent);"></div>
+    </td></tr>
+    <tr><td align="center" style="padding-bottom:32px;">
+      <h1 style="margin:0 0 12px;font-size:28px;font-weight:300;letter-spacing:-0.03em;color:#ffffff;line-height:1.2;">${greeting}</h1>
+      <p style="margin:0;font-size:13px;color:rgba(236,72,153,0.8);letter-spacing:0.05em;text-transform:uppercase;">Radiografía de Pareja — Los Dos</p>
+    </td></tr>
+    <tr><td style="padding-bottom:16px;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f0f1a;border:1px solid rgba(236,72,153,0.18);border-radius:20px;overflow:hidden;">
+        <tr><td style="padding:40px 40px 32px;">
+          <p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);"><strong style="color:rgba(255,255,255,0.9);font-weight:400;">${safeBuyer}</strong> te ha invitado a hacer juntos la <strong style="color:rgba(255,255,255,0.9);font-weight:400;">Radiografía de Pareja</strong> — un cuestionario de 40 preguntas que analiza su vínculo desde 11 corrientes psicológicas.</p>
+          <p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Cada uno responde por separado. Cuando ambos terminen, recibirán un <strong style="color:rgba(255,255,255,0.9);font-weight:400;">análisis cruzado</strong> — la radiografía de su relación vista desde los dos lados.</p>
+          <p style="margin:0 0 32px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);">Tu acceso ya está pagado. Solo necesitas crear tu cuenta para comenzar.</p>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr><td align="center">
+              <a href="${registroUrl}" style="display:inline-block;padding:16px 48px;background:linear-gradient(135deg,#db2777,#9333ea);color:#ffffff;text-decoration:none;font-size:15px;font-weight:400;letter-spacing:0.02em;border-radius:12px;">Crear mi cuenta y comenzar &rarr;</a>
+            </td></tr>
+          </table>
+        </td></tr>
+      </table>
+    </td></tr>
+    <tr><td style="padding:24px 0;">
+      <div style="height:1px;background:linear-gradient(to right,transparent,rgba(255,255,255,0.06),transparent);"></div>
+    </td></tr>
+    <tr><td align="center">
+      <p style="margin:0 0 6px;font-size:11px;color:rgba(255,255,255,0.2);line-height:1.7;">No necesitas pagar nada. Tu acceso fue cubierto por tu pareja.</p>
+      <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15);">luisvirrueta.com &mdash; hola@luisvirrueta.com</p>
+    </td></tr>
+  </table>
+</td></tr>
+</table>
+</body></html>`
+}
+
+async function handleSendPartnerInvite(req, env) {
+  const { partnerEmail, partnerName, buyerName } = await req.json()
+  if (!partnerEmail) return json({ error: 'Missing partnerEmail' }, 400)
+
+  const registroUrl = `${SITE_URL}/registro?email=${encodeURIComponent(partnerEmail)}&invite=losdos&package=losdos`
+
+  try {
+    await sendEmail(env, {
+      to:      partnerEmail,
+      subject: `${escapeHtml(buyerName || 'Tu pareja').trim()} te invita a la Radiografía de Pareja`,
+      html:    partnerInviteEmailHtml({ buyerName, partnerName, registroUrl }),
+    })
+    return json({ ok: true })
+  } catch (e) {
+    console.error('Partner invite email error:', e.message)
+    return json({ ok: false, error: e.message }, 500)
+  }
+}
+
 async function handleSendBackupEmail(req, env) {
   const { token, type, profileData, questions, responses } = await req.json()
   if (!token || !responses) return json({ error: 'Missing data' }, 400)
@@ -1182,6 +1251,7 @@ export default {
         if (pathname === '/api/save-profile')                return handleSaveProfile(request, env)
         if (pathname === '/api/send-analysis-email')         return handleSendAnalysisEmail(request, env)
         if (pathname === '/api/send-backup-email')           return handleSendBackupEmail(request, env)
+        if (pathname === '/api/send-partner-invite')         return handleSendPartnerInvite(request, env)
         if (pathname === '/api/check-cross-status')          return handleCheckCrossStatus(request, env)
         if (pathname === '/api/mark-partner-done')           return handleMarkPartnerDone(request, env)
         if (pathname === '/api/save-cross-analysis')         return handleSaveCrossAnalysis(request, env)

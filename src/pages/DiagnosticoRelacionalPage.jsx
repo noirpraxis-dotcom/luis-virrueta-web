@@ -14,8 +14,10 @@ import SEOHead from '../components/SEOHead'
 import jsPDF from 'jspdf'
 import { analyzeDiagnostic } from '../services/diagnosticRelacionalService'
 import { generateAccessToken, PRODUCT_LABELS, DATA_RETENTION_DAYS } from '../utils/accessToken'
-import { sendAccessEmails, sendResultsEmail, verifyStripeSession } from '../services/emailApiService'
+import { sendAccessEmails, sendResultsEmail, verifyStripeSession, sendPartnerInvite } from '../services/emailApiService'
 import { saveProgress, getProgress, savePurchase, saveResults } from '../services/firebaseAuthService'
+import { useAuth } from '../context/AuthContext'
+import { createPurchase as createFirestorePurchase } from '../services/firestoreService'
 
 // ─── CUESTIONARIO: 44 PREGUNTAS EN 18 BLOQUES ────────────────────
 
@@ -720,6 +722,7 @@ function ConflictSankeyChart({ conflictFlow }) {
 const DiagnosticoRelacionalPage = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
+  const { user: firebaseUser } = useAuth()
 
   // Stages: hero | checkout | thankyou | instructions | questionnaire | email | analyzing | engagement | results
   const [stage, setStage] = useState('hero')
@@ -787,6 +790,18 @@ const DiagnosticoRelacionalPage = () => {
   // Test/dev mode: URL param
   const isDevMode = searchParams.get('test') === 'true' || searchParams.get('demo') === 'true'
   const [stripeTestMode, setStripeTestMode] = useState(false)
+
+  // Auto-fill email and name from Firebase user when logged in
+  useEffect(() => {
+    if (firebaseUser) {
+      if (firebaseUser.email && !thankyouEmails[0]) {
+        setThankyouEmails(prev => [firebaseUser.email, prev[1]])
+      }
+      if (firebaseUser.displayName && !thankYouProfile.nombre) {
+        setThankYouProfile(prev => ({ ...prev, nombre: prev.nombre || firebaseUser.displayName }))
+      }
+    }
+  }, [firebaseUser])
 
   // ─── PREVIEW MODE: ?preview=results → skip to results with sample data ───
   useEffect(() => {
@@ -2631,6 +2646,26 @@ const DiagnosticoRelacionalPage = () => {
                         sessionStorage.setItem('diagnostico_relacional_purchase_id', pid)
                         // Save purchase to Firestore (fire-and-forget — Firebase may not be configured)
                         savePurchase(pid, { type: purchaseType, email: emails[0], stripeSessionId: purchaseId }).catch(() => {})
+                        // Create purchase in new Firestore structure (users/{uid}/purchases) if logged in
+                        if (firebaseUser) {
+                          createFirestorePurchase(firebaseUser.uid, {
+                            product: 'radiografia-pareja',
+                            packageType: purchaseType,
+                            stripeSessionId: purchaseId || pid,
+                            partnerEmail: purchaseType === 'losdos' ? (thankyouEmails[1] || '') : null,
+                            partnerName: purchaseType === 'losdos' ? (thankYouProfile.nombrePareja || '') : null,
+                          }).then(firestorePurchaseId => {
+                            sessionStorage.setItem('firestore_purchase_id', firestorePurchaseId)
+                            // For losdos — send partner invitation email
+                            if (purchaseType === 'losdos' && thankyouEmails[1]) {
+                              sendPartnerInvite({
+                                partnerEmail: thankyouEmails[1],
+                                partnerName: thankYouProfile.nombrePareja || '',
+                                buyerName: thankYouProfile.nombre || firebaseUser.displayName || '',
+                              }).catch(() => {})
+                            }
+                          }).catch(() => {})
+                        }
                         // Get buyer's token (from Stripe verify) for pair linking
                         const buyerTk = accessToken || sessionStorage.getItem('diagnostico_relacional_token') || ''
                         // Send access emails via backend (Worker links pair for losdos)

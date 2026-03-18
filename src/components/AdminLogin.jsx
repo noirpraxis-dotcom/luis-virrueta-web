@@ -4,7 +4,7 @@ import { Lock, Eye, EyeOff, LogIn, AlertCircle, Sparkles, X } from 'lucide-react
 import { useAuth } from '../context/AuthContext'
 
 export default function AdminLogin({ onClose }) {
-  const { login } = useAuth()
+  const { loginWithEmail, loginWithGoogle } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -16,7 +16,7 @@ export default function AdminLogin({ onClose }) {
     setError('')
     setLoading(true)
 
-    const result = await login(email, password)
+    const result = await loginWithEmail(email, password)
     
     if (result.success) {
       onClose?.()

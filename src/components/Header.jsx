@@ -1,7 +1,8 @@
+import React, { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { useState, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import ToolsMenu from './ToolsMenu'
+import UserMenu from './UserMenu'
 
 const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
   const [hoveredItem, setHoveredItem] = useState(null)
@@ -56,9 +57,10 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
             </motion.div>
           </Link>
           
-          {/* Contenedor derecho: Tools + Hamburguesa */}
-          <div className="flex items-center gap-3">
+          {/* Contenedor derecho: Tools + User + Hamburguesa */}
+          <div className="flex items-center gap-2">
             <ToolsMenu />
+            <UserMenu />
             
             {/* Botón Hamburguesa Elegante */}
             <motion.button
@@ -220,13 +222,21 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
             {/* Menu Items - mejor espaciado */}
             <div className="flex items-center gap-8">
               <ul className="flex space-x-10 items-center">
-              {menuItems.map((item, index) => (
-                <li 
-                  key={index} 
-                  className="relative group"
-                  onMouseEnter={() => handleMouseEnter(index)}
-                  onMouseLeave={handleMouseLeave}
-                >
+              {menuItems.map((item, index) => {
+                // Insert ToolsMenu right before Tienda
+                const isTienda = item.special || item.name === 'Tienda'
+                return (
+                  <React.Fragment key={index}>
+                  {isTienda && (
+                    <li key="tools-menu">
+                      <ToolsMenu />
+                    </li>
+                  )}
+                  <li 
+                    className="relative group"
+                    onMouseEnter={() => handleMouseEnter(index)}
+                    onMouseLeave={handleMouseLeave}
+                  >
                   <Link to={item.href}>
                     <motion.div
                       className="relative cursor-pointer whitespace-nowrap"
@@ -327,11 +337,13 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
                     />
                   )}
                 </li>
-              ))}
+              </React.Fragment>
+              )
+              })}
               </ul>
               
-              {/* Tools Menu */}
-              <ToolsMenu />
+              {/* User Profile/Login */}
+              <UserMenu />
             </div>
           </div>
         </div>

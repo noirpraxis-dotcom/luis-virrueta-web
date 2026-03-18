@@ -35,14 +35,16 @@ const StoreProductPage = lazy(() => import('./pages/StoreProductPage'))
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'))
 const TermsConditionsPage = lazy(() => import('./pages/TermsConditionsPage'))
 const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage'))
-const VocationalTestPage = lazy(() => import('./pages/VocationalTestPage'))
+// VocationalTestPage removed
 const FraseDelDiaPage = lazy(() => import('./pages/FraseDelDiaPage'))
 const AtlasHumanidadPage = lazy(() => import('./pages/AtlasHumanidadPage'))
 const LaboratorioEticoPage = lazy(() => import('./pages/LaboratorioEticoPage'))
-const DiagnosticoRelacionalPage = lazy(() => import('./pages/DiagnosticoRelacionalPage'))
+// DiagnosticoRelacionalPage removed
 const ConsultaProductPage = lazy(() => import('./pages/ConsultaProductPage'))
 const ConsultaGraciasPage = lazy(() => import('./pages/ConsultaGraciasPage'))
 const RadiografiaPremiumPage = lazy(() => import('./pages/RadiografiaPremiumPage'))
+const PerfilPage = lazy(() => import('./pages/PerfilPage'))
+const RegistroPage = lazy(() => import('./pages/RegistroPage'))
 
 // Loading component
 const PageLoader = () => (
@@ -62,7 +64,6 @@ const AppContent = () => {
     { name: t('menu.home'), href: '/' },
     { name: t('menu.metodo'), href: '/metodo' },
     { name: t('menu.services'), href: '/servicios' },
-    { name: t('menu.blog'), href: '/blog' },
     { name: t('menu.about'), href: '/sobre-mi' },
     { name: t('menu.contact'), href: '/contacto' },
     { name: 'Tienda', href: '/tienda', special: true }
@@ -70,7 +71,7 @@ const AppContent = () => {
 
   const AppShell = () => {
     const location = useLocation()
-    const hideGlobalHeader = location.pathname.startsWith('/test-vocacional/iniciar') || location.pathname === '/frase-del-dia' || location.pathname === '/atlas-humanidad' || location.pathname === '/laboratorio-etico' || location.pathname === '/tienda/radiografia-premium' || location.pathname === '/tienda/diagnostico-relacional'
+    const hideGlobalHeader = location.pathname === '/frase-del-dia' || location.pathname === '/atlas-humanidad' || location.pathname === '/laboratorio-etico' || location.pathname === '/tienda/radiografia-premium'
 
     return (
       <div className="relative min-h-screen">
@@ -161,12 +162,12 @@ const AppContent = () => {
                 <BlogArticlePage />
               } />
 
-              {/* Test Vocacional */}
-              <Route path="/test-vocacional" element={
-                <VocationalTestPage key="vocational-landing" />
+              {/* Perfil + Registro */}
+              <Route path="/perfil" element={
+                <PerfilPage />
               } />
-              <Route path="/test-vocacional/iniciar" element={
-                <VocationalTestPage key="vocational-start" initialStage="test" />
+              <Route path="/registro" element={
+                <RegistroPage />
               } />
 
               {/* Herramientas */}
@@ -190,11 +191,6 @@ const AppContent = () => {
               {/* Página Tienda: Productos y servicios */}
               <Route path="/tienda" element={
                 <StorePage />
-              } />
-
-              {/* Diagnóstico Relacional */}
-              <Route path="/tienda/diagnostico-relacional" element={
-                <DiagnosticoRelacionalPage />
               } />
 
               {/* Radiografía Premium */}

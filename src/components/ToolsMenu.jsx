@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react'
-import { Wrench, Calendar, Target, Quote, Map, Beaker, X, Heart } from 'lucide-react'
+import { Wrench, Quote, Map, Beaker, X, BookOpen } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const ToolsMenu = ({ isMobile = false }) => {
@@ -8,12 +8,10 @@ const ToolsMenu = ({ isMobile = false }) => {
   const menuRef = useRef(null)
 
   const tools = [
-    { name: 'Diagnóstico de Pareja', icon: Heart, href: '/servicios/consulta-pareja', highlight: true },
-    { name: 'Test Vocacional', icon: Target, href: '/test-vocacional' },
+    { name: 'Blog', icon: BookOpen, href: '/blog' },
     { name: 'Frase del día', icon: Quote, href: '/frase-del-dia' },
     { name: 'Laboratorio Ético', icon: Beaker, href: '/laboratorio-etico' },
     { name: 'Atlas de la Humanidad', icon: Map, href: '/atlas-humanidad' },
-    { name: 'Dinámica de la semana', icon: Calendar, href: '/dinamica-del-dia' }
   ]
 
   useEffect(() => {
@@ -37,11 +35,10 @@ const ToolsMenu = ({ isMobile = false }) => {
           onClick={() => setIsOpen(!isOpen)}
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
-          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-4 rounded-full text-sm font-medium tracking-[0.2em] transition-all duration-300 uppercase shadow-lg shadow-blue-500/30 border-2 border-blue-500 hover:border-white/30"
-          style={{ fontFamily: 'Gotham, sans-serif' }}
+          className="flex items-center gap-2 bg-white/5 text-white/80 px-4 py-2.5 rounded-full text-xs font-light tracking-[0.15em] transition-all duration-300 uppercase border border-white/10 hover:border-white/20 hover:bg-white/10"
+          style={{ fontFamily: 'Space Grotesk, monospace' }}
         >
-          <Wrench className="w-4 h-4" strokeWidth={2.5} />
-          <span className="text-xs">Herramientas</span>
+          Herramientas
         </motion.button>
 
         <AnimatePresence>
@@ -135,12 +132,13 @@ const ToolsMenu = ({ isMobile = false }) => {
     <div className="relative" ref={menuRef}>
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="relative flex items-center justify-center w-10 h-10 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm hover:border-white/40 hover:bg-white/10 transition-all duration-300"
+        whileHover={{ scale: 1.03 }}
+        whileTap={{ scale: 0.97 }}
+        className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm hover:border-white/30 hover:bg-white/10 transition-all duration-300 text-white/80 hover:text-white"
+        style={{ fontFamily: 'Space Grotesk, monospace' }}
         aria-label="Abrir menú de herramientas"
       >
-        <Wrench className="w-4 h-4 text-white/80" strokeWidth={1.5} />
+        <span className="text-[0.75rem] uppercase tracking-[0.12em] font-medium">Herramientas</span>
       </motion.button>
 
       <AnimatePresence>

@@ -14,6 +14,9 @@ import { analyzeRadiografiaPremium, generateFallbackAnalysis, analyzeCrossRadiog
 import { CACHED_PREVIEW_ANALYSIS } from '../data/cachedPreviewAnalysis'
 import { saveAnalysis, sendAnalysisEmail, sendBackupEmail, getAnalysis, checkCrossStatus, markPartnerDone, saveCrossAnalysis, sendCrossAnalysisEmail, getCrossAnalysis, getProfile, saveProfile } from '../services/emailApiService'
 import { downloadRadiografiaPDF } from '../services/pdfGenerationService'
+import { generateReactPDF } from '../services/pdfReactService'
+import { useAuth } from '../context/AuthContext'
+import { saveTestProgress, saveAnalysisResult, saveCrossAnalysisResult, getPurchase, updatePurchase } from '../services/firestoreService'
 
 // ─── 40 PREGUNTAS NARRATIVAS — 5 BLOQUES ────────────────────
 
@@ -857,7 +860,7 @@ function RadarChart({ dimensiones }) {
 
   return (
     <div>
-      <svg viewBox="0 0 500 500" className="w-full max-w-lg mx-auto">
+      <svg viewBox="-40 -10 580 530" className="w-full max-w-lg mx-auto">
         {[20, 40, 60, 80, 100].map(level => (
           <circle key={level} cx={cx} cy={cy} r={r * level / 100} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={0.5} />
         ))}
@@ -932,7 +935,7 @@ function MindMapRadial({ dimensiones }) {
   const keys = Object.keys(DIMENSION_LABELS)
   const labels = Object.values(DIMENSION_LABELS)
   const n = keys.length
-  const cx = 300, cy = 300
+  const cx = 330, cy = 310
 
   // Define dimension correlations for connecting arcs
   const correlations = [
@@ -956,7 +959,7 @@ function MindMapRadial({ dimensiones }) {
 
   return (
     <div className="relative">
-      <svg viewBox="0 0 600 600" className="w-full max-w-2xl mx-auto">
+      <svg viewBox="0 0 660 640" className="w-full max-w-2xl mx-auto">
         <defs>
           <radialGradient id="mm-center-glow" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.15" />
@@ -1036,9 +1039,9 @@ function DimensionNetworkGraph({ dimensiones }) {
   const labels = Object.values(DIMENSION_LABELS)
 
   const clusters = {
-    emocional: { dims: ['apego_emocional', 'conexion_emocional', 'vulnerabilidad_emocional', 'intimidad'], color: '#ec4899', label: 'Emocional', x: 120, y: 100 },
-    estructural: { dims: ['estabilidad_relacional', 'sincronia_relacional', 'roles_sistemicos', 'resiliencia_vinculo'], color: '#6366f1', label: 'Estructural', x: 400, y: 100 },
-    profundo: { dims: ['patrones_inconscientes', 'fantasma_relacional', 'deseo_erotico', 'narrativa_futuro'], color: '#a855f7', label: 'Profunda', x: 260, y: 280 }
+    emocional: { dims: ['apego_emocional', 'conexion_emocional', 'vulnerabilidad_emocional', 'intimidad'], color: '#ec4899', label: 'Emocional', x: 140, y: 110 },
+    estructural: { dims: ['estabilidad_relacional', 'sincronia_relacional', 'roles_sistemicos', 'resiliencia_vinculo'], color: '#6366f1', label: 'Estructural', x: 380, y: 110 },
+    profundo: { dims: ['patrones_inconscientes', 'fantasma_relacional', 'deseo_erotico', 'narrativa_futuro'], color: '#a855f7', label: 'Profunda', x: 260, y: 290 }
   }
 
   // Position child nodes around each cluster center
@@ -1059,7 +1062,7 @@ function DimensionNetworkGraph({ dimensiones }) {
 
   return (
     <div>
-      <svg viewBox="-10 -20 540 460" className="w-full max-w-xl mx-auto">
+      <svg viewBox="-30 -30 580 480" className="w-full max-w-xl mx-auto">
         <defs>
           <filter id="net-glow"><feGaussianBlur stdDeviation="3" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
         </defs>
@@ -1852,11 +1855,11 @@ function RepetitionCycleChart({ data }) {
 function OrbitalCoreChart({ data }) {
   if (!data) return null
   const { centro, fuerzas } = data
-  const cx = 220, cy = 210, orbitR = 130
+  const cx = 240, cy = 220, orbitR = 130
   const colors = ['#8b5cf6', '#f43f5e', '#10b981', '#3b82f6', '#f59e0b']
   return (
     <div className="py-4">
-      <svg viewBox="0 0 440 430" className="w-full max-w-md mx-auto">
+      <svg viewBox="0 0 480 460" className="w-full max-w-md mx-auto">
         {/* Orbit ring */}
         <circle cx={cx} cy={cy} r={orbitR} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={1} strokeDasharray="4 6" />
         <circle cx={cx} cy={cy} r={orbitR - 25} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth={0.5} />
@@ -2027,11 +2030,20 @@ const RadiografiaPremiumPage = () => {
 
   // Purchase token from URL — used for localStorage namespacing and API calls
   const [purchaseToken] = useState(() => new URLSearchParams(window.location.search).get('token') || '')
+  // Firebase Auth user + Firestore purchase
+  const { user: firebaseUser } = useAuth()
+  const [firestorePurchaseId] = useState(() => new URLSearchParams(window.location.search).get('purchaseId') || '')
+  const [fromProfile] = useState(() => new URLSearchParams(window.location.search).get('fromProfile') === 'true')
+  const [viewResultsMode] = useState(() => new URLSearchParams(window.location.search).get('viewResults') === 'true')
 
   // Cross-analysis data (losdos package)
   const [crossAnalysis, setCrossAnalysis] = useState(null)
   // Tab state for results: 'individual' or 'cruzado'
   const [resultTab, setResultTab] = useState('individual')
+  // Demo mode with persona tabs (Sofía / Mateo)
+  const [demoMode, setDemoMode] = useState(false)
+  const [demoPersona, setDemoPersona] = useState('sofia') // 'sofia' | 'mateo'
+  const demoDataRef = useRef(null) // { sofia: analysis, mateo: analysis, cross: crossAnalysis }
 
   // Payment gate — only allow access if paid, free promo, test/dev mode, or token link
   const [accessGranted] = useState(() => {
@@ -2062,8 +2074,21 @@ const RadiografiaPremiumPage = () => {
   })
   // Profile gate: if user arrives via email link without profile data, show form first
   const [profileGateDone, setProfileGateDone] = useState(() => {
-    return !!(sessionStorage.getItem('radiografia_nombre'))
+    if (sessionStorage.getItem('radiografia_nombre')) return true
+    // Also check localStorage questionnaire progress (survives browser close)
+    try {
+      const params = new URLSearchParams(window.location.search)
+      const tk = params.get('token')
+      const key = tk ? `radiografia_premium_progress_${tk}` : 'radiografia_premium_progress'
+      const saved = localStorage.getItem(key)
+      if (saved) {
+        const data = JSON.parse(saved)
+        if (data.profileData?.nombre) return true
+      }
+    } catch {}
+    return false
   })
+  const [profileLoading, setProfileLoading] = useState(false)
   const [soundTestOk, setSoundTestOk] = useState(null)
   const [micTestOk, setMicTestOk] = useState(null)
   const [micAnalyser, setMicAnalyser] = useState(null)
@@ -2104,96 +2129,81 @@ const RadiografiaPremiumPage = () => {
 
   // Shared sales demo loader used by DEV controls and URL-triggered sample mode.
   const loadSalesDemoAnalysis = useCallback(async () => {
-    setProfileData({ nombre: 'Sofía', edad: '31', nombrePareja: 'Mateo', edadPareja: '34' })
-    setEmailData(prev => ({ ...prev, emailUsuario: 'demo@ventas.com' }))
-
     try {
-      const { CACHED_DEMO_ANALYSIS } = await import('../data/cachedDemoAnalysis')
-      if (CACHED_DEMO_ANALYSIS) {
-        setAiAnalysis(CACHED_DEMO_ANALYSIS)
-        setCachedAnalysis(CACHED_DEMO_ANALYSIS)
-        setStage('results')
-        return
-      }
-    } catch {}
+      const [
+        { CACHED_DEMO_ANALYSIS },
+        { CACHED_DEMO_ANALYSIS_MATEO },
+        { CACHED_DEMO_CROSS_ANALYSIS }
+      ] = await Promise.all([
+        import('../data/cachedDemoAnalysis'),
+        import('../data/cachedDemoAnalysisMateo'),
+        import('../data/cachedDemoCrossAnalysis')
+      ])
 
-    // If no dedicated demo file exists, fallback to preview analysis.
-    if (CACHED_PREVIEW_ANALYSIS) {
-      setAiAnalysis(CACHED_PREVIEW_ANALYSIS)
-      setCachedAnalysis(CACHED_PREVIEW_ANALYSIS)
+      // Store all demo data for persona switching
+      demoDataRef.current = {
+        sofia: CACHED_DEMO_ANALYSIS,
+        mateo: CACHED_DEMO_ANALYSIS_MATEO,
+        cross: CACHED_DEMO_CROSS_ANALYSIS
+      }
+
+      // Default to Sofía
+      setProfileData({ nombre: 'Sofía', edad: '31', nombrePareja: 'Mateo', edadPareja: '34' })
+      setEmailData(prev => ({ ...prev, emailUsuario: 'demo@ventas.com' }))
+      setAiAnalysis(CACHED_DEMO_ANALYSIS)
+      setCachedAnalysis(CACHED_DEMO_ANALYSIS)
+      setCrossAnalysis(CACHED_DEMO_CROSS_ANALYSIS)
+      setDemoMode(true)
+      setDemoPersona('sofia')
+      setResultTab('individual')
       setStage('results')
+    } catch {
+      // Fallback if Mateo/cross data not available
+      try {
+        const { CACHED_DEMO_ANALYSIS } = await import('../data/cachedDemoAnalysis')
+        if (CACHED_DEMO_ANALYSIS) {
+          setProfileData({ nombre: 'Sofía', edad: '31', nombrePareja: 'Mateo', edadPareja: '34' })
+          setEmailData(prev => ({ ...prev, emailUsuario: 'demo@ventas.com' }))
+          setAiAnalysis(CACHED_DEMO_ANALYSIS)
+          setCachedAnalysis(CACHED_DEMO_ANALYSIS)
+          setDemoMode(false)
+          setStage('results')
+        }
+      } catch {}
     }
   }, [])
 
-  // ── Load stored analysis when arriving via "analysis ready" email link ──
+  // Switch demo persona (Sofía ↔ Mateo)
+  const switchDemoPersona = useCallback((persona) => {
+    if (!demoDataRef.current) return
+    setDemoPersona(persona)
+    setResultTab('individual')
+    if (persona === 'sofia') {
+      setProfileData({ nombre: 'Sofía', edad: '31', nombrePareja: 'Mateo', edadPareja: '34' })
+      setAiAnalysis(demoDataRef.current.sofia)
+      setCachedAnalysis(demoDataRef.current.sofia)
+    } else {
+      setProfileData({ nombre: 'Mateo', edad: '34', nombrePareja: 'Sofía', edadPareja: '31' })
+      setAiAnalysis(demoDataRef.current.mateo)
+      setCachedAnalysis(demoDataRef.current.mateo)
+    }
+    setCrossAnalysis(demoDataRef.current.cross)
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [])
+
+  // ── Recover profile + analysis from KV for ANY token link ──
   useEffect(() => {
     if (import.meta.env.DEV) return
     const params = new URLSearchParams(window.location.search)
-    if (params.get('view') !== 'results') return
     const token = params.get('token')
     if (!token) return
 
-    // Load individual analysis
-    getAnalysis(token)
-      .then(data => {
-        if (data?.analysis) {
-          setAiAnalysis(data.analysis)
-          setStage('results')
-        }
-      })
-      .catch(() => {})
+    const isViewResults = params.get('view') === 'results'
 
-    // If cross-analysis link (?cross=pairId), also load cross-analysis
-    const crossPairId = params.get('cross')
-    if (crossPairId) {
-      getCrossAnalysis(crossPairId, token)
-        .then(data => {
-          if (data?.analysis) {
-            setCrossAnalysis(data.analysis)
-            setResultTab('cruzado')
-          }
-        })
-        .catch(() => {})
-    } else {
-      // Cross-analysis resilience: if no cross link yet, check if both partners are done
-      // and trigger cross-analysis generation if needed
-      checkCrossStatus(token)
-        .then(async (crossStatus) => {
-          if (!crossStatus?.bothDone) return
-          // Check if cross-analysis already exists
-          if (crossStatus.pairId) {
-            try {
-              const existing = await getCrossAnalysis(crossStatus.pairId, token)
-              if (existing?.analysis) {
-                setCrossAnalysis(existing.analysis)
-                return
-              }
-            } catch {}
-          }
-          // Both done but no cross-analysis yet → generate it
-          if (crossStatus.otherAnalysis) {
-            try {
-              const myAnalysis = await getAnalysis(token)
-              if (!myAnalysis?.analysis) return
-              const crossResult = await analyzeCrossRadiografia({
-                analysis1: myAnalysis.analysis,
-                analysis2: crossStatus.otherAnalysis,
-                profile1: { nombre: 'Participante 1' },
-                profile2: { nombre: 'Participante 2' },
-              })
-              if (crossResult && crossStatus.pairId) {
-                await saveCrossAnalysis({ token, pairId: crossStatus.pairId, analysis: crossResult })
-                setCrossAnalysis(crossResult)
-                await sendCrossAnalysisEmail({ pairId: crossStatus.pairId, token })
-              }
-            } catch (e) { console.error('Cross-analysis resilience error:', e) }
-          }
-        })
-        .catch(() => {})
-    }
-
-    // Recover profile data from KV if not in sessionStorage
+    // ── Always recover profile from KV if not in sessionStorage ──
     if (!sessionStorage.getItem('radiografia_nombre')) {
+      setProfileLoading(true)
       getProfile(token)
         .then(p => {
           if (p && p.nombre) {
@@ -2204,12 +2214,80 @@ const RadiografiaPremiumPage = () => {
               nombrePareja: p.nombrePareja || prev.nombrePareja,
               edadPareja: p.edadPareja || prev.edadPareja,
             }))
+            // Persist to sessionStorage so gate doesn't flash on re-render
+            sessionStorage.setItem('radiografia_nombre', p.nombre)
+            if (p.edad) sessionStorage.setItem('radiografia_edad', p.edad)
+            if (p.nombrePareja) sessionStorage.setItem('radiografia_nombre_pareja', p.nombrePareja)
+            if (p.edadPareja) sessionStorage.setItem('radiografia_edad_pareja', p.edadPareja)
             if (p.email) setEmailData(prev => ({ ...prev, emailUsuario: p.email || prev.emailUsuario }))
             if (p.partnerEmail) setEmailData(prev => ({ ...prev, emailPareja: p.partnerEmail || prev.emailPareja }))
             setProfileGateDone(true)
           }
         })
         .catch(() => {})
+        .finally(() => setProfileLoading(false))
+    }
+
+    // ── Load analysis from KV (for view=results OR resume without local progress) ──
+    const storageKey = `radiografia_premium_progress_${token}`
+    const hasLocalProgress = !!localStorage.getItem(storageKey)
+
+    if (isViewResults || !hasLocalProgress) {
+      getAnalysis(token)
+        .then(data => {
+          if (data?.analysis) {
+            setAiAnalysis(data.analysis)
+            setStage('results')
+          }
+        })
+        .catch(() => {})
+    }
+
+    // ── Cross-analysis: only for explicit view=results links ──
+    if (isViewResults) {
+      const crossPairId = params.get('cross')
+      if (crossPairId) {
+        getCrossAnalysis(crossPairId, token)
+          .then(data => {
+            if (data?.analysis) {
+              setCrossAnalysis(data.analysis)
+              setResultTab('cruzado')
+            }
+          })
+          .catch(() => {})
+      } else {
+        checkCrossStatus(token)
+          .then(async (crossStatus) => {
+            if (!crossStatus?.bothDone) return
+            if (crossStatus.pairId) {
+              try {
+                const existing = await getCrossAnalysis(crossStatus.pairId, token)
+                if (existing?.analysis) {
+                  setCrossAnalysis(existing.analysis)
+                  return
+                }
+              } catch {}
+            }
+            if (crossStatus.otherAnalysis) {
+              try {
+                const myAnalysis = await getAnalysis(token)
+                if (!myAnalysis?.analysis) return
+                const crossResult = await analyzeCrossRadiografia({
+                  analysis1: myAnalysis.analysis,
+                  analysis2: crossStatus.otherAnalysis,
+                  profile1: { nombre: 'Participante 1' },
+                  profile2: { nombre: 'Participante 2' },
+                })
+                if (crossResult && crossStatus.pairId) {
+                  await saveCrossAnalysis({ token, pairId: crossStatus.pairId, analysis: crossResult })
+                  setCrossAnalysis(crossResult)
+                  await sendCrossAnalysisEmail({ pairId: crossStatus.pairId, token })
+                }
+              } catch (e) { console.error('Cross-analysis resilience error:', e) }
+            }
+          })
+          .catch(() => {})
+      }
     }
   }, [])
 
@@ -2254,6 +2332,65 @@ const RadiografiaPremiumPage = () => {
       }))
     }
   }, [responses, currentQ, stage, profileData])
+
+  // ── Firestore: Load progress from purchase on mount ──
+  useEffect(() => {
+    if (!firebaseUser || !firestorePurchaseId) return
+    const load = async () => {
+      try {
+        const purchase = await getPurchase(firebaseUser.uid, firestorePurchaseId)
+        if (!purchase) return
+        // If viewResults mode and analysis exists, jump to results
+        if (viewResultsMode && purchase.analysis) {
+          setAiAnalysis(purchase.analysis)
+          if (purchase.crossAnalysis) setCrossAnalysis(purchase.crossAnalysis)
+          if (purchase.profileData) setProfileData(purchase.profileData)
+          setStage('results')
+          return
+        }
+        // Restore progress
+        if (purchase.responses && Object.keys(purchase.responses).length > 0) {
+          setResponses(purchase.responses)
+          if (purchase.currentQuestion > 0) setCurrentQ(purchase.currentQuestion)
+          if (purchase.profileData) setProfileData(purchase.profileData)
+          if (purchase.voiceSelection) setSelectedVoice(purchase.voiceSelection)
+          if (purchase.status === 'in-progress') setStage('questionnaire')
+        }
+        // If analysis already generated, show results
+        if (purchase.analysis) {
+          setAiAnalysis(purchase.analysis)
+          if (purchase.crossAnalysis) setCrossAnalysis(purchase.crossAnalysis)
+          setStage('results')
+        }
+      } catch (err) {
+        console.error('Error loading Firestore progress:', err)
+      }
+    }
+    load()
+  }, [firebaseUser, firestorePurchaseId, viewResultsMode])
+
+  // ── Firestore: Save progress on each answer ──
+  useEffect(() => {
+    if (!firebaseUser || !firestorePurchaseId) return
+    if (stage !== 'questionnaire' || Object.keys(responses).length === 0) return
+    const save = async () => {
+      try {
+        await saveTestProgress(firebaseUser.uid, firestorePurchaseId, {
+          currentQuestion: currentQ,
+          responses,
+          profileData,
+          voiceSelection: selectedVoice
+        })
+        // Also update status to in-progress if first save
+        await updatePurchase(firebaseUser.uid, firestorePurchaseId, { status: 'in-progress' })
+      } catch (err) {
+        console.error('Error saving progress to Firestore:', err)
+      }
+    }
+    // Debounce saves
+    const timer = setTimeout(save, 1500)
+    return () => clearTimeout(timer)
+  }, [responses, currentQ, firebaseUser, firestorePurchaseId, stage])
 
   // ── Stop any currently playing audio ──
   const stopAudio = useCallback(() => {
@@ -2401,7 +2538,7 @@ const RadiografiaPremiumPage = () => {
       }
     }
     return () => stopAudio()
-  }, [currentQ, stage, showOnboarding]) // eslint-disable-line react-hooks-exhaustive-deps
+  }, [currentQ, stage, showOnboarding, profileGateDone]) // eslint-disable-line react-hooks-exhaustive-deps
 
   // ── Spotlight narration: play TTS for each onboarding step ──
   useEffect(() => {
@@ -2522,17 +2659,6 @@ const RadiografiaPremiumPage = () => {
     setStage('questionnaire')
   }, [stopAudio])
 
-  // ── Fill demo responses for testing (all Q1-Q40, Carlos/Ana profile, jump to Q40) ──
-  const fillDemoResponses = useCallback(() => {
-    setResponses({ ...DEMO_RESPONSES })
-    setProfileData({ nombre: 'Carlos', edad: '32', nombrePareja: 'Ana', edadPareja: '30' })
-    setEmailData(prev => ({ ...prev, emailUsuario: 'demo@test.com' }))
-    setCurrentQ(PREGUNTAS.length - 1) // jump to Q40
-    const lastQ = PREGUNTAS[PREGUNTAS.length - 1]
-    setTranscript(DEMO_RESPONSES[lastQ.id] || '')
-    setTextInput(DEMO_RESPONSES[lastQ.id] || '')
-  }, [])
-
   // ── Run AI Analysis ──
   const handleRunAnalysis = useCallback(async (finalResponses) => {
     // If we have a cached analysis (DEV mode), use it directly
@@ -2542,7 +2668,12 @@ const RadiografiaPremiumPage = () => {
       return
     }
 
-    setStage('analyzing')
+    // In production: show "thank you" screen immediately, run analysis in background
+    if (!import.meta.env.DEV) {
+      setStage('thankyou')
+    } else {
+      setStage('analyzing')
+    }
     setCompletedTasks(0)
     setAnalysisDone(false)
 
@@ -2563,6 +2694,13 @@ const RadiografiaPremiumPage = () => {
       localStorage.removeItem(storageKey)
       // Save to localStorage for later DEV access
       try { localStorage.setItem('radiografia_cached_analysis', JSON.stringify(result)) } catch {}
+
+      // ── Save analysis to Firestore (fire-and-forget) ──
+      if (firebaseUser && firestorePurchaseId) {
+        saveAnalysisResult(firebaseUser.uid, firestorePurchaseId, result).catch(err =>
+          console.error('Firestore save error:', err)
+        )
+      }
 
       // Save results to KV + send "analysis ready" email (fire-and-forget, never blocks UI)
       if (!import.meta.env.DEV) {
@@ -2619,13 +2757,44 @@ const RadiografiaPremiumPage = () => {
     }
   }, [])
 
-  // ── When both analysis and animation done → show results ──
+  // ── Fill demo responses for testing — auto-advance one question at a time ──
+  const fillDemoResponses = useCallback(() => {
+    setProfileData({ nombre: 'Carlos', edad: '32', nombrePareja: 'Ana', edadPareja: '30' })
+    setEmailData(prev => ({ ...prev, emailUsuario: 'demo@test.com' }))
+    setCurrentQ(0)
+    setStage('questionnaire')
+
+    let qIdx = 0
+    const fillInterval = setInterval(() => {
+      if (qIdx >= PREGUNTAS.length) {
+        clearInterval(fillInterval)
+        setTimeout(() => {
+          const finalResponses = { ...DEMO_RESPONSES }
+          handleRunAnalysis(finalResponses)
+        }, 500)
+        return
+      }
+      const q = PREGUNTAS[qIdx]
+      const answer = DEMO_RESPONSES[q.id] || ''
+      setResponses(prev => ({ ...prev, [q.id]: answer }))
+      setTranscript(answer)
+      setTextInput(answer)
+      setCurrentQ(qIdx)
+      qIdx++
+    }, 350)
+
+    return () => clearInterval(fillInterval)
+  }, [handleRunAnalysis])
+
+  // ── When both analysis and animation done → show results (DEV only, production stays on thankyou) ──
   useEffect(() => {
-    if (analysisDone && completedTasks >= ANALYSIS_TASKS.length && aiAnalysis) {
-      const timer = setTimeout(() => setStage('results'), 800)
+    if (analysisDone && aiAnalysis && (stage === 'analyzing' || stage === 'thankyou')) {
+      // In DEV, wait for animation; in production, go to results after a short delay
+      const delay = stage === 'analyzing' && completedTasks < ANALYSIS_TASKS.length ? 800 : 2000
+      const timer = setTimeout(() => setStage('results'), delay)
       return () => clearTimeout(timer)
     }
-  }, [analysisDone, completedTasks, aiAnalysis])
+  }, [analysisDone, completedTasks, aiAnalysis, stage])
 
   // ── Scroll to top on stage change ──
   useEffect(() => {
@@ -2637,7 +2806,7 @@ const RadiografiaPremiumPage = () => {
     if (!aiAnalysis || !resultsRef.current) return
     setPdfGenerating(true)
     try {
-      await downloadRadiografiaPDF(resultsRef.current, profileData, { crossAnalysis })
+      await downloadRadiografiaPDF(resultsRef.current, profileData, { crossAnalysis, aiAnalysis })
     } catch (err) {
       console.error('PDF generation error:', err)
     } finally { setPdfGenerating(false) }
@@ -2695,6 +2864,12 @@ const RadiografiaPremiumPage = () => {
 
               {/* ── Profile gate: inline form if profile data is missing ── */}
               {!profileGateDone && !import.meta.env.DEV && (
+                profileLoading ? (
+                  <div className="flex flex-col items-center justify-center py-10 gap-3">
+                    <div className="w-8 h-8 border-2 border-violet-500/30 border-t-violet-400 rounded-full animate-spin" />
+                    <p className="text-white/50 text-sm font-light">Recuperando tus datos...</p>
+                  </div>
+                ) :
                 <div className="space-y-4 p-6 rounded-2xl border border-violet-500/20 bg-violet-500/[0.04]">
                   <div className="text-center mb-2">
                     <p className="text-white/70 text-base font-light mb-1">Antes de empezar, cuéntanos un poco sobre ti</p>
@@ -3294,12 +3469,11 @@ const RadiografiaPremiumPage = () => {
                     </div>
                     <span className="text-[9px] text-white/55">Instruc.</span>
                   </button>
-                  {/* 3. Rellenar TODO (Q1-Q40 + perfil Carlos/Ana → saltar a Q40) */}
+                  {/* 3. Rellenar TODO (Q1-Q40 + perfil Carlos/Ana → auto-avance) */}
                   <button onClick={() => {
                     fillDemoResponses()
-                    if (stage !== 'questionnaire') setStage('questionnaire')
                   }}
-                    className="flex flex-col items-center gap-1" title="Rellenar las 40 respuestas con Carlos/Ana y saltar a Q40">
+                    className="flex flex-col items-center gap-1" title="Rellenar las 40 respuestas con auto-avance pregunta por pregunta">
                     <div className="w-11 h-11 rounded-full border border-amber-500/25 bg-amber-500/10 flex items-center justify-center hover:bg-amber-500/20 transition-colors">
                       <PenLine className="w-4 h-4 text-amber-300/70" />
                     </div>
@@ -3349,72 +3523,15 @@ const RadiografiaPremiumPage = () => {
                     </div>
                     <span className="text-[9px] text-white/55">Preview</span>
                   </button>
-                  {/* 6. Demo para ventas */}
+                  {/* 6. Demo ventas (Sofía + Mateo con pestañas) */}
                   <button onClick={loadSalesDemoAnalysis}
-                    className="flex flex-col items-center gap-1" title="Demo para ventas (Sofía y Mateo)">
+                    className="flex flex-col items-center gap-1" title="Demo completo (Sofía + Mateo con pestañas)">
                     <div className="w-11 h-11 rounded-full border border-pink-500/25 bg-pink-500/10 flex items-center justify-center hover:bg-pink-500/20 transition-colors">
-                      <Play className="w-4 h-4 text-pink-300/70" />
+                      <Users className="w-4 h-4 text-pink-300/70" />
                     </div>
                     <span className="text-[9px] text-white/55">Demo</span>
                   </button>
-                  {/* 7. Demo Sofía (descubre) — test AI with single person profile */}
-                  <button onClick={() => {
-                    const sofiaProfile = { nombre: 'Sofía', edad: '28', nombrePareja: '', edadPareja: '' }
-                    // Override packageType via URL for this session
-                    const url = new URL(window.location)
-                    url.searchParams.set('type', 'descubre')
-                    window.history.replaceState({}, '', url)
-                    setProfileData(sofiaProfile)
-                    setEmailData(prev => ({ ...prev, emailUsuario: 'sofia@test.com' }))
-                    setResponses({ ...DEMO_RESPONSES_SOFIA })
-                    setCachedAnalysis(null)
-                    localStorage.removeItem('radiografia_cached_analysis')
-                    setStage('analyzing')
-                    setTimeout(() => handleRunAnalysis(DEMO_RESPONSES_SOFIA), 300)
-                  }}
-                    className="flex flex-col items-center gap-1" title="Demo Sofía — descubre (soltera, autoconocimiento)">
-                    <div className="w-11 h-11 rounded-full border border-cyan-500/25 bg-cyan-500/10 flex items-center justify-center hover:bg-cyan-500/20 transition-colors">
-                      <Compass className="w-4 h-4 text-cyan-300/70" />
-                    </div>
-                    <span className="text-[9px] text-white/55">Sofía</span>
-                  </button>
-                  {/* 8. LosDos — preview cross-analysis with demo data */}
-                  <button onClick={() => {
-                    const url = new URL(window.location)
-                    url.searchParams.set('type', 'losdos')
-                    window.history.replaceState({}, '', url)
-                    setProfileData({ nombre: 'Carlos', edad: '32', nombrePareja: 'Ana', edadPareja: '30' })
-                    setEmailData(prev => ({ ...prev, emailUsuario: 'carlos@test.com' }))
-                    // Load individual analysis + cross analysis
-                    if (CACHED_PREVIEW_ANALYSIS) {
-                      setAiAnalysis(CACHED_PREVIEW_ANALYSIS)
-                      setCachedAnalysis(CACHED_PREVIEW_ANALYSIS)
-                    }
-                    setCrossAnalysis(DEMO_CROSS_ANALYSIS)
-                    setStage('results')
-                  }}
-                    className="flex flex-col items-center gap-1" title="Demo LosDos — análisis cruzado Carlos & Ana">
-                    <div className="w-11 h-11 rounded-full border border-emerald-500/25 bg-emerald-500/10 flex items-center justify-center hover:bg-emerald-500/20 transition-colors">
-                      <Users className="w-4 h-4 text-emerald-300/70" />
-                    </div>
-                    <span className="text-[9px] text-white/55">LosDos</span>
-                  </button>
-                  {/* 9. Borrar caché */}
-                  {localStorage.getItem('radiografia_cached_analysis') && (
-                    <button onClick={() => {
-                      localStorage.removeItem('radiografia_cached_analysis')
-                      setCachedAnalysis(null)
-                      setResponses({ ...DEMO_RESPONSES })
-                      setTimeout(() => handleRunAnalysis(DEMO_RESPONSES), 200)
-                    }}
-                      className="flex flex-col items-center gap-1" title="Borrar caché y relanzar">
-                      <div className="w-11 h-11 rounded-full border border-red-500/25 bg-red-500/10 flex items-center justify-center hover:bg-red-500/20 transition-colors">
-                        <Repeat className="w-4 h-4 text-red-300/70" />
-                      </div>
-                      <span className="text-[9px] text-white/55">Caché</span>
-                    </button>
-                  )}
-                  {/* 10. PDF — descargar resultados como PDF */}
+                  {/* 8. PDF — descargar resultados como PDF */}
                   <button onClick={generatePDF} disabled={pdfGenerating || !aiAnalysis}
                     className="flex flex-col items-center gap-1" title={aiAnalysis ? 'Descargar PDF de resultados' : 'Genera un análisis primero'}>
                     <div className={`w-11 h-11 rounded-full border transition-colors ${
@@ -3426,38 +3543,17 @@ const RadiografiaPremiumPage = () => {
                     </div>
                     <span className="text-[9px] text-white/55">PDF</span>
                   </button>
-                  {/* 11. PDF Ind. — Load individual demo → auto-generate PDF */}
-                  <button onClick={() => {
-                    setProfileData({ nombre: 'Sofía', edad: '28', nombrePareja: 'Mateo', edadPareja: '31' })
-                    setAiAnalysis(CACHED_PREVIEW_ANALYSIS)
-                    setCachedAnalysis(CACHED_PREVIEW_ANALYSIS)
-                    setCrossAnalysis(null)
-                    setStage('results')
-                    setAutoPdf(true)
-                  }}
-                    className="flex flex-col items-center gap-1" title="Generar PDF demo individual (Sofía)">
-                    <div className="w-11 h-11 rounded-full border border-orange-500/25 bg-orange-500/10 flex items-center justify-center hover:bg-orange-500/20 transition-colors">
-                      <Download className="w-4 h-4 text-orange-300/70" />
+                  {/* 9. PDF React — experimental @react-pdf/renderer */}
+                  <button onClick={() => aiAnalysis && generateReactPDF(aiAnalysis, profileData)} disabled={!aiAnalysis}
+                    className="flex flex-col items-center gap-1" title={aiAnalysis ? 'PDF React (experimental)' : 'Genera un análisis primero'}>
+                    <div className={`w-11 h-11 rounded-full border transition-colors ${
+                      aiAnalysis
+                        ? 'border-emerald-500/25 bg-emerald-500/10 hover:bg-emerald-500/20'
+                        : 'border-white/10 bg-white/[0.03] opacity-40 cursor-not-allowed'
+                    } flex items-center justify-center`}>
+                      <Download className="w-4 h-4 text-emerald-300/70" />
                     </div>
-                    <span className="text-[9px] text-white/55">PDF Ind.</span>
-                  </button>
-                  {/* 12. PDF Cruz. — Load cross demo → auto-generate PDF */}
-                  <button onClick={() => {
-                    const url = new URL(window.location)
-                    url.searchParams.set('type', 'losdos')
-                    window.history.replaceState({}, '', url)
-                    setProfileData({ nombre: 'Carlos', edad: '32', nombrePareja: 'Ana', edadPareja: '30' })
-                    setAiAnalysis(CACHED_PREVIEW_ANALYSIS)
-                    setCachedAnalysis(CACHED_PREVIEW_ANALYSIS)
-                    setCrossAnalysis(DEMO_CROSS_ANALYSIS)
-                    setStage('results')
-                    setAutoPdf(true)
-                  }}
-                    className="flex flex-col items-center gap-1" title="Generar PDF demo cruzado (Carlos & Ana)">
-                    <div className="w-11 h-11 rounded-full border border-rose-500/25 bg-rose-500/10 flex items-center justify-center hover:bg-rose-500/20 transition-colors">
-                      <Download className="w-4 h-4 text-rose-300/70" />
-                    </div>
-                    <span className="text-[9px] text-white/55">PDF Cruz.</span>
+                    <span className="text-[9px] text-white/55">PDF⚡</span>
                   </button>
                 </div>
                 </div>
@@ -3468,7 +3564,7 @@ const RadiografiaPremiumPage = () => {
         )}
 
         {/* ═══════════════════════════════════════════════════════
-            STAGE: ANALYZING
+            STAGE: ANALYZING (DEV mode — shows progress checks)
         ═══════════════════════════════════════════════════════ */}
         {stage === 'analyzing' && (
           <motion.div key="analyzing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -3518,6 +3614,97 @@ const RadiografiaPremiumPage = () => {
         )}
 
         {/* ═══════════════════════════════════════════════════════
+            STAGE: THANKYOU (Production — "Gracias, te llegará al correo")
+        ═══════════════════════════════════════════════════════ */}
+        {stage === 'thankyou' && (
+          <motion.div key="thankyou" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="min-h-screen flex items-center justify-center px-6">
+            <div className="max-w-lg w-full">
+              <div className="relative p-10 rounded-3xl border border-violet-500/20 bg-gradient-to-br from-violet-500/[0.06] via-fuchsia-500/[0.03] to-transparent text-center">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.08),transparent_70%)] rounded-3xl" />
+                <div className="relative">
+                  <motion.div
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: 'spring', duration: 0.8 }}
+                    className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center shadow-lg shadow-emerald-500/15">
+                    <Check className="w-10 h-10 text-emerald-400/80" strokeWidth={2} />
+                  </motion.div>
+
+                  <motion.h2
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="text-2xl lg:text-3xl font-light text-white mb-3">
+                    Gracias por completar tu radiografía
+                  </motion.h2>
+
+                  <motion.p
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="text-white/60 text-[15px] font-light leading-relaxed mb-6">
+                    Tus respuestas están siendo analizadas por nuestra inteligencia artificial a través de 11 corrientes psicológicas.
+                  </motion.p>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 }}
+                    className="p-5 rounded-xl border border-violet-500/15 bg-violet-500/[0.04] mb-6">
+                    <div className="flex items-center justify-center gap-3 mb-3">
+                      <Mail className="w-5 h-5 text-violet-400/60" />
+                      <p className="text-violet-300/80 text-sm font-medium">Recibirás tu radiografía por correo</p>
+                    </div>
+                    <p className="text-white/50 text-sm font-light">
+                      En un lapso de <span className="text-violet-300/80 font-medium">10 a 15 minutos</span> (o antes) recibirás un email con un enlace para ver tu radiografía completa y descargar tu PDF.
+                    </p>
+                  </motion.div>
+
+                  {emailData.emailUsuario && (
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.9 }}
+                      className="text-white/35 text-xs font-light mb-4">
+                      Se enviará a: <span className="text-white/55">{emailData.emailUsuario}</span>
+                    </motion.p>
+                  )}
+
+                  {packageType === 'losdos' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1.1 }}
+                      className="p-4 rounded-xl border border-emerald-500/15 bg-emerald-500/[0.04] mt-4">
+                      <div className="flex items-center justify-center gap-2 mb-2">
+                        <Users className="w-4 h-4 text-emerald-400/60" />
+                        <p className="text-emerald-300/70 text-sm font-medium">Análisis cruzado</p>
+                      </div>
+                      <p className="text-white/50 text-xs font-light">
+                        Cuando tu pareja también complete su cuestionario, ambos recibirán una radiografía cruzada con la perspectiva de los dos.
+                      </p>
+                    </motion.div>
+                  )}
+
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.3 }}
+                    className="mt-8 flex flex-col items-center gap-3">
+                    <p className="text-white/30 text-[11px] font-light">No cierres esta ventana — en unos minutos verás tu radiografía.</p>
+                    <div className="flex items-center gap-2">
+                      <Brain className="w-4 h-4 text-violet-400/30 animate-pulse" />
+                      <span className="text-violet-300/40 text-xs font-light">Procesando...</span>
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════
             STAGE: RESULTS
         ═══════════════════════════════════════════════════════ */}
         {stage === 'results' && aiAnalysis && (
@@ -3526,7 +3713,7 @@ const RadiografiaPremiumPage = () => {
             <div ref={resultsRef} className="max-w-4xl mx-auto space-y-12">
 
               {/* Header — Ultra Premium with profile data */}
-              <div className="relative text-center py-8 mb-4">
+              <div data-pdf-page="header" className="relative text-center py-8 mb-4">
                 <div className="absolute inset-0 bg-gradient-to-b from-violet-500/[0.06] via-fuchsia-500/[0.03] to-transparent rounded-3xl" />
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.08),transparent_70%)]" />
                 <div className="relative">
@@ -3598,6 +3785,33 @@ const RadiografiaPremiumPage = () => {
                 </div>
               </motion.div>
 
+              {/* ═══ DEMO: Persona tabs (Sofía / Mateo) — only in demo mode ═══ */}
+              {demoMode && demoDataRef.current && (
+                <div className="flex flex-col items-center gap-3 py-4 mb-2">
+                  <p className="text-white/30 text-[10px] font-bold uppercase tracking-[0.3em]">Perspectiva</p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => switchDemoPersona('sofia')}
+                      className={`px-6 py-3 rounded-xl text-sm font-light transition-all ${
+                        demoPersona === 'sofia'
+                          ? 'bg-gradient-to-r from-fuchsia-600/80 to-pink-600/70 text-white shadow-lg shadow-fuchsia-500/20 border border-fuchsia-500/30'
+                          : 'text-white/45 border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:text-white/65'
+                      }`}>
+                      Sofía
+                    </button>
+                    <button
+                      onClick={() => switchDemoPersona('mateo')}
+                      className={`px-6 py-3 rounded-xl text-sm font-light transition-all ${
+                        demoPersona === 'mateo'
+                          ? 'bg-gradient-to-r from-blue-600/80 to-indigo-600/70 text-white shadow-lg shadow-blue-500/20 border border-blue-500/30'
+                          : 'text-white/45 border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:text-white/65'
+                      }`}>
+                      Mateo
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* ═══ TABS: Individual / Cruzado (only when crossAnalysis available) ═══ */}
               {crossAnalysis && (
                 <div className="flex items-center justify-center gap-2 py-2">
@@ -3623,7 +3837,7 @@ const RadiografiaPremiumPage = () => {
               )}
 
               {/* ═══ SEPARADOR PARTE 1 — PRIMERO, VAMOS CONTIGO ═══ */}
-              {resultTab === 'individual' && (<>
+              <div className={`${resultTab !== 'individual' ? 'hidden' : ''} space-y-12`} data-pdf-tab="individual">
               <div className="text-center mb-6">
                 <p className="text-violet-400/50 text-xs font-bold uppercase tracking-[0.25em] mb-1">Parte 1</p>
                 <p className="text-white/40 text-sm font-light">Primero, vamos contigo</p>
@@ -3652,13 +3866,13 @@ const RadiografiaPremiumPage = () => {
                     return (
                       <div className="relative mb-10 space-y-10">
                         {/* Mind Map Radial */}
-                        <div>
+                        <div data-pdf-page="chart-mindmap">
                           <p className="text-center text-white/60 text-sm font-medium uppercase tracking-widest mb-3">Mapa radial de dimensiones</p>
                           <MindMapRadial dimensiones={dims} />
                         </div>
 
                         {/* Sankey Diagram */}
-                        <div>
+                        <div data-pdf-page="chart-network">
                           <p className="text-center text-white/60 text-sm font-medium uppercase tracking-widest mb-3">Distribución de energía relacional</p>
                           <p className="text-center text-white/50 text-xs font-light mb-5 max-w-lg mx-auto">Este diagrama muestra cómo se distribuye la energía emocional de tu relación entre tres esferas fundamentales: la emocional, la estructural y la profunda. Cada flujo representa una dimensión analizada y su grosor es proporcional a la puntuación detectada.</p>
                           <DimensionNetworkGraph dimensiones={dims} />
@@ -3709,7 +3923,7 @@ const RadiografiaPremiumPage = () => {
                         if (!text) return null
                         const chart = renderCardChart(chartType)
                         return (
-                          <div key={key} className={`rounded-2xl overflow-hidden border ${border} bg-white/[0.02] backdrop-blur-sm`}>
+                          <div key={key} data-pdf-page={`card-${key}`} className={`rounded-2xl overflow-hidden border ${border} bg-white/[0.02] backdrop-blur-sm`}>
                             {/* Header — centered author style */}
                             <div className="text-center py-6 px-5 relative">
                               <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(to right, transparent, ${accentColor}60, transparent)` }} />
@@ -3737,7 +3951,7 @@ const RadiografiaPremiumPage = () => {
 
               {/* ═══ RAPPORT — BIENVENIDA EMPÁTICA — Tarjeta con header de color ═══ */}
               {aiAnalysis.radiografia_inicial && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                <motion.div data-pdf-page="rapport" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                   className="rounded-2xl overflow-hidden border border-indigo-500/15 bg-white/[0.02] backdrop-blur-sm">
                   <div className="bg-gradient-to-r from-indigo-600/90 to-violet-600/80 px-6 py-4 flex items-center gap-3">
                     <MessageCircle className="w-5 h-5 text-white/90" />
@@ -3768,7 +3982,7 @@ const RadiografiaPremiumPage = () => {
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                   {/* ── SECCIÓN PANORÁMICA: Tu relación en una mirada ── */}
                   {aiAnalysis.dimensiones && (
-                    <div className="space-y-6 mb-10">
+                    <div data-pdf-page="radar-global" className="space-y-6 mb-10">
                       <div className="text-center py-6">
                         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-indigo-500/15 border border-violet-500/25 mb-4 shadow-lg shadow-violet-500/10">
                           <Eye className="w-7 h-7 text-violet-400/80" />
@@ -3799,7 +4013,7 @@ const RadiografiaPremiumPage = () => {
                     ]
                     const detalle = data.jinetes_detalle || []
                     return (
-                      <div className="space-y-6">
+                      <div data-pdf-page="psych-gottman" className="space-y-6">
                         <div className="text-center py-6">
                           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-500/15 border border-blue-500/25 mb-4 shadow-lg shadow-blue-500/10">
                             <Shield className="w-7 h-7 text-blue-400/80" />
@@ -3947,7 +4161,7 @@ const RadiografiaPremiumPage = () => {
                   {aiAnalysis.lecturas_por_enfoque?.sternberg && (() => {
                     const data = aiAnalysis.lecturas_por_enfoque.sternberg
                     return (
-                      <div className="space-y-6">
+                      <div data-pdf-page="psych-sternberg" className="space-y-6">
                         <div className="text-center py-6">
                           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-purple-500/15 border border-violet-500/25 mb-4 shadow-lg shadow-violet-500/10">
                             <Star className="w-7 h-7 text-violet-400/80" />
@@ -3972,7 +4186,7 @@ const RadiografiaPremiumPage = () => {
                   {aiAnalysis.lecturas_por_enfoque?.levine && (() => {
                     const data = aiAnalysis.lecturas_por_enfoque.levine
                     return (
-                      <div className="space-y-6">
+                      <div data-pdf-page="psych-levine" className="space-y-6">
                         <div className="text-center py-6">
                           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500/20 to-yellow-500/15 border border-amber-500/25 mb-4 shadow-lg shadow-amber-500/10">
                             <Anchor className="w-7 h-7 text-amber-400/80" />
@@ -3997,7 +4211,7 @@ const RadiografiaPremiumPage = () => {
                   {aiAnalysis.lecturas_por_enfoque?.sue_johnson && (() => {
                     const data = aiAnalysis.lecturas_por_enfoque.sue_johnson
                     return (
-                      <div className="space-y-6">
+                      <div data-pdf-page="psych-johnson" className="space-y-6">
                         <div className="text-center py-6">
                           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500/20 to-pink-500/15 border border-rose-500/25 mb-4 shadow-lg shadow-rose-500/10">
                             <Heart className="w-7 h-7 text-rose-400/80" />
@@ -4022,7 +4236,7 @@ const RadiografiaPremiumPage = () => {
                   {aiAnalysis.lecturas_por_enfoque?.perel && (() => {
                     const data = aiAnalysis.lecturas_por_enfoque.perel
                     return (
-                      <div className="space-y-6">
+                      <div data-pdf-page="psych-perel" className="space-y-6">
                         <div className="text-center py-6">
                           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500/20 to-rose-500/15 border border-pink-500/25 mb-4 shadow-lg shadow-pink-500/10">
                             <Flame className="w-7 h-7 text-pink-400/80" />
@@ -4047,7 +4261,7 @@ const RadiografiaPremiumPage = () => {
                   {aiAnalysis.lecturas_por_enfoque?.freud_lacan && (() => {
                     const data = aiAnalysis.lecturas_por_enfoque.freud_lacan
                     return (
-                      <div className="space-y-6">
+                      <div data-pdf-page="psych-freud-lacan" className="space-y-6">
                         <div className="text-center py-6">
                           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500/20 to-fuchsia-500/15 border border-purple-500/25 mb-4 shadow-lg shadow-purple-500/10">
                             <Brain className="w-7 h-7 text-purple-400/80" />
@@ -4088,7 +4302,7 @@ const RadiografiaPremiumPage = () => {
                   {aiAnalysis.lecturas_por_enfoque?.hendrix && (() => {
                     const data = aiAnalysis.lecturas_por_enfoque.hendrix
                     return (
-                      <div className="space-y-6">
+                      <div data-pdf-page="psych-hendrix" className="space-y-6">
                         <div className="text-center py-6">
                           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500/20 to-amber-500/15 border border-orange-500/25 mb-4 shadow-lg shadow-orange-500/10">
                             <Repeat className="w-7 h-7 text-orange-400/80" />
@@ -4113,7 +4327,7 @@ const RadiografiaPremiumPage = () => {
                   {aiAnalysis.lecturas_por_enfoque?.schnarch && (() => {
                     const data = aiAnalysis.lecturas_por_enfoque.schnarch
                     return (
-                      <div className="space-y-6">
+                      <div data-pdf-page="psych-schnarch" className="space-y-6">
                         <div className="text-center py-6">
                           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/15 border border-emerald-500/25 mb-4 shadow-lg shadow-emerald-500/10">
                             <Compass className="w-7 h-7 text-emerald-400/80" />
@@ -4138,7 +4352,7 @@ const RadiografiaPremiumPage = () => {
                   {aiAnalysis.lecturas_por_enfoque?.tatkin && (() => {
                     const data = aiAnalysis.lecturas_por_enfoque.tatkin
                     return (
-                      <div className="space-y-6">
+                      <div data-pdf-page="psych-tatkin" className="space-y-6">
                         <div className="text-center py-6">
                           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500/20 to-cyan-500/15 border border-teal-500/25 mb-4 shadow-lg shadow-teal-500/10">
                             <Activity className="w-7 h-7 text-teal-400/80" />
@@ -4163,7 +4377,7 @@ const RadiografiaPremiumPage = () => {
                   {aiAnalysis.lecturas_por_enfoque?.chapman && (() => {
                     const data = aiAnalysis.lecturas_por_enfoque.chapman
                     return (
-                      <div className="space-y-6">
+                      <div data-pdf-page="psych-chapman" className="space-y-6">
                         <div className="text-center py-6">
                           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500/20 to-orange-500/15 border border-red-500/25 mb-4 shadow-lg shadow-red-500/10">
                             <Gift className="w-7 h-7 text-red-400/80" />
@@ -4204,7 +4418,7 @@ const RadiografiaPremiumPage = () => {
                   {aiAnalysis.lecturas_por_enfoque?.real && (() => {
                     const data = aiAnalysis.lecturas_por_enfoque.real
                     return (
-                      <div className="space-y-6">
+                      <div data-pdf-page="psych-real" className="space-y-6">
                         <div className="text-center py-6">
                           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-sky-500/15 border border-cyan-500/25 mb-4 shadow-lg shadow-cyan-500/10">
                             <Scale className="w-7 h-7 text-cyan-400/80" />
@@ -4231,7 +4445,7 @@ const RadiografiaPremiumPage = () => {
 
               {/* ═══ 4. DIRECCIÓN PROBABLE — Premium Gauges ═══ */}
               {aiAnalysis.direccion_probable && (
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                <motion.div data-pdf-page="direccion" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                   <div className="relative text-center py-8 mb-6">
                     <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-500/25 to-transparent" />
                     <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/15 to-blue-500/10 border border-cyan-500/20 mb-3">
@@ -4280,7 +4494,7 @@ const RadiografiaPremiumPage = () => {
 
               {/* ═══ 5. FORTALEZAS Y RIESGOS — Side by side ═══ */}
               {(aiAnalysis.fortalezas?.length > 0 || aiAnalysis.riesgos?.length > 0) && (
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                <motion.div data-pdf-page="fortalezas" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                   <div className="relative text-center py-8 mb-6">
                     <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
                     <div className="flex items-center justify-center gap-3 mb-3">
@@ -4351,6 +4565,8 @@ const RadiografiaPremiumPage = () => {
               {/* ═══ 6. TU SIGUIENTE PASO — CTA DINÁMICO ═══ */}
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 className="p-6 lg:p-8 rounded-2xl border border-violet-500/15 bg-gradient-to-br from-violet-500/[0.04] via-fuchsia-500/[0.02] to-transparent relative overflow-hidden">
+                {/* PDF page: sig-intro (title + intro text + topics) */}
+                <div data-pdf-page="sig-intro" className="relative">
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/30 via-fuchsia-500/20 to-violet-500/30" />
                 <div className="text-center mb-6">
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/15 border border-violet-500/25 mb-4">
@@ -4411,9 +4627,13 @@ const RadiografiaPremiumPage = () => {
                       ))
                   }
                 </div>
+                </div>{/* /sig-intro */}
 
-                {/* Técnicas terapéuticas recomendadas */}
-                {aiAnalysis.tecnicas_recomendadas?.length > 0 && (
+                {/* Técnicas terapéuticas + Lecturas recomendadas — PDF: combined on same page */}
+                {(aiAnalysis.tecnicas_recomendadas?.length > 0 || aiAnalysis.libros_recomendados?.length > 0) && (
+                  <div data-pdf-page="tecnicas-libros">
+                  {/* Técnicas terapéuticas */}
+                  {aiAnalysis.tecnicas_recomendadas?.length > 0 && (
                   <div className="mb-6">
                     <p className="text-violet-300/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
                       <Activity className="w-3.5 h-3.5" /> Técnicas terapéuticas sugeridas
@@ -4432,11 +4652,11 @@ const RadiografiaPremiumPage = () => {
                       ))}
                     </div>
                   </div>
-                )}
+                  )}
 
-                {/* Libros recomendados */}
-                {aiAnalysis.libros_recomendados?.length > 0 && (
-                  <div className="mb-8">
+                  {/* Lecturas recomendadas */}
+                  {aiAnalysis.libros_recomendados?.length > 0 && (
+                  <div className="mb-4">
                     <p className="text-fuchsia-300/50 text-[10px] font-bold uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
                       📚 Lecturas recomendadas
                     </p>
@@ -4462,9 +4682,11 @@ const RadiografiaPremiumPage = () => {
                       })}
                     </div>
                   </div>
+                  )}
+                  </div>
                 )}
-                {/* ═══ CTA TERAPIA PREMIUM ═══ */}
-                <div className="mt-6 mb-2">
+                {/* ═══ CTA TERAPIA PREMIUM — web-only cards with WhatsApp buttons ═══ */}
+                <div data-no-pdf className="mt-6 mb-2">
                   <div className="text-center mb-6">
                     <p className="text-violet-400/50 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Da el siguiente paso</p>
                     <p className="text-white/50 text-sm font-light">Tu radiografía detectó patrones que se pueden transformar — con guía profesional.</p>
@@ -4556,24 +4778,61 @@ const RadiografiaPremiumPage = () => {
                   </div>
                 </div>
               </motion.div>
-              </>)}
+
+              {/* PDF-only closing page: professional CTA with QR */}
+              <div data-pdf-page="cta-final" data-pdf-only className="hidden">
+                <div className="p-8 rounded-2xl border border-violet-500/20 bg-gradient-to-br from-violet-500/[0.05] via-fuchsia-500/[0.03] to-transparent text-center">
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/15 border border-violet-500/25 mb-6">
+                    <Heart className="w-7 h-7 text-violet-400/70" />
+                  </div>
+                  <p className="text-violet-300/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-3">Tu siguiente paso</p>
+                  <h2 className="text-2xl font-light text-white/80 mb-4">Este mapa revela el territorio.<br/>La consulta traza el camino.</h2>
+                  <p className="text-white/55 text-[14px] font-light leading-relaxed max-w-md mx-auto mb-6">
+                    Cada patrón detectado en tu radiografía es una puerta que se puede abrir con el acompañamiento adecuado. No se trata de lo que está "mal" — se trata de lo que aún no has podido ver y transformar.
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-6">
+                    <div className="p-5 rounded-xl border border-amber-500/20 bg-amber-500/[0.04] min-w-[180px]">
+                      <p className="text-amber-300/70 text-xs font-bold uppercase tracking-wider mb-1">Individual</p>
+                      <p className="text-white/70 text-xl font-light">$700 <span className="text-sm text-white/35">MXN</span></p>
+                      <p className="text-white/35 text-[10px] mt-1">90 min · Online o presencial</p>
+                    </div>
+                    <div className="p-5 rounded-xl border border-violet-500/20 bg-violet-500/[0.04] min-w-[180px]">
+                      <p className="text-violet-300/70 text-xs font-bold uppercase tracking-wider mb-1">De Pareja</p>
+                      <p className="text-white/70 text-xl font-light">$1,250 <span className="text-sm text-white/35">MXN</span></p>
+                      <p className="text-white/35 text-[10px] mt-1">90 min · Online o presencial</p>
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <p className="text-white/40 text-[10px] font-medium uppercase tracking-[0.2em] mb-3">Agenda tu sesión</p>
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent('https://wa.me/527228720520?text=Hola, hice mi Radiografía de Pareja y me gustaría agendar una consulta.')}&bgcolor=0f0f1a&color=8b5cf6`}
+                      alt="QR WhatsApp"
+                      className="w-28 h-28 mx-auto rounded-lg border border-violet-500/20 p-1"
+                    />
+                    <p className="text-violet-300/50 text-[11px] mt-2">Escanea para contactar por WhatsApp</p>
+                  </div>
+                  <p className="text-white/30 text-[11px] font-light">luisvirrueta.com · Lic. Luis Virrueta</p>
+                </div>
+              </div>
+              </div>{/* /individual tab */}
 
               {/* ═══════════════════════════════════════════════════════════════
                   SECCIÓN: RADIOGRAFÍA CRUZADA (Los Dos)
-                  Solo se muestra cuando hay crossAnalysis disponible
+                  Siempre en DOM cuando hay crossAnalysis; oculta via CSS cuando pestaña individual
               ═══════════════════════════════════════════════════════════════ */}
-              {resultTab === 'cruzado' && crossAnalysis && (
+              {crossAnalysis && (
+                <div className={resultTab !== 'cruzado' ? 'hidden' : ''} data-pdf-tab="cruzado">
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-10">
 
                   {/* Separator */}
-                  <div className="text-center my-10 py-8 border-t border-b border-emerald-500/10">
+                  <div data-pdf-page="cruzado-apertura" className="text-center my-10 py-8 border-t border-b border-emerald-500/10">
                     <p className="text-emerald-400/50 text-xs font-bold uppercase tracking-[0.25em] mb-1">Radiografía Cruzada</p>
                     <p className="text-white/40 text-sm font-light">La relación vista desde las dos perspectivas</p>
                   </div>
 
                   {/* Apertura */}
                   {crossAnalysis.apertura && (
-                    <div className="p-6 lg:p-8 rounded-2xl border border-emerald-500/15 bg-gradient-to-br from-emerald-500/[0.04] via-teal-500/[0.03] to-transparent">
+                    <div data-pdf-page="cruzado-apertura-texto" className="p-6 lg:p-8 rounded-2xl border border-emerald-500/15 bg-gradient-to-br from-emerald-500/[0.04] via-teal-500/[0.03] to-transparent">
                       <div className="text-center mb-6">
                         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/15 border border-emerald-500/25 mb-4">
                           <Users className="w-7 h-7 text-emerald-400/80" />
@@ -4588,7 +4847,7 @@ const RadiografiaPremiumPage = () => {
 
                   {/* Resumen cruzado */}
                   {crossAnalysis.resumen_cruzado && (
-                    <div className="p-6 rounded-2xl border border-teal-500/15 bg-teal-500/[0.03]">
+                    <div data-pdf-page="cruzado-resumen" className="p-6 rounded-2xl border border-teal-500/15 bg-teal-500/[0.03]">
                       <p className="text-teal-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-4">Resumen cruzado</p>
                       {crossAnalysis.resumen_cruzado.split('\n\n').map((p, i) => (
                         <p key={i} className="text-white/70 text-[15px] font-light leading-[1.8] mb-3">{renderConceptBold(p)}</p>
@@ -4604,7 +4863,7 @@ const RadiografiaPremiumPage = () => {
                     const name2 = ind.p2?.nombre || 'Participante 2'
                     const dimKeys = Object.keys(dims)
                     return (
-                      <div className="p-6 lg:p-8 rounded-2xl border border-emerald-500/15 bg-white/[0.02]">
+                      <div data-pdf-page="cruzado-dimensiones" className="p-6 lg:p-8 rounded-2xl border border-emerald-500/15 bg-white/[0.02]">
                         <div className="text-center mb-6">
                           <p className="text-emerald-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Dimensiones cruzadas</p>
                           <h3 className="text-xl font-light text-white/80">Cómo se ven el uno al otro</h3>
@@ -4654,7 +4913,7 @@ const RadiografiaPremiumPage = () => {
                       p2: typeof dims[k].p2 === 'number' ? dims[k].p2 : parseInt(dims[k].p2) || 50,
                     }))
                     return (
-                      <div className="p-6 lg:p-8 rounded-2xl border border-violet-500/15 bg-white/[0.02]">
+                      <div data-pdf-page="cruzado-radar" className="p-6 lg:p-8 rounded-2xl border border-violet-500/15 bg-white/[0.02]">
                         <div className="text-center mb-4">
                           <p className="text-violet-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Perfil dual</p>
                           <h3 className="text-xl font-light text-white/80">Radar comparativo de las 12 dimensiones</h3>
@@ -4687,7 +4946,7 @@ const RadiografiaPremiumPage = () => {
                       return { dim: DIMENSION_LABELS[k] || k.replace(/_/g, ' '), gap: Math.abs(v1 - v2), v1, v2 }
                     }).sort((a, b) => b.gap - a.gap)
                     return (
-                      <div className="p-6 lg:p-8 rounded-2xl border border-rose-500/15 bg-white/[0.02]">
+                      <div data-pdf-page="cruzado-brechas-perc" className="p-6 lg:p-8 rounded-2xl border border-rose-500/15 bg-white/[0.02]">
                         <div className="text-center mb-6">
                           <p className="text-rose-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Brechas de percepción</p>
                           <h3 className="text-xl font-light text-white/80">Dónde más difieren sus mundos</h3>
@@ -4720,7 +4979,7 @@ const RadiografiaPremiumPage = () => {
                     const color = sincronia >= 70 ? '#10b981' : sincronia >= 45 ? '#fbbf24' : '#f43f5e'
                     const label = sincronia >= 70 ? 'Alta sincronía' : sincronia >= 45 ? 'Sincronía moderada' : 'Baja sincronía'
                     return (
-                      <div className="p-6 lg:p-8 rounded-2xl border border-emerald-500/15 bg-white/[0.02]">
+                      <div data-pdf-page="cruzado-sincronia" className="p-6 lg:p-8 rounded-2xl border border-emerald-500/15 bg-white/[0.02]">
                         <div className="text-center mb-4">
                           <p className="text-emerald-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Índice de sincronía global</p>
                           <h3 className="text-xl font-light text-white/80">¿Qué tan alineadas están sus percepciones?</h3>
@@ -4759,7 +5018,7 @@ const RadiografiaPremiumPage = () => {
                       { key: 'freud_lacan', label: 'Freud+Lacan', icon: Brain, desc: 'Inconsciente relacional' },
                     ]
                     return (
-                      <div className="p-6 lg:p-8 rounded-2xl border border-violet-500/15 bg-white/[0.02]">
+                      <div data-pdf-page="cruzado-compat" className="p-6 lg:p-8 rounded-2xl border border-violet-500/15 bg-white/[0.02]">
                         <div className="text-center mb-6">
                           <p className="text-violet-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Compatibilidad por corriente</p>
                           <h3 className="text-xl font-light text-white/80">11 marcos teóricos, 11 diagnósticos</h3>
@@ -4791,7 +5050,7 @@ const RadiografiaPremiumPage = () => {
 
                   {/* ═══ BRECHAS CRÍTICAS CARDS ═══ */}
                   {crossAnalysis.brechas_criticas?.length > 0 && (
-                    <div className="p-6 lg:p-8 rounded-2xl border border-amber-500/15 bg-white/[0.02]">
+                    <div data-pdf-page="cruzado-brechas-cards" className="p-6 lg:p-8 rounded-2xl border border-amber-500/15 bg-white/[0.02]">
                       <div className="text-center mb-6">
                         <p className="text-amber-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Brechas críticas</p>
                         <h3 className="text-xl font-light text-white/80">Las 3 dimensiones donde más urge trabajar</h3>
@@ -4816,7 +5075,7 @@ const RadiografiaPremiumPage = () => {
 
                   {/* Puntos ciegos */}
                   {crossAnalysis.puntos_ciegos && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div data-pdf-page="cruzado-puntos-ciegos" className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {crossAnalysis.puntos_ciegos.p1_no_ve && (
                         <div className="p-5 rounded-2xl border border-amber-500/15 bg-amber-500/[0.03]">
                           <div className="flex items-center gap-2 mb-3">
@@ -4844,7 +5103,7 @@ const RadiografiaPremiumPage = () => {
 
                   {/* Dinámica real */}
                   {crossAnalysis.dinamica_real && (
-                    <div className="p-6 rounded-2xl border border-fuchsia-500/15 bg-fuchsia-500/[0.03]">
+                    <div data-pdf-page="cruzado-dinamica-real" className="p-6 rounded-2xl border border-fuchsia-500/15 bg-fuchsia-500/[0.03]">
                       <div className="flex items-center gap-2 mb-4">
                         <Zap className="w-5 h-5 text-fuchsia-400/70" />
                         <p className="text-fuchsia-300/60 text-[10px] font-bold uppercase tracking-[0.3em]">La dinámica real de la pareja</p>
@@ -4856,7 +5115,7 @@ const RadiografiaPremiumPage = () => {
                   )}
 
                   {/* Convergencias y Divergencias */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div data-pdf-page="cruzado-convergencias" className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {crossAnalysis.convergencias?.length > 0 && (
                       <div className="p-5 rounded-2xl border border-emerald-500/15 bg-emerald-500/[0.03]">
                         <p className="text-emerald-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-3 flex items-center gap-2">
@@ -4899,7 +5158,7 @@ const RadiografiaPremiumPage = () => {
                       { key: 'dinamica_emocional_cruzada', label: 'Dinámica emocional', icon: Activity },
                     ]
                     return (
-                      <div className="p-6 lg:p-8 rounded-2xl border border-violet-500/15 bg-gradient-to-br from-violet-500/[0.03] to-fuchsia-500/[0.02]">
+                      <div data-pdf-page="cruzado-profundo" className="p-6 lg:p-8 rounded-2xl border border-violet-500/15 bg-gradient-to-br from-violet-500/[0.03] to-fuchsia-500/[0.02]">
                         <div className="text-center mb-6">
                           <p className="text-violet-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Análisis profundo cruzado</p>
                           <h3 className="text-xl font-light text-white/80">Lo que emerge al cruzar ambas narrativas</h3>
@@ -4929,7 +5188,7 @@ const RadiografiaPremiumPage = () => {
                   {crossAnalysis.lectura_psicoanalitica_cruzada && (() => {
                     const lp = crossAnalysis.lectura_psicoanalitica_cruzada
                     return (
-                      <div className="p-6 lg:p-8 rounded-2xl border border-rose-500/15 bg-gradient-to-br from-rose-500/[0.03] to-pink-500/[0.02]">
+                      <div data-pdf-page="cruzado-psico" className="p-6 lg:p-8 rounded-2xl border border-rose-500/15 bg-gradient-to-br from-rose-500/[0.03] to-pink-500/[0.02]">
                         <div className="text-center mb-6">
                           <Brain className="w-8 h-8 text-rose-400/60 mx-auto mb-2" />
                           <p className="text-rose-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Lectura psicoanalítica cruzada</p>
@@ -4973,7 +5232,7 @@ const RadiografiaPremiumPage = () => {
                     const name1 = ind.p1?.nombre || 'P1'
                     const name2 = ind.p2?.nombre || 'P2'
                     return (
-                      <div className="p-6 lg:p-8 rounded-2xl border border-red-500/15 bg-white/[0.02]">
+                      <div data-pdf-page="cruzado-conflicto" className="p-6 lg:p-8 rounded-2xl border border-red-500/15 bg-white/[0.02]">
                         <div className="text-center mb-6">
                           <p className="text-red-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Dinámica de conflicto cruzada</p>
                           <h3 className="text-xl font-light text-white/80">Cómo pelean y cómo reparan</h3>
@@ -5046,7 +5305,7 @@ const RadiografiaPremiumPage = () => {
                             : text
                           if (!allText) return null
                           return (
-                            <div key={key} className={`rounded-2xl overflow-hidden border ${border} bg-white/[0.02]`}>
+                            <div key={key} data-pdf-page={`cruzado-lectura-${key}`} className={`rounded-2xl overflow-hidden border ${border} bg-white/[0.02]`}>
                               <div className="text-center py-6 px-5 relative">
                                 <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(to right, transparent, ${accent}60, transparent)` }} />
                                 <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 mb-3`}>
@@ -5092,7 +5351,7 @@ const RadiografiaPremiumPage = () => {
                       return 'text-amber-400'
                     }
                     return (
-                      <div className="p-6 lg:p-8 rounded-2xl border border-white/10 bg-white/[0.02] overflow-x-auto">
+                      <div data-pdf-page="cruzado-tabla" className="p-6 lg:p-8 rounded-2xl border border-white/10 bg-white/[0.02] overflow-x-auto">
                         <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-4 text-center">Tabla diagnóstica cruzada</p>
                         <table className="w-full text-left text-sm">
                           <thead>
@@ -5128,7 +5387,7 @@ const RadiografiaPremiumPage = () => {
                       { key: 'autonomia_saludable', label: 'Autonomía saludable', color: 'from-amber-500 to-yellow-500' },
                     ]
                     return (
-                      <div className="p-6 lg:p-8 rounded-2xl border border-cyan-500/15 bg-gradient-to-br from-cyan-500/[0.03] to-blue-500/[0.02]">
+                      <div data-pdf-page="cruzado-energia" className="p-6 lg:p-8 rounded-2xl border border-cyan-500/15 bg-gradient-to-br from-cyan-500/[0.03] to-blue-500/[0.02]">
                         <div className="text-center mb-6">
                           <Activity className="w-7 h-7 text-cyan-400/60 mx-auto mb-2" />
                           <p className="text-cyan-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Energía del vínculo</p>
@@ -5156,7 +5415,7 @@ const RadiografiaPremiumPage = () => {
 
                   {/* Mensaje para ambos */}
                   {crossAnalysis.mensaje_para_ambos && (
-                    <div className="p-6 lg:p-8 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.06] via-teal-500/[0.04] to-transparent">
+                    <div data-pdf-page="cruzado-mensaje" className="p-6 lg:p-8 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.06] via-teal-500/[0.04] to-transparent">
                       <div className="text-center mb-6">
                         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/15 border border-emerald-500/25 mb-4">
                           <Heart className="w-7 h-7 text-emerald-400/80" />
@@ -5175,7 +5434,7 @@ const RadiografiaPremiumPage = () => {
                     const potencial = typeof pr.potencial === 'number' ? pr.potencial : parseInt(pr.potencial) || 50
                     const riesgo = typeof pr.riesgo === 'number' ? pr.riesgo : parseInt(pr.riesgo) || 50
                     return (
-                      <div className="p-6 rounded-2xl border border-violet-500/15 bg-violet-500/[0.03]">
+                      <div data-pdf-page="cruzado-pronostico" className="p-6 rounded-2xl border border-violet-500/15 bg-violet-500/[0.03]">
                         <p className="text-violet-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-4 text-center">Pronóstico relacional</p>
                         <div className="grid grid-cols-2 gap-6 mb-4">
                           <div className="text-center">
@@ -5208,7 +5467,7 @@ const RadiografiaPremiumPage = () => {
 
                   {/* ═══ TEMAS PARA CONSULTA CRUZADA ═══ */}
                   {crossAnalysis.temas_para_consulta_cruzada?.length > 0 && (
-                    <div className="p-6 lg:p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+                    <div data-pdf-page="cruzado-temas" className="p-6 lg:p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
                       <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-4 text-center">Temas para consulta de pareja</p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {crossAnalysis.temas_para_consulta_cruzada.map((tema, i) => (
@@ -5223,7 +5482,7 @@ const RadiografiaPremiumPage = () => {
 
                   {/* ═══ TÉCNICAS RECOMENDADAS CRUZADA ═══ */}
                   {crossAnalysis.tecnicas_recomendadas_cruzada?.length > 0 && (
-                    <div className="p-6 lg:p-8 rounded-2xl border border-teal-500/15 bg-gradient-to-br from-teal-500/[0.03] to-emerald-500/[0.02]">
+                    <div data-pdf-page="cruzado-tecnicas" className="p-6 lg:p-8 rounded-2xl border border-teal-500/15 bg-gradient-to-br from-teal-500/[0.03] to-emerald-500/[0.02]">
                       <p className="text-teal-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-4 text-center">Técnicas recomendadas para la pareja</p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {crossAnalysis.tecnicas_recomendadas_cruzada.map((tec, i) => {
@@ -5243,8 +5502,8 @@ const RadiografiaPremiumPage = () => {
                     </div>
                   )}
 
-                  {/* ═══ CTA TERAPIA PREMIUM (Cruzado) ═══ */}
-                  <div className="mt-6 mb-2">
+                  {/* ═══ CTA TERAPIA PREMIUM (Cruzado) — web-only cards ═══ */}
+                  <div data-no-pdf className="mt-6 mb-2">
                     <div className="text-center mb-6">
                       <p className="text-emerald-400/50 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Da el siguiente paso — juntos</p>
                       <p className="text-white/50 text-sm font-light">{crossAnalysis.cta_terapia_pareja?.frase_cierre || 'La radiografía cruzada reveló dinámicas que se pueden transformar — con guía profesional.'}</p>
@@ -5337,6 +5596,34 @@ const RadiografiaPremiumPage = () => {
                   </div>
 
                 </motion.div>
+                </div>
+              )}
+
+              {/* PDF-only closing page for cruzado */}
+              {crossAnalysis && (
+                <div data-pdf-page="cruzado-cta-final" data-pdf-only className="hidden">
+                  <div className="p-8 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.05] to-teal-500/[0.03] text-center">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/15 border border-emerald-500/25 mb-6">
+                      <Users className="w-7 h-7 text-emerald-400/80" />
+                    </div>
+                    <p className="text-emerald-300/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-3">Da el siguiente paso</p>
+                    <h2 className="text-2xl font-light text-white/80 mb-6">Cuando gusten una consulta</h2>
+                    <p className="text-white/55 text-[15px] font-light leading-relaxed max-w-md mx-auto mb-8">
+                      Esta radiografía cruzada es el inicio. Con acompañamiento profesional, cada dinámica puede transformarse en una oportunidad de crecimiento para el vínculo.
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-8">
+                      <div className="p-5 rounded-xl border border-amber-500/20 bg-amber-500/[0.04] min-w-[180px]">
+                        <p className="text-amber-300/70 text-xs font-bold uppercase tracking-wider mb-1">Individual</p>
+                        <p className="text-white/70 text-xl font-light">$700 <span className="text-sm text-white/35">MXN</span></p>
+                      </div>
+                      <div className="p-5 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] min-w-[180px]">
+                        <p className="text-emerald-300/70 text-xs font-bold uppercase tracking-wider mb-1">De Pareja</p>
+                        <p className="text-white/70 text-xl font-light">$1,250 <span className="text-sm text-white/35">MXN</span></p>
+                      </div>
+                    </div>
+                    <p className="text-white/35 text-sm font-light">luisvirrueta.com</p>
+                  </div>
+                </div>
               )}
 
               {/* Back */}

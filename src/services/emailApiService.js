@@ -121,6 +121,18 @@ export async function sendBackupEmail({ token, type, profileData, questions, res
   return res.json().catch(() => ({}))
 }
 
+/**
+ * Send partner invitation email (losdos package).
+ */
+export async function sendPartnerInvite({ partnerEmail, partnerName, buyerName }) {
+  const res = await fetch(`${API_BASE}/api/send-partner-invite`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ partnerEmail, partnerName, buyerName })
+  })
+  return res.json().catch(() => ({}))
+}
+
 // ── Cross-analysis (losdos) endpoints ────────────────────────────────────────
 
 /** Check if both partners have finished their questionnaires */
