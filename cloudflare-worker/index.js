@@ -165,6 +165,16 @@ function getPromos(env) {
   catch { return BUILT_IN_PROMOS }
 }
 
+async function getPromosWithKV(env) {
+  const base = getPromos(env)
+  if (!env.PURCHASES) return base
+  try {
+    const kvRaw = await env.PURCHASES.get('admin:promo_codes')
+    if (kvRaw) Object.assign(base, JSON.parse(kvRaw))
+  } catch {}
+  return base
+}
+
 function getTypeLabel(type) {
   return { descubre: 'Individual', solo: 'Pareja — Solo', losdos: 'Pareja — Los Dos' }[type] || type
 }
@@ -353,7 +363,7 @@ function analysisEmailHtml({ typeLabel, accessUrl, packageType = 'solo' }) {
           ${bodyParagraphs}
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr><td align="center">
-              <a href="${accessUrl}" style="display:inline-block;padding:16px 48px;background:linear-gradient(135deg,#6d28d9,#9333ea);color:#ffffff;text-decoration:none;font-size:15px;font-weight:400;letter-spacing:0.02em;border-radius:12px;">Ver mi radiografía &rarr;</a>
+              <a href="${accessUrl}" style="display:inline-block;padding:16px 48px;background:linear-gradient(135deg,#6d28d9,#9333ea);color:#ffffff;text-decoration:none;font-size:15px;font-weight:400;letter-spacing:0.02em;border-radius:12px;">Ver mi reporte &rarr;</a>
             </td></tr>
           </table>
         </td></tr>
@@ -450,7 +460,7 @@ async function handleCreateCheckout(req, env) {
   const priceId = getPriceId(env, type, isTest)
   if (!priceId) return json({ error: 'Producto no encontrado' }, 400)
 
-  const promos = getPromos(env)
+  const promos = await getPromosWithKV(env)
   const promo  = promoCode ? promos[promoCode.toUpperCase()] : null
 
   // Promo 100% gratis — saltamos Stripe
@@ -479,6 +489,38 @@ async function handleCreateCheckout(req, env) {
 
   const session = await stripe(env, 'POST', '/checkout/sessions', params, isTest)
   return json({ url: session.url })
+}
+
+async function handleCreateCustomCheckout(req, env) {
+  const { email, packageType, customPriceCents, productName, adminSecret } = await req.json()
+  // Only allow admin (check shared secret)
+  if (!adminSecret || adminSecret !== env.ADMIN_SECRET) {
+    return json({ error: 'No autorizado' }, 403)
+  }
+  if (!email || !customPriceCents || customPriceCents < 100) {
+    return json({ error: 'Email y precio (mín $1) requeridos' }, 400)
+  }
+  const type = packageType || 'solo'
+  const label = productName || `Radiografía Psicológica — ${getTypeLabel(type)}`
+
+  const params = {
+    mode: 'payment',
+    customer_email: email,
+    line_items: [{
+      price_data: {
+        currency: 'mxn',
+        product_data: { name: label },
+        unit_amount: String(Math.round(customPriceCents)),
+      },
+      quantity: '1',
+    }],
+    success_url: `${SITE_URL}/tienda/diagnostico-relacional?session_id={CHECKOUT_SESSION_ID}&type=${type}`,
+    cancel_url: RETURN_URL,
+    metadata: { type, customPrice: 'true' },
+  }
+
+  const session = await stripe(env, 'POST', '/checkout/sessions', params, false)
+  return json({ url: session.url, sessionId: session.id })
 }
 
 async function handleVerifyPayment(req, env) {
@@ -551,7 +593,7 @@ async function handleVerifyPayment(req, env) {
 
 async function handleValidatePromo(req, env) {
   const { promoCode, type } = await req.json()
-  const promos = getPromos(env)
+  const promos = await getPromosWithKV(env)
   const promo  = promos[promoCode?.toUpperCase()]
   if (!promo) return json({ valid: false, error: 'Código no válido' })
 
@@ -826,9 +868,8 @@ async function handleSendCrossAnalysisEmail(req, env) {
   const errors = []
 
   for (const email of emails) {
-    // Each partner gets their own link with their token (which will load cross-analysis section)
-    const partnerToken = email === pair.email1 ? pair.token1 : pair.token2
-    const accessUrl = `${RADIOGRAFIA_URL}?token=${partnerToken}&type=losdos&view=results&cross=${pairId}`
+    // Link to dashboard where cross-analysis tab will be visible
+    const accessUrl = `${SITE_URL}/perfil`
     try {
       await sendEmail(env, {
         to: email,
@@ -872,8 +913,8 @@ async function handleSendAnalysisEmail(req, env) {
   if (!token || !emails?.length) return json({ error: 'Missing token or emails' }, 400)
 
   const typeLabel = getTypeLabel(type || 'solo')
-  // All recipients get the same URL — the buyer token links to the shared analysis
-  const accessUrl = `${RADIOGRAFIA_URL}?token=${token}&type=${type || 'solo'}&view=results`
+  // Link to dashboard — the user logs in and sees their results there
+  const accessUrl = `${SITE_URL}/perfil`
   const errors = []
 
   for (const email of emails.filter(Boolean)) {
@@ -1223,6 +1264,44 @@ async function handleTTSProxy(req, env) {
   })
 }
 
+// ── Admin: manage promo codes in KV ──────────────────────────────────────────
+
+async function handleCreatePromoCode(req, env) {
+  const { code, discountPercent, free, label, adminSecret } = await req.json()
+  if (!adminSecret || adminSecret !== env.ADMIN_SECRET) return json({ error: 'No autorizado' }, 403)
+  if (!code || code.length < 2) return json({ error: 'Código requerido (mín 2 caracteres)' }, 400)
+
+  const key = code.toUpperCase().trim()
+  const kvRaw = await env.PURCHASES?.get('admin:promo_codes') || '{}'
+  const codes = JSON.parse(kvRaw)
+  codes[key] = {
+    ...(free ? { free: true } : { discountPercent: Number(discountPercent) || 10 }),
+    label: label || key,
+    createdAt: Date.now(),
+  }
+  await env.PURCHASES?.put('admin:promo_codes', JSON.stringify(codes))
+  return json({ ok: true, code: key, promo: codes[key] })
+}
+
+async function handleListPromoCodes(req, env) {
+  const { adminSecret } = await req.json()
+  if (!adminSecret || adminSecret !== env.ADMIN_SECRET) return json({ error: 'No autorizado' }, 403)
+  const builtIn = getPromos(env)
+  const kvRaw = await env.PURCHASES?.get('admin:promo_codes') || '{}'
+  const custom = JSON.parse(kvRaw)
+  return json({ builtIn, custom })
+}
+
+async function handleDeletePromoCode(req, env) {
+  const { code, adminSecret } = await req.json()
+  if (!adminSecret || adminSecret !== env.ADMIN_SECRET) return json({ error: 'No autorizado' }, 403)
+  const kvRaw = await env.PURCHASES?.get('admin:promo_codes') || '{}'
+  const codes = JSON.parse(kvRaw)
+  delete codes[code?.toUpperCase()?.trim()]
+  await env.PURCHASES?.put('admin:promo_codes', JSON.stringify(codes))
+  return json({ ok: true })
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // ROUTER
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1244,6 +1323,10 @@ export default {
 
       if (method === 'POST') {
         if (pathname === '/api/create-radiografia-checkout') return handleCreateCheckout(request, env)
+        if (pathname === '/api/create-custom-checkout')     return handleCreateCustomCheckout(request, env)
+        if (pathname === '/api/create-promo-code')         return handleCreatePromoCode(request, env)
+        if (pathname === '/api/list-promo-codes')           return handleListPromoCodes(request, env)
+        if (pathname === '/api/delete-promo-code')          return handleDeletePromoCode(request, env)
         if (pathname === '/api/verify-payment')              return handleVerifyPayment(request, env)
         if (pathname === '/api/validate-radiografia-promo')  return handleValidatePromo(request, env)
         if (pathname === '/api/send-access-email')           return handleSendAccessEmail(request, env)

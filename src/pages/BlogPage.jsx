@@ -5,7 +5,7 @@ import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen,
 import SEOHead from '../components/SEOHead'
 import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
-import AdminLogin from '../components/AdminLogin'
+// AdminLogin removed — admin is detected automatically via Firebase Auth header login
 import DeleteConfirmModal from '../components/DeleteConfirmModal'
 import { getArticleContent } from '../data/blogArticlesContent'
 import { getLegacyBlogIndex } from '../data/blogIndex'
@@ -29,7 +29,6 @@ const BlogPage = () => {
   const [activeCategory, setActiveCategory] = useState('all')
   
   // Estados para admin
-  const [showLogin, setShowLogin] = useState(false)
   const [deletingArticle, setDeletingArticle] = useState(null)
   const [isDeleting, setIsDeleting] = useState(false)
 
@@ -387,23 +386,10 @@ const BlogPage = () => {
         tags={['blog', 'psicología', 'psicoanálisis', 'filosofía', 'inconsciente', 'percepción', 'consciencia', 'transformación']}
       />
       {/* Hero Section - Estilo AboutPage */}
-      {/* Header Admin Controls - Elegante y Discreto */}
+      {/* Header Admin Controls - Solo visible cuando isAdmin (login automático via header) */}
+      {isAdmin && (
       <div className="fixed top-32 right-6 z-50">
         <AnimatePresence>
-          {!isAdmin ? (
-            <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowLogin(true)}
-              className="group flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-lg border border-white/10 hover:border-white/30 rounded-full transition-all duration-300"
-            >
-              <Lock className="w-4 h-4 text-white/60 group-hover:text-white/90 transition-colors" />
-              <span className="text-xs text-white/60 group-hover:text-white/90 transition-colors tracking-wide">Admin</span>
-            </motion.button>
-          ) : (
             <div className="flex items-center gap-3">
               <motion.button
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -430,9 +416,9 @@ const BlogPage = () => {
                 <LogOut className="w-4 h-4 text-white/60 group-hover:text-red-400 transition-colors" />
               </motion.button>
             </div>
-          )}
         </AnimatePresence>
       </div>
+      )}
 
       <section ref={heroRef} className="relative pt-12 lg:pt-20 pb-40 lg:pb-56 px-6 lg:px-20 overflow-hidden">
         {/* Video de fondo */}
@@ -584,12 +570,7 @@ const BlogPage = () => {
       </section>
     </div>
 
-    {/* Login Modal */}
-    <AnimatePresence>
-      {showLogin && (
-        <AdminLogin onClose={() => setShowLogin(false)} />
-      )}
-    </AnimatePresence>
+
 
     {/* Delete Confirmation Modal */}
     <AnimatePresence>

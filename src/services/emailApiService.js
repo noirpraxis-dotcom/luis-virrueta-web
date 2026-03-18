@@ -204,3 +204,51 @@ export async function getProfile(token) {
   const data = await res.json().catch(() => null)
   return data?.profileData || null
 }
+
+/** Create a custom-price Stripe checkout link (admin only) */
+export async function createCustomCheckout({ email, packageType, customPriceCents, productName, adminSecret }) {
+  const res = await fetch(`${API_BASE}/api/create-custom-checkout`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, packageType, customPriceCents, productName, adminSecret }),
+  })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(data.error || `Error ${res.status}`)
+  return data // { url, sessionId }
+}
+
+/** Create a promo code (admin only) */
+export async function createPromoCode({ code, discountPercent, free, label, adminSecret }) {
+  const res = await fetch(`${API_BASE}/api/create-promo-code`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code, discountPercent, free, label, adminSecret }),
+  })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(data.error || `Error ${res.status}`)
+  return data
+}
+
+/** List all promo codes (admin only) */
+export async function listPromoCodes(adminSecret) {
+  const res = await fetch(`${API_BASE}/api/list-promo-codes`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ adminSecret }),
+  })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(data.error || `Error ${res.status}`)
+  return data // { builtIn, custom }
+}
+
+/** Delete a custom promo code (admin only) */
+export async function deletePromoCode({ code, adminSecret }) {
+  const res = await fetch(`${API_BASE}/api/delete-promo-code`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code, adminSecret }),
+  })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(data.error || `Error ${res.status}`)
+  return data
+}

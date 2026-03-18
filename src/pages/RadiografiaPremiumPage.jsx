@@ -2057,7 +2057,7 @@ const RadiografiaPremiumPage = () => {
     )
   })
 
-  // Stages: instructions | profile | questionnaire | analyzing | results
+  // Stages: instructions | profile | questionnaire | analyzing | completion | results
   const [stage, setStage] = useState('instructions')
   const [currentQ, setCurrentQ] = useState(0)
   const [responses, setResponses] = useState({})
@@ -2786,15 +2786,21 @@ const RadiografiaPremiumPage = () => {
     return () => clearInterval(fillInterval)
   }, [handleRunAnalysis])
 
-  // ── When both analysis and animation done → show results (DEV only, production stays on thankyou) ──
+  // ── When both analysis and animation done → show completion or results ──
   useEffect(() => {
     if (analysisDone && aiAnalysis && (stage === 'analyzing' || stage === 'thankyou')) {
-      // In DEV, wait for animation; in production, go to results after a short delay
       const delay = stage === 'analyzing' && completedTasks < ANALYSIS_TASKS.length ? 800 : 2000
-      const timer = setTimeout(() => setStage('results'), delay)
+      const timer = setTimeout(() => {
+        // If viewing from profile or DEV mode, go straight to results
+        if (viewResultsMode || import.meta.env.DEV) {
+          setStage('results')
+        } else {
+          setStage('completion')
+        }
+      }, delay)
       return () => clearTimeout(timer)
     }
-  }, [analysisDone, completedTasks, aiAnalysis, stage])
+  }, [analysisDone, completedTasks, aiAnalysis, stage, viewResultsMode])
 
   // ── Scroll to top on stage change ──
   useEffect(() => {
@@ -3700,6 +3706,68 @@ const RadiografiaPremiumPage = () => {
                   </motion.div>
                 </div>
               </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════
+            STAGE: COMPLETION — Post-analysis, redirect to dashboard
+        ═══════════════════════════════════════════════════════ */}
+        {stage === 'completion' && (
+          <motion.div key="completion" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="min-h-screen flex items-center justify-center px-6 pt-28 pb-20 relative">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-emerald-600/6 rounded-full blur-3xl animate-pulse" />
+              <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-violet-600/4 rounded-full blur-3xl animate-pulse" />
+            </div>
+            <div className="relative z-10 max-w-lg w-full space-y-8 text-center">
+              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200 }}>
+                <div className="mx-auto w-24 h-24 rounded-full bg-gradient-to-br from-emerald-400/20 to-violet-400/20 border border-emerald-400/25 flex items-center justify-center">
+                  <CheckCircle className="w-12 h-12 text-emerald-400/80" strokeWidth={1.5} />
+                </div>
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+                <h2 className="text-3xl lg:text-4xl font-light text-white mb-4 tracking-tight">
+                  ¡Gracias por completar tu test!
+                </h2>
+                <p className="text-white/70 text-base lg:text-lg font-light leading-relaxed mb-2">
+                  Tu reporte completo estará disponible en tu <span className="text-violet-200">dashboard</span> en unos minutos y también recibirás una notificación a tu correo electrónico.
+                </p>
+                {firebaseUser?.email && (
+                  <p className="text-white/50 text-sm font-light">
+                    <Mail className="w-4 h-4 inline mr-1 -mt-0.5" />
+                    {firebaseUser.email}
+                  </p>
+                )}
+              </motion.div>
+
+              {(packageType === 'losdos' || packageType === 'solo') && (
+                <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+                  className="p-5 rounded-2xl border border-pink-500/20 bg-pink-500/[0.04] space-y-2">
+                  <div className="flex items-center justify-center gap-2">
+                    <Users className="w-5 h-5 text-pink-300/70" />
+                    <h3 className="text-lg font-light text-white">Reporte cruzado</h3>
+                  </div>
+                  <p className="text-white/60 text-sm font-light leading-relaxed">
+                    Cuando tu pareja termine su cuestionario, se generará automáticamente un <span className="text-pink-200">análisis cruzado</span> comparando ambas perspectivas. Recibirás otro correo cuando esté listo.
+                  </p>
+                </motion.div>
+              )}
+
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}
+                className="space-y-3 pt-4">
+                <button
+                  onClick={() => navigate('/perfil')}
+                  className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
+                  Ir a mi dashboard
+                </button>
+                <button
+                  onClick={() => setStage('results')}
+                  className="w-full py-3 rounded-xl border border-white/10 text-white/60 text-sm font-light hover:text-white/80 hover:border-white/20 transition-all">
+                  Ver mi reporte ahora
+                </button>
+              </motion.div>
             </div>
           </motion.div>
         )}

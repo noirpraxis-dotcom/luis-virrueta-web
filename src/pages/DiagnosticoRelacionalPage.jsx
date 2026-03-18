@@ -723,7 +723,7 @@ function ConflictSankeyChart({ conflictFlow }) {
 const DiagnosticoRelacionalPage = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const { user: firebaseUser, loginWithGoogle, signUpWithEmail, loginWithEmail } = useAuth()
+  const { user: firebaseUser, isAdmin, loginWithGoogle, signUpWithEmail, loginWithEmail } = useAuth()
 
   // Stages: hero | checkout | auth-checkout | thankyou | instructions | questionnaire | email | analyzing | engagement | results
   const [stage, setStage] = useState('hero')
@@ -880,12 +880,11 @@ const DiagnosticoRelacionalPage = () => {
   // Restore purchase from session OR handle Stripe redirect
   useEffect(() => {
     const sessionId = searchParams.get('session_id')
-    // New: unified Stripe return with session_id — verify via backend
+    // Unified Stripe return with session_id — verify, create Firestore purchase, redirect to test
     if (sessionId && !purchaseId) {
       setVerifyingPayment(true)
-      setStage('thankyou')
+      setStage('thankyou') // Show brief loading while we verify + create
       verifyStripeSession(sessionId).then(async (data) => {
-        // URL ?type= is authoritative for radiografía products (backend may prefix with 'radiografia_')
         const urlType = searchParams.get('type') || ''
         const radiografiaTypes = ['descubre', 'solo', 'losdos']
         const type = radiografiaTypes.includes(urlType) ? urlType : (data.type || urlType || 'solo')
@@ -899,24 +898,47 @@ const DiagnosticoRelacionalPage = () => {
         sessionStorage.setItem('diagnostico_relacional_purchased', 'true')
         sessionStorage.setItem('diagnostico_relacional_type', type)
         sessionStorage.setItem('diagnostico_relacional_purchase_id', sessionId)
-        if (data.email) setThankyouEmails([data.email, ''])
 
-        // Auto-fill profile from saved session data
-        const savedNombre = sessionStorage.getItem('radiografia_nombre')
-        const savedEdad = sessionStorage.getItem('radiografia_edad')
-        const savedNombrePareja = sessionStorage.getItem('radiografia_nombre_pareja')
-        const savedEdadPareja = sessionStorage.getItem('radiografia_edad_pareja')
-        const savedPartnerEmail = sessionStorage.getItem('radiografia_partner_email')
-        const savedPartnerName = sessionStorage.getItem('radiografia_partner_name')
-        if (savedNombre) setThankYouProfile(p => ({ ...p, nombre: p.nombre || savedNombre }))
-        if (savedEdad) setThankYouProfile(p => ({ ...p, edad: p.edad || savedEdad }))
-        if (savedNombrePareja) setThankYouProfile(p => ({ ...p, nombrePareja: p.nombrePareja || savedNombrePareja }))
-        if (savedEdadPareja) setThankYouProfile(p => ({ ...p, edadPareja: p.edadPareja || savedEdadPareja }))
-        if (savedPartnerEmail) {
-          setThankyouEmails(prev => [prev[0], savedPartnerEmail])
-          setAuthPartnerEmail(savedPartnerEmail)
+        // Recover saved data from auth-checkout
+        const savedPartnerEmail = sessionStorage.getItem('radiografia_partner_email') || ''
+        const savedPartnerName = sessionStorage.getItem('radiografia_partner_name') || ''
+        const savedNombre = sessionStorage.getItem('radiografia_nombre') || ''
+        const savedEdad = sessionStorage.getItem('radiografia_edad') || ''
+        const savedNombrePareja = sessionStorage.getItem('radiografia_nombre_pareja') || ''
+        const savedEdadPareja = sessionStorage.getItem('radiografia_edad_pareja') || ''
+        const userEmail = data.email || firebaseUser?.email || ''
+
+        // Save buyer email for RadiografiaPremiumPage
+        if (userEmail) sessionStorage.setItem('radiografia_buyer_email', userEmail)
+        sessionStorage.setItem('radiografia_prefilled', 'true')
+
+        // Create Firestore purchase + send partner invite (non-blocking navigation)
+        let firestoreDocId = ''
+        if (firebaseUser) {
+          try {
+            firestoreDocId = await createFirestorePurchase(firebaseUser.uid, {
+              product: 'radiografia-pareja',
+              packageType: type,
+              stripeSessionId: sessionId,
+              partnerEmail: type === 'losdos' ? savedPartnerEmail : null,
+              partnerName: type === 'losdos' ? savedPartnerName : null,
+            })
+            sessionStorage.setItem('firestore_purchase_id', firestoreDocId)
+            // Send partner invite for losdos
+            if (type === 'losdos' && savedPartnerEmail) {
+              sendPartnerInvite({
+                partnerEmail: savedPartnerEmail,
+                partnerName: savedPartnerName || '',
+                buyerName: savedNombre || firebaseUser.displayName || '',
+              }).catch(() => {})
+            }
+          } catch (e) { console.error('Firestore purchase creation error:', e) }
         }
-        if (savedPartnerName) setAuthPartnerName(savedPartnerName)
+
+        // Navigate directly to the test page — skip thankyou entirely
+        const testPurchaseId = firestoreDocId || sessionId
+        const navToken = data.token ? `&token=${data.token}` : ''
+        navigate(`/tienda/radiografia-premium?purchaseId=${testPurchaseId}&type=${type}&fromProfile=true${navToken}`, { replace: true })
       }).catch(() => {
         // Fallback: still mark as purchased from type param
         const type = searchParams.get('type') || 'individual'
@@ -1295,18 +1317,17 @@ const DiagnosticoRelacionalPage = () => {
       return
     }
     // Save progress to Firestore (non-blocking)
-    if (purchaseId) {
-      saveProgress(purchaseId, {
-        currentQuestion: currentQuestion + 1,
-        responses,
-        email: thankyouEmails[0] || email
-      }).catch(() => { /* silent */ })
-    }
-    // Also save to user's purchase doc for admin visibility
     if (firebaseUser?.uid && purchaseId) {
       saveFirestoreProgress(firebaseUser.uid, purchaseId, {
         currentQuestion: currentQuestion + 1,
         responses
+      }).catch(() => { /* silent */ })
+    } else if (purchaseId) {
+      // Fallback: save to old progress collection
+      saveProgress(purchaseId, {
+        currentQuestion: currentQuestion + 1,
+        responses,
+        email: thankyouEmails[0] || email
       }).catch(() => { /* silent */ })
     }
     if (currentQuestion < QUESTIONS.length - 1) {
@@ -2498,6 +2519,7 @@ const DiagnosticoRelacionalPage = () => {
 
               {/* Switch modo test + Volver */}
               <div className="space-y-3">
+                {isAdmin && (
                 <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/[0.04] flex items-center justify-between gap-4">
                   <div>
                     <p className="text-amber-300/70 text-sm font-medium">Modo prueba</p>
@@ -2517,6 +2539,7 @@ const DiagnosticoRelacionalPage = () => {
                     }`} />
                   </button>
                 </div>
+                )}
                 <div className="text-center">
                   <button onClick={() => { setStage('hero'); scrollToTop() }}
                     className="text-white/20 text-xs hover:text-white/40 transition-colors">
@@ -2768,6 +2791,7 @@ const DiagnosticoRelacionalPage = () => {
                   </motion.button>
 
                   {/* Test mode toggle (same as checkout) */}
+                  {isAdmin && (
                   <div className="p-3 rounded-xl border border-amber-500/20 bg-amber-500/[0.04] flex items-center justify-between gap-4">
                     <div>
                       <p className="text-amber-300/70 text-xs font-medium">Modo prueba</p>
@@ -2780,6 +2804,7 @@ const DiagnosticoRelacionalPage = () => {
                       <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${stripeTestMode ? 'translate-x-5' : 'translate-x-0'}`} />
                     </button>
                   </div>
+                  )}
                 </div>
               )}
             </div>
@@ -3078,6 +3103,7 @@ const DiagnosticoRelacionalPage = () => {
                       <><Send className="inline w-4 h-4 mr-2" /> {purchaseType === 'losdos' ? 'Enviar enlace y comenzar →' : purchaseType === 'pareja' ? 'Enviar acceso a ambos' : 'Enviar acceso'}</>
                     )}
                   </motion.button>
+                  {isAdmin && (
                   <button
                     onClick={() => {
                       const buyerEmailToSave = thankyouEmails[0] || email || ''
@@ -3096,6 +3122,7 @@ const DiagnosticoRelacionalPage = () => {
                     className="w-full py-3 rounded-xl border border-amber-400/30 bg-amber-500/[0.08] text-amber-200/90 text-sm font-light hover:bg-amber-500/[0.14] transition-colors">
                     Saltar este paso temporalmente (modo pruebas)
                   </button>
+                  )}
                   {thankYouValidationError && (
                     <p className="text-amber-300/90 text-xs text-center mt-1">{thankYouValidationError}</p>
                   )}

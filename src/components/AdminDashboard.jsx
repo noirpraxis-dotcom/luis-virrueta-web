@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getAllUsers, giftProduct, removeProduct } from '../services/firestoreService'
-import { Users, Package, Download, ChevronDown, ChevronUp, Mail, Search, Gift, Trash2, Plus, AlertTriangle, CheckCircle, FileText, BarChart3 } from 'lucide-react'
+import { createCustomCheckout, createPromoCode, listPromoCodes, deletePromoCode } from '../services/emailApiService'
+import { Users, Package, Download, ChevronDown, ChevronUp, Mail, Search, Gift, Trash2, Plus, AlertTriangle, CheckCircle, FileText, BarChart3, Link2, Copy, DollarSign, Tag, Percent } from 'lucide-react'
 
 const PRODUCT_OPTIONS = [
   { value: 'radiografia-pareja', label: 'Radiografía de Pareja' },
@@ -17,7 +18,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [expandedUser, setExpandedUser] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [activeTab, setActiveTab] = useState('clients') // 'clients' | 'gift'
+  const [activeTab, setActiveTab] = useState('clients') // 'clients' | 'gift' | 'pricing'
 
   // Gift form state
   const [giftEmail, setGiftEmail] = useState('')
@@ -28,6 +29,24 @@ export default function AdminDashboard() {
 
   // Remove product state
   const [removingId, setRemovingId] = useState(null)
+
+  // Custom pricing state
+  const [pricingEmail, setPricingEmail] = useState('')
+  const [pricingPackage, setPricingPackage] = useState('descubre')
+  const [pricingAmount, setPricingAmount] = useState('')
+  const [pricingLoading, setPricingLoading] = useState(false)
+  const [pricingResult, setPricingResult] = useState(null) // { type, text, url? }
+  const [copiedLink, setCopiedLink] = useState(false)
+
+  // Promo codes state
+  const [promoCode, setPromoCode] = useState('')
+  const [promoDiscount, setPromoDiscount] = useState('')
+  const [promoFree, setPromoFree] = useState(false)
+  const [promoLabel, setPromoLabel] = useState('')
+  const [promoLoading, setPromoLoading] = useState(false)
+  const [promoMessage, setPromoMessage] = useState(null)
+  const [promoList, setPromoList] = useState({ builtIn: {}, custom: {} })
+  const [promoListLoaded, setPromoListLoaded] = useState(false)
 
   useEffect(() => {
     loadUsers()
@@ -127,6 +146,94 @@ export default function AdminDashboard() {
     }
   }
 
+  const handleCreatePricingLink = async () => {
+    if (!pricingEmail.includes('@')) {
+      setPricingResult({ type: 'error', text: 'Ingresa un email válido' })
+      return
+    }
+    const amountNum = parseFloat(pricingAmount)
+    if (!amountNum || amountNum < 1) {
+      setPricingResult({ type: 'error', text: 'Ingresa un precio válido (mínimo $1 MXN)' })
+      return
+    }
+    setPricingLoading(true)
+    setPricingResult(null)
+    setCopiedLink(false)
+    try {
+      const result = await createCustomCheckout({
+        email: pricingEmail.trim(),
+        packageType: pricingPackage,
+        customPriceCents: Math.round(amountNum * 100),
+        adminSecret: import.meta.env.VITE_ADMIN_SECRET,
+      })
+      setPricingResult({ type: 'success', text: `Enlace creado para ${pricingEmail}`, url: result.url })
+    } catch (err) {
+      setPricingResult({ type: 'error', text: err.message || 'Error al crear enlace' })
+    } finally {
+      setPricingLoading(false)
+    }
+  }
+
+  const handleCopyLink = () => {
+    if (pricingResult?.url) {
+      navigator.clipboard.writeText(pricingResult.url)
+      setCopiedLink(true)
+      setTimeout(() => setCopiedLink(false), 2000)
+    }
+  }
+
+  const loadPromos = async () => {
+    try {
+      const data = await listPromoCodes(import.meta.env.VITE_ADMIN_SECRET)
+      setPromoList(data)
+      setPromoListLoaded(true)
+    } catch (err) {
+      console.error('Error loading promo codes:', err)
+    }
+  }
+
+  const handleCreatePromo = async () => {
+    if (!promoCode || promoCode.length < 2) {
+      setPromoMessage({ type: 'error', text: 'El código debe tener al menos 2 caracteres' })
+      return
+    }
+    if (!promoFree && (!promoDiscount || Number(promoDiscount) < 1 || Number(promoDiscount) > 100)) {
+      setPromoMessage({ type: 'error', text: 'Descuento debe ser entre 1% y 100%' })
+      return
+    }
+    setPromoLoading(true)
+    setPromoMessage(null)
+    try {
+      await createPromoCode({
+        code: promoCode.trim(),
+        discountPercent: promoFree ? 100 : Number(promoDiscount),
+        free: promoFree,
+        label: promoLabel || promoCode.toUpperCase(),
+        adminSecret: import.meta.env.VITE_ADMIN_SECRET,
+      })
+      setPromoMessage({ type: 'success', text: `Código ${promoCode.toUpperCase()} creado` })
+      setPromoCode('')
+      setPromoDiscount('')
+      setPromoLabel('')
+      setPromoFree(false)
+      await loadPromos()
+    } catch (err) {
+      setPromoMessage({ type: 'error', text: err.message || 'Error al crear código' })
+    } finally {
+      setPromoLoading(false)
+    }
+  }
+
+  const handleDeletePromo = async (code) => {
+    if (!confirm(`¿Eliminar código ${code}?`)) return
+    try {
+      await deletePromoCode({ code, adminSecret: import.meta.env.VITE_ADMIN_SECRET })
+      await loadPromos()
+    } catch (err) {
+      console.error('Error deleting promo:', err)
+    }
+  }
+
   if (loading) {
     return (
       <div className="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-8 text-center">
@@ -172,6 +279,18 @@ export default function AdminDashboard() {
             activeTab === 'gift' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-black/20 text-gray-500 border border-white/5 hover:text-gray-300'
           }`}>
           <Gift className="w-3 h-3" /> Regalar producto
+        </button>
+        <button onClick={() => setActiveTab('pricing')}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-all ${
+            activeTab === 'pricing' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-black/20 text-gray-500 border border-white/5 hover:text-gray-300'
+          }`}>
+          <DollarSign className="w-3 h-3" /> Precio custom
+        </button>
+        <button onClick={() => { setActiveTab('promos'); if (!promoListLoaded) loadPromos() }}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-all ${
+            activeTab === 'promos' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-black/20 text-gray-500 border border-white/5 hover:text-gray-300'
+          }`}>
+          <Tag className="w-3 h-3" /> Códigos promo
         </button>
       </div>
 
@@ -398,6 +517,175 @@ export default function AdminDashboard() {
                       disabled={removingId === p.id}
                       className="text-[10px] text-red-400 hover:text-red-300 transition-colors disabled:opacity-40">
                       {removingId === p.id ? '...' : <Trash2 className="w-3 h-3" />}
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── TAB: CUSTOM PRICING ─── */}
+      {activeTab === 'pricing' && (
+        <div className="space-y-4">
+          <p className="text-gray-400 text-xs leading-relaxed">
+            Genera un enlace de pago con precio personalizado para un usuario. El enlace abrirá un checkout de Stripe con el monto indicado.
+          </p>
+
+          <div className="bg-black/20 border border-white/5 rounded-xl p-4 space-y-3">
+            <div>
+              <label className="text-white/60 text-xs uppercase tracking-wider mb-1.5 block">Email del cliente</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                <input type="email" value={pricingEmail} onChange={e => setPricingEmail(e.target.value)}
+                  placeholder="cliente@email.com"
+                  className="w-full pl-10 pr-4 py-2.5 bg-black/30 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-amber-500/30 focus:outline-none" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-white/60 text-xs uppercase tracking-wider mb-1.5 block">Paquete</label>
+                <select value={pricingPackage} onChange={e => setPricingPackage(e.target.value)}
+                  className="w-full px-3 py-2.5 bg-black/30 border border-white/10 rounded-xl text-white text-sm focus:border-amber-500/30 focus:outline-none">
+                  {PACKAGE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="text-white/60 text-xs uppercase tracking-wider mb-1.5 block">Precio (MXN)</label>
+                <div className="relative">
+                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                  <input type="number" min="1" step="1" value={pricingAmount} onChange={e => setPricingAmount(e.target.value)}
+                    placeholder="299"
+                    className="w-full pl-10 pr-4 py-2.5 bg-black/30 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-amber-500/30 focus:outline-none" />
+                </div>
+              </div>
+            </div>
+
+            <div className="text-[10px] text-gray-500">
+              Precios base: Descubre $499 · Solo $499 · Los Dos $999
+            </div>
+
+            <button onClick={handleCreatePricingLink} disabled={pricingLoading || !pricingEmail.includes('@') || !pricingAmount}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-zinc-900 text-sm font-medium hover:from-amber-400 hover:to-orange-400 transition-all disabled:opacity-40">
+              {pricingLoading ? <div className="w-4 h-4 border-2 border-zinc-900/30 border-t-zinc-900 rounded-full animate-spin" /> :
+                <><Link2 className="w-4 h-4" /> Generar enlace de pago</>}
+            </button>
+
+            {pricingResult && (
+              <div className={`px-3 py-2 rounded-lg text-xs ${
+                pricingResult.type === 'success' ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-300' :
+                'bg-red-500/10 border border-red-500/20 text-red-300'
+              }`}>
+                <div className="flex items-center gap-2">
+                  {pricingResult.type === 'success' ? <CheckCircle className="w-3.5 h-3.5 flex-shrink-0" /> : <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" />}
+                  {pricingResult.text}
+                </div>
+                {pricingResult.url && (
+                  <div className="mt-2 flex items-center gap-2">
+                    <input type="text" readOnly value={pricingResult.url}
+                      className="flex-1 px-2 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] text-gray-300 font-mono truncate" />
+                    <button onClick={handleCopyLink}
+                      className="flex items-center gap-1 px-2 py-1.5 bg-amber-500/20 text-amber-300 rounded-lg text-[10px] hover:bg-amber-500/30 transition-colors flex-shrink-0">
+                      <Copy className="w-3 h-3" /> {copiedLink ? '¡Copiado!' : 'Copiar'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ─── TAB: PROMO CODES ─── */}
+      {activeTab === 'promos' && (
+        <div className="space-y-4">
+          <p className="text-gray-400 text-xs leading-relaxed">
+            Crea códigos de descuento reutilizables. Los usuarios los aplican en el checkout antes de pagar.
+          </p>
+
+          <div className="bg-black/20 border border-white/5 rounded-xl p-4 space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-white/60 text-xs uppercase tracking-wider mb-1.5 block">Código</label>
+                <input type="text" value={promoCode} onChange={e => setPromoCode(e.target.value.toUpperCase())}
+                  placeholder="DESCUENTO20"
+                  className="w-full px-3 py-2.5 bg-black/30 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-amber-500/30 focus:outline-none font-mono" />
+              </div>
+              <div>
+                <label className="text-white/60 text-xs uppercase tracking-wider mb-1.5 block">Etiqueta</label>
+                <input type="text" value={promoLabel} onChange={e => setPromoLabel(e.target.value)}
+                  placeholder="Promo verano -20%"
+                  className="w-full px-3 py-2.5 bg-black/30 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-amber-500/30 focus:outline-none" />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked={promoFree} onChange={e => setPromoFree(e.target.checked)}
+                  className="rounded border-white/20 bg-black/30 text-amber-500 focus:ring-amber-500/30" />
+                <span className="text-xs text-gray-300">100% gratis</span>
+              </label>
+              {!promoFree && (
+                <div className="flex items-center gap-2 flex-1">
+                  <Percent className="w-4 h-4 text-gray-500" />
+                  <input type="number" min="1" max="99" value={promoDiscount} onChange={e => setPromoDiscount(e.target.value)}
+                    placeholder="20"
+                    className="w-20 px-3 py-2 bg-black/30 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-amber-500/30 focus:outline-none" />
+                  <span className="text-xs text-gray-500">% descuento</span>
+                </div>
+              )}
+            </div>
+
+            <button onClick={handleCreatePromo} disabled={promoLoading || !promoCode}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-zinc-900 text-sm font-medium hover:from-amber-400 hover:to-orange-400 transition-all disabled:opacity-40">
+              {promoLoading ? <div className="w-4 h-4 border-2 border-zinc-900/30 border-t-zinc-900 rounded-full animate-spin" /> :
+                <><Tag className="w-4 h-4" /> Crear código</>}
+            </button>
+
+            {promoMessage && (
+              <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs ${
+                promoMessage.type === 'success' ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-300' :
+                'bg-red-500/10 border border-red-500/20 text-red-300'
+              }`}>
+                {promoMessage.type === 'success' ? <CheckCircle className="w-3.5 h-3.5" /> : <AlertTriangle className="w-3.5 h-3.5" />}
+                {promoMessage.text}
+              </div>
+            )}
+          </div>
+
+          {/* Existing promo codes */}
+          <div>
+            <p className="text-amber-300/60 text-xs uppercase tracking-wider mb-2">Códigos integrados</p>
+            <div className="space-y-1">
+              {Object.entries(promoList.builtIn || {}).map(([code, p]) => (
+                <div key={code} className="flex items-center justify-between bg-black/20 border border-white/5 rounded-lg px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-white font-mono">{code}</span>
+                    <span className="text-[10px] text-gray-500">{p.label || (p.free ? '100% gratis' : `${p.discountPercent}% desc.`)}</span>
+                  </div>
+                  <span className="text-[10px] text-gray-600">fijo</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="text-amber-300/60 text-xs uppercase tracking-wider mb-2">Códigos personalizados</p>
+            <div className="space-y-1">
+              {Object.keys(promoList.custom || {}).length === 0 ? (
+                <p className="text-xs text-gray-600 py-2">Ningún código personalizado aún</p>
+              ) : (
+                Object.entries(promoList.custom).map(([code, p]) => (
+                  <div key={code} className="flex items-center justify-between bg-black/20 border border-white/5 rounded-lg px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-white font-mono">{code}</span>
+                      <span className="text-[10px] text-gray-500">{p.label || (p.free ? '100% gratis' : `${p.discountPercent}% desc.`)}</span>
+                    </div>
+                    <button onClick={() => handleDeletePromo(code)}
+                      className="text-[10px] text-red-400 hover:text-red-300 transition-colors">
+                      <Trash2 className="w-3 h-3" />
                     </button>
                   </div>
                 ))
