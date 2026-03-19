@@ -490,134 +490,130 @@ const RadiografiaPDF = ({ analysis, profileData, crossAnalysis }) => {
       )}
 
       {/* ═══════════════════════════════════════════════════════
-          SÍNTESIS FINAL
+          SÍNTESIS FINAL + FORTALEZAS Y RIESGOS — Same page
       ═══════════════════════════════════════════════════════ */}
-      {a.sintesis_final && (
-        <Page size="LETTER" style={s.page}>
-          <View style={s.headerBox}>
-            <Text style={s.subtitle}>Integración</Text>
-            <Text style={s.titleSmall}>Síntesis Final</Text>
-          </View>
-
-          {a.sintesis_final.que_ocurre && (
-            <View style={s.section}>
-              <Text style={s.sectionLabel}>¿Qué ocurre?</Text>
-              <Text style={s.paragraph}>{clean(a.sintesis_final.que_ocurre)}</Text>
-            </View>
-          )}
-          {a.sintesis_final.por_que && (
-            <View style={s.section}>
-              <Text style={s.sectionLabel}>¿Por qué?</Text>
-              <Text style={s.paragraph}>{clean(a.sintesis_final.por_que)}</Text>
-            </View>
-          )}
-          {a.sintesis_final.que_sigue && (
-            <View style={s.section}>
-              <Text style={s.sectionLabel}>¿Qué sigue?</Text>
-              <Text style={s.paragraph}>{clean(a.sintesis_final.que_sigue)}</Text>
-            </View>
-          )}
-          {typeof a.sintesis_final === 'string' && (
-            <View style={s.section}>
-              <Text style={s.paragraph}>{clean(a.sintesis_final)}</Text>
-            </View>
-          )}
-
-          <PageFooter />
-        </Page>
-      )}
-
-      {/* ═══════════════════════════════════════════════════════
-          FORTALEZAS + RIESGOS
-      ═══════════════════════════════════════════════════════ */}
-      {(a.fortalezas || a.riesgos) && (
-        <Page size="LETTER" style={s.page}>
-          <View style={s.headerBox}>
-            <Text style={s.subtitle}>Balance</Text>
-            <Text style={s.titleSmall}>Fortalezas y Riesgos</Text>
-          </View>
-
-          {a.fortalezas && (
-            <View style={s.section}>
-              <Text style={s.sectionLabel}>Fortalezas del vínculo</Text>
-              {a.fortalezas.map((f, i) => (
-                <View key={i} style={s.listItem}>
-                  <Text style={{ ...s.bullet, color: C.emerald }}>+</Text>
-                  <Text style={s.listText}>{clean(f)}</Text>
-                </View>
-              ))}
-            </View>
-          )}
-
-          {a.fortalezas && a.riesgos && <View style={s.divider} />}
-
-          {a.riesgos && (
-            <View style={s.section}>
-              <Text style={s.sectionLabel}>Riesgos detectados</Text>
-              {a.riesgos.map((r, i) => (
-                <View key={i} style={s.listItem}>
-                  <Text style={{ ...s.bullet, color: C.pink }}>!</Text>
-                  <Text style={s.listText}>{clean(r)}</Text>
-                </View>
-              ))}
-            </View>
-          )}
-
-          <PageFooter />
-        </Page>
-      )}
-
-      {/* ═══════════════════════════════════════════════════════
-          TÉCNICAS + LIBROS — Combined if both exist
-      ═══════════════════════════════════════════════════════ */}
-      {(a.tecnicas_recomendadas?.length > 0 || a.libros_recomendados?.length > 0) && (
+      {(a.sintesis_final || a.fortalezas || a.riesgos) && (
         <Page size="LETTER" style={s.page} wrap>
-          {a.tecnicas_recomendadas?.length > 0 && (
-            <>
-              <View style={{ marginBottom: 10 }}>
-                <Text style={s.subtitle}>Herramientas</Text>
-                <Text style={{ fontSize: 13, color: C.white, fontWeight: 300, marginBottom: 6 }}>Técnicas Recomendadas</Text>
+          {a.sintesis_final && (
+            <View wrap={false}>
+              <View style={s.headerBox}>
+                <Text style={s.subtitle}>Integración</Text>
+                <Text style={s.titleSmall}>Síntesis Final</Text>
               </View>
-              {a.tecnicas_recomendadas.map((t, i) => {
-                const nombre = typeof t === 'string' ? t : (t.nombre || t.tecnica || t.titulo || '')
-                const desc = typeof t === 'string' ? '' : (t.descripcion || t.explicacion || '')
-                return (
-                  <View key={i} style={s.card} wrap={false}>
-                    <Text style={{ ...s.cardTitle, fontSize: 9 }}>{clean(nombre)}</Text>
-                    {desc && <Text style={s.paragraphSmall}>{clean(desc)}</Text>}
-                  </View>
-                )
-              })}
-            </>
+
+              {a.sintesis_final.que_ocurre && (
+                <View style={s.section}>
+                  <Text style={s.sectionLabel}>¿Qué ocurre?</Text>
+                  <Text style={s.paragraph}>{clean(a.sintesis_final.que_ocurre)}</Text>
+                </View>
+              )}
+              {a.sintesis_final.por_que && (
+                <View style={s.section}>
+                  <Text style={s.sectionLabel}>¿Por qué?</Text>
+                  <Text style={s.paragraph}>{clean(a.sintesis_final.por_que)}</Text>
+                </View>
+              )}
+              {a.sintesis_final.que_sigue && (
+                <View style={s.section}>
+                  <Text style={s.sectionLabel}>¿Qué sigue?</Text>
+                  <Text style={s.paragraph}>{clean(a.sintesis_final.que_sigue)}</Text>
+                </View>
+              )}
+              {typeof a.sintesis_final === 'string' && (
+                <View style={s.section}>
+                  <Text style={s.paragraph}>{clean(a.sintesis_final)}</Text>
+                </View>
+              )}
+            </View>
           )}
 
-          {a.libros_recomendados?.length > 0 && (
-            <>
-              <View style={{ ...s.divider, marginVertical: 12 }} />
-              <View style={{ marginBottom: 10 }}>
-                <Text style={s.subtitle}>Lecturas</Text>
-                <Text style={{ fontSize: 13, color: C.white, fontWeight: 300, marginBottom: 6 }}>Libros Recomendados</Text>
+          {(a.fortalezas || a.riesgos) && (
+            <View wrap={false}>
+              <View style={s.divider} />
+              <View style={{ marginBottom: 6 }}>
+                <Text style={s.subtitle}>Balance</Text>
+                <Text style={{ fontSize: 13, color: C.white, fontWeight: 300, marginBottom: 6 }}>Fortalezas y Riesgos</Text>
               </View>
-              {a.libros_recomendados.map((l, i) => {
-                if (typeof l === 'string') {
-                  return (
+
+              {a.fortalezas && (
+                <View style={s.section}>
+                  <Text style={s.sectionLabel}>Fortalezas del vínculo</Text>
+                  {a.fortalezas.map((f, i) => (
                     <View key={i} style={s.listItem}>
-                      <Text style={s.bullet}>•</Text>
-                      <Text style={s.listText}>{clean(l)}</Text>
+                      <Text style={{ ...s.bullet, color: C.emerald }}>+</Text>
+                      <Text style={s.listText}>{clean(f)}</Text>
                     </View>
-                  )
-                }
-                return (
-                  <View key={i} style={s.card} wrap={false}>
-                    <Text style={{ ...s.cardTitle, fontSize: 9 }}>{l.titulo || 'Libro'}</Text>
-                    {l.autor && <Text style={{ fontSize: 7.5, color: C.dim, marginBottom: 3 }}>{l.autor}</Text>}
-                    {l.razon && <Text style={s.paragraphSmall}>{clean(l.razon)}</Text>}
-                  </View>
-                )
-              })}
-            </>
+                  ))}
+                </View>
+              )}
+
+              {a.riesgos && (
+                <View style={s.section}>
+                  <Text style={s.sectionLabel}>Riesgos detectados</Text>
+                  {a.riesgos.map((r, i) => (
+                    <View key={i} style={s.listItem}>
+                      <Text style={{ ...s.bullet, color: C.pink }}>!</Text>
+                      <Text style={s.listText}>{clean(r)}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+            </View>
           )}
 
+          <PageFooter />
+        </Page>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════
+          TÉCNICAS RECOMENDADAS — Own page
+      ═══════════════════════════════════════════════════════ */}
+      {a.tecnicas_recomendadas?.length > 0 && (
+        <Page size="LETTER" style={s.page} wrap>
+          <View style={s.headerBox}>
+            <Text style={s.subtitle}>Herramientas</Text>
+            <Text style={s.titleSmall}>Técnicas Recomendadas</Text>
+          </View>
+          {a.tecnicas_recomendadas.map((t, i) => {
+            const nombre = typeof t === 'string' ? t : (t.nombre || t.tecnica || t.titulo || '')
+            const desc = typeof t === 'string' ? '' : (t.descripcion || t.explicacion || '')
+            return (
+              <View key={i} style={s.card} wrap={false}>
+                <Text style={{ ...s.cardTitle, fontSize: 9 }}>{clean(nombre)}</Text>
+                {desc && <Text style={s.paragraphSmall}>{clean(desc)}</Text>}
+              </View>
+            )
+          })}
+          <PageFooter />
+        </Page>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════
+          LIBROS RECOMENDADOS — Own page
+      ═══════════════════════════════════════════════════════ */}
+      {a.libros_recomendados?.length > 0 && (
+        <Page size="LETTER" style={s.page} wrap>
+          <View style={s.headerBox}>
+            <Text style={s.subtitle}>Lecturas</Text>
+            <Text style={s.titleSmall}>Libros Recomendados</Text>
+          </View>
+          {a.libros_recomendados.map((l, i) => {
+            if (typeof l === 'string') {
+              return (
+                <View key={i} style={s.listItem}>
+                  <Text style={s.bullet}>•</Text>
+                  <Text style={s.listText}>{clean(l)}</Text>
+                </View>
+              )
+            }
+            return (
+              <View key={i} style={s.card} wrap={false}>
+                <Text style={{ ...s.cardTitle, fontSize: 9 }}>{l.titulo || 'Libro'}</Text>
+                {l.autor && <Text style={{ fontSize: 7.5, color: C.dim, marginBottom: 3 }}>{l.autor}</Text>}
+                {l.razon && <Text style={s.paragraphSmall}>{clean(l.razon)}</Text>}
+              </View>
+            )
+          })}
           <PageFooter />
         </Page>
       )}
@@ -668,6 +664,7 @@ const RadiografiaPDF = ({ analysis, profileData, crossAnalysis }) => {
             </View>
           </Page>
 
+          {/* Cross: Resumen + Sincronía + Dinámica */}
           <Page size="LETTER" style={s.page} wrap>
             <View style={s.headerBox}>
               <Text style={{ ...s.subtitle, color: C.pink }}>Análisis Cruzado</Text>
@@ -675,54 +672,60 @@ const RadiografiaPDF = ({ analysis, profileData, crossAnalysis }) => {
             </View>
 
             {cross.apertura && (
-              <View style={s.section}>
+              <View style={s.section} wrap={false}>
                 <Text style={s.sectionLabel}>Apertura</Text>
                 <Text style={s.paragraph}>{clean(cross.apertura)}</Text>
               </View>
             )}
 
             {cross.resumen_cruzado && (
-              <View style={s.section}>
+              <View style={s.section} wrap={false}>
                 <Text style={s.sectionLabel}>Resumen</Text>
                 <Text style={s.paragraph}>{clean(cross.resumen_cruzado)}</Text>
               </View>
             )}
 
             {cross.indice_sincronia_global !== undefined && (
-              <View style={{ ...s.card, marginTop: 6 }}>
+              <View style={{ ...s.card, marginTop: 6 }} wrap={false}>
                 <Text style={s.cardSubtitle}>Índice de sincronía global</Text>
                 <ScoreBar label="Sincronía" value={cross.indice_sincronia_global} color={C.pink} />
               </View>
             )}
 
             {cross.dinamica_real && (
-              <View style={s.section}>
+              <View style={s.section} wrap={false}>
                 <Text style={s.sectionLabel}>Dinámica real</Text>
                 <Text style={s.paragraph}>{clean(cross.dinamica_real)}</Text>
               </View>
             )}
 
-            {/* Dimensiones cruzadas */}
-            {cross.dimensiones_cruzadas && (
-              <View wrap={false} style={{ marginTop: 8 }}>
-                <Text style={{ ...s.sectionLabel, marginBottom: 8 }}>Dimensiones cruzadas</Text>
-                {Object.entries(cross.dimensiones_cruzadas).map(([key, val]) => (
-                  <View key={key} style={{ marginBottom: 8 }}>
-                    <Text style={{ fontSize: 8, color: C.white, marginBottom: 3 }}>
-                      {DIMENSION_LABELS[key] || key}
-                    </Text>
-                    <ScoreBar label={cross._individual?.p1?.nombre || 'P1'} value={val.p1} color={C.accent} />
-                    <ScoreBar label={cross._individual?.p2?.nombre || 'P2'} value={val.p2} color={C.pink} />
-                    {val.interpretacion && (
-                      <Text style={s.paragraphSmall}>{clean(val.interpretacion)}</Text>
-                    )}
-                  </View>
-                ))}
-              </View>
-            )}
-
             <PageFooter />
           </Page>
+
+          {/* Cross: Dimensiones cruzadas — own page for proper spacing */}
+          {cross.dimensiones_cruzadas && (
+            <Page size="LETTER" style={s.page} wrap>
+              <View style={s.headerBox}>
+                <Text style={{ ...s.subtitle, color: C.pink }}>Análisis Cruzado</Text>
+                <Text style={s.titleSmall}>Dimensiones Cruzadas</Text>
+              </View>
+
+              {Object.entries(cross.dimensiones_cruzadas).map(([key, val]) => (
+                <View key={key} style={{ marginBottom: 10 }} wrap={false}>
+                  <Text style={{ fontSize: 8.5, color: C.white, fontWeight: 'bold', marginBottom: 4 }}>
+                    {DIMENSION_LABELS[key] || key}
+                  </Text>
+                  <ScoreBar label={cross._individual?.p1?.nombre || 'P1'} value={val.p1} color={C.accent} />
+                  <ScoreBar label={cross._individual?.p2?.nombre || 'P2'} value={val.p2} color={C.pink} />
+                  {val.interpretacion && (
+                    <Text style={{ ...s.paragraphSmall, marginTop: 2 }}>{clean(val.interpretacion)}</Text>
+                  )}
+                </View>
+              ))}
+
+              <PageFooter />
+            </Page>
+          )}
 
           {/* Convergencias + Divergencias + Puntos ciegos */}
           {(cross.convergencias || cross.divergencias || cross.puntos_ciegos) && (
@@ -910,18 +913,76 @@ const RadiografiaPDF = ({ analysis, profileData, crossAnalysis }) => {
   )
 }
 
-// ── Export function to generate and download PDF ────────────────
-export async function generateReactPDF(analysis, profileData, crossAnalysis) {
-  const blob = await pdf(
-    <RadiografiaPDF analysis={analysis} profileData={profileData} crossAnalysis={crossAnalysis} />
-  ).toBlob()
+// ── Helper: generate blob + trigger download ──────────────────
+function downloadBlob(blob, filename) {
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
-  const nombre = profileData?.nombre || 'Radiografia'
   a.href = url
-  a.download = `Radiografia-${nombre}.pdf`
+  a.download = filename
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
   URL.revokeObjectURL(url)
+}
+
+// ── Full PDF (individual + cruzado combined) ───────────────────
+export async function generateReactPDF(analysis, profileData, crossAnalysis) {
+  const blob = await pdf(
+    <RadiografiaPDF analysis={analysis} profileData={profileData} crossAnalysis={crossAnalysis} />
+  ).toBlob()
+  const nombre = profileData?.nombre || 'Radiografia'
+  downloadBlob(blob, `Radiografia-${nombre}.pdf`)
+}
+
+// ── Individual PDF only (no cross-analysis) ────────────────────
+export async function generateIndividualPDF(analysis, profileData) {
+  const blob = await pdf(
+    <RadiografiaPDF analysis={analysis} profileData={profileData} crossAnalysis={null} />
+  ).toBlob()
+  const nombre = profileData?.nombre || 'Radiografia'
+  downloadBlob(blob, `Radiografia-Individual-${nombre}.pdf`)
+}
+
+// ── Cross-analysis PDF only ────────────────────────────────────
+export async function generateCruzadoPDF(analysis, profileData, crossAnalysis) {
+  if (!crossAnalysis) return
+  // Minimal individual context + full cross analysis
+  const minAnalysis = {
+    resumen_relacion: analysis?.resumen_relacion,
+    diagnostico: analysis?.diagnostico,
+    dimensiones: analysis?.dimensiones,
+    direccion_probable: analysis?.direccion_probable,
+  }
+  const blob = await pdf(
+    <Document>
+      {/* Cover */}
+      <Page size="LETTER" style={s.coverPage}>
+        <View style={{ textAlign: 'center', marginBottom: 80 }}>
+          <Text style={{ fontSize: 9, color: C.pink, letterSpacing: 4, textTransform: 'uppercase', marginBottom: 20 }}>
+            Radiografía Cruzada
+          </Text>
+          <Text style={{ fontSize: 28, color: C.white, fontWeight: 300, marginBottom: 12 }}>
+            La perspectiva de ambos
+          </Text>
+          <View style={{ width: 60, height: 1, backgroundColor: C.pink, marginBottom: 20, alignSelf: 'center' }} />
+          {crossAnalysis._individual && (
+            <Text style={{ fontSize: 13, color: C.muted }}>
+              {crossAnalysis._individual.p1?.nombre || 'Persona 1'} & {crossAnalysis._individual.p2?.nombre || 'Persona 2'}
+            </Text>
+          )}
+          <Text style={{ fontSize: 9, color: C.dim, marginTop: 24 }}>
+            {new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })}
+          </Text>
+        </View>
+        <View style={{ position: 'absolute', bottom: 50, left: 40, right: 40, textAlign: 'center' }}>
+          <Text style={{ fontSize: 10, color: C.muted, marginBottom: 4 }}>Lic. Luis Virrueta — Psicólogo Clínico</Text>
+        </View>
+      </Page>
+
+      {/* Use the same cross-analysis pages from the full document */}
+      <RadiografiaPDF analysis={minAnalysis} profileData={profileData} crossAnalysis={crossAnalysis} />
+    </Document>
+  ).toBlob()
+  const nombre = profileData?.nombre || 'Radiografia'
+  downloadBlob(blob, `Radiografia-Cruzada-${nombre}.pdf`)
 }

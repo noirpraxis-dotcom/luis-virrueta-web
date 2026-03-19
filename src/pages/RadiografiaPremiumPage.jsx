@@ -14,7 +14,7 @@ import { analyzeRadiografiaPremium, generateFallbackAnalysis, analyzeCrossRadiog
 import { CACHED_PREVIEW_ANALYSIS } from '../data/cachedPreviewAnalysis'
 import { saveAnalysis, sendAnalysisEmail, sendBackupEmail, getAnalysis, checkCrossStatus, markPartnerDone, saveCrossAnalysis, sendCrossAnalysisEmail, getCrossAnalysis, getProfile, saveProfile } from '../services/emailApiService'
 import { downloadRadiografiaPDF } from '../services/pdfGenerationService'
-import { generateReactPDF } from '../services/pdfReactService'
+import { generateReactPDF, generateIndividualPDF, generateCruzadoPDF } from '../services/pdfReactService'
 import { useAuth } from '../context/AuthContext'
 import { saveTestProgress, saveAnalysisResult, saveCrossAnalysisResult, getPurchase, updatePurchase } from '../services/firestoreService'
 
@@ -2852,6 +2852,34 @@ const RadiografiaPremiumPage = () => {
     } finally { setPdfGenerating(false) }
   }, [aiAnalysis, profileData, crossAnalysis])
 
+  // Download only individual analysis PDF
+  const generateIndividualPDFHandler = useCallback(async () => {
+    if (!aiAnalysis) return
+    setPdfGenerating(true)
+    setPdfProgress('Generando PDF individual...')
+    try {
+      await generateIndividualPDF(aiAnalysis, profileData)
+      setPdfProgress('')
+    } catch (err) {
+      console.error('Individual PDF error:', err)
+      setPdfProgress('')
+    } finally { setPdfGenerating(false) }
+  }, [aiAnalysis, profileData])
+
+  // Download only cross-analysis PDF
+  const generateCruzadoPDFHandler = useCallback(async () => {
+    if (!aiAnalysis || !crossAnalysis) return
+    setPdfGenerating(true)
+    setPdfProgress('Generando PDF cruzado...')
+    try {
+      await generateCruzadoPDF(aiAnalysis, profileData, crossAnalysis)
+      setPdfProgress('')
+    } catch (err) {
+      console.error('Cross PDF error:', err)
+      setPdfProgress('')
+    } finally { setPdfGenerating(false) }
+  }, [aiAnalysis, profileData, crossAnalysis])
+
   // Auto-generate PDF after demo data is loaded and DOM is rendered
   useEffect(() => {
     if (autoPdf && aiAnalysis && stage === 'results') {
@@ -3886,12 +3914,22 @@ const RadiografiaPremiumPage = () => {
                     <p className="text-white/80 text-sm font-light mb-1">Te recomendamos descargar tu radiografía</p>
                     <p className="text-white/40 text-xs font-light">Tu acceso a esta página es por tiempo limitado. Descarga tus resultados para conservarlos.</p>
                   </div>
-                  <motion.button onClick={generatePDF} disabled={pdfGenerating}
-                    whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                    className="flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600/80 to-fuchsia-600/70 text-white text-sm font-light hover:from-violet-600 hover:to-fuchsia-600 transition-all disabled:opacity-40 shadow-lg shadow-violet-500/10">
-                    {pdfGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                    {pdfGenerating ? (pdfProgress || 'Generando...') : 'Descargar Radiografía'}
-                  </motion.button>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <motion.button onClick={generateIndividualPDFHandler} disabled={pdfGenerating}
+                      whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600/80 to-fuchsia-600/70 text-white text-xs font-light hover:from-violet-600 hover:to-fuchsia-600 transition-all disabled:opacity-40 shadow-lg shadow-violet-500/10">
+                      {pdfGenerating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+                      Individual
+                    </motion.button>
+                    {crossAnalysis && (
+                      <motion.button onClick={generateCruzadoPDFHandler} disabled={pdfGenerating}
+                        whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600/80 to-teal-600/70 text-white text-xs font-light hover:from-emerald-600 hover:to-teal-600 transition-all disabled:opacity-40 shadow-lg shadow-emerald-500/10">
+                        {pdfGenerating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+                        Cruzada
+                      </motion.button>
+                    )}
+                  </div>
                 </div>
               </motion.div>
 
@@ -3948,6 +3986,17 @@ const RadiografiaPremiumPage = () => {
 
               {/* ═══ SEPARADOR PARTE 1 — PRIMERO, VAMOS CONTIGO ═══ */}
               <div className={`${resultTab !== 'individual' ? 'hidden' : ''} space-y-12`} data-pdf-tab="individual">
+
+              {/* Download individual PDF button */}
+              <div className="flex justify-center">
+                <motion.button onClick={generateIndividualPDFHandler} disabled={pdfGenerating}
+                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600/80 to-fuchsia-600/70 text-white text-sm font-light hover:from-violet-600 hover:to-fuchsia-600 transition-all disabled:opacity-40 shadow-lg shadow-violet-500/10 border border-violet-500/20">
+                  {pdfGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                  {pdfGenerating ? (pdfProgress || 'Generando...') : 'Descargar Radiografía Individual'}
+                </motion.button>
+              </div>
+
               <div className="text-center mb-6">
                 <p className="text-violet-400/50 text-xs font-bold uppercase tracking-[0.25em] mb-1">Parte 1</p>
                 <p className="text-white/40 text-sm font-light">Primero, vamos contigo</p>
@@ -4933,6 +4982,16 @@ const RadiografiaPremiumPage = () => {
               {crossAnalysis && (
                 <div className={resultTab !== 'cruzado' ? 'hidden' : ''} data-pdf-tab="cruzado">
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-10">
+
+                  {/* Download cruzado PDF button */}
+                  <div className="flex justify-center pt-2">
+                    <motion.button onClick={generateCruzadoPDFHandler} disabled={pdfGenerating}
+                      whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                      className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600/80 to-teal-600/70 text-white text-sm font-light hover:from-emerald-600 hover:to-teal-600 transition-all disabled:opacity-40 shadow-lg shadow-emerald-500/10 border border-emerald-500/20">
+                      {pdfGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                      {pdfGenerating ? (pdfProgress || 'Generando...') : 'Descargar Radiografía Cruzada'}
+                    </motion.button>
+                  </div>
 
                   {/* Separator */}
                   <div data-pdf-page="cruzado-apertura" className="text-center my-10 py-8 border-t border-b border-emerald-500/10">
