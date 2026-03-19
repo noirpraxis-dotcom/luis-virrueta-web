@@ -310,3 +310,98 @@ export async function downloadRadiografiaPDF(resultsElement, profileData, option
   return pdf
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   Chart Image Capture — captures chart DOM elements as base64 images
+   for embedding in @react-pdf/renderer PDFs.
+═══════════════════════════════════════════════════════════════════ */
+export async function captureChartImages(resultsElement) {
+  const images = {}
+  const CHART_SCALE = 1.5  // 1.5× is sharp enough for PDF while being ~44% fewer pixels than 2×
+  const BATCH_SIZE = 3     // Process N captures in parallel; avoids overwhelming the browser
+
+  // ── 1. Clone master once and prepare it ──────────────────────
+  const masterContainer = document.createElement('div')
+  masterContainer.style.cssText = `
+    position: fixed; top: -20000px; left: 0;
+    width: ${CLONE_WIDTH_PX}px; background: ${BG_HEX}; color: white;
+    overflow: visible; z-index: -1;
+  `
+  document.body.appendChild(masterContainer)
+
+  const masterClone = resultsElement.cloneNode(true)
+  masterClone.style.cssText = `width:${CLONE_WIDTH_PX}px;max-width:${CLONE_WIDTH_PX}px;overflow:visible;padding:0;margin:0;`
+  masterContainer.appendChild(masterClone)
+  prepareClone(masterClone)
+
+  // ── 2. Build individual containers for every node (no shared container mutation) ──
+  const pageNodes = Array.from(masterClone.querySelectorAll('[data-pdf-page]'))
+  const WRAPPER_CSS = `
+    width: ${CLONE_WIDTH_PX}px; background: ${BG_HEX};
+    overflow: visible; padding: 28px 32px; box-sizing: border-box;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  `
+  const captureItems = pageNodes.map(node => {
+    const label = node.getAttribute('data-pdf-page')
+    const nodeContainer = document.createElement('div')
+    nodeContainer.style.cssText = `
+      position: fixed; top: -20000px; left: 0;
+      width: ${CLONE_WIDTH_PX}px; background: ${BG_HEX};
+      overflow: visible; z-index: -1;
+    `
+    const wrapper = document.createElement('div')
+    wrapper.style.cssText = WRAPPER_CSS
+    const nodeClone = node.cloneNode(true)
+    nodeClone.style.cssText = `margin: 0; width: 100%; max-width: ${CLONE_WIDTH_PX - 64}px;`
+    nodeClone.removeAttribute('data-pdf-page')
+    wrapper.appendChild(nodeClone)
+    nodeContainer.appendChild(wrapper)
+    document.body.appendChild(nodeContainer)
+    prepareClone(wrapper)
+    return { label, nodeContainer, wrapper }
+  })
+
+  // ── 3. Single wait for all layouts to settle ──────────────────
+  await new Promise(r => setTimeout(r, 200))
+
+  // ── 4. Capture in parallel batches ────────────────────────────
+  for (let i = 0; i < captureItems.length; i += BATCH_SIZE) {
+    const batch = captureItems.slice(i, i + BATCH_SIZE)
+    const results = await Promise.all(
+      batch.map(({ label, wrapper }) =>
+        html2canvas(wrapper, {
+          backgroundColor: BG_HEX,
+          scale: CHART_SCALE,
+          useCORS: true,
+          allowTaint: true,
+          logging: false,
+          width: CLONE_WIDTH_PX,
+          windowWidth: CLONE_WIDTH_PX,
+          scrollX: 0,
+          scrollY: 0,
+          onclone: (doc) => {
+            doc.querySelectorAll('*').forEach(e => {
+              e.style.opacity = '1'
+              e.style.transform = 'none'
+              e.style.transition = 'none'
+              e.style.animation = 'none'
+            })
+          }
+        })
+          .then(canvas => ({ label, canvas }))
+          .catch(err => { console.warn(`[ChartCapture] Failed "${label}":`, err); return null })
+      )
+    )
+    for (const result of results) {
+      if (result && result.canvas.height > 10) {
+        // JPEG is ~5–10× smaller than PNG and encodes much faster
+        images[result.label] = result.canvas.toDataURL('image/jpeg', 0.88)
+      }
+    }
+  }
+
+  // ── 5. Clean up ───────────────────────────────────────────────
+  captureItems.forEach(({ nodeContainer }) => document.body.removeChild(nodeContainer))
+  document.body.removeChild(masterContainer)
+  console.log('[ChartCapture] Captured', Object.keys(images).length, 'charts:', Object.keys(images))
+  return images
+}
