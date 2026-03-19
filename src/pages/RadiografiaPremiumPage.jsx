@@ -13,7 +13,7 @@ import SEOHead from '../components/SEOHead'
 import { analyzeRadiografiaPremium, generateFallbackAnalysis, analyzeCrossRadiografia } from '../services/radiografiaPremiumService'
 import { CACHED_PREVIEW_ANALYSIS } from '../data/cachedPreviewAnalysis'
 import { saveAnalysis, sendAnalysisEmail, sendBackupEmail, getAnalysis, checkCrossStatus, markPartnerDone, saveCrossAnalysis, sendCrossAnalysisEmail, getCrossAnalysis, getProfile, saveProfile } from '../services/emailApiService'
-import { downloadRadiografiaPDF } from '../services/pdfGenerationService'
+import { downloadRadiografiaPDF, captureChartImages } from '../services/pdfGenerationService'
 import { generateReactPDF } from '../services/pdfReactService'
 import { useAuth } from '../context/AuthContext'
 import { saveTestProgress, saveAnalysisResult, saveCrossAnalysisResult, getPurchase, updatePurchase } from '../services/firestoreService'
@@ -2075,9 +2075,11 @@ const RadiografiaPremiumPage = () => {
   // Profile gate: if user arrives via email link without profile data, show form first
   const [profileGateDone, setProfileGateDone] = useState(() => {
     if (sessionStorage.getItem('radiografia_nombre')) return true
+    // If coming from profile page (logged in user), skip gate — will auto-fill from Firebase user
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('fromProfile') === 'true') return true
     // Also check localStorage questionnaire progress (survives browser close)
     try {
-      const params = new URLSearchParams(window.location.search)
       const tk = params.get('token')
       const key = tk ? `radiografia_premium_progress_${tk}` : 'radiografia_premium_progress'
       const saved = localStorage.getItem(key)
@@ -2115,6 +2117,7 @@ const RadiografiaPremiumPage = () => {
   const [analysisDone, setAnalysisDone] = useState(false)
   const [completedTasks, setCompletedTasks] = useState(0)
   const [pdfGenerating, setPdfGenerating] = useState(false)
+  const [pdfProgress, setPdfProgress] = useState('')  // progress text for PDF generation
   const [autoPdf, setAutoPdf] = useState(false)
   const [cachedAnalysis, setCachedAnalysis] = useState(null)
   const [showOnboarding, setShowOnboarding] = useState(false)
@@ -2306,10 +2309,11 @@ const RadiografiaPremiumPage = () => {
   const totalQ = PREGUNTAS.length
   const progress = ((currentQ + 1) / totalQ) * 100
 
-  // ── Restore saved progress from localStorage (namespaced by token) ──
+  // ── Restore saved progress from localStorage (namespaced by purchaseId) ──
   useEffect(() => {
     try {
-      const storageKey = purchaseToken ? `radiografia_premium_progress_${purchaseToken}` : 'radiografia_premium_progress'
+      const key = firestorePurchaseId || purchaseToken
+      const storageKey = key ? `radiografia_premium_progress_${key}` : 'radiografia_premium_progress'
       const saved = localStorage.getItem(storageKey)
       if (saved) {
         const data = JSON.parse(saved)
@@ -2317,21 +2321,23 @@ const RadiografiaPremiumPage = () => {
           setResponses(data.responses)
           if (data.currentQ != null) setCurrentQ(data.currentQ)
           if (data.profileData) setProfileData(prev => ({ ...prev, ...data.profileData }))
+          if (data.selectedVoiceId !== undefined) setSelectedVoiceId(data.selectedVoiceId)
           if (data.stage === 'questionnaire') setStage('questionnaire')
         }
       }
     } catch { /* ignore corrupted data */ }
   }, [])
 
-  // ── Save progress to localStorage on every change (namespaced by token) ──
+  // ── Save progress to localStorage on every change (namespaced by purchaseId) ──
   useEffect(() => {
     if (stage === 'questionnaire' && Object.keys(responses).length > 0) {
-      const storageKey = purchaseToken ? `radiografia_premium_progress_${purchaseToken}` : 'radiografia_premium_progress'
+      const key = firestorePurchaseId || purchaseToken
+      const storageKey = key ? `radiografia_premium_progress_${key}` : 'radiografia_premium_progress'
       localStorage.setItem(storageKey, JSON.stringify({
-        responses, currentQ, profileData, stage: 'questionnaire'
+        responses, currentQ, profileData, selectedVoiceId, stage: 'questionnaire'
       }))
     }
-  }, [responses, currentQ, stage, profileData])
+  }, [responses, currentQ, stage, profileData, selectedVoiceId])
 
   // ── Firestore: Load progress from purchase on mount ──
   useEffect(() => {
@@ -2340,6 +2346,21 @@ const RadiografiaPremiumPage = () => {
       try {
         const purchase = await getPurchase(firebaseUser.uid, firestorePurchaseId)
         if (!purchase) return
+
+        // Auto-fill profile from Firebase user if no profile data exists yet
+        if (!purchase.profileData?.nombre && fromProfile) {
+          const autoName = firebaseUser.displayName || ''
+          if (autoName) {
+            setProfileData(prev => ({ ...prev, nombre: prev.nombre || autoName }))
+            sessionStorage.setItem('radiografia_nombre', autoName)
+          }
+          if (firebaseUser.email) {
+            setEmailData(prev => ({ ...prev, emailUsuario: prev.emailUsuario || firebaseUser.email }))
+            sessionStorage.setItem('radiografia_buyer_email', firebaseUser.email)
+          }
+          setProfileGateDone(true)
+        }
+
         // If viewResults mode and analysis exists, jump to results
         if (viewResultsMode && purchase.analysis) {
           setAiAnalysis(purchase.analysis)
@@ -2352,8 +2373,18 @@ const RadiografiaPremiumPage = () => {
         if (purchase.responses && Object.keys(purchase.responses).length > 0) {
           setResponses(purchase.responses)
           if (purchase.currentQuestion > 0) setCurrentQ(purchase.currentQuestion)
-          if (purchase.profileData) setProfileData(purchase.profileData)
-          if (purchase.voiceSelection) setSelectedVoice(purchase.voiceSelection)
+          if (purchase.profileData) {
+            setProfileData(purchase.profileData)
+            // Persist to sessionStorage so profile gate stays done on refresh
+            if (purchase.profileData.nombre) {
+              sessionStorage.setItem('radiografia_nombre', purchase.profileData.nombre)
+              if (purchase.profileData.edad) sessionStorage.setItem('radiografia_edad', purchase.profileData.edad)
+              if (purchase.profileData.nombrePareja) sessionStorage.setItem('radiografia_nombre_pareja', purchase.profileData.nombrePareja)
+              if (purchase.profileData.edadPareja) sessionStorage.setItem('radiografia_edad_pareja', purchase.profileData.edadPareja)
+              setProfileGateDone(true)
+            }
+          }
+          if (purchase.voiceSelection) setSelectedVoiceId(purchase.voiceSelection)
           if (purchase.status === 'in-progress') setStage('questionnaire')
         }
         // If analysis already generated, show results
@@ -2379,7 +2410,7 @@ const RadiografiaPremiumPage = () => {
           currentQuestion: currentQ,
           responses,
           profileData,
-          voiceSelection: selectedVoice
+          voiceSelection: selectedVoiceId
         })
         // Also update status to in-progress if first save
         await updatePurchase(firebaseUser.uid, firestorePurchaseId, { status: 'in-progress' })
@@ -2807,14 +2838,29 @@ const RadiografiaPremiumPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [stage])
 
-  // ── Download — self-contained HTML clone (exact visual replica) ──
+  // ── Download — React PDF with captured chart images ──
   const generatePDF = useCallback(async () => {
-    if (!aiAnalysis || !resultsRef.current) return
+    if (!aiAnalysis) return
     setPdfGenerating(true)
+    setPdfProgress('Capturando gráficas...')
     try {
-      await downloadRadiografiaPDF(resultsRef.current, profileData, { crossAnalysis, aiAnalysis })
+      // Capture chart images from the DOM first
+      let chartImages = {}
+      if (resultsRef.current) {
+        try {
+          chartImages = await captureChartImages(resultsRef.current, (done, total) => {
+            setPdfProgress(`Capturando gráficas (${done}/${total})...`)
+          })
+        } catch (err) {
+          console.warn('Chart capture failed, PDF will render without charts:', err)
+        }
+      }
+      setPdfProgress('Generando PDF...')
+      await generateReactPDF(aiAnalysis, profileData, crossAnalysis, chartImages)
+      setPdfProgress('')
     } catch (err) {
       console.error('PDF generation error:', err)
+      setPdfProgress('')
     } finally { setPdfGenerating(false) }
   }, [aiAnalysis, profileData, crossAnalysis])
 
@@ -3014,23 +3060,26 @@ const RadiografiaPremiumPage = () => {
               {/* ── Comprobación de Audio y Micrófono ── */}
               <div className="space-y-4 p-6 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.04] to-transparent">
                 <p className="text-violet-300/80 text-base font-medium flex items-center justify-center gap-2">
-                  <Headphones className="w-5 h-5 text-violet-400/50" /> Comprobación de audio y micrófono
+                  <Headphones className="w-5 h-5 text-violet-400/50" /> Verificación del sistema
                 </p>
-                <p className="text-white/60 text-sm font-light text-center">Asegúrate de que todo funciona antes de iniciar el test.</p>
+                <p className="text-white/60 text-sm font-light text-center leading-relaxed">
+                  Antes de comenzar, necesitamos verificar que tu dispositivo está listo.
+                  <br /><span className="text-white/40 text-xs">Si tu navegador te pide permiso para usar el micrófono o reproducir audio, acepta para continuar.</span>
+                </p>
                 <div className="h-px bg-white/5" />
 
-                <div className="flex flex-wrap gap-3 justify-center">
+                <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
                   {/* Sound test */}
                   <button
                     onClick={() => {
                       playQuestion('¿Me escuchas bien? Si puedes oírme con claridad, estamos listos para comenzar.', undefined, () => setSoundTestOk(true), 'sound-test')
                     }}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all text-xs font-light ${
+                    className={`flex items-center gap-2 px-5 py-3 rounded-xl border transition-all text-sm font-light w-full sm:w-auto justify-center ${
                       soundTestOk === true ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' :
                       soundTestOk === false ? 'border-red-500/30 bg-red-500/10 text-red-300' :
                       'border-white/15 bg-white/[0.03] text-white/50 hover:border-white/25 hover:text-white/70'}`}>
                     <Volume2 className="w-4 h-4" />
-                    {soundTestOk === true ? '✓ Se escucha bien' : soundTestOk === false ? 'No se escuchó' : 'Probar sonido'}
+                    {soundTestOk === true ? '✓ Audio funcionando' : soundTestOk === false ? '✗ No se escuchó — verifica tu volumen' : '1. Probar audio'}
                   </button>
                   {/* Mic test */}
                   <button
@@ -3051,15 +3100,20 @@ const RadiografiaPremiumPage = () => {
                         }, 3000)
                       } catch { setMicTestOk(false) }
                     }}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all text-xs font-light ${
+                    className={`flex items-center gap-2 px-5 py-3 rounded-xl border transition-all text-sm font-light w-full sm:w-auto justify-center ${
                       micTestOk === true ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' :
                       micTestOk === false ? 'border-red-500/30 bg-red-500/10 text-red-300' :
                       'border-white/15 bg-white/[0.03] text-white/50 hover:border-white/25 hover:text-white/70'}`}>
                     <Mic className="w-4 h-4" />
-                    {micTestOk === true ? '✓ Micrófono listo' : micTestOk === false ? 'Sin acceso al mic' : 'Probar micrófono'}
+                    {micTestOk === true ? '✓ Micrófono activado' : micTestOk === false ? '✗ Sin acceso — permite el micrófono en tu navegador' : '2. Activar micrófono'}
                   </button>
                 </div>
                 {micAnalyser && <MicLevelBars analyser={micAnalyser} />}
+                {micTestOk === false && (
+                  <p className="text-red-300/70 text-xs text-center leading-relaxed">
+                    Tu navegador bloqueó el acceso al micrófono. Busca el ícono de candado 🔒 en la barra de dirección y permite el acceso al micrófono, luego vuelve a intentar.
+                  </p>
+                )}
               </div>
 
               <motion.button
@@ -3549,8 +3603,8 @@ const RadiografiaPremiumPage = () => {
                     </div>
                     <span className="text-[9px] text-white/55">PDF</span>
                   </button>
-                  {/* 9. PDF React — experimental @react-pdf/renderer */}
-                  <button onClick={() => aiAnalysis && generateReactPDF(aiAnalysis, profileData)} disabled={!aiAnalysis}
+                  {/* 9. PDF React — @react-pdf/renderer with charts */}
+                  <button onClick={generatePDF} disabled={pdfGenerating || !aiAnalysis}
                     className="flex flex-col items-center gap-1" title={aiAnalysis ? 'PDF React (experimental)' : 'Genera un análisis primero'}>
                     <div className={`w-11 h-11 rounded-full border transition-colors ${
                       aiAnalysis
@@ -3848,7 +3902,7 @@ const RadiografiaPremiumPage = () => {
                     whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                     className="flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600/80 to-fuchsia-600/70 text-white text-sm font-light hover:from-violet-600 hover:to-fuchsia-600 transition-all disabled:opacity-40 shadow-lg shadow-violet-500/10">
                     {pdfGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                    Descargar Radiografía
+                    {pdfGenerating ? (pdfProgress || 'Generando...') : 'Descargar Radiografía'}
                   </motion.button>
                 </div>
               </motion.div>

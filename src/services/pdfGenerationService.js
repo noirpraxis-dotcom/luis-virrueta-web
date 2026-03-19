@@ -314,10 +314,26 @@ export async function downloadRadiografiaPDF(resultsElement, profileData, option
    Chart Image Capture — captures chart DOM elements as base64 images
    for embedding in @react-pdf/renderer PDFs.
 ═══════════════════════════════════════════════════════════════════ */
-export async function captureChartImages(resultsElement) {
+// Keys that the React PDF component actually embeds as <Image> via ChartImg.
+// Everything else (text-only sections) is rendered natively by @react-pdf/renderer
+// and capturing it is wasted work.
+function isNeededForPDF(label) {
+  if (!label) return false
+  // Prefixes that contain SVG charts the PDF can't render natively
+  if (label.startsWith('card-'))  return true  // autoanalisis cards — each has a unique chart
+  if (label.startsWith('psych-')) return true  // 11 psychological readings — each has a unique chart
+  // Individual chart sections
+  const CHART_KEYS = new Set([
+    'chart-mindmap', 'chart-network', 'radar-global',
+    'direccion', 'fortalezas', 'cruzado-radar',
+  ])
+  return CHART_KEYS.has(label)
+}
+
+export async function captureChartImages(resultsElement, onProgress) {
   const images = {}
   const CHART_SCALE = 1.5  // 1.5× is sharp enough for PDF while being ~44% fewer pixels than 2×
-  const BATCH_SIZE = 3     // Process N captures in parallel; avoids overwhelming the browser
+  const BATCH_SIZE = 4     // Process N captures in parallel
 
   // ── 1. Clone master once and prepare it ──────────────────────
   const masterContainer = document.createElement('div')
@@ -333,14 +349,17 @@ export async function captureChartImages(resultsElement) {
   masterContainer.appendChild(masterClone)
   prepareClone(masterClone)
 
-  // ── 2. Build individual containers for every node (no shared container mutation) ──
-  const pageNodes = Array.from(masterClone.querySelectorAll('[data-pdf-page]'))
+  // ── 2. Filter to only elements that contain charts used by the PDF ──
+  const allNodes = Array.from(masterClone.querySelectorAll('[data-pdf-page]'))
+  const chartNodes = allNodes.filter(n => isNeededForPDF(n.getAttribute('data-pdf-page')))
+  console.log(`[ChartCapture] ${allNodes.length} total sections, ${chartNodes.length} with charts to capture`)
+
   const WRAPPER_CSS = `
     width: ${CLONE_WIDTH_PX}px; background: ${BG_HEX};
     overflow: visible; padding: 28px 32px; box-sizing: border-box;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
   `
-  const captureItems = pageNodes.map(node => {
+  const captureItems = chartNodes.map(node => {
     const label = node.getAttribute('data-pdf-page')
     const nodeContainer = document.createElement('div')
     nodeContainer.style.cssText = `
@@ -361,9 +380,10 @@ export async function captureChartImages(resultsElement) {
   })
 
   // ── 3. Single wait for all layouts to settle ──────────────────
-  await new Promise(r => setTimeout(r, 200))
+  await new Promise(r => setTimeout(r, 150))
 
-  // ── 4. Capture in parallel batches ────────────────────────────
+  // ── 4. Capture in parallel batches with progress ──────────────
+  let captured = 0
   for (let i = 0; i < captureItems.length; i += BATCH_SIZE) {
     const batch = captureItems.slice(i, i + BATCH_SIZE)
     const results = await Promise.all(
@@ -393,10 +413,11 @@ export async function captureChartImages(resultsElement) {
     )
     for (const result of results) {
       if (result && result.canvas.height > 10) {
-        // JPEG is ~5–10× smaller than PNG and encodes much faster
-        images[result.label] = result.canvas.toDataURL('image/jpeg', 0.88)
+        images[result.label] = result.canvas.toDataURL('image/jpeg', 0.85)
       }
     }
+    captured += batch.length
+    if (onProgress) onProgress(captured, captureItems.length)
   }
 
   // ── 5. Clean up ───────────────────────────────────────────────
