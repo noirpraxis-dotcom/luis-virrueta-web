@@ -14,8 +14,19 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 }
 
-const app = initializeApp(firebaseConfig)
-export const auth = getAuth(app)
-export const db = getFirestore(app)
-export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null
+let app = null
+let auth = null
+let db = null
+let analytics = null
+
+try {
+  app = initializeApp(firebaseConfig)
+  auth = getAuth(app)
+  db = getFirestore(app)
+  analytics = typeof window !== 'undefined' ? getAnalytics(app) : null
+} catch (err) {
+  console.warn('Firebase init failed (API key may be invalid):', err.message)
+}
+
+export { auth, db, analytics }
 export default app

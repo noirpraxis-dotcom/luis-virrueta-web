@@ -25,11 +25,12 @@ export function AuthProvider({ children }) {
 
   // Handle Google redirect result on page load
   useEffect(() => {
-    getRedirectResult(auth).catch(() => {})
+    if (auth) getRedirectResult(auth).catch(() => {})
   }, [])
 
   // Listen to Firebase auth state
   useEffect(() => {
+    if (!auth) { setLoading(false); return }
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser)
