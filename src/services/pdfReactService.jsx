@@ -946,13 +946,8 @@ export async function generateIndividualPDF(analysis, profileData) {
 // ── Cross-analysis PDF only ────────────────────────────────────
 export async function generateCruzadoPDF(analysis, profileData, crossAnalysis) {
   if (!crossAnalysis) return
-  // Minimal individual context + full cross analysis
-  const minAnalysis = {
-    resumen_relacion: analysis?.resumen_relacion,
-    diagnostico: analysis?.diagnostico,
-    dimensiones: analysis?.dimensiones,
-    direccion_probable: analysis?.direccion_probable,
-  }
+  const cross = crossAnalysis
+
   const blob = await pdf(
     <Document>
       {/* Cover */}
@@ -965,9 +960,9 @@ export async function generateCruzadoPDF(analysis, profileData, crossAnalysis) {
             La perspectiva de ambos
           </Text>
           <View style={{ width: 60, height: 1, backgroundColor: C.pink, marginBottom: 20, alignSelf: 'center' }} />
-          {crossAnalysis._individual && (
+          {cross._individual && (
             <Text style={{ fontSize: 13, color: C.muted }}>
-              {crossAnalysis._individual.p1?.nombre || 'Persona 1'} & {crossAnalysis._individual.p2?.nombre || 'Persona 2'}
+              {cross._individual.p1?.nombre || 'Persona 1'} & {cross._individual.p2?.nombre || 'Persona 2'}
             </Text>
           )}
           <Text style={{ fontSize: 9, color: C.dim, marginTop: 24 }}>
@@ -976,11 +971,244 @@ export async function generateCruzadoPDF(analysis, profileData, crossAnalysis) {
         </View>
         <View style={{ position: 'absolute', bottom: 50, left: 40, right: 40, textAlign: 'center' }}>
           <Text style={{ fontSize: 10, color: C.muted, marginBottom: 4 }}>Lic. Luis Virrueta — Psicólogo Clínico</Text>
+          <Text style={{ fontSize: 8, color: C.dim }}>Este reporte es confidencial y de uso exclusivo para la persona consultante.</Text>
         </View>
       </Page>
 
-      {/* Use the same cross-analysis pages from the full document */}
-      <RadiografiaPDF analysis={minAnalysis} profileData={profileData} crossAnalysis={crossAnalysis} />
+      {/* Resumen + Sincronía + Dinámica */}
+      <Page size="LETTER" style={s.page} wrap>
+        <View style={s.headerBox}>
+          <Text style={{ ...s.subtitle, color: C.pink }}>Análisis Cruzado</Text>
+          <Text style={s.titleSmall}>Resumen Cruzado</Text>
+        </View>
+
+        {cross.apertura && (
+          <View style={s.section} wrap={false}>
+            <Text style={s.sectionLabel}>Apertura</Text>
+            <Text style={s.paragraph}>{clean(cross.apertura)}</Text>
+          </View>
+        )}
+
+        {cross.resumen_cruzado && (
+          <View style={s.section} wrap={false}>
+            <Text style={s.sectionLabel}>Resumen</Text>
+            <Text style={s.paragraph}>{clean(cross.resumen_cruzado)}</Text>
+          </View>
+        )}
+
+        {cross.indice_sincronia_global !== undefined && (
+          <View style={{ ...s.card, marginTop: 6 }} wrap={false}>
+            <Text style={s.cardSubtitle}>Índice de sincronía global</Text>
+            <ScoreBar label="Sincronía" value={cross.indice_sincronia_global} color={C.pink} />
+          </View>
+        )}
+
+        {cross.dinamica_real && (
+          <View style={s.section} wrap={false}>
+            <Text style={s.sectionLabel}>Dinámica real</Text>
+            <Text style={s.paragraph}>{clean(cross.dinamica_real)}</Text>
+          </View>
+        )}
+
+        <PageFooter />
+      </Page>
+
+      {/* Dimensiones cruzadas — own page */}
+      {cross.dimensiones_cruzadas && (
+        <Page size="LETTER" style={s.page} wrap>
+          <View style={s.headerBox}>
+            <Text style={{ ...s.subtitle, color: C.pink }}>Análisis Cruzado</Text>
+            <Text style={s.titleSmall}>Dimensiones Cruzadas</Text>
+          </View>
+
+          {Object.entries(cross.dimensiones_cruzadas).map(([key, val]) => (
+            <View key={key} style={{ marginBottom: 10 }} wrap={false}>
+              <Text style={{ fontSize: 8.5, color: C.white, fontWeight: 'bold', marginBottom: 4 }}>
+                {DIMENSION_LABELS[key] || key}
+              </Text>
+              <ScoreBar label={cross._individual?.p1?.nombre || 'P1'} value={val.p1} color={C.accent} />
+              <ScoreBar label={cross._individual?.p2?.nombre || 'P2'} value={val.p2} color={C.pink} />
+              {val.interpretacion && (
+                <Text style={{ ...s.paragraphSmall, marginTop: 2 }}>{clean(val.interpretacion)}</Text>
+              )}
+            </View>
+          ))}
+
+          <PageFooter />
+        </Page>
+      )}
+
+      {/* Convergencias + Divergencias + Puntos ciegos */}
+      {(cross.convergencias || cross.divergencias || cross.puntos_ciegos) && (
+        <Page size="LETTER" style={s.page} wrap>
+          {cross.convergencias && (
+            <View style={s.section} wrap={false}>
+              <Text style={s.sectionLabel}>Convergencias</Text>
+              {cross.convergencias.map((c, i) => (
+                <View key={i} style={s.listItem}>
+                  <Text style={{ ...s.bullet, color: C.emerald }}>+</Text>
+                  <Text style={s.listText}>{clean(c)}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+
+          {cross.divergencias && (
+            <View style={s.section} wrap={false}>
+              <Text style={s.sectionLabel}>Divergencias</Text>
+              {cross.divergencias.map((d, i) => (
+                <View key={i} style={s.listItem}>
+                  <Text style={{ ...s.bullet, color: C.pink }}>!</Text>
+                  <Text style={s.listText}>{clean(d)}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+
+          {cross.brechas_criticas?.length > 0 && (
+            <View style={s.section} wrap={false}>
+              <Text style={s.sectionLabel}>Brechas críticas</Text>
+              {cross.brechas_criticas.map((b, i) => (
+                <View key={i} style={s.card}>
+                  <Text style={{ ...s.cardTitle, fontSize: 8 }}>{b.dimension}</Text>
+                  {b.diferencia !== undefined && (
+                    <Text style={{ fontSize: 7.5, color: C.pink, marginBottom: 3 }}>Diferencia: {b.diferencia}%</Text>
+                  )}
+                  {b.interpretacion && <Text style={s.paragraphSmall}>{clean(b.interpretacion)}</Text>}
+                </View>
+              ))}
+            </View>
+          )}
+
+          {cross.puntos_ciegos && (
+            <View style={s.section} wrap={false}>
+              <Text style={s.sectionLabel}>Puntos ciegos</Text>
+              {cross.puntos_ciegos.p1_no_ve && (
+                <View style={s.card}>
+                  <Text style={{ ...s.cardTitle, fontSize: 8 }}>
+                    Lo que {cross._individual?.p1?.nombre || 'Persona 1'} no ve
+                  </Text>
+                  <Text style={s.paragraphSmall}>{clean(cross.puntos_ciegos.p1_no_ve)}</Text>
+                </View>
+              )}
+              {cross.puntos_ciegos.p2_no_ve && (
+                <View style={s.card}>
+                  <Text style={{ ...s.cardTitle, fontSize: 8 }}>
+                    Lo que {cross._individual?.p2?.nombre || 'Persona 2'} no ve
+                  </Text>
+                  <Text style={s.paragraphSmall}>{clean(cross.puntos_ciegos.p2_no_ve)}</Text>
+                </View>
+              )}
+            </View>
+          )}
+
+          <PageFooter />
+        </Page>
+      )}
+
+      {/* Análisis profundo + Pronóstico + Mensaje */}
+      {(cross.analisis_profundo_cruzado || cross.lectura_psicoanalitica_cruzada || cross.pronostico_relacional || cross.mensaje_para_ambos) && (
+        <Page size="LETTER" style={s.page} wrap>
+          {cross.analisis_profundo_cruzado && (
+            <View style={s.section} wrap={false}>
+              <Text style={s.sectionLabel}>Análisis profundo</Text>
+              {cross.analisis_profundo_cruzado.narrativa_dominante && (
+                <View style={{ marginBottom: 6 }}>
+                  <Text style={{ fontSize: 7.5, color: C.accent, marginBottom: 2 }}>Narrativa dominante</Text>
+                  <Text style={s.paragraphSmall}>{clean(cross.analisis_profundo_cruzado.narrativa_dominante)}</Text>
+                </View>
+              )}
+              {cross.analisis_profundo_cruzado.tensiones_estructurales && (
+                <View style={{ marginBottom: 6 }}>
+                  <Text style={{ fontSize: 7.5, color: C.accent, marginBottom: 2 }}>Tensiones estructurales</Text>
+                  <Text style={s.paragraphSmall}>{clean(cross.analisis_profundo_cruzado.tensiones_estructurales)}</Text>
+                </View>
+              )}
+              {cross.analisis_profundo_cruzado.evolucion_deseo_cruzada && (
+                <View style={{ marginBottom: 6 }}>
+                  <Text style={{ fontSize: 7.5, color: C.accent, marginBottom: 2 }}>Evolución del deseo</Text>
+                  <Text style={s.paragraphSmall}>{clean(cross.analisis_profundo_cruzado.evolucion_deseo_cruzada)}</Text>
+                </View>
+              )}
+              {cross.analisis_profundo_cruzado.dinamica_emocional_cruzada && (
+                <View style={{ marginBottom: 6 }}>
+                  <Text style={{ fontSize: 7.5, color: C.accent, marginBottom: 2 }}>Dinámica emocional</Text>
+                  <Text style={s.paragraphSmall}>{clean(cross.analisis_profundo_cruzado.dinamica_emocional_cruzada)}</Text>
+                </View>
+              )}
+            </View>
+          )}
+
+          {cross.lectura_psicoanalitica_cruzada && (
+            <View style={s.section} wrap={false}>
+              <Text style={s.sectionLabel}>Lectura psicoanalítica cruzada</Text>
+              {cross.lectura_psicoanalitica_cruzada.proyecciones_mutuas && (
+                <View style={{ marginBottom: 6 }}>
+                  <Text style={{ fontSize: 7.5, color: C.accent, marginBottom: 2 }}>Proyecciones mutuas</Text>
+                  <Text style={s.paragraphSmall}>{clean(cross.lectura_psicoanalitica_cruzada.proyecciones_mutuas)}</Text>
+                </View>
+              )}
+              {cross.lectura_psicoanalitica_cruzada.fantasma_relacional_compartido && (
+                <View style={{ marginBottom: 6 }}>
+                  <Text style={{ fontSize: 7.5, color: C.accent, marginBottom: 2 }}>Fantasma relacional compartido</Text>
+                  <Text style={s.paragraphSmall}>{clean(cross.lectura_psicoanalitica_cruzada.fantasma_relacional_compartido)}</Text>
+                </View>
+              )}
+              {cross.lectura_psicoanalitica_cruzada.goce_compartido && (
+                <View style={{ marginBottom: 6 }}>
+                  <Text style={{ fontSize: 7.5, color: C.accent, marginBottom: 2 }}>Goce compartido</Text>
+                  <Text style={s.paragraphSmall}>{clean(cross.lectura_psicoanalitica_cruzada.goce_compartido)}</Text>
+                </View>
+              )}
+            </View>
+          )}
+
+          {cross.pronostico_relacional && (
+            <View style={s.section} wrap={false}>
+              <Text style={s.sectionLabel}>Pronóstico relacional</Text>
+              <View style={s.card}>
+                {cross.pronostico_relacional.potencial !== undefined && (
+                  <ScoreBar label="Potencial" value={cross.pronostico_relacional.potencial} color={C.emerald} />
+                )}
+                {cross.pronostico_relacional.riesgo !== undefined && (
+                  <ScoreBar label="Riesgo" value={cross.pronostico_relacional.riesgo} color={C.pink} />
+                )}
+                {cross.pronostico_relacional.direccion && (
+                  <Text style={{ ...s.paragraphSmall, marginTop: 4 }}>{clean(cross.pronostico_relacional.direccion)}</Text>
+                )}
+              </View>
+            </View>
+          )}
+
+          {cross.mensaje_para_ambos && (
+            <View style={{ ...s.card, borderColor: C.pink, marginTop: 6 }} wrap={false}>
+              <Text style={s.sectionLabel}>Mensaje para ambos</Text>
+              <Text style={s.paragraph}>{clean(cross.mensaje_para_ambos)}</Text>
+            </View>
+          )}
+
+          <PageFooter />
+        </Page>
+      )}
+
+      {/* CTA */}
+      <Page size="LETTER" style={s.coverPage}>
+        <View style={{ textAlign: 'center' }}>
+          <Text style={{ fontSize: 9, color: C.pink, letterSpacing: 4, textTransform: 'uppercase', marginBottom: 24 }}>
+            Tu siguiente paso
+          </Text>
+          <Text style={{ fontSize: 22, color: C.white, fontWeight: 300, marginBottom: 8 }}>
+            Este mapa revela el territorio
+          </Text>
+          <Text style={{ fontSize: 14, color: C.muted, fontWeight: 300, marginBottom: 30 }}>
+            La consulta traza el camino.
+          </Text>
+          <View style={{ width: 60, height: 1, backgroundColor: C.pink, marginBottom: 30, alignSelf: 'center' }} />
+          <Text style={{ fontSize: 12, color: C.white, marginBottom: 6 }}>Lic. Luis Virrueta — Psicólogo Clínico</Text>
+          <Text style={{ fontSize: 10, color: C.muted, marginBottom: 4 }}>90 min · Online o presencial</Text>
+          <Text style={{ fontSize: 11, color: C.pink, marginTop: 12 }}>wa.me/527228720520</Text>
+        </View>
+      </Page>
     </Document>
   ).toBlob()
   const nombre = profileData?.nombre || 'Radiografia'
