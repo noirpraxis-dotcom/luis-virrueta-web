@@ -45,6 +45,7 @@ const ConsultaGraciasPage = lazy(() => import('./pages/ConsultaGraciasPage'))
 const RadiografiaPremiumPage = lazy(() => import('./pages/RadiografiaPremiumPage'))
 const PerfilPage = lazy(() => import('./pages/PerfilPage'))
 const RegistroPage = lazy(() => import('./pages/RegistroPage'))
+const FirebaseAuthActionPage = lazy(() => import('./pages/FirebaseAuthActionPage'))
 
 // Loading component
 const PageLoader = () => (
@@ -71,7 +72,7 @@ const AppContent = () => {
 
   const AppShell = () => {
     const location = useLocation()
-    const hideGlobalHeader = location.pathname === '/frase-del-dia' || location.pathname === '/atlas-humanidad' || location.pathname === '/laboratorio-etico' || location.pathname === '/tienda/radiografia-premium' || location.pathname === '/tienda/diagnostico-relacional'
+    const hideGlobalHeader = location.pathname === '/frase-del-dia' || location.pathname === '/atlas-humanidad' || location.pathname === '/laboratorio-etico' || location.pathname === '/tienda/radiografia-premium' || location.pathname === '/tienda/diagnostico-relacional' || location.pathname.startsWith('/__/auth/')
 
     return (
       <div className="relative min-h-screen">
@@ -97,6 +98,9 @@ const AppContent = () => {
         <main className="relative z-0">
           <Suspense fallback={<PageLoader />}>
             <Routes>
+              {/* Firebase Auth action handler (email verification, password reset) */}
+              <Route path="/__/auth/action" element={<FirebaseAuthActionPage />} />
+
               {/* Página Home: Video + Hero con "Ver más" */}
               <Route path="/" element={
                 <HomePage />

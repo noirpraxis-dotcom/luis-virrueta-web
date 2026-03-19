@@ -160,6 +160,58 @@ function makeToken() {
   return [...buf].map(b => b.toString(16).padStart(2, '0')).join('')
 }
 
+// ── Firebase Admin (service account JWT → access token → Identity Toolkit) ───
+function base64url(buf) {
+  return btoa(String.fromCharCode(...new Uint8Array(buf)))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+}
+
+async function getFirebaseAccessToken(env) {
+  if (!env.FIREBASE_SA_EMAIL || !env.FIREBASE_SA_KEY) throw new Error('Service account secrets not set')
+  const now = Math.floor(Date.now() / 1000)
+  const header = base64url(new TextEncoder().encode(JSON.stringify({ alg: 'RS256', typ: 'JWT' })))
+  const payload = base64url(new TextEncoder().encode(JSON.stringify({
+    iss: env.FIREBASE_SA_EMAIL,
+    sub: env.FIREBASE_SA_EMAIL,
+    aud: 'https://oauth2.googleapis.com/token',
+    iat: now,
+    exp: now + 3600,
+    scope: 'https://www.googleapis.com/auth/identitytoolkit',
+  })))
+  // Import PEM private key
+  const pem = env.FIREBASE_SA_KEY.replace(/-----BEGIN PRIVATE KEY-----/, '').replace(/-----END PRIVATE KEY-----/, '').replace(/\s/g, '')
+  const keyBuf = Uint8Array.from(atob(pem), c => c.charCodeAt(0))
+  const key = await crypto.subtle.importKey('pkcs8', keyBuf, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, false, ['sign'])
+  const sig = base64url(await crypto.subtle.sign('RSASSA-PKCS1-v1_5', key, new TextEncoder().encode(`${header}.${payload}`)))
+  const jwt = `${header}.${payload}.${sig}`
+  // Exchange for access token
+  const res = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${jwt}`,
+  })
+  const data = await res.json()
+  if (!res.ok) throw new Error(`OAuth error: ${data.error_description || data.error}`)
+  return data.access_token
+}
+
+async function handleDeleteAuthUser(request, env) {
+  const { uid, adminSecret } = await request.json()
+  if (adminSecret !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401)
+  if (!uid) return json({ error: 'UID requerido' }, 400)
+  const accessToken = await getFirebaseAccessToken(env)
+  const res = await fetch(`https://identitytoolkit.googleapis.com/v1/projects/diagnostico-emocional-7b8f7/accounts:delete`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ localId: uid }),
+  })
+  const data = await res.json()
+  if (!res.ok && data.error?.message !== 'USER_NOT_FOUND') {
+    throw new Error(data.error?.message || `Delete failed (${res.status})`)
+  }
+  return json({ ok: true })
+}
+
 function getPromos(env) {
   try { return { ...BUILT_IN_PROMOS, ...JSON.parse(env.PROMO_CODES_JSON || '{}') } }
   catch { return BUILT_IN_PROMOS }
@@ -1371,6 +1423,84 @@ async function handleMediaDelete(req, env) {
   return json({ ok: true })
 }
 
+// ── Email verification via 6-digit code ─────────────────────────────────────
+function verificationEmailHtml(code) {
+  const digits = String(code).split('')
+  const digitCells = digits.map(d =>
+    `<td style="width:44px;height:52px;text-align:center;font-size:28px;font-weight:600;letter-spacing:0.05em;color:#fff;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.25);border-radius:10px;">${d}</td>`
+  ).join('<td style="width:8px;"></td>')
+  return `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Código de verificación</title></head>
+<body style="margin:0;padding:0;background:#080810;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#080810;">
+<tr><td align="center" style="padding:48px 16px 40px;">
+  <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+    <tr><td align="center" style="padding-bottom:40px;">
+      <p style="margin:0;font-size:11px;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:rgba(167,139,250,0.7);">LUIS VIRRUETA</p>
+    </td></tr>
+    <tr><td style="padding-bottom:40px;">
+      <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(167,139,250,0.3),transparent);"></div>
+    </td></tr>
+    <tr><td style="padding-bottom:32px;">
+      <h1 style="margin:0 0 12px;font-size:22px;font-weight:300;color:#fff;text-align:center;">Gracias por registrarte</h1>
+      <p style="margin:0 0 4px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);text-align:center;">Solo te falta un paso.</p>
+      <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);text-align:center;">Ingresa este código para verificar tu correo:</p>
+    </td></tr>
+    <tr><td align="center" style="padding-bottom:32px;">
+      <table cellpadding="0" cellspacing="0"><tr>${digitCells}</tr></table>
+    </td></tr>
+    <tr><td style="padding-bottom:32px;">
+      <p style="margin:0;font-size:13px;line-height:1.6;color:rgba(255,255,255,0.4);text-align:center;">Este código expira en 15 minutos.<br>Si no solicitaste esta verificación, ignora este correo.</p>
+    </td></tr>
+    <tr><td style="padding-bottom:24px;">
+      <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(167,139,250,0.15),transparent);"></div>
+    </td></tr>
+    <tr><td align="center">
+      <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.25);">luisvirrueta.com</p>
+    </td></tr>
+  </table>
+</td></tr>
+</table>
+</body></html>`
+}
+
+async function handleSendVerificationCode(request, env) {
+  const { email } = await request.json()
+  if (!email) return json({ error: 'Email requerido' }, 400)
+
+  // Generate 6-digit code
+  const code = String(Math.floor(100000 + Math.random() * 900000))
+
+  // Store in KV with 15-minute TTL, keyed by email
+  const kvKey = `verify:${email.toLowerCase().trim()}`
+  await env.PURCHASES.put(kvKey, code, { expirationTtl: 900 })
+
+  // Send email via Resend
+  await sendEmail(env, {
+    to: email,
+    subject: `${code} — Código de verificación`,
+    html: verificationEmailHtml(code),
+  })
+
+  return json({ ok: true })
+}
+
+async function handleVerifyCode(request, env) {
+  const { email, code } = await request.json()
+  if (!email || !code) return json({ error: 'Email y código requeridos' }, 400)
+
+  const kvKey = `verify:${email.toLowerCase().trim()}`
+  const stored = await env.PURCHASES.get(kvKey)
+
+  if (!stored) return json({ valid: false, error: 'Código expirado o no encontrado' })
+  if (stored !== String(code).trim()) return json({ valid: false, error: 'Código incorrecto' })
+
+  // Code matches — delete it so it can't be reused
+  await env.PURCHASES.delete(kvKey)
+  return json({ valid: true })
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // ROUTER
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1417,6 +1547,9 @@ export default {
         if (pathname === '/api/create-consulta-checkout')    return handleCreateConsultaCheckout(request, env)
         if (pathname === '/api/validate-consulta-promo')     return handleValidateConsultaPromo(request, env)
         if (pathname === '/api/notify-consulta-purchase')    return handleNotifyConsulta(request, env)
+        if (pathname === '/api/send-verification-code')      return handleSendVerificationCode(request, env)
+        if (pathname === '/api/verify-code')                 return handleVerifyCode(request, env)
+        if (pathname === '/api/delete-auth-user')            return handleDeleteAuthUser(request, env)
         if (pathname === '/webhook')                         return handleWebhook(request, env)
         if (pathname === '/api/deepseek-proxy')               return handleDeepSeekProxy(request, env)
         if (pathname === '/api/tts-proxy')                    return handleTTSProxy(request, env)

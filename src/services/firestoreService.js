@@ -1,6 +1,6 @@
 import {
   doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, deleteField,
-  collection, query, where, orderBy, serverTimestamp, limit
+  collection, query, where, orderBy, serverTimestamp, limit, onSnapshot
 } from 'firebase/firestore'
 import { db } from '../config/firebase'
 
@@ -81,27 +81,30 @@ export async function saveCrossAnalysisResult(uid, purchaseId, crossAnalysis) {
 // ─── PARTNER INVITE LOOKUP ───────────────────────────────────────
 
 export async function findPurchaseByPartnerEmail(email) {
-  // Search all users for a purchase that has this email as partnerEmail
-  const usersSnap = await getDocs(collection(db, 'users'))
-  for (const userDoc of usersSnap.docs) {
-    const purchasesSnap = await getDocs(
-      query(
-        collection(db, 'users', userDoc.id, 'purchases'),
-        where('partnerEmail', '==', email),
-        limit(1)
-      )
-    )
-    if (!purchasesSnap.empty) {
-      const purchase = purchasesSnap.docs[0]
-      return {
-        buyerUid: userDoc.id,
-        buyerName: userDoc.data().displayName || '',
-        purchaseId: purchase.id,
-        ...purchase.data()
-      }
-    }
-  }
+  // Look up the partner_invites collection (top-level, readable by any auth user)
+  const snap = await getDoc(doc(db, 'partner_invites', email.toLowerCase()))
+  if (snap.exists()) return { id: snap.id, ...snap.data() }
   return null
+}
+
+// Save a partner invite when buyer sends invitation (losdos flow)
+export async function savePartnerInvite(partnerEmail, { buyerUid, buyerPurchaseId, buyerName, product, packageType, pairId }) {
+  await setDoc(doc(db, 'partner_invites', partnerEmail.toLowerCase()), {
+    buyerUid,
+    buyerPurchaseId,
+    buyerName: buyerName || '',
+    product: product || 'radiografia-pareja',
+    packageType: packageType || 'losdos',
+    pairId: pairId || null,
+    partnerEmail: partnerEmail.toLowerCase(),
+    createdAt: serverTimestamp(),
+    claimed: false,
+  })
+}
+
+// Mark invite as claimed after partner links
+export async function claimPartnerInvite(partnerEmail) {
+  await updateDoc(doc(db, 'partner_invites', partnerEmail.toLowerCase()), { claimed: true })
 }
 
 export async function linkPartnerToPurchase(buyerUid, purchaseId, partnerUid) {
@@ -147,6 +150,22 @@ export async function getAllUsers() {
     })
   }
   return users
+}
+
+export function subscribeToUsers(callback) {
+  const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'))
+  return onSnapshot(q, async (snap) => {
+    const users = []
+    for (const userDoc of snap.docs) {
+      const purchasesSnap = await getDocs(collection(db, 'users', userDoc.id, 'purchases'))
+      users.push({
+        id: userDoc.id,
+        ...userDoc.data(),
+        purchases: purchasesSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+      })
+    }
+    callback(users)
+  })
 }
 
 export async function getAdminUserDetail(uid) {
@@ -203,4 +222,32 @@ export async function giftProduct(email, product, packageType) {
 
 export async function removeProduct(uid, purchaseId) {
   await deleteDoc(doc(db, 'users', uid, 'purchases', purchaseId))
+}
+
+// ─── ADMIN: DELETE USER ─────────────────────────────────
+
+export async function deleteUserAdmin(uid) {
+  // Delete all purchases subcollection first
+  const purchasesSnap = await getDocs(collection(db, 'users', uid, 'purchases'))
+  for (const purchaseDoc of purchasesSnap.docs) {
+    await deleteDoc(doc(db, 'users', uid, 'purchases', purchaseDoc.id))
+  }
+  // Delete user document
+  await deleteDoc(doc(db, 'users', uid))
+  // Delete from Firebase Auth via Worker
+  try {
+    await fetch('https://radiografia-worker.noirpraxis.workers.dev/api/delete-auth-user', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ uid, adminSecret: import.meta.env.VITE_ADMIN_SECRET })
+    })
+  } catch (e) {
+    console.error('Error deleting auth user:', e)
+  }
+}
+
+// ─── ADMIN: SET TEST MODE ───────────────────────────────
+
+export async function setUserTestMode(uid, enabled) {
+  await setDoc(doc(db, 'users', uid), { testMode: enabled }, { merge: true })
 }

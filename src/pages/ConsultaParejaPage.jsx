@@ -566,7 +566,7 @@ const DISCOUNT_CODES = {
   'AMIGO30': { discount: 0.30, label: '30% de descuento' },
   'PAREJA25': { discount: 0.25, label: '25% de descuento' },
   'RELACION20': { discount: 0.20, label: '20% de descuento' },
-  'LUISPRO': { discount: 1.0, label: 'Acceso gratuito (código profesional)' }
+
 }
 
 const PREMIUM_PRICE = 249 // MXN

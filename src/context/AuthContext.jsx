@@ -6,6 +6,7 @@ import { auth, db } from '../config/firebase'
 const AuthContext = createContext()
 
 const ADMIN_EMAIL = 'luis.virrueta.contacto@gmail.com'
+const WORKER_URL = 'https://radiografia-worker.noirpraxis.workers.dev'
 const googleProvider = new GoogleAuthProvider()
 
 export function useAuth() {
@@ -19,6 +20,7 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [emailVerified, setEmailVerified] = useState(false)
   const [loading, setLoading] = useState(true)
 
   // Handle Google redirect result on page load
@@ -35,17 +37,34 @@ export function AuthProvider({ children }) {
         // Upsert user doc in Firestore
         const userRef = doc(db, 'users', firebaseUser.uid)
         const snap = await getDoc(userRef).catch(() => null)
+        const provider = firebaseUser.providerData?.[0]?.providerId || 'unknown'
+        const isGoogle = provider === 'google.com'
         if (!snap?.exists()) {
+          const verified = isGoogle || firebaseUser.emailVerified
           await setDoc(userRef, {
             displayName: firebaseUser.displayName || '',
             email: firebaseUser.email,
             role: firebaseUser.email === ADMIN_EMAIL ? 'admin' : 'user',
+            provider,
+            emailVerified: verified,
             createdAt: serverTimestamp()
           }).catch(() => {})
+          setEmailVerified(verified)
+        } else {
+          // Update provider/verified status on every login
+          const updates = {}
+          if (!snap.data().provider) updates.provider = provider
+          if ((isGoogle || firebaseUser.emailVerified) && !snap.data().emailVerified) updates.emailVerified = true
+          if (firebaseUser.displayName && !snap.data().displayName) updates.displayName = firebaseUser.displayName
+          if (Object.keys(updates).length > 0) {
+            await setDoc(userRef, updates, { merge: true }).catch(() => {})
+          }
+          setEmailVerified(snap.data().emailVerified || isGoogle || firebaseUser.emailVerified)
         }
       } else {
         setUser(null)
         setIsAdmin(false)
+        setEmailVerified(false)
       }
       setLoading(false)
     })
@@ -67,14 +86,24 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // Email/Password Sign-Up
+  // Email/Password Sign-Up (sends verification code via Resend)
   const signUpWithEmail = async (email, password, displayName) => {
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password)
       if (displayName) {
         await updateProfile(result.user, { displayName })
       }
-      return { success: true, user: result.user }
+      // Send verification code via Worker/Resend
+      try {
+        await fetch(`${WORKER_URL}/api/send-verification-code`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        })
+      } catch (verifyErr) {
+        console.error('Error sending verification code:', verifyErr)
+      }
+      return { success: true, user: result.user, needsVerification: true }
     } catch (err) {
       const msg = err.code === 'auth/email-already-in-use' ? 'Este correo ya está registrado'
         : err.code === 'auth/weak-password' ? 'La contraseña debe tener al menos 6 caracteres'
@@ -83,27 +112,57 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // Email/Password Sign-In (auto-creates account if not found)
+  // Resend verification code via Worker/Resend
+  const resendVerification = async () => {
+    const currentUser = auth.currentUser
+    if (!currentUser) return { success: false }
+    try {
+      const res = await fetch(`${WORKER_URL}/api/send-verification-code`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: currentUser.email })
+      })
+      if (!res.ok) throw new Error('Error sending code')
+      return { success: true }
+    } catch (err) {
+      console.error('Error resending verification code:', err)
+      return { success: false, error: err?.message }
+    }
+  }
+
+  // Verify the 6-digit code via Worker
+  const verifyCode = async (code) => {
+    const currentUser = auth.currentUser
+    if (!currentUser) return { success: false, error: 'No hay sesión activa' }
+    try {
+      const res = await fetch(`${WORKER_URL}/api/verify-code`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: currentUser.email, code })
+      })
+      const data = await res.json()
+      if (data.valid) {
+        // Mark emailVerified in Firestore
+        const userRef = doc(db, 'users', currentUser.uid)
+        await setDoc(userRef, { emailVerified: true }, { merge: true })
+        setEmailVerified(true)
+        return { success: true }
+      }
+      return { success: false, error: data.error || 'Código incorrecto' }
+    } catch (err) {
+      return { success: false, error: err?.message || 'Error al verificar código' }
+    }
+  }
+
+  // Email/Password Sign-In
   const loginWithEmail = async (email, password) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password)
       return { success: true, user: result.user }
     } catch (err) {
-      // Auto-register if account doesn't exist
-      if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
-        try {
-          const result = await createUserWithEmailAndPassword(auth, email, password)
-          return { success: true, user: result.user }
-        } catch (regErr) {
-          if (regErr.code === 'auth/email-already-in-use') {
-            return { success: false, error: 'Contraseña incorrecta' }
-          }
-          const msg = regErr.code === 'auth/weak-password' ? 'La contraseña debe tener al menos 6 caracteres'
-            : regErr?.message || 'Error al crear cuenta'
-          return { success: false, error: msg }
-        }
-      }
-      const msg = err.code === 'auth/wrong-password' ? 'Contraseña incorrecta'
+      const msg = err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential'
+        ? 'Correo o contraseña incorrectos'
+        : err.code === 'auth/wrong-password' ? 'Contraseña incorrecta'
         : err?.message || 'Error al iniciar sesión'
       return { success: false, error: msg }
     }
@@ -155,10 +214,13 @@ export function AuthProvider({ children }) {
   const value = {
     user,
     isAdmin,
+    emailVerified,
     loading,
     loginWithGoogle,
     signUpWithEmail,
     loginWithEmail,
+    resendVerification,
+    verifyCode,
     logout,
     deleteAccount
   }

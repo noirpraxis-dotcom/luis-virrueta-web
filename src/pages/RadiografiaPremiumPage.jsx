@@ -2844,7 +2844,7 @@ const RadiografiaPremiumPage = () => {
     setPdfGenerating(true)
     setPdfProgress('Generando PDF...')
     try {
-      await generateReactPDF(aiAnalysis, profileData, crossAnalysis, {})
+      await generateReactPDF(aiAnalysis, profileData, crossAnalysis)
       setPdfProgress('')
     } catch (err) {
       console.error('PDF generation error:', err)

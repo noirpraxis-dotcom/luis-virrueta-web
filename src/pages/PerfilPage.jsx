@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { getPurchases, createPurchase, updatePurchase } from '../services/firestoreService'
+import { getPurchases, createPurchase, updatePurchase, removeProduct } from '../services/firestoreService'
 import { LogOut, Package, ArrowRight, Clock, CheckCircle, Play, Eye, Shield, ChevronDown, Download, Users, Loader2, Trash2, AlertTriangle, Lock } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 import AdminDashboard from '../components/AdminDashboard'
@@ -31,7 +31,7 @@ export default function PerfilPage() {
   const [searchParams] = useSearchParams()
   const [purchases, setPurchases] = useState([])
   const [loadingPurchases, setLoadingPurchases] = useState(true)
-  const [showAdmin, setShowAdmin] = useState(searchParams.get('admin') === 'true')
+  const [showAdmin, setShowAdmin] = useState(true)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deletePassword, setDeletePassword] = useState('')
   const [deleteError, setDeleteError] = useState('')
@@ -49,6 +49,16 @@ export default function PerfilPage() {
     if (!user) return
     const load = async () => {
       try {
+        // Recover any pending purchase that was never saved to Firestore (race condition fallback)
+        const pendingStr = sessionStorage.getItem('pending_firestore_purchase')
+        if (pendingStr) {
+          try {
+            const pendingData = JSON.parse(pendingStr)
+            const docId = await createPurchase(user.uid, pendingData)
+            sessionStorage.removeItem('pending_firestore_purchase')
+            sessionStorage.setItem('firestore_purchase_id', docId)
+          } catch (e) { console.error('Pending purchase recovery error:', e) }
+        }
         const data = await getPurchases(user.uid)
         setPurchases(data)
       } catch (err) {
@@ -141,27 +151,16 @@ export default function PerfilPage() {
               </div>
             )}
             <div>
-              <h1 className="text-xl text-white font-light">
+              <h1 className="text-xl text-white font-light flex items-center gap-2">
                 {user.displayName || 'Mi perfil'}
+                {isAdmin && <span title="Administrador" className="text-lg">👑</span>}
               </h1>
               <p className="text-sm text-gray-400">{user.email}</p>
+              {isAdmin && <p className="text-xs text-amber-400/70 font-medium mt-0.5">Administrador</p>}
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            {isAdmin && (
-              <button
-                onClick={() => setShowAdmin(!showAdmin)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs transition-all ${
-                  showAdmin
-                    ? 'bg-amber-500/20 border border-amber-500/30 text-amber-300'
-                    : 'bg-white/5 border border-white/10 text-gray-400 hover:text-white'
-                }`}
-              >
-                <Shield className="w-3.5 h-3.5" />
-                Admin
-              </button>
-            )}
             <button
               onClick={handleLogout}
               className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-red-300 hover:border-red-500/20 text-xs transition-all"
@@ -173,21 +172,82 @@ export default function PerfilPage() {
         </motion.div>
 
         {/* Admin Panel */}
-        <AnimatePresence>
-          {isAdmin && showAdmin && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mb-8 overflow-hidden"
-            >
-              <AdminDashboard />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {isAdmin && (
+          <div className="mb-8">
+            <AdminDashboard />
+          </div>
+        )}
 
-        {/* Purchases */}
-        <motion.div
+        {/* Admin Quick Test Section */}
+        {isAdmin && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="mb-8"
+          >
+            <div className="bg-gradient-to-br from-violet-500/[0.06] to-fuchsia-500/[0.04] border border-violet-500/15 rounded-2xl p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <Play className="w-4 h-4 text-violet-400" />
+                <h2 className="text-sm text-violet-300 font-medium uppercase tracking-wider">Test — Accesos r&aacute;pidos</h2>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Radiograf&iacute;a de Pareja</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {[
+                      { label: 'Landing', href: '/tienda/radiografia-pareja', icon: '🏠' },
+                      { label: 'Demo resultados', href: '/tienda/radiografia-premium?demo=ventas', icon: '📊' },
+                      { label: 'Test Descubre', href: '/tienda/radiografia-premium?free=true&type=descubre&fromProfile=true', icon: '🔍' },
+                      { label: 'Test Solo', href: '/tienda/radiografia-premium?free=true&type=solo&fromProfile=true', icon: '👤' },
+                      { label: 'Test Los Dos', href: '/tienda/radiografia-premium?free=true&type=losdos&fromProfile=true', icon: '👥' },
+                      { label: 'Compra test mode', href: '/tienda/radiografia-pareja?test=true', icon: '🧪' },
+                    ].map(link => (
+                      <a key={link.href} href={link.href}
+                        className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-black/30 border border-white/8 text-white/70 text-xs hover:text-white hover:border-violet-500/30 hover:bg-violet-500/[0.06] transition-all">
+                        <span className="text-sm">{link.icon}</span>
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-white/5">
+                  <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">C&oacute;digos de prueba</p>
+                  <div className="flex flex-wrap gap-3 text-xs text-white/50">
+                    <span>🎟️ <span className="font-mono text-amber-300">BETA100</span> — 100% desc.</span>
+                    <span>🎟️ <span className="font-mono text-amber-300">LANZAMIENTO50</span> — 50% desc.</span>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-white/5">
+                  <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Mantenimiento</p>
+                  <button
+                    onClick={async () => {
+                      if (!confirm('¿Eliminar todas tus compras de prueba?')) return
+                      try {
+                        const myPurchases = await getPurchases(user.uid)
+                        for (const p of myPurchases) {
+                          await removeProduct(user.uid, p.id)
+                        }
+                        setPurchases([])
+                        alert('Compras eliminadas')
+                      } catch (e) { console.error(e); alert('Error: ' + e.message) }
+                    }}
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300/70 text-xs hover:text-red-200 hover:border-red-500/30 transition-all"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                    Limpiar mis compras de prueba
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Purchases — hidden for admin */}
+        {!isAdmin && (<motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
@@ -311,10 +371,10 @@ export default function PerfilPage() {
               })}
             </div>
           )}
-        </motion.div>
+        </motion.div>)}
 
-        {/* Delete Account */}
-        <motion.div
+        {/* Delete Account — hidden for admin */}
+        {!isAdmin && (<motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
@@ -374,7 +434,7 @@ export default function PerfilPage() {
               </div>
             </div>
           )}
-        </motion.div>
+        </motion.div>)}
       </div>
     </div>
   )

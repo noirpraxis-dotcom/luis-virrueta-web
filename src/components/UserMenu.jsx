@@ -90,24 +90,21 @@ const UserMenu = () => {
             {/* Menu items */}
             <div className="py-1">
               <Link
-                to="/perfil"
+                to={isAdmin ? "/perfil" : "/perfil"}
                 onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 px-4 py-2.5 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-200"
+                className={`flex items-center gap-3 px-4 py-2.5 transition-all duration-200 ${
+                  isAdmin
+                    ? 'text-amber-400/80 hover:text-amber-300 hover:bg-amber-500/5'
+                    : 'text-white/70 hover:text-white hover:bg-white/5'
+                }`}
               >
-                <LayoutDashboard className="w-4 h-4" strokeWidth={1.5} />
-                <span className="text-sm font-light">Mi perfil</span>
-              </Link>
-
-              {isAdmin && (
-                <Link
-                  to="/perfil?admin=true"
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-3 px-4 py-2.5 text-amber-400/80 hover:text-amber-300 hover:bg-amber-500/5 transition-all duration-200"
-                >
+                {isAdmin ? (
                   <Shield className="w-4 h-4" strokeWidth={1.5} />
-                  <span className="text-sm font-light">Panel Admin</span>
-                </Link>
-              )}
+                ) : (
+                  <LayoutDashboard className="w-4 h-4" strokeWidth={1.5} />
+                )}
+                <span className="text-sm font-light">{isAdmin ? 'Panel Admin' : 'Mi perfil'}</span>
+              </Link>
             </div>
 
             {/* Logout */}

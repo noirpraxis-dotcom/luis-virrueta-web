@@ -17,7 +17,7 @@ import { generateAccessToken, PRODUCT_LABELS, DATA_RETENTION_DAYS } from '../uti
 import { sendAccessEmails, sendResultsEmail, verifyStripeSession, sendPartnerInvite } from '../services/emailApiService'
 import { saveProgress, getProgress, savePurchase, saveResults } from '../services/firebaseAuthService'
 import { useAuth } from '../context/AuthContext'
-import { createPurchase as createFirestorePurchase, saveTestProgress as saveFirestoreProgress } from '../services/firestoreService'
+import { createPurchase as createFirestorePurchase, saveTestProgress as saveFirestoreProgress, getUserProfile, updatePurchase as updateFirestorePurchase, savePartnerInvite } from '../services/firestoreService'
 import { User as UserIcon, Lock as LockIcon, Eye as EyeIcon, EyeOff as EyeOffIcon } from 'lucide-react'
 
 // ─── CUESTIONARIO: 44 PREGUNTAS EN 18 BLOQUES ────────────────────
@@ -723,7 +723,10 @@ function ConflictSankeyChart({ conflictFlow }) {
 const DiagnosticoRelacionalPage = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const { user: firebaseUser, isAdmin, loginWithGoogle, signUpWithEmail, loginWithEmail } = useAuth()
+  const { user: firebaseUser, isAdmin, loginWithGoogle, signUpWithEmail, loginWithEmail, resendVerification, verifyCode, emailVerified, loading: authInitLoading } = useAuth()
+
+  // Ref for deferred Firestore purchase creation (when firebaseUser isn't ready yet after Stripe return)
+  const pendingPurchaseRef = useRef(null)
 
   // Stages: hero | checkout | auth-checkout | thankyou | instructions | questionnaire | email | analyzing | engagement | results
   const [stage, setStage] = useState('hero')
@@ -742,6 +745,41 @@ const DiagnosticoRelacionalPage = () => {
   const [authPartnerName, setAuthPartnerName] = useState('')
   const [authError, setAuthError] = useState('')
   const [authLoading, setAuthLoading] = useState(false)
+  const [authVerificationSent, setAuthVerificationSent] = useState(false)
+  const [authResendCooldown, setAuthResendCooldown] = useState(0)
+  const [authVerCode, setAuthVerCode] = useState(['', '', '', '', '', ''])
+  const [authCodeError, setAuthCodeError] = useState('')
+  const [authVerifying, setAuthVerifying] = useState(false)
+
+  // Auto-verify when all 6 digits are filled
+  useEffect(() => {
+    if (authVerCode.every(d => d !== '') && !authVerifying) {
+      const code = authVerCode.join('')
+      if (code.length !== 6) return
+      setAuthVerifying(true)
+      setAuthCodeError('')
+      verifyCode(code).then(result => {
+        if (!result.success) {
+          setAuthCodeError(result.error || 'Código incorrecto')
+          setAuthVerCode(['', '', '', '', '', ''])
+          document.getElementById('dcode-0')?.focus()
+        }
+        setAuthVerifying(false)
+      })
+    }
+  }, [authVerCode])
+
+  // Email verification cooldown
+  useEffect(() => {
+    if (authResendCooldown <= 0) return
+    const t = setTimeout(() => setAuthResendCooldown(c => c - 1), 1000)
+    return () => clearTimeout(t)
+  }, [authResendCooldown])
+
+  // When emailVerified changes via context, clear verification screen
+  useEffect(() => {
+    if (emailVerified && authVerificationSent) setAuthVerificationSent(false)
+  }, [emailVerified, authVerificationSent])
 
   // Per-card promo codes (Stripe checkout)
   const [cardPromoCodes, setCardPromoCodes] = useState({ descubre: '', solo: '', losdos: '' })
@@ -797,12 +835,25 @@ const DiagnosticoRelacionalPage = () => {
   const [purchaseId, setPurchaseId] = useState(null)
   const [accessToken, setAccessToken] = useState(null)
   const [verifyingPayment, setVerifyingPayment] = useState(false)
+  const [postPayPartnerEmail, setPostPayPartnerEmail] = useState('')
+  const [postPayPartnerName, setPostPayPartnerName] = useState('')
+  const [postPayInviteSent, setPostPayInviteSent] = useState(false)
+  const [postPaySending, setPostPaySending] = useState(false)
+  const [postPayError, setPostPayError] = useState('')
   const [autoSendingPdf, setAutoSendingPdf] = useState(false)
   const [pdfAutoSent, setPdfAutoSent] = useState(false)
 
   // Test/dev mode: URL param
   const isDevMode = searchParams.get('test') === 'true' || searchParams.get('demo') === 'true'
   const [stripeTestMode, setStripeTestMode] = useState(false)
+
+  // Load user testMode from Firestore (admin-assigned)
+  useEffect(() => {
+    if (!firebaseUser) return
+    getUserProfile(firebaseUser.uid).then(profile => {
+      if (profile?.testMode) setStripeTestMode(true)
+    }).catch(() => {})
+  }, [firebaseUser])
 
   // Auto-fill email and name from Firebase user when logged in
   useEffect(() => {
@@ -912,27 +963,32 @@ const DiagnosticoRelacionalPage = () => {
         if (userEmail) sessionStorage.setItem('radiografia_buyer_email', userEmail)
         sessionStorage.setItem('radiografia_prefilled', 'true')
 
-        // Create Firestore purchase + send partner invite (non-blocking navigation)
+        // Create Firestore purchase (or defer if firebaseUser not ready yet)
         let firestoreDocId = ''
+        const purchaseData = {
+          product: 'radiografia-pareja',
+          packageType: type,
+          stripeSessionId: sessionId,
+          partnerEmail: null,
+          partnerName: null,
+        }
         if (firebaseUser) {
           try {
-            firestoreDocId = await createFirestorePurchase(firebaseUser.uid, {
-              product: 'radiografia-pareja',
-              packageType: type,
-              stripeSessionId: sessionId,
-              partnerEmail: type === 'losdos' ? savedPartnerEmail : null,
-              partnerName: type === 'losdos' ? savedPartnerName : null,
-            })
+            firestoreDocId = await createFirestorePurchase(firebaseUser.uid, purchaseData)
             sessionStorage.setItem('firestore_purchase_id', firestoreDocId)
-            // Send partner invite for losdos
-            if (type === 'losdos' && savedPartnerEmail) {
-              sendPartnerInvite({
-                partnerEmail: savedPartnerEmail,
-                partnerName: savedPartnerName || '',
-                buyerName: savedNombre || firebaseUser.displayName || '',
-              }).catch(() => {})
-            }
           } catch (e) { console.error('Firestore purchase creation error:', e) }
+        } else {
+          // firebaseUser not ready yet (auth state loading) — defer creation
+          pendingPurchaseRef.current = purchaseData
+          // Also persist to sessionStorage as backup in case user navigates away
+          sessionStorage.setItem('pending_firestore_purchase', JSON.stringify(purchaseData))
+        }
+
+        // For losdos: show partner invite form instead of auto-navigating
+        if (type === 'losdos') {
+          setStage('thankyou')
+          setVerifyingPayment(false)
+          return
         }
 
         // Navigate directly to the test page — skip thankyou entirely
@@ -995,6 +1051,26 @@ const DiagnosticoRelacionalPage = () => {
       }
     }
   }, [searchParams, scrollToTop, purchaseId])
+
+  // Deferred Firestore purchase creation — runs when firebaseUser becomes available after Stripe return
+  useEffect(() => {
+    if (!firebaseUser || !pendingPurchaseRef.current) return
+    const data = pendingPurchaseRef.current
+    pendingPurchaseRef.current = null
+    createFirestorePurchase(firebaseUser.uid, data).then(docId => {
+      sessionStorage.setItem('firestore_purchase_id', docId)
+      sessionStorage.removeItem('pending_firestore_purchase')
+      // If user is still on thankyou page (losdos), update purchaseId for partner form
+      // For other types, the user was already navigated to the test — update sessionStorage only
+      if (data.packageType !== 'losdos') {
+        // User already navigated to test with sessionId as purchaseId
+        // Update the navigation to use the real Firestore doc ID
+        const navToken = sessionStorage.getItem('diagnostico_relacional_token')
+        const tokenParam = navToken ? `&token=${navToken}` : ''
+        navigate(`/tienda/radiografia-premium?purchaseId=${docId}&type=${data.packageType}&fromProfile=true${tokenParam}`, { replace: true })
+      }
+    }).catch(e => console.error('Deferred Firestore purchase creation error:', e))
+  }, [firebaseUser])
 
   // Profile form intro audio — Valentina voice plays once when post-purchase form appears
   useEffect(() => {
@@ -1158,7 +1234,6 @@ const DiagnosticoRelacionalPage = () => {
 
   // ─── PROMO CODE VALIDATION ─────────────────────────────────
   const LOCAL_PROMO_CODES = {
-    'LUISPRO': { discount: 1.0, label: 'Acceso gratuito (código profesional)', appliesTo: ['descubre', 'solo', 'losdos'] }
   }
 
   const handleApplyPromo = useCallback(async (type) => {
@@ -1222,11 +1297,6 @@ const DiagnosticoRelacionalPage = () => {
       sessionStorage.setItem('diagnostico_relacional_type', freeType)
       navigate(`/tienda/radiografia-premium?type=${freeType}&free=true`)
       return
-    }
-    // Save partner data from auth-checkout stage (for losdos)
-    if (type === 'losdos' && authPartnerEmail) {
-      sessionStorage.setItem('radiografia_partner_email', authPartnerEmail)
-      sessionStorage.setItem('radiografia_partner_name', authPartnerName)
     }
     // Save user data from Firebase for post-payment use
     if (firebaseUser) {
@@ -2599,113 +2669,171 @@ const DiagnosticoRelacionalPage = () => {
 
               {/* Auth section — only if NOT logged in */}
               {!firebaseUser ? (
-                <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-6 space-y-4">
-                  <div className="text-center mb-2">
-                    <h2 className="text-xl font-light text-white mb-1">
-                      {authMode === 'register' ? 'Crea tu perfil' : 'Accede a tu perfil'}
-                    </h2>
-                    <p className="text-gray-400 text-xs">
-                      {authMode === 'register'
-                        ? 'Tu espacio para guardar productos, reportes y progreso'
-                        : 'Entra para continuar con tu compra'}
-                    </p>
-                  </div>
-
-                  {/* Google */}
-                  <button
-                    onClick={async () => {
-                      setAuthError('')
-                      setAuthLoading(true)
-                      const result = await loginWithGoogle()
-                      if (!result.success) {
-                        setAuthError(result.error || 'Error al conectar con Google')
-                        setAuthLoading(false)
-                      }
-                    }}
-                    disabled={authLoading}
-                    className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all text-white text-sm font-light"
-                  >
-                    <svg className="w-5 h-5" viewBox="0 0 24 24">
-                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
-                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                    </svg>
-                    Continuar con Google
-                  </button>
-
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 h-px bg-white/10" />
-                    <span className="text-xs text-gray-500">o con email</span>
-                    <div className="flex-1 h-px bg-white/10" />
-                  </div>
-
-                  {authError && (
-                    <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 flex items-start gap-2">
-                      <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
-                      <p className="text-red-300 text-sm">{authError}</p>
+                <div className="space-y-4">
+                  <div className="bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden">
+                    <div className="bg-gradient-to-r from-purple-600/20 to-fuchsia-600/20 px-5 py-3 border-b border-white/5">
+                      <p className="text-white text-sm font-medium">Crea tu cuenta para continuar</p>
                     </div>
-                  )}
 
-                  <form onSubmit={async (e) => {
-                    e.preventDefault()
-                    setAuthError('')
-                    setAuthLoading(true)
-                    let result
-                    if (authMode === 'register') {
-                      if (!authName.trim()) { setAuthError('Ingresa tu nombre'); setAuthLoading(false); return }
-                      result = await signUpWithEmail(authEmail, authPassword, authName.trim())
-                    } else {
-                      result = await loginWithEmail(authEmail, authPassword)
-                    }
-                    if (!result.success) {
-                      setAuthError(result.error)
-                      setAuthLoading(false)
-                    }
-                    // If success: firebaseUser will update via context, UI will react
-                  }} className="space-y-3">
-                    {authMode === 'register' && (
-                      <div className="relative">
-                        <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                        <input type="text" placeholder="Tu nombre" value={authName}
-                          onChange={e => setAuthName(e.target.value)}
-                          autoComplete="name"
-                          className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors" />
+                    <div className="p-5 space-y-4">
+                      {authError && (
+                        <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 flex items-start gap-2">
+                          <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
+                          <p className="text-red-300 text-sm">{authError}</p>
+                        </div>
+                      )}
+
+                      <form onSubmit={async (e) => {
+                        e.preventDefault()
+                        setAuthError('')
+                        setAuthLoading(true)
+                        if (!authName.trim()) { setAuthError('Ingresa tu nombre'); setAuthLoading(false); return }
+                        const result = await signUpWithEmail(authEmail, authPassword, authName.trim())
+                        if (result.success && result.needsVerification) {
+                          setAuthVerificationSent(true)
+                          setAuthLoading(false)
+                          return
+                        }
+                        if (!result.success) {
+                          setAuthError(result.error)
+                          setAuthLoading(false)
+                        }
+                      }} className="space-y-3">
+                        <div className="relative">
+                          <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                          <input type="text" placeholder="Tu nombre" value={authName}
+                            onChange={e => setAuthName(e.target.value)}
+                            autoComplete="name"
+                            className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors" />
+                        </div>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                          <input type="email" placeholder="tu@email.com" value={authEmail}
+                            onChange={e => setAuthEmail(e.target.value)} required
+                            autoComplete="email"
+                            className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors" />
+                        </div>
+                        <div className="relative">
+                          <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                          <input type={authShowPassword ? 'text' : 'password'}
+                            placeholder="Crea una contraseña (mín. 6 caracteres)"
+                            value={authPassword} onChange={e => setAuthPassword(e.target.value)} required minLength={6}
+                            autoComplete="new-password"
+                            className="w-full pl-10 pr-10 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors" />
+                          <button type="button" onClick={() => setAuthShowPassword(!authShowPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
+                            {authShowPassword ? <EyeOffIcon className="w-4 h-4" /> : <EyeIcon className="w-4 h-4" />}
+                          </button>
+                        </div>
+                        <button type="submit" disabled={authLoading}
+                          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white text-sm font-medium transition-all disabled:opacity-50 bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500">
+                          {authLoading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> :
+                            <>Crear mi cuenta<ArrowRight className="w-4 h-4" /></>}
+                        </button>
+                      </form>
+
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1 h-px bg-white/10" />
+                        <span className="text-xs text-gray-500">o continúa con</span>
+                        <div className="flex-1 h-px bg-white/10" />
                       </div>
-                    )}
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                      <input type="email" placeholder="tu@email.com" value={authEmail}
-                        onChange={e => setAuthEmail(e.target.value)} required
-                        autoComplete="email"
-                        className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors" />
-                    </div>
-                    <div className="relative">
-                      <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                      <input type={authShowPassword ? 'text' : 'password'} placeholder="Contraseña (mín. 6 caracteres)"
-                        value={authPassword} onChange={e => setAuthPassword(e.target.value)} required minLength={6}
-                        autoComplete={authMode === 'register' ? 'new-password' : 'current-password'}
-                        className="w-full pl-10 pr-10 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors" />
-                      <button type="button" onClick={() => setAuthShowPassword(!authShowPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
-                        {authShowPassword ? <EyeOffIcon className="w-4 h-4" /> : <EyeIcon className="w-4 h-4" />}
+
+                      {/* Google */}
+                      <button
+                        onClick={async () => {
+                          setAuthError('')
+                          setAuthLoading(true)
+                          const result = await loginWithGoogle()
+                          if (!result.success) {
+                            setAuthError(result.error || 'Error al conectar con Google')
+                            setAuthLoading(false)
+                          }
+                        }}
+                        disabled={authLoading}
+                        className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all text-white text-sm font-light"
+                      >
+                        <svg className="w-5 h-5" viewBox="0 0 24 24">
+                          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
+                          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                        </svg>
+                        Continuar con Google
                       </button>
+
+                      <p className="text-center text-gray-500 text-xs">¿Ya tienes cuenta? <button onClick={() => { navigate('/registro'); }} className="text-purple-400 hover:text-purple-300 transition-colors">Inicia sesión</button></p>
                     </div>
-                    <button type="submit" disabled={authLoading}
-                      className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white text-sm font-medium hover:from-purple-500 hover:to-fuchsia-500 transition-all disabled:opacity-50">
-                      {authLoading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> :
-                        <>{authMode === 'register' ? 'Crear mi perfil' : 'Entrar'}<ArrowRight className="w-4 h-4" /></>}
+                  </div>
+                </div>
+              ) : firebaseUser.providerData?.some(p => p.providerId === 'password') && !emailVerified ? (
+                /* Email account not verified */
+                <div className="space-y-4">
+                  <div className="bg-white/[0.03] border border-purple-500/20 rounded-2xl p-6 text-center space-y-3">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-purple-500/10 border border-purple-500/20 mx-auto">
+                      <Mail className="w-7 h-7 text-purple-400" />
+                    </div>
+                    <h3 className="text-white text-base font-medium">Ingresa tu código</h3>
+                    <p className="text-gray-400 text-sm">Enviamos un código de 6 dígitos a</p>
+                    <p className="text-purple-300 text-sm font-medium">{firebaseUser.email}</p>
+
+                    {/* 6-digit code input */}
+                    <div className="flex justify-center gap-2 pt-2" onPaste={(e) => {
+                      const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
+                      if (pasted.length === 6) { e.preventDefault(); setAuthVerCode(pasted.split('')); setAuthCodeError(''); document.getElementById('dcode-5')?.focus() }
+                    }}>
+                      {authVerCode.map((digit, i) => (
+                        <input
+                          key={i}
+                          id={`dcode-${i}`}
+                          type="text"
+                          inputMode="numeric"
+                          maxLength={1}
+                          value={digit}
+                          onChange={(e) => {
+                            if (!/^\d*$/.test(e.target.value)) return
+                            const nc = [...authVerCode]; nc[i] = e.target.value.slice(-1); setAuthVerCode(nc); setAuthCodeError('')
+                            if (e.target.value && i < 5) document.getElementById(`dcode-${i + 1}`)?.focus()
+                          }}
+                          onKeyDown={(e) => { if (e.key === 'Backspace' && !authVerCode[i] && i > 0) document.getElementById(`dcode-${i - 1}`)?.focus() }}
+                          className="w-10 h-12 text-center text-lg font-semibold text-white bg-white/5 border border-white/15 rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-500/30 outline-none transition-all"
+                        />
+                      ))}
+                    </div>
+
+                    {authCodeError && <p className="text-red-400 text-xs">{authCodeError}</p>}
+
+                    <button
+                      onClick={async () => {
+                        const code = authVerCode.join('')
+                        if (code.length !== 6) { setAuthCodeError('Ingresa los 6 dígitos'); return }
+                        setAuthVerifying(true); setAuthCodeError('')
+                        const result = await verifyCode(code)
+                        if (!result.success) {
+                          setAuthCodeError(result.error || 'Código incorrecto')
+                          setAuthVerCode(['', '', '', '', '', ''])
+                          document.getElementById('dcode-0')?.focus()
+                        }
+                        setAuthVerifying(false)
+                      }}
+                      disabled={authVerifying || authVerCode.join('').length !== 6}
+                      className="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white text-sm font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      {authVerifying ? 'Verificando...' : 'Verificar código'}
                     </button>
-                  </form>
-                  <div className="text-center">
-                    <button onClick={() => { setAuthMode(authMode === 'register' ? 'login' : 'register'); setAuthError('') }}
-                      className="text-xs text-gray-400 hover:text-purple-300 transition-colors">
-                      {authMode === 'register' ? '¿Ya tienes perfil? Inicia sesión' : '¿No tienes perfil? Créalo aquí'}
+
+                    <p className="text-gray-500 text-xs">Revisa tu bandeja de entrada y spam.</p>
+                    <button onClick={async () => {
+                      if (authResendCooldown > 0) return
+                      const r = await resendVerification()
+                      if (r.success) setAuthResendCooldown(60)
+                    }} disabled={authResendCooldown > 0}
+                      className="text-xs text-gray-400 hover:text-purple-300 transition-colors disabled:opacity-40">
+                      {authResendCooldown > 0 ? `Reenviar en ${authResendCooldown}s` : 'Reenviar código'}
                     </button>
                   </div>
                 </div>
               ) : (
-                /* User IS logged in */
+                /* User IS logged in and verified — ready to pay */
                 <div className="space-y-4">
                   {/* User info confirmation */}
                   <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-5">
@@ -2725,29 +2853,6 @@ const DiagnosticoRelacionalPage = () => {
                     </div>
                     <p className="text-emerald-300/50 text-xs">Sesión activa — tu compra se guardará en tu perfil</p>
                   </div>
-
-                  {/* Partner fields for "losdos" */}
-                  {selectedPlan === 'losdos' && (
-                    <div className="bg-white/[0.03] border border-cyan-500/15 rounded-2xl p-5 space-y-3">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Heart className="w-4 h-4 text-cyan-400/60" />
-                        <p className="text-cyan-300/80 text-sm font-medium">Datos de tu pareja</p>
-                      </div>
-                      <p className="text-gray-400 text-xs">Le enviaremos una invitación por correo para que haga su propio test.</p>
-                      <div className="relative">
-                        <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                        <input type="text" placeholder="Nombre de tu pareja" value={authPartnerName}
-                          onChange={e => setAuthPartnerName(e.target.value)}
-                          className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-cyan-500/50 focus:outline-none transition-colors" />
-                      </div>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                        <input type="email" placeholder="Email de tu pareja" value={authPartnerEmail}
-                          onChange={e => setAuthPartnerEmail(e.target.value)}
-                          className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-cyan-500/50 focus:outline-none transition-colors" />
-                      </div>
-                    </div>
-                  )}
 
                   {/* Promo code section */}
                   <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-5">
@@ -2775,7 +2880,7 @@ const DiagnosticoRelacionalPage = () => {
                   {/* Pay button */}
                   <motion.button
                     onClick={() => handlePurchase(selectedPlan)}
-                    disabled={checkoutLoading === selectedPlan || (selectedPlan === 'losdos' && !authPartnerEmail.includes('@'))}
+                    disabled={checkoutLoading === selectedPlan}
                     whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     className={`w-full py-4 rounded-xl text-white font-medium text-base transition-all shadow-lg disabled:opacity-50 ${
                       selectedPlan === 'descubre' ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-zinc-900 shadow-amber-600/20' :
@@ -2878,8 +2983,123 @@ const DiagnosticoRelacionalPage = () => {
                 </motion.div>
               )}
 
-              {/* Email collection — Individual / Pareja only */}
-              {purchaseType !== 'consulta' && !emailsSent && !verifyingPayment && (
+              {/* Post-payment partner invite form (losdos only) */}
+              {purchaseType === 'losdos' && !verifyingPayment && !postPayInviteSent && (
+                <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+                  className="p-6 rounded-2xl border border-cyan-500/20 bg-cyan-500/[0.03] space-y-5">
+                  <div className="text-center">
+                    <Heart className="w-8 h-8 text-cyan-300/85 mx-auto mb-3" />
+                    <h3 className="text-xl font-light text-white mb-1">Invita a tu pareja</h3>
+                    <p className="text-white/60 text-sm font-light leading-relaxed">
+                      Le enviaremos una invitación por correo para que haga su propio test en privado.
+                    </p>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="relative">
+                      <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                      <input type="text" placeholder="Nombre de tu pareja" value={postPayPartnerName}
+                        onChange={e => { setPostPayPartnerName(e.target.value); setPostPayError('') }}
+                        className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-cyan-500/50 focus:outline-none transition-colors" />
+                    </div>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                      <input type="email" placeholder="Email de tu pareja" value={postPayPartnerEmail}
+                        onChange={e => { setPostPayPartnerEmail(e.target.value); setPostPayError('') }}
+                        className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-cyan-500/50 focus:outline-none transition-colors" />
+                    </div>
+                  </div>
+                  {postPayError && <p className="text-red-400 text-xs text-center">{postPayError}</p>}
+                  <motion.button
+                    onClick={async () => {
+                      if (!postPayPartnerEmail.includes('@')) { setPostPayError('Ingresa un email válido'); return }
+                      setPostPaySending(true)
+                      setPostPayError('')
+                      try {
+                        const savedNombre = sessionStorage.getItem('radiografia_nombre') || firebaseUser?.displayName || ''
+                        await sendPartnerInvite({
+                          partnerEmail: postPayPartnerEmail,
+                          partnerName: postPayPartnerName || '',
+                          buyerName: savedNombre,
+                        })
+                        // Save partner data to sessionStorage + Firestore
+                        sessionStorage.setItem('radiografia_partner_email', postPayPartnerEmail)
+                        sessionStorage.setItem('radiografia_partner_name', postPayPartnerName)
+                        if (firebaseUser) {
+                          let firestoreId = sessionStorage.getItem('firestore_purchase_id')
+                          // If Firestore purchase hasn't been created yet, create it now
+                          if (!firestoreId) {
+                            try {
+                              firestoreId = await createFirestorePurchase(firebaseUser.uid, {
+                                product: 'radiografia-pareja',
+                                packageType: 'losdos',
+                                stripeSessionId: purchaseId || sessionStorage.getItem('diagnostico_relacional_purchase_id'),
+                                partnerEmail: postPayPartnerEmail,
+                                partnerName: postPayPartnerName,
+                              })
+                              sessionStorage.setItem('firestore_purchase_id', firestoreId)
+                              pendingPurchaseRef.current = null
+                            } catch (e) { console.error('Firestore purchase creation error:', e) }
+                          } else {
+                            updateFirestorePurchase(firebaseUser.uid, firestoreId, {
+                              partnerEmail: postPayPartnerEmail,
+                              partnerName: postPayPartnerName,
+                            }).catch(() => {})
+                          }
+                          // Save partner invite to top-level collection for partner registration lookup
+                          savePartnerInvite(postPayPartnerEmail, {
+                            buyerUid: firebaseUser.uid,
+                            buyerPurchaseId: firestoreId,
+                            buyerName: sessionStorage.getItem('radiografia_nombre') || firebaseUser.displayName || '',
+                            product: 'radiografia-pareja',
+                            packageType: 'losdos',
+                          }).catch(e => console.error('Save partner invite error:', e))
+                        }
+                        setPostPayInviteSent(true)
+                      } catch (err) {
+                        console.error('Partner invite error:', err)
+                        setPostPayError('Error al enviar. Intenta de nuevo.')
+                      } finally {
+                        setPostPaySending(false)
+                      }
+                    }}
+                    disabled={postPaySending || !postPayPartnerEmail.includes('@') || !firebaseUser}
+                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-medium text-sm transition-all shadow-lg shadow-cyan-600/20 disabled:opacity-50 disabled:cursor-not-allowed">
+                    {postPaySending ? (
+                      <span className="flex items-center justify-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Enviando...</span>
+                    ) : 'Enviar invitación'}
+                  </motion.button>
+                </motion.div>
+              )}
+
+              {/* Post-payment partner invite SENT confirmation (losdos only) */}
+              {purchaseType === 'losdos' && postPayInviteSent && (
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', stiffness: 200 }}
+                  className="space-y-5">
+                  <div className="p-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.04] text-center space-y-3">
+                    <div className="mx-auto w-14 h-14 rounded-full bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center">
+                      <CheckCircle className="w-7 h-7 text-emerald-400" />
+                    </div>
+                    <h3 className="text-lg font-light text-white">Invitación enviada</h3>
+                    <p className="text-white/50 text-sm font-light">
+                      Se envió la invitación a <span className="text-cyan-300">{postPayPartnerEmail}</span>
+                    </p>
+                  </div>
+                  <motion.button
+                    onClick={() => {
+                      const firestoreId = sessionStorage.getItem('firestore_purchase_id') || purchaseId
+                      const navToken = accessToken ? `&token=${accessToken}` : ''
+                      navigate(`/tienda/radiografia-premium?purchaseId=${firestoreId}&type=losdos&fromProfile=true${navToken}`, { replace: true })
+                    }}
+                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-medium text-base transition-all shadow-lg shadow-violet-600/20">
+                    Continuar al test
+                  </motion.button>
+                </motion.div>
+              )}
+
+              {/* Email collection — Individual / Pareja only (skip for losdos — handled by post-payment partner form above) */}
+              {purchaseType !== 'consulta' && purchaseType !== 'losdos' && !emailsSent && !verifyingPayment && (
                 <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
                   className="p-6 rounded-2xl border border-white/15 bg-white/[0.03] space-y-5 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]">
                   <div className="text-center">
@@ -3014,7 +3234,7 @@ const DiagnosticoRelacionalPage = () => {
                                 partnerEmail: thankyouEmails[1],
                                 partnerName: thankYouProfile.nombrePareja || '',
                                 buyerName: thankYouProfile.nombre || firebaseUser.displayName || '',
-                              }).catch(() => {})
+                              }).catch(err => console.error('Partner invite email error:', err))
                             }
                           }).catch(() => {})
                         }

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { getAllUsers, giftProduct, removeProduct } from '../services/firestoreService'
+import { getAllUsers, subscribeToUsers, giftProduct, removeProduct, deleteUserAdmin, setUserTestMode } from '../services/firestoreService'
 import { createCustomCheckout, createPromoCode, listPromoCodes, deletePromoCode } from '../services/emailApiService'
-import { Users, Package, Download, ChevronDown, ChevronUp, Mail, Search, Gift, Trash2, Plus, AlertTriangle, CheckCircle, FileText, BarChart3, Link2, Copy, DollarSign, Tag, Percent } from 'lucide-react'
+import { Users, Package, Download, ChevronDown, ChevronUp, Mail, Search, Gift, Trash2, Plus, AlertTriangle, CheckCircle, FileText, BarChart3, Link2, Copy, DollarSign, Tag, Percent, Code2, ExternalLink } from 'lucide-react'
 
 const PRODUCT_OPTIONS = [
   { value: 'radiografia-pareja', label: 'Radiografía de Pareja' },
@@ -18,7 +18,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [expandedUser, setExpandedUser] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [activeTab, setActiveTab] = useState('clients') // 'clients' | 'gift' | 'pricing'
+  const [activeTab, setActiveTab] = useState('clients') // 'clients' | 'gift' | 'pricing' | 'promos' | 'dev'
 
   // Gift form state
   const [giftEmail, setGiftEmail] = useState('')
@@ -29,6 +29,12 @@ export default function AdminDashboard() {
 
   // Remove product state
   const [removingId, setRemovingId] = useState(null)
+
+  // Delete user state
+  const [deletingUserId, setDeletingUserId] = useState(null)
+
+  // Test mode toggle state
+  const [togglingTestMode, setTogglingTestMode] = useState(null)
 
   // Custom pricing state
   const [pricingEmail, setPricingEmail] = useState('')
@@ -49,7 +55,11 @@ export default function AdminDashboard() {
   const [promoListLoaded, setPromoListLoaded] = useState(false)
 
   useEffect(() => {
-    loadUsers()
+    const unsubscribe = subscribeToUsers((data) => {
+      setUsers(data)
+      setLoading(false)
+    })
+    return () => unsubscribe()
   }, [])
 
   const loadUsers = async () => {
@@ -63,38 +73,152 @@ export default function AdminDashboard() {
     }
   }
 
+  const ADMIN_EMAIL = 'luis.virrueta.contacto@gmail.com'
+
   const filteredUsers = users.filter(u =>
+    u.email !== ADMIN_EMAIL && (
     !searchQuery ||
     (u.displayName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
     (u.email || '').toLowerCase().includes(searchQuery.toLowerCase())
+    )
   )
 
-  const totalPurchases = users.reduce((sum, u) => sum + (u.purchases?.length || 0), 0)
-  const completedPurchases = users.reduce((sum, u) => sum + (u.purchases?.filter(p => p.status === 'completed').length || 0), 0)
+  const clientUsers = users.filter(u => u.email !== ADMIN_EMAIL)
+  const totalPurchases = clientUsers.reduce((sum, u) => sum + (u.purchases?.length || 0), 0)
+  const completedPurchases = clientUsers.reduce((sum, u) => sum + (u.purchases?.filter(p => p.status === 'completed').length || 0), 0)
+
+  // Question texts for formatted download
+  const QUESTION_MAP = {
+    Q1: 'Para empezar, cuéntame un poco sobre tu vida actualmente y en qué momento te encuentras hoy.',
+    Q2: 'Cuéntame la historia de tu relación desde el principio hasta hoy.',
+    Q3: 'Cuéntame cómo describirías tu relación actualmente y cómo sientes que están las cosas.',
+    Q4: 'Háblame de cómo es la vida cotidiana entre ustedes y cómo suelen relacionarse en el día a día.',
+    Q5: 'Cuéntame qué sientes que han construido o desarrollado como pareja a lo largo del tiempo.',
+    Q6: 'Cuéntame qué fue lo que más te llamó la atención de tu pareja cuando empezaron a conocerse.',
+    Q7: 'Cuéntame cómo se demuestran cariño o amor entre ustedes en el día a día.',
+    Q8: 'Cuéntame qué momentos o etapas recuerdas como especialmente importantes.',
+    Q9: 'Cuéntame cómo imaginabas que podría ser el futuro entre ustedes.',
+    Q10: 'Cuéntame qué representaba esa persona para ti o qué sentías que encontrabas en esa relación.',
+    Q11: 'Cuéntame sobre el ambiente en el que creciste y cómo era la relación entre las personas que te criaron.',
+    Q12: 'Cuéntame qué ideas o creencias sobre el amor sientes que aprendiste en tu familia.',
+    Q13: 'Cuéntame si algo de tu familia aparece en tu forma de relacionarte con tu pareja.',
+    Q14: 'Cuéntame cómo fueron tus relaciones importantes anteriores y qué aprendiste de ellas.',
+    Q15: 'Cuéntame qué tanto sientes que puedes ser tú mismo/a sin perder tu identidad.',
+    Q16: 'Cuéntame si sienten que funcionan como equipo cuando las cosas se ponen difíciles.',
+    Q17: 'Cuéntame cómo suelen empezar los desacuerdos o discusiones.',
+    Q18: 'Cuéntame cómo reaccionas tú normalmente cuando aparece un conflicto.',
+    Q19: 'Cuéntame cómo suele reaccionar tu pareja ante un desacuerdo.',
+    Q20: 'Cuéntame qué suele pasar después de una discusión o desacuerdo.',
+    Q21: 'Cuéntame qué cosas de tu pareja siguen despertando atracción o deseo en ti.',
+    Q22: 'Cuéntame cómo describirías la cercanía emocional que existe entre ustedes.',
+    Q23: 'Háblame de cómo se vive actualmente la intimidad física o sexual entre ustedes.',
+    Q24: 'Cuéntame cómo ha cambiado el deseo o la atracción desde el inicio hasta hoy.',
+    Q25: 'Cuéntame qué cosas suelen hacer que se sientan más cercanos o conectados.',
+    Q26: 'Cuéntame si hay momentos en los que sientes más distancia entre ustedes.',
+    Q27: 'Cuéntame cómo suelen manejar las decisiones importantes.',
+    Q28: 'Cuéntame si sientes que hay equilibrio en el poder y la influencia entre ustedes.',
+    Q29: 'Cuéntame qué crees que es importante para tu pareja dentro de la relación.',
+    Q30: 'Cuéntame qué cosas son importantes para ti dentro de la relación.',
+    Q31: 'Cuéntame qué significa hoy esta relación para ti dentro de tu vida.',
+    Q32: 'Cuéntame cómo imaginas la relación entre ustedes con el paso del tiempo.',
+    Q33: 'Cuéntame qué cosas concretas te hacen sentir amado/a o seguro/a.',
+    Q34: 'Cuéntame si hay cosas dentro de la relación que te generan dudas o incertidumbre.',
+    Q35: 'Cuéntame cómo han logrado atravesar los momentos difíciles.',
+    Q36: 'Cuéntame si sienten que la relación tiene momentos de novedad o se ha vuelto rutinaria.',
+    Q37: 'Cuéntame qué crees que busca cada uno dentro de esta relación.',
+    Q38: 'Cuéntame qué crees que esta relación ha despertado o revelado en ti como persona.',
+    Q39: 'Cuéntame qué hace única o particular tu relación con esta persona.',
+    Q40: 'Cuéntame si hay algo importante que todavía no has mencionado y te gustaría compartir.',
+  }
+
+  const BLOCK_MAP = {
+    Q1: 'Contexto personal', Q2: 'Contexto personal', Q3: 'Contexto personal', Q4: 'Contexto personal', Q5: 'Contexto personal',
+    Q6: 'Origen del vínculo', Q7: 'Expresión afectiva', Q8: 'Origen del vínculo', Q9: 'Origen del vínculo', Q10: 'Origen del vínculo',
+    Q11: 'Historia emocional', Q12: 'Historia emocional', Q13: 'Historia emocional', Q14: 'Historia emocional',
+    Q15: 'Identidad y autonomía', Q16: 'Regulación emocional', Q17: 'Patrones relacionales', Q18: 'Patrones relacionales', Q19: 'Patrones relacionales', Q20: 'Patrones relacionales',
+    Q21: 'Deseo e intimidad', Q22: 'Deseo e intimidad', Q23: 'Deseo e intimidad', Q24: 'Deseo e intimidad', Q25: 'Deseo e intimidad',
+    Q26: 'Deseo e intimidad', Q27: 'Deseo e intimidad', Q28: 'Dinámicas de poder', Q29: 'Deseo e intimidad', Q30: 'Deseo e intimidad',
+    Q31: 'Futuro y sentido', Q32: 'Futuro y sentido', Q33: 'Seguridad emocional', Q34: 'Futuro y sentido', Q35: 'Futuro y sentido',
+    Q36: 'Novedad y rutina', Q37: 'Futuro y sentido', Q38: 'Futuro y sentido', Q39: 'Futuro y sentido', Q40: 'Futuro y sentido',
+  }
+
+  const BLOCK_COLORS = {
+    'Contexto personal': '#818cf8',
+    'Origen del vínculo': '#c084fc',
+    'Expresión afectiva': '#f472b6',
+    'Historia emocional': '#fb923c',
+    'Identidad y autonomía': '#fbbf24',
+    'Regulación emocional': '#34d399',
+    'Patrones relacionales': '#22d3ee',
+    'Deseo e intimidad': '#60a5fa',
+    'Dinámicas de poder': '#a78bfa',
+    'Seguridad emocional': '#e879f9',
+    'Novedad y rutina': '#f87171',
+    'Futuro y sentido': '#4ade80',
+  }
 
   const downloadPurchaseData = (user, purchase) => {
-    const data = JSON.stringify({
-      user: { id: user.id, displayName: user.displayName, email: user.email },
-      purchase: {
-        id: purchase.id,
-        product: purchase.product,
-        packageType: purchase.packageType,
-        status: purchase.status,
-        currentQuestion: purchase.currentQuestion,
-        responses: purchase.responses,
-        analysis: purchase.analysis,
-        crossAnalysis: purchase.crossAnalysis,
-        profileData: purchase.profileData,
-        partnerEmail: purchase.partnerEmail,
-        createdAt: purchase.createdAt,
-        completedAt: purchase.completedAt,
-      }
-    }, null, 2)
-    const blob = new Blob([data], { type: 'application/json' })
+    const name = user.displayName || user.email || 'Usuario'
+    const pkg = purchase.packageType || 'N/A'
+    const progress = purchase.currentQuestion || 0
+    const responses = purchase.responses || {}
+    const profile = purchase.profileData || {}
+    const answered = Object.keys(responses).length
+
+    let questionsHtml = ''
+    for (let i = 1; i <= 40; i++) {
+      const qid = `Q${i}`
+      const text = QUESTION_MAP[qid] || qid
+      const block = BLOCK_MAP[qid] || ''
+      const blockColor = BLOCK_COLORS[block] || '#666'
+      const response = responses[qid]
+      const hasResponse = response && (typeof response === 'string' ? response.trim() : true)
+      const responseText = hasResponse ? (typeof response === 'string' ? response : JSON.stringify(response)) : '— Sin respuesta —'
+      const bgColor = hasResponse ? '#1a1a2e' : '#111'
+      const borderColor = hasResponse ? blockColor : '#333'
+      const responseColor = hasResponse ? '#e2e8f0' : '#555'
+
+      questionsHtml += `
+        <div style="margin-bottom:16px;padding:14px 18px;background:${bgColor};border-left:4px solid ${borderColor};border-radius:8px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+            <span style="background:${blockColor};color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px;">${qid}</span>
+            <span style="color:${blockColor};font-size:11px;font-weight:600;">${block}</span>
+          </div>
+          <p style="color:#a5b4fc;font-size:13px;font-weight:600;margin:0 0 8px 0;">${text}</p>
+          <p style="color:${responseColor};font-size:13px;line-height:1.6;margin:0;white-space:pre-wrap;">${responseText.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
+        </div>`
+    }
+
+    const profileHtml = profile.name || profile.email ? `
+      <div style="background:#1a1a2e;border:1px solid #333;border-radius:12px;padding:16px 20px;margin-bottom:24px;">
+        <h3 style="color:#a78bfa;font-size:14px;margin:0 0 10px 0;">Perfil del usuario</h3>
+        ${profile.name ? `<p style="color:#ccc;font-size:12px;margin:4px 0;">Nombre: <strong style="color:#fff;">${profile.name}</strong></p>` : ''}
+        ${profile.email ? `<p style="color:#ccc;font-size:12px;margin:4px 0;">Email: <strong style="color:#fff;">${profile.email}</strong></p>` : ''}
+        ${profile.age ? `<p style="color:#ccc;font-size:12px;margin:4px 0;">Edad: <strong style="color:#fff;">${profile.age}</strong></p>` : ''}
+        ${profile.gender ? `<p style="color:#ccc;font-size:12px;margin:4px 0;">Género: <strong style="color:#fff;">${profile.gender}</strong></p>` : ''}
+      </div>` : ''
+
+    const html = `<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><title>Radiografía — ${name}</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0a1a;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:40px;max-width:900px;margin:0 auto}
+@media print{body{background:#fff;color:#222;padding:20px}div[style*="background:#1a1a2e"]{background:#f5f5ff!important}p{color:#222!important}}</style></head>
+<body>
+  <div style="text-align:center;margin-bottom:36px;">
+    <h1 style="font-size:24px;color:#a78bfa;margin-bottom:4px;">Radiografía de Pareja</h1>
+    <p style="color:#888;font-size:13px;">${name} — Paquete: ${pkg} — Progreso: ${progress}/40 (${answered} respondidas)</p>
+    ${purchase.partnerEmail ? `<p style="color:#f472b6;font-size:12px;margin-top:4px;">Pareja: ${purchase.partnerEmail}</p>` : ''}
+    <p style="color:#555;font-size:11px;margin-top:8px;">Generado: ${new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+  </div>
+  ${profileHtml}
+  <h2 style="color:#818cf8;font-size:16px;margin-bottom:16px;border-bottom:1px solid #222;padding-bottom:8px;">Preguntas y Respuestas</h2>
+  ${questionsHtml}
+</body></html>`
+
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `${user.displayName || user.email}-${purchase.product}-${purchase.id.slice(0, 6)}.json`
+    a.download = `${name.replace(/\s+/g, '-')}-radiografia-${purchase.id.slice(0, 6)}.html`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -143,6 +267,31 @@ export default function AdminDashboard() {
       console.error('Error removing product:', err)
     } finally {
       setRemovingId(null)
+    }
+  }
+
+  const handleDeleteUser = async (uid, displayName) => {
+    if (!confirm(`¿Eliminar al usuario "${displayName || uid}"? Se borrarán todos sus datos y compras.`)) return
+    setDeletingUserId(uid)
+    try {
+      await deleteUserAdmin(uid)
+      await loadUsers()
+    } catch (err) {
+      console.error('Error deleting user:', err)
+    } finally {
+      setDeletingUserId(null)
+    }
+  }
+
+  const handleToggleTestMode = async (uid, currentValue) => {
+    setTogglingTestMode(uid)
+    try {
+      await setUserTestMode(uid, !currentValue)
+      setUsers(prev => prev.map(u => u.id === uid ? { ...u, testMode: !currentValue } : u))
+    } catch (err) {
+      console.error('Error toggling test mode:', err)
+    } finally {
+      setTogglingTestMode(null)
     }
   }
 
@@ -253,7 +402,7 @@ export default function AdminDashboard() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3 mb-5">
         <div className="bg-black/30 rounded-xl p-3 text-center">
-          <p className="text-2xl text-white font-light">{users.length}</p>
+          <p className="text-2xl text-white font-light">{clientUsers.length}</p>
           <p className="text-[10px] text-gray-500 uppercase tracking-wider">Usuarios</p>
         </div>
         <div className="bg-black/30 rounded-xl p-3 text-center">
@@ -292,6 +441,12 @@ export default function AdminDashboard() {
           }`}>
           <Tag className="w-3 h-3" /> Códigos promo
         </button>
+        <button onClick={() => setActiveTab('dev')}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-all ${
+            activeTab === 'dev' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-black/20 text-gray-500 border border-white/5 hover:text-gray-300'
+          }`}>
+          <Code2 className="w-3 h-3" /> Desarrollador
+        </button>
       </div>
 
       {/* ─── TAB: CLIENTS ─── */}
@@ -321,6 +476,16 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
+                      {u.provider === 'google.com' ? (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">Google</span>
+                      ) : u.provider === 'password' ? (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">Email</span>
+                      ) : null}
+                      {u.emailVerified ? (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Verificado</span>
+                      ) : (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">No verificado</span>
+                      )}
                       <span className="text-xs text-gray-500">{u.purchases?.length || 0} compras</span>
                       {isExpanded ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
                     </div>
@@ -337,6 +502,30 @@ export default function AdminDashboard() {
                               className="ml-auto flex items-center gap-1 text-xs text-amber-400 hover:text-amber-300 transition-colors">
                               <Download className="w-3 h-3" /> Todo
                             </button>
+                          </div>
+
+                          {/* Admin actions: test mode + delete */}
+                          <div className="flex items-center gap-3 mb-3 p-2.5 rounded-lg bg-black/30 border border-white/5">
+                            {/* Test mode toggle */}
+                            <div className="flex items-center gap-2 flex-1">
+                              <span className="text-[10px] text-gray-400">Modo prueba</span>
+                              <button
+                                onClick={() => handleToggleTestMode(u.id, u.testMode)}
+                                disabled={togglingTestMode === u.id}
+                                className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 disabled:opacity-50 ${u.testMode ? 'bg-amber-500' : 'bg-white/15'}`}>
+                                <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${u.testMode ? 'translate-x-4' : 'translate-x-0'}`} />
+                              </button>
+                              {u.testMode && <span className="text-[10px] text-amber-400">Activo</span>}
+                            </div>
+                            {/* Delete user — hide for admin's own account */}
+                            {u.email !== 'luis.virrueta.contacto@gmail.com' && (
+                            <button
+                              onClick={() => handleDeleteUser(u.id, u.displayName || u.email)}
+                              disabled={deletingUserId === u.id}
+                              className="flex items-center gap-1 text-[10px] text-red-400/60 hover:text-red-300 transition-colors disabled:opacity-40">
+                              <Trash2 className="w-3 h-3" />
+                              {deletingUserId === u.id ? 'Eliminando...' : 'Eliminar usuario'}
+                            </button>)}
                           </div>
 
                           {u.purchases?.length > 0 ? (
@@ -360,19 +549,21 @@ export default function AdminDashboard() {
                                     }`}>{p.status}</span>
                                   </div>
 
-                                  {/* Progress */}
-                                  {p.currentQuestion > 0 && (
-                                    <div className="mb-2">
-                                      <div className="flex justify-between text-[10px] text-gray-500 mb-0.5">
-                                        <span>Pregunta {p.currentQuestion}/40</span>
-                                        <span>{Math.round((p.currentQuestion / 40) * 100)}%</span>
-                                      </div>
-                                      <div className="h-1 bg-white/5 rounded-full overflow-hidden">
-                                        <div className="h-full bg-gradient-to-r from-purple-500 to-fuchsia-500 rounded-full"
-                                          style={{ width: `${(p.currentQuestion / 40) * 100}%` }} />
-                                      </div>
+                                  {/* Progress — always visible */}
+                                  <div className="mb-2">
+                                    <div className="flex justify-between text-[10px] text-gray-500 mb-0.5">
+                                      <span>Pregunta {p.currentQuestion || 0}/40</span>
+                                      <span>{Math.round(((p.currentQuestion || 0) / 40) * 100)}%</span>
                                     </div>
-                                  )}
+                                    <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                      <div className={`h-full rounded-full transition-all ${(p.currentQuestion || 0) >= 40 ? 'bg-gradient-to-r from-emerald-500 to-green-400' : 'bg-gradient-to-r from-purple-500 to-fuchsia-500'}`}
+                                        style={{ width: `${((p.currentQuestion || 0) / 40) * 100}%` }} />
+                                    </div>
+                                    <div className="flex justify-between text-[9px] text-gray-600 mt-0.5">
+                                      <span>{Object.keys(p.responses || {}).length} respuestas grabadas</span>
+                                      {p.status === 'completed' && <span className="text-emerald-400">✓ Completado</span>}
+                                    </div>
+                                  </div>
 
                                   {/* Partner info */}
                                   {p.partnerEmail && (
@@ -690,6 +881,56 @@ export default function AdminDashboard() {
                   </div>
                 ))
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── TAB: DEVELOPER TOOLS ─── */}
+      {activeTab === 'dev' && (
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium text-amber-300 flex items-center gap-2">
+            <Code2 className="w-4 h-4" /> Herramientas de Desarrollador
+          </h3>
+
+          {/* Quick access links */}
+          <div className="space-y-2">
+            <p className="text-[10px] text-gray-500 uppercase tracking-wider">Accesos rápidos</p>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { label: 'Landing Radiografía', href: '/tienda/radiografia-pareja' },
+                { label: 'Demo ventas (resultados)', href: '/tienda/radiografia-premium?demo=ventas' },
+                { label: 'Test Descubre (gratis)', href: '/tienda/radiografia-premium?free=true&type=descubre&fromProfile=true' },
+                { label: 'Test Solo (gratis)', href: '/tienda/radiografia-premium?free=true&type=solo&fromProfile=true' },
+                { label: 'Test Los Dos (gratis)', href: '/tienda/radiografia-premium?free=true&type=losdos&fromProfile=true' },
+                { label: 'Compra test mode', href: '/tienda/radiografia-pareja?test=true' },
+              ].map(link => (
+                <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-black/30 border border-white/10 text-white/70 text-xs hover:text-white hover:border-amber-500/30 transition-all">
+                  <ExternalLink className="w-3 h-3 text-amber-400/60" />
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Test promo code */}
+          <div className="space-y-2">
+            <p className="text-[10px] text-gray-500 uppercase tracking-wider">Código de prueba</p>
+            <div className="p-3 rounded-lg bg-black/30 border border-white/10 space-y-2">
+              <p className="text-white/60 text-xs">Usa el código <span className="font-mono text-amber-300">BETA100</span> en checkout para acceder gratis (100% descuento).</p>
+              <p className="text-white/60 text-xs">Código <span className="font-mono text-amber-300">LANZAMIENTO50</span> aplica 50% de descuento.</p>
+            </div>
+          </div>
+
+          {/* System info */}
+          <div className="space-y-2">
+            <p className="text-[10px] text-gray-500 uppercase tracking-wider">Sistema</p>
+            <div className="p-3 rounded-lg bg-black/30 border border-white/10 text-xs text-white/50 space-y-1">
+              <p>Worker: radiografia-worker.noirpraxis.workers.dev</p>
+              <p>Firebase: diagnostico-emocional-7b8f7</p>
+              <p>Stripe: Modo {import.meta.env.DEV ? 'Test (dev)' : 'Live'}</p>
+              <p>Usuarios: {users.length} | Compras: {totalPurchases}</p>
             </div>
           </div>
         </div>
