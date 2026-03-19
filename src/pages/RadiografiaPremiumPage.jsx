@@ -13,7 +13,7 @@ import SEOHead from '../components/SEOHead'
 import { analyzeRadiografiaPremium, generateFallbackAnalysis, analyzeCrossRadiografia } from '../services/radiografiaPremiumService'
 import { CACHED_PREVIEW_ANALYSIS } from '../data/cachedPreviewAnalysis'
 import { saveAnalysis, sendAnalysisEmail, sendBackupEmail, getAnalysis, checkCrossStatus, markPartnerDone, saveCrossAnalysis, sendCrossAnalysisEmail, getCrossAnalysis, getProfile, saveProfile } from '../services/emailApiService'
-import { downloadRadiografiaPDF, captureChartImages } from '../services/pdfGenerationService'
+import { downloadRadiografiaPDF } from '../services/pdfGenerationService'
 import { generateReactPDF } from '../services/pdfReactService'
 import { useAuth } from '../context/AuthContext'
 import { saveTestProgress, saveAnalysisResult, saveCrossAnalysisResult, getPurchase, updatePurchase } from '../services/firestoreService'
@@ -2838,25 +2838,13 @@ const RadiografiaPremiumPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [stage])
 
-  // ── Download — React PDF with captured chart images ──
+  // ── Download — React PDF (text-only, no chart capture) ──
   const generatePDF = useCallback(async () => {
     if (!aiAnalysis) return
     setPdfGenerating(true)
-    setPdfProgress('Capturando gráficas...')
+    setPdfProgress('Generando PDF...')
     try {
-      // Capture chart images from the DOM first
-      let chartImages = {}
-      if (resultsRef.current) {
-        try {
-          chartImages = await captureChartImages(resultsRef.current, (done, total) => {
-            setPdfProgress(`Capturando gráficas (${done}/${total})...`)
-          })
-        } catch (err) {
-          console.warn('Chart capture failed, PDF will render without charts:', err)
-        }
-      }
-      setPdfProgress('Generando PDF...')
-      await generateReactPDF(aiAnalysis, profileData, crossAnalysis, chartImages)
+      await generateReactPDF(aiAnalysis, profileData, crossAnalysis, {})
       setPdfProgress('')
     } catch (err) {
       console.error('PDF generation error:', err)
