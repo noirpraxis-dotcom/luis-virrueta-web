@@ -2492,39 +2492,32 @@ const DiagnosticoRelacionalPage = () => {
         ═══════════════════════════════════════════════════════ */}
         {stage === 'auth-checkout' && (
           <motion.div key="auth-checkout" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="min-h-screen flex items-center justify-center px-6 pt-12 pb-20">
-            <div className="max-w-lg w-full space-y-6">
-
-              {/* Back */}
-              <button onClick={() => { setStage('hero'); scrollToTop() }}
-                className="flex items-center gap-2 text-white/40 text-sm hover:text-white/70 transition-colors">
-                <ArrowLeft className="w-4 h-4" />
-                Volver
-              </button>
+            className="min-h-screen px-6 pt-6 pb-20">
+            <div className="max-w-xl mx-auto w-full space-y-6">
 
               {/* Product card — full details of what they're buying */}
               {selectedPlan === 'descubre' ? (
                 <div className="rounded-2xl border border-white/[0.1] bg-zinc-950/60 overflow-hidden">
-                  <div className="py-4 px-7 bg-gradient-to-br from-amber-400 to-orange-500 min-h-[80px] flex flex-col justify-center">
+                  <div className="py-5 px-7 bg-gradient-to-br from-amber-400 to-orange-500 min-h-[90px] flex flex-col justify-center">
                     <div className="flex items-center gap-2 mb-1.5">
-                      <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-bold">Individual — Sin pareja</p>
-                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-black/15 text-zinc-900 font-semibold">1 reporte</span>
+                      <p className="text-white text-sm uppercase tracking-[0.15em] font-bold">Individual — Sin pareja</p>
+                      <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-white/25 text-white font-semibold">1 reporte</span>
                     </div>
-                    <p className="text-zinc-900 text-sm font-bold leading-snug">Empieza por ti: entiende tu forma de amar.</p>
+                    <p className="text-white text-base font-bold leading-snug">Empieza por ti: entiende tu forma de amar.</p>
                   </div>
-                  <div className="p-6 pt-4 space-y-4">
+                  <div className="p-7 pt-5 space-y-5">
                     <div>
                       <div className="flex items-baseline gap-2 mb-1">
-                        <span className="text-white/30 text-lg line-through">$999</span>
-                        <p className="text-3xl font-light text-white">${cardPromoApplied.descubre?.finalPrice ?? PRODUCT_PRICE_DESCUBRE} <span className="text-lg text-white/35">MXN</span></p>
+                        <span className="text-white/40 text-lg line-through">$999</span>
+                        <p className="text-4xl font-light text-white">${cardPromoApplied.descubre?.finalPrice ?? PRODUCT_PRICE_DESCUBRE} <span className="text-lg text-white/50">MXN</span></p>
                       </div>
-                      <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                      <p className="text-white/50 text-sm font-light">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
+                      <p className="text-emerald-400 text-sm font-medium mb-1">-50% por lanzamiento</p>
+                      <p className="text-white/70 text-base font-light">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
                     </div>
-                    <ul className="space-y-2">
+                    <ul className="space-y-2.5">
                       {['Descubre por qué eliges siempre el mismo tipo de pareja', 'Mapa de tu estilo de apego y mecanismos de defensa', 'Radiografía de tus patrones inconscientes al amar', '40 preguntas guiadas por voz con IA', 'Análisis de 11 corrientes psicológicas sobre ti', 'Reporte PDF con gráficas y análisis descargable'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2.5 text-white/70 text-sm font-light">
-                          <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                        <li key={i} className="flex items-start gap-2.5 text-white/90 text-base font-light">
+                          <Check className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
                       ))}
@@ -2533,26 +2526,26 @@ const DiagnosticoRelacionalPage = () => {
                 </div>
               ) : selectedPlan === 'solo' ? (
                 <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] overflow-hidden">
-                  <div className="py-4 px-7 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[80px] flex flex-col justify-center">
+                  <div className="py-5 px-7 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
                     <div className="flex items-center gap-2 mb-1.5">
-                      <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Respondes tú</p>
-                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">1 reporte</span>
+                      <p className="text-white text-sm uppercase tracking-[0.15em] font-bold">Pareja — Respondes tú</p>
+                      <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-white/25 text-white font-semibold">1 reporte</span>
                     </div>
-                    <p className="text-white text-sm font-bold leading-snug">Tienes pareja, pero tú haces todo el análisis.</p>
+                    <p className="text-white text-base font-bold leading-snug">Tienes pareja, pero tú haces todo el análisis.</p>
                   </div>
-                  <div className="p-6 pt-4 space-y-4">
+                  <div className="p-7 pt-5 space-y-5">
                     <div>
                       <div className="flex items-baseline gap-2 mb-1">
-                        <span className="text-white/30 text-lg line-through">$999</span>
-                        <p className="text-3xl font-light text-white">${cardPromoApplied.solo?.finalPrice ?? PRODUCT_PRICE_SOLO} <span className="text-lg text-white/35">MXN</span></p>
+                        <span className="text-white/40 text-lg line-through">$999</span>
+                        <p className="text-4xl font-light text-white">${cardPromoApplied.solo?.finalPrice ?? PRODUCT_PRICE_SOLO} <span className="text-lg text-white/50">MXN</span></p>
                       </div>
-                      <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                      <p className="text-white/50 text-sm font-light">Tú contestas · Análisis profundo de lo que está pasando en tu relación</p>
+                      <p className="text-emerald-400 text-sm font-medium mb-1">-50% por lanzamiento</p>
+                      <p className="text-white/70 text-base font-light">Tú contestas · Análisis profundo de lo que está pasando en tu relación</p>
                     </div>
-                    <ul className="space-y-2">
+                    <ul className="space-y-2.5">
                       {['Entiende qué dinámicas invisibles están desgastando tu relación', '40 preguntas guiadas por voz — tú contestas solo/a', 'Análisis de 11 corrientes psicológicas sobre tu caso', 'Diagnóstico de hacia dónde va tu relación si nada cambia', 'Autoanálisis: qué proyectas, qué repites, qué evitas', 'Reporte PDF profesional con radar y gráficas'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2.5 text-white/70 text-sm font-light">
-                          <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                        <li key={i} className="flex items-start gap-2.5 text-white/90 text-base font-light">
+                          <Check className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
                       ))}
@@ -2561,26 +2554,26 @@ const DiagnosticoRelacionalPage = () => {
                 </div>
               ) : (
                 <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] overflow-hidden">
-                  <div className="py-4 px-7 bg-gradient-to-br from-blue-500 to-cyan-500 min-h-[80px] flex flex-col justify-center">
+                  <div className="py-5 px-7 bg-gradient-to-br from-blue-500 to-cyan-500 min-h-[90px] flex flex-col justify-center">
                     <div className="flex items-center gap-2 mb-1.5">
-                      <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Responden los dos</p>
-                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">3 reportes</span>
+                      <p className="text-white text-sm uppercase tracking-[0.15em] font-bold">Pareja — Responden los dos</p>
+                      <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-white/25 text-white font-semibold">3 reportes</span>
                     </div>
-                    <p className="text-white text-sm font-bold leading-snug">Diagnóstico cruzado completo de ambos.</p>
+                    <p className="text-white text-base font-bold leading-snug">Diagnóstico cruzado completo de ambos.</p>
                   </div>
-                  <div className="p-6 pt-4 space-y-4">
+                  <div className="p-7 pt-5 space-y-5">
                     <div>
                       <div className="flex items-baseline gap-2 mb-1">
-                        <span className="text-white/30 text-lg line-through">$1,999</span>
-                        <p className="text-3xl font-light text-white">${cardPromoApplied.losdos?.finalPrice ?? PRODUCT_PRICE_LOSDOS} <span className="text-lg text-white/35">MXN</span></p>
+                        <span className="text-white/40 text-lg line-through">$1,999</span>
+                        <p className="text-4xl font-light text-white">${cardPromoApplied.losdos?.finalPrice ?? PRODUCT_PRICE_LOSDOS} <span className="text-lg text-white/50">MXN</span></p>
                       </div>
-                      <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                      <p className="text-white/50 text-sm font-light">Cada uno contesta por separado · 3 reportes: tuyo, suyo y cruzado</p>
+                      <p className="text-emerald-400 text-sm font-medium mb-1">-50% por lanzamiento</p>
+                      <p className="text-white/70 text-base font-light">Cada uno contesta por separado · 3 reportes: tuyo, suyo y cruzado</p>
                     </div>
-                    <ul className="space-y-2">
+                    <ul className="space-y-2.5">
                       {['Cada uno contesta 40 preguntas por separado, en privado', 'Reporte individual para cada uno con su propio análisis', 'Reporte cruzado: dónde chocan y dónde se complementan', 'Diagnóstico de la dinámica invisible entre los dos', 'Comparación de estilos de apego y lenguajes del amor', 'El punto de partida ideal antes de terapia de pareja'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2.5 text-white/70 text-sm font-light">
-                          <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                        <li key={i} className="flex items-start gap-2.5 text-white/90 text-base font-light">
+                          <Check className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
                       ))}
@@ -2589,11 +2582,34 @@ const DiagnosticoRelacionalPage = () => {
                 </div>
               )}
 
+              {/* Promo code — between card and auth */}
+              <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-5">
+                <p className="text-white/70 text-sm uppercase tracking-wider mb-3 font-medium">Código promocional</p>
+                <div className="relative">
+                  <input type="text" value={cardPromoCodes[selectedPlan] || ''}
+                    onChange={e => { setCardPromoCodes(p => ({ ...p, [selectedPlan]: e.target.value })); setCardPromoErrors(p => ({ ...p, [selectedPlan]: '' })); setCardPromoApplied(p => ({ ...p, [selectedPlan]: null })) }}
+                    placeholder="¿Tienes un código?"
+                    className="w-full px-4 py-3 pr-24 bg-white/[0.04] border border-white/10 rounded-lg text-white text-base font-light placeholder:text-white/30 focus:border-violet-400/30 focus:outline-none transition-colors" />
+                  <button onClick={() => handleApplyPromo(selectedPlan)}
+                    disabled={!cardPromoCodes[selectedPlan]?.trim() || promoValidating === selectedPlan}
+                    className="absolute right-1 top-1 bottom-1 px-4 rounded-md bg-gradient-to-r from-amber-400 to-orange-500 text-white text-sm font-semibold transition-colors disabled:opacity-30 disabled:cursor-default">
+                    {promoValidating === selectedPlan ? '...' : 'Aplicar'}
+                  </button>
+                </div>
+                {cardPromoErrors[selectedPlan] && <p className="text-red-400/70 text-sm mt-2">{cardPromoErrors[selectedPlan]}</p>}
+                {cardPromoApplied[selectedPlan] && (
+                  <div className="flex items-center gap-2 px-3 py-2 mt-2 rounded-lg bg-emerald-500/[0.08] border border-emerald-500/20">
+                    <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" strokeWidth={2} />
+                    <span className="text-emerald-300 text-sm font-light">{cardPromoApplied[selectedPlan].label}{cardPromoApplied[selectedPlan].free ? ' · Gratis' : ` · -${cardPromoApplied[selectedPlan].discountPercent}%`}</span>
+                  </div>
+                )}
+              </div>
+
               {/* Section separator */}
-              <div className="flex items-center gap-3 pt-2">
-                <div className="flex-1 h-px bg-white/10" />
-                <p className="text-white/40 text-xs font-light tracking-wide">Crea tu cuenta o inicia sesión para completar tu compra</p>
-                <div className="flex-1 h-px bg-white/10" />
+              <div className="flex items-center gap-3 pt-3">
+                <div className="flex-1 h-px bg-white/15" />
+                <p className="text-white/60 text-sm font-light tracking-wide">Crea tu cuenta o inicia sesión para completar tu compra</p>
+                <div className="flex-1 h-px bg-white/15" />
               </div>
 
               {/* Auth section — only if NOT logged in */}
@@ -2821,12 +2837,12 @@ const DiagnosticoRelacionalPage = () => {
                         </div>
                       )}
                       <div>
-                        <p className="text-white text-sm">{firebaseUser.displayName || 'Mi perfil'}</p>
-                        <p className="text-gray-400 text-xs">{firebaseUser.email}</p>
+                        <p className="text-white text-base font-medium">{firebaseUser.displayName || 'Mi perfil'}</p>
+                        <p className="text-white/60 text-sm">{firebaseUser.email}</p>
                       </div>
-                      <CheckCircle className="w-5 h-5 text-emerald-400/60 ml-auto" />
+                      <CheckCircle className="w-6 h-6 text-emerald-400 ml-auto" />
                     </div>
-                    <p className="text-emerald-300/50 text-xs">Sesión activa — tu compra se guardará en tu perfil</p>
+                    <p className="text-emerald-300/70 text-sm">Sesión activa — tu compra se guardará en tu perfil</p>
                   </div>
                 </div>
               )}
@@ -2840,38 +2856,14 @@ const DiagnosticoRelacionalPage = () => {
                    PRODUCT_PRICE_DESCUBRE)
                 return (
                   <div className="space-y-4">
-                    {/* Promo code section */}
-                    <div className={`bg-white/[0.03] border border-white/10 rounded-2xl p-5 transition-opacity ${isReady ? '' : 'opacity-60'}`}>
-                      <p className="text-white/50 text-xs uppercase tracking-wider mb-3">Código promocional</p>
-                      <div className="relative">
-                        <input type="text" value={cardPromoCodes[selectedPlan] || ''}
-                          onChange={e => { setCardPromoCodes(p => ({ ...p, [selectedPlan]: e.target.value })); setCardPromoErrors(p => ({ ...p, [selectedPlan]: '' })); setCardPromoApplied(p => ({ ...p, [selectedPlan]: null })) }}
-                          placeholder="¿Tienes un código?"
-                          disabled={!isReady}
-                          className="w-full px-3 py-2.5 pr-20 bg-white/[0.04] border border-white/10 rounded-lg text-white text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors disabled:opacity-50" />
-                        <button onClick={() => handleApplyPromo(selectedPlan)}
-                          disabled={!isReady || !cardPromoCodes[selectedPlan]?.trim() || promoValidating === selectedPlan}
-                          className="absolute right-1 top-1 bottom-1 px-3 rounded-md bg-violet-600/80 hover:bg-violet-500/80 text-white text-[11px] font-medium transition-colors disabled:opacity-30 disabled:cursor-default">
-                          {promoValidating === selectedPlan ? '...' : 'Aplicar'}
-                        </button>
-                      </div>
-                      {cardPromoErrors[selectedPlan] && <p className="text-red-400/70 text-xs mt-2">{cardPromoErrors[selectedPlan]}</p>}
-                      {cardPromoApplied[selectedPlan] && (
-                        <div className="flex items-center gap-2 px-3 py-2 mt-2 rounded-lg bg-emerald-500/[0.08] border border-emerald-500/20">
-                          <CheckCircle className="w-3.5 h-3.5 text-emerald-400/70 flex-shrink-0" strokeWidth={2} />
-                          <span className="text-emerald-300/80 text-xs font-light">{cardPromoApplied[selectedPlan].label}{cardPromoApplied[selectedPlan].free ? ' · Gratis' : ` · -${cardPromoApplied[selectedPlan].discountPercent}%`}</span>
-                        </div>
-                      )}
-                    </div>
-
                     {/* Pay button — always visible */}
                     <div className="relative">
                       <motion.button
                         onClick={() => isReady && handlePurchase(selectedPlan)}
                         disabled={!isReady || checkoutLoading === selectedPlan}
                         whileHover={isReady ? { scale: 1.02 } : {}} whileTap={isReady ? { scale: 0.98 } : {}}
-                        className={`w-full py-4 rounded-xl text-white font-medium text-base transition-all shadow-lg disabled:opacity-40 disabled:cursor-not-allowed ${
-                          selectedPlan === 'descubre' ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-zinc-900 shadow-amber-600/20' :
+                        className={`w-full py-4 rounded-xl text-white font-semibold text-lg transition-all shadow-lg disabled:opacity-40 disabled:cursor-not-allowed ${
+                          selectedPlan === 'descubre' ? 'bg-gradient-to-r from-amber-400 to-orange-500 shadow-amber-600/20' :
                           selectedPlan === 'losdos' ? 'bg-gradient-to-r from-blue-500 to-cyan-500 shadow-cyan-600/20' :
                           'bg-gradient-to-r from-violet-600 to-fuchsia-600 shadow-violet-600/20'
                         }`}>
@@ -2880,7 +2872,7 @@ const DiagnosticoRelacionalPage = () => {
                          `Pagar $${currentPrice} MXN`}
                       </motion.button>
                       {!isReady && (
-                        <p className="text-center text-white/30 text-[11px] mt-2 font-light">
+                        <p className="text-center text-white/50 text-sm mt-2 font-light">
                           {!firebaseUser ? 'Crea tu cuenta arriba para activar el pago' : 'Verifica tu email para activar el pago'}
                         </p>
                       )}
