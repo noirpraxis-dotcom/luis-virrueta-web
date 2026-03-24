@@ -2725,8 +2725,8 @@ const BlogArticlePage = () => {
 
     try {
       const { title: metaTitle, subtitle: metaSubtitle, body } = extractMetaFromBlocks(draftBlocks)
-      const finalTitle = toSentenceCase(metaTitle || draftTitle || article.title)
-      const finalSubtitle = toSentenceCase(metaSubtitle || draftSubtitle || '')
+      const finalTitle = (metaTitle || draftTitle || article.title || '').trim()
+      const finalSubtitle = (metaSubtitle || draftSubtitle || '').trim()
 
       // Validar que haya título
       if (!finalTitle || finalTitle.trim().length === 0) {
@@ -3234,7 +3234,7 @@ const BlogArticlePage = () => {
       />
 
       {/* Hero Image Section - SOLO LA IMAGEN */}
-      <section ref={heroRef} className="relative w-full h-[36vh] sm:h-[50vh] lg:aspect-video lg:h-auto lg:max-h-[80vh] overflow-hidden">
+      <section ref={heroRef} className="relative w-full aspect-video max-h-[80vh] overflow-hidden">
         {/* Background image (robusto con fallback) */}
         {effectiveHeroImage ? (
           <div className="absolute inset-0 overflow-hidden flex items-center justify-center">
@@ -3682,7 +3682,6 @@ const BlogArticlePage = () => {
                   setDraftTitle(e.target.value)
                   setIsDirty(true)
                 }}
-                onBlur={(e) => setDraftTitle(toSentenceCase(e.target.value))}
                 placeholder="Escribe el título aquí..."
                 autoFocus
                 className="w-full bg-transparent outline-none border-b border-white/10 focus:border-white/30 placeholder:text-white/30"
@@ -3707,7 +3706,6 @@ const BlogArticlePage = () => {
                     setDraftSubtitle(e.target.value)
                     setIsDirty(true)
                   }}
-                  onBlur={(e) => setDraftSubtitle(toSentenceCase(e.target.value))}
                   placeholder="Escribe el subtítulo aquí..."
                   className="w-full bg-transparent outline-none border-b border-white/10 focus:border-white/30 placeholder:text-white/40"
                 />

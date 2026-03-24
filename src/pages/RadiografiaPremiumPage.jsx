@@ -3641,12 +3641,15 @@ const RadiografiaPremiumPage = () => {
                     Responde en voz alta lo primero que te venga a la mente. No lo pienses demasiado.
                   </p>
 
-                  {/* Mic icon centered */}
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="w-12 h-12 rounded-full bg-red-500/15 border-2 border-red-500/30 flex items-center justify-center animate-pulse">
-                      <Mic className="w-5 h-5 text-red-400" />
+                  {/* Info box: mic auto-activation */}
+                  <div className="p-4 rounded-xl border border-violet-500/15 bg-violet-500/[0.04]">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <Mic className="w-3.5 h-3.5 text-violet-300" />
+                      </div>
+                      <span className="text-violet-200 text-sm font-semibold uppercase tracking-wider">Importante</span>
                     </div>
-                    <p className="text-white/60 text-sm font-light">Cuando la voz termine, el <span className="text-red-300">micrófono se activa</span> automáticamente.</p>
+                    <p className="text-white/80 text-base font-light">Después de cada pregunta, el micrófono se activa automáticamente para que puedas hablar.</p>
                   </div>
                 </motion.div>
               )}
@@ -3659,7 +3662,7 @@ const RadiografiaPremiumPage = () => {
                   </div>
                   <div>
                     <h2 className="text-xl lg:text-2xl font-light text-white mb-3">Después aparece la <span className="text-violet-300">tarjeta violeta</span></h2>
-                    <p className="text-white/70 text-base font-light max-w-md mx-auto">Te muestra puntos que quizás no mencionaste, para completar tu respuesta.</p>
+                    <p className="text-white/80 text-lg font-light max-w-md mx-auto">Te muestra puntos que quizás no mencionaste, para completar tu respuesta.</p>
                   </div>
                   {/* Demo purple card */}
                   <div className="rounded-2xl overflow-hidden">
@@ -3678,8 +3681,8 @@ const RadiografiaPremiumPage = () => {
                       </div>
                     </div>
                   </div>
-                  <p className="text-white/70 text-base font-light">
-                    El micrófono se activa de nuevo para que complementes. El algoritmo une ambas respuestas.
+                  <p className="text-white/80 text-lg font-light">
+                    El micrófono se activa de nuevo para que complementes.
                   </p>
                 </motion.div>
               )}
@@ -3691,21 +3694,27 @@ const RadiografiaPremiumPage = () => {
                     <RotateCcw className="w-7 h-7 text-amber-400/60" strokeWidth={1.5} />
                   </div>
                   <div>
-                    <h2 className="text-xl lg:text-2xl font-light text-white mb-3">Si quieres regrabar, se borra todo</h2>
-                    <p className="text-white/70 text-base font-light max-w-md mx-auto">No se puede editar solo una parte. Si eliges regrabar, empiezas desde cero.</p>
+                    <h2 className="text-xl lg:text-2xl font-light text-white mb-3">¿No quedaste conforme? Puedes regrabar</h2>
+                    <p className="text-white/70 text-base font-light max-w-md mx-auto">Cada pregunta tiene dos partes: la <span className="text-emerald-300 font-medium">verde</span> (tu respuesta espontánea) y la <span className="text-violet-300 font-medium">violeta</span> (complemento). Si regresas, ambas se reinician.</p>
                   </div>
                   <div className="p-5 rounded-2xl border border-amber-500/10 bg-amber-500/[0.03] space-y-4">
                     <div className="flex items-start gap-3 text-left">
                       <div className="w-7 h-7 rounded-full bg-amber-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <span className="text-amber-300 text-sm font-bold">1</span>
                       </div>
-                      <p className="text-white/80 text-base font-light">Toca <span className="text-amber-300 font-medium underline underline-offset-2 decoration-amber-400/40">"Regrabar desde cero"</span> si no quedaste conforme.</p>
+                      <p className="text-white/80 text-base font-light">Toca el botón <span className="text-amber-300 font-medium underline underline-offset-2 decoration-amber-400/40">"Regrabar desde cero"</span> si no quedaste conforme con tu respuesta.</p>
                     </div>
                     <div className="flex items-start gap-3 text-left">
                       <div className="w-7 h-7 rounded-full bg-amber-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <span className="text-amber-300 text-sm font-bold">2</span>
                       </div>
-                      <p className="text-white/80 text-base font-light">Se borra tu respuesta anterior completa y vuelves a la pregunta verde.</p>
+                      <p className="text-white/80 text-base font-light">Tu respuesta se borra por completo (verde y violeta) y la pregunta vuelve a leerse desde el inicio.</p>
+                    </div>
+                    <div className="flex items-start gap-3 text-left">
+                      <div className="w-7 h-7 rounded-full bg-amber-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-amber-300 text-sm font-bold">3</span>
+                      </div>
+                      <p className="text-white/80 text-base font-light">Solo afecta la pregunta actual — el resto de tus respuestas se conservan intactas.</p>
                     </div>
                   </div>
                 </motion.div>
@@ -3719,20 +3728,17 @@ const RadiografiaPremiumPage = () => {
                   </div>
                   <div>
                     <h2 className="text-xl lg:text-2xl font-light text-white mb-3">Tu progreso se guarda automáticamente</h2>
-                    <p className="text-white/70 text-base font-light max-w-md mx-auto">Si cierras la ventana o pierdes conexión, al volver encontrarás todo donde lo dejaste.</p>
+                    <p className="text-white/70 text-base font-light max-w-md mx-auto">Si cierras la ventana o pierdes conexión, puedes continuar el test desde donde te quedaste.</p>
                   </div>
-                  <div className="p-5 rounded-2xl border border-teal-500/10 bg-teal-500/[0.03]">
+                  <div className="p-5 rounded-2xl border border-teal-500/10 bg-teal-500/[0.03] space-y-3">
                     <div className="flex flex-wrap gap-5 justify-center text-white/80 text-base font-light">
                       <span className="flex items-center gap-2"><CheckCircle className="w-5 h-5 text-teal-400/60" /> Guardado en la nube</span>
                       <span className="flex items-center gap-2"><CheckCircle className="w-5 h-5 text-teal-400/60" /> Retoma cuando quieras</span>
-                      <span className="flex items-center gap-2"><CheckCircle className="w-5 h-5 text-teal-400/60" /> 100% privado</span>
                     </div>
-                  </div>
-                  <div className="p-5 rounded-xl bg-gradient-to-r from-emerald-500/[0.06] to-teal-500/[0.04] border border-emerald-500/15 text-center">
-                    <p className="text-white/70 text-base font-light mb-1">¿Necesitas ayuda durante el test?</p>
-                    <p className="text-emerald-300/80 text-base font-light">
-                      Usa el botón flotante de WhatsApp en la esquina y te ayudamos al instante.
-                    </p>
+                    <div className="flex flex-wrap gap-5 justify-center text-white/80 text-base font-light">
+                      <span className="flex items-center gap-2"><CheckCircle className="w-5 h-5 text-teal-400/60" /> 100% privado</span>
+                      <span className="flex items-center gap-2"><CheckCircle className="w-5 h-5 text-teal-400/60" /> Sin límite de tiempo</span>
+                    </div>
                   </div>
                 </motion.div>
               )}
@@ -3937,12 +3943,13 @@ const RadiografiaPremiumPage = () => {
                 </motion.button>
               </div>
 
-              {/* ── Regrabar link (voice mode only, when has content) ── */}
+              {/* ── Regrabar button (voice mode only, when has content) ── */}
               {inputMode === 'voice' && (recording || currentText.trim()) && (
-                <div className="text-center mb-6">
+                <div className="flex justify-center mb-6">
                   <button
                     onClick={() => setShowRegrabarModal(true)}
-                    className="text-amber-300/60 text-sm font-light hover:text-amber-300/90 transition-colors underline underline-offset-2 decoration-amber-300/20 hover:decoration-amber-300/50">
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-amber-500/20 bg-amber-500/[0.06] text-amber-300/80 hover:text-amber-300 hover:bg-amber-500/[0.12] hover:border-amber-500/35 transition-all text-sm font-light">
+                    <RotateCcw className="w-4 h-4" />
                     Regrabar desde cero
                   </button>
                 </div>
@@ -3960,7 +3967,7 @@ const RadiografiaPremiumPage = () => {
                         className="flex-1 py-2.5 rounded-xl border border-white/10 text-white/60 text-sm font-light hover:bg-white/5 transition-colors">
                         Cancelar
                       </button>
-                      <button onClick={() => { setShowRegrabarModal(false); stopAudio(); if (recording) stopRecording(); setTranscript(''); setTextInput(''); setGreenAnswer(''); setQuestionPhase('green'); setTimeout(() => startRecording(), 300) }}
+                      <button onClick={() => { setShowRegrabarModal(false); stopAudio(); if (recording) stopRecording(); setTranscript(''); setTextInput(''); setGreenAnswer(''); setQuestionPhase('green'); setResponses(prev => { const copy = { ...prev }; delete copy[question.id]; return copy }); setTimeout(() => { if (selectedVoiceId) { playQuestion(questionText, undefined, () => { setTimeout(() => { const sr = window.SpeechRecognition || window.webkitSpeechRecognition; if (sr && inputMode === 'voice') startRecording() }, 300) }) } else { startRecording() } }, 300) }}
                         className="flex-1 py-2.5 rounded-xl bg-amber-500/20 border border-amber-500/25 text-amber-300 text-sm font-light hover:bg-amber-500/30 transition-colors">
                         Sí, regrabar
                       </button>

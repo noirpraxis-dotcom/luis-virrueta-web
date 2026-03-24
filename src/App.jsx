@@ -48,6 +48,7 @@ const RegistroPage = lazy(() => import('./pages/RegistroPage'))
 const FirebaseAuthActionPage = lazy(() => import('./pages/FirebaseAuthActionPage'))
 const AdminComentariosPage = lazy(() => import('./pages/AdminComentariosPage'))
 const AdminAnalyticsPage = lazy(() => import('./pages/AdminAnalyticsPage'))
+const AdminSEOPage = lazy(() => import('./pages/AdminSEOPage'))
 
 // Loading component
 const PageLoader = () => (
@@ -255,6 +256,11 @@ const AppContent = () => {
               {/* Admin: Analytics */}
               <Route path="/admin/analytics" element={
                 <AdminAnalyticsPage />
+              } />
+
+              {/* Admin: SEO Manager */}
+              <Route path="/admin/seo" element={
+                <AdminSEOPage />
               } />
 
               {/* Aquí irán más rutas/páginas */}

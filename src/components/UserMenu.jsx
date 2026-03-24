@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react'
-import { User, LogOut, LayoutDashboard, Shield, MessageSquare, BarChart3 } from 'lucide-react'
+import { User, LogOut, LayoutDashboard, Shield, MessageSquare, BarChart3, Globe } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
@@ -105,6 +105,17 @@ const UserMenu = () => {
                 )}
                 <span className="text-sm font-light">{isAdmin ? 'Panel Admin' : 'Mi perfil'}</span>
               </Link>
+
+              {isAdmin && (
+                <Link
+                  to="/admin/seo"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 px-4 py-2.5 transition-all duration-200 text-emerald-400/80 hover:text-emerald-300 hover:bg-emerald-500/5"
+                >
+                  <Globe className="w-4 h-4" strokeWidth={1.5} />
+                  <span className="text-sm font-light">SEO</span>
+                </Link>
+              )}
 
               {isAdmin && (
                 <Link
