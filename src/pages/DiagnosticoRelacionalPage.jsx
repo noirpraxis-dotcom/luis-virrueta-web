@@ -1817,11 +1817,7 @@ const DiagnosticoRelacionalPage = () => {
                       className="px-7 sm:px-10 py-4 sm:py-5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base sm:text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20 whitespace-nowrap">
                       Comenzar mi radiografía <ArrowRight className="inline w-5 h-5 ml-1.5" />
                     </motion.button>
-                    {resumeDraft && (
-                      <button onClick={restoreDraft} className="block mt-4 text-violet-300/40 text-sm hover:text-violet-300/70 underline underline-offset-4 transition-colors">
-                        Continuar diagnóstico en progreso
-                      </button>
-                    )}
+
                   </motion.div>
 
                   {/* Right — Video */}
@@ -2470,11 +2466,7 @@ const DiagnosticoRelacionalPage = () => {
                   </div>
                 </div>
 
-                {resumeDraft && (
-                  <button onClick={restoreDraft} className="block mx-auto mt-6 text-violet-300/40 text-sm hover:text-violet-300/70 underline underline-offset-4 transition-colors">
-                    Continuar diagnóstico en progreso
-                  </button>
-                )}
+
                 <p className="text-white/20 text-xs font-light mt-5">12 dimensiones psicológicas · Bowlby, Gottman, Sternberg, Perel y 8 autores más</p>
               </motion.div>
 

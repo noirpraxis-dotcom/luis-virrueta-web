@@ -72,9 +72,9 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
             transition={{ type: "spring", duration: 0.5 }}
             className="absolute inset-0 flex items-center justify-center"
           >
-            <div className="relative w-full h-full bg-black/98 backdrop-blur-xl flex flex-col items-center justify-center p-8">
+            <div className="relative w-full h-full bg-black/98 backdrop-blur-xl flex flex-col p-8 pt-6 overflow-y-auto">
               {/* Efectos decorativos */}
-              <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] animate-pulse" />
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-fuchsia-600/15 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
               </div>
@@ -84,7 +84,7 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                className="absolute top-6 left-6 right-6 z-20"
+                className="relative z-20 mb-6"
               >
                 <div className="flex rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md">
                   {/* Herramientas side — expands tools inline */}
@@ -112,7 +112,7 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                 initial="closed"
                 animate={isOpen ? "open" : "closed"}
                 exit="closed"
-                className="space-y-1 z-10 w-full max-w-md"
+                className="space-y-1 z-10 w-full max-w-md flex-1 flex flex-col justify-center mx-auto"
               >
                 {menuItems.map((item, index) => {
                   const isStore = item.name.toLowerCase().includes('store') || 

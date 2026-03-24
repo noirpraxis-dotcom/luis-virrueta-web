@@ -3392,10 +3392,7 @@ const RadiografiaPremiumPage = () => {
 
               {(profileGateDone || import.meta.env.DEV) && (<>
 
-              {/* Descripción post-header */}
-              <p className="text-white/70 text-base font-light leading-relaxed max-w-md mx-auto text-center">
-                Un espacio seguro donde tu voz revela patrones que las palabras escritas no capturan.
-              </p>
+
 
               {/* ── Verificación del sistema ── */}
               <div className="rounded-2xl overflow-hidden border border-violet-500/15 bg-white/[0.02]">
@@ -3453,6 +3450,7 @@ const RadiografiaPremiumPage = () => {
                       Tu navegador bloqueó el micrófono. Busca el ícono de candado 🔒 en la barra de dirección y permite el acceso.
                     </p>
                   )}
+                  <p className="text-white/40 text-xs font-light text-center mt-2">🎧 Opcional: usa audífonos para una experiencia más inmersiva</p>
                 </div>
               </div>
 
@@ -3581,7 +3579,7 @@ const RadiografiaPremiumPage = () => {
 
               {/* ── Layer progress dots ── */}
               <div className="flex items-center justify-center gap-2">
-                {[1, 2, 3, 4, 5, 6].map(n => (
+                {[1, 2, 3, 4, 5].map(n => (
                   <div key={n} className={`w-2 h-2 rounded-full transition-all duration-300 ${n === instructionLayer ? 'w-6 bg-gradient-to-r from-violet-400 to-fuchsia-400' : n < instructionLayer ? 'bg-violet-500/60' : 'bg-white/15'}`} />
                 ))}
               </div>
@@ -3593,12 +3591,11 @@ const RadiografiaPremiumPage = () => {
                     <Brain className="w-8 h-8 text-violet-400/60" strokeWidth={1.5} />
                   </div>
                   <h2 className="text-2xl lg:text-3xl font-light text-white leading-snug">
-                    Estás a punto de ver lo que normalmente <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">no se ve</span> en tu forma de amar.
+                    Estás a punto de ver las heridas invisibles que definen <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">cómo amas y a quién eliges</span>.
                   </h2>
                   <div className="p-5 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.04] to-transparent">
                     <p className="text-white/70 text-sm font-medium uppercase tracking-wider mb-3">Antes de empezar, asegúrate de tener</p>
                     <div className="flex flex-wrap gap-5 justify-center text-white/80 text-base font-light">
-                      <span className="flex items-center gap-2">🎧 Audífonos puestos</span>
                       <span className="flex items-center gap-2">🔇 Un lugar tranquilo</span>
                       <span className="flex items-center gap-2">⏱️ 20–25 minutos</span>
                     </div>
@@ -3606,55 +3603,31 @@ const RadiografiaPremiumPage = () => {
                 </motion.div>
               )}
 
-              {/* ══ LAYER 2: Cómo funciona ══ */}
+              {/* ══ LAYER 2: Demo verde + Así funciona ══ */}
               {instructionLayer === 2 && (
                 <motion.div key="layer2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto">
-                    <Headphones className="w-7 h-7 text-violet-400/60" strokeWidth={1.5} />
-                  </div>
-                  <div>
-                    <h2 className="text-xl lg:text-2xl font-light text-white mb-3">Así funciona tu test</h2>
-                    <p className="text-white/70 text-base font-light max-w-md mx-auto">Cada pregunta tiene 2 momentos:</p>
-                  </div>
-                  <div className="space-y-4 text-left">
-                    <div className="flex items-start gap-4 p-5 rounded-xl border border-violet-500/10 bg-violet-500/[0.03]">
-                      <div className="w-10 h-10 rounded-full bg-violet-500/15 border border-violet-500/25 flex items-center justify-center flex-shrink-0">
-                        <Volume2 className="w-5 h-5 text-violet-300" />
-                      </div>
-                      <div>
-                        <p className="text-white text-base font-medium mb-1">La voz te lee la pregunta</p>
-                        <p className="text-white/60 text-base font-light">Escucharás cada pregunta en la voz que elegiste.</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-4 p-5 rounded-xl border border-violet-500/10 bg-violet-500/[0.03]">
-                      <div className="w-10 h-10 rounded-full bg-violet-500/15 border border-violet-500/25 flex items-center justify-center flex-shrink-0">
-                        <Mic className="w-5 h-5 text-violet-300" />
-                      </div>
-                      <div>
-                        <p className="text-white text-base font-medium mb-1">El micrófono se activa automáticamente</p>
-                        <p className="text-white/60 text-base font-light">Tu respuesta se captura mientras hablas.</p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* ══ LAYER 3: Demo verde ══ */}
-              {instructionLayer === 3 && (
-                <motion.div key="layer3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/15 to-teal-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto">
                     <Heart className="w-7 h-7 text-emerald-400/60" strokeWidth={1.5} />
                   </div>
                   <div>
-                    <h2 className="text-xl lg:text-2xl font-light text-white mb-3">Son <span className="text-white font-medium">40 preguntas</span> y cada una aparece así</h2>
-                    <p className="text-white/70 text-base font-light max-w-md mx-auto">Primero verás una <span className="text-emerald-300 font-medium">pregunta verde</span>:</p>
+                    <h2 className="text-xl lg:text-2xl font-light text-white mb-3">Así funciona tu test</h2>
+                    <p className="text-white/70 text-base font-light max-w-md mx-auto">Son <span className="text-white font-medium">40 preguntas</span> y cada una aparece así:</p>
                   </div>
+
+                  {/* Step 1 indicator */}
+                  <div className="flex items-center justify-center gap-3 mb-2">
+                    <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
+                      <span className="text-emerald-300 text-sm font-bold">1</span>
+                    </div>
+                    <p className="text-white/70 text-base font-light">Primero verás una <span className="text-emerald-300 font-medium">pregunta verde</span>:</p>
+                  </div>
+
                   {/* Demo green card */}
                   <div className="rounded-2xl overflow-hidden">
                     <div className="px-5 py-3 bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-emerald-500/15 border border-b-0 border-emerald-500/15">
                       <p className="text-emerald-200 text-sm font-semibold uppercase tracking-wider text-center flex items-center justify-center gap-2">
                         <Heart className="w-4 h-4 text-emerald-400/70" />
-                        <span className="text-emerald-100 font-bold">1</span> · Habla sin filtro
+                        Habla sin filtro
                       </p>
                     </div>
                     <div className="px-6 py-6 border border-t-0 border-emerald-500/10 bg-emerald-500/[0.02]">
@@ -3663,18 +3636,23 @@ const RadiografiaPremiumPage = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center justify-center gap-3 py-3">
+
+                  <p className="text-white/80 text-base font-medium text-center">
+                    Responde en voz alta lo primero que te venga a la mente. No lo pienses demasiado.
+                  </p>
+
+                  {/* Mic icon centered */}
+                  <div className="flex flex-col items-center gap-2">
                     <div className="w-12 h-12 rounded-full bg-red-500/15 border-2 border-red-500/30 flex items-center justify-center animate-pulse">
                       <Mic className="w-5 h-5 text-red-400" />
                     </div>
-                    <p className="text-white/70 text-base font-light">Cuando la voz termine, el <span className="text-red-300">micrófono se activa</span> automáticamente.</p>
+                    <p className="text-white/60 text-sm font-light">Cuando la voz termine, el <span className="text-red-300">micrófono se activa</span> automáticamente.</p>
                   </div>
-                  <p className="text-white/80 text-lg font-light">Es así de fácil.</p>
                 </motion.div>
               )}
 
-              {/* ══ LAYER 4: Demo violeta ══ */}
-              {instructionLayer === 4 && (
+              {/* ══ LAYER 3: Demo violeta ══ */}
+              {instructionLayer === 3 && (
                 <motion.div key="layer4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto">
                     <Lightbulb className="w-7 h-7 text-violet-400/60" strokeWidth={1.5} />
@@ -3706,8 +3684,8 @@ const RadiografiaPremiumPage = () => {
                 </motion.div>
               )}
 
-              {/* ══ LAYER 5: Regrabación ══ */}
-              {instructionLayer === 5 && (
+              {/* ══ LAYER 4: Regrabación ══ */}
+              {instructionLayer === 4 && (
                 <motion.div key="layer5" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500/15 to-orange-500/10 border border-amber-500/20 flex items-center justify-center mx-auto">
                     <RotateCcw className="w-7 h-7 text-amber-400/60" strokeWidth={1.5} />
@@ -3733,8 +3711,8 @@ const RadiografiaPremiumPage = () => {
                 </motion.div>
               )}
 
-              {/* ══ LAYER 6: Guardado automático + WhatsApp ══ */}
-              {instructionLayer === 6 && (
+              {/* ══ LAYER 5: Guardado automático + WhatsApp ══ */}
+              {instructionLayer === 5 && (
                 <motion.div key="layer6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500/15 to-emerald-500/10 border border-teal-500/20 flex items-center justify-center mx-auto">
                     <Shield className="w-7 h-7 text-teal-400/60" strokeWidth={1.5} />
@@ -3761,7 +3739,7 @@ const RadiografiaPremiumPage = () => {
 
               {/* ── Navigation ── */}
               <div className="space-y-3">
-                {instructionLayer < 6 ? (
+                {instructionLayer < 5 ? (
                   <motion.button
                     onClick={() => setInstructionLayer(prev => prev + 1)}
                     whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
@@ -3823,21 +3801,7 @@ const RadiografiaPremiumPage = () => {
                     title="Repetir audio">
                     <Volume2 className="w-3 h-3" /> Repetir
                   </button>
-                  {audioPlaying && (
-                    <button
-                      onClick={() => {
-                        stopAudio()
-                        // Auto-start mic on "Saltar"
-                        setTimeout(() => {
-                          const sr = window.SpeechRecognition || window.webkitSpeechRecognition
-                          if (sr && inputMode === 'voice') startRecording()
-                        }, 300)
-                      }}
-                      className="h-7 px-3 rounded-lg border border-amber-500/20 bg-amber-500/[0.06] text-amber-300/70 hover:text-amber-300 transition-all text-[10px] font-light inline-flex items-center gap-1.5"
-                      title="Saltar audio">
-                      <SkipForward className="w-3 h-3" /> Saltar
-                    </button>
-                  )}
+
                 </div>
 
               </div>
@@ -3938,7 +3902,7 @@ const RadiografiaPremiumPage = () => {
                   <div className={`w-12 h-12 lg:w-13 lg:h-13 rounded-full flex items-center justify-center transition-all border-2 ${currentQ === 0 && questionPhase === 'green' ? 'opacity-20 pointer-events-none border-white/10 bg-white/[0.02] text-white/50' : 'border-violet-500/30 bg-violet-500/[0.08] text-violet-300/70 hover:border-violet-500/50 hover:bg-violet-500/[0.12] hover:text-violet-300'}`}>
                     <ArrowLeft className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-light text-violet-300/40">Anterior</span>
+                  <span className="text-[10px] font-light text-violet-300/40">Regresar</span>
                 </motion.button>
 
                 {/* Mic — center, larger (only in voice mode) */}
@@ -3965,7 +3929,7 @@ const RadiografiaPremiumPage = () => {
                   <div className={`w-12 h-12 lg:w-13 lg:h-13 rounded-full flex items-center justify-center transition-all border-2 ${currentText.trim()
                     ? 'bg-gradient-to-br from-violet-600 to-fuchsia-600 border-violet-500/50 text-white shadow-lg shadow-violet-500/25'
                     : 'border-violet-500/20 bg-violet-500/[0.05] text-violet-300/40 hover:border-violet-500/30 hover:text-violet-300/60'}`}>
-                    {questionPhase === 'green' ? <Lightbulb className="w-5 h-5" /> : currentQ < totalQ - 1 ? <ArrowRight className="w-5 h-5" /> : <Check className="w-5 h-5" />}
+                    {questionPhase === 'green' ? <ArrowRight className="w-5 h-5" /> : currentQ < totalQ - 1 ? <ArrowRight className="w-5 h-5" /> : <Check className="w-5 h-5" />}
                   </div>
                   <span className={`text-[10px] font-light ${currentText.trim() ? 'text-violet-300/60' : 'text-violet-300/30'}`}>
                     {questionPhase === 'green' ? 'Continuar' : currentQ < totalQ - 1 ? 'Siguiente' : 'Finalizar'}

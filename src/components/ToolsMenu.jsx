@@ -30,7 +30,7 @@ const ToolsMenu = ({ isMobile = false, splitButton = false, splitMobile = false,
   // Versión split mobile — botón plano dentro del split container con dropdown inline
   if (splitMobile) {
     return (
-      <div className="flex-1 relative">
+      <div className="flex-1">
         <motion.button
           onClick={() => setIsOpen(!isOpen)}
           whileTap={{ scale: 0.97 }}
@@ -54,11 +54,18 @@ const ToolsMenu = ({ isMobile = false, splitButton = false, splitMobile = false,
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
-              className="absolute top-full left-0 right-0 z-[70] overflow-hidden"
+              className="overflow-hidden"
             >
-              <div className="bg-black/95 backdrop-blur-xl border border-white/10 border-t-0 rounded-b-2xl shadow-2xl shadow-black/50">
+              <div className="bg-black/95 backdrop-blur-xl border-t border-white/10 rounded-b-2xl shadow-2xl shadow-black/50">
                 {tools.map((tool, index) => {
                   const Icon = tool.icon
+                  const colors = [
+                    'from-blue-500/15 to-cyan-500/10 border-blue-500/15 text-blue-200',
+                    'from-violet-500/15 to-fuchsia-500/10 border-violet-500/15 text-violet-200',
+                    'from-emerald-500/15 to-teal-500/10 border-emerald-500/15 text-emerald-200',
+                    'from-amber-500/15 to-orange-500/10 border-amber-500/15 text-amber-200',
+                  ]
+                  const colorClass = colors[index % colors.length]
                   return (
                     <motion.div
                       key={tool.name}
@@ -67,7 +74,7 @@ const ToolsMenu = ({ isMobile = false, splitButton = false, splitMobile = false,
                       transition={{ delay: index * 0.06 }}
                     >
                       <Link to={tool.href} onClick={() => { setIsOpen(false); if (onClose) onClose() }} className="block">
-                        <div className="flex items-center gap-3 px-5 py-3.5 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-200 border-b border-white/5 last:border-0">
+                        <div className={`flex items-center gap-3 px-5 py-3.5 bg-gradient-to-r ${colorClass} hover:brightness-125 transition-all duration-200 border-b border-white/5 last:border-0`}>
                           <Icon className="w-4 h-4 flex-shrink-0" strokeWidth={1.5} />
                           <span className="text-sm font-light tracking-wide">{tool.name}</span>
                         </div>
