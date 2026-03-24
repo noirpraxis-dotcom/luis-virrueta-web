@@ -86,7 +86,7 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                 transition={{ delay: 0.1 }}
                 className="absolute top-6 left-6 right-6 z-20"
               >
-                <div className="flex rounded-2xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-md">
+                <div className="flex rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md">
                   {/* Herramientas side — expands tools inline */}
                   <ToolsMenu splitMobile={true} onClose={onClose} />
 
@@ -97,7 +97,7 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                   <Link to="/tienda" onClick={onClose} className="flex-1">
                     <motion.div
                       whileTap={{ scale: 0.97 }}
-                      className="flex items-center justify-center gap-2.5 bg-gradient-to-r from-violet-600/30 to-fuchsia-600/30 text-white px-4 py-4 transition-all duration-300"
+                      className="flex items-center justify-center gap-2.5 bg-gradient-to-r from-violet-600/30 to-fuchsia-600/30 text-white px-4 py-4 rounded-r-2xl transition-all duration-300"
                     >
                       <ShoppingBag className="w-4 h-4 text-fuchsia-300" strokeWidth={1.5} />
                       <span className="text-sm uppercase tracking-[0.15em] font-medium" style={{ fontFamily: 'Space Grotesk, monospace' }}>Tienda</span>
@@ -162,7 +162,7 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                                   {item.name}
                                   <motion.svg
                                     width="12" height="12" viewBox="0 0 12 12" fill="none"
-                                    className="opacity-25"
+                                    className="opacity-50"
                                   >
                                     <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                   </motion.svg>

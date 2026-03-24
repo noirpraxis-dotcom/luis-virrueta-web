@@ -3315,19 +3315,21 @@ const BlogArticlePage = () => {
             <div className="flex items-center gap-2">
               <ShareButton />
 
-              <button
-                type="button"
-                onClick={() => {
-                  if (isEditMode) {
-                    stopEditMode()
-                  } else {
-                    beginEditMode()
-                  }
-                }}
-                className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 text-sm"
-              >
-                {!isAdmin ? 'Admin' : (isEditMode ? 'Salir' : 'Editar')}
-              </button>
+              {isAdmin && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (isEditMode) {
+                      stopEditMode()
+                    } else {
+                      beginEditMode()
+                    }
+                  }}
+                  className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 text-sm"
+                >
+                  {isEditMode ? 'Salir' : 'Editar'}
+                </button>
+              )}
             </div>
           </motion.div>
 

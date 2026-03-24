@@ -34,7 +34,7 @@ const ToolsMenu = ({ isMobile = false, splitButton = false, splitMobile = false,
         <motion.button
           onClick={() => setIsOpen(!isOpen)}
           whileTap={{ scale: 0.97 }}
-          className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-blue-600/30 to-cyan-600/30 text-white px-4 py-4 transition-all duration-300"
+          className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-blue-600/30 to-cyan-600/30 text-white px-4 py-4 rounded-l-2xl transition-all duration-300"
         >
           <Wrench className="w-4 h-4 text-cyan-300" strokeWidth={1.5} />
           <span className="text-sm uppercase tracking-[0.15em] font-medium" style={{ fontFamily: 'Space Grotesk, monospace' }}>Herramientas</span>
