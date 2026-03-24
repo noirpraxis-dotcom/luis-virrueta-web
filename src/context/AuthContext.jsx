@@ -99,7 +99,7 @@ export function AuthProvider({ children }) {
         await fetch(`${WORKER_URL}/api/send-verification-code`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
+          body: JSON.stringify({ email, name: displayName || '' })
         })
       } catch (verifyErr) {
         console.error('Error sending verification code:', verifyErr)

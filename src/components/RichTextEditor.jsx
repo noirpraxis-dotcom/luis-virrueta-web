@@ -579,9 +579,42 @@ export default function RichTextEditor({
     )
 
     const inline = (s) => {
-      const t = esc(s)
+      let t = esc(s)
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
+
+      // Neon text: {{neon:#color}}text{{/neon}}
+      t = t.replace(/\{\{neon:(#[0-9a-fA-F]{3,8})\}\}(.+?)\{\{\/neon\}\}/g, (_m, color, text) => {
+        const safeColor = color.replace(/[^#0-9a-fA-F]/g, '')
+        return `<span data-rte-type="neon" data-neon-color="${safeColor}" style="color:${safeColor};text-shadow:0 0 7px ${safeColor},0 0 14px ${safeColor},0 0 28px ${safeColor};font-weight:500">${text}</span>`
+      })
+
+      // Gradient text: {{gradient:#from:#to}}text{{/gradient}}
+      t = t.replace(/\{\{gradient:(#[0-9a-fA-F]{3,8}):(#[0-9a-fA-F]{3,8})\}\}(.+?)\{\{\/gradient\}\}/g, (_m, from, to, text) => {
+        const safeFrom = from.replace(/[^#0-9a-fA-F]/g, '')
+        const safeTo = to.replace(/[^#0-9a-fA-F]/g, '')
+        return `<span data-rte-type="gradient" data-gradient-from="${safeFrom}" data-gradient-to="${safeTo}" style="background-image:linear-gradient(135deg,${safeFrom},${safeTo});-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:600">${text}</span>`
+      })
+
+      // Font: {{font:FontFamily}}text{{/font}}
+      t = t.replace(/\{\{font:([^}]+)\}\}(.+?)\{\{\/font\}\}/g, (_m, fontFamily, text) => {
+        const safeFont = fontFamily.replace(/[<>"]/g, '')
+        return `<span data-rte-type="font" data-font-family="${safeFont}" style="font-family:${safeFont}">${text}</span>`
+      })
+
+      // Animation: {{anim:type}}text{{/anim}}
+      t = t.replace(/\{\{anim:([a-z]+)\}\}(.+?)\{\{\/anim\}\}/g, (_m, animType, text) => {
+        const animStyles = {
+          'shimmer': 'background:linear-gradient(90deg,currentColor 0%,#f0f 20%,currentColor 40%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:rte-shimmer 2s linear infinite',
+          'pulse': 'animation:rte-pulse 2s ease-in-out infinite',
+          'glow': 'animation:rte-glow 2s ease-in-out infinite;text-shadow:0 0 10px currentColor',
+          'typewriter': 'border-right:2px solid currentColor;overflow:hidden;white-space:nowrap',
+          'bounce': 'animation:rte-bounce 1s ease infinite',
+          'float': 'animation:rte-float 3s ease-in-out infinite',
+        }
+        const style = animStyles[animType] || ''
+        return `<span data-rte-type="animation" data-anim-type="${animType}" style="display:inline-block;${style}">${text}</span>`
+      })
 
       // Markdown-style links: [text](url)
       const withLinks = t.replace(/\[([^\]]+?)\]\(([^\s)]+)\)/g, (_m, label, href) => {
@@ -823,6 +856,35 @@ export default function RichTextEditor({
           const href = String(node.getAttribute?.('href') || '')
           if (!href) return inner
           return `[${inner}](${href})`
+        }
+
+        // Neon text effect
+        if (tag === 'span' && node.getAttribute?.('data-rte-type') === 'neon') {
+          const color = node.getAttribute?.('data-neon-color') || node.style?.color || '#06b6d4'
+          const inner = Array.from(node.childNodes || []).map(extractInlineMarkedText).join('')
+          return `{{neon:${color}}}${inner}{{/neon}}`
+        }
+
+        // Gradient text effect
+        if (tag === 'span' && node.getAttribute?.('data-rte-type') === 'gradient') {
+          const from = node.getAttribute?.('data-gradient-from') || '#a855f7'
+          const to = node.getAttribute?.('data-gradient-to') || '#06b6d4'
+          const inner = Array.from(node.childNodes || []).map(extractInlineMarkedText).join('')
+          return `{{gradient:${from}:${to}}}${inner}{{/gradient}}`
+        }
+
+        // Font effect
+        if (tag === 'span' && node.getAttribute?.('data-rte-type') === 'font') {
+          const fontFamily = node.getAttribute?.('data-font-family') || 'serif'
+          const inner = Array.from(node.childNodes || []).map(extractInlineMarkedText).join('')
+          return `{{font:${fontFamily}}}${inner}{{/font}}`
+        }
+
+        // Animation effect
+        if (tag === 'span' && node.getAttribute?.('data-rte-type') === 'animation') {
+          const animType = node.getAttribute?.('data-anim-type') || 'shimmer'
+          const inner = Array.from(node.childNodes || []).map(extractInlineMarkedText).join('')
+          return `{{anim:${animType}}}${inner}{{/anim}}`
         }
 
         const inner = Array.from(node.childNodes || []).map(extractInlineMarkedText).join('')
@@ -1829,6 +1891,29 @@ export default function RichTextEditor({
         return
       }
 
+      if (action === 'whatsapp-inline') {
+        const waUrl = 'https://chat.whatsapp.com/BjvBnSM6tILK6veH3mOLzv'
+        const sel = window.getSelection()
+        if (sel && sel.rangeCount > 0) {
+          const range = sel.getRangeAt(0)
+          const link = document.createElement('a')
+          link.href = waUrl
+          link.target = '_blank'
+          link.rel = 'noopener noreferrer'
+          link.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-400 text-sm font-medium hover:bg-emerald-500/30 transition-all no-underline'
+          link.setAttribute('data-rte-type', 'wa-inline')
+          link.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px;display:inline-block;vertical-align:middle"><path d="M12 2a9.94 9.94 0 0 0-8.72 14.8L2 22l5.36-1.42A9.95 9.95 0 1 0 12 2Zm0 18a8 8 0 0 1-4.08-1.12l-.29-.17-3.14.83.84-3.06-.2-.31A8 8 0 1 1 12 20Zm4.45-5.32c-.24-.12-1.43-.7-1.65-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.44-1.34-1.68-.14-.24-.02-.36.1-.48.1-.1.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.48-.4-.42-.54-.42-.14 0-.3-.02-.46-.02-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.1.16 1.52.1.46-.06 1.43-.58 1.63-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28Z"/></svg> Únete a nuestra comunidad'
+          range.insertNode(link)
+          range.setStartAfter(link)
+          range.collapse(true)
+          sel.removeAllRanges()
+          sel.addRange(range)
+        }
+        syncBlocksFromDocDom(undefined)
+        setShowFloatingToolbar(false)
+        return
+      }
+
       if (action === 'whatsapp') {
         const waTitle = 'Comunidad de WhatsApp'
         const waBody = 'No te pierdas ningún artículo ni reflexión importante'
@@ -2215,38 +2300,201 @@ export default function RichTextEditor({
       }
 
       if (action === 'reflection') {
+        // "Cita" — professional blockquote with decorative styling
+        const lines = text.split('\n').map(l => l.trim()).filter(Boolean)
+        const hasAuthor = lines.length > 1 && lines[lines.length - 1].length < 60
+        const quoteText = hasAuthor ? lines.slice(0, -1).join(' ') : text.trim()
+        const authorText = hasAuthor ? lines[lines.length - 1] : ''
+
         const wrapper = document.createElement('div')
         wrapper.setAttribute('data-rte-type', 'reflection')
-        wrapper.className = 'my-12 relative'
-        
-        const leftBar = document.createElement('div')
-        leftBar.setAttribute('data-rte-role', 'reflection-bar')
-        leftBar.className = `absolute left-0 top-0 w-1 h-full bg-gradient-to-b ${accentPreset.quoteBar} rounded-full`
-        
+        wrapper.className = `my-14 relative bg-gradient-to-r from-white/[0.02] via-white/[0.04] to-white/[0.02] border border-white/10 rounded-2xl p-8 lg:p-10 overflow-hidden`
+
+        const topLine = document.createElement('div')
+        topLine.setAttribute('data-rte-role', 'reflection-bar')
+        topLine.className = `absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent ${accentPreset.highlightDivider} to-transparent`
+
+        const bottomLine = document.createElement('div')
+        bottomLine.className = `absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent ${accentPreset.highlightDivider} to-transparent`
+
+        const openQuote = document.createElement('div')
+        openQuote.className = `absolute top-4 left-6 text-6xl ${accentPreset.quoteMark} font-serif leading-none select-none pointer-events-none`
+        openQuote.textContent = '\u201C'
+
+        const closeQuote = document.createElement('div')
+        closeQuote.className = `absolute bottom-4 right-6 text-6xl ${accentPreset.quoteMark} font-serif leading-none select-none pointer-events-none`
+        closeQuote.textContent = '\u201D'
+
         const content = document.createElement('div')
-        content.className = 'pl-8 pr-0 py-1'
-        
+        content.className = 'relative z-10 pl-6'
+
         const p = document.createElement('p')
-        p.className = 'text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic relative'
-        p.textContent = text.trim()
-        
-        const openQuote = document.createElement('span')
-        openQuote.className = `absolute -left-2 -top-1 text-5xl ${accentPreset.quoteMark} font-serif`
-        openQuote.textContent = '"'
-        
-        const closeQuote = document.createElement('span')
-        closeQuote.className = `absolute -bottom-6 right-0 text-5xl ${accentPreset.quoteMark} font-serif`
-        closeQuote.textContent = '"'
-        
-        p.appendChild(openQuote)
-        p.appendChild(document.createTextNode(text.trim()))
-        p.appendChild(closeQuote)
-        
+        p.className = 'text-xl lg:text-2xl text-white/90 leading-relaxed font-light italic'
+        p.textContent = quoteText
+
         content.appendChild(p)
-        wrapper.appendChild(leftBar)
+
+        if (authorText) {
+          const divider = document.createElement('div')
+          divider.className = `h-px w-16 bg-gradient-to-r ${accentPreset.highlightDivider} mt-6 mb-3`
+          const cite = document.createElement('cite')
+          cite.className = `block text-sm ${accentPreset.highlightCite}/70 not-italic font-normal tracking-wide`
+          cite.textContent = '— ' + authorText
+          content.appendChild(divider)
+          content.appendChild(cite)
+        }
+
+        wrapper.appendChild(topLine)
+        wrapper.appendChild(bottomLine)
+        wrapper.appendChild(openQuote)
+        wrapper.appendChild(closeQuote)
         wrapper.appendChild(content)
-        
+
         replaceSelectionWithTopLevelBlock(wrapper, undefined)
+        setShowFloatingToolbar(false)
+        return
+      }
+
+      // Neon text effect (inline)
+      if (action.startsWith('neon:')) {
+        const color = action.split(':')[1] || '#06b6d4'
+        const span = document.createElement('span')
+        span.setAttribute('data-rte-type', 'neon')
+        span.setAttribute('data-neon-color', color)
+        span.style.color = color
+        span.style.textShadow = `0 0 7px ${color}, 0 0 14px ${color}, 0 0 28px ${color}`
+        span.style.fontWeight = '500'
+        span.textContent = text.trim()
+
+        range.deleteContents()
+        range.insertNode(span)
+
+        const sel = window.getSelection()
+        if (sel) {
+          sel.removeAllRanges()
+          const after = document.createRange()
+          after.setStartAfter(span)
+          after.collapse(true)
+          sel.addRange(after)
+          docSelectionRangeRef.current = after.cloneRange()
+        }
+
+        syncBlocksFromDocDom(undefined)
+        setShowFloatingToolbar(false)
+        return
+      }
+
+      // Gradient text effect (inline)
+      if (action.startsWith('gradient:')) {
+        const parts = action.split(':')
+        const from = parts[1] || '#a855f7'
+        const to = parts[2] || '#06b6d4'
+        const span = document.createElement('span')
+        span.setAttribute('data-rte-type', 'gradient')
+        span.setAttribute('data-gradient-from', from)
+        span.setAttribute('data-gradient-to', to)
+        span.style.backgroundImage = `linear-gradient(135deg, ${from}, ${to})`
+        span.style.webkitBackgroundClip = 'text'
+        span.style.backgroundClip = 'text'
+        span.style.webkitTextFillColor = 'transparent'
+        span.style.fontWeight = '600'
+        span.textContent = text.trim()
+
+        range.deleteContents()
+        range.insertNode(span)
+
+        const sel = window.getSelection()
+        if (sel) {
+          sel.removeAllRanges()
+          const after = document.createRange()
+          after.setStartAfter(span)
+          after.collapse(true)
+          sel.addRange(after)
+          docSelectionRangeRef.current = after.cloneRange()
+        }
+
+        syncBlocksFromDocDom(undefined)
+        setShowFloatingToolbar(false)
+        return
+      }
+
+      // Font effect (inline)
+      if (action.startsWith('font:')) {
+        const fontFamily = action.substring(5)
+        const span = document.createElement('span')
+        span.setAttribute('data-rte-type', 'font')
+        span.setAttribute('data-font-family', fontFamily)
+        span.style.fontFamily = fontFamily
+        span.textContent = text.trim()
+
+        range.deleteContents()
+        range.insertNode(span)
+
+        const sel = window.getSelection()
+        if (sel) {
+          sel.removeAllRanges()
+          const after = document.createRange()
+          after.setStartAfter(span)
+          after.collapse(true)
+          sel.addRange(after)
+          docSelectionRangeRef.current = after.cloneRange()
+        }
+
+        syncBlocksFromDocDom(undefined)
+        setShowFloatingToolbar(false)
+        return
+      }
+
+      // Animation effect (inline)
+      if (action.startsWith('anim:')) {
+        const animType = action.substring(5)
+        const span = document.createElement('span')
+        span.setAttribute('data-rte-type', 'animation')
+        span.setAttribute('data-anim-type', animType)
+        span.style.display = 'inline-block'
+
+        const animStyles = {
+          'shimmer': 'background:linear-gradient(90deg,currentColor 0%,#f0f 20%,currentColor 40%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:rte-shimmer 2s linear infinite',
+          'pulse': 'animation:rte-pulse 2s ease-in-out infinite',
+          'glow': 'animation:rte-glow 2s ease-in-out infinite;text-shadow:0 0 10px currentColor',
+          'typewriter': 'border-right:2px solid currentColor;animation:rte-typewriter 3s steps(40) infinite,rte-blink .75s step-end infinite;overflow:hidden;white-space:nowrap',
+          'bounce': 'animation:rte-bounce 1s ease infinite',
+          'float': 'animation:rte-float 3s ease-in-out infinite',
+        }
+
+        span.setAttribute('style', (animStyles[animType] || '') + ';display:inline-block')
+        span.textContent = text.trim()
+
+        range.deleteContents()
+        range.insertNode(span)
+
+        // Inject keyframes if not already present
+        if (!document.getElementById('rte-anim-styles')) {
+          const style = document.createElement('style')
+          style.id = 'rte-anim-styles'
+          style.textContent = `
+            @keyframes rte-shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+            @keyframes rte-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.7;transform:scale(1.05)}}
+            @keyframes rte-glow{0%,100%{text-shadow:0 0 5px currentColor,0 0 10px currentColor}50%{text-shadow:0 0 20px currentColor,0 0 40px currentColor,0 0 60px currentColor}}
+            @keyframes rte-typewriter{from{width:0}to{width:100%}}
+            @keyframes rte-blink{50%{border-color:transparent}}
+            @keyframes rte-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+            @keyframes rte-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+          `
+          document.head.appendChild(style)
+        }
+
+        const sel = window.getSelection()
+        if (sel) {
+          sel.removeAllRanges()
+          const after = document.createRange()
+          after.setStartAfter(span)
+          after.collapse(true)
+          sel.addRange(after)
+          docSelectionRangeRef.current = after.cloneRange()
+        }
+
+        syncBlocksFromDocDom(undefined)
         setShowFloatingToolbar(false)
         return
       }
@@ -2610,10 +2858,16 @@ function BlockEditor({
         return `${base} ${size}`
       case 'highlight':
         return `${base} text-lg font-medium text-purple-300`
+      case 'reflection':
+        return `${base} text-lg font-light text-white/90 italic leading-relaxed`
       case 'list':
         return `${base} text-gray-300 pl-6`
       case 'questions':
         return `${base} text-gray-300 leading-relaxed pl-6`
+      case 'subsection':
+        return `${base} text-gray-300 leading-relaxed`
+      case 'whatsapp':
+        return `${base} text-emerald-300 leading-relaxed`
       default:
         return `${base} text-gray-300 leading-relaxed`
     }
@@ -2626,16 +2880,41 @@ function BlockEditor({
                block.level === 'h2' ? Heading2 : Heading3
       case 'highlight':
         return Sparkles
+      case 'reflection':
+        return Quote
       case 'list':
         return List
       case 'questions':
         return AlertCircle
+      case 'subsection':
+        return Hash
+      case 'whatsapp':
+        return MessageCircle
       default:
         return Type
     }
   }
 
   const Icon = getIcon()
+
+  // Enhanced wrapper styles per block type to match published look
+  const getWrapperClasses = () => {
+    const selectedRing = isSelected ? 'ring-1 ring-purple-500/30' : ''
+    switch (block.type) {
+      case 'highlight':
+        return `group relative px-6 py-5 transition-all cursor-text rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-500/[0.06] to-fuchsia-500/[0.03] ${selectedRing}`
+      case 'reflection':
+        return `group relative pl-8 pr-4 py-4 transition-all cursor-text rounded-xl border-l-2 border-purple-400/40 bg-white/[0.02] ${selectedRing}`
+      case 'questions':
+        return `group relative px-6 py-5 transition-all cursor-text rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.06] to-teal-500/[0.03] ${selectedRing}`
+      case 'subsection':
+        return `group relative px-6 py-5 transition-all cursor-text rounded-2xl border border-white/10 bg-white/[0.03] ${selectedRing}`
+      case 'whatsapp':
+        return `group relative px-6 py-4 transition-all cursor-text rounded-2xl border border-emerald-500/15 bg-emerald-500/[0.04] ${selectedRing}`
+      default:
+        return `group relative px-4 py-3 transition-all cursor-text rounded-xl ${isSelected ? 'bg-purple-500/10 ring-1 ring-purple-500/30' : 'bg-transparent hover:bg-white/[0.03]'}`
+    }
+  }
 
   return (
     <motion.div
@@ -2644,11 +2923,7 @@ function BlockEditor({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
       onClick={onSelect}
-      className={`group relative px-4 py-3 transition-all cursor-text rounded-xl ${
-        isSelected
-          ? 'bg-purple-500/10 ring-1 ring-purple-500/30'
-          : 'bg-transparent hover:bg-white/[0.03]'
-      }`}
+      className={getWrapperClasses()}
     >
       {/* Toolbar */}
       <AnimatePresence>
@@ -2677,6 +2952,32 @@ function BlockEditor({
         )}
       </AnimatePresence>
 
+      {/* Block type label for special blocks */}
+      {['highlight', 'reflection', 'questions', 'subsection', 'whatsapp'].includes(block.type) && (
+        <div className="flex items-center gap-2 mb-2 pointer-events-none">
+          <Icon className={`w-3.5 h-3.5 ${
+            block.type === 'reflection' ? 'text-purple-400/60' :
+            block.type === 'highlight' ? 'text-fuchsia-400/60' :
+            block.type === 'questions' ? 'text-emerald-400/60' :
+            block.type === 'whatsapp' ? 'text-emerald-400/60' :
+            'text-white/40'
+          }`} />
+          <span className={`text-[10px] uppercase tracking-[0.15em] font-medium ${
+            block.type === 'reflection' ? 'text-purple-300/50' :
+            block.type === 'highlight' ? 'text-fuchsia-300/50' :
+            block.type === 'questions' ? 'text-emerald-300/50' :
+            block.type === 'whatsapp' ? 'text-emerald-300/50' :
+            'text-white/30'
+          }`}>
+            {block.type === 'highlight' ? 'Cita destacada' :
+             block.type === 'reflection' ? 'Reflexión' :
+             block.type === 'questions' ? 'Preguntas' :
+             block.type === 'subsection' ? 'Subsección' :
+             'WhatsApp CTA'}
+          </span>
+        </div>
+      )}
+
       {/* Contenido editable */}
       <AutoGrowTextarea
         value={block.content}
@@ -2684,8 +2985,11 @@ function BlockEditor({
         inputRef={textareaElRef}
         placeholder={
           block.type === 'heading' ? 'Escribe un título...' :
-          block.type === 'highlight' ? 'Texto destacado...' :
+          block.type === 'highlight' ? 'Escribe una cita... usa — para separar autor (ej: La vida es... — Autor)' :
+          block.type === 'reflection' ? 'Escribe una reflexión o pensamiento...' :
           block.type === 'questions' ? 'Escribe una pregunta por línea...' :
+          block.type === 'subsection' ? 'Escribe el contenido de esta subsección...' :
+          block.type === 'whatsapp' ? 'Texto del enlace de WhatsApp...' :
           'Escribe aquí...'
         }
         className={getInputClasses()}
@@ -2736,8 +3040,11 @@ function BlockTypeSelector({ onSelect }) {
     { type: 'paragraph', icon: Type, label: 'Párrafo' },
     { type: 'heading', icon: Heading2, label: 'Título' },
     { type: 'highlight', icon: Sparkles, label: 'Destacado' },
+    { type: 'reflection', icon: Quote, label: 'Reflexión' },
     { type: 'list', icon: List, label: 'Lista' },
     { type: 'questions', icon: AlertCircle, label: 'Preguntas' },
+    { type: 'subsection', icon: Hash, label: 'Subsección' },
+    { type: 'whatsapp', icon: MessageCircle, label: 'WhatsApp CTA' },
   ]
 
   return (
@@ -2758,7 +3065,7 @@ function BlockTypeSelector({ onSelect }) {
             exit={{ opacity: 0, y: -10 }}
             className="absolute bottom-full left-0 right-0 mb-2 bg-gray-900 border border-gray-700 rounded-xl p-2 shadow-2xl z-20"
           >
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-1.5">
               {blockTypes.map(({ type, icon: Icon, label }) => (
                 <button
                   key={type}
@@ -2766,10 +3073,10 @@ function BlockTypeSelector({ onSelect }) {
                     onSelect(type)
                     setIsOpen(false)
                   }}
-                  className="flex items-center gap-3 p-3 hover:bg-white/10 rounded-lg transition-all text-left"
+                  className="flex items-center gap-2.5 p-2.5 hover:bg-white/10 rounded-lg transition-all text-left"
                 >
-                  <Icon className="w-5 h-5 text-purple-400" />
-                  <span className="text-sm text-white">{label}</span>
+                  <Icon className="w-4 h-4 text-purple-400" />
+                  <span className="text-xs text-white">{label}</span>
                 </button>
               ))}
             </div>
@@ -2786,16 +3093,68 @@ function BlockTypeSelector({ onSelect }) {
  */
 function FloatingFormatToolbar({ position, onClose, onFormat, onInteract }) {
   const [showBlockMenu, setShowBlockMenu] = useState(false)
+  const [showEffectsMenu, setShowEffectsMenu] = useState(false)
+  const [effectSection, setEffectSection] = useState(null) // 'neon' | 'gradient' | 'fonts' | 'animations'
+
+  const FONT_PRESETS = [
+    { label: 'Serif', family: 'Georgia, serif' },
+    { label: 'Cursiva', family: "'Dancing Script', cursive" },
+    { label: 'Mono', family: "'Courier New', monospace" },
+    { label: 'Fantasy', family: "'Papyrus', fantasy" },
+    { label: 'Elegante', family: "'Playfair Display', serif" },
+    { label: 'Título', family: "'Oswald', sans-serif" },
+    { label: 'Manuscrita', family: "'Caveat', cursive" },
+    { label: 'Retro', family: "'Press Start 2P', system-ui" },
+  ]
+
+  const ANIMATION_PRESETS = [
+    { label: 'Shimmer', value: 'shimmer', icon: '✨' },
+    { label: 'Pulso', value: 'pulse', icon: '💫' },
+    { label: 'Resplandor', value: 'glow', icon: '🌟' },
+    { label: 'Rebote', value: 'bounce', icon: '⬆' },
+    { label: 'Flotar', value: 'float', icon: '☁' },
+  ]
+
+  const NEON_COLORS = [
+    { label: 'Cyan', color: '#06b6d4', shadow: '0 0 10px #06b6d4, 0 0 20px #06b6d4, 0 0 40px #06b6d4' },
+    { label: 'Púrpura', color: '#a855f7', shadow: '0 0 10px #a855f7, 0 0 20px #a855f7, 0 0 40px #a855f7' },
+    { label: 'Rosa', color: '#ec4899', shadow: '0 0 10px #ec4899, 0 0 20px #ec4899, 0 0 40px #ec4899' },
+    { label: 'Verde', color: '#10b981', shadow: '0 0 10px #10b981, 0 0 20px #10b981, 0 0 40px #10b981' },
+    { label: 'Dorado', color: '#f59e0b', shadow: '0 0 10px #f59e0b, 0 0 20px #f59e0b, 0 0 40px #f59e0b' },
+    { label: 'Rojo', color: '#ef4444', shadow: '0 0 10px #ef4444, 0 0 20px #ef4444, 0 0 40px #ef4444' },
+    { label: 'Azul', color: '#3b82f6', shadow: '0 0 10px #3b82f6, 0 0 20px #3b82f6, 0 0 40px #3b82f6' },
+    { label: 'Lavanda', color: '#a78bfa', shadow: '0 0 10px #a78bfa, 0 0 20px #a78bfa, 0 0 40px #a78bfa' },
+    { label: 'Magenta', color: '#d946ef', shadow: '0 0 10px #d946ef, 0 0 20px #d946ef, 0 0 40px #d946ef' },
+    { label: 'Turquesa', color: '#2dd4bf', shadow: '0 0 10px #2dd4bf, 0 0 20px #2dd4bf, 0 0 40px #2dd4bf' },
+    { label: 'Lima', color: '#84cc16', shadow: '0 0 10px #84cc16, 0 0 20px #84cc16, 0 0 40px #84cc16' },
+    { label: 'Índigo', color: '#6366f1', shadow: '0 0 10px #6366f1, 0 0 20px #6366f1, 0 0 40px #6366f1' },
+    { label: 'Coral', color: '#fb7185', shadow: '0 0 10px #fb7185, 0 0 20px #fb7185, 0 0 40px #fb7185' },
+    { label: 'Blanco', color: '#ffffff', shadow: '0 0 10px #ffffff, 0 0 20px #ffffffaa, 0 0 40px #ffffff66' },
+  ]
+
+  const GRADIENT_PRESETS = [
+    { label: 'Aurora', from: '#a855f7', to: '#06b6d4' },
+    { label: 'Fuego', from: '#ef4444', to: '#f59e0b' },
+    { label: 'Océano', from: '#3b82f6', to: '#10b981' },
+    { label: 'Atardecer', from: '#ec4899', to: '#f97316' },
+    { label: 'Galaxia', from: '#6366f1', to: '#d946ef' },
+    { label: 'Selva', from: '#10b981', to: '#84cc16' },
+    { label: 'Rubí', from: '#ef4444', to: '#ec4899' },
+    { label: 'Hielo', from: '#06b6d4', to: '#a78bfa' },
+    { label: 'Lava', from: '#f97316', to: '#ef4444' },
+    { label: 'Oro', from: '#f59e0b', to: '#fbbf24' },
+  ]
 
   const formatOptions = [
     { icon: Bold, label: 'Negrita', action: 'bold' },
     { icon: Italic, label: 'Cursiva', action: 'italic' },
     { icon: MousePointer, label: 'Sección', action: 'heading' },
     { icon: Hash, label: 'Tarjeta #', action: 'subsection' },
-    { icon: MessageCircle, label: 'WhatsApp', action: 'whatsapp' },
     { icon: LinkIcon, label: 'Enlace', action: 'link' },
     { icon: Trash2, label: 'Quitar formato', action: 'delete' },
   ]
+
+  const [showWhatsAppMenu, setShowWhatsAppMenu] = useState(false)
 
   return (
     <motion.div
@@ -2819,7 +3178,7 @@ function FloatingFormatToolbar({ position, onClose, onFormat, onInteract }) {
           <button
             onMouseDown={(e) => e.preventDefault()}
             onClick={() => setShowBlockMenu((v) => !v)}
-            title="Destacar / Reflexión / Preguntas"
+            title="Reflexión / Cita / Preguntas"
             className="p-2.5 rounded-lg hover:bg-white/10 text-gray-300 hover:text-white transition-all group"
           >
             <Sparkles className="w-4 h-4" />
@@ -2840,7 +3199,7 @@ function FloatingFormatToolbar({ position, onClose, onFormat, onInteract }) {
                 className="w-full px-3 py-2 text-left text-sm text-white/90 hover:bg-white/10 flex items-center gap-2"
               >
                 <Sparkles className="w-4 h-4 text-purple-300" />
-                Destacar
+                Reflexión
               </button>
               <button
                 onMouseDown={(e) => e.preventDefault()}
@@ -2850,8 +3209,8 @@ function FloatingFormatToolbar({ position, onClose, onFormat, onInteract }) {
                 }}
                 className="w-full px-3 py-2 text-left text-sm text-white/90 hover:bg-white/10 flex items-center gap-2"
               >
-                <Quote className="w-4 h-4 text-purple-300" />
-                Reflexión
+                <Quote className="w-4 h-4 text-cyan-300" />
+                Cita
               </button>
               <button
                 onMouseDown={(e) => e.preventDefault()}
@@ -2879,6 +3238,197 @@ function FloatingFormatToolbar({ position, onClose, onFormat, onInteract }) {
             <Icon className="w-4 h-4" />
           </button>
         ))}
+
+        {/* WhatsApp dropdown button */}
+        <div className="relative">
+          <button
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => setShowWhatsAppMenu((v) => !v)}
+            title="WhatsApp"
+            className="p-2.5 rounded-lg hover:bg-white/10 text-gray-300 hover:text-white transition-all"
+          >
+            <MessageCircle className="w-4 h-4" />
+          </button>
+
+          {showWhatsAppMenu && (
+            <div
+              onMouseDown={(e) => e.preventDefault()}
+              className="absolute left-0 top-full mt-2 w-52 rounded-lg border border-white/10 bg-gray-900 shadow-2xl overflow-hidden"
+              style={{ zIndex: 100000 }}
+            >
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  setShowWhatsAppMenu(false)
+                  onFormat?.('whatsapp-inline')
+                }}
+                className="w-full px-3 py-2.5 text-left text-sm text-white/90 hover:bg-white/10 flex items-center gap-2"
+              >
+                <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-xs">Únete a nuestra comunidad</span>
+              </button>
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  setShowWhatsAppMenu(false)
+                  onFormat?.('whatsapp')
+                }}
+                className="w-full px-3 py-2.5 text-left text-sm text-white/90 hover:bg-white/10 flex items-center gap-2 border-t border-white/5"
+              >
+                <MessageCircle className="w-3.5 h-3.5 text-green-400" />
+                <span className="text-xs">Tarjeta de WhatsApp</span>
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Effects button (neon / gradient) */}
+        <div className="relative">
+          <button
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => setShowEffectsMenu((v) => !v)}
+            title="Efectos de texto"
+            className="p-2.5 rounded-lg hover:bg-white/10 text-gray-300 hover:text-white transition-all"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
+          </button>
+
+          {showEffectsMenu && (
+            <div
+              onMouseDown={(e) => e.preventDefault()}
+              className="absolute right-0 top-full mt-2 w-64 rounded-xl border border-white/10 bg-gray-900 shadow-2xl overflow-hidden max-h-[70vh] overflow-y-auto"
+              style={{ zIndex: 100000 }}
+            >
+              {/* Neón — collapsible */}
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => setEffectSection(effectSection === 'neon' ? null : 'neon')}
+                className="w-full px-3 py-2.5 text-left text-[11px] uppercase tracking-wider text-white/60 hover:text-white/80 hover:bg-white/5 flex items-center justify-between border-b border-white/5 transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_6px_#06b6d4]" />
+                  Neón
+                </span>
+                <svg className={`w-3 h-3 transition-transform ${effectSection === 'neon' ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </button>
+              {effectSection === 'neon' && (
+                <div className="flex flex-wrap gap-1.5 px-3 py-2.5 border-b border-white/5">
+                  {NEON_COLORS.map((nc) => (
+                    <button
+                      key={nc.label}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => {
+                        setShowEffectsMenu(false)
+                        setEffectSection(null)
+                        onFormat?.(`neon:${nc.color}`)
+                      }}
+                      title={nc.label}
+                      className="w-7 h-7 rounded-full border-2 border-white/20 hover:border-white/60 transition-all hover:scale-110"
+                      style={{ backgroundColor: nc.color, boxShadow: nc.shadow }}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Gradiente — collapsible */}
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => setEffectSection(effectSection === 'gradient' ? null : 'gradient')}
+                className="w-full px-3 py-2.5 text-left text-[11px] uppercase tracking-wider text-white/60 hover:text-white/80 hover:bg-white/5 flex items-center justify-between border-b border-white/5 transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full" style={{ background: 'linear-gradient(135deg, #a855f7, #06b6d4)' }} />
+                  Gradiente
+                </span>
+                <svg className={`w-3 h-3 transition-transform ${effectSection === 'gradient' ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </button>
+              {effectSection === 'gradient' && (
+                <div className="flex flex-wrap gap-1.5 px-3 py-2.5 border-b border-white/5">
+                  {GRADIENT_PRESETS.map((gp) => (
+                    <button
+                      key={gp.label}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => {
+                        setShowEffectsMenu(false)
+                        setEffectSection(null)
+                        onFormat?.(`gradient:${gp.from}:${gp.to}`)
+                      }}
+                      title={gp.label}
+                      className="w-7 h-7 rounded-full border-2 border-white/20 hover:border-white/60 transition-all hover:scale-110"
+                      style={{ background: `linear-gradient(135deg, ${gp.from}, ${gp.to})` }}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Fuentes — collapsible */}
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => setEffectSection(effectSection === 'fonts' ? null : 'fonts')}
+                className="w-full px-3 py-2.5 text-left text-[11px] uppercase tracking-wider text-white/60 hover:text-white/80 hover:bg-white/5 flex items-center justify-between border-b border-white/5 transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-purple-400">Aa</span>
+                  Fuentes
+                </span>
+                <svg className={`w-3 h-3 transition-transform ${effectSection === 'fonts' ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </button>
+              {effectSection === 'fonts' && (
+                <div className="border-b border-white/5">
+                  {FONT_PRESETS.map((fp) => (
+                    <button
+                      key={fp.label}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => {
+                        setShowEffectsMenu(false)
+                        setEffectSection(null)
+                        onFormat?.(`font:${fp.family}`)
+                      }}
+                      className="w-full px-3 py-2 text-left text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+                    >
+                      <span style={{ fontFamily: fp.family }}>{fp.label}</span>
+                      <span className="ml-2 text-[10px] text-white/30" style={{ fontFamily: fp.family }}>Ejemplo de texto</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Animaciones — collapsible */}
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => setEffectSection(effectSection === 'animations' ? null : 'animations')}
+                className="w-full px-3 py-2.5 text-left text-[11px] uppercase tracking-wider text-white/60 hover:text-white/80 hover:bg-white/5 flex items-center justify-between transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  <span className="text-xs">⚡</span>
+                  Animaciones
+                </span>
+                <svg className={`w-3 h-3 transition-transform ${effectSection === 'animations' ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </button>
+              {effectSection === 'animations' && (
+                <div className="border-t border-white/5">
+                  {ANIMATION_PRESETS.map((ap) => (
+                    <button
+                      key={ap.value}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => {
+                        setShowEffectsMenu(false)
+                        setEffectSection(null)
+                        onFormat?.(`anim:${ap.value}`)
+                      }}
+                      className="w-full px-3 py-2 text-left text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors flex items-center gap-2"
+                    >
+                      <span className="text-base">{ap.icon}</span>
+                      {ap.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </motion.div>
   )

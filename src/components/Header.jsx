@@ -59,7 +59,6 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
           
           {/* Contenedor derecho: Tools + User + Hamburguesa */}
           <div className="flex items-center gap-2">
-            <ToolsMenu />
             <UserMenu />
             
             {/* Botón Hamburguesa Elegante */}
@@ -223,16 +222,45 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
             <div className="flex items-center gap-8">
               <ul className="flex space-x-10 items-center">
               {menuItems.map((item, index) => {
-                // Insert ToolsMenu right before Tienda
+                // Tienda item is rendered as a split button with Herramientas
                 const isTienda = item.special || item.name === 'Tienda'
-                return (
-                  <React.Fragment key={index}>
-                  {isTienda && (
-                    <li key="tools-menu">
-                      <ToolsMenu />
+                if (isTienda) {
+                  return (
+                    <li key={index} className="relative">
+                      <div className="flex items-center rounded-full border border-white/20 bg-white/5">
+                        {/* Herramientas side */}
+                        <ToolsMenu splitButton />
+                        {/* Divider */}
+                        <div className="w-px h-5 bg-white/20" />
+                        {/* Tienda side */}
+                        <Link to={item.href}>
+                          <motion.span
+                            className="text-[0.8rem] uppercase flex items-center gap-2 px-4 py-1.5 text-purple-300 hover:text-purple-200 transition-colors"
+                            style={{
+                              fontFamily: 'Space Grotesk, monospace',
+                              fontWeight: 500,
+                              letterSpacing: '0.15em',
+                              textShadow: '0 0 20px rgba(168,85,247,0.4), 0 0 8px rgba(139,92,246,0.3)',
+                            }}
+                            whileHover={{
+                              textShadow: '0 0 30px rgba(168,85,247,0.6), 0 0 15px rgba(139,92,246,0.4)',
+                              backgroundColor: 'rgba(139,92,246,0.08)'
+                            }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                            {item.name}
+                          </motion.span>
+                        </Link>
+                      </div>
                     </li>
-                  )}
-                  <li 
+                  )
+                }
+                return (
+                  <li
+                    key={index}
                     className="relative group"
                     onMouseEnter={() => handleMouseEnter(index)}
                     onMouseLeave={handleMouseLeave}
@@ -243,48 +271,23 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
                       whileHover={{ y: -2 }}
                       transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
                     >
-                      {item.special ? (
-                        <motion.span
-                          className="text-[0.8rem] uppercase flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/5"
-                          style={{ 
-                            fontFamily: 'Space Grotesk, monospace',
-                            fontWeight: 500,
-                            letterSpacing: '0.15em',
-                            color: '#ffffff',
-                            textShadow: '0 0 20px rgba(255,255,255,0.3), 0 0 8px rgba(168,85,247,0.2)',
-                          }}
-                          whileHover={{
-                            textShadow: '0 0 30px rgba(255,255,255,0.6), 0 0 15px rgba(168,85,247,0.4)',
-                            letterSpacing: '0.2em',
-                            borderColor: 'rgba(255,255,255,0.3)',
-                            backgroundColor: 'rgba(255,255,255,0.1)'
-                          }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                          </svg>
-                          {item.name}
-                        </motion.span>
-                      ) : (
-                        <motion.span
-                          className="text-[0.8rem] uppercase"
-                          style={{ 
-                            fontFamily: 'Space Grotesk, monospace',
-                            fontWeight: 500,
-                            letterSpacing: '0.15em',
-                            color: '#ffffff',
-                            textShadow: '0 0 20px rgba(255,255,255,0.3), 0 0 8px rgba(168,85,247,0.2)',
-                          }}
-                          whileHover={{
-                            textShadow: '0 0 30px rgba(255,255,255,0.6), 0 0 15px rgba(168,85,247,0.4)',
-                            letterSpacing: '0.2em'
-                          }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          {item.name}
-                        </motion.span>
-                      )}
+                      <motion.span
+                        className="text-[0.8rem] uppercase"
+                        style={{ 
+                          fontFamily: 'Space Grotesk, monospace',
+                          fontWeight: 500,
+                          letterSpacing: '0.15em',
+                          color: '#ffffff',
+                          textShadow: '0 0 20px rgba(255,255,255,0.3), 0 0 8px rgba(168,85,247,0.2)',
+                        }}
+                        whileHover={{
+                          textShadow: '0 0 30px rgba(255,255,255,0.6), 0 0 15px rgba(168,85,247,0.4)',
+                          letterSpacing: '0.2em'
+                        }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        {item.name}
+                      </motion.span>
                     </motion.div>
                   </Link>
                   
@@ -337,7 +340,6 @@ const Header = ({ menuItems, onMenuToggle, isMenuOpen }) => {
                     />
                   )}
                 </li>
-              </React.Fragment>
               )
               })}
               </ul>

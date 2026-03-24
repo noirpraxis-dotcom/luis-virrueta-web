@@ -15,25 +15,46 @@ const StorePage = () => {
 
   const products = [
     {
-      id: 7,
-      name: 'Radiografía de Pareja — Diagnóstico Relacional',
+      id: 'descubre',
+      name: 'Radiografía Personal',
       category: 'Diagnóstico Psicológico',
-      price: 'Desde $499 MXN',
+      price: '$499 MXN',
+      duration: '~25 min',
+      image: 'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/imagen-tienda.jpg',
+      description: '40 preguntas por voz analizadas por IA desde 11 corrientes psicológicas. Descubre tus patrones inconscientes, tu estilo de apego y por qué amas como amas.',
+      shortDesc: 'Descubre tu forma de amar. Test individual para explorar tus patrones inconscientes, tu estilo de apego y las dinámicas que repites sin darte cuenta.',
+      benefits: [
+        '40 preguntas por voz — hablas, la IA analiza',
+        '11 corrientes: Gottman, Bowlby, Perel, Schnarch y más',
+        'Radar multidimensional de 12 dimensiones',
+        'Mapa de apego + mecanismos de defensa',
+        'PDF descargable con tu reporte completo'
+      ],
+      gradient: 'from-amber-600/20 to-orange-600/20',
+      borderGradient: 'from-amber-500 to-orange-500',
+      popular: true,
+      link: '/tienda/diagnostico-relacional?tipo=descubre'
+    },
+    {
+      id: 'solo',
+      name: 'Radiografía de Tu Relación',
+      category: 'Diagnóstico de Pareja',
+      price: '$499 MXN',
       duration: '~35 min',
       image: 'https://radiografia-worker.noirpraxis.workers.dev/media/products/radiografia/imagen-tienda.jpg',
-      description: '40 preguntas por voz analizadas por inteligencia artificial desde la perspectiva de 11 corrientes psicológicas (Gottman, Sternberg, Perel, Bowlby, Schnarch y más). Radar multidimensional, mapa de apego, indicadores compuestos y análisis clínico profundo.',
-      shortDesc: 'La respuesta a por qué amas como amas. Elige tu modalidad: descubre tus patrones inconscientes, la verdad sobre tu relación o el diagnóstico completo para los dos.',
+      description: 'Análisis profundo de tu relación: cómo se comunican, qué patrones repiten, dónde hay distancia emocional y qué necesita cada uno del otro.',
+      shortDesc: 'Analiza tu relación desde dentro. 40 preguntas que revelan la verdad sobre tu vínculo — conflictos, patrones, deseos y lo que no se dice.',
       benefits: [
-        '3 opciones: Individual $499 · Pareja Solo $499 · Los dos $999',
-        '40 preguntas por voz — hablas, la IA analiza desde 11 corrientes',
-        'Radar multidimensional + mapa de apego + PDF descargable',
-        'Gottman, Bowlby, Perel, Schnarch y más — todo sobre tu caso',
-        '+ Opción: 60 min con Luis para interpretar tus resultados'
+        '40 preguntas centradas en tu relación de pareja',
+        'Análisis de dinámicas, conflictos y deseos',
+        'Lecturas desde 11 corrientes psicológicas',
+        'Radar de 12 dimensiones relacionales',
+        'PDF descargable con tu diagnóstico completo'
       ],
       gradient: 'from-violet-600/20 to-fuchsia-600/20',
       borderGradient: 'from-violet-500 to-fuchsia-500',
       popular: true,
-      isDiagnostic: true
+      link: '/tienda/diagnostico-relacional?tipo=solo'
     },
     {
       id: 8,
@@ -194,14 +215,14 @@ const StorePage = () => {
       {/* Products Grid */}
       <section ref={productsRef} className="relative py-20 lg:py-32 px-6 lg:px-20">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {products.map((product, index) => (
               <motion.div
                 key={product.id}
                 initial={{ opacity: 0, y: 50 }}
                 animate={isProductsInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                onClick={() => navigate(product.isDiagnostic ? '/tienda/diagnostico-relacional' : `/tienda/${product.id}`)}
+                onClick={() => navigate(product.link || `/tienda/${product.id}`)}
                 className="group relative bg-zinc-900/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 hover:border-white/20 transition-all duration-500 cursor-pointer"
               >
                 {/* Popular badge */}
@@ -255,7 +276,7 @@ const StorePage = () => {
 
                   {/* Benefits preview */}
                   <div className="space-y-2">
-                    {product.benefits.slice(0, product.isDiagnostic ? 5 : 3).map((benefit, i) => (
+                    {product.benefits.slice(0, product.link ? 5 : 3).map((benefit, i) => (
                       <div key={i} className="flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4 text-violet-400 flex-shrink-0" />
                         <span className="text-xs text-white/50 font-light">{benefit}</span>

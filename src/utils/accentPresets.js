@@ -433,6 +433,141 @@ export const ACCENT_PRESETS = {
     questionsIcon: 'text-violet-200',
     questionsTitle: 'from-violet-200 via-fuchsia-200 to-cyan-200',
     questionsDot: 'from-violet-400 to-fuchsia-400'
+  },
+  teal: {
+    heroVia: 'via-teal-500/30',
+    headingTopBar: 'from-teal-500 via-cyan-500 to-teal-500',
+    badgeBg: 'bg-teal-500/10',
+    badgeBorder: 'border-teal-500/30',
+    badgeText: 'text-teal-300',
+    badgeIcon: 'text-teal-400',
+    quoteBar: 'from-teal-500/50 via-cyan-500/30 to-transparent',
+    quoteMark: 'text-teal-400/20',
+    highlightBg: 'from-teal-900/30 via-cyan-900/20 to-teal-900/30',
+    highlightBorder: 'border-teal-500/30',
+    highlightCornerA: 'from-cyan-500/20 to-transparent',
+    highlightCornerB: 'from-teal-500/20 to-transparent',
+    highlightQuote: 'text-teal-500/20',
+    highlightDivider: 'via-teal-500/50',
+    highlightCite: 'text-teal-300',
+    questionsBg: 'from-teal-500/10 via-cyan-500/10 to-teal-500/10',
+    questionsBorder: 'border-teal-500/20',
+    questionsHoverBorder: 'group-hover:border-teal-500/40',
+    questionsOrbA: 'from-teal-500/20 to-cyan-500/20',
+    questionsOrbB: 'from-cyan-500/20 to-teal-500/20',
+    questionsIconBg: 'from-teal-500/30 to-cyan-500/30',
+    questionsIconBorder: 'border-teal-500/30',
+    questionsIcon: 'text-teal-300',
+    questionsTitle: 'from-teal-300 via-cyan-300 to-teal-300',
+    questionsDot: 'from-teal-400 to-cyan-400'
+  },
+  rose: {
+    heroVia: 'via-rose-500/30',
+    headingTopBar: 'from-rose-500 via-pink-500 to-rose-500',
+    badgeBg: 'bg-rose-500/10',
+    badgeBorder: 'border-rose-500/30',
+    badgeText: 'text-rose-300',
+    badgeIcon: 'text-rose-400',
+    quoteBar: 'from-rose-500/50 via-pink-500/30 to-transparent',
+    quoteMark: 'text-rose-400/20',
+    highlightBg: 'from-rose-900/30 via-pink-900/20 to-rose-900/30',
+    highlightBorder: 'border-rose-500/30',
+    highlightCornerA: 'from-pink-500/20 to-transparent',
+    highlightCornerB: 'from-rose-500/20 to-transparent',
+    highlightQuote: 'text-rose-500/20',
+    highlightDivider: 'via-rose-500/50',
+    highlightCite: 'text-rose-300',
+    questionsBg: 'from-rose-500/10 via-pink-500/10 to-rose-500/10',
+    questionsBorder: 'border-rose-500/20',
+    questionsHoverBorder: 'group-hover:border-rose-500/40',
+    questionsOrbA: 'from-rose-500/20 to-pink-500/20',
+    questionsOrbB: 'from-pink-500/20 to-rose-500/20',
+    questionsIconBg: 'from-rose-500/30 to-pink-500/30',
+    questionsIconBorder: 'border-rose-500/30',
+    questionsIcon: 'text-rose-300',
+    questionsTitle: 'from-rose-300 via-pink-300 to-rose-300',
+    questionsDot: 'from-rose-400 to-pink-400'
+  },
+  fuchsia: {
+    heroVia: 'via-fuchsia-500/30',
+    headingTopBar: 'from-fuchsia-500 via-pink-500 to-fuchsia-500',
+    badgeBg: 'bg-fuchsia-500/10',
+    badgeBorder: 'border-fuchsia-500/30',
+    badgeText: 'text-fuchsia-300',
+    badgeIcon: 'text-fuchsia-400',
+    quoteBar: 'from-fuchsia-500/50 via-pink-500/30 to-transparent',
+    quoteMark: 'text-fuchsia-400/20',
+    highlightBg: 'from-fuchsia-900/30 via-pink-900/20 to-fuchsia-900/30',
+    highlightBorder: 'border-fuchsia-500/30',
+    highlightCornerA: 'from-pink-500/20 to-transparent',
+    highlightCornerB: 'from-fuchsia-500/20 to-transparent',
+    highlightQuote: 'text-fuchsia-500/20',
+    highlightDivider: 'via-fuchsia-500/50',
+    highlightCite: 'text-fuchsia-300',
+    questionsBg: 'from-fuchsia-500/10 via-pink-500/10 to-fuchsia-500/10',
+    questionsBorder: 'border-fuchsia-500/20',
+    questionsHoverBorder: 'group-hover:border-fuchsia-500/40',
+    questionsOrbA: 'from-fuchsia-500/20 to-pink-500/20',
+    questionsOrbB: 'from-pink-500/20 to-fuchsia-500/20',
+    questionsIconBg: 'from-fuchsia-500/30 to-pink-500/30',
+    questionsIconBorder: 'border-fuchsia-500/30',
+    questionsIcon: 'text-fuchsia-300',
+    questionsTitle: 'from-fuchsia-300 via-pink-300 to-fuchsia-300',
+    questionsDot: 'from-fuchsia-400 to-pink-400'
+  },
+  sky: {
+    heroVia: 'via-sky-500/30',
+    headingTopBar: 'from-sky-500 via-blue-500 to-sky-500',
+    badgeBg: 'bg-sky-500/10',
+    badgeBorder: 'border-sky-500/30',
+    badgeText: 'text-sky-300',
+    badgeIcon: 'text-sky-400',
+    quoteBar: 'from-sky-500/50 via-blue-500/30 to-transparent',
+    quoteMark: 'text-sky-400/20',
+    highlightBg: 'from-sky-900/30 via-blue-900/20 to-sky-900/30',
+    highlightBorder: 'border-sky-500/30',
+    highlightCornerA: 'from-blue-500/20 to-transparent',
+    highlightCornerB: 'from-sky-500/20 to-transparent',
+    highlightQuote: 'text-sky-500/20',
+    highlightDivider: 'via-sky-500/50',
+    highlightCite: 'text-sky-300',
+    questionsBg: 'from-sky-500/10 via-blue-500/10 to-sky-500/10',
+    questionsBorder: 'border-sky-500/20',
+    questionsHoverBorder: 'group-hover:border-sky-500/40',
+    questionsOrbA: 'from-sky-500/20 to-blue-500/20',
+    questionsOrbB: 'from-blue-500/20 to-sky-500/20',
+    questionsIconBg: 'from-sky-500/30 to-blue-500/30',
+    questionsIconBorder: 'border-sky-500/30',
+    questionsIcon: 'text-sky-300',
+    questionsTitle: 'from-sky-300 via-blue-300 to-sky-300',
+    questionsDot: 'from-sky-400 to-blue-400'
+  },
+  gold: {
+    heroVia: 'via-yellow-500/30',
+    headingTopBar: 'from-yellow-500 via-amber-500 to-yellow-500',
+    badgeBg: 'bg-yellow-500/10',
+    badgeBorder: 'border-yellow-500/30',
+    badgeText: 'text-yellow-300',
+    badgeIcon: 'text-yellow-400',
+    quoteBar: 'from-yellow-500/50 via-amber-500/30 to-transparent',
+    quoteMark: 'text-yellow-400/20',
+    highlightBg: 'from-yellow-900/30 via-amber-900/20 to-yellow-900/30',
+    highlightBorder: 'border-yellow-500/30',
+    highlightCornerA: 'from-amber-500/20 to-transparent',
+    highlightCornerB: 'from-yellow-500/20 to-transparent',
+    highlightQuote: 'text-yellow-500/20',
+    highlightDivider: 'via-yellow-500/50',
+    highlightCite: 'text-yellow-300',
+    questionsBg: 'from-yellow-500/10 via-amber-500/10 to-yellow-500/10',
+    questionsBorder: 'border-yellow-500/20',
+    questionsHoverBorder: 'group-hover:border-yellow-500/40',
+    questionsOrbA: 'from-yellow-500/20 to-amber-500/20',
+    questionsOrbB: 'from-amber-500/20 to-yellow-500/20',
+    questionsIconBg: 'from-yellow-500/30 to-amber-500/30',
+    questionsIconBorder: 'border-yellow-500/30',
+    questionsIcon: 'text-yellow-300',
+    questionsTitle: 'from-yellow-300 via-amber-300 to-yellow-300',
+    questionsDot: 'from-yellow-400 to-amber-400'
   }
 }
 
@@ -443,11 +578,11 @@ export const normalizeAccentKey = (key) => {
 
   // Allow aliases commonly used in the UI
   if (k === 'neutral' || k === 'gray' || k === 'grey' || k === 'zinc') return 'slate'
-  if (k === 'teal' || k === 'green') return 'emerald'
-  if (k === 'sky') return 'blue'
+  if (k === 'green') return 'emerald'
   if (k === 'aqua') return 'cyan'
-  if (k === 'magenta' || k === 'fuchsia' || k === 'rose') return 'pink'
-  if (k === 'violet') return 'purple'
+  if (k === 'magenta') return 'fuchsia'
+  if (k === 'coral') return 'rose'
+  if (k === 'golden' || k === 'yellow') return 'gold'
   if (k === 'waifu 8' || k === 'waifu8') return 'waifu8'
   if (k === 'waifu 9' || k === 'waifu9') return 'waifu9'
 

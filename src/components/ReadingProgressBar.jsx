@@ -4,35 +4,26 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 const ReadingProgressBar = ({ accentKey = 'purple', contentRef, onToggleTOC }) => {
   const progressValue = useMotionValue(0)
   const scaleX = useSpring(progressValue, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
+    stiffness: 300,
+    damping: 40,
+    restDelta: 0.01
   })
   
   const [progress, setProgress] = useState(0)
   const lastProgressRef = useRef(0)
   
   useEffect(() => {
-    if (!contentRef?.current) return
-
     let rafId = null
 
     const updateProgress = () => {
-      const element = contentRef.current
-      if (!element) return
-
-      const rect = element.getBoundingClientRect()
       const viewportHeight = window.innerHeight || 0
+      const docHeight = document.documentElement.scrollHeight || 0
+      const totalScrollable = Math.max(1, docHeight - viewportHeight)
+
+      // Use native scrollY (reliable with Lenis native scroll)
       const scrollY = window.scrollY || window.pageYOffset || 0
 
-      const elementTop = rect.top + scrollY
-      const elementBottom = rect.bottom + scrollY
-
-      const start = elementTop - viewportHeight
-      const end = elementBottom - viewportHeight
-      const total = Math.max(1, end - start)
-
-      const raw = (scrollY - start) / total
+      const raw = scrollY / totalScrollable
       const clamped = Math.max(0, Math.min(1, raw))
 
       progressValue.set(clamped)
@@ -48,29 +39,50 @@ const ReadingProgressBar = ({ accentKey = 'purple', contentRef, onToggleTOC }) =
       rafId = requestAnimationFrame(updateProgress)
     }
 
-    const lenis = window.__lenis
-    if (lenis && typeof lenis.on === 'function') {
-      lenis.on('scroll', onScroll)
-    }
-
+    // Register native scroll listener
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll)
 
-    const resizeObserver = new ResizeObserver(() => onScroll())
-    resizeObserver.observe(contentRef.current)
+    // Also listen to Lenis for smooth scroll sync
+    let lenisRef = window.__lenis
+    let lenisCheckInterval = null
+
+    const attachLenis = (lenis) => {
+      if (lenis && typeof lenis.on === 'function') {
+        lenis.on('scroll', onScroll)
+        lenisRef = lenis
+      }
+    }
+
+    if (lenisRef) {
+      attachLenis(lenisRef)
+    } else {
+      let tries = 0
+      lenisCheckInterval = setInterval(() => {
+        tries++
+        if (window.__lenis) {
+          attachLenis(window.__lenis)
+          clearInterval(lenisCheckInterval)
+          lenisCheckInterval = null
+        } else if (tries > 20) {
+          clearInterval(lenisCheckInterval)
+          lenisCheckInterval = null
+        }
+      }, 100)
+    }
 
     updateProgress()
 
     return () => {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
-      if (lenis && typeof lenis.off === 'function') {
-        lenis.off('scroll', onScroll)
+      if (lenisRef && typeof lenisRef.off === 'function') {
+        lenisRef.off('scroll', onScroll)
       }
-      resizeObserver.disconnect()
+      if (lenisCheckInterval) clearInterval(lenisCheckInterval)
       if (rafId) cancelAnimationFrame(rafId)
     }
-  }, [contentRef, progressValue])
+  }, [progressValue])
 
   const colorMap = {
     purple: { from: '#9333ea', to: '#c026d3' },

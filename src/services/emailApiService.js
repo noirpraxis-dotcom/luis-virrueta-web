@@ -169,11 +169,11 @@ export async function saveCrossAnalysis({ token, pairId, analysis }) {
 }
 
 /** Send cross-analysis ready email to both partners */
-export async function sendCrossAnalysisEmail({ pairId, token }) {
+export async function sendCrossAnalysisEmail({ pairId, token, emails }) {
   const res = await fetch(`${API_BASE}/api/send-cross-analysis-email`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ pairId, token })
+    body: JSON.stringify({ pairId, token, emails })
   })
   if (!res.ok) throw new Error('Error sending cross analysis email')
   return res.json()

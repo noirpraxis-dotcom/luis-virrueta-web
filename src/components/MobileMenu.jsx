@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Wrench } from 'lucide-react'
+import { ShoppingBag } from 'lucide-react'
 import ToolsMenu from './ToolsMenu'
 
 const MobileMenu = ({ isOpen, onClose, menuItems }) => {
@@ -73,42 +73,46 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
             className="absolute inset-0 flex items-center justify-center"
           >
             <div className="relative w-full h-full bg-black/98 backdrop-blur-xl flex flex-col items-center justify-center p-8">
-              {/* Efectos decorativos mejorados */}
+              {/* Efectos decorativos */}
               <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] animate-pulse" />
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-fuchsia-600/15 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
               </div>
 
-              {/* Botón Cerrar - Top Left con flecha elegante */}
-              <motion.button
-                onClick={onClose}
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -20, opacity: 0 }}
+              {/* Herramientas + Tienda — combined button bar at the top */}
+              <motion.div
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                whileHover={{ scale: 1.05, x: -3 }}
-                whileTap={{ scale: 0.95 }}
-                className="absolute top-6 left-6 z-20 w-11 h-11 flex items-center justify-center rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-white/20 transition-all duration-300 group"
-                aria-label="Cerrar menú"
+                className="absolute top-6 left-6 right-6 z-20"
               >
-                <svg 
-                  className="w-5 h-5 text-white/70 group-hover:text-white transition-colors duration-300" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor" 
-                  strokeWidth={2}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-              </motion.button>
+                <div className="flex rounded-2xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-md">
+                  {/* Herramientas side — expands tools inline */}
+                  <ToolsMenu splitMobile={true} onClose={onClose} />
 
-              {/* Menu Items - Ultra Elegant con más espacio arriba */}
+                  {/* Divider */}
+                  <div className="w-px bg-white/10" />
+
+                  {/* Tienda side */}
+                  <Link to="/tienda" onClick={onClose} className="flex-1">
+                    <motion.div
+                      whileTap={{ scale: 0.97 }}
+                      className="flex items-center justify-center gap-2.5 bg-gradient-to-r from-violet-600/30 to-fuchsia-600/30 text-white px-4 py-4 transition-all duration-300"
+                    >
+                      <ShoppingBag className="w-4 h-4 text-fuchsia-300" strokeWidth={1.5} />
+                      <span className="text-sm uppercase tracking-[0.15em] font-medium" style={{ fontFamily: 'Space Grotesk, monospace' }}>Tienda</span>
+                    </motion.div>
+                  </Link>
+                </div>
+              </motion.div>
+
+              {/* Menu Items */}
               <motion.ul
                 variants={menuVariants}
                 initial="closed"
                 animate={isOpen ? "open" : "closed"}
                 exit="closed"
-                className="space-y-1 z-10 w-full max-w-md mt-20"
+                className="space-y-1 z-10 w-full max-w-md"
               >
                 {menuItems.map((item, index) => {
                   const isStore = item.name.toLowerCase().includes('store') || 
@@ -125,19 +129,21 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                         {item.subItems ? (
                           <motion.button
                             onClick={() => setExpandedItem(expandedItem === index ? null : index)}
-                            whileHover={{ x: 8, scale: 1.02 }}
-                            className="block text-white/70 hover:text-white text-xl font-light tracking-[0.3em] transition-all duration-300 py-4 text-left w-full uppercase relative group"
+                            whileHover={{ scale: 1.02 }}
+                            className="block text-white/70 hover:text-white text-xl font-light tracking-[0.3em] transition-all duration-300 py-4 w-full uppercase relative group text-center"
                             style={{ fontFamily: 'Gotham, sans-serif' }}
                           >
                             <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 rounded-lg transition-all duration-300" />
-                            <span className="relative z-10 flex items-center justify-between">
+                            <span className="relative z-10 flex items-center justify-center gap-3">
                               {item.name}
-                              <motion.span
+                              <motion.svg
                                 animate={{ rotate: expandedItem === index ? 180 : 0 }}
-                                className="inline-block text-xs opacity-50"
+                                transition={{ duration: 0.3 }}
+                                width="12" height="12" viewBox="0 0 12 12" fill="none"
+                                className="opacity-40"
                               >
-                                ▼
-                              </motion.span>
+                                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                              </motion.svg>
                             </span>
                           </motion.button>
                         ) : (
@@ -147,18 +153,26 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                           >
                             {!isStore ? (
                               <motion.div
-                                whileHover={{ x: 8, scale: 1.02 }}
-                                className="block text-white/70 hover:text-white text-xl font-light tracking-[0.3em] transition-all duration-300 py-4 uppercase relative group"
+                                whileHover={{ scale: 1.02 }}
+                                className="block text-white/70 hover:text-white text-xl font-light tracking-[0.3em] transition-all duration-300 py-4 uppercase relative group text-center"
                                 style={{ fontFamily: 'Gotham, sans-serif' }}
                               >
                                 <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 rounded-lg transition-all duration-300" />
-                                <span className="relative z-10">{item.name}</span>
+                                <span className="relative z-10 flex items-center justify-center gap-3">
+                                  {item.name}
+                                  <motion.svg
+                                    width="12" height="12" viewBox="0 0 12 12" fill="none"
+                                    className="opacity-25"
+                                  >
+                                    <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </motion.svg>
+                                </span>
                               </motion.div>
                             ) : null}
                           </Link>
                         )}
 
-                        {/* Submenú Elegante */}
+                        {/* Submenú */}
                         <AnimatePresence>
                           {item.subItems && expandedItem === index && (
                             <motion.ul
@@ -195,7 +209,7 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                         </AnimatePresence>
                       </div>
 
-                      {/* Línea decorativa ultra sutil */}
+                      {/* Línea decorativa */}
                       {!isStore && !item.subItems && (
                         <motion.div
                           initial={{ scaleX: 0 }}
@@ -208,34 +222,6 @@ const MobileMenu = ({ isOpen, onClose, menuItems }) => {
                   )
                 })}
               </motion.ul>
-
-              {/* Tienda y Herramientas en la misma línea */}
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="mt-6 z-10 w-full max-w-md"
-              >
-                <div className="grid grid-cols-2 gap-3">
-                  {/* Botón Tienda */}
-                  <Link to="/tienda" onClick={onClose}>
-                    <motion.div
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-4 py-4 rounded-full text-sm font-medium tracking-[0.2em] transition-all duration-300 uppercase shadow-lg shadow-violet-500/30 border-2 border-violet-500 hover:border-white/30"
-                      style={{ fontFamily: 'Gotham, sans-serif' }}
-                    >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                      </svg>
-                      <span className="text-xs">Tienda</span>
-                    </motion.div>
-                  </Link>
-
-                  {/* Botón Herramientas */}
-                  <ToolsMenu isMobile={true} />
-                </div>
-              </motion.div>
 
             </div>
           </motion.nav>

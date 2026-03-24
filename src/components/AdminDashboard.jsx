@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { getAllUsers, subscribeToUsers, giftProduct, removeProduct, deleteUserAdmin, setUserTestMode } from '../services/firestoreService'
+import { getAllUsers, subscribeToUsers, giftProduct, removeProduct, deleteUserAdmin, setUserTestMode, deletePurchaseCascade } from '../services/firestoreService'
 import { createCustomCheckout, createPromoCode, listPromoCodes, deletePromoCode } from '../services/emailApiService'
-import { Users, Package, Download, ChevronDown, ChevronUp, Mail, Search, Gift, Trash2, Plus, AlertTriangle, CheckCircle, FileText, BarChart3, Link2, Copy, DollarSign, Tag, Percent, Code2, ExternalLink } from 'lucide-react'
+import { Users, Package, Download, ChevronDown, ChevronUp, Mail, Search, Gift, Trash2, Plus, AlertTriangle, CheckCircle, FileText, BarChart3, Link2, Copy, DollarSign, Tag, Percent, Code2, ExternalLink, Zap, RefreshCw, Loader2 } from 'lucide-react'
+
+const WORKER_URL = 'https://radiografia-worker.noirpraxis.workers.dev'
 
 const PRODUCT_OPTIONS = [
   { value: 'radiografia-pareja', label: 'Radiografía de Pareja' },
@@ -18,6 +19,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [expandedUser, setExpandedUser] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
+
   const [activeTab, setActiveTab] = useState('clients') // 'clients' | 'gift' | 'pricing' | 'promos' | 'dev'
 
   // Gift form state
@@ -54,6 +56,10 @@ export default function AdminDashboard() {
   const [promoList, setPromoList] = useState({ builtIn: {}, custom: {} })
   const [promoListLoaded, setPromoListLoaded] = useState(false)
 
+  // Admin generate state
+  const [generating, setGenerating] = useState(null) // 'uid_purchaseId_type' or null
+  const [generateMsg, setGenerateMsg] = useState(null) // { id, type, text }
+
   useEffect(() => {
     const unsubscribe = subscribeToUsers((data) => {
       setUsers(data)
@@ -74,6 +80,30 @@ export default function AdminDashboard() {
   }
 
   const ADMIN_EMAIL = 'luis.virrueta.contacto@gmail.com'
+
+  const handleAdminGenerate = async (uid, purchaseId, type) => {
+    const key = `${uid}_${purchaseId}_${type}`
+    setGenerating(key)
+    setGenerateMsg(null)
+    try {
+      const endpoint = type === 'cross' ? '/api/admin-cross-analysis' : '/api/admin-generate'
+      const res = await fetch(`${WORKER_URL}${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid, purchaseId }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setGenerateMsg({ id: key, type: 'error', text: data.error || 'Error' })
+      } else {
+        setGenerateMsg({ id: key, type: 'success', text: data.message || 'Enviado' })
+      }
+    } catch (err) {
+      setGenerateMsg({ id: key, type: 'error', text: err.message })
+    } finally {
+      setGenerating(null)
+    }
+  }
 
   const filteredUsers = users.filter(u =>
     u.email !== ADMIN_EMAIL && (
@@ -270,6 +300,23 @@ export default function AdminDashboard() {
     }
   }
 
+  const handleDeletePurchase = async (uid, purchaseId, packageType) => {
+    const isLinked = packageType === 'losdos'
+    const msg = isLinked
+      ? '¿Eliminar esta compra? Se limpiarán también las referencias cruzadas con la pareja vinculada.'
+      : '¿Seguro que quieres eliminar esta compra?'
+    if (!confirm(msg)) return
+    setRemovingId(purchaseId)
+    try {
+      await deletePurchaseCascade(uid, purchaseId)
+      await loadUsers()
+    } catch (err) {
+      console.error('Error deleting purchase:', err)
+    } finally {
+      setRemovingId(null)
+    }
+  }
+
   const handleDeleteUser = async (uid, displayName) => {
     if (!confirm(`¿Eliminar al usuario "${displayName || uid}"? Se borrarán todos sus datos y compras.`)) return
     setDeletingUserId(uid)
@@ -449,7 +496,7 @@ export default function AdminDashboard() {
         </button>
       </div>
 
-      {/* ─── TAB: CLIENTS ─── */}
+      {/* ─── TAB: CLIENTS — accordion list ─── */}
       {activeTab === 'clients' && (
         <>
           <div className="relative mb-4">
@@ -459,176 +506,249 @@ export default function AdminDashboard() {
               className="w-full pl-10 pr-4 py-2.5 bg-black/30 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-amber-500/30 focus:outline-none" />
           </div>
 
-          <div className="space-y-2 max-h-[600px] overflow-y-auto">
+          <div className="space-y-2">
             {filteredUsers.map(u => {
               const isExpanded = expandedUser === u.id
+              const purchaseCount = u.purchases?.length || 0
+              const completedCount = u.purchases?.filter(p => p.status === 'completed' || p.analysis).length || 0
+              const hasActive = u.purchases?.some(p => p.status === 'in-progress')
               return (
-                <div key={u.id} className="bg-black/20 border border-white/5 rounded-xl overflow-hidden">
-                  <button onClick={() => setExpandedUser(isExpanded ? null : u.id)}
-                    className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-white/[0.02] transition-colors">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-8 h-8 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center flex-shrink-0">
-                        <span className="text-xs text-purple-300">{(u.displayName || u.email || '?').charAt(0).toUpperCase()}</span>
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm text-white truncate">{u.displayName || 'Sin nombre'}</p>
-                        <p className="text-xs text-gray-500 truncate">{u.email}</p>
-                      </div>
+                <div key={u.id} className={`rounded-xl border transition-all ${isExpanded ? 'bg-[#12121f] border-amber-500/20' : 'bg-black/30 border-white/[0.06] hover:border-white/10'}`}>
+                  {/* Collapsed header row */}
+                  <button
+                    onClick={() => setExpandedUser(isExpanded ? null : u.id)}
+                    className="w-full flex items-center gap-3 p-3.5 text-left">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500/20 to-fuchsia-500/15 border border-purple-500/20 flex items-center justify-center flex-shrink-0">
+                      <span className="text-sm font-medium text-purple-300">{(u.displayName || u.email || '?').charAt(0).toUpperCase()}</span>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm text-white font-medium truncate">{u.displayName || 'Sin nombre'}</p>
+                      <p className="text-[11px] text-gray-500 truncate">{u.email}</p>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      {u.provider === 'google.com' ? (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">Google</span>
-                      ) : u.provider === 'password' ? (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">Email</span>
-                      ) : null}
-                      {u.emailVerified ? (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Verificado</span>
-                      ) : (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">No verificado</span>
+                      {u.testMode && (
+                        <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/15">⚡ Test</span>
                       )}
-                      <span className="text-xs text-gray-500">{u.purchases?.length || 0} compras</span>
-                      {isExpanded ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
+                      {hasActive && (
+                        <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/15 animate-pulse">En curso</span>
+                      )}
+                      <span className="text-[10px] text-gray-500">{purchaseCount} compra{purchaseCount !== 1 ? 's' : ''}</span>
+                      {completedCount > 0 && (
+                        <span className="text-[10px] text-emerald-400">{completedCount} ✓</span>
+                      )}
+                      <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                     </div>
                   </button>
 
-                  <AnimatePresence>
-                    {isExpanded && (
-                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
-                        className="border-t border-white/5 overflow-hidden">
-                        <div className="px-4 pb-4">
-                          <div className="flex items-center gap-2 mt-3 mb-3">
-                            <p className="text-[10px] text-gray-600 font-mono">UID: {u.id}</p>
-                            <button onClick={() => downloadAllUserData(u)}
-                              className="ml-auto flex items-center gap-1 text-xs text-amber-400 hover:text-amber-300 transition-colors">
-                              <Download className="w-3 h-3" /> Todo
-                            </button>
-                          </div>
+                  {/* Expanded content */}
+                  {isExpanded && (
+                    <div className="px-4 pb-4 space-y-4 border-t border-white/5">
+                      {/* User info + badges */}
+                      <div className="pt-3 flex flex-wrap items-center gap-2">
+                        {u.provider === 'google.com' ? (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/15">Google</span>
+                        ) : u.provider === 'password' ? (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-purple-500/10 text-purple-400 border border-purple-500/15">Email</span>
+                        ) : null}
+                        {u.emailVerified ? (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/15">✓ Verificado</span>
+                        ) : (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-yellow-500/10 text-yellow-400 border border-yellow-500/15">No verificado</span>
+                        )}
+                        <span className="text-[9px] text-gray-600 font-mono ml-auto">UID: {u.id}</span>
+                      </div>
 
-                          {/* Admin actions: test mode + delete */}
-                          <div className="flex items-center gap-3 mb-3 p-2.5 rounded-lg bg-black/30 border border-white/5">
-                            {/* Test mode toggle */}
-                            <div className="flex items-center gap-2 flex-1">
-                              <span className="text-[10px] text-gray-400">Modo prueba</span>
-                              <button
-                                onClick={() => handleToggleTestMode(u.id, u.testMode)}
-                                disabled={togglingTestMode === u.id}
-                                className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 disabled:opacity-50 ${u.testMode ? 'bg-amber-500' : 'bg-white/15'}`}>
-                                <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${u.testMode ? 'translate-x-4' : 'translate-x-0'}`} />
-                              </button>
-                              {u.testMode && <span className="text-[10px] text-amber-400">Activo</span>}
-                            </div>
-                            {/* Delete user — hide for admin's own account */}
-                            {u.email !== 'luis.virrueta.contacto@gmail.com' && (
-                            <button
-                              onClick={() => handleDeleteUser(u.id, u.displayName || u.email)}
-                              disabled={deletingUserId === u.id}
-                              className="flex items-center gap-1 text-[10px] text-red-400/60 hover:text-red-300 transition-colors disabled:opacity-40">
-                              <Trash2 className="w-3 h-3" />
-                              {deletingUserId === u.id ? 'Eliminando...' : 'Eliminar usuario'}
-                            </button>)}
-                          </div>
+                      {/* Admin actions */}
+                      <div className="flex items-center gap-3 p-3 rounded-xl bg-black/30 border border-white/5">
+                        <div className="flex items-center gap-2 flex-1">
+                          <span className="text-[10px] text-gray-400">Modo prueba</span>
+                          <button
+                            onClick={() => handleToggleTestMode(u.id, u.testMode)}
+                            disabled={togglingTestMode === u.id}
+                            className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 disabled:opacity-50 ${u.testMode ? 'bg-amber-500' : 'bg-white/15'}`}>
+                            <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${u.testMode ? 'translate-x-4' : 'translate-x-0'}`} />
+                          </button>
+                        </div>
+                        <button onClick={() => downloadAllUserData(u)}
+                          className="flex items-center gap-1 text-[10px] text-amber-400 hover:text-amber-300 transition-colors">
+                          <Download className="w-3 h-3" /> JSON
+                        </button>
+                        {u.email !== 'luis.virrueta.contacto@gmail.com' && (
+                          <button
+                            onClick={() => { handleDeleteUser(u.id, u.displayName || u.email); if (expandedUser === u.id) setExpandedUser(null) }}
+                            disabled={deletingUserId === u.id}
+                            className="flex items-center gap-1 text-[10px] text-red-400/60 hover:text-red-300 transition-colors disabled:opacity-40">
+                            <Trash2 className="w-3 h-3" /> Eliminar
+                          </button>
+                        )}
+                      </div>
 
-                          {u.purchases?.length > 0 ? (
-                            <div className="space-y-3">
-                              {u.purchases.map(p => (
-                                <div key={p.id} className="bg-white/[0.02] border border-white/5 rounded-lg p-3">
-                                  {/* Header */}
-                                  <div className="flex justify-between items-start mb-2">
-                                    <div>
-                                      <span className="text-xs text-white font-medium">{p.product}</span>
-                                      <span className="text-xs text-gray-500 ml-2">— {p.packageType}</span>
-                                      {p.source === 'gift' && (
-                                        <span className="text-[10px] px-1.5 py-0.5 ml-2 rounded bg-amber-500/15 text-amber-300">regalo</span>
-                                      )}
-                                    </div>
-                                    <span className={`text-[10px] px-2 py-0.5 rounded-full ${
-                                      p.status === 'completed' ? 'bg-emerald-500/10 text-emerald-400' :
-                                      p.status === 'in-progress' ? 'bg-blue-500/10 text-blue-400' :
-                                      p.status === 'paid' ? 'bg-violet-500/10 text-violet-400' :
-                                      'bg-gray-500/10 text-gray-400'
-                                    }`}>{p.status}</span>
-                                  </div>
+                      {/* Purchases */}
+                      <div className="space-y-3">
+                        <h4 className="text-[11px] text-white/50 font-medium uppercase tracking-wider flex items-center gap-1.5">
+                          <Package className="w-3.5 h-3.5 text-amber-400/60" />
+                          Compras ({purchaseCount})
+                        </h4>
 
-                                  {/* Progress — always visible */}
-                                  <div className="mb-2">
-                                    <div className="flex justify-between text-[10px] text-gray-500 mb-0.5">
-                                      <span>Pregunta {p.currentQuestion || 0}/40</span>
-                                      <span>{Math.round(((p.currentQuestion || 0) / 40) * 100)}%</span>
-                                    </div>
-                                    <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                      <div className={`h-full rounded-full transition-all ${(p.currentQuestion || 0) >= 40 ? 'bg-gradient-to-r from-emerald-500 to-green-400' : 'bg-gradient-to-r from-purple-500 to-fuchsia-500'}`}
-                                        style={{ width: `${((p.currentQuestion || 0) / 40) * 100}%` }} />
-                                    </div>
-                                    <div className="flex justify-between text-[9px] text-gray-600 mt-0.5">
-                                      <span>{Object.keys(p.responses || {}).length} respuestas grabadas</span>
-                                      {p.status === 'completed' && <span className="text-emerald-400">✓ Completado</span>}
-                                    </div>
-                                  </div>
-
-                                  {/* Partner info */}
-                                  {p.partnerEmail && (
-                                    <p className="text-[10px] text-pink-400/60 mb-1 flex items-center gap-1">
-                                      <Mail className="w-3 h-3" /> Pareja: {p.partnerEmail}
-                                    </p>
+                        {u.purchases?.length > 0 ? (
+                          u.purchases.map(p => (
+                            <div key={p.id} className="bg-black/20 border border-white/5 rounded-xl p-4 space-y-3">
+                              {/* Purchase header */}
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <span className="text-xs text-white font-medium">{p.product}</span>
+                                  <span className="text-xs text-gray-500 ml-2">— {p.packageType}</span>
+                                  {p.source === 'gift' && (
+                                    <span className="text-[9px] px-1.5 py-0.5 ml-2 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/15">regalo</span>
                                   )}
+                                </div>
+                                <span className={`text-[9px] px-2.5 py-0.5 rounded-full font-medium ${
+                                  (p.status === 'completed' || p.analysis) ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20' :
+                                  p.status === 'in-progress' ? 'bg-blue-500/15 text-blue-400 border border-blue-500/20' :
+                                  p.status === 'paid' ? 'bg-violet-500/15 text-violet-400 border border-violet-500/20' :
+                                  'bg-gray-500/15 text-gray-400 border border-gray-500/20'
+                                }`}>{(p.status === 'completed' || p.analysis) ? '✓ Completado' : p.status === 'in-progress' ? 'En progreso' : p.status}</span>
+                              </div>
 
-                                  {/* Responses */}
-                                  {p.responses && Object.keys(p.responses).length > 0 && (
-                                    <details className="mt-2">
-                                      <summary className="text-[10px] text-amber-400 cursor-pointer hover:text-amber-300 flex items-center gap-1">
-                                        <FileText className="w-3 h-3" /> Ver respuestas ({Object.keys(p.responses).length})
-                                      </summary>
-                                      <div className="mt-1 space-y-1 max-h-48 overflow-auto bg-black/30 rounded p-2">
-                                        {Object.entries(p.responses).map(([q, r]) => (
-                                          <div key={q} className="text-[9px]">
-                                            <span className="text-violet-300/60 font-medium">{q}:</span>
-                                            <span className="text-gray-400 ml-1">{typeof r === 'string' ? r.slice(0, 200) : JSON.stringify(r).slice(0, 200)}</span>
+                              {/* Progress bar */}
+                              <div>
+                                <div className="flex justify-between text-[10px] text-gray-500 mb-1">
+                                  <span>Pregunta {Math.min(p.currentQuestion || 0, 40)}/40</span>
+                                  <span>{Math.min(Math.round(((p.currentQuestion || 0) / 40) * 100), 100)}%</span>
+                                </div>
+                                <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                  <div className={`h-full rounded-full transition-all ${(p.currentQuestion || 0) >= 40 || p.analysis ? 'bg-gradient-to-r from-emerald-500 to-green-400' : 'bg-gradient-to-r from-purple-500 to-fuchsia-500'}`}
+                                    style={{ width: `${Math.min(((p.currentQuestion || 0) / 40) * 100, 100)}%` }} />
+                                </div>
+                                <p className="text-[9px] text-gray-600 mt-1">{Object.keys(p.responses || {}).length} respuestas grabadas</p>
+                              </div>
+
+                              {/* Partner info */}
+                              {p.partnerEmail && (
+                                <p className="text-[10px] text-pink-400/70 flex items-center gap-1.5">
+                                  <Mail className="w-3 h-3" /> Pareja: {p.partnerEmail}
+                                </p>
+                              )}
+
+                              {/* Responses (expandable) */}
+                              {p.responses && Object.keys(p.responses).length > 0 && (
+                                <details className="group/resp">
+                                  <summary className="text-[10px] text-amber-400 cursor-pointer hover:text-amber-300 flex items-center gap-1.5 select-none font-medium">
+                                    <FileText className="w-3 h-3" /> Cuestionario ({Object.keys(p.responses).length}/40)
+                                  </summary>
+                                  <div className="mt-2 bg-black/30 rounded-lg border border-white/5 overflow-hidden">
+                                    <div className="max-h-72 overflow-auto p-2.5 space-y-1">
+                                      {Array.from({ length: 40 }, (_, i) => {
+                                        const qid = `Q${i + 1}`
+                                        const resp = p.responses[qid]
+                                        const hasResp = resp && (typeof resp === 'string' ? resp.trim() : true)
+                                        const block = BLOCK_MAP[qid] || ''
+                                        const blockColor = BLOCK_COLORS[block] || '#666'
+                                        return (
+                                          <div key={qid} className={`py-1.5 px-2.5 rounded-lg text-[10px] ${hasResp ? 'bg-white/[0.02]' : 'opacity-25'}`}>
+                                            <div className="flex items-center gap-2 mb-0.5">
+                                              <span className="font-mono font-bold text-violet-300/80">{qid}</span>
+                                              <span style={{ color: blockColor }} className="text-[9px] font-medium">{block}</span>
+                                            </div>
+                                            <p className="text-gray-400 leading-relaxed">
+                                              {hasResp ? (typeof resp === 'string' ? resp : JSON.stringify(resp)) : '— Sin respuesta —'}
+                                            </p>
                                           </div>
-                                        ))}
-                                      </div>
-                                    </details>
-                                  )}
+                                        )
+                                      })}
+                                    </div>
+                                  </div>
+                                </details>
+                              )}
 
-                                  {/* Analysis */}
-                                  {p.analysis && (
-                                    <details className="mt-2">
-                                      <summary className="text-[10px] text-emerald-400 cursor-pointer hover:text-emerald-300 flex items-center gap-1">
-                                        <BarChart3 className="w-3 h-3" /> Ver análisis
-                                      </summary>
-                                      <pre className="mt-1 text-[9px] text-gray-500 max-h-48 overflow-auto bg-black/30 rounded p-2">
-                                        {JSON.stringify(p.analysis, null, 2).slice(0, 5000)}
-                                      </pre>
-                                    </details>
-                                  )}
+                              {/* Analysis (expandable) */}
+                              {p.analysis && (
+                                <details>
+                                  <summary className="text-[10px] text-emerald-400 cursor-pointer hover:text-emerald-300 flex items-center gap-1.5 font-medium">
+                                    <BarChart3 className="w-3 h-3" /> Ver análisis completo
+                                  </summary>
+                                  <pre className="mt-2 text-[9px] text-gray-500 max-h-56 overflow-auto bg-black/30 rounded-lg p-2.5 border border-white/5">
+                                    {JSON.stringify(p.analysis, null, 2).slice(0, 8000)}
+                                  </pre>
+                                </details>
+                              )}
 
-                                  {p.crossAnalysis && (
-                                    <p className="text-[10px] text-pink-400 mt-1">✓ Análisis cruzado</p>
-                                  )}
+                              {p.crossAnalysis && (
+                                <p className="text-[10px] text-pink-400 font-medium flex items-center gap-1.5">
+                                  <CheckCircle className="w-3 h-3" /> Análisis cruzado disponible
+                                </p>
+                              )}
 
-                                  {/* Actions */}
-                                  <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/5">
-                                    <button onClick={() => downloadPurchaseData(u, p)}
-                                      className="flex items-center gap-1 text-[10px] text-amber-400 hover:text-amber-300 transition-colors">
-                                      <Download className="w-3 h-3" /> Descargar
-                                    </button>
-                                    {p.source === 'gift' && (
-                                      <button onClick={() => handleRemoveProduct(u.id, p.id)}
-                                        disabled={removingId === p.id}
-                                        className="flex items-center gap-1 text-[10px] text-red-400 hover:text-red-300 transition-colors ml-auto disabled:opacity-40">
-                                        <Trash2 className="w-3 h-3" /> {removingId === p.id ? 'Eliminando...' : 'Quitar'}
+                              {/* Actions */}
+                              <div className="flex items-center gap-3 pt-2 border-t border-white/5">
+                                {p.responses && Object.keys(p.responses).length > 0 && (
+                                  <button onClick={() => downloadPurchaseData(u, p)}
+                                    className="flex items-center gap-1.5 text-[10px] text-amber-400 hover:text-amber-300 transition-colors font-medium">
+                                    <Download className="w-3 h-3" /> Exportar cuestionario
+                                  </button>
+                                )}
+                                <button
+                                  onClick={() => handleDeletePurchase(u.id, p.id, p.packageType)}
+                                  disabled={removingId === p.id}
+                                  className="flex items-center gap-1.5 text-[10px] text-red-400/60 hover:text-red-300 transition-colors ml-auto disabled:opacity-40">
+                                  <Trash2 className="w-3 h-3" /> {removingId === p.id ? 'Eliminando...' : 'Eliminar compra'}
+                                </button>
+                              </div>
+
+                              {/* Admin support: regenerate analysis */}
+                              {p.responses && Object.keys(p.responses).length > 0 && (
+                                <div className="pt-2 border-t border-white/5 space-y-2">
+                                  <p className="text-[9px] text-gray-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                                    <RefreshCw className="w-3 h-3" /> Soporte — Generar análisis
+                                  </p>
+                                  <div className="flex flex-wrap gap-2">
+                                    {/* Individual analysis button */}
+                                    {!p.analysis && (
+                                      <button
+                                        onClick={() => handleAdminGenerate(u.id, p.id, 'individual')}
+                                        disabled={generating === `${u.id}_${p.id}_individual`}
+                                        className="flex items-center gap-1.5 text-[10px] px-3 py-1.5 rounded-lg bg-violet-500/15 text-violet-300 border border-violet-500/20 hover:bg-violet-500/25 hover:text-violet-200 transition-all disabled:opacity-50">
+                                        {generating === `${u.id}_${p.id}_individual` ? <Loader2 className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3" />}
+                                        Generar individual
+                                      </button>
+                                    )}
+                                    {p.analysis && !p.crossAnalysis && p.packageType === 'losdos' && (
+                                      <button
+                                        onClick={() => handleAdminGenerate(u.id, p.id, 'cross')}
+                                        disabled={generating === `${u.id}_${p.id}_cross`}
+                                        className="flex items-center gap-1.5 text-[10px] px-3 py-1.5 rounded-lg bg-pink-500/15 text-pink-300 border border-pink-500/20 hover:bg-pink-500/25 hover:text-pink-200 transition-all disabled:opacity-50">
+                                        {generating === `${u.id}_${p.id}_cross` ? <Loader2 className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3" />}
+                                        Generar cruzado
+                                      </button>
+                                    )}
+                                    {p.analysis && (
+                                      <button
+                                        onClick={() => handleAdminGenerate(u.id, p.id, 'individual')}
+                                        disabled={generating === `${u.id}_${p.id}_individual`}
+                                        className="flex items-center gap-1.5 text-[10px] px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-300/70 border border-amber-500/15 hover:bg-amber-500/20 hover:text-amber-200 transition-all disabled:opacity-50">
+                                        {generating === `${u.id}_${p.id}_individual` ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+                                        Regenerar individual
                                       </button>
                                     )}
                                   </div>
+                                  {generateMsg && (generateMsg.id === `${u.id}_${p.id}_individual` || generateMsg.id === `${u.id}_${p.id}_cross`) && (
+                                    <p className={`text-[9px] ${generateMsg.type === 'success' ? 'text-emerald-400' : 'text-red-400'}`}>
+                                      {generateMsg.type === 'success' ? '✓' : '✗'} {generateMsg.text}
+                                    </p>
+                                  )}
                                 </div>
-                              ))}
+                              )}
                             </div>
-                          ) : (
-                            <p className="text-xs text-gray-500 py-2">Sin compras</p>
-                          )}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                          ))
+                        ) : (
+                          <div className="bg-black/20 border border-white/5 rounded-xl p-5 text-center">
+                            <Package className="w-6 h-6 text-gray-600 mx-auto mb-1.5" />
+                            <p className="text-xs text-gray-500">Sin compras</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )
             })}

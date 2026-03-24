@@ -6,17 +6,18 @@ import {
   Loader2, ChevronDown, AlertTriangle, TrendingUp, TrendingDown, Star,
   Shield, Activity, Brain, Heart, Zap, Eye, Target, Users, Flame,
   CheckCircle, Download, PenLine, Send, MessageCircle, Lightbulb, Clock,
-  Headphones, SkipForward, Anchor, Compass, Scale, Gift, Repeat, Play, Mail
+  Headphones, SkipForward, Anchor, Compass, Scale, Gift, Repeat, Play, Mail, X,
+  ClipboardList, RotateCcw
 } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, RadarChart as RechartRadar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts'
 import SEOHead from '../components/SEOHead'
-import { analyzeRadiografiaPremium, generateFallbackAnalysis, analyzeCrossRadiografia } from '../services/radiografiaPremiumService'
+import { analyzeRadiografiaPremium, generateFallbackAnalysis, analyzeCrossRadiografia, requestServerAnalysis, retryServerAnalysis } from '../services/radiografiaPremiumService'
 import { CACHED_PREVIEW_ANALYSIS } from '../data/cachedPreviewAnalysis'
 import { saveAnalysis, sendAnalysisEmail, sendBackupEmail, getAnalysis, checkCrossStatus, markPartnerDone, saveCrossAnalysis, sendCrossAnalysisEmail, getCrossAnalysis, getProfile, saveProfile } from '../services/emailApiService'
 import { downloadRadiografiaPDF } from '../services/pdfGenerationService'
 import { generateReactPDF, generateIndividualPDF, generateCruzadoPDF } from '../services/pdfReactService'
 import { useAuth } from '../context/AuthContext'
-import { saveTestProgress, saveAnalysisResult, saveCrossAnalysisResult, getPurchase, updatePurchase } from '../services/firestoreService'
+import { saveTestProgress, saveAnalysisResult, saveCrossAnalysisResult, getPurchase, updatePurchase, getUserProfile, checkCrossAnalysisReady, saveCrossAnalysisToBoth, createPurchase as createFirestorePurchase, subscribeToPurchase } from '../services/firestoreService'
 
 // ─── 40 PREGUNTAS NARRATIVAS — 5 BLOQUES ────────────────────
 
@@ -406,7 +407,7 @@ const RecordingBars = ({ analyser }) => {
 const AUTOANALISIS_SECTIONS = [
   { key: 'apertura_rapport', label: 'Rapport', icon: '💜', color: '#c084fc' },
   { key: 'forma_de_amar', label: 'Forma de amar', icon: '❤️', color: '#f472b6' },
-  { key: 'goce_repeticion', label: 'Goce', icon: '🔥', color: '#ef4444' },
+  { key: 'goce_repeticion', label: 'Lo que repites', icon: '🔥', color: '#ef4444' },
   { key: 'lo_que_busca_en_el_otro', label: 'Lo que buscas', icon: '🔍', color: '#60a5fa' },
   { key: 'lo_que_reclama_afuera', label: 'Lo que reclamas', icon: '📣', color: '#fb923c' },
   { key: 'fantasma_relacional', label: 'Fantasma', icon: '👻', color: '#a78bfa' },
@@ -755,6 +756,94 @@ const DEMO_CROSS_ANALYSIS = {
       'Reconectar el deseo erótico que migró hacia el conflicto'
     ]
   },
+}
+
+// ─── TEST MODE RESPONSES (Usuario 1 & 2 for quick fill) ─────────
+
+const TEST_RESPONSES_USER1 = {
+  Q1: 'Actualmente siento que estoy en un momento medio extraño… como estancado. Trabajo, sí, pero no me siento realmente satisfecho con lo que hago. Es como si estuviera sobreviviendo más que viviendo. Llevo aproximadamente un tiempo considerable en mi relación, pero últimamente siento que muchas cosas externas me afectan… estrés, inseguridad, incluso cosas internas mías que no logro resolver. Y siento que todo eso termina filtrándose en la relación, como si no pudiera separar lo que me pasa de lo que vivimos juntos.',
+  Q2: 'Al inicio todo fue muy intenso… como si por fin alguien me hubiera visto de verdad. Nos conocimos y rápidamente sentí una conexión muy fuerte, como si hubiera algo especial. Hubo momentos muy bonitos, pero también etapas donde empezaron a aparecer dudas, inseguridades, discusiones. Siento que la relación pasó de algo muy idealizado a algo más complicado… como si la realidad fuera bajando poco a poco.',
+  Q3: 'Hoy… no sé. Me cuesta definirlo. Hay momentos donde siento que estamos bien, pero otros donde siento distancia, como si algo se estuviera rompiendo lentamente. A veces me siento querido, pero otras veces muy solo dentro de la relación. Lo que antes fluía fácil ahora parece más pesado, más tenso.',
+  Q4: 'En el día a día… es raro. A veces convivimos bien, pero otras veces cada quien está en su mundo. Yo tiendo a estar más pendiente, más atento, pero también más ansioso… esperando señales, buscando si todo está bien. No siempre siento que eso sea recíproco.',
+  Q5: 'Siento que hemos construido algo… pero también siento que lo que hemos construido es frágil. He aprendido mucho de mí, pero también me he enfrentado a partes que no me gustan… inseguridad, miedo, dependencia emocional. La relación me ha hecho crecer, pero también me ha hecho sentir vulnerable de una forma que a veces me pesa.',
+  Q6: 'Me llamó la atención que era diferente… que parecía seguro, estable. Creo que me atrajo esa sensación de que podía darme algo que yo sentía que me faltaba… como estabilidad emocional o seguridad.',
+  Q7: 'Yo necesito palabras, atención, cercanía constante. Necesito sentir que estoy presente para la otra persona. Creo que yo doy mucho… quizá demasiado. Y a veces siento que no recibo lo mismo, o al menos no de la forma en que lo necesito.',
+  Q8: 'Recuerdo momentos muy bonitos… pero también algunos muy duros. Los momentos difíciles se me quedan más grabados, como discusiones o momentos donde sentí que podía perder a la otra persona.',
+  Q9: 'Al inicio imaginaba algo muy sólido… incluso un futuro juntos, estabilidad, tranquilidad. Pensaba que por fin había encontrado algo "seguro"… algo que no se iba a romper.',
+  Q10: 'Esa persona representaba refugio… validación… como sentir que yo era suficiente para alguien. Creo que encontré ahí algo que no encontraba en mí mismo.',
+  Q11: 'En mi infancia… no recuerdo mucha estabilidad emocional. Había cariño, pero también mucha tensión, conflictos no resueltos, silencios… y eso creo que me marcó bastante.',
+  Q12: 'Aprendí que el amor no siempre es seguro… que puede doler, que puede irse. Creo que crecí con la idea de que hay que esforzarse mucho para que alguien se quede.',
+  Q13: 'Sí… repito cosas. Sobre todo el miedo a perder, el querer controlar, el sobrepensar. A veces reacciono de formas que después me doy cuenta que vienen de ahí.',
+  Q14: 'Mis relaciones anteriores… también tenían patrones similares. Mucha intensidad al inicio, después inseguridad, dependencia emocional… y finalmente desgaste.',
+  Q15: 'No siento que pueda ser completamente yo mismo. Muchas veces me adapto, me guardo cosas o cambio cómo actúo para evitar problemas o para no incomodar.',
+  Q16: 'No siento que funcionemos como equipo siempre. Cuando estoy mal, a veces siento que no hay respuesta… y eso me hace sentir más solo.',
+  Q17: 'Los conflictos suelen empezar por cosas pequeñas… pero en realidad vienen de algo más profundo. A veces es por falta de atención, por sentirme ignorado o no validado.',
+  Q18: 'Cuando hay conflicto… me activo mucho emocionalmente. Siento ansiedad, miedo… y tiendo a insistir, a buscar resolver, a no soltar el tema.',
+  Q19: 'Mi pareja a veces se cierra… o se distancia. Eso me afecta mucho, porque mientras yo quiero acercarme, la otra persona parece alejarse.',
+  Q20: 'Después de una discusión… queda algo. Aunque aparentemente se resuelva, siento que hay cosas que no se dicen o no se sanan del todo.',
+  Q21: 'Sí hay atracción… pero no como antes. A veces depende mucho de cómo estamos emocionalmente.',
+  Q22: 'La conexión emocional es inestable. Hay momentos muy cercanos… y otros donde siento una distancia enorme.',
+  Q23: 'La intimidad física ha cambiado… Ya no es tan espontánea, y a veces siento que está conectada con cómo estamos emocionalmente.',
+  Q24: 'Al inicio era muy intensa… Ahora siento que depende mucho del estado de la relación.',
+  Q25: 'Me siento más conectado cuando hay atención, cuando me escuchan, cuando siento cercanía real. Pequeños gestos hacen mucha diferencia.',
+  Q26: 'La distancia aparece cuando siento indiferencia… O cuando percibo que no soy prioridad.',
+  Q27: 'Tomar decisiones… puede ser complicado. A veces cedo para evitar conflicto.',
+  Q28: 'Siento que no siempre hay equilibrio. A veces siento que doy más, que me involucro más emocionalmente.',
+  Q29: 'Creo que mi pareja busca tranquilidad… menos intensidad. Quizá alguien más estable.',
+  Q30: 'Yo necesito seguridad… constancia… sentir que soy importante. Necesito más claridad emocional.',
+  Q31: 'Esta relación es muy importante para mí… Pero también me genera mucho conflicto interno.',
+  Q32: 'El futuro… no lo veo claro. Quisiera estabilidad, pero no sé si la vamos a lograr.',
+  Q33: 'Me siento amado cuando hay atención, palabras, presencia. Pero siento que eso a veces falta.',
+  Q34: 'Sí tengo muchas dudas… Sobre si esto realmente funciona o si solo estoy sosteniéndolo por miedo a perder.',
+  Q35: 'Seguimos adelante… pero a veces siento que es más resistencia que construcción real.',
+  Q36: 'Se ha vuelto más rutinaria… Y a veces extraño la intensidad del inicio.',
+  Q37: 'Creo que mi pareja busca paz… Y yo busco seguridad emocional.',
+  Q38: 'Esta relación ha sacado mi inseguridad… Pero también me ha mostrado lo que necesito trabajar en mí.',
+  Q39: 'Es una relación intensa… emocionalmente cargada. Con mucha conexión, pero también mucho conflicto interno.',
+  Q40: 'Creo que… lo que más pesa es el miedo. Miedo a perder, miedo a no ser suficiente… y a veces siento que eso define más la relación que el amor en sí.',
+}
+
+const TEST_RESPONSES_USER2 = {
+  Q1: 'Actualmente estoy enfocado en mis cosas… trabajo, proyectos personales. Trato de mantenerme ocupado. Diría que estoy en un momento de estabilidad en general, aunque a veces siento que hay demasiada presión emocional en mi vida, especialmente en la relación. Llevo tiempo en esta relación, y sí… hay cosas que la afectan, sobre todo el nivel de intensidad emocional que se maneja a veces.',
+  Q2: 'La relación empezó muy bien, bastante natural. Había buena conexión, fluía todo fácil, sin tantas complicaciones. Con el tiempo empezaron a aparecer más conflictos, más emociones intensas… y siento que eso fue cambiando la dinámica. Antes era más ligero, ahora se siente más cargado.',
+  Q3: 'Actualmente diría que la relación es… inestable emocionalmente. Hay momentos buenos, pero también muchos momentos donde siento presión o conflicto innecesario. Siento que lo que más ha cambiado es la tranquilidad.',
+  Q4: 'En el día a día… a veces estamos bien, pero otras veces siento que no hay espacio. Yo necesito mis momentos, mi independencia… y a veces siento que eso no se entiende del todo. La comunicación muchas veces se vuelve demasiado intensa para cosas que podrían ser más simples.',
+  Q5: 'Creo que hemos construido una relación con historia, con momentos importantes… Pero también siento que se ha vuelto más complicada de lo que debería ser. Sí he aprendido cosas, sobre todo a ver cómo reacciono ante la presión emocional.',
+  Q6: 'Me llamó la atención que era una persona emocional, conectada, expresiva. Al inicio eso se sentía bien… había mucha conexión. Pero con el tiempo, esa misma intensidad a veces se volvió difícil de manejar.',
+  Q7: 'Yo no soy muy expresivo verbalmente… Demuestro más con acciones o estando presente, pero no tanto con palabras constantes o validación emocional continua. Siento que ahí hay una diferencia importante entre nosotros.',
+  Q8: 'Recuerdo momentos buenos… viajes, conversaciones, conexión. Pero también recuerdo momentos donde empezaron los conflictos repetitivos, donde las mismas cosas volvían una y otra vez.',
+  Q9: 'Al inicio veía algo estable, tranquilo… No imaginaba una relación tan emocionalmente demandante.',
+  Q10: 'Representaba compañía… conexión… alguien con quien compartir. Pero no necesariamente alguien de quien depender emocionalmente tanto.',
+  Q11: 'En mi casa no se expresaban tanto las emociones. Los conflictos no siempre se hablaban… muchas veces se evitaban o simplemente pasaban.',
+  Q12: 'Aprendí que el amor no tiene que ser complicado… Que cada quien debe tener su espacio y no depender demasiado del otro.',
+  Q13: 'Sí noto que evito conflictos… Prefiero retirarme, calmar las cosas o no entrar tanto en la intensidad.',
+  Q14: 'En relaciones anteriores… también he sentido algo parecido. Al inicio todo bien, pero después empieza a haber demasiada carga emocional.',
+  Q15: 'Para mí es importante mantener mi espacio. Y a veces siento que eso se ve como falta de interés, cuando en realidad es necesidad personal.',
+  Q16: 'No siempre siento que funcionamos como equipo… Más bien siento que reaccionamos distinto: uno se acerca más y el otro se aleja.',
+  Q17: 'Los conflictos suelen empezar por temas emocionales… Cosas que para mí no parecen tan grandes, pero que escalan rápido.',
+  Q18: 'Cuando hay conflicto… suelo cerrarme un poco. Prefiero pensar, tomar distancia, no reaccionar desde la emoción.',
+  Q19: 'Mi pareja reacciona con mucha intensidad… Busca resolver en el momento, hablarlo todo… y a veces eso me satura.',
+  Q20: 'Después de los conflictos… siento que se repiten. Como si no se cerraran del todo.',
+  Q21: 'Sí hay atracción… pero depende mucho del ambiente. Si hay tensión emocional, eso afecta.',
+  Q22: 'La cercanía emocional es variable. Hay momentos buenos, pero también momentos donde necesito distancia.',
+  Q23: 'La intimidad ha cambiado… Ya no es tan espontánea, y muchas veces está influida por el estado emocional de la relación.',
+  Q24: 'Al inicio era más natural… Ahora siento que está más condicionada.',
+  Q25: 'Me siento más conectado cuando todo está tranquilo, sin presión. Cuando podemos simplemente estar sin necesidad de resolver algo.',
+  Q26: 'La distancia aparece cuando siento exigencia emocional… O cuando siento que tengo que responder de cierta forma.',
+  Q27: 'Para tomar decisiones… trato de ser práctico. Pero a veces se vuelve complicado cuando hay mucha emoción involucrada.',
+  Q28: 'A veces siento que cedo para evitar conflicto. O me retiro, lo cual también genera problema.',
+  Q29: 'Creo que mi pareja necesita más atención emocional… Más validación, más cercanía constante.',
+  Q30: 'Yo necesito más espacio… Más tranquilidad, menos intensidad emocional.',
+  Q31: 'La relación es importante… Pero también siento que necesita cambiar para que funcione mejor.',
+  Q32: 'Me gustaría un futuro más tranquilo… Más estable emocionalmente.',
+  Q33: 'Me siento bien cuando hay calma… Pero siento que a veces eso se rompe demasiado fácil.',
+  Q34: 'Sí hay dudas… Sobre si podemos encontrar un punto medio.',
+  Q35: 'Seguimos adelante… Pero muchas veces más por costumbre o por lo que hemos construido.',
+  Q36: 'Se ha vuelto más predecible… Y también más tensa en ciertos aspectos.',
+  Q37: 'Creo que mi pareja busca seguridad emocional constante… Y yo busco equilibrio.',
+  Q38: 'Esta relación me ha mostrado que necesito aprender a manejar mejor las emociones… Pero también a poner límites.',
+  Q39: 'Es una relación intensa… Con mucha diferencia en la forma de sentir y reaccionar.',
+  Q40: 'Creo que el problema principal… Es que queremos cosas similares, pero las buscamos de formas muy diferentes.',
 }
 
 // ─── ANÁLISIS ANIMATION TASKS ─────────────────────────────────────
@@ -1971,8 +2060,8 @@ function JouissanceChart({ data }) {
         })}
         {/* Center */}
         <circle cx={cx} cy={cy} r={28} fill="rgba(239,68,68,0.1)" stroke="rgba(239,68,68,0.3)" strokeWidth={1.5} />
-        <text x={cx} y={cy - 4} textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize="11" fontWeight="600">Goce</text>
-        <text x={cx} y={cy + 10} textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="9">repetición</text>
+        <text x={cx} y={cy - 4} textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize="11" fontWeight="600">Patrón</text>
+        <text x={cx} y={cy + 10} textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="9">repetitivo</text>
       </svg>
       {posicion && (
         <div className="text-center mt-2">
@@ -2029,17 +2118,29 @@ const RadiografiaPremiumPage = () => {
   })
 
   // Purchase token from URL — used for localStorage namespacing and API calls
-  const [purchaseToken] = useState(() => new URLSearchParams(window.location.search).get('token') || '')
+  const [purchaseToken, setPurchaseToken] = useState(() => new URLSearchParams(window.location.search).get('token') || '')
   // Firebase Auth user + Firestore purchase
   const { user: firebaseUser } = useAuth()
-  const [firestorePurchaseId] = useState(() => new URLSearchParams(window.location.search).get('purchaseId') || '')
+  const [firestorePurchaseId, setFirestorePurchaseId] = useState(() => new URLSearchParams(window.location.search).get('purchaseId') || '')
   const [fromProfile] = useState(() => new URLSearchParams(window.location.search).get('fromProfile') === 'true')
   const [viewResultsMode] = useState(() => new URLSearchParams(window.location.search).get('viewResults') === 'true')
+  const [retryAnalysisMode] = useState(() => new URLSearchParams(window.location.search).get('retryAnalysis') === 'true')
 
   // Cross-analysis data (losdos package)
   const [crossAnalysis, setCrossAnalysis] = useState(null)
+  const [crossGenerating, setCrossGenerating] = useState(false)
+  const [crossError, setCrossError] = useState(null)
+  const [crossPartnerReady, setCrossPartnerReady] = useState(null) // null = unchecked, true/false
+  const [isBuyer, setIsBuyer] = useState(true) // true = buyer (who paid), false = partner
   // Tab state for results: 'individual' or 'cruzado'
   const [resultTab, setResultTab] = useState('individual')
+  // Dismissible dashboard banner
+  const [showDashboardBanner, setShowDashboardBanner] = useState(true)
+  // Test mode (from Firestore user doc)
+  const [isTestMode, setIsTestMode] = useState(false)
+  // Paste-responses modal for test mode
+  const [showPasteModal, setShowPasteModal] = useState(false)
+  const [pasteText, setPasteText] = useState('')
   // Demo mode with persona tabs (Sofía / Mateo)
   const [demoMode, setDemoMode] = useState(false)
   const [demoPersona, setDemoPersona] = useState('sofia') // 'sofia' | 'mateo'
@@ -2075,9 +2176,10 @@ const RadiografiaPremiumPage = () => {
   // Profile gate: if user arrives via email link without profile data, show form first
   const [profileGateDone, setProfileGateDone] = useState(() => {
     if (sessionStorage.getItem('radiografia_nombre')) return true
-    // If coming from profile page (logged in user), skip gate — will auto-fill from Firebase user
+    // If coming from profile page (logged in user) or Firestore flow, skip gate — data collected elsewhere
     const params = new URLSearchParams(window.location.search)
     if (params.get('fromProfile') === 'true') return true
+    if (params.get('purchaseId')) return true
     // Also check localStorage questionnaire progress (survives browser close)
     try {
       const tk = params.get('token')
@@ -2108,6 +2210,10 @@ const RadiografiaPremiumPage = () => {
   const [typingMode, setTypingMode] = useState(false)
   const [textInput, setTextInput] = useState('')
   const [showRegrabarModal, setShowRegrabarModal] = useState(false)
+  const [questionPhase, setQuestionPhase] = useState('green') // 'green' or 'purple'
+  const [greenAnswer, setGreenAnswer] = useState('') // stores green-phase answer before combining
+  const [instructionLayer, setInstructionLayer] = useState(1) // 1-6 for how-it-works steps
+  const [inputMode, setInputMode] = useState('voice') // 'voice' or 'written'
   const recognitionRef = useRef(null)
   const [recordingAnalyser, setRecordingAnalyser] = useState(null)
   const recordingStreamRef = useRef(null)
@@ -2115,6 +2221,7 @@ const RadiografiaPremiumPage = () => {
   // Analysis
   const [aiAnalysis, setAiAnalysis] = useState(null)
   const [analysisDone, setAnalysisDone] = useState(false)
+  const [analysisError, setAnalysisError] = useState(null)
   const [completedTasks, setCompletedTasks] = useState(0)
   const [pdfGenerating, setPdfGenerating] = useState(false)
   const [pdfProgress, setPdfProgress] = useState('')  // progress text for PDF generation
@@ -2344,8 +2451,41 @@ const RadiografiaPremiumPage = () => {
     if (!firebaseUser || !firestorePurchaseId) return
     const load = async () => {
       try {
-        const purchase = await getPurchase(firebaseUser.uid, firestorePurchaseId)
-        if (!purchase) return
+        // Load user profile to check testMode
+        const userProfile = await getUserProfile(firebaseUser.uid)
+        if (userProfile?.testMode) setIsTestMode(true)
+
+        let purchase = await getPurchase(firebaseUser.uid, firestorePurchaseId)
+
+        // Fallback: if purchase not found (e.g. purchaseId is a Stripe session ID), try to create it
+        if (!purchase) {
+          const pendingRaw = sessionStorage.getItem('pending_firestore_purchase')
+          const storedFsId = sessionStorage.getItem('firestore_purchase_id')
+          if (storedFsId && storedFsId !== firestorePurchaseId) {
+            // A real Firestore ID exists in sessionStorage — try to load that instead
+            purchase = await getPurchase(firebaseUser.uid, storedFsId)
+            if (purchase) setFirestorePurchaseId(storedFsId)
+          }
+          if (!purchase && pendingRaw) {
+            try {
+              const pendingData = JSON.parse(pendingRaw)
+              const newId = await createFirestorePurchase(firebaseUser.uid, pendingData)
+              sessionStorage.setItem('firestore_purchase_id', newId)
+              sessionStorage.removeItem('pending_firestore_purchase')
+              purchase = await getPurchase(firebaseUser.uid, newId)
+              if (purchase) setFirestorePurchaseId(newId)
+            } catch (e) { console.error('Fallback purchase creation error:', e) }
+          }
+          if (!purchase) return
+        }
+
+        // Determine if current user is the buyer (not the invited partner)
+        if (purchase.linkedBuyerUid) setIsBuyer(false)
+
+        // Recover kvToken from Firestore if not in URL
+        if (!purchaseToken && purchase.kvToken) {
+          setPurchaseToken(purchase.kvToken)
+        }
 
         // Auto-fill profile from Firebase user if no profile data exists yet
         if (!purchase.profileData?.nombre && fromProfile) {
@@ -2358,6 +2498,19 @@ const RadiografiaPremiumPage = () => {
             setEmailData(prev => ({ ...prev, emailUsuario: prev.emailUsuario || firebaseUser.email }))
             sessionStorage.setItem('radiografia_buyer_email', firebaseUser.email)
           }
+          // For Partner B: fetch buyer's name from partnerRef to fill nombrePareja
+          if (purchase.partnerRef?.uid && purchase.partnerRef?.purchaseId) {
+            try {
+              const buyerPurchase = await getPurchase(purchase.partnerRef.uid, purchase.partnerRef.purchaseId)
+              const buyerName = buyerPurchase?.profileData?.nombre || ''
+              const buyerAge = buyerPurchase?.profileData?.edad || ''
+              if (buyerName) {
+                setProfileData(prev => ({ ...prev, nombrePareja: prev.nombrePareja || buyerName, edadPareja: prev.edadPareja || buyerAge }))
+                sessionStorage.setItem('radiografia_nombre_pareja', buyerName)
+                if (buyerAge) sessionStorage.setItem('radiografia_edad_pareja', buyerAge)
+              }
+            } catch (e) { console.error('Error fetching buyer name for partner:', e) }
+          }
           setProfileGateDone(true)
         }
 
@@ -2366,6 +2519,16 @@ const RadiografiaPremiumPage = () => {
           setAiAnalysis(purchase.analysis)
           if (purchase.crossAnalysis) setCrossAnalysis(purchase.crossAnalysis)
           if (purchase.profileData) setProfileData(purchase.profileData)
+          // For Partner B: ensure nombrePareja shows buyer's actual name
+          if (purchase.partnerRef?.uid && purchase.partnerRef?.purchaseId) {
+            getPurchase(purchase.partnerRef.uid, purchase.partnerRef.purchaseId)
+              .then(buyerPurchase => {
+                const buyerName = buyerPurchase?.profileData?.nombre || ''
+                const buyerAge = buyerPurchase?.profileData?.edad || ''
+                if (buyerName) setProfileData(prev => ({ ...prev, nombrePareja: buyerName, edadPareja: buyerAge || prev.edadPareja }))
+              })
+              .catch(() => {})
+          }
           setStage('results')
           return
         }
@@ -2385,13 +2548,48 @@ const RadiografiaPremiumPage = () => {
             }
           }
           if (purchase.voiceSelection) setSelectedVoiceId(purchase.voiceSelection)
-          if (purchase.status === 'in-progress') setStage('questionnaire')
         }
-        // If analysis already generated, show results
+        // If analysis already generated, show results directly
         if (purchase.analysis) {
           setAiAnalysis(purchase.analysis)
           if (purchase.crossAnalysis) setCrossAnalysis(purchase.crossAnalysis)
           setStage('results')
+        } else if (purchase.status === 'analyzing') {
+          setStage('thankyou')
+          // If retryAnalysis mode, re-trigger analysis from frontend with saved responses
+          if (retryAnalysisMode && purchase.responses && Object.keys(purchase.responses).length > 0) {
+            const retryProfileData = purchase.profileData || {}
+            const retryPkgType = purchase.packageType || packageType
+            setProfileData(retryProfileData)
+            setResponses(purchase.responses)
+            // Run analysis from frontend (4 parallel proxy calls)
+            analyzeRadiografiaPremium({
+              responses: purchase.responses,
+              questions: PREGUNTAS,
+              profileData: retryProfileData,
+              packageType: retryPkgType,
+            }).then(async (analysis) => {
+              if (analysis && retryProfileData?.nombre) {
+                let str = JSON.stringify(analysis)
+                str = str.replace(/\[nombre\]/gi, retryProfileData.nombre)
+                if (retryProfileData.nombrePareja) str = str.replace(/\[pareja\]/gi, retryProfileData.nombrePareja)
+                Object.assign(analysis, JSON.parse(str))
+              }
+              await saveAnalysisResult(firebaseUser.uid, firestorePurchaseId, analysis)
+              setAiAnalysis(analysis)
+              setAnalysisDone(true)
+              console.log('✅ Retry analysis completed and saved')
+            }).catch(err => {
+              console.error('Retry analysis error:', err)
+              setAnalysisError(err.message || 'Error al reintentar el análisis')
+            })
+          }
+        } else if (purchase.responses && Object.keys(purchase.responses).length > 0 && purchase.status === 'in-progress') {
+          // Restore exact stage: if stageReached is saved, use it; otherwise default to questionnaire
+          const savedStage = purchase.stageReached || 'questionnaire'
+          setStage(savedStage)
+        } else if (purchase.stageReached === 'how-it-works') {
+          setStage('how-it-works')
         }
       } catch (err) {
         console.error('Error loading Firestore progress:', err)
@@ -2400,10 +2598,10 @@ const RadiografiaPremiumPage = () => {
     load()
   }, [firebaseUser, firestorePurchaseId, viewResultsMode])
 
-  // ── Firestore: Save progress on each answer ──
+  // ── Firestore: Save progress on each answer / navigation ──
   useEffect(() => {
     if (!firebaseUser || !firestorePurchaseId) return
-    if (stage !== 'questionnaire' || Object.keys(responses).length === 0) return
+    if (stage !== 'questionnaire') return
     const save = async () => {
       try {
         await saveTestProgress(firebaseUser.uid, firestorePurchaseId, {
@@ -2412,8 +2610,6 @@ const RadiografiaPremiumPage = () => {
           profileData,
           voiceSelection: selectedVoiceId
         })
-        // Also update status to in-progress if first save
-        await updatePurchase(firebaseUser.uid, firestorePurchaseId, { status: 'in-progress' })
       } catch (err) {
         console.error('Error saving progress to Firestore:', err)
       }
@@ -2545,7 +2741,8 @@ const RadiografiaPremiumPage = () => {
         greetingPlayedRef.current = false
         return
       }
-      setTypingMode(false)
+      // If written mode, don't auto-start mic
+      if (inputMode === 'written') return
       // If no voice selected, skip audio and go straight to mic
       if (!selectedVoiceId) {
         setTimeout(() => {
@@ -2555,10 +2752,10 @@ const RadiografiaPremiumPage = () => {
         return
       }
       playQuestion(questionText, undefined, () => {
-        // Auto-start mic after TTS ends (only if not already recording/typing)
+        // Auto-start mic after TTS ends
         setTimeout(() => {
           const sr = window.SpeechRecognition || window.webkitSpeechRecognition
-          if (sr && !typingMode) startRecording()
+          if (sr && inputMode === 'voice') startRecording()
         }, 300)
       })
       // Preload next question
@@ -2570,6 +2767,17 @@ const RadiografiaPremiumPage = () => {
     }
     return () => stopAudio()
   }, [currentQ, stage, showOnboarding, profileGateDone]) // eslint-disable-line react-hooks-exhaustive-deps
+
+  // ── Check if partner finished when user opens the Cruzado tab ──
+  useEffect(() => {
+    if (resultTab !== 'cruzado' || crossAnalysis || crossGenerating || !firebaseUser || !firestorePurchaseId || packageType !== 'losdos') return
+    if (crossPartnerReady !== null) return // already checked
+    checkCrossAnalysisReady(firebaseUser.uid, firestorePurchaseId)
+      .then(result => {
+        setCrossPartnerReady(result.ready)
+      })
+      .catch(() => setCrossPartnerReady(false))
+  }, [resultTab, crossAnalysis, crossGenerating, firebaseUser, firestorePurchaseId, packageType, crossPartnerReady])
 
   // ── Spotlight narration: play TTS for each onboarding step ──
   useEffect(() => {
@@ -2631,29 +2839,70 @@ const RadiografiaPremiumPage = () => {
   }, [])
 
   // ── Save response and navigate ──
-  const currentText = typingMode ? textInput : transcript
+  const currentText = inputMode === 'written' ? textInput : transcript
+
+  // ── Continue from green phase to purple phase ──
+  const continueToExamples = useCallback(() => {
+    const greenText = inputMode === 'written' ? textInput.trim() : transcript.trim()
+    setGreenAnswer(greenText)
+    stopRecording()
+    setTranscript('')
+    setTextInput('')
+    setQuestionPhase('purple')
+    // Auto-start mic for purple phase (voice mode only)
+    if (inputMode === 'voice') {
+      setTimeout(() => {
+        const sr = window.SpeechRecognition || window.webkitSpeechRecognition
+        if (sr) startRecording()
+      }, 500)
+    }
+  }, [inputMode, textInput, transcript, stopRecording, startRecording])
 
   const saveAndNext = useCallback(() => {
-    const finalText = typingMode ? textInput.trim() : transcript.trim()
+    let finalText
+    if (questionPhase === 'purple') {
+      const purpleText = inputMode === 'written' ? textInput.trim() : transcript.trim()
+      finalText = [greenAnswer, purpleText].filter(Boolean).join(' ')
+    } else {
+      finalText = inputMode === 'written' ? textInput.trim() : transcript.trim()
+    }
     if (finalText) {
       setResponses(prev => ({ ...prev, [question.id]: finalText }))
     }
     stopRecording()
     setTranscript('')
     setTextInput('')
-    setTypingMode(false)
+    setQuestionPhase('green')
+    setGreenAnswer('')
     if (currentQ < totalQ - 1) {
       setCurrentQ(prev => prev + 1)
     } else {
       const finalResponses = { ...responses }
       if (finalText) finalResponses[question.id] = finalText
+      // Save final progress (Q40) to Firestore before analysis
+      if (firebaseUser && firestorePurchaseId) {
+        saveTestProgress(firebaseUser.uid, firestorePurchaseId, {
+          currentQuestion: totalQ,
+          responses: finalResponses,
+          profileData,
+          voiceSelection: selectedVoiceId
+        }).catch(err => console.error('Error saving final progress:', err))
+      }
       handleRunAnalysis(finalResponses)
     }
-  }, [textInput, transcript, typingMode, currentQ, totalQ, question, responses, stopRecording])
+  }, [textInput, transcript, inputMode, currentQ, totalQ, question, responses, stopRecording, questionPhase, greenAnswer])
 
   const goBack = useCallback(() => {
+    if (questionPhase === 'purple') {
+      stopRecording()
+      setTranscript(greenAnswer)
+      setTextInput(greenAnswer)
+      setQuestionPhase('green')
+      setGreenAnswer('')
+      return
+    }
     if (currentQ > 0) {
-      const finalText = typingMode ? textInput.trim() : transcript.trim()
+      const finalText = inputMode === 'written' ? textInput.trim() : transcript.trim()
       if (finalText) {
         setResponses(prev => ({ ...prev, [question.id]: finalText }))
       }
@@ -2663,9 +2912,8 @@ const RadiografiaPremiumPage = () => {
       const prevVal = responses[prevQ.id] || ''
       setTranscript(prevVal)
       setTextInput(prevVal)
-      setTypingMode(false)
     }
-  }, [currentQ, textInput, transcript, typingMode, question, responses, stopRecording])
+  }, [currentQ, textInput, transcript, inputMode, question, responses, stopRecording, questionPhase, greenAnswer])
 
   // ── When entering a question, load saved transcript ──
   useEffect(() => {
@@ -2673,7 +2921,8 @@ const RadiografiaPremiumPage = () => {
       const saved = responses[question?.id] || ''
       setTranscript(saved)
       setTextInput(saved)
-      setTypingMode(false)
+      setQuestionPhase('green')
+      setGreenAnswer('')
     }
   }, [currentQ, stage]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -2688,7 +2937,11 @@ const RadiografiaPremiumPage = () => {
   const startQuestionnaire = useCallback(() => {
     stopAudio()
     setStage('questionnaire')
-  }, [stopAudio])
+    // Set status to in-progress once when user begins
+    if (firebaseUser && firestorePurchaseId) {
+      updatePurchase(firebaseUser.uid, firestorePurchaseId, { status: 'in-progress', stageReached: 'questionnaire' }).catch(() => {})
+    }
+  }, [stopAudio, firebaseUser, firestorePurchaseId])
 
   // ── Run AI Analysis ──
   const handleRunAnalysis = useCallback(async (finalResponses) => {
@@ -2699,7 +2952,7 @@ const RadiografiaPremiumPage = () => {
       return
     }
 
-    // In production: show "thank you" screen immediately, run analysis in background
+    // Show "thank you" screen immediately
     if (!import.meta.env.DEV) {
       setStage('thankyou')
     } else {
@@ -2707,6 +2960,12 @@ const RadiografiaPremiumPage = () => {
     }
     setCompletedTasks(0)
     setAnalysisDone(false)
+    setAnalysisError(null)
+
+    // Set status to 'analyzing' in Firestore so dashboard shows correct state
+    if (firebaseUser && firestorePurchaseId) {
+      updatePurchase(firebaseUser.uid, firestorePurchaseId, { status: 'analyzing', currentQuestion: 40 }).catch(() => {})
+    }
 
     // Start animation — 40 tasks × 4.5s ≈ 3 min, paced for parallel API
     let taskIdx = 0
@@ -2717,76 +2976,116 @@ const RadiografiaPremiumPage = () => {
     }, 4500)
 
     try {
-      const result = await analyzeRadiografiaPremium({ responses: finalResponses, questions: PREGUNTAS, profileData, packageType })
-      setAiAnalysis(result)
-      setCachedAnalysis(result) // Cache for DEV reuse
-      setAnalysisDone(true)
-      const storageKey = purchaseToken ? `radiografia_premium_progress_${purchaseToken}` : 'radiografia_premium_progress'
-      localStorage.removeItem(storageKey)
-      // Save to localStorage for later DEV access
-      try { localStorage.setItem('radiografia_cached_analysis', JSON.stringify(result)) } catch {}
-
-      // ── Save analysis to Firestore (fire-and-forget) ──
-      if (firebaseUser && firestorePurchaseId) {
-        saveAnalysisResult(firebaseUser.uid, firestorePurchaseId, result).catch(err =>
-          console.error('Firestore save error:', err)
-        )
+      // Partner analysis runs server-side (Worker) for reliability — no browser timeouts
+      if (!isBuyer && firebaseUser && firestorePurchaseId) {
+        console.log('🔄 Partner detected — routing analysis to server-side Worker...')
+        const email = firebaseUser?.email || emailData.emailUsuario
+        try {
+          await requestServerAnalysis({
+            uid: firebaseUser.uid,
+            purchaseId: firestorePurchaseId,
+            email,
+            packageType,
+            profileData,
+            responses: finalResponses,
+            questions: PREGUNTAS,
+          })
+          console.log('✅ Server analysis queued — onSnapshot will pick up the result')
+        } catch (e) {
+          console.warn('Server analysis request error (onSnapshot will still work):', e.message)
+        }
+        // Don't clear animation — let it run naturally while Worker processes in background
+        // onSnapshot listener will detect completion and set analysisDone + aiAnalysis
+        return
       }
 
-      // Save results to KV + send "analysis ready" email (fire-and-forget, never blocks UI)
-      if (!import.meta.env.DEV) {
-        const urlParams = new URLSearchParams(window.location.search)
-        const purchaseToken = urlParams.get('token')
-        if (purchaseToken) {
-          const type    = urlParams.get('type') || packageType
-          const buyer   = sessionStorage.getItem('radiografia_buyer_email')   || ''
-          const partner = sessionStorage.getItem('radiografia_partner_email') || ''
-          const emails  = [buyer, partner].filter(e => e.includes('@'))
-          saveAnalysis({ token: purchaseToken, analysis: result }).catch(() => {})
-          sendBackupEmail({
-            token: purchaseToken, type, profileData,
-            questions: PREGUNTAS.map(q => ({ id: q.id, mainQuestion: q.mainQuestion })),
-            responses: finalResponses
-          }).catch(() => {})
-          if (emails.length > 0) {
-            sendAnalysisEmail({ token: purchaseToken, type, emails }).catch(() => {})
-          }
+      // Buyer: Frontend-driven analysis: 4 parallel calls to /api/deepseek-proxy
+      // Each call is a separate Worker invocation (~15s), well within Cloudflare's limits.
+      const analysis = await analyzeRadiografiaPremium({
+        responses: finalResponses,
+        questions: PREGUNTAS,
+        profileData,
+        packageType,
+      })
 
-          // Cross-analysis flow for "losdos" — fire-and-forget
-          if (type === 'losdos') {
-            ;(async () => {
-              try {
-                await markPartnerDone(purchaseToken)
-                const crossStatus = await checkCrossStatus(purchaseToken)
-                if (crossStatus?.bothDone && crossStatus.otherAnalysis) {
-                  console.log('🔄 Ambos terminaron — generando análisis cruzado...')
-                  const crossResult = await analyzeCrossRadiografia({
-                    analysis1: result,
-                    analysis2: crossStatus.otherAnalysis,
-                    profile1: profileData,
-                    profile2: { nombre: profileData.nombrePareja || 'Pareja' },
-                  })
-                  if (crossResult && crossStatus.pairId) {
-                    await saveCrossAnalysis({ token: purchaseToken, pairId: crossStatus.pairId, analysis: crossResult })
-                    setCrossAnalysis(crossResult)
-                    await sendCrossAnalysisEmail({ pairId: crossStatus.pairId, token: purchaseToken })
-                    console.log('✅ Análisis cruzado guardado y email enviado')
-                  }
-                } else {
-                  console.log('⏳ Esperando a que la otra persona termine su cuestionario')
-                }
-              } catch (e) {
-                console.error('Cross-analysis error (non-blocking):', e)
+      // Post-process: replace [nombre] / [pareja] placeholders
+      if (analysis && profileData?.nombre) {
+        let str = JSON.stringify(analysis)
+        str = str.replace(/\[nombre\]/gi, profileData.nombre)
+        if (profileData.nombrePareja) str = str.replace(/\[pareja\]/gi, profileData.nombrePareja)
+        Object.assign(analysis, JSON.parse(str))
+      }
+
+      // Save to Firestore → triggers onSnapshot for live update
+      if (firebaseUser && firestorePurchaseId) {
+        await saveAnalysisResult(firebaseUser.uid, firestorePurchaseId, analysis)
+      }
+
+      // Clear stored progress
+      const storageKey = purchaseToken ? `radiografia_premium_progress_${purchaseToken}` : 'radiografia_premium_progress'
+      localStorage.removeItem(storageKey)
+
+      // Send notification email via Worker
+      const email = firebaseUser?.email || emailData.emailUsuario
+      if (email) {
+        fetch(`${WORKER_URL}/api/send-analysis-email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ emails: [email], type: packageType, token: purchaseToken || 'firestore' }),
+        }).catch(() => {})
+      }
+
+      // Set analysis directly (onSnapshot will also do this, but this is faster)
+      setAiAnalysis(analysis)
+      setAnalysisDone(true)
+      try { localStorage.setItem('radiografia_cached_analysis', JSON.stringify(analysis)) } catch {}
+
+      console.log('✅ Analysis completed and saved')
+
+      // ── Cross-analysis: check if both partners are done (losdos) ──
+      if (packageType === 'losdos' && firebaseUser && firestorePurchaseId) {
+        try {
+          const crossCheck = await checkCrossAnalysisReady(firebaseUser.uid, firestorePurchaseId)
+          if (crossCheck.ready) {
+            console.log('🔄 Both partners done — generating cross-analysis...')
+            const crossResult = await analyzeCrossRadiografia({
+              analysis1: analysis,
+              analysis2: crossCheck.partnerAnalysis,
+              profile1: profileData,
+              profile2: crossCheck.partnerProfileData,
+            })
+            if (crossResult) {
+              await saveCrossAnalysisToBoth(
+                firebaseUser.uid, firestorePurchaseId,
+                crossCheck.partnerUid, crossCheck.partnerPurchaseId,
+                crossResult
+              )
+              setCrossAnalysis(crossResult)
+              console.log('✅ Cross-analysis saved to both purchases')
+              // Notify both partners
+              const partnerEmail = crossCheck.partnerEmail
+              const emails = [email, partnerEmail].filter(Boolean)
+              if (emails.length) {
+                fetch(`${WORKER_URL}/api/send-analysis-email`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ emails, type: 'cruzado', token: purchaseToken || 'firestore' }),
+                }).catch(() => {})
               }
-            })()
+            }
+          } else {
+            console.log('⏳ Partner not done yet — cross-analysis will generate when they finish')
           }
+        } catch (crossErr) {
+          console.error('Cross-analysis check error:', crossErr)
         }
       }
     } catch (err) {
       console.error('Analysis failed:', err)
-      setAnalysisDone(true)
+      clearInterval(animInterval)
+      setAnalysisError(err.message || 'Error al generar el análisis')
     }
-  }, [])
+  }, [cachedAnalysis, firebaseUser, firestorePurchaseId, emailData.emailUsuario, packageType, profileData, purchaseToken, isBuyer])
 
   // ── Fill demo responses for testing — auto-advance one question at a time ──
   const fillDemoResponses = useCallback(() => {
@@ -2816,6 +3115,104 @@ const RadiografiaPremiumPage = () => {
 
     return () => clearInterval(fillInterval)
   }, [handleRunAnalysis])
+
+  // ── Fill test responses (testMode) — instant fill + trigger analysis ──
+  const fillTestResponses = useCallback(async (userResponses, userName) => {
+    // Use real Firebase display name instead of generic "Usuario Prueba"
+    const realName = firebaseUser?.displayName || (userName === 'user1' ? 'Usuario 1' : 'Usuario 2')
+    const profileName = realName
+    // Try to get the real partner name and ages from Firestore
+    let partnerName = ''
+    let edad = ''
+    let edadPareja = ''
+    if (firebaseUser && firestorePurchaseId) {
+      try {
+        const myPurchase = await getPurchase(firebaseUser.uid, firestorePurchaseId)
+        // Use existing profile ages if available
+        if (myPurchase?.profileData?.edad) edad = myPurchase.profileData.edad
+        if (myPurchase?.profileData?.edadPareja) edadPareja = myPurchase.profileData.edadPareja
+        if (myPurchase?.partnerRef) {
+          // I'm the partner — get buyer's name from their purchase profileData or displayName
+          const buyerPurchase = await getPurchase(myPurchase.partnerRef.uid, myPurchase.partnerRef.purchaseId)
+          partnerName = buyerPurchase?.profileData?.nombre || myPurchase.partnerRef.displayName || ''
+        }
+        if (!partnerName && myPurchase?.partnerEmail) {
+          // I'm the buyer — partner name not available yet, use partnerName from invite or placeholder
+          partnerName = myPurchase.partnerName || ''
+        }
+      } catch (e) { console.error('Error fetching partner name:', e) }
+    }
+    if (!partnerName) partnerName = `Pareja de ${realName}`
+    const testProfile = { nombre: profileName, edad, nombrePareja: partnerName, edadPareja }
+    setProfileData(testProfile)
+    setProfileGateDone(true)
+    setResponses({ ...userResponses })
+    // Save all responses to Firestore before triggering analysis
+    if (firebaseUser && firestorePurchaseId) {
+      saveTestProgress(firebaseUser.uid, firestorePurchaseId, {
+        currentQuestion: 40,
+        responses: userResponses,
+        profileData: testProfile,
+        voiceSelection: selectedVoiceId
+      }).catch(err => console.error('Error saving test progress:', err))
+    }
+    handleRunAnalysis(userResponses)
+  }, [firebaseUser, firestorePurchaseId, selectedVoiceId, handleRunAnalysis])
+
+  // ── Parse pasted responses and fill (testMode) ──
+  const handlePasteResponses = useCallback((text) => {
+    const lines = text.split('\n').filter(l => l.trim())
+    const parsed = {}
+    let currentQ = null
+    let currentText = ''
+    for (const line of lines) {
+      const match = line.match(/^\s*(?:Q?(\d+)[.):\-]\s*|(\d+)\.\s*)(.*)$/i)
+      if (match) {
+        if (currentQ) parsed[`Q${currentQ}`] = currentText.trim()
+        currentQ = parseInt(match[1] || match[2])
+        currentText = (match[3] || '').trim()
+      } else if (currentQ) {
+        currentText += ' ' + line.trim()
+      }
+    }
+    if (currentQ) parsed[`Q${currentQ}`] = currentText.trim()
+    const validKeys = Object.keys(parsed).filter(k => {
+      const n = parseInt(k.replace('Q', ''))
+      return n >= 1 && n <= 40 && parsed[k].length > 0
+    })
+    if (validKeys.length === 0) return
+    fillTestResponses(parsed, 'pasted')
+    setShowPasteModal(false)
+    setPasteText('')
+  }, [fillTestResponses])
+
+  // ── onSnapshot: listen for server-side analysis completion ──
+  useEffect(() => {
+    if ((stage !== 'thankyou' && stage !== 'analyzing') || !firebaseUser?.uid || !firestorePurchaseId) return
+    // Already have analysis — no need to listen
+    if (aiAnalysis) return
+
+    const unsub = subscribeToPurchase(firebaseUser.uid, firestorePurchaseId, (purchase) => {
+      if (!purchase) return
+      if (purchase.analysis && purchase.status === 'completed') {
+        setAiAnalysis(purchase.analysis)
+        setCachedAnalysis(purchase.analysis)
+        if (purchase.crossAnalysis) setCrossAnalysis(purchase.crossAnalysis)
+        setAnalysisDone(true)
+        try { localStorage.setItem('radiografia_cached_analysis', JSON.stringify(purchase.analysis)) } catch {}
+      }
+      // Also pick up cross-analysis if it arrives later
+      if (purchase.crossAnalysis && !crossAnalysis) {
+        setCrossAnalysis(purchase.crossAnalysis)
+      }
+      if (purchase.status === 'error') {
+        console.error('Server analysis error:', purchase.errorMessage)
+        setAnalysisError(purchase.errorMessage || 'Error generating analysis')
+        setAnalysisDone(true)
+      }
+    })
+    return unsub
+  }, [stage, firebaseUser?.uid, firestorePurchaseId, aiAnalysis])
 
   // ── When both analysis and animation done → show completion or results ──
   useEffect(() => {
@@ -2903,31 +3300,13 @@ const RadiografiaPremiumPage = () => {
         {stage === 'instructions' && (
           <motion.div key="instructions" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="min-h-screen flex items-center justify-center px-6 pt-6 pb-12">
-            <div className="max-w-xl w-full text-center space-y-8">
+            <div className="max-w-xl w-full text-center space-y-6">
 
-              {/* ── Header + tagline ── */}
-              <div>
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-4">
-                  <Brain className="w-8 h-8 text-violet-400/60" strokeWidth={1.5} />
-                </div>
+              {/* ── Header con fondo degradado morado ── */}
+              <div className="rounded-2xl overflow-hidden bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 p-8 text-center shadow-xl shadow-purple-900/30">
+                <Brain className="w-10 h-10 text-white/80 mx-auto mb-3" strokeWidth={1.5} />
                 <h1 className="text-2xl lg:text-3xl font-light text-white mb-2">Radiografía de Pareja Premium</h1>
-                <p className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400 text-sm font-medium tracking-wide mb-4">Descubre tu forma de amar</p>
-                <p className="text-white/50 text-sm font-light leading-relaxed max-w-md mx-auto">
-                  Un análisis narrativo profundo de tu relación a través de <strong className="text-white/70">40 preguntas abiertas</strong> que exploran tu vínculo desde <strong className="text-white/70">12 dimensiones psicológicas</strong>.
-                </p>
-              </div>
-
-              {/* ── Step indicator ── */}
-              <div className="flex items-center justify-center gap-3">
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/15 border border-violet-500/25">
-                  <div className="w-5 h-5 rounded-full bg-violet-500 flex items-center justify-center text-white text-[10px] font-bold">1</div>
-                  <span className="text-violet-300/80 text-xs font-medium">Configuración</span>
-                </div>
-                <div className="w-6 h-px bg-white/15" />
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/8 bg-white/[0.02]">
-                  <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-white/60 text-[10px] font-bold">2</div>
-                  <span className="text-white/55 text-xs font-medium">Instrucciones</span>
-                </div>
+                <p className="text-white/90 text-base font-medium tracking-wide">Descubre tu forma de amar</p>
               </div>
 
               {/* ── Profile gate: inline form if profile data is missing ── */}
@@ -2935,54 +3314,54 @@ const RadiografiaPremiumPage = () => {
                 profileLoading ? (
                   <div className="flex flex-col items-center justify-center py-10 gap-3">
                     <div className="w-8 h-8 border-2 border-violet-500/30 border-t-violet-400 rounded-full animate-spin" />
-                    <p className="text-white/50 text-sm font-light">Recuperando tus datos...</p>
+                    <p className="text-white/60 text-base font-light">Recuperando tus datos...</p>
                   </div>
                 ) :
                 <div className="space-y-4 p-6 rounded-2xl border border-violet-500/20 bg-violet-500/[0.04]">
                   <div className="text-center mb-2">
-                    <p className="text-white/70 text-base font-light mb-1">Antes de empezar, cuéntanos un poco sobre ti</p>
-                    <p className="text-white/45 text-xs font-light">Esta información personaliza tu análisis y aparecerá en tu reporte</p>
+                    <p className="text-white/80 text-lg font-light mb-1">Antes de empezar, cuéntanos un poco sobre ti</p>
+                    <p className="text-white/60 text-sm font-light">Esta información personaliza tu análisis y aparecerá en tu reporte</p>
                   </div>
                   <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto">
                     <div>
-                      <label className="text-white/50 text-xs font-light mb-1 block">Tu nombre *</label>
+                      <label className="text-white/60 text-sm font-light mb-1 block">Tu nombre *</label>
                       <input type="text" value={profileData.nombre} maxLength={50}
                         onChange={e => setProfileData(p => ({ ...p, nombre: e.target.value }))}
-                        className="w-full px-3 py-2.5 rounded-xl bg-white/[0.06] border border-white/10 text-white text-sm font-light placeholder:text-white/25 focus:outline-none focus:border-violet-500/40"
+                        className="w-full px-3 py-2.5 rounded-xl bg-white/[0.06] border border-white/10 text-white text-base font-light placeholder:text-white/30 focus:outline-none focus:border-violet-500/40"
                         placeholder="Tu nombre" />
                     </div>
                     <div>
-                      <label className="text-white/50 text-xs font-light mb-1 block">Tu edad</label>
+                      <label className="text-white/60 text-sm font-light mb-1 block">Tu edad</label>
                       <input type="number" value={profileData.edad} min={16} max={99}
                         onChange={e => setProfileData(p => ({ ...p, edad: e.target.value }))}
-                        className="w-full px-3 py-2.5 rounded-xl bg-white/[0.06] border border-white/10 text-white text-sm font-light placeholder:text-white/25 focus:outline-none focus:border-violet-500/40"
+                        className="w-full px-3 py-2.5 rounded-xl bg-white/[0.06] border border-white/10 text-white text-base font-light placeholder:text-white/30 focus:outline-none focus:border-violet-500/40"
                         placeholder="Edad" />
                     </div>
                   </div>
                   {(packageType === 'solo' || packageType === 'losdos') && (
                     <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto">
                       <div>
-                        <label className="text-white/50 text-xs font-light mb-1 block">Nombre de tu pareja</label>
+                        <label className="text-white/60 text-sm font-light mb-1 block">Nombre de tu pareja</label>
                         <input type="text" value={profileData.nombrePareja} maxLength={50}
                           onChange={e => setProfileData(p => ({ ...p, nombrePareja: e.target.value }))}
-                          className="w-full px-3 py-2.5 rounded-xl bg-white/[0.06] border border-white/10 text-white text-sm font-light placeholder:text-white/25 focus:outline-none focus:border-violet-500/40"
+                          className="w-full px-3 py-2.5 rounded-xl bg-white/[0.06] border border-white/10 text-white text-base font-light placeholder:text-white/30 focus:outline-none focus:border-violet-500/40"
                           placeholder="Su nombre" />
                       </div>
                       <div>
-                        <label className="text-white/50 text-xs font-light mb-1 block">Edad de tu pareja</label>
+                        <label className="text-white/60 text-sm font-light mb-1 block">Edad de tu pareja</label>
                         <input type="number" value={profileData.edadPareja} min={16} max={99}
                           onChange={e => setProfileData(p => ({ ...p, edadPareja: e.target.value }))}
-                          className="w-full px-3 py-2.5 rounded-xl bg-white/[0.06] border border-white/10 text-white text-sm font-light placeholder:text-white/25 focus:outline-none focus:border-violet-500/40"
+                          className="w-full px-3 py-2.5 rounded-xl bg-white/[0.06] border border-white/10 text-white text-base font-light placeholder:text-white/30 focus:outline-none focus:border-violet-500/40"
                           placeholder="Edad" />
                       </div>
                     </div>
                   )}
                   {!emailData.emailUsuario && (
                     <div className="max-w-sm mx-auto">
-                      <label className="text-white/50 text-xs font-light mb-1 block">Tu email *</label>
+                      <label className="text-white/60 text-sm font-light mb-1 block">Tu email *</label>
                       <input type="email" value={emailData.emailUsuario}
                         onChange={e => setEmailData(p => ({ ...p, emailUsuario: e.target.value }))}
-                        className="w-full px-3 py-2.5 rounded-xl bg-white/[0.06] border border-white/10 text-white text-sm font-light placeholder:text-white/25 focus:outline-none focus:border-violet-500/40"
+                        className="w-full px-3 py-2.5 rounded-xl bg-white/[0.06] border border-white/10 text-white text-base font-light placeholder:text-white/30 focus:outline-none focus:border-violet-500/40"
                         placeholder="tu@email.com" />
                     </div>
                   )}
@@ -2991,12 +3370,10 @@ const RadiografiaPremiumPage = () => {
                       whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                       disabled={!profileData.nombre.trim()}
                       onClick={() => {
-                        // Save to sessionStorage
                         sessionStorage.setItem('radiografia_nombre', profileData.nombre)
                         if (profileData.edad) sessionStorage.setItem('radiografia_edad', profileData.edad)
                         if (profileData.nombrePareja) sessionStorage.setItem('radiografia_nombre_pareja', profileData.nombrePareja)
                         if (profileData.edadPareja) sessionStorage.setItem('radiografia_edad_pareja', profileData.edadPareja)
-                        // Save to KV (fire and forget)
                         if (purchaseToken) {
                           saveProfile({ token: purchaseToken, profileData: {
                             nombre: profileData.nombre, edad: profileData.edad,
@@ -3006,137 +3383,188 @@ const RadiografiaPremiumPage = () => {
                         }
                         setProfileGateDone(true)
                       }}
-                      className="px-8 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-sm font-medium hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-500/15 disabled:opacity-40 disabled:cursor-not-allowed">
+                      className="px-8 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-base font-medium hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-500/15 disabled:opacity-40 disabled:cursor-not-allowed">
                       Continuar <ArrowRight className="w-4 h-4 inline ml-1" />
                     </motion.button>
                   </div>
                 </div>
               )}
 
-              {/* ── Voice selector: 4 circular cards + no-voice option, single toggle ── */}
               {(profileGateDone || import.meta.env.DEV) && (<>
-              <div className="space-y-4">
-                <div className="text-center">
-                  <p className="text-white/70 text-base font-light flex items-center justify-center gap-2 mb-1">
-                    <Headphones className="w-4 h-4 text-violet-400/50" /> Elige la voz que te guiará
+
+              {/* Descripción post-header */}
+              <p className="text-white/70 text-base font-light leading-relaxed max-w-md mx-auto text-center">
+                Un espacio seguro donde tu voz revela patrones que las palabras escritas no capturan.
+              </p>
+
+              {/* ── Verificación del sistema ── */}
+              <div className="rounded-2xl overflow-hidden border border-violet-500/15 bg-white/[0.02]">
+                {/* Header con color */}
+                <div className="bg-gradient-to-r from-violet-600/80 to-purple-600/80 px-5 py-3.5 flex items-center gap-2.5">
+                  <Headphones className="w-5 h-5 text-white/80" />
+                  <span className="text-white text-base font-medium">Verificación del sistema</span>
+                </div>
+                {/* Contenido */}
+                <div className="p-5 space-y-4">
+                  <p className="text-white/70 text-sm font-light text-center leading-relaxed">
+                    Necesitamos verificar que tu dispositivo está listo. Si tu navegador te pide permiso, acepta para continuar.
                   </p>
-                  <p className="text-white/45 text-sm font-light">Toca una voz para seleccionarla y escuchar una prueba</p>
-                </div>
-                <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto">
-                  {VOICE_LIST.map(v => {
-                    const isSelected = selectedVoiceId === v.id
-                    const isPreviewing = previewingVoiceId === v.id && audioPlaying
-                    return (
-                      <button key={v.id}
-                        onClick={() => {
-                          stopAudio()
-                          setSelectedVoiceId(v.id)
-                          if (!isSelected || !audioPlaying) {
-                            playQuestion(`Hola, soy ${v.name} y te acompañaré durante toda tu radiografía. Escucharás cada pregunta en mi voz.`, v.id)
-                          }
-                        }}
-                        className={`relative flex flex-col items-center gap-2 py-4 px-3 rounded-2xl border transition-all duration-300 ${isSelected
-                          ? `${v.border} ${v.bg} shadow-lg`
-                          : 'border-white/8 bg-white/[0.02] hover:border-white/15 hover:bg-white/[0.04]'}`}>
-                        <div className={`relative w-14 h-14 rounded-full bg-gradient-to-br ${v.color} flex items-center justify-center text-white font-semibold text-lg shadow-lg ${isPreviewing ? `ring-4 ${v.ring} animate-pulse` : ''}`}>
-                          {v.initial}
-                          {isSelected && (
-                            <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full bg-zinc-900 border-2 border-green-500 flex items-center justify-center">
-                              <Check className="w-3 h-3 text-green-400" />
-                            </div>
-                          )}
-                        </div>
-                        <div className="text-center">
-                          <span className={`text-sm font-medium block ${isSelected ? v.text : 'text-white/60'}`}>{v.name}</span>
-                          <span className="text-xs text-white/50 font-light">{v.desc}</span>
-                        </div>
-                        {isPreviewing && (
-                          <div className="absolute top-2 right-2">
-                            <Volume2 className={`w-3.5 h-3.5 ${v.text} animate-pulse`} />
-                          </div>
-                        )}
-                      </button>
-                    )
-                  })}
-                </div>
-                {/* Opción sin voz */}
-                <div className="flex justify-center">
-                  <button
-                    onClick={() => { stopAudio(); setSelectedVoiceId(null) }}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl border transition-all text-sm font-light ${
-                      selectedVoiceId === null
-                        ? 'border-white/25 bg-white/[0.08] text-white/70'
-                        : 'border-white/8 bg-white/[0.02] text-white/60 hover:border-white/15 hover:text-white/55'}`}>
-                    <VolumeX className="w-4 h-4" />
-                    {selectedVoiceId === null ? '✓ Sin voz guía' : 'Prefiero no tener voz guía'}
-                  </button>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                    <button
+                      onClick={() => {
+                        playQuestion('¿Me escuchas bien? Si puedes oírme con claridad, estamos listos para comenzar.', VOICE_LIST[0].id, () => setSoundTestOk(true), 'sound-test')
+                      }}
+                      className={`flex items-center gap-2 px-5 py-3 rounded-xl border transition-all text-base font-light w-full sm:w-auto justify-center ${
+                        soundTestOk === true ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' :
+                        soundTestOk === false ? 'border-red-500/30 bg-red-500/10 text-red-300' :
+                        'border-white/15 bg-white/[0.03] text-white/70 hover:border-white/25 hover:text-white/80'}`}>
+                      <Volume2 className="w-5 h-5" />
+                      {soundTestOk === true ? '✓ Audio funcionando' : soundTestOk === false ? '✗ Verifica tu volumen' : 'Probar audio'}
+                    </button>
+                    <button
+                      onClick={async () => {
+                        try {
+                          const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+                          setMicTestOk(true)
+                          const ctx = new (window.AudioContext || window.webkitAudioContext)()
+                          const src = ctx.createMediaStreamSource(stream)
+                          const analyser = ctx.createAnalyser()
+                          analyser.fftSize = 256
+                          src.connect(analyser)
+                          setMicAnalyser(analyser)
+                          setTimeout(() => {
+                            stream.getTracks().forEach(t => t.stop())
+                            ctx.close()
+                            setMicAnalyser(null)
+                          }, 3000)
+                        } catch { setMicTestOk(false) }
+                      }}
+                      className={`flex items-center gap-2 px-5 py-3 rounded-xl border transition-all text-base font-light w-full sm:w-auto justify-center ${
+                        micTestOk === true ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' :
+                        micTestOk === false ? 'border-red-500/30 bg-red-500/10 text-red-300' :
+                        'border-white/15 bg-white/[0.03] text-white/70 hover:border-white/25 hover:text-white/80'}`}>
+                      <Mic className="w-5 h-5" />
+                      {micTestOk === true ? '✓ Micrófono activado' : micTestOk === false ? '✗ Permite el micrófono' : 'Activar micrófono'}
+                    </button>
+                  </div>
+                  {micAnalyser && <MicLevelBars analyser={micAnalyser} />}
+                  {micTestOk === false && (
+                    <p className="text-red-300/80 text-sm text-center leading-relaxed">
+                      Tu navegador bloqueó el micrófono. Busca el ícono de candado 🔒 en la barra de dirección y permite el acceso.
+                    </p>
+                  )}
                 </div>
               </div>
 
-              {/* ── Comprobación de Audio y Micrófono ── */}
-              <div className="space-y-4 p-6 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.04] to-transparent">
-                <p className="text-violet-300/80 text-base font-medium flex items-center justify-center gap-2">
-                  <Headphones className="w-5 h-5 text-violet-400/50" /> Verificación del sistema
-                </p>
-                <p className="text-white/60 text-sm font-light text-center leading-relaxed">
-                  Antes de comenzar, necesitamos verificar que tu dispositivo está listo.
-                  <br /><span className="text-white/40 text-xs">Si tu navegador te pide permiso para usar el micrófono o reproducir audio, acepta para continuar.</span>
-                </p>
-                <div className="h-px bg-white/5" />
-
-                <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-                  {/* Sound test */}
-                  <button
-                    onClick={() => {
-                      playQuestion('¿Me escuchas bien? Si puedes oírme con claridad, estamos listos para comenzar.', undefined, () => setSoundTestOk(true), 'sound-test')
-                    }}
-                    className={`flex items-center gap-2 px-5 py-3 rounded-xl border transition-all text-sm font-light w-full sm:w-auto justify-center ${
-                      soundTestOk === true ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' :
-                      soundTestOk === false ? 'border-red-500/30 bg-red-500/10 text-red-300' :
-                      'border-white/15 bg-white/[0.03] text-white/50 hover:border-white/25 hover:text-white/70'}`}>
-                    <Volume2 className="w-4 h-4" />
-                    {soundTestOk === true ? '✓ Audio funcionando' : soundTestOk === false ? '✗ No se escuchó — verifica tu volumen' : '1. Probar audio'}
-                  </button>
-                  {/* Mic test */}
-                  <button
-                    onClick={async () => {
-                      try {
-                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-                        setMicTestOk(true)
-                        const ctx = new (window.AudioContext || window.webkitAudioContext)()
-                        const src = ctx.createMediaStreamSource(stream)
-                        const analyser = ctx.createAnalyser()
-                        analyser.fftSize = 256
-                        src.connect(analyser)
-                        setMicAnalyser(analyser)
-                        setTimeout(() => {
-                          stream.getTracks().forEach(t => t.stop())
-                          ctx.close()
-                          setMicAnalyser(null)
-                        }, 3000)
-                      } catch { setMicTestOk(false) }
-                    }}
-                    className={`flex items-center gap-2 px-5 py-3 rounded-xl border transition-all text-sm font-light w-full sm:w-auto justify-center ${
-                      micTestOk === true ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' :
-                      micTestOk === false ? 'border-red-500/30 bg-red-500/10 text-red-300' :
-                      'border-white/15 bg-white/[0.03] text-white/50 hover:border-white/25 hover:text-white/70'}`}>
-                    <Mic className="w-4 h-4" />
-                    {micTestOk === true ? '✓ Micrófono activado' : micTestOk === false ? '✗ Sin acceso — permite el micrófono en tu navegador' : '2. Activar micrófono'}
-                  </button>
+              {/* ── Elige la voz que te guiará ── */}
+              <div className="rounded-2xl overflow-hidden border border-violet-500/15 bg-white/[0.02]">
+                {/* Header con color */}
+                <div className="bg-gradient-to-r from-fuchsia-600/80 to-violet-600/80 px-5 py-3.5 flex items-center gap-2.5">
+                  <Volume2 className="w-5 h-5 text-white/80" />
+                  <span className="text-white text-base font-medium">Elige la voz que te guiará</span>
                 </div>
-                {micAnalyser && <MicLevelBars analyser={micAnalyser} />}
-                {micTestOk === false && (
-                  <p className="text-red-300/70 text-xs text-center leading-relaxed">
-                    Tu navegador bloqueó el acceso al micrófono. Busca el ícono de candado 🔒 en la barra de dirección y permite el acceso al micrófono, luego vuelve a intentar.
-                  </p>
-                )}
+                {/* Contenido */}
+                <div className="p-5 space-y-4">
+                  <p className="text-white/60 text-sm font-light text-center">Toca una voz para seleccionarla y escuchar una prueba</p>
+                  <div className="flex justify-center gap-4">
+                    {VOICE_LIST.map(v => {
+                      const isSelected = selectedVoiceId === v.id
+                      const isPreviewing = previewingVoiceId === v.id && audioPlaying
+                      return (
+                        <button key={v.id}
+                          onClick={() => {
+                            stopAudio()
+                            setSelectedVoiceId(v.id)
+                            if (!isSelected || !audioPlaying) {
+                              playQuestion(`Hola, soy ${v.name} y te acompañaré durante toda tu radiografía. Escucharás cada pregunta en mi voz.`, v.id)
+                            }
+                          }}
+                          className="flex flex-col items-center gap-2 group">
+                          <div className={`relative w-14 h-14 rounded-full bg-gradient-to-br ${v.color} flex items-center justify-center text-white font-semibold text-lg shadow-lg transition-all duration-300 ${
+                            isSelected ? `ring-3 ${v.ring} scale-110` : 'opacity-60 hover:opacity-90 hover:scale-105'
+                          } ${isPreviewing ? 'animate-pulse' : ''}`}>
+                            {v.initial}
+                            {isSelected && (
+                              <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full bg-zinc-900 border-2 border-green-500 flex items-center justify-center">
+                                <Check className="w-3 h-3 text-green-400" />
+                              </div>
+                            )}
+                          </div>
+                          <span className={`text-sm font-medium ${isSelected ? v.text : 'text-white/50'}`}>{v.name}</span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                  <div className="flex justify-center pt-1">
+                    <button
+                      onClick={() => { stopAudio(); setSelectedVoiceId(null) }}
+                      className={`flex items-center gap-2 px-6 py-2.5 rounded-xl border transition-all text-sm font-light ${
+                        selectedVoiceId === null
+                          ? 'border-white/25 bg-white/[0.08] text-white/80'
+                          : 'border-white/8 bg-white/[0.02] text-white/50 hover:border-white/15 hover:text-white/70'}`}>
+                      <VolumeX className="w-4 h-4" />
+                      Prefiero no tener voz guía
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* ── ¿Cómo prefieres contestar? ── */}
+              <div className="rounded-2xl overflow-hidden border border-violet-500/15 bg-white/[0.02]">
+                {/* Header con color */}
+                <div className="bg-gradient-to-r from-indigo-600/80 to-violet-600/80 px-5 py-3.5 flex items-center gap-2.5">
+                  <PenLine className="w-5 h-5 text-white/80" />
+                  <span className="text-white text-base font-medium">¿Cómo prefieres contestar?</span>
+                </div>
+                {/* Contenido */}
+                <div className="p-5">
+                  <div className="flex gap-3 max-w-sm mx-auto">
+                    <button
+                      onClick={() => setInputMode('voice')}
+                      className={`flex-1 flex flex-col items-center gap-2 py-4 px-3 rounded-2xl border transition-all duration-300 ${
+                        inputMode === 'voice'
+                          ? 'border-violet-500/40 bg-violet-500/10 shadow-lg shadow-violet-500/10'
+                          : 'border-white/8 bg-white/[0.02] hover:border-white/15'}`}>
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                        inputMode === 'voice'
+                          ? 'bg-gradient-to-br from-violet-500/30 to-fuchsia-500/20 border-2 border-violet-500/40'
+                          : 'bg-white/5 border-2 border-white/10'}`}>
+                        <Mic className={`w-5 h-5 ${inputMode === 'voice' ? 'text-violet-300' : 'text-white/50'}`} />
+                      </div>
+                      <span className={`text-base font-medium ${inputMode === 'voice' ? 'text-violet-300' : 'text-white/60'}`}>Con voz</span>
+                      {inputMode === 'voice' && (
+                        <span className="text-violet-400/60 text-xs px-2 py-0.5 rounded-full bg-violet-500/10">Más elegido</span>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setInputMode('written')}
+                      className={`flex-1 flex flex-col items-center gap-2 py-4 px-3 rounded-2xl border transition-all duration-300 ${
+                        inputMode === 'written'
+                          ? 'border-amber-500/40 bg-amber-500/10 shadow-lg shadow-amber-500/10'
+                          : 'border-white/8 bg-white/[0.02] hover:border-white/15'}`}>
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                        inputMode === 'written'
+                          ? 'bg-gradient-to-br from-amber-500/30 to-orange-500/20 border-2 border-amber-500/40'
+                          : 'bg-white/5 border-2 border-white/10'}`}>
+                        <PenLine className={`w-5 h-5 ${inputMode === 'written' ? 'text-amber-300' : 'text-white/50'}`} />
+                      </div>
+                      <span className={`text-base font-medium ${inputMode === 'written' ? 'text-amber-300' : 'text-white/60'}`}>Escrito</span>
+                    </button>
+                  </div>
+                </div>
               </div>
 
               <motion.button
-                onClick={() => setStage('how-it-works')}
+                onClick={() => {
+                  setStage('how-it-works')
+                  setInstructionLayer(1)
+                  if (firebaseUser && firestorePurchaseId) {
+                    updatePurchase(firebaseUser.uid, firestorePurchaseId, { stageReached: 'how-it-works' }).catch(() => {})
+                  }
+                }}
                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
-                Siguiente: Instrucciones <ArrowRight className="inline w-4 h-4 ml-2" />
+                className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
+                Siguiente: Instrucciones <ArrowRight className="inline w-5 h-5 ml-2" />
               </motion.button>
               </>)}
             </div>
@@ -3144,135 +3572,213 @@ const RadiografiaPremiumPage = () => {
         )}
 
         {/* ═══════════════════════════════════════════════════════
-            STAGE: HOW-IT-WORKS — Pantalla 2: Instrucciones premium
+            STAGE: HOW-IT-WORKS — 6 layered instruction screens
         ═══════════════════════════════════════════════════════ */}
         {stage === 'how-it-works' && (
           <motion.div key="how-it-works" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="min-h-screen flex items-center justify-center px-6 pt-6 pb-12">
             <div className="max-w-xl w-full text-center space-y-8">
 
-              {/* ── Step indicator ── */}
-              <div className="flex items-center justify-center gap-3">
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/8 bg-white/[0.02]">
-                  <div className="w-5 h-5 rounded-full bg-emerald-500/60 flex items-center justify-center">
-                    <Check className="w-3 h-3 text-white" />
-                  </div>
-                  <span className="text-white/60 text-xs font-medium">Configuración</span>
-                </div>
-                <div className="w-6 h-px bg-white/15" />
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/15 border border-violet-500/25">
-                  <div className="w-5 h-5 rounded-full bg-violet-500 flex items-center justify-center text-white text-[10px] font-bold">2</div>
-                  <span className="text-violet-300/80 text-xs font-medium">Instrucciones</span>
-                </div>
+              {/* ── Layer progress dots ── */}
+              <div className="flex items-center justify-center gap-2">
+                {[1, 2, 3, 4, 5, 6].map(n => (
+                  <div key={n} className={`w-2 h-2 rounded-full transition-all duration-300 ${n === instructionLayer ? 'w-6 bg-gradient-to-r from-violet-400 to-fuchsia-400' : n < instructionLayer ? 'bg-violet-500/60' : 'bg-white/15'}`} />
+                ))}
               </div>
 
-              {/* ── Header centrado y premium ── */}
-              <div>
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-4">
-                  <Headphones className="w-7 h-7 text-violet-400/60" strokeWidth={1.5} />
-                </div>
-                <h2 className="text-2xl lg:text-3xl font-light text-white mb-2">Prepara tu espacio</h2>
-                <p className="text-white/55 text-sm font-light max-w-md mx-auto">Lee con calma cómo funciona antes de empezar.</p>
-              </div>
+              {/* ══ LAYER 1: Hook ══ */}
+              {instructionLayer === 1 && (
+                <motion.div key="layer1" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto">
+                    <Brain className="w-8 h-8 text-violet-400/60" strokeWidth={1.5} />
+                  </div>
+                  <h2 className="text-2xl lg:text-3xl font-light text-white leading-snug">
+                    Estás a punto de ver lo que normalmente <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">no se ve</span> en tu forma de amar.
+                  </h2>
+                  <div className="p-5 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.04] to-transparent">
+                    <p className="text-white/70 text-sm font-medium uppercase tracking-wider mb-3">Antes de empezar, asegúrate de tener</p>
+                    <div className="flex flex-wrap gap-5 justify-center text-white/80 text-base font-light">
+                      <span className="flex items-center gap-2">🎧 Audífonos puestos</span>
+                      <span className="flex items-center gap-2">🔇 Un lugar tranquilo</span>
+                      <span className="flex items-center gap-2">⏱️ 20–25 minutos</span>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
 
-              {/* ── Condiciones ideales ── */}
-              <div className="p-5 rounded-2xl border border-violet-500/10 bg-gradient-to-br from-violet-500/[0.04] to-transparent">
-                <div className="flex flex-wrap gap-4 justify-center text-white/60 text-sm font-light">
-                  <span className="flex items-center gap-2">🎧 Usa audífonos</span>
-                  <span className="flex items-center gap-2">🔇 Busca un lugar tranquilo</span>
-                  <span className="flex items-center gap-2">⏱️ 20–25 minutos</span>
-                </div>
-              </div>
-
-              {/* ── Instrucciones numeradas ── */}
-              <div className="space-y-4">
-                <p className="text-white/70 text-base font-medium text-center mb-2">Así funciona cada pregunta</p>
-
-                {/* Paso 1 */}
-                <div className="flex items-start gap-4">
-                  <div className="w-8 h-8 rounded-full bg-violet-500/15 border border-violet-500/25 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-violet-300 text-sm font-bold">1</span>
+              {/* ══ LAYER 2: Cómo funciona ══ */}
+              {instructionLayer === 2 && (
+                <motion.div key="layer2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto">
+                    <Headphones className="w-7 h-7 text-violet-400/60" strokeWidth={1.5} />
                   </div>
                   <div>
-                    <p className="text-white/80 text-sm font-medium mb-1">Se te leerá la pregunta en voz alta</p>
-                    <p className="text-white/45 text-sm font-light">Puedes <strong className="text-white/60">saltar</strong> el audio o <strong className="text-white/60">repetirlo</strong> con los botones que verás junto a la pregunta.</p>
+                    <h2 className="text-xl lg:text-2xl font-light text-white mb-3">Así funciona tu test</h2>
+                    <p className="text-white/70 text-base font-light max-w-md mx-auto">Cada pregunta tiene 2 momentos:</p>
                   </div>
-                </div>
+                  <div className="space-y-4 text-left">
+                    <div className="flex items-start gap-4 p-5 rounded-xl border border-violet-500/10 bg-violet-500/[0.03]">
+                      <div className="w-10 h-10 rounded-full bg-violet-500/15 border border-violet-500/25 flex items-center justify-center flex-shrink-0">
+                        <Volume2 className="w-5 h-5 text-violet-300" />
+                      </div>
+                      <div>
+                        <p className="text-white text-base font-medium mb-1">La voz te lee la pregunta</p>
+                        <p className="text-white/60 text-base font-light">Escucharás cada pregunta en la voz que elegiste.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4 p-5 rounded-xl border border-violet-500/10 bg-violet-500/[0.03]">
+                      <div className="w-10 h-10 rounded-full bg-violet-500/15 border border-violet-500/25 flex items-center justify-center flex-shrink-0">
+                        <Mic className="w-5 h-5 text-violet-300" />
+                      </div>
+                      <div>
+                        <p className="text-white text-base font-medium mb-1">El micrófono se activa automáticamente</p>
+                        <p className="text-white/60 text-base font-light">Tu respuesta se captura mientras hablas.</p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
 
-                {/* Paso 2 */}
-                <div className="flex items-start gap-4">
-                  <div className="w-8 h-8 rounded-full bg-violet-500/15 border border-violet-500/25 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-violet-300 text-sm font-bold">2</span>
+              {/* ══ LAYER 3: Demo verde ══ */}
+              {instructionLayer === 3 && (
+                <motion.div key="layer3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/15 to-teal-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto">
+                    <Heart className="w-7 h-7 text-emerald-400/60" strokeWidth={1.5} />
                   </div>
                   <div>
-                    <p className="text-white/80 text-sm font-medium mb-1">Se activará el micrófono automáticamente</p>
-                    <p className="text-white/45 text-sm font-light">Solo habla con naturalidad. Si prefieres escribir, toca "Prefiero escribir mi respuesta".</p>
+                    <h2 className="text-xl lg:text-2xl font-light text-white mb-3">Son <span className="text-white font-medium">40 preguntas</span> y cada una aparece así</h2>
+                    <p className="text-white/70 text-base font-light max-w-md mx-auto">Primero verás una <span className="text-emerald-300 font-medium">pregunta verde</span>:</p>
                   </div>
-                </div>
+                  {/* Demo green card */}
+                  <div className="rounded-2xl overflow-hidden">
+                    <div className="px-5 py-3 bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-emerald-500/15 border border-b-0 border-emerald-500/15">
+                      <p className="text-emerald-200 text-sm font-semibold uppercase tracking-wider text-center flex items-center justify-center gap-2">
+                        <Heart className="w-4 h-4 text-emerald-400/70" />
+                        <span className="text-emerald-100 font-bold">1</span> · Habla sin filtro
+                      </p>
+                    </div>
+                    <div className="px-6 py-6 border border-t-0 border-emerald-500/10 bg-emerald-500/[0.02]">
+                      <p className="text-white/80 text-lg font-light leading-relaxed text-center italic">
+                        "¿Qué es lo que más te atrajo de tu pareja al principio?"
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-center gap-3 py-3">
+                    <div className="w-12 h-12 rounded-full bg-red-500/15 border-2 border-red-500/30 flex items-center justify-center animate-pulse">
+                      <Mic className="w-5 h-5 text-red-400" />
+                    </div>
+                    <p className="text-white/70 text-base font-light">Cuando la voz termine, el <span className="text-red-300">micrófono se activa</span> automáticamente.</p>
+                  </div>
+                  <p className="text-white/80 text-lg font-light">Es así de fácil.</p>
+                </motion.div>
+              )}
 
-                {/* Paso 3 */}
-                <div className="flex items-start gap-4">
-                  <div className="w-8 h-8 rounded-full bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-emerald-300 text-sm font-bold">3</span>
+              {/* ══ LAYER 4: Demo violeta ══ */}
+              {instructionLayer === 4 && (
+                <motion.div key="layer4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 border border-violet-500/20 flex items-center justify-center mx-auto">
+                    <Lightbulb className="w-7 h-7 text-violet-400/60" strokeWidth={1.5} />
                   </div>
                   <div>
-                    <p className="text-white/80 text-sm font-medium mb-1">Di lo primero que te venga a la mente</p>
-                    <p className="text-white/45 text-sm font-light">Lee primero la <strong className="text-emerald-300/70">pregunta verde</strong> — es la pregunta principal. Responde con lo que sientas, sin pensarlo demasiado.</p>
+                    <h2 className="text-xl lg:text-2xl font-light text-white mb-3">Después aparece la <span className="text-violet-300">tarjeta violeta</span></h2>
+                    <p className="text-white/70 text-base font-light max-w-md mx-auto">Te muestra puntos que quizás no mencionaste, para completar tu respuesta.</p>
                   </div>
-                </div>
+                  {/* Demo purple card */}
+                  <div className="rounded-2xl overflow-hidden">
+                    <div className="px-5 py-3 bg-gradient-to-r from-violet-500/15 via-fuchsia-500/10 to-violet-500/15 border border-b-0 border-violet-500/15">
+                      <p className="text-violet-200 text-sm font-semibold uppercase tracking-wider text-center flex items-center justify-center gap-2">
+                        <Lightbulb className="w-4 h-4 text-violet-400/70" />
+                        Completa tu respuesta
+                      </p>
+                    </div>
+                    <div className="px-5 py-5 border border-t-0 border-white/10 bg-white/[0.02] space-y-3">
+                      <div className="flex items-center justify-center gap-2.5 text-white/80 text-base font-light">
+                        <span className="text-violet-400/60">✦</span> <span>¿Fue algo físico, emocional o intelectual?</span>
+                      </div>
+                      <div className="flex items-center justify-center gap-2.5 text-white/80 text-base font-light">
+                        <span className="text-violet-400/60">✦</span> <span>¿Eso que te atrajo sigue presente hoy?</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-white/70 text-base font-light">
+                    El micrófono se activa de nuevo para que complementes. El algoritmo une ambas respuestas.
+                  </p>
+                </motion.div>
+              )}
 
-                {/* Paso 4 */}
-                <div className="flex items-start gap-4">
-                  <div className="w-8 h-8 rounded-full bg-fuchsia-500/15 border border-fuchsia-500/25 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-fuchsia-300 text-sm font-bold">4</span>
+              {/* ══ LAYER 5: Regrabación ══ */}
+              {instructionLayer === 5 && (
+                <motion.div key="layer5" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500/15 to-orange-500/10 border border-amber-500/20 flex items-center justify-center mx-auto">
+                    <RotateCcw className="w-7 h-7 text-amber-400/60" strokeWidth={1.5} />
                   </div>
                   <div>
-                    <p className="text-white/80 text-sm font-medium mb-1">Lee las preguntas violeta para completar</p>
-                    <p className="text-white/45 text-sm font-light">Debajo de la pregunta verde verás <strong className="text-violet-300/70">ideas en violeta</strong> que te ayudan a profundizar tu respuesta. Son opcionales.</p>
+                    <h2 className="text-xl lg:text-2xl font-light text-white mb-3">Si quieres regrabar, se borra todo</h2>
+                    <p className="text-white/70 text-base font-light max-w-md mx-auto">No se puede editar solo una parte. Si eliges regrabar, empiezas desde cero.</p>
                   </div>
-                </div>
+                  <div className="p-5 rounded-2xl border border-amber-500/10 bg-amber-500/[0.03] space-y-4">
+                    <div className="flex items-start gap-3 text-left">
+                      <div className="w-7 h-7 rounded-full bg-amber-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-amber-300 text-sm font-bold">1</span>
+                      </div>
+                      <p className="text-white/80 text-base font-light">Toca <span className="text-amber-300 font-medium underline underline-offset-2 decoration-amber-400/40">"Regrabar desde cero"</span> si no quedaste conforme.</p>
+                    </div>
+                    <div className="flex items-start gap-3 text-left">
+                      <div className="w-7 h-7 rounded-full bg-amber-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-amber-300 text-sm font-bold">2</span>
+                      </div>
+                      <p className="text-white/80 text-base font-light">Se borra tu respuesta anterior completa y vuelves a la pregunta verde.</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
 
-                {/* Paso 5 */}
-                <div className="flex items-start gap-4">
-                  <div className="w-8 h-8 rounded-full bg-amber-500/15 border border-amber-500/25 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-amber-300 text-sm font-bold">5</span>
+              {/* ══ LAYER 6: Guardado automático + WhatsApp ══ */}
+              {instructionLayer === 6 && (
+                <motion.div key="layer6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500/15 to-emerald-500/10 border border-teal-500/20 flex items-center justify-center mx-auto">
+                    <Shield className="w-7 h-7 text-teal-400/60" strokeWidth={1.5} />
                   </div>
                   <div>
-                    <p className="text-white/80 text-sm font-medium mb-1">Puedes regrabar cualquier respuesta</p>
-                    <p className="text-white/45 text-sm font-light">Si no quedaste conforme, simplemente toca <strong className="text-white/60">Regrabar</strong>. También puedes editar el texto transcrito antes de avanzar.</p>
+                    <h2 className="text-xl lg:text-2xl font-light text-white mb-3">Tu progreso se guarda automáticamente</h2>
+                    <p className="text-white/70 text-base font-light max-w-md mx-auto">Si cierras la ventana o pierdes conexión, al volver encontrarás todo donde lo dejaste.</p>
                   </div>
-                </div>
-
-                {/* Paso 6 */}
-                <div className="flex items-start gap-4">
-                  <div className="w-8 h-8 rounded-full bg-teal-500/15 border border-teal-500/25 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-teal-300 text-sm font-bold">6</span>
+                  <div className="p-5 rounded-2xl border border-teal-500/10 bg-teal-500/[0.03]">
+                    <div className="flex flex-wrap gap-5 justify-center text-white/80 text-base font-light">
+                      <span className="flex items-center gap-2"><CheckCircle className="w-5 h-5 text-teal-400/60" /> Guardado en la nube</span>
+                      <span className="flex items-center gap-2"><CheckCircle className="w-5 h-5 text-teal-400/60" /> Retoma cuando quieras</span>
+                      <span className="flex items-center gap-2"><CheckCircle className="w-5 h-5 text-teal-400/60" /> 100% privado</span>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-white/80 text-sm font-medium mb-1">Tu progreso se guarda automáticamente</p>
-                    <p className="text-white/45 text-sm font-light">Si cierras la ventana o pierdes conexión, al volver encontrarás todo donde lo dejaste.</p>
+                  <div className="p-5 rounded-xl bg-gradient-to-r from-emerald-500/[0.06] to-teal-500/[0.04] border border-emerald-500/15 text-center">
+                    <p className="text-white/70 text-base font-light mb-1">¿Necesitas ayuda durante el test?</p>
+                    <p className="text-emerald-300/80 text-base font-light">
+                      Usa el botón flotante de WhatsApp en la esquina y te ayudamos al instante.
+                    </p>
                   </div>
-                </div>
-              </div>
-
-              {/* ── Mensaje de confianza ── */}
-              <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/[0.06] to-teal-500/[0.04] border border-emerald-500/15 text-center">
-                <p className="text-emerald-300/80 text-sm font-light">
-                  💬 Puedes hablar como si fuera tu mejor amigo, sin filtros. Lo que digas es solo para ti.
-                </p>
-              </div>
+                </motion.div>
+              )}
 
               {/* ── Navigation ── */}
               <div className="space-y-3">
-                <motion.button
-                  onClick={() => startQuestionnaire()}
-                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                  className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
-                  Comenzar radiografía <ArrowRight className="inline w-4 h-4 ml-2" />
-                </motion.button>
-                <button onClick={() => setStage('instructions')}
-                  className="w-full py-3 text-center text-white/60 text-sm font-light hover:text-white/55 transition-colors">
-                  <ArrowLeft className="inline w-3.5 h-3.5 mr-1" /> Volver a configuración
+                {instructionLayer < 6 ? (
+                  <motion.button
+                    onClick={() => setInstructionLayer(prev => prev + 1)}
+                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
+                    Siguiente <ArrowRight className="inline w-5 h-5 ml-2" />
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    onClick={() => startQuestionnaire()}
+                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
+                    Comenzar radiografía <ArrowRight className="inline w-5 h-5 ml-2" />
+                  </motion.button>
+                )}
+                <button onClick={() => instructionLayer > 1 ? setInstructionLayer(prev => prev - 1) : setStage('instructions')}
+                  className="w-full py-3 text-center text-white/70 text-base font-light hover:text-white/60 transition-colors">
+                  <ArrowLeft className="inline w-4 h-4 mr-1" /> {instructionLayer > 1 ? 'Anterior' : 'Volver a configuración'}
                 </button>
               </div>
             </div>
@@ -3292,8 +3798,8 @@ const RadiografiaPremiumPage = () => {
               {/* Progress bar */}
               <div className="mb-8">
                 <div className="text-center mb-2">
-                  <span className="text-violet-300/70 text-xs font-medium uppercase tracking-wider block">{question.block}</span>
-                  <span className="text-white/60 text-xs font-light">{currentQ + 1} de {totalQ}</span>
+                  <span className="text-violet-200/80 text-sm font-medium uppercase tracking-wider block">{question.block}</span>
+                  <span className="text-white/70 text-sm font-light">{currentQ + 1} de {totalQ}</span>
                 </div>
                 <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                   <motion.div animate={{ width: `${progress}%` }} transition={{ duration: 0.4 }}
@@ -3304,13 +3810,13 @@ const RadiografiaPremiumPage = () => {
               {/* Main question — centered */}
               <div className="text-center mb-6">
                 <div className="flex items-center justify-center gap-2 mb-3">
-                  <span className="text-white/50 text-xs font-light">Pregunta {currentQ + 1}</span>
+                  <span className="text-white/60 text-sm font-light">Pregunta {currentQ + 1}</span>
                   <button
                     onClick={() => {
                       if (recording) stopRecording()
                       playQuestion(questionText, undefined, () => {
                         const sr = window.SpeechRecognition || window.webkitSpeechRecognition
-                        if (sr && !typingMode) startRecording()
+                        if (sr && inputMode === 'voice') startRecording()
                       })
                     }}
                     className="h-7 px-3 rounded-lg border border-white/15 bg-white/[0.04] text-white/50 hover:text-white/70 hover:border-white/25 transition-all text-[10px] font-light inline-flex items-center gap-1.5"
@@ -3324,7 +3830,7 @@ const RadiografiaPremiumPage = () => {
                         // Auto-start mic on "Saltar"
                         setTimeout(() => {
                           const sr = window.SpeechRecognition || window.webkitSpeechRecognition
-                          if (sr && !typingMode) startRecording()
+                          if (sr && inputMode === 'voice') startRecording()
                         }, 300)
                       }}
                       className="h-7 px-3 rounded-lg border border-amber-500/20 bg-amber-500/[0.06] text-amber-300/70 hover:text-amber-300 transition-all text-[10px] font-light inline-flex items-center gap-1.5"
@@ -3336,105 +3842,109 @@ const RadiografiaPremiumPage = () => {
 
               </div>
 
-              {/* ── Card verde: Responde libremente + pregunta principal ── */}
+              {/* ── Card verde: Habla sin filtro + pregunta principal (visible in green phase) ── */}
+              {questionPhase === 'green' && (
               <div id="spotlight-question" className="mb-6">
-                <div className="px-4 py-2.5 rounded-t-2xl bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-emerald-500/15 border border-b-0 border-emerald-500/15">
-                  <p className="text-emerald-300/80 text-xs font-semibold uppercase tracking-widest text-center flex items-center justify-center gap-2">
-                    <Heart className="w-3.5 h-3.5 text-emerald-400/60" />
-                    Responde libremente — di lo primero que te venga a la mente
+                <div className="px-5 py-3 rounded-t-2xl bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-emerald-500/15 border border-b-0 border-emerald-500/15">
+                  <p className="text-emerald-200 text-sm font-semibold uppercase tracking-wider text-center flex items-center justify-center gap-2">
+                    <Heart className="w-4 h-4 text-emerald-400/70" />
+                    Habla sin filtro. Di lo primero que te venga a la mente.
                   </p>
                 </div>
-                <div className="px-6 py-6 rounded-b-2xl border border-t-0 border-emerald-500/10 bg-emerald-500/[0.02]">
-                  <p className="text-white/90 text-lg lg:text-xl font-light leading-relaxed text-center max-w-xl mx-auto">{questionText}</p>
+                <div className="px-6 py-7 rounded-b-2xl border border-t-0 border-emerald-500/10 bg-emerald-500/[0.02]">
+                  <p className="text-white text-xl lg:text-2xl font-light leading-relaxed text-center max-w-xl mx-auto">{questionText}</p>
                 </div>
               </div>
+              )}
 
-              {/* Examples — as completion prompts */}
-              <div id="spotlight-examples" className="mb-8">
-                <div className="px-4 py-2.5 rounded-t-2xl bg-gradient-to-r from-violet-500/15 via-fuchsia-500/10 to-violet-500/15 border border-b-0 border-violet-500/15">
-                  <p className="text-violet-300/80 text-xs font-semibold uppercase tracking-widest text-center flex items-center justify-center gap-2">
-                    <Lightbulb className="w-3.5 h-3.5 text-violet-400/60" />
-                    Si te faltó algo, completa con estas ideas
-                  </p>
+              {/* ── Purple phase: purple examples card ── */}
+              {questionPhase === 'purple' && (
+              <>
+                {/* Examples — completa tu respuesta */}
+                <div id="spotlight-examples" className="mb-8">
+                  <div className="px-5 py-3 rounded-t-2xl bg-gradient-to-r from-violet-500/15 via-fuchsia-500/10 to-violet-500/15 border border-b-0 border-violet-500/15">
+                    <p className="text-violet-200 text-sm font-semibold uppercase tracking-wider text-center flex items-center justify-center gap-2">
+                      <Lightbulb className="w-4 h-4 text-violet-400/70" />
+                      Completa tu respuesta con estos puntos si no los mencionaste antes
+                    </p>
+                  </div>
+                  <div className="px-5 py-5 rounded-b-2xl border border-t-0 border-white/10 bg-white/[0.02] space-y-3">
+                    {questionExamples.map((ex, i) => (
+                      <div key={i} className="flex items-center justify-center gap-2.5 text-white/80 text-base font-light">
+                        <span className="text-violet-400/60">✦</span>
+                        <span>{ex}</span>
+                      </div>
+                    ))}
+                    <div className="h-px bg-white/5 mt-3 mb-2" />
+                    <p className="text-white/50 text-sm font-light italic flex items-center justify-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-violet-400/40" />
+                      Puedes añadir cualquier otro detalle que sientas importante
+                    </p>
+                  </div>
                 </div>
-                <div className="px-5 py-4 rounded-b-2xl border border-t-0 border-white/10 bg-white/[0.02] space-y-2">
-                  {questionExamples.map((ex, i) => (
-                    <div key={i} className="flex items-center justify-center gap-2 text-white/55 text-sm font-light">
-                      <span className="text-violet-400/50">✦</span>
-                      <span>{ex}</span>
-                    </div>
-                  ))}
-                  <div className="h-px bg-white/5 mt-3 mb-2" />
-                  <p className="text-white/60 text-xs font-light italic flex items-center justify-center gap-1.5">
-                    <Sparkles className="w-3 h-3 text-violet-400/30" />
-                    Puedes añadir cualquier otro detalle que sientas importante
-                  </p>
-                </div>
-              </div>
+              </>
+              )}
 
               {/* ── Response area ── */}
 
-              {/* While recording: show animated MicLevelBars indicator */}
-              {recording && !typingMode && (
+              {/* Voice mode: animated MicLevelBars while recording */}
+              {recording && inputMode === 'voice' && (
                 <div className="mb-6 text-center">
                   <div className="inline-flex flex-col items-center gap-3 px-6 py-4 rounded-2xl border border-red-500/20 bg-red-500/[0.04]">
                     <MicLevelBars analyser={recordingAnalyser} />
-                    <span className="text-red-300/70 text-sm font-light">Escuchando… habla con libertad</span>
+                    <span className="text-red-200/80 text-base font-light">
+                      {questionPhase === 'green' ? 'Escuchando… habla con libertad' : 'Escuchando… complementa tu respuesta'}
+                    </span>
                   </div>
                 </div>
               )}
 
-              {/* After stopping: show "Respuesta guardada" badge (user proceeds with Next button) */}
-              {!recording && currentText.trim() && !typingMode && (
+              {/* Voice mode: "Respuesta guardada" badge after stopping (no transcript shown) */}
+              {!recording && currentText.trim() && inputMode === 'voice' && (
                 <div className="mb-6 text-center">
                   <div className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.05]">
                     <CheckCircle className="w-4 h-4 text-emerald-400/70" />
-                    <span className="text-emerald-300/80 text-sm font-light">Respuesta guardada — toca Siguiente para avanzar</span>
+                    <span className="text-emerald-200/90 text-base font-light">✓ Respuesta guardada</span>
                   </div>
                 </div>
               )}
 
-              {/* Typing mode: show previous recording read-only + textarea */}
-              {typingMode && !recording && (
-                <div className="mb-6 space-y-3">
-                  {transcript.trim() && (
-                    <div className="p-3 rounded-xl border border-white/8 bg-white/[0.02]">
-                      <p className="text-white/55 text-[10px] font-medium uppercase tracking-wider mb-1">Lo que grabaste antes</p>
-                      <p className="text-white/60 text-xs font-light leading-relaxed">{transcript}</p>
-                    </div>
-                  )}
+              {/* Written mode: textarea */}
+              {inputMode === 'written' && (
+                <div className="mb-6">
                   <textarea
                     value={textInput}
                     onChange={(e) => setTextInput(e.target.value)}
-                    placeholder="Escribe o complementa tu respuesta aquí…"
+                    placeholder={questionPhase === 'green' ? 'Escribe tu respuesta aquí…' : 'Complementa tu respuesta aquí…'}
                     rows={4}
-                    className="w-full p-4 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-sm font-light placeholder:text-white/55 focus:border-violet-500/30 focus:outline-none resize-none transition-colors leading-relaxed"
+                    className="w-full p-4 rounded-xl border border-white/15 bg-white/[0.03] text-white/80 text-base font-light placeholder:text-white/40 focus:border-violet-500/30 focus:outline-none resize-none transition-colors leading-relaxed"
                   />
                 </div>
               )}
 
-              {/* If no content and not recording and not typing: waiting state */}
-              {!currentText.trim() && !recording && !typingMode && (
-                <p className="text-center text-white/55 text-sm font-light mb-4 italic">
+              {/* If no content and not recording and voice mode: waiting state */}
+              {!currentText.trim() && !recording && inputMode === 'voice' && (
+                <p className="text-center text-white/60 text-base font-light mb-4 italic">
                   {audioPlaying ? 'Escucha la pregunta…' : 'Tu micrófono se activará en un momento'}
                 </p>
               )}
 
-              {/* ── Action buttons: Back | Mic | Next (3 buttons only, matching purple) ── */}
+              {/* ── Action buttons: Back | Mic | Next ── */}
               <div id="spotlight-actions" className="flex items-end justify-center gap-5 lg:gap-6 mb-2">
-                {/* Back — purple matching */}
-                <motion.button onClick={goBack} disabled={currentQ === 0}
+                {/* Back */}
+                <motion.button onClick={goBack} disabled={currentQ === 0 && questionPhase === 'green'}
                   whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                   className="flex flex-col items-center gap-1.5">
-                  <div className={`w-12 h-12 lg:w-13 lg:h-13 rounded-full flex items-center justify-center transition-all border-2 ${currentQ === 0 ? 'opacity-20 pointer-events-none border-white/10 bg-white/[0.02] text-white/50' : 'border-violet-500/30 bg-violet-500/[0.08] text-violet-300/70 hover:border-violet-500/50 hover:bg-violet-500/[0.12] hover:text-violet-300'}`}>
+                  <div className={`w-12 h-12 lg:w-13 lg:h-13 rounded-full flex items-center justify-center transition-all border-2 ${currentQ === 0 && questionPhase === 'green' ? 'opacity-20 pointer-events-none border-white/10 bg-white/[0.02] text-white/50' : 'border-violet-500/30 bg-violet-500/[0.08] text-violet-300/70 hover:border-violet-500/50 hover:bg-violet-500/[0.12] hover:text-violet-300'}`}>
                     <ArrowLeft className="w-5 h-5" />
                   </div>
                   <span className="text-[10px] font-light text-violet-300/40">Anterior</span>
                 </motion.button>
 
-                {/* Mic — center, larger */}
+                {/* Mic — center, larger (only in voice mode) */}
+                {inputMode === 'voice' && (
                 <motion.button
-                  onClick={() => { if (typingMode) setTypingMode(false); recording ? stopRecording() : startRecording() }}
+                  onClick={() => { recording ? stopRecording() : startRecording() }}
                   whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                   className="flex flex-col items-center gap-1.5">
                   <div className={`w-16 h-16 lg:w-[4.5rem] lg:h-[4.5rem] rounded-full flex items-center justify-center transition-all ${recording
@@ -3443,65 +3953,36 @@ const RadiografiaPremiumPage = () => {
                     {recording ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
                   </div>
                   <span className={`text-[10px] font-light ${recording ? 'text-red-400/70' : 'text-violet-300/60'}`}>
-                    {recording ? 'Grabando…' : 'Micrófono'}
+                    {recording ? 'Detener' : 'Micrófono'}
                   </span>
                 </motion.button>
+                )}
 
-                {/* Next — purple matching */}
-                <motion.button onClick={saveAndNext}
+                {/* Next — continuar to examples (green) or save & next (purple) */}
+                <motion.button onClick={questionPhase === 'green' ? continueToExamples : saveAndNext}
                   whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                   className="flex flex-col items-center gap-1.5">
                   <div className={`w-12 h-12 lg:w-13 lg:h-13 rounded-full flex items-center justify-center transition-all border-2 ${currentText.trim()
                     ? 'bg-gradient-to-br from-violet-600 to-fuchsia-600 border-violet-500/50 text-white shadow-lg shadow-violet-500/25'
                     : 'border-violet-500/20 bg-violet-500/[0.05] text-violet-300/40 hover:border-violet-500/30 hover:text-violet-300/60'}`}>
-                    {currentQ < totalQ - 1 ? <ArrowRight className="w-5 h-5" /> : <Check className="w-5 h-5" />}
+                    {questionPhase === 'green' ? <Lightbulb className="w-5 h-5" /> : currentQ < totalQ - 1 ? <ArrowRight className="w-5 h-5" /> : <Check className="w-5 h-5" />}
                   </div>
                   <span className={`text-[10px] font-light ${currentText.trim() ? 'text-violet-300/60' : 'text-violet-300/30'}`}>
-                    {currentQ < totalQ - 1 ? 'Siguiente' : 'Finalizar'}
+                    {questionPhase === 'green' ? 'Continuar' : currentQ < totalQ - 1 ? 'Siguiente' : 'Finalizar'}
                   </span>
                 </motion.button>
               </div>
 
-              {/* ── Small links below buttons: detener/regrabar when recording, prefiero escribir always ── */}
-              <div className="text-center space-y-1.5 mb-6">
-                {/* Detener & Regrabar links — visible when recording or has content */}
-                {(recording || (currentText.trim() && !typingMode)) && (
-                  <div className="flex items-center justify-center gap-3">
-                    {recording && (
-                      <button
-                        onClick={stopRecording}
-                        className="text-red-300/60 text-xs font-light hover:text-red-300/90 transition-colors underline underline-offset-2 decoration-red-300/20 hover:decoration-red-300/50">
-                        Detener grabación
-                      </button>
-                    )}
-                    {(recording || currentText.trim()) && !typingMode && (
-                      <>
-                        {recording && <span className="text-white/15">·</span>}
-                        <button
-                          onClick={() => setShowRegrabarModal(true)}
-                          className="text-amber-300/50 text-xs font-light hover:text-amber-300/80 transition-colors underline underline-offset-2 decoration-amber-300/15 hover:decoration-amber-300/40">
-                          Regrabar desde cero
-                        </button>
-                      </>
-                    )}
-                  </div>
-                )}
-
-                {/* Prefiero escribir — always visible */}
-                {!typingMode ? (
+              {/* ── Regrabar link (voice mode only, when has content) ── */}
+              {inputMode === 'voice' && (recording || currentText.trim()) && (
+                <div className="text-center mb-6">
                   <button
-                    onClick={() => { if (recording) stopRecording(); setTypingMode(true); setTextInput(transcript || textInput) }}
-                    className="text-white/55 text-xs font-light hover:text-white/55 transition-colors underline underline-offset-2 decoration-white/15 hover:decoration-white/30">
-                    Prefiero escribir mi respuesta
+                    onClick={() => setShowRegrabarModal(true)}
+                    className="text-amber-300/60 text-sm font-light hover:text-amber-300/90 transition-colors underline underline-offset-2 decoration-amber-300/20 hover:decoration-amber-300/50">
+                    Regrabar desde cero
                   </button>
-                ) : (
-                  <button
-                    onClick={() => setTypingMode(false)}
-                    className="text-white/55 text-xs font-light hover:text-white/55 transition-colors underline underline-offset-2 decoration-white/15 hover:decoration-white/30">
-                    Volver al micrófono
-                  </button>
-                )}
-              </div>
+                </div>
+              )}
 
               {/* ── Regrabar confirmation modal ── */}
               {showRegrabarModal && (
@@ -3515,10 +3996,94 @@ const RadiografiaPremiumPage = () => {
                         className="flex-1 py-2.5 rounded-xl border border-white/10 text-white/60 text-sm font-light hover:bg-white/5 transition-colors">
                         Cancelar
                       </button>
-                      <button onClick={() => { setShowRegrabarModal(false); stopAudio(); if (recording) stopRecording(); setTranscript(''); setTextInput(''); setTimeout(() => startRecording(), 200) }}
+                      <button onClick={() => { setShowRegrabarModal(false); stopAudio(); if (recording) stopRecording(); setTranscript(''); setTextInput(''); setGreenAnswer(''); setQuestionPhase('green'); setTimeout(() => startRecording(), 300) }}
                         className="flex-1 py-2.5 rounded-xl bg-amber-500/20 border border-amber-500/25 text-amber-300 text-sm font-light hover:bg-amber-500/30 transition-colors">
                         Sí, regrabar
                       </button>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+
+              {/* TEST MODE: Quick fill buttons (only when testMode active in Firestore) */}
+              {isTestMode && (
+                <div className="mt-6 pt-4 border-t border-amber-500/10">
+                  <p className="text-amber-400/60 text-[10px] font-bold uppercase tracking-[0.2em] text-center mb-3 flex items-center justify-center gap-1.5">
+                    <Zap className="w-3 h-3" /> Modo Prueba
+                  </p>
+                  <div className="flex items-center justify-center gap-3">
+                    <motion.button
+                      onClick={() => fillTestResponses(TEST_RESPONSES_USER1, 'user1')}
+                      whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                      className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/15 border border-amber-500/25 text-amber-300 text-sm font-medium hover:from-amber-500/30 hover:to-orange-500/25 transition-all shadow-lg shadow-amber-500/5">
+                      <Users className="w-4 h-4" />
+                      Usuario 1
+                    </motion.button>
+                    <motion.button
+                      onClick={() => fillTestResponses(TEST_RESPONSES_USER2, 'user2')}
+                      whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                      className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-violet-500/20 to-fuchsia-500/15 border border-violet-500/25 text-violet-300 text-sm font-medium hover:from-violet-500/30 hover:to-fuchsia-500/25 transition-all shadow-lg shadow-violet-500/5">
+                      <Users className="w-4 h-4" />
+                      Usuario 2
+                    </motion.button>
+                    <motion.button
+                      onClick={() => setShowPasteModal(true)}
+                      whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                      className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-500/20 to-teal-500/15 border border-emerald-500/25 text-emerald-300 text-sm font-medium hover:from-emerald-500/30 hover:to-teal-500/25 transition-all shadow-lg shadow-emerald-500/5">
+                      <ClipboardList className="w-4 h-4" />
+                      Pegar respuestas
+                    </motion.button>
+                  </div>
+                  <p className="text-amber-400/30 text-[9px] text-center mt-2">Rellena las 40 respuestas automáticamente</p>
+                </div>
+              )}
+
+              {/* PASTE RESPONSES MODAL */}
+              {showPasteModal && (
+                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={() => setShowPasteModal(false)}>
+                  <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+                    className="bg-[#1a1a2e] border border-emerald-500/20 rounded-2xl p-6 max-w-lg w-full shadow-2xl max-h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <ClipboardList className="w-5 h-5 text-emerald-400" />
+                        <h3 className="text-white text-base font-medium">Pegar respuestas</h3>
+                      </div>
+                      <button onClick={() => setShowPasteModal(false)} className="text-white/40 hover:text-white/70 transition-colors">
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+                    <p className="text-white/50 text-xs font-light mb-3">Pega las 40 respuestas numeradas. Formatos válidos:</p>
+                    <div className="text-white/35 text-[10px] font-mono mb-3 space-y-0.5 px-3 py-2 rounded-lg bg-white/[0.03] border border-white/5">
+                      <p>1. Respuesta uno...</p>
+                      <p>2. Respuesta dos...</p>
+                      <p className="text-white/25">— o —</p>
+                      <p>Q1: Respuesta uno...</p>
+                      <p>Q2: Respuesta dos...</p>
+                    </div>
+                    <textarea
+                      value={pasteText}
+                      onChange={e => setPasteText(e.target.value)}
+                      placeholder="Pega aquí las 40 respuestas numeradas..."
+                      className="flex-1 min-h-[200px] w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white/80 text-sm font-light placeholder-white/20 focus:outline-none focus:border-emerald-500/30 resize-none"
+                    />
+                    <div className="flex items-center justify-between mt-4">
+                      <p className="text-white/30 text-[10px]">
+                        {(() => {
+                          const count = pasteText.split('\n').filter(l => l.match(/^\s*(?:Q?\d+[.):\-])/i)).length
+                          return count > 0 ? `${count} respuestas detectadas` : ''
+                        })()}
+                      </p>
+                      <div className="flex gap-2">
+                        <button onClick={() => setShowPasteModal(false)}
+                          className="px-4 py-2 rounded-xl border border-white/10 text-white/50 text-sm font-light hover:bg-white/5 transition-colors">
+                          Cancelar
+                        </button>
+                        <button onClick={() => handlePasteResponses(pasteText)}
+                          disabled={!pasteText.trim()}
+                          className="px-5 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/25 text-emerald-300 text-sm font-medium hover:bg-emerald-500/30 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                          Rellenar y analizar
+                        </button>
+                      </div>
                     </div>
                   </motion.div>
                 </div>
@@ -3719,46 +4284,36 @@ const RadiografiaPremiumPage = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 }}
-                    className="text-white/60 text-[15px] font-light leading-relaxed mb-6">
-                    Tus respuestas están siendo analizadas por nuestra inteligencia artificial a través de 11 corrientes psicológicas.
+                    className="text-white/60 text-[15px] font-light leading-relaxed mb-4">
+                    Nuestro algoritmo está procesando tus respuestas a través de <strong className="text-white/80 font-normal">11 corrientes psicológicas</strong>. Tu radiografía estará lista en aproximadamente <strong className="text-white/80 font-normal">10 a 15 minutos</strong>.
                   </motion.p>
 
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.7 }}
-                    className="p-5 rounded-xl border border-violet-500/15 bg-violet-500/[0.04] mb-6">
-                    <div className="flex items-center justify-center gap-3 mb-3">
-                      <Mail className="w-5 h-5 text-violet-400/60" />
-                      <p className="text-violet-300/80 text-sm font-medium">Recibirás tu radiografía por correo</p>
+                    className="p-5 rounded-xl border border-amber-500/25 bg-amber-500/[0.06] mb-6">
+                    <div className="flex items-center justify-center gap-3 mb-2">
+                      <Loader2 className="w-5 h-5 text-amber-400/70 animate-spin" />
+                      <p className="text-amber-300/90 text-sm font-medium">No cierres esta pantalla</p>
                     </div>
-                    <p className="text-white/50 text-sm font-light">
-                      En un lapso de <span className="text-violet-300/80 font-medium">10 a 15 minutos</span> (o antes) recibirás un email con un enlace para ver tu radiografía completa y descargar tu PDF.
+                    <p className="text-white/55 text-sm font-light">
+                      Tu radiografía se está generando en este momento. Mantén esta ventana abierta hasta que termine.
                     </p>
                   </motion.div>
-
-                  {emailData.emailUsuario && (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.9 }}
-                      className="text-white/35 text-xs font-light mb-4">
-                      Se enviará a: <span className="text-white/55">{emailData.emailUsuario}</span>
-                    </motion.p>
-                  )}
 
                   {packageType === 'losdos' && (
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 1.1 }}
+                      transition={{ delay: 0.9 }}
                       className="p-4 rounded-xl border border-emerald-500/15 bg-emerald-500/[0.04] mt-4">
                       <div className="flex items-center justify-center gap-2 mb-2">
                         <Users className="w-4 h-4 text-emerald-400/60" />
                         <p className="text-emerald-300/70 text-sm font-medium">Análisis cruzado</p>
                       </div>
                       <p className="text-white/50 text-xs font-light">
-                        Cuando tu pareja también complete su cuestionario, ambos recibirán una radiografía cruzada con la perspectiva de los dos.
+                        Cuando ambos terminen su cuestionario, quien compró la prueba podrá generar el análisis cruzado desde la pestaña correspondiente en sus resultados.
                       </p>
                     </motion.div>
                   )}
@@ -3767,12 +4322,106 @@ const RadiografiaPremiumPage = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1.3 }}
-                    className="mt-8 flex flex-col items-center gap-3">
-                    <p className="text-white/30 text-[11px] font-light">No cierres esta ventana — en unos minutos verás tu radiografía.</p>
-                    <div className="flex items-center gap-2">
-                      <Brain className="w-4 h-4 text-violet-400/30 animate-pulse" />
-                      <span className="text-violet-300/40 text-xs font-light">Procesando...</span>
-                    </div>
+                    className="mt-8 flex flex-col items-center gap-4">
+
+                    {/* "Ver mi reporte" button — semi-transparent until ready */}
+                    <button
+                      onClick={() => analysisDone && aiAnalysis ? setStage('completion') : null}
+                      disabled={!analysisDone || !aiAnalysis}
+                      className={`w-full max-w-xs py-3.5 rounded-xl text-white font-light text-sm transition-all duration-700 ${
+                        analysisDone && aiAnalysis
+                          ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 shadow-lg shadow-violet-600/20 cursor-pointer opacity-100'
+                          : analysisError
+                            ? 'bg-red-600/20 border border-red-500/30 cursor-default opacity-70'
+                            : 'bg-gradient-to-r from-violet-600/30 to-fuchsia-600/30 border border-violet-500/15 cursor-default opacity-50'
+                      }`}>
+                      {analysisDone && aiAnalysis ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <CheckCircle className="w-4 h-4" />
+                          Ver mi radiografía
+                        </span>
+                      ) : analysisError ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <AlertTriangle className="w-4 h-4 text-red-400" />
+                          Error al generar
+                        </span>
+                      ) : (
+                        <span className="flex items-center justify-center gap-2">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Generando tu radiografía...
+                        </span>
+                      )}
+                    </button>
+
+                    {analysisError && (
+                      <div className="w-full max-w-sm space-y-4">
+                        <div className="p-5 rounded-2xl border border-violet-500/15 bg-violet-500/[0.04]">
+                          <p className="text-white/60 text-sm font-light leading-relaxed mb-4">
+                            No te preocupes, tus respuestas están guardadas. Escríbeme por WhatsApp y yo me encargo de generar tu reporte.
+                          </p>
+                          <a
+                            href={`https://wa.me/527228720520?text=${encodeURIComponent('Hola, completé mi Radiografía de Pareja pero hubo un error al generar mi análisis. ¿Puedes ayudarme a generarlo? Mi correo es: ' + (firebaseUser?.email || emailData.emailUsuario || ''))}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium transition-all shadow-lg shadow-emerald-600/20"
+                          >
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            Escribir por WhatsApp
+                          </a>
+                        </div>
+                        <button
+                          onClick={async () => {
+                            setAnalysisError(null)
+                            setAnalysisDone(false)
+                            try {
+                              if (!isBuyer && firebaseUser && firestorePurchaseId) {
+                                // Partner: retry server-side (background) — onSnapshot picks up result
+                                await retryServerAnalysis({ uid: firebaseUser.uid, purchaseId: firestorePurchaseId })
+                                // onSnapshot will set analysisDone when Worker finishes
+                              } else {
+                                // Buyer: retry client-side
+                                const analysis = await analyzeRadiografiaPremium({
+                                  responses,
+                                  questions: PREGUNTAS,
+                                  profileData,
+                                  packageType,
+                                })
+                                if (analysis && profileData?.nombre) {
+                                  let str = JSON.stringify(analysis)
+                                  str = str.replace(/\[nombre\]/gi, profileData.nombre)
+                                  if (profileData.nombrePareja) str = str.replace(/\[pareja\]/gi, profileData.nombrePareja)
+                                  Object.assign(analysis, JSON.parse(str))
+                                }
+                                if (firebaseUser && firestorePurchaseId) {
+                                  await saveAnalysisResult(firebaseUser.uid, firestorePurchaseId, analysis)
+                                }
+                                setAiAnalysis(analysis)
+                                setAnalysisDone(true)
+                              }
+                            } catch (e) {
+                              console.error('Retry failed:', e)
+                              setAnalysisError(e.message || 'Error al reintentar')
+                            }
+                          }}
+                          className="w-full py-2.5 rounded-xl border border-white/10 text-white/40 text-xs hover:text-white/60 hover:border-white/20 transition-all"
+                        >
+                          Reintentar análisis
+                        </button>
+                      </div>
+                    )}
+
+                    <p className="text-white/40 text-[11px] font-light">
+                      {analysisDone && aiAnalysis
+                        ? '¡Tu radiografía está lista! Haz clic para verla.'
+                        : analysisError
+                          ? ''
+                          : 'Mantén esta ventana abierta mientras se genera tu análisis.'}
+                    </p>
+
+                    <a href="/perfil" className="mt-2 inline-flex items-center gap-2 text-violet-400/70 hover:text-violet-300 text-sm font-light transition-colors">
+                      <ArrowLeft className="w-4 h-4" />
+                      Ir a mi dashboard
+                    </a>
                   </motion.div>
                 </div>
               </div>
@@ -3812,15 +4461,15 @@ const RadiografiaPremiumPage = () => {
                 )}
               </motion.div>
 
-              {(packageType === 'losdos' || packageType === 'solo') && (
+              {packageType === 'losdos' && (
                 <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
                   className="p-5 rounded-2xl border border-pink-500/20 bg-pink-500/[0.04] space-y-2">
                   <div className="flex items-center justify-center gap-2">
                     <Users className="w-5 h-5 text-pink-300/70" />
-                    <h3 className="text-lg font-light text-white">Reporte cruzado</h3>
+                    <h3 className="text-lg font-light text-white">Análisis cruzado</h3>
                   </div>
                   <p className="text-white/60 text-sm font-light leading-relaxed">
-                    Cuando tu pareja termine su cuestionario, se generará automáticamente un <span className="text-pink-200">análisis cruzado</span> comparando ambas perspectivas. Recibirás otro correo cuando esté listo.
+                    Cuando ambos terminen, quien compró la prueba podrá generar el <span className="text-pink-200">análisis cruzado</span> desde la pestaña correspondiente en sus resultados. Tu reporte siempre estará disponible en tu dashboard.
                   </p>
                 </motion.div>
               )}
@@ -3880,55 +4529,95 @@ const RadiografiaPremiumPage = () => {
                 </div>
               </div>
 
-              {/* ═══ BANNER: Email con resultados enviado ═══ */}
-              {!import.meta.env.DEV && (
-                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
-                  className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] mb-2">
-                  <p className="text-emerald-300/90 text-sm font-light text-center flex items-center justify-center gap-2">
-                    <Mail className="w-4 h-4 text-emerald-400/60" />
-                    Tus resultados también llegarán a tu correo — guarda este enlace para acceder cuando quieras.
-                    {packageType === 'losdos' && <span className="block text-emerald-200/60 text-xs mt-1">Cuando tu pareja también termine, recibirán ambos el análisis cruzado por email.</span>}
-                  </p>
-                </motion.div>
-              )}
-
-              {/* ═══ BANNER: Advertencia si el análisis es fallback ═══ */}
-              {aiAnalysis._isFallback && (
-                <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 mb-6">
-                  <p className="text-amber-300/90 text-sm font-medium flex items-center gap-2 mb-1">
-                    <AlertTriangle className="w-4 h-4" /> Análisis de demostración
-                  </p>
-                  <p className="text-amber-200/60 text-xs font-light">
-                    {aiAnalysis._error
-                      ? `La IA no pudo generar tu análisis personalizado (${aiAnalysis._error}). Se muestra un ejemplo de referencia. Puedes reintentar el análisis.`
-                      : 'Este es un análisis de ejemplo. Tu análisis personalizado se generará cuando la IA esté conectada.'}
-                  </p>
+              {/* ═══ TABS: Individual / Cruzado — premium tab bar ═══ */}
+              {(crossAnalysis || packageType === 'losdos') && (
+                <div className="relative -mb-2">
+                  <div className="flex items-center justify-center gap-2 relative z-10">
+                    <button
+                      onClick={() => setResultTab('individual')}
+                      className={`group flex items-center gap-2.5 px-6 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
+                        resultTab === 'individual'
+                          ? 'bg-gradient-to-r from-violet-500/20 to-fuchsia-500/15 text-violet-200 border border-violet-500/30 shadow-lg shadow-violet-500/10'
+                          : 'text-white/35 border border-transparent hover:text-white/55 hover:bg-white/[0.03]'
+                      }`}>
+                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all ${
+                        resultTab === 'individual'
+                          ? 'bg-violet-500/25 shadow-inner'
+                          : 'bg-white/[0.04] group-hover:bg-white/[0.08]'
+                      }`}>
+                        <Brain className={`w-3.5 h-3.5 transition-colors ${
+                          resultTab === 'individual' ? 'text-violet-300' : 'text-white/30 group-hover:text-white/50'
+                        }`} />
+                      </div>
+                      Análisis Individual
+                    </button>
+                    <button
+                      onClick={() => setResultTab('cruzado')}
+                      className={`group flex items-center gap-2.5 px-6 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
+                        resultTab === 'cruzado'
+                          ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/15 text-emerald-200 border border-emerald-500/30 shadow-lg shadow-emerald-500/10'
+                          : 'text-white/35 border border-transparent hover:text-white/55 hover:bg-white/[0.03]'
+                      }`}>
+                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all ${
+                        resultTab === 'cruzado'
+                          ? 'bg-emerald-500/25 shadow-inner'
+                          : 'bg-white/[0.04] group-hover:bg-white/[0.08]'
+                      }`}>
+                        <Users className={`w-3.5 h-3.5 transition-colors ${
+                          resultTab === 'cruzado' ? 'text-emerald-300' : 'text-white/30 group-hover:text-white/50'
+                        }`} />
+                      </div>
+                      Análisis Cruzado
+                    </button>
+                  </div>
+                  {/* Divider line */}
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                 </div>
               )}
 
-              {/* ═══ BANNER: Descargar resultados ═══ */}
-              <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
-                className="p-5 rounded-xl border border-violet-500/20 bg-gradient-to-r from-violet-500/[0.06] to-fuchsia-500/[0.04] mb-2">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="text-center sm:text-left">
-                    <p className="text-white/80 text-sm font-light mb-1">Te recomendamos descargar tu radiografía</p>
-                    <p className="text-white/40 text-xs font-light">Tu acceso a esta página es por tiempo limitado. Descarga tus resultados para conservarlos.</p>
-                  </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <motion.button onClick={generateIndividualPDFHandler} disabled={pdfGenerating}
-                      whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600/80 to-fuchsia-600/70 text-white text-xs font-light hover:from-violet-600 hover:to-fuchsia-600 transition-all disabled:opacity-40 shadow-lg shadow-violet-500/10">
-                      {pdfGenerating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
-                      Individual
-                    </motion.button>
-                    {crossAnalysis && (
-                      <motion.button onClick={generateCruzadoPDFHandler} disabled={pdfGenerating}
-                        whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600/80 to-teal-600/70 text-white text-xs font-light hover:from-emerald-600 hover:to-teal-600 transition-all disabled:opacity-40 shadow-lg shadow-emerald-500/10">
-                        {pdfGenerating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
-                        Cruzada
-                      </motion.button>
-                    )}
+              {/* ═══ BANNER: Accede a tu dashboard ═══ */}
+              {!import.meta.env.DEV && showDashboardBanner && (
+                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+                  className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] mb-2 relative">
+                  <button
+                    onClick={() => setShowDashboardBanner(false)}
+                    className="absolute top-2 right-2 p-1 rounded-lg text-emerald-300/40 hover:text-emerald-300/70 hover:bg-emerald-500/10 transition-colors">
+                    <X className="w-4 h-4" />
+                  </button>
+                  <p className="text-emerald-300/90 text-sm font-light text-center flex items-center justify-center gap-2 pr-6">
+                    <Mail className="w-4 h-4 text-emerald-400/60 flex-shrink-0" />
+                    Este reporte se guarda en tu cuenta. Accede a tu dashboard cuando quieras para consultarlo.
+                  </p>
+                  {packageType === 'losdos' && (
+                    <p className="text-emerald-200/60 text-xs font-light text-center mt-2 pr-6">
+                      Cuando tu pareja también termine, recibirán ambos el análisis cruzado por email.
+                    </p>
+                  )}
+                </motion.div>
+              )}
+
+
+
+              {/* ═══ SCROLL INDICATOR — Premium ═══ */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.2 }}
+                className="flex flex-col items-center py-6 mb-2">
+                <div className="relative p-5 rounded-2xl border border-violet-500/15 bg-gradient-to-b from-violet-500/[0.04] to-transparent">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center">
+                        <Eye className="w-4 h-4 text-violet-400/60" />
+                      </div>
+                      <p className="text-white/50 text-sm font-light">Tu reporte completo te espera abajo</p>
+                    </div>
+                    <motion.div
+                      animate={{ y: [0, 6, 0] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                      className="w-10 h-10 rounded-full border border-violet-500/20 bg-violet-500/[0.06] flex items-center justify-center">
+                      <ChevronDown className="w-5 h-5 text-violet-400/50" />
+                    </motion.div>
                   </div>
                 </div>
               </motion.div>
@@ -3960,42 +4649,8 @@ const RadiografiaPremiumPage = () => {
                 </div>
               )}
 
-              {/* ═══ TABS: Individual / Cruzado (only when crossAnalysis available) ═══ */}
-              {crossAnalysis && (
-                <div className="flex items-center justify-center gap-2 py-2">
-                  <button
-                    onClick={() => setResultTab('individual')}
-                    className={`px-5 py-2.5 rounded-xl text-sm font-light transition-all ${
-                      resultTab === 'individual'
-                        ? 'bg-gradient-to-r from-violet-600/80 to-fuchsia-600/70 text-white shadow-lg shadow-violet-500/15 border border-violet-500/30'
-                        : 'text-white/45 border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:text-white/65'
-                    }`}>
-                    Tu Radiografía Individual
-                  </button>
-                  <button
-                    onClick={() => setResultTab('cruzado')}
-                    className={`px-5 py-2.5 rounded-xl text-sm font-light transition-all ${
-                      resultTab === 'cruzado'
-                        ? 'bg-gradient-to-r from-emerald-600/80 to-teal-600/70 text-white shadow-lg shadow-emerald-500/15 border border-emerald-500/30'
-                        : 'text-white/45 border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:text-white/65'
-                    }`}>
-                    Radiografía Cruzada
-                  </button>
-                </div>
-              )}
-
               {/* ═══ SEPARADOR PARTE 1 — PRIMERO, VAMOS CONTIGO ═══ */}
               <div className={`${resultTab !== 'individual' ? 'hidden' : ''} space-y-12`} data-pdf-tab="individual">
-
-              {/* Download individual PDF button */}
-              <div className="flex justify-center">
-                <motion.button onClick={generateIndividualPDFHandler} disabled={pdfGenerating}
-                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600/80 to-fuchsia-600/70 text-white text-sm font-light hover:from-violet-600 hover:to-fuchsia-600 transition-all disabled:opacity-40 shadow-lg shadow-violet-500/10 border border-violet-500/20">
-                  {pdfGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                  {pdfGenerating ? (pdfProgress || 'Generando...') : 'Descargar Radiografía Individual'}
-                </motion.button>
-              </div>
 
               <div className="text-center mb-6">
                 <p className="text-violet-400/50 text-xs font-bold uppercase tracking-[0.25em] mb-1">Parte 1</p>
@@ -4046,7 +4701,7 @@ const RadiografiaPremiumPage = () => {
                       const REPORT_CARDS = [
                         { key: 'apertura_rapport', icon: MessageCircle, title: 'Tu radiografía inicial', subtitle: 'Inicio', gradient: 'from-indigo-500 via-violet-500 to-purple-500', border: 'border-indigo-500/20', iconBg: 'from-indigo-500/30 to-violet-500/20', accentColor: '#818cf8', chartType: null },
                         { key: 'forma_de_amar', icon: Heart, title: 'Cómo amas y cómo esperas ser amado', subtitle: 'Tu forma de amar', gradient: 'from-rose-500 via-pink-500 to-fuchsia-500', border: 'border-rose-500/20', iconBg: 'from-rose-500/30 to-pink-500/20', accentColor: '#f472b6', chartType: 'polaridades' },
-                        { key: 'goce_repeticion', icon: Flame, title: 'El goce que te ata y te repites', subtitle: 'Tu goce', gradient: 'from-red-500 via-orange-500 to-amber-500', border: 'border-red-500/20', iconBg: 'from-red-500/30 to-orange-500/20', accentColor: '#ef4444', chartType: 'goce_jouissance' },
+                        { key: 'goce_repeticion', icon: Flame, title: 'Lo que repites sin darte cuenta', subtitle: 'Tu patrón inconsciente', gradient: 'from-red-500 via-orange-500 to-amber-500', border: 'border-red-500/20', iconBg: 'from-red-500/30 to-orange-500/20', accentColor: '#ef4444', chartType: 'goce_jouissance' },
                         { key: 'lo_que_busca_en_el_otro', icon: Eye, title: 'Lo que buscas en el otro', subtitle: 'Proyección inconsciente', gradient: 'from-sky-500 via-blue-500 to-indigo-500', border: 'border-sky-500/20', iconBg: 'from-sky-500/30 to-blue-500/20', accentColor: '#38bdf8', chartType: 'cuadrante_apego' },
                         { key: 'lo_que_reclama_afuera', icon: Compass, title: 'Lo que reclamas afuera y te pertenece adentro', subtitle: 'Espejo emocional', gradient: 'from-amber-500 via-orange-500 to-red-500', border: 'border-amber-500/20', iconBg: 'from-amber-500/30 to-orange-500/20', accentColor: '#fb923c', chartType: 'espejo' },
                         { key: 'fantasma_relacional', icon: Anchor, title: 'Tu fantasma relacional', subtitle: 'Escena inconsciente', gradient: 'from-purple-500 via-fuchsia-500 to-pink-500', border: 'border-purple-500/20', iconBg: 'from-purple-500/30 to-fuchsia-500/20', accentColor: '#c084fc', chartType: 'escena_relacional' },
@@ -4179,7 +4834,10 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-blue-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Regulación del conflicto</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300 tracking-wide">Los 4 jinetes de tu relación</h2>
-                        <p className="text-white/45 text-xs font-light mt-2">John Gottman</p>
+                          <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-400/20 backdrop-blur-sm">
+                            <span className="w-1.5 h-1.5 rounded-full bg-blue-400/60" />
+                            <span className="text-blue-300/90 text-[11px] font-medium tracking-wide">John Gottman</span>
+                          </div>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">¿Cómo manejan los desacuerdos? Los patrones de conflicto que aparecen una y otra vez revelan la salud del vínculo.</p>
                         </div>
 
@@ -4327,7 +4985,10 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-violet-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">La geometría del amor</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-purple-300 tracking-wide">Intimidad, pasión y compromiso</h2>
-                          <p className="text-white/45 text-xs font-light mt-2">Robert Sternberg</p>
+                          <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-full bg-gradient-to-r from-violet-500/10 to-purple-500/10 border border-violet-400/20 backdrop-blur-sm">
+                            <span className="w-1.5 h-1.5 rounded-full bg-violet-400/60" />
+                            <span className="text-violet-300/90 text-[11px] font-medium tracking-wide">Robert Sternberg</span>
+                          </div>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">El triángulo amoroso refleja la proporción entre los tres pilares de toda relación profunda.</p>
                         </div>
                         <SternbergTriangleChart data={data} />
@@ -4352,7 +5013,10 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-amber-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Identidad emocional</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-yellow-300 tracking-wide">Tu estilo de apego</h2>
-                          <p className="text-white/45 text-xs font-light mt-2">Amir Levine{data.estilo_apego ? ` · Estilo detectado: ${data.estilo_apego}` : ''}</p>
+                          <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/10 to-yellow-500/10 border border-amber-400/20 backdrop-blur-sm">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-400/60" />
+                            <span className="text-amber-300/90 text-[11px] font-medium tracking-wide">Amir Levine{data.estilo_apego ? ` · ${data.estilo_apego}` : ''}</span>
+                          </div>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">¿Qué tipo de pareja eres? Tu forma de vincularte y cuánta cercanía toleras.</p>
                         </div>
                         <PolarMiniChart data={data} />
@@ -4377,7 +5041,10 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-rose-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Ciclos emocionales</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-rose-300 to-pink-300 tracking-wide">El baile emocional de tu relación</h2>
-                          <p className="text-white/45 text-xs font-light mt-2">Sue Johnson</p>
+                          <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-full bg-gradient-to-r from-rose-500/10 to-pink-500/10 border border-rose-400/20 backdrop-blur-sm">
+                            <span className="w-1.5 h-1.5 rounded-full bg-rose-400/60" />
+                            <span className="text-rose-300/90 text-[11px] font-medium tracking-wide">Sue Johnson</span>
+                          </div>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">El ciclo perseguidor-distanciador: cómo se activan las alarmas emocionales y se perpetúan los patrones de desconexión.</p>
                         </div>
                         <JohnsonCycleChart data={data} />
@@ -4402,7 +5069,10 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-pink-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Vida erótica</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-rose-300 tracking-wide">Erotismo y deseo</h2>
-                          <p className="text-white/45 text-xs font-light mt-2">Esther Perel</p>
+                          <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-full bg-gradient-to-r from-pink-500/10 to-rose-500/10 border border-pink-400/20 backdrop-blur-sm">
+                            <span className="w-1.5 h-1.5 rounded-full bg-pink-400/60" />
+                            <span className="text-pink-300/90 text-[11px] font-medium tracking-wide">Esther Perel</span>
+                          </div>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">La tensión entre seguridad y aventura. El deseo necesita misterio, novedad y autonomía para sobrevivir.</p>
                         </div>
                         {aiAnalysis.energia_vinculo && <LollipopMiniChart data={aiAnalysis.energia_vinculo} />}
@@ -4427,7 +5097,10 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-purple-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Inconsciente relacional</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-fuchsia-300 tracking-wide">Lo que no ves, te elige</h2>
-                          <p className="text-white/45 text-xs font-light mt-2">Sigmund Freud & Jacques Lacan</p>
+                          <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-500/10 to-fuchsia-500/10 border border-purple-400/20 backdrop-blur-sm">
+                            <span className="w-1.5 h-1.5 rounded-full bg-purple-400/60" />
+                            <span className="text-purple-300/90 text-[11px] font-medium tracking-wide">Sigmund Freud & Jacques Lacan</span>
+                          </div>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">Debajo de la superficie: herida infantil, pulsiones repetitivas y la búsqueda inconsciente del otro.</p>
                         </div>
                         <IcebergChart data={data} />
@@ -4468,7 +5141,10 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-orange-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">La elección inconsciente</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-amber-300 tracking-wide">¿Por qué elegiste a tu pareja?</h2>
-                          <p className="text-white/45 text-xs font-light mt-2">Harville Hendrix</p>
+                          <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-full bg-gradient-to-r from-orange-500/10 to-amber-500/10 border border-orange-400/20 backdrop-blur-sm">
+                            <span className="w-1.5 h-1.5 rounded-full bg-orange-400/60" />
+                            <span className="text-orange-300/90 text-[11px] font-medium tracking-wide">Harville Hendrix</span>
+                          </div>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">La persona que elegimos no es casualidad. Nuestra psique busca reparar heridas de la infancia a través del Imago.</p>
                         </div>
                         <HendrixImagoChart data={data} />
@@ -4493,7 +5169,10 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-emerald-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Diferenciación del self</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-teal-300 tracking-wide">¿Te pierdes en la relación?</h2>
-                          <p className="text-white/45 text-xs font-light mt-2">David Schnarch</p>
+                          <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-400/20 backdrop-blur-sm">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/60" />
+                            <span className="text-emerald-300/90 text-[11px] font-medium tracking-wide">David Schnarch</span>
+                          </div>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">La madurez emocional se mide por tu capacidad de mantener tu identidad sin fusionarte ni distanciarte.</p>
                         </div>
                         <SchnarchThermometerChart data={data} />
@@ -4518,7 +5197,10 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-teal-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Sistema nervioso</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-teal-300 to-cyan-300 tracking-wide">Tu regulación en pareja</h2>
-                          <p className="text-white/45 text-xs font-light mt-2">Stan Tatkin</p>
+                          <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-full bg-gradient-to-r from-teal-500/10 to-cyan-500/10 border border-teal-400/20 backdrop-blur-sm">
+                            <span className="w-1.5 h-1.5 rounded-full bg-teal-400/60" />
+                            <span className="text-teal-300/90 text-[11px] font-medium tracking-wide">Stan Tatkin</span>
+                          </div>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">Cómo tu sistema nervioso responde al estrés relacional: ¿te hiperactivás, te desconectás o te regulás con tu pareja?</p>
                         </div>
                         <TatkinSpeedometerChart data={data} />
@@ -4543,7 +5225,10 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-red-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Lenguaje emocional</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-red-300 to-orange-300 tracking-wide">Cómo das y recibes amor</h2>
-                          <p className="text-white/45 text-xs font-light mt-2">Gary Chapman</p>
+                          <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-full bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-400/20 backdrop-blur-sm">
+                            <span className="w-1.5 h-1.5 rounded-full bg-red-400/60" />
+                            <span className="text-red-300/90 text-[11px] font-medium tracking-wide">Gary Chapman</span>
+                          </div>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">Los 5 lenguajes del amor: descubre cuál es el tuyo, cuál es el de tu pareja y por qué no siempre se entienden.</p>
                         </div>
                         <ChapmanArcsChart data={data} />
@@ -4584,7 +5269,10 @@ const RadiografiaPremiumPage = () => {
                           </div>
                           <p className="text-cyan-300/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Poder relacional</p>
                           <h2 className="text-2xl lg:text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-sky-300 tracking-wide">El equilibrio de fuerzas</h2>
-                          <p className="text-white/45 text-xs font-light mt-2">Terry Real</p>
+                          <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-full bg-gradient-to-r from-cyan-500/10 to-sky-500/10 border border-cyan-400/20 backdrop-blur-sm">
+                            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400/60" />
+                            <span className="text-cyan-300/90 text-[11px] font-medium tracking-wide">Terry Real</span>
+                          </div>
                           <p className="text-white/55 text-sm font-light mt-2 max-w-lg mx-auto">La danza entre grandiosidad y vergüenza. ¿Quién tiene más poder en la relación y cómo se negocia?</p>
                         </div>
                         <RealBalanceChart data={data} />
@@ -4977,21 +5665,141 @@ const RadiografiaPremiumPage = () => {
 
               {/* ═══════════════════════════════════════════════════════════════
                   SECCIÓN: RADIOGRAFÍA CRUZADA (Los Dos)
-                  Siempre en DOM cuando hay crossAnalysis; oculta via CSS cuando pestaña individual
+                  Siempre en DOM cuando hay crossAnalysis o paquete losdos; oculta via CSS cuando pestaña individual
               ═══════════════════════════════════════════════════════════════ */}
-              {crossAnalysis && (
+              {(crossAnalysis || packageType === 'losdos') && (
                 <div className={resultTab !== 'cruzado' ? 'hidden' : ''} data-pdf-tab="cruzado">
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-10">
 
-                  {/* Download cruzado PDF button */}
-                  <div className="flex justify-center pt-2">
-                    <motion.button onClick={generateCruzadoPDFHandler} disabled={pdfGenerating}
-                      whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                      className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600/80 to-teal-600/70 text-white text-sm font-light hover:from-emerald-600 hover:to-teal-600 transition-all disabled:opacity-40 shadow-lg shadow-emerald-500/10 border border-emerald-500/20">
-                      {pdfGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                      {pdfGenerating ? (pdfProgress || 'Generando...') : 'Descargar Radiografía Cruzada'}
-                    </motion.button>
+{/* Placeholder / Generate button when no cross-analysis yet */}
+              {!crossAnalysis && (
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                  className="p-8 lg:p-12 rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-500/[0.06] via-orange-500/[0.04] to-transparent text-center my-8">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/15 border border-amber-500/25 mb-6">
+                    {crossGenerating
+                      ? <Loader2 className="w-8 h-8 text-amber-400/70 animate-spin" />
+                      : <Users className="w-8 h-8 text-amber-400/70" />}
                   </div>
+                  <h3 className="text-xl font-light text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-300 mb-3">
+                    {crossGenerating ? 'Generando Análisis Cruzado...' : 'Análisis Cruzado'}
+                  </h3>
+
+                  {crossGenerating ? (
+                    <div className="space-y-4 max-w-md mx-auto">
+                      <p className="text-white/55 text-sm font-light leading-relaxed">
+                        Estamos comparando ambas radiografías a través de <strong className="text-white/75 font-normal">12 dimensiones</strong>. Este proceso toma aproximadamente <strong className="text-white/75 font-normal">5 a 10 minutos</strong>.
+                      </p>
+                      <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/[0.06]">
+                        <div className="flex items-center justify-center gap-2 mb-1">
+                          <Loader2 className="w-4 h-4 text-amber-400/70 animate-spin" />
+                          <p className="text-amber-300/80 text-sm font-medium">No cierres esta pantalla</p>
+                        </div>
+                        <p className="text-white/45 text-xs font-light">
+                          Tu análisis cruzado aparecerá aquí cuando termine.
+                        </p>
+                      </div>
+                    </div>
+                  ) : crossError ? (
+                    <div className="space-y-4 max-w-md mx-auto">
+                      <p className="text-red-400/70 text-sm font-light">{crossError}</p>
+                      <button
+                        onClick={() => { setCrossError(null); setCrossPartnerReady(true) }}
+                        className="px-6 py-2.5 rounded-xl border border-amber-500/25 text-amber-300/70 text-sm hover:text-amber-200 hover:border-amber-500/40 transition-all"
+                      >
+                        Reintentar
+                      </button>
+                    </div>
+                  ) : crossPartnerReady ? (
+                    <div className="space-y-4 max-w-md mx-auto">
+                      {isBuyer ? (
+                        <>
+                          <p className="text-white/55 text-sm font-light leading-relaxed">
+                            ¡Ambos completaron su cuestionario! Ya puedes generar el análisis cruzado de su relación.
+                          </p>
+                          <button
+                            onClick={async () => {
+                              setCrossGenerating(true)
+                              setCrossError(null)
+                              try {
+                                const crossCheck = await checkCrossAnalysisReady(firebaseUser.uid, firestorePurchaseId)
+                                if (!crossCheck.ready) {
+                                  setCrossError('Tu pareja aún no ha completado su cuestionario.')
+                                  setCrossGenerating(false)
+                                  setCrossPartnerReady(false)
+                                  return
+                                }
+                                const crossResult = await analyzeCrossRadiografia({
+                                  analysis1: aiAnalysis,
+                                  analysis2: crossCheck.partnerAnalysis,
+                                  profile1: profileData,
+                                  profile2: crossCheck.partnerProfileData,
+                                })
+                                if (crossResult) {
+                                  await saveCrossAnalysisToBoth(
+                                    firebaseUser.uid, firestorePurchaseId,
+                                    crossCheck.partnerUid, crossCheck.partnerPurchaseId,
+                                    crossResult
+                                  )
+                                  setCrossAnalysis(crossResult)
+                                  // Send email notification to both
+                                  const myEmail = firebaseUser?.email || emailData.emailUsuario
+                                  const partnerEmail = crossCheck.partnerEmail
+                                  const emails = [myEmail, partnerEmail].filter(Boolean)
+                                  if (emails.length) {
+                                    fetch(`${WORKER_URL}/api/send-analysis-email`, {
+                                      method: 'POST',
+                                      headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify({ emails, type: 'cruzado', token: purchaseToken || 'firestore' }),
+                                    }).catch(() => {})
+                                  }
+                                } else {
+                                  setCrossError('No se pudo generar el análisis cruzado. Intenta de nuevo.')
+                                }
+                              } catch (err) {
+                                console.error('Cross-analysis generation error:', err)
+                                setCrossError(err.message || 'Error al generar el análisis cruzado.')
+                              } finally {
+                                setCrossGenerating(false)
+                              }
+                            }}
+                            className="px-8 py-3 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 text-white text-sm font-medium hover:from-amber-500 hover:to-orange-500 transition-all shadow-lg shadow-amber-500/15"
+                          >
+                            Generar análisis cruzado
+                          </button>
+                        </>
+                      ) : (
+                        <p className="text-white/55 text-sm font-light leading-relaxed">
+                          Ambos completaron su cuestionario. Quien compró la prueba puede generar el análisis cruzado desde su cuenta. Te avisaremos cuando esté listo.
+                        </p>
+                      )}
+                    </div>
+                  ) : crossPartnerReady === false ? (
+                    <div className="space-y-4 max-w-md mx-auto">
+                      <p className="text-white/55 text-sm font-light leading-relaxed">
+                        {isBuyer
+                          ? 'Tu pareja aún no ha completado su cuestionario. Cuando lo haga, podrás generar el análisis cruzado desde aquí.'
+                          : 'Tu pareja aún no ha completado su cuestionario. Cuando ambos terminen, quien compró la prueba podrá generar el análisis cruzado.'}
+                      </p>
+                      {isBuyer && (
+                        <button
+                          onClick={() => { setCrossPartnerReady(null) }}
+                          className="px-6 py-2.5 rounded-xl border border-white/10 text-white/40 text-xs hover:text-white/60 hover:border-white/20 transition-all"
+                        >
+                          Verificar de nuevo
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center gap-2 py-4">
+                      <Loader2 className="w-5 h-5 text-amber-400/50 animate-spin" />
+                      <p className="text-white/40 text-sm font-light">Verificando estado...</p>
+                    </div>
+                  )}
+                  </motion.div>
+                )}
+
+                {/* Full cruzado content when crossAnalysis is available */}
+                {crossAnalysis && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-10">
 
                   {/* Separator */}
                   <div data-pdf-page="cruzado-apertura" className="text-center my-10 py-8 border-t border-b border-emerald-500/10">
@@ -5765,6 +6573,7 @@ const RadiografiaPremiumPage = () => {
                   </div>
 
                 </motion.div>
+                )}
                 </div>
               )}
 
@@ -5794,6 +6603,34 @@ const RadiografiaPremiumPage = () => {
                   </div>
                 </div>
               )}
+
+              {/* ═══ DESCARGAR PDF — al final del reporte ═══ */}
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+                className="p-5 rounded-xl border border-violet-500/20 bg-gradient-to-r from-violet-500/[0.06] to-fuchsia-500/[0.04]">
+                <p className="text-white/50 text-xs font-bold uppercase tracking-[0.2em] text-center mb-3">Descargar PDF</p>
+                <div className="flex items-center justify-center gap-3">
+                  <motion.button onClick={generateIndividualPDFHandler} disabled={pdfGenerating}
+                    whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600/80 to-fuchsia-600/70 text-white text-xs font-light hover:from-violet-600 hover:to-fuchsia-600 transition-all disabled:opacity-40 shadow-lg shadow-violet-500/10 border border-violet-500/20">
+                    {pdfGenerating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+                    Individual
+                  </motion.button>
+                  {crossAnalysis ? (
+                    <motion.button onClick={generateCruzadoPDFHandler} disabled={pdfGenerating}
+                      whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                      className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600/80 to-teal-600/70 text-white text-xs font-light hover:from-emerald-600 hover:to-teal-600 transition-all disabled:opacity-40 shadow-lg shadow-emerald-500/10 border border-emerald-500/20">
+                      {pdfGenerating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+                      Cruzada
+                    </motion.button>
+                  ) : packageType === 'losdos' ? (
+                    <button disabled
+                      className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.04] text-white/30 text-xs font-light border border-white/10 cursor-not-allowed">
+                      <Download className="w-3.5 h-3.5" />
+                      Cruzada
+                    </button>
+                  ) : null}
+                </div>
+              </motion.div>
 
               {/* Back */}
               <div className="text-center pt-4">

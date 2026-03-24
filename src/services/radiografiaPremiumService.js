@@ -613,11 +613,8 @@ export async function analyzeRadiografiaPremium({ responses, questions, profileD
 
   // Check if critical part (autoanálisis) failed
   if (!part1?.autoanalisis_usuario) {
-    console.error('❌ Part 1 (autoanálisis) falló — usando fallback completo')
-    const fallback = generateFallbackAnalysis()
-    fallback._isFallback = true
-    fallback._error = 'Autoanálisis no generado'
-    return fallback
+    console.error('❌ Part 1 (autoanálisis) falló')
+    throw new Error('El análisis principal no se pudo generar. Por favor contacta soporte.')
   }
 
   // Merge all parts
@@ -680,6 +677,43 @@ export async function analyzeRadiografiaPremium({ responses, questions, profileD
 
   console.log('✅ Análisis paralelo completado y fusionado exitosamente')
   return merged
+}
+
+// ─── SERVER-SIDE ANALYSIS REQUEST ────────────────────────────────────────────
+// Sends all prompt data to the Worker for server-side analysis generation.
+// The Worker handles DeepSeek calls, Firestore save, email, and cross-analysis.
+export async function requestServerAnalysis({ uid, purchaseId, email, packageType, profileData, responses, questions }) {
+  const basePrompt = buildPrompt(responses, questions, profileData, packageType)
+  const res = await fetch(`${API_BASE}/api/generate-analysis`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      uid, purchaseId, email, packageType, profileData,
+      systemPrompt: SYSTEM_PROMPT,
+      basePrompt,
+      partInstructions: [
+        { name: 'Autoanálisis', instruction: PART1_INSTRUCTION, maxTokens: 8192 },
+        { name: 'Lecturas A', instruction: PART2_INSTRUCTION, maxTokens: 8192 },
+        { name: 'Lecturas B', instruction: PART3_INSTRUCTION, maxTokens: 8192 },
+        { name: 'Gráficas', instruction: PART4_INSTRUCTION, maxTokens: 8192 },
+      ]
+    })
+  })
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    throw new Error(data.error || `Server analysis request failed: ${res.status}`)
+  }
+  return res.json()
+}
+
+export async function retryServerAnalysis({ uid, purchaseId }) {
+  const res = await fetch(`${API_BASE}/api/retry-analysis`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ uid, purchaseId })
+  })
+  if (!res.ok) throw new Error(`Retry analysis request failed: ${res.status}`)
+  return res.json()
 }
 
 export function generateFallbackAnalysis() {
@@ -1240,9 +1274,9 @@ export async function analyzeCrossRadiografia({ analysis1, analysis2, profile1, 
 
   console.log('🚀 Lanzando 3 llamadas paralelas de análisis cruzado a DeepSeek...')
   const [partA, partB, partC] = await Promise.all([
-    callDeepSeekPart(null, basePrompt, CROSS_PART_A, 'Cross-A', 10000, CROSS_ANALYSIS_SYSTEM),
-    callDeepSeekPart(null, basePrompt, CROSS_PART_B, 'Cross-B', 10000, CROSS_ANALYSIS_SYSTEM),
-    callDeepSeekPart(null, basePrompt, CROSS_PART_C, 'Cross-C', 10000, CROSS_ANALYSIS_SYSTEM),
+    callDeepSeekPart(null, basePrompt, CROSS_PART_A, 'Cross-A', 8000, CROSS_ANALYSIS_SYSTEM),
+    callDeepSeekPart(null, basePrompt, CROSS_PART_B, 'Cross-B', 8000, CROSS_ANALYSIS_SYSTEM),
+    callDeepSeekPart(null, basePrompt, CROSS_PART_C, 'Cross-C', 8000, CROSS_ANALYSIS_SYSTEM),
   ])
 
   if (!partA) {

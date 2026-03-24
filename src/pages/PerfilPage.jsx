@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { getPurchases, createPurchase, updatePurchase, removeProduct } from '../services/firestoreService'
-import { LogOut, Package, ArrowRight, Clock, CheckCircle, Play, Eye, Shield, ChevronDown, Download, Users, Loader2, Trash2, AlertTriangle, Lock } from 'lucide-react'
+import { getPurchases, createPurchase, updatePurchase, removeProduct, subscribeToPurchase } from '../services/firestoreService'
+import { retryServerAnalysis } from '../services/radiografiaPremiumService'
+import { LogOut, Package, ArrowRight, Clock, CheckCircle, Play, Eye, Shield, ChevronDown, Download, Users, Loader2, Trash2, AlertTriangle, Lock, Brain, Sparkles } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 import AdminDashboard from '../components/AdminDashboard'
 
@@ -70,6 +71,20 @@ export default function PerfilPage() {
     load()
   }, [user])
 
+  // Live-update purchases that are still analyzing via onSnapshot
+  const analyzingIds = purchases.filter(p => p.status === 'analyzing').map(p => p.id).join(',')
+  useEffect(() => {
+    if (!user || !analyzingIds) return
+    const ids = analyzingIds.split(',')
+    const unsubs = ids.map(id =>
+      subscribeToPurchase(user.uid, id, (updated) => {
+        if (!updated) return
+        setPurchases(prev => prev.map(pp => pp.id === id ? { ...pp, ...updated } : pp))
+      })
+    )
+    return () => unsubs.forEach(u => u())
+  }, [user, analyzingIds])
+
   // Handle redirect from Stripe with purchase params
   useEffect(() => {
     const startPurchase = searchParams.get('startPurchase')
@@ -99,6 +114,23 @@ export default function PerfilPage() {
       type: purchase.packageType,
       viewResults: 'true',
       fromProfile: 'true'
+    })
+    navigate(`/tienda/radiografia-premium?${params.toString()}`)
+  }
+
+  const handleRetryAnalysis = async (purchase) => {
+    // First, call the Worker retry endpoint directly (uses saved request data)
+    try {
+      await retryServerAnalysis({ uid: user.uid, purchaseId: purchase.id })
+    } catch (e) {
+      console.error('Worker retry failed, falling back to full reload:', e)
+    }
+    // Navigate to the premium page to show the waiting screen + onSnapshot listener
+    const params = new URLSearchParams({
+      purchaseId: purchase.id,
+      type: purchase.packageType,
+      fromProfile: 'true',
+      retryAnalysis: 'true'
     })
     navigate(`/tienda/radiografia-premium?${params.toString()}`)
   }
@@ -274,99 +306,167 @@ export default function PerfilPage() {
               </Link>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {purchases.map((purchase) => {
                 const status = STATUS_MAP[purchase.status] || STATUS_MAP.pending
                 const StatusIcon = status.icon
-                const progress = purchase.currentQuestion || 0
+                const progress = Math.min(purchase.currentQuestion || 0, 40)
                 const total = 40
+                const pct = Math.min(Math.round((progress / total) * 100), 100)
                 const hasAnalysis = Boolean(purchase.analysis)
                 const hasCross = Boolean(purchase.crossAnalysis)
+                const crossIsNew = hasCross && purchase.crossAnalysisAddedAt && (Date.now() - (purchase.crossAnalysisAddedAt.toDate?.() || new Date(purchase.crossAnalysisAddedAt)).getTime() < 7 * 24 * 60 * 60 * 1000)
+                const isAnalyzing = purchase.status === 'analyzing' || (progress >= 40 && !hasAnalysis && purchase.status === 'in-progress')
+                const isComplete = hasAnalysis || purchase.status === 'completed'
+                const profileName = purchase.profileData?.nombre || ''
 
                 return (
-                  <motion.div
-                    key={purchase.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-white/[0.03] border border-white/10 rounded-2xl p-5 hover:border-white/15 transition-all"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="text-white text-sm font-medium">
-                          {PRODUCT_NAMES[purchase.product] || purchase.product}
-                        </h3>
-                        <p className="text-xs text-gray-500 mt-0.5">
-                          {PACKAGE_NAMES[purchase.packageType] || purchase.packageType}
-                          {purchase.partnerEmail && (
-                            <span className="ml-2 text-pink-400/60">
-                              <Users className="w-3 h-3 inline mr-1" />
-                              {purchase.partnerEmail}
-                            </span>
-                          )}
-                        </p>
+                  <div key={purchase.id} className="space-y-3">
+                    {/* ── Individual Radiography Card ── */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all group"
+                    >
+                      {/* Card Header */}
+                      <div className={`px-5 pt-5 pb-4 ${isComplete ? 'bg-gradient-to-br from-emerald-500/[0.06] to-transparent' : isAnalyzing ? 'bg-gradient-to-br from-purple-500/[0.06] to-transparent' : 'bg-gradient-to-br from-violet-500/[0.06] to-transparent'}`}>
+                        <div className="flex items-start gap-3">
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isComplete ? 'bg-emerald-500/15 border border-emerald-500/20' : isAnalyzing ? 'bg-purple-500/15 border border-purple-500/20' : 'bg-violet-500/15 border border-violet-500/20'}`}>
+                            <Brain className={`w-5 h-5 ${isComplete ? 'text-emerald-400/70' : isAnalyzing ? 'text-purple-400/70' : 'text-violet-400/70'}`} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-white text-sm font-medium leading-tight">
+                              Radiografía Individual
+                            </h3>
+                            <p className="text-xs text-gray-500 mt-0.5">
+                              {PACKAGE_NAMES[purchase.packageType] || purchase.packageType}
+                            </p>
+                            {profileName && (
+                              <p className="text-[11px] text-violet-400/70 mt-1 font-light">
+                                {profileName}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        {purchase.partnerEmail && (
+                          <p className="text-[10px] text-pink-400/60 mt-2 flex items-center gap-1 pl-[52px]">
+                            <Users className="w-3 h-3" />
+                            {purchase.partnerEmail}
+                          </p>
+                        )}
                       </div>
-                      <span className={`flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full ${status.bg} ${status.border} border ${status.color}`}>
-                        <StatusIcon className="w-3 h-3" />
-                        {status.label}
-                      </span>
-                    </div>
 
-                    {/* Progress bar */}
-                    {purchase.status === 'in-progress' && (
-                      <div className="mb-3">
-                        <div className="flex justify-between text-xs text-gray-500 mb-1">
-                          <span>Pregunta {progress} de {total}</span>
-                          <span>{Math.round((progress / total) * 100)}%</span>
+                      {/* Progress + Status */}
+                      <div className="px-5 py-3 border-t border-white/5">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className={`flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded-full ${isComplete ? STATUS_MAP.completed.bg + ' ' + STATUS_MAP.completed.border + ' border ' + STATUS_MAP.completed.color : isAnalyzing ? STATUS_MAP.analyzing.bg + ' ' + STATUS_MAP.analyzing.border + ' border ' + STATUS_MAP.analyzing.color : status.bg + ' ' + status.border + ' border ' + status.color}`}>
+                            <StatusIcon className={`w-3 h-3 ${isAnalyzing && !isComplete ? 'animate-spin' : ''}`} />
+                            {isComplete ? 'Completado' : isAnalyzing ? 'Generando análisis...' : status.label}
+                          </span>
+                          <span className="text-[10px] text-gray-500">{pct}%</span>
                         </div>
                         <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-gradient-to-r from-purple-500 to-fuchsia-500 rounded-full transition-all"
-                            style={{ width: `${(progress / total) * 100}%` }}
+                            className={`h-full rounded-full transition-all ${isComplete ? 'bg-gradient-to-r from-emerald-500 to-green-400' : 'bg-gradient-to-r from-purple-500 to-fuchsia-500'}`}
+                            style={{ width: `${pct}%` }}
                           />
                         </div>
                       </div>
-                    )}
 
-                    {/* Actions */}
-                    <div className="flex gap-2">
-                      {purchase.status === 'paid' && (
-                        <button
-                          onClick={() => handleStartTest(purchase)}
-                          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white text-xs font-medium hover:from-purple-500 hover:to-fuchsia-500 transition-all"
-                        >
-                          <Play className="w-3.5 h-3.5" />
-                          Comenzar test
-                        </button>
-                      )}
-                      {purchase.status === 'in-progress' && (
-                        <button
-                          onClick={() => handleStartTest(purchase)}
-                          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-medium hover:from-blue-500 hover:to-purple-500 transition-all"
-                        >
-                          <ArrowRight className="w-3.5 h-3.5" />
-                          Continuar test
-                        </button>
-                      )}
-                      {hasAnalysis && (
-                        <button
-                          onClick={() => handleViewResults(purchase)}
-                          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs hover:bg-emerald-500/20 transition-all"
-                        >
-                          <Eye className="w-3.5 h-3.5" />
-                          Ver resultados
-                        </button>
-                      )}
-                      {hasCross && (
-                        <button
-                          onClick={() => handleViewResults(purchase)}
-                          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-pink-500/10 border border-pink-500/20 text-pink-300 text-xs hover:bg-pink-500/20 transition-all"
-                        >
-                          <Users className="w-3.5 h-3.5" />
-                          Cruzado
-                        </button>
-                      )}
-                    </div>
-                  </motion.div>
+                      {/* Actions */}
+                      <div className="px-5 pb-4 pt-1">
+                        {purchase.status === 'paid' && (
+                          <button
+                            onClick={() => handleStartTest(purchase)}
+                            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white text-xs font-medium hover:from-purple-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-500/10"
+                          >
+                            <Play className="w-3.5 h-3.5" />
+                            Comenzar test
+                          </button>
+                        )}
+                        {purchase.status === 'in-progress' && !hasAnalysis && !isAnalyzing && (
+                          <button
+                            onClick={() => handleStartTest(purchase)}
+                            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-medium hover:from-blue-500 hover:to-purple-500 transition-all shadow-lg shadow-blue-500/10"
+                          >
+                            <ArrowRight className="w-3.5 h-3.5" />
+                            Continuar test
+                          </button>
+                        )}
+                        {isAnalyzing && !isComplete && (
+                          <div className="space-y-2">
+                            <div className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs">
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              Tu radiografía se está generando...
+                            </div>
+                            <button
+                              onClick={() => handleRetryAnalysis(purchase)}
+                              className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-purple-500/15 text-purple-400/60 text-[11px] hover:text-purple-300 hover:border-purple-500/30 transition-all"
+                            >
+                              ¿Lleva mucho tiempo? Reintentar
+                            </button>
+                          </div>
+                        )}
+                        {hasAnalysis && (
+                          <div className="space-y-2">
+                            <button
+                              onClick={() => handleViewResults(purchase)}
+                              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600/80 to-teal-600/70 text-white text-xs font-medium hover:from-emerald-600 hover:to-teal-600 transition-all shadow-lg shadow-emerald-500/10"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                              Ver resultados
+                            </button>
+                            {purchase.packageType === 'losdos' && !hasCross && (
+                              <p className="text-[10px] text-amber-400/60 text-center flex items-center justify-center gap-1">
+                                <Sparkles className="w-3 h-3" />
+                                Entra a tus resultados → pestaña "Análisis Cruzado" para generarlo
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+
+                    {/* ── Cross-Analysis Card (separate, only when exists) ── */}
+                    {hasCross && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 }}
+                        className="bg-white/[0.03] border border-pink-500/20 rounded-2xl overflow-hidden hover:border-pink-500/30 transition-all"
+                      >
+                        <div className="px-5 pt-5 pb-4 bg-gradient-to-br from-pink-500/[0.08] via-fuchsia-500/[0.04] to-transparent">
+                          <div className="flex items-start gap-3">
+                            <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-pink-500/15 border border-pink-500/20">
+                              <Sparkles className="w-5 h-5 text-pink-400/70" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-white text-sm font-medium leading-tight">
+                                Radiografía Cruzada
+                              </h3>
+                              <p className="text-xs text-pink-400/60 mt-0.5">
+                                Análisis comparativo de ambos
+                              </p>
+                            </div>
+                            {crossIsNew && (
+                              <span className="px-2 py-0.5 rounded-full bg-pink-500 text-white text-[9px] font-bold animate-pulse shadow-lg shadow-pink-500/30">
+                                ¡Nuevo!
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="px-5 pb-4 pt-3">
+                          <button
+                            onClick={() => handleViewResults(purchase)}
+                            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-pink-600/80 to-fuchsia-600/70 text-white text-xs font-medium hover:from-pink-600 hover:to-fuchsia-600 transition-all shadow-lg shadow-pink-500/10"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                            Ver radiografía cruzada
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </div>
                 )
               })}
             </div>

@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Wrench, Quote, Map, Beaker, X, BookOpen } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-const ToolsMenu = ({ isMobile = false }) => {
+const ToolsMenu = ({ isMobile = false, splitButton = false, splitMobile = false, onClose }) => {
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef(null)
 
@@ -26,6 +26,62 @@ const ToolsMenu = ({ isMobile = false }) => {
       return () => document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [isMobile])
+
+  // Versión split mobile — botón plano dentro del split container con dropdown inline
+  if (splitMobile) {
+    return (
+      <div className="flex-1 relative">
+        <motion.button
+          onClick={() => setIsOpen(!isOpen)}
+          whileTap={{ scale: 0.97 }}
+          className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-blue-600/30 to-cyan-600/30 text-white px-4 py-4 transition-all duration-300"
+        >
+          <Wrench className="w-4 h-4 text-cyan-300" strokeWidth={1.5} />
+          <span className="text-sm uppercase tracking-[0.15em] font-medium" style={{ fontFamily: 'Space Grotesk, monospace' }}>Herramientas</span>
+          <motion.span
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            transition={{ duration: 0.3 }}
+            className="text-cyan-300/60"
+          >
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </motion.span>
+        </motion.button>
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
+              className="absolute top-full left-0 right-0 z-[70] overflow-hidden"
+            >
+              <div className="bg-black/95 backdrop-blur-xl border border-white/10 border-t-0 rounded-b-2xl shadow-2xl shadow-black/50">
+                {tools.map((tool, index) => {
+                  const Icon = tool.icon
+                  return (
+                    <motion.div
+                      key={tool.name}
+                      initial={{ opacity: 0, x: -15 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.06 }}
+                    >
+                      <Link to={tool.href} onClick={() => { setIsOpen(false); if (onClose) onClose() }} className="block">
+                        <div className="flex items-center gap-3 px-5 py-3.5 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-200 border-b border-white/5 last:border-0">
+                          <Icon className="w-4 h-4 flex-shrink-0" strokeWidth={1.5} />
+                          <span className="text-sm font-light tracking-wide">{tool.name}</span>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  )
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    )
+  }
 
   // Versión móvil - Pantalla completa
   if (isMobile) {
@@ -124,6 +180,60 @@ const ToolsMenu = ({ isMobile = false }) => {
           )}
         </AnimatePresence>
       </>
+    )
+  }
+
+  // Versión split button (inside combined Herramientas|Tienda button)
+  if (splitButton) {
+    return (
+      <div className="relative" ref={menuRef}>
+        <motion.button
+          onClick={() => setIsOpen(!isOpen)}
+          whileHover={{
+            backgroundColor: 'rgba(245,158,11,0.1)'
+          }}
+          className="flex items-center gap-2 px-4 py-1.5 text-amber-300 hover:text-amber-200 transition-all duration-300"
+          style={{ fontFamily: 'Space Grotesk, monospace' }}
+          aria-label="Abrir menú de herramientas"
+        >
+          <Wrench className="w-3.5 h-3.5" strokeWidth={1.5} />
+          <span className="text-[0.8rem] uppercase tracking-[0.15em] font-medium"
+            style={{
+              textShadow: '0 0 20px rgba(245,158,11,0.4), 0 0 8px rgba(251,191,36,0.3)',
+            }}
+          >Herramientas</span>
+        </motion.button>
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="absolute left-0 mt-4 w-56 bg-black/95 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl z-50"
+            >
+              {tools.map((tool, index) => {
+                const Icon = tool.icon
+                return (
+                  <motion.a
+                    key={tool.name}
+                    href={tool.href}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="flex items-center gap-3 px-4 py-3 transition-all duration-200 border-b border-white/5 last:border-0 text-white/70 hover:text-white hover:bg-white/5"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Icon className="w-4 h-4" strokeWidth={1.5} />
+                    <span className="text-sm font-light">{tool.name}</span>
+                  </motion.a>
+                )
+              })}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     )
   }
 

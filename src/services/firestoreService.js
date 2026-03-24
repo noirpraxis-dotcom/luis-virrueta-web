@@ -17,7 +17,14 @@ export async function updateUserProfile(uid, data) {
 
 // ─── PURCHASES ───────────────────────────────────────────────────
 
-export async function createPurchase(uid, { product, packageType, stripeSessionId, partnerEmail, partnerName }) {
+export async function createPurchase(uid, { product, packageType, stripeSessionId, partnerEmail, partnerName, kvToken, partnerRef }) {
+  // Dedup: if a purchase with same stripeSessionId already exists, return it
+  if (stripeSessionId) {
+    const existing = await getDocs(
+      query(collection(db, 'users', uid, 'purchases'), where('stripeSessionId', '==', stripeSessionId), limit(1))
+    )
+    if (!existing.empty) return existing.docs[0].id
+  }
   const purchaseRef = doc(collection(db, 'users', uid, 'purchases'))
   const data = {
     product,
@@ -28,6 +35,8 @@ export async function createPurchase(uid, { product, packageType, stripeSessionI
     partnerName: partnerName || null,
     partnerUid: null,
     pairId: null,
+    kvToken: kvToken || null,
+    partnerRef: partnerRef || null,
     voiceSelection: null,
     profileData: null,
     currentQuestion: 0,
@@ -78,6 +87,54 @@ export async function saveCrossAnalysisResult(uid, purchaseId, crossAnalysis) {
   await updateDoc(doc(db, 'users', uid, 'purchases', purchaseId), { crossAnalysis })
 }
 
+// ─── PARTNER CROSS-ANALYSIS (Firestore-based) ───────────────────
+
+// Get the partner's purchase using partnerRef stored on this purchase
+export async function getPartnerPurchase(myUid, myPurchaseId) {
+  const myPurchase = await getPurchase(myUid, myPurchaseId)
+  if (!myPurchase?.partnerRef) return null
+  const { uid: partnerUid, purchaseId: partnerPurchaseId } = myPurchase.partnerRef
+  if (!partnerUid || !partnerPurchaseId) return null
+  const partnerPurchase = await getPurchase(partnerUid, partnerPurchaseId)
+  return partnerPurchase ? { ...partnerPurchase, uid: partnerUid } : null
+}
+
+// Check if cross-analysis is ready (partner also completed their analysis)
+export async function checkCrossAnalysisReady(myUid, myPurchaseId) {
+  const myPurchase = await getPurchase(myUid, myPurchaseId)
+  if (!myPurchase?.partnerRef) return { ready: false, reason: 'no-partner-linked' }
+  const { uid: partnerUid, purchaseId: partnerPurchaseId } = myPurchase.partnerRef
+  if (!partnerUid || !partnerPurchaseId) return { ready: false, reason: 'no-partner-linked' }
+  const partnerPurchase = await getPurchase(partnerUid, partnerPurchaseId)
+  if (!partnerPurchase) return { ready: false, reason: 'partner-purchase-not-found' }
+  if (!partnerPurchase.analysis) return { ready: false, reason: 'partner-not-done' }
+  // Try to get partner's email — may fail due to cross-user permission rules
+  let partnerEmail = ''
+  try {
+    const partnerProfile = await getUserProfile(partnerUid)
+    partnerEmail = partnerProfile?.email || ''
+  } catch {}
+  // Fall back to email stored in purchase data
+  if (!partnerEmail) partnerEmail = partnerPurchase.partnerEmail || myPurchase.partnerEmail || ''
+  return {
+    ready: true,
+    partnerAnalysis: partnerPurchase.analysis,
+    partnerProfileData: partnerPurchase.profileData,
+    partnerUid,
+    partnerPurchaseId: partnerPurchase.id,
+    partnerEmail,
+  }
+}
+
+// Save cross-analysis to BOTH purchases (buyer + partner)
+export async function saveCrossAnalysisToBoth(uid1, purchaseId1, uid2, purchaseId2, crossAnalysis) {
+  const crossData = { crossAnalysis, crossAnalysisAddedAt: serverTimestamp() }
+  await Promise.all([
+    updateDoc(doc(db, 'users', uid1, 'purchases', purchaseId1), crossData),
+    updateDoc(doc(db, 'users', uid2, 'purchases', purchaseId2), crossData),
+  ])
+}
+
 // ─── PARTNER INVITE LOOKUP ───────────────────────────────────────
 
 export async function findPurchaseByPartnerEmail(email) {
@@ -124,6 +181,7 @@ export async function createPartnerPurchase(partnerUid, { product, packageType, 
     linkedBuyerUid: buyerUid,
     linkedBuyerPurchaseId: buyerPurchaseId,
     pairId: pairId || null,
+    partnerRef: { uid: buyerUid, purchaseId: buyerPurchaseId },
     voiceSelection: null,
     profileData: null,
     currentQuestion: 0,
@@ -226,12 +284,52 @@ export async function removeProduct(uid, purchaseId) {
 
 // ─── ADMIN: DELETE USER ─────────────────────────────────
 
+export async function deletePurchaseCascade(uid, purchaseId) {
+  const purchase = await getPurchase(uid, purchaseId)
+  if (!purchase) { await deleteDoc(doc(db, 'users', uid, 'purchases', purchaseId)); return }
+
+  // Clean up partner linkage
+  if (purchase.partnerRef?.uid && purchase.partnerRef?.purchaseId) {
+    try {
+      await updateDoc(doc(db, 'users', purchase.partnerRef.uid, 'purchases', purchase.partnerRef.purchaseId), {
+        partnerRef: null, linkedBuyerUid: null, linkedBuyerPurchaseId: null, crossAnalysis: null, crossAnalysisAddedAt: null
+      })
+    } catch (e) { /* partner purchase may not exist */ }
+  }
+  // Clean up if this is a partner's mirrored purchase (clean buyer side)
+  if (purchase.linkedBuyerUid && purchase.linkedBuyerPurchaseId) {
+    try {
+      await updateDoc(doc(db, 'users', purchase.linkedBuyerUid, 'purchases', purchase.linkedBuyerPurchaseId), {
+        partnerRef: null, partnerUid: null, crossAnalysis: null, crossAnalysisAddedAt: null
+      })
+    } catch (e) { /* buyer purchase may not exist */ }
+  }
+  // Clean up partner_invites if this purchase has a partnerEmail
+  if (purchase.partnerEmail) {
+    try { await deleteDoc(doc(db, 'partner_invites', purchase.partnerEmail.toLowerCase())) } catch (e) { /* ok */ }
+  }
+  await deleteDoc(doc(db, 'users', uid, 'purchases', purchaseId))
+}
+
 export async function deleteUserAdmin(uid) {
-  // Delete all purchases subcollection first
+  // Get user doc for email (to clean partner_invites by buyer email)
+  const userDoc = await getDoc(doc(db, 'users', uid))
+  const userEmail = userDoc.exists() ? userDoc.data().email : null
+
+  // Delete all purchases with cascade cleanup
   const purchasesSnap = await getDocs(collection(db, 'users', uid, 'purchases'))
   for (const purchaseDoc of purchasesSnap.docs) {
-    await deleteDoc(doc(db, 'users', uid, 'purchases', purchaseDoc.id))
+    await deletePurchaseCascade(uid, purchaseDoc.id)
   }
+
+  // Clean up any partner_invites where this user was the buyer
+  if (userEmail) {
+    const invitesSnap = await getDocs(query(collection(db, 'partner_invites'), where('buyerUid', '==', uid)))
+    for (const inviteDoc of invitesSnap.docs) {
+      await deleteDoc(doc(db, 'partner_invites', inviteDoc.id))
+    }
+  }
+
   // Delete user document
   await deleteDoc(doc(db, 'users', uid))
   // Delete from Firebase Auth via Worker
@@ -250,4 +348,12 @@ export async function deleteUserAdmin(uid) {
 
 export async function setUserTestMode(uid, enabled) {
   await setDoc(doc(db, 'users', uid), { testMode: enabled }, { merge: true })
+}
+
+// ─── SUBSCRIBE TO PURCHASE (onSnapshot) ─────────────────
+
+export function subscribeToPurchase(uid, purchaseId, callback) {
+  return onSnapshot(doc(db, 'users', uid, 'purchases', purchaseId), (snap) => {
+    callback(snap.exists() ? { id: snap.id, ...snap.data() } : null)
+  })
 }

@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { Mail, Lock, User, ArrowRight, Eye, EyeOff, AlertCircle, Heart, CheckCircle2, MailCheck, RefreshCw } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
-import { findPurchaseByPartnerEmail, createPartnerPurchase, linkPartnerToPurchase, claimPartnerInvite } from '../services/firestoreService'
+import { findPurchaseByPartnerEmail, createPartnerPurchase, linkPartnerToPurchase, claimPartnerInvite, updatePurchase } from '../services/firestoreService'
 
 export default function RegistroPage() {
   const { user, loginWithGoogle, signUpWithEmail, loginWithEmail, resendVerification, verifyCode, emailVerified } = useAuth()
@@ -72,7 +72,7 @@ export default function RegistroPage() {
         try {
           await linkPartnerToPurchase(invite.buyerUid, invite.buyerPurchaseId, loggedUser.uid)
         } catch (e) { console.error('Link partner error (non-fatal):', e) }
-        // Create mirror purchase for partner
+        // Create mirror purchase for partner (partnerRef → buyer is set inside createPartnerPurchase)
         const partnerPurchaseId = await createPartnerPurchase(loggedUser.uid, {
           product: invite.product,
           packageType: invite.packageType,
@@ -80,6 +80,12 @@ export default function RegistroPage() {
           buyerPurchaseId: invite.buyerPurchaseId,
           pairId: invite.pairId,
         })
+        // Set partnerRef on buyer's purchase → pointing to partner's new purchase
+        try {
+          await updatePurchase(invite.buyerUid, invite.buyerPurchaseId, {
+            partnerRef: { uid: loggedUser.uid, purchaseId: partnerPurchaseId }
+          })
+        } catch (e) { console.error('Set buyer partnerRef error (non-fatal):', e) }
         // Mark invite as claimed
         await claimPartnerInvite(loggedUser.email).catch(() => {})
         navigate(`/tienda/radiografia-premium?purchaseId=${partnerPurchaseId}&type=${invite.packageType}&fromProfile=true`)

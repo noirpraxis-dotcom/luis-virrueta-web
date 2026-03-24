@@ -93,6 +93,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
   const [tags, setTags] = useState(article?.tags?.join(', ') || '')
   const [readTime, setReadTime] = useState(article?.readTime || '15 min')
   const [language, setLanguage] = useState(article?.language || 'es')
+  const [slug, setSlug] = useState(article?.slug || '')
   
   // Imagen
   const [imageFile, setImageFile] = useState(null)
@@ -353,7 +354,7 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
         content: bodyWithSectionIcon,
         is_published: finalIsPublished,
         published_at: resolvePublishedAtIso(),
-        slug: generateSlug(normalizedTitle),
+        slug: slug.trim() || generateSlug(normalizedTitle),
         updated_at: new Date().toISOString()
       }
 
@@ -846,32 +847,50 @@ export default function AdminBlogEditor({ article, onClose, onSave }) {
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Título *
                 </label>
-                <div
-                  contentEditable
-                  suppressContentEditableWarning
-                  onInput={(e) => {
-                    const text = e.currentTarget.textContent || ''
-                    setTitle(text)
-                  }}
-                  data-placeholder="El título principal de tu artículo"
-                  className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white text-xl font-bold focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all min-h-[3rem] empty:before:content-[attr(data-placeholder)] empty:before:text-gray-600"
-                >{title}</div>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="El título principal de tu artículo"
+                  className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white text-xl font-bold focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all placeholder-gray-600"
+                />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Subtítulo
                 </label>
-                <div
-                  contentEditable
-                  suppressContentEditableWarning
-                  onInput={(e) => {
-                    const text = e.currentTarget.textContent || ''
-                    setSubtitle(text)
-                  }}
-                  data-placeholder="Un subtítulo descriptivo (opcional)"
-                  className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all min-h-[3rem] empty:before:content-[attr(data-placeholder)] empty:before:text-gray-600"
-                >{subtitle}</div>
+                <input
+                  type="text"
+                  value={subtitle}
+                  onChange={(e) => setSubtitle(e.target.value)}
+                  placeholder="Un subtítulo descriptivo (opcional)"
+                  className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all placeholder-gray-600"
+                />
+              </div>
+
+              {/* Slug */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Slug (URL)
+                </label>
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-500 text-sm">/blog/</span>
+                  <input
+                    type="text"
+                    value={slug}
+                    onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, ''))}
+                    placeholder={generateSlug(title) || 'mi-articulo'}
+                    className="flex-1 px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white font-mono text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all placeholder-gray-600"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setSlug(generateSlug(title))}
+                    className="px-3 py-3 bg-white/10 hover:bg-white/20 text-gray-300 rounded-lg transition-all text-xs whitespace-nowrap"
+                  >
+                    Auto
+                  </button>
+                </div>
               </div>
             </div>
 

@@ -1,6 +1,6 @@
 import {
   collection, doc, addDoc, getDoc, getDocs, updateDoc, deleteDoc, setDoc,
-  query, where, orderBy, limit, serverTimestamp
+  query, where, orderBy, limit, serverTimestamp, arrayUnion, increment
 } from 'firebase/firestore'
 import { db } from '../config/firebase'
 
@@ -9,6 +9,7 @@ import { db } from '../config/firebase'
 // ============================================
 
 const BLOG_COLLECTION = 'blog_articles'
+const BLOG_META_DOC = 'blog_metadata'
 const VOTES_COLLECTION = 'laboratorio_votos'
 const COMMENTS_COLLECTION = 'laboratorio_comentarios'
 
@@ -74,25 +75,64 @@ export async function deleteBlogArticle(id) {
 }
 
 /**
+ * Obtener categorías y tags globales guardados
+ */
+export async function getBlogMetadata() {
+  try {
+    const ref = doc(db, BLOG_META_DOC, 'global')
+    const snap = await getDoc(ref)
+    if (!snap.exists()) return { categories: [], tags: [] }
+    const data = snap.data()
+    return {
+      categories: Array.isArray(data.categories) ? data.categories : [],
+      tags: Array.isArray(data.tags) ? data.tags : []
+    }
+  } catch (err) {
+    console.error('Error obteniendo blog metadata:', err)
+    return { categories: [], tags: [] }
+  }
+}
+
+/**
+ * Guardar categorías y/o tags nuevos (merge con existentes)
+ */
+export async function saveBlogMetadata({ categories = [], tags = [] }) {
+  try {
+    const ref = doc(db, BLOG_META_DOC, 'global')
+    const updates = {}
+    if (categories.length) updates.categories = arrayUnion(...categories)
+    if (tags.length) updates.tags = arrayUnion(...tags)
+    if (Object.keys(updates).length === 0) return
+    await setDoc(ref, updates, { merge: true })
+  } catch (err) {
+    console.error('Error guardando blog metadata:', err)
+  }
+}
+
+/**
  * Subir imagen — usa R2 CDN via Worker
  */
 export async function uploadBlogImage(file) {
   const API = import.meta.env.VITE_API_BASE_URL
   const ADMIN_SECRET = import.meta.env.VITE_ADMIN_SECRET
 
-  const formData = new FormData()
-  formData.append('file', file)
-  formData.append('path', `blog/${Date.now()}-${file.name}`)
+  const ext = file.name?.split('.').pop()?.toLowerCase() || 'webp'
+  const filename = `${Date.now()}.${ext}`
+  const folder = 'blog'
 
-  const res = await fetch(`${API}/media/upload`, {
-    method: 'POST',
-    headers: { 'X-Admin-Secret': ADMIN_SECRET },
-    body: formData
+  const res = await fetch(`${API}/api/media-upload?folder=${folder}&filename=${filename}`, {
+    method: 'PUT',
+    headers: {
+      'X-Admin-Secret': ADMIN_SECRET,
+      'Content-Type': file.type || 'image/webp'
+    },
+    body: file
   })
 
   if (!res.ok) throw new Error('Error subiendo imagen')
-  const { url } = await res.json()
-  return url
+  const data = await res.json()
+  // Return absolute URL
+  return `${API}${data.url}`
 }
 
 // ============================================
@@ -189,6 +229,184 @@ export async function getComments(dilemaId) {
     })
   } catch (err) {
     console.error('Error obteniendo comentarios:', err)
+    return []
+  }
+}
+
+// ============================================
+// FUNCIONES PARA COMENTARIOS DE BLOG
+// ============================================
+const BLOG_COMMENTS_COLLECTION = 'blog_comments'
+
+export async function addBlogComment({ slug, userId, userName, userPhoto, content, rating }) {
+  try {
+    const docRef = await addDoc(collection(db, BLOG_COMMENTS_COLLECTION), {
+      slug,
+      user_id: userId,
+      user_name: userName,
+      user_photo: userPhoto || null,
+      content,
+      rating: rating || 0,
+      status: 'pending',
+      created_at: serverTimestamp()
+    })
+    return { id: docRef.id }
+  } catch (err) {
+    console.error('Error agregando comentario:', err)
+    return null
+  }
+}
+
+export async function getBlogComments(slug, includeAll = false) {
+  try {
+    const constraints = [
+      where('slug', '==', slug)
+    ]
+    if (!includeAll) {
+      constraints.push(where('status', '==', 'approved'))
+    }
+    constraints.push(orderBy('created_at', 'desc'))
+    constraints.push(limit(100))
+    const q = query(collection(db, BLOG_COMMENTS_COLLECTION), ...constraints)
+    const snap = await getDocs(q)
+    return snap.docs.map(d => ({
+      id: d.id,
+      ...d.data(),
+      created_at: d.data().created_at?.toDate?.()?.toISOString() || d.data().created_at
+    }))
+  } catch (err) {
+    console.error('Error obteniendo comentarios del blog:', err)
+    return []
+  }
+}
+
+export async function moderateBlogComment(commentId, status) {
+  try {
+    await updateDoc(doc(db, BLOG_COMMENTS_COLLECTION, commentId), { status })
+    return true
+  } catch (err) {
+    console.error('Error moderando comentario:', err)
+    return false
+  }
+}
+
+export async function deleteBlogComment(commentId) {
+  try {
+    await deleteDoc(doc(db, BLOG_COMMENTS_COLLECTION, commentId))
+    return true
+  } catch (err) {
+    console.error('Error eliminando comentario:', err)
+    return false
+  }
+}
+
+export async function getAllBlogComments(statusFilter = null) {
+  try {
+    const constraints = [orderBy('created_at', 'desc'), limit(200)]
+    if (statusFilter) {
+      constraints.push(where('status', '==', statusFilter))
+    }
+    const q = query(collection(db, BLOG_COMMENTS_COLLECTION), ...constraints)
+    const snap = await getDocs(q)
+    return snap.docs.map(d => ({
+      id: d.id,
+      ...d.data(),
+      created_at: d.data().created_at?.toDate?.()?.toISOString() || d.data().created_at
+    }))
+  } catch (err) {
+    console.error('Error obteniendo todos los comentarios:', err)
+    return []
+  }
+}
+
+// ============================================
+// FUNCIONES PARA ANALYTICS (Firestore)
+// ============================================
+
+const ANALYTICS_COLLECTION = 'page_views'
+const ANALYTICS_DAILY_COLLECTION = 'analytics_daily'
+
+/**
+ * Registrar una visita de página
+ */
+export async function trackPageView({ path, slug = null, referrer = '', userAgent = '' }) {
+  try {
+    const now = new Date()
+    const dateStr = now.toISOString().slice(0, 10)
+
+    await addDoc(collection(db, ANALYTICS_COLLECTION), {
+      path,
+      slug,
+      referrer: referrer || document.referrer || '',
+      user_agent: userAgent || navigator.userAgent || '',
+      language: navigator.language || '',
+      screen: `${screen.width}x${screen.height}`,
+      date: dateStr,
+      timestamp: serverTimestamp(),
+      is_mobile: /Mobile|Android|iPhone/i.test(navigator.userAgent)
+    })
+
+    // Incrementar contador diario agregado
+    const dailyDocId = `${dateStr}_${(slug || path).replace(/[\/\.#]/g, '_')}`
+    const dailyRef = doc(db, ANALYTICS_DAILY_COLLECTION, dailyDocId)
+    try {
+      await updateDoc(dailyRef, { views: increment(1) })
+    } catch {
+      await setDoc(dailyRef, { date: dateStr, path, slug, views: 1 })
+    }
+  } catch (err) {
+    console.warn('Analytics track error:', err)
+  }
+}
+
+/**
+ * Obtener datos agregados diarios
+ */
+export async function getAnalyticsDaily(days = 30) {
+  try {
+    const since = new Date()
+    since.setDate(since.getDate() - days)
+    const sinceStr = since.toISOString().slice(0, 10)
+
+    const q = query(
+      collection(db, ANALYTICS_DAILY_COLLECTION),
+      where('date', '>=', sinceStr),
+      orderBy('date', 'asc')
+    )
+    const snap = await getDocs(q)
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }))
+  } catch (err) {
+    console.error('Error obteniendo analytics diarios:', err)
+    return []
+  }
+}
+
+/**
+ * Obtener visitas individuales para análisis detallado
+ */
+export async function getAnalyticsRaw(days = 30, maxDocs = 2000) {
+  try {
+    const since = new Date()
+    since.setDate(since.getDate() - days)
+    const sinceStr = since.toISOString().slice(0, 10)
+
+    const q = query(
+      collection(db, ANALYTICS_COLLECTION),
+      where('date', '>=', sinceStr),
+      orderBy('date', 'desc'),
+      limit(maxDocs)
+    )
+    const snap = await getDocs(q)
+    return snap.docs.map(d => {
+      const data = d.data()
+      return {
+        id: d.id,
+        ...data,
+        timestamp: data.timestamp?.toDate?.()?.toISOString() || data.timestamp
+      }
+    })
+  } catch (err) {
+    console.error('Error obteniendo analytics raw:', err)
     return []
   }
 }

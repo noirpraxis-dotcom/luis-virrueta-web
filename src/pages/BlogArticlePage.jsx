@@ -1,12 +1,13 @@
 ﻿import { AnimatePresence, motion, useInView } from 'framer-motion'
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { ACCENT_PRESETS } from '../utils/accentPresets'
-import { useParams, Link } from 'react-router-dom'
-import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles, Award, Check, Shield, AlertCircle, Copy, Crown, Moon, Star, Diamond, Bookmark, Target, Compass, Flame, Heart, Lightbulb, FileDown } from 'lucide-react'
+import { useParams, Link, useNavigate } from 'react-router-dom'
+import { Calendar, Clock, ArrowLeft, User, Tag, Share2, BookmarkPlus, Eye, Brain, Zap, Sparkles, Award, Check, Shield, AlertCircle, Copy, Crown, Moon, Star, Diamond, Bookmark, Target, Compass, Flame, Heart, Lightbulb, FileDown, Plus } from 'lucide-react'
 import ReadingProgressBar from '../components/ReadingProgressBar'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown } from 'lucide-react' // kept for other dropdowns
 import RelatedArticles from '../components/RelatedArticles'
 import NewsletterSignup from '../components/NewsletterSignup'
+import BlogComments from '../components/BlogComments'
 import TableOfContents from '../components/TableOfContents'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
@@ -20,7 +21,7 @@ import RichTextEditor from '../components/RichTextEditor'
 import { getArticleContent } from '../data/blogArticlesContent'
 import { getLegacyBlogIndex } from '../data/blogIndex'
 import { getBlogArticles, getBlogArticleBySlug } from '../lib/supabase'
-import { uploadBlogImage, updateBlogArticle, createBlogArticle } from '../lib/supabase'
+import { uploadBlogImage, updateBlogArticle, createBlogArticle, getBlogMetadata, saveBlogMetadata, trackPageView } from '../lib/supabase'
 
 const HIDDEN_BLOG_SLUGS = new Set([
   'rebranding-vs-refresh-cuando-redisenar-marca-completa',
@@ -76,7 +77,7 @@ const toSentenceCase = (raw) => {
   return lower.slice(0, i) + lower[i].toLocaleUpperCase('es-MX') + lower.slice(i + 1)
 }
 
-const SUGGESTED_TAGS = [
+const DEFAULT_SUGGESTED_TAGS = [
   'filosofía',
   'psicología',
   'psicoanálisis',
@@ -94,6 +95,25 @@ const SUGGESTED_TAGS = [
   'muerte',
   'existencia',
   'identidad'
+]
+
+const DEFAULT_CATEGORIES = [
+  { value: 'philosophy', label: 'Filosofía' },
+  { value: 'psychoanalysis', label: 'Psicoanálisis' },
+  { value: 'psychology', label: 'Psicología' },
+  { value: 'perception', label: 'Percepción' },
+  { value: 'consciousness', label: 'Conciencia' },
+  { value: 'metaphysics', label: 'Metafísica' },
+  { value: 'reflections', label: 'Reflexiones' },
+  { value: 'diary', label: 'Diario' },
+  { value: 'ethics', label: 'Ética' },
+  { value: 'existence', label: 'Existencia' },
+  { value: 'epistemology', label: 'Epistemología' },
+  { value: 'ontology', label: 'Ontología' },
+  { value: 'aesthetics', label: 'Estética' },
+  { value: 'phenomenology', label: 'Fenomenología' },
+  { value: 'hermeneutics', label: 'Hermenéutica' },
+  { value: 'spirituality', label: 'Espiritualidad' }
 ]
 
 const getCategoryLabel = (rawCategory, language) => {
@@ -1848,6 +1868,7 @@ const getArticleBySlug = (slug) => {
 
 const BlogArticlePage = () => {
   const { slug } = useParams()
+  const navigate = useNavigate()
   const { currentLanguage, t } = useLanguage()
   const { isAdmin } = useAuth()
   const isHiddenSlug = HIDDEN_BLOG_SLUGS.has(slug)
@@ -1877,15 +1898,21 @@ const BlogArticlePage = () => {
   })
   const [draftBlocks, setDraftBlocks] = useState([])
   const [draftRelatedSlugs, setDraftRelatedSlugs] = useState([])
+  const [draftSlug, setDraftSlug] = useState('')
   const [isDirty, setIsDirty] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [saveStatus, setSaveStatus] = useState('')
   const [saveError, setSaveError] = useState('')
   const [tagInput, setTagInput] = useState('')
+  const [showTagSuggestions, setShowTagSuggestions] = useState(false)
   const [tocOpen, setTocOpen] = useState(false)
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
+  const [categorySearch, setCategorySearch] = useState('')
   const [showColorPicker, setShowColorPicker] = useState(false)
   const [showIconPicker, setShowIconPicker] = useState(false)
+  const [savedCategories, setSavedCategories] = useState([])
+  const [savedTags, setSavedTags] = useState([])
+  const [publishFeedback, setPublishFeedback] = useState('')
 
   // Sistema de undo/redo
   const [history, setHistory] = useState([])
@@ -1906,6 +1933,21 @@ const BlogArticlePage = () => {
       window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
     }
   }, [slug, currentLanguage])
+
+  // Registrar visita
+  useEffect(() => {
+    if (slug && slug !== 'nuevo') {
+      trackPageView({ path: `/blog/${slug}`, slug })
+    }
+  }, [slug])
+  // Cargar categorías y tags guardados desde Firestore
+  useEffect(() => {
+    if (!isAdmin) return
+    getBlogMetadata().then(({ categories, tags }) => {
+      if (categories.length) setSavedCategories(categories)
+      if (tags.length) setSavedTags(tags)
+    })
+  }, [isAdmin])
 
   // Cargar todos los artículos (legacy + Supabase) para el selector de relacionados
   useEffect(() => {
@@ -2056,6 +2098,7 @@ const BlogArticlePage = () => {
           setDraftSectionIcon('brain')
           setDraftTags([])
           setDraftImageUrl('')
+          setDraftSlug('')
           setDraftBlocks(emptyTemplate.content)
         }, 100)
         
@@ -2102,6 +2145,7 @@ const BlogArticlePage = () => {
                 : (Array.isArray(articleData?.tags) ? articleData.tags : [])
             )
             setDraftImageUrl(String(row?.image_url || articleData?.heroImage || articleData?.image || '').trim())
+            setDraftSlug(String(row?.slug || slug || '').trim())
             setDraftPublishedAt(String(row?.published_at || row?.created_at || '').slice(0, 16))
             setDraftBlocks(initialBlocks)
             setIsDirty(false)
@@ -2495,8 +2539,8 @@ const BlogArticlePage = () => {
       resolvePublicImageUrl(cmsRow?.image_url),
       resolvePublicImageUrl(article.heroImage),
       resolvePublicImageUrl(article.image),
-      // Last resort: site cover
-      'https://radiografia-worker.noirpraxis.workers.dev/media/products/portada.webp'
+      // Last resort: site cover (skip for brand-new articles)
+      ...(slug === 'nuevo' ? [] : ['https://radiografia-worker.noirpraxis.workers.dev/media/products/portada.webp'])
     ].filter(Boolean)
 
     // Unique preserve order
@@ -2507,7 +2551,7 @@ const BlogArticlePage = () => {
       seen.add(u)
       return true
     })
-  }, [cmsRow?.image_url, article.heroImage, article.image])
+  }, [cmsRow?.image_url, article.heroImage, article.image, slug])
 
   const [heroCandidateIndex, setHeroCandidateIndex] = useState(0)
   const heroBackgroundImage = (!isEditMode && cmsLoading) ? null : (heroImageCandidates[heroCandidateIndex] || null)
@@ -2560,6 +2604,7 @@ const BlogArticlePage = () => {
         : (Array.isArray(article.tags) ? article.tags : [])
     )
     setDraftImageUrl(String(row?.image_url || article.heroImage || article.image || '').trim())
+    setDraftSlug(String(row?.slug || slug || '').trim())
     setDraftPublishedAt(String(row?.published_at || row?.created_at || '').slice(0, 16))
     setDraftBlocks(initialBlocks)
     setIsDirty(false)
@@ -2691,9 +2736,9 @@ const BlogArticlePage = () => {
         return
       }
 
-      // Si es artículo nuevo, generar slug desde el título
-      let finalSlug = slug
-      if (slug === 'nuevo') {
+      // Si hay draftSlug, usarlo; si es nuevo, generar desde título
+      let finalSlug = draftSlug?.trim() || slug
+      if (finalSlug === 'nuevo' || !finalSlug) {
         finalSlug = finalTitle.toLowerCase()
           .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Eliminar acentos
           .replace(/[^a-z0-9\s-]/g, '') // Solo letras, números, espacios y guiones
@@ -2744,8 +2789,46 @@ const BlogArticlePage = () => {
       setCmsRow(result)
       setDraftTitle(result.title || finalTitle)
       setDraftSubtitle(result.subtitle || finalSubtitle)
+      setDraftSlug(result.slug || finalSlug)
       setIsDirty(false)
-      if (!silent) setSaveStatus(publish ? 'Publicado' : 'Borrador guardado')
+
+      // Guardar categorías y tags nuevos en Firestore para reutilización
+      if (!silent) {
+        const catValue = updates.category
+        const catLabel = getCategoryLabel(catValue, currentLanguage)
+        const newCatEntry = JSON.stringify({ value: catValue, label: catLabel })
+        const existingCatValues = savedCategories.map(c => c.value)
+        const newCats = existingCatValues.includes(catValue) ? [] : [newCatEntry]
+
+        const existingTagSet = new Set(savedTags.map(t => t.toLowerCase()))
+        const newTags = (updates.tags || []).filter(t => !existingTagSet.has(t.toLowerCase()))
+
+        if (newCats.length || newTags.length) {
+          saveBlogMetadata({
+            categories: newCats.length ? [{ value: catValue, label: catLabel }] : [],
+            tags: newTags
+          }).then(() => {
+            if (newCats.length) setSavedCategories(prev => [...prev, { value: catValue, label: catLabel }])
+            if (newTags.length) setSavedTags(prev => [...new Set([...prev, ...newTags])])
+          })
+        }
+      }
+
+      if (!silent) {
+        if (publish) {
+          setPublishFeedback('¡Publicado con éxito!')
+          setSaveStatus('')
+          setTimeout(() => setPublishFeedback(''), 3000)
+        } else {
+          setSaveStatus('Borrador guardado')
+        }
+      }
+
+      // Si el slug cambió, navegar a la nueva URL
+      if (finalSlug !== slug) {
+        navigate(`/blog/${finalSlug}`, { replace: true })
+        return
+      }
 
       // Recargar lista de artículos para actualizar relacionados
       const freshArticles = await getBlogArticles(false, currentLanguage)
@@ -2892,7 +2975,8 @@ const BlogArticlePage = () => {
     setIsDirty(true)
   }, [])
 
-  const shareUrl = `${window.location.origin}/blog/${slug}`
+  const effectiveSlug = (isEditMode && draftSlug) ? draftSlug : slug
+  const shareUrl = `${window.location.origin}/blog/${effectiveSlug}`
   const shareTitle = article.title
   const shareSubtitle = article.subtitle || ''
   // Usar el excerpt del CMS primero, luego extract de article, luego primer contenido
@@ -2938,532 +3022,71 @@ const BlogArticlePage = () => {
   // Título SEO con contexto del sitio
   const seoTitle = shareSubtitle ? `${shareTitle} — ${shareSubtitle} | Luis Virrueta` : `${shareTitle} | Luis Virrueta`
 
-  const ShareDropdown = () => {
-    const [open, setOpen] = useState(false)
-    const rootRef = useRef(null)
-
-    const handleNativeShare = async () => {
-      if (!navigator.share) return
-      try {
-        const shareData = {
-          title: shareTitle,
-          text: shareTextFormatted,
-          url: shareUrl
-        }
-
-        // Intentar incluir la imagen si está disponible
-        if (shareImage) {
-          try {
-            const res = await fetch(shareImage, { mode: 'cors' })
-            const blob = await res.blob()
-            const file = new File([blob], 'articulo.jpg', { type: blob.type || 'image/jpeg' })
-            
-            // Verificar si el dispositivo puede compartir archivos
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-              shareData.files = [file]
-            }
-          } catch (imageError) {
-            // Si falla la carga de la imagen, continuar sin ella
-            console.warn('No se pudo cargar la imagen para compartir:', imageError)
-          }
-        }
-
-        await navigator.share(shareData)
-      } catch (err) {
-        if (err?.name !== 'AbortError') {
-          console.error('Error al compartir:', err)
-        }
-      } finally {
-        setOpen(false)
-      }
+  const ShareButton = () => {
+    const accentColors = {
+      purple: { bg: 'from-purple-500 to-fuchsia-500', hover: 'hover:from-purple-600 hover:to-fuchsia-600' },
+      red: { bg: 'from-red-500 to-pink-600', hover: 'hover:from-red-600 hover:to-pink-700' },
+      emerald: { bg: 'from-emerald-500 to-teal-500', hover: 'hover:from-emerald-600 hover:to-teal-600' },
+      amber: { bg: 'from-amber-500 to-orange-500', hover: 'hover:from-amber-600 hover:to-orange-600' },
+      indigo: { bg: 'from-indigo-500 to-violet-500', hover: 'hover:from-indigo-600 hover:to-violet-600' },
+      blue: { bg: 'from-blue-500 to-cyan-500', hover: 'hover:from-blue-600 hover:to-cyan-600' },
+      cyan: { bg: 'from-cyan-500 to-teal-400', hover: 'hover:from-cyan-600 hover:to-teal-500' },
+      pink: { bg: 'from-pink-500 to-rose-500', hover: 'hover:from-pink-600 hover:to-rose-600' },
+      orange: { bg: 'from-orange-500 to-red-500', hover: 'hover:from-orange-600 hover:to-red-600' },
+      slate: { bg: 'from-slate-500 to-zinc-500', hover: 'hover:from-slate-600 hover:to-zinc-600' },
+      lime: { bg: 'from-lime-500 to-green-500', hover: 'hover:from-lime-600 hover:to-green-600' },
+      violet: { bg: 'from-violet-500 to-purple-500', hover: 'hover:from-violet-600 hover:to-purple-600' },
     }
+    const palette = accentColors[accentKey] || accentColors.purple
 
-    const exportToPDF = async () => {
-      try {
-        setOpen(false)
-
-        const pdfTitle = (isEditMode ? (draftTitle || article.title) : article.title) || article.title
-        const pdfSubtitle = isEditMode ? (draftSubtitle || article.subtitle) : article.subtitle
-        const pdfExcerptSource = isEditMode
-          ? (draftExcerpt || article.excerpt || shareExcerptRaw)
-          : (article.excerpt || shareExcerptRaw)
-        const pdfExcerpt = String(pdfExcerptSource || '').trim()
-        const pdfSections = isEditMode ? cmsBlocksToSections(draftBlocks) : (article.sections || [])
-
-        const escapeHtml = (value) => String(value ?? '')
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;')
-
-        const inlineMdToHtml = (value) => {
-          const safe = escapeHtml(value)
-          return safe
-            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\*(.+?)\*/g, '<em>$1</em>')
-            .replace(/\n/g, '<br />')
-        }
-
-        const renderListItems = (items = []) => items.map((item) => {
-          if (typeof item === 'string') {
-            return `<li>${inlineMdToHtml(item)}</li>`
-          }
-          const title = item?.title ? inlineMdToHtml(item.title) : ''
-          const description = item?.description ? inlineMdToHtml(item.description) : ''
-          const line = description ? `${title}: ${description}` : title
-          return line ? `<li>${line}</li>` : ''
-        }).filter(Boolean).join('')
-
-        const renderSection = (section) => {
-          if (!section || typeof section !== 'object') return ''
-
-          switch (section.type) {
-            case 'heading':
-              return section.title
-                ? `<h3 class="section-title">${inlineMdToHtml(section.title)}</h3>`
-                : ''
-            case 'intro':
-              return section.content
-                ? `<p class="paragraph intro">${inlineMdToHtml(section.content)}</p>`
-                : ''
-            case 'reflection':
-              return section.content
-                ? `<blockquote class="quote">${inlineMdToHtml(section.content)}</blockquote>`
-                : ''
-            case 'text':
-            case 'paragraph':
-              return section.content
-                ? `<p class="paragraph">${inlineMdToHtml(section.content)}</p>`
-                : ''
-            case 'highlight':
-              return section.content
-                ? `<blockquote class="highlight">${inlineMdToHtml(section.content)}${section.author ? `<span class="cite">— ${inlineMdToHtml(section.author)}</span>` : ''}</blockquote>`
-                : ''
-            case 'subsection': {
-              const number = section.number ? `<span class="sub-number">${inlineMdToHtml(section.number)}</span>` : ''
-              const title = section.title ? `<h4 class="sub-title">${inlineMdToHtml(section.title)}</h4>` : ''
-              const content = section.content ? `<p class="paragraph">${inlineMdToHtml(section.content)}</p>` : ''
-              return number || title || content
-                ? `<div class="subsection">${number}<div class="sub-body">${title}${content}</div></div>`
-                : ''
-            }
-            case 'questions': {
-              const items = Array.isArray(section.items)
-                ? section.items
-                : (String(section.content || '')
-                  .split('\n')
-                  .map((q) => q.trim())
-                  .filter(Boolean))
-              if (!items.length) return ''
-              return `
-                <div class="questions">
-                  <h4 class="questions-title">${inlineMdToHtml(section.title || 'Preguntas')}</h4>
-                  <ul class="list">${renderListItems(items)}</ul>
-                </div>
-              `
-            }
-            case 'list': {
-              const items = Array.isArray(section.items) ? section.items : []
-              if (!items.length) return ''
-              return `<ul class="list">${renderListItems(items)}</ul>`
-            }
-            case 'conclusion':
-              return section.content
-                ? `<div class="conclusion"><h3 class="section-title">Conclusión</h3><p class="paragraph">${inlineMdToHtml(section.content)}</p></div>`
-                : ''
-            case 'colorGrid':
-              return Array.isArray(section.colors)
-                ? `<div class="grid-block">
-                    <h4 class="section-title">${inlineMdToHtml(section.title || 'Colores')}</h4>
-                    <ul class="list">
-                      ${section.colors.map((c) => `<li>${inlineMdToHtml(c.name)} — ${inlineMdToHtml(c.emotion || '')} ${c.hex ? `(${inlineMdToHtml(c.hex)})` : ''}</li>`).join('')}
-                    </ul>
-                  </div>`
-                : ''
-            case 'statsGrid':
-              return Array.isArray(section.stats)
-                ? `<div class="grid-block">
-                    <h4 class="section-title">${inlineMdToHtml(section.title || 'Estadísticas')}</h4>
-                    <ul class="list">
-                      ${section.stats.map((s) => `<li>${inlineMdToHtml(s.metric)} — ${inlineMdToHtml(s.label || '')}${s.source ? ` (${inlineMdToHtml(s.source)})` : ''}</li>`).join('')}
-                    </ul>
-                  </div>`
-                : ''
-            case 'dataVisualization':
-              return Array.isArray(section.data)
-                ? `<div class="grid-block">
-                    <h4 class="section-title">${inlineMdToHtml(section.title || 'Comparativa')}</h4>
-                    <ul class="list">
-                      ${section.data.map((d) => `<li>${inlineMdToHtml(d.model)} — ${inlineMdToHtml(d.score)}${d.company ? ` (${inlineMdToHtml(d.company)})` : ''}</li>`).join('')}
-                    </ul>
-                  </div>`
-                : ''
-            case 'philosophicalAnalysis':
-              return Array.isArray(section.analyses)
-                ? `<div class="grid-block">
-                    <h4 class="section-title">${inlineMdToHtml(section.title || 'Análisis')}</h4>
-                    <ul class="list">
-                      ${section.analyses.map((a) => `<li>${inlineMdToHtml(a.company || '')}: ${inlineMdToHtml(a.approach || a.reasoning || '')}</li>`).join('')}
-                    </ul>
-                  </div>`
-                : ''
-            case 'externalFactors':
-              return Array.isArray(section.factors)
-                ? `<div class="grid-block">
-                    <h4 class="section-title">${inlineMdToHtml(section.title || 'Factores')}</h4>
-                    <ul class="list">
-                      ${section.factors.map((f) => `<li>${inlineMdToHtml(f.factor)} — ${inlineMdToHtml(f.impact || '')}</li>`).join('')}
-                    </ul>
-                  </div>`
-                : ''
-            case 'whatsapp':
-              return ''
-            default: {
-              if (section.title && !section.content) {
-                return `<h3 class="section-title">${inlineMdToHtml(section.title)}</h3>`
-              }
-              if (section.content) {
-                return `<p class="paragraph">${inlineMdToHtml(section.content)}</p>`
-              }
-              return ''
-            }
-          }
-        }
-        
-        // Crear un contenedor temporal para el PDF
-        const printContainer = document.createElement('div')
-        printContainer.style.cssText = `
-          position: absolute;
-          left: -9999px;
-          top: 0;
-          width: 210mm;
-          background: #0a0a0a;
-          padding: 0;
-          box-sizing: border-box;
-          font-family: 'Outfit', system-ui, sans-serif;
-          color: #e5e7eb;
-        `
-        
-        // Construir el HTML del artículo
-        let htmlContent = `
-          <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            .pdf-content { padding: 12mm 16mm 24mm; }
-            .hero { width: 100%; height: 120mm; object-fit: cover; border-radius: 14px; margin-bottom: 18px; display: block; }
-            .title { font-family: 'Playfair Display', Georgia, serif; font-size: 34px; font-weight: 600; margin: 0 0 12px; color: #f9fafb; line-height: 1.2; }
-            .subtitle { font-size: 18px; color: #9ca3af; font-weight: 300; margin: 0 0 28px; line-height: 1.5; }
-            .excerpt { font-size: 14.5px; line-height: 1.85; margin: 0 0 22px; color: #cbd5f5; }
-            .section-title { font-family: 'Playfair Display', Georgia, serif; font-size: 22px; margin: 28px 0 12px; color: #f3f4f6; font-weight: 600; }
-            .paragraph { font-size: 14.5px; line-height: 1.85; margin: 0 0 14px; color: #d1d5db; }
-            .intro { font-style: italic; color: #e5e7eb; }
-            .quote { margin: 18px 0 20px; padding: 14px 18px; border-left: 3px solid #6b7280; background: #111827; color: #e5e7eb; font-style: italic; }
-            .highlight { margin: 22px 0; padding: 16px 18px; border: 1px solid #1f2937; border-radius: 12px; background: #0f172a; color: #f3f4f6; }
-            .cite { display: block; margin-top: 10px; font-size: 12px; color: #9ca3af; font-style: normal; }
-            .list { padding-left: 18px; margin: 0 0 16px; color: #d1d5db; }
-            .list li { margin: 0 0 8px; line-height: 1.7; }
-            .subsection { display: flex; gap: 12px; margin: 14px 0 18px; padding: 12px 14px; border: 1px solid #1f2937; border-radius: 12px; background: #0b0f19; }
-            .sub-number { font-family: 'Space Grotesk', 'Outfit', sans-serif; font-size: 26px; font-weight: 600; color: #6b7280; }
-            .sub-title { font-size: 16px; margin: 0 0 8px; color: #f3f4f6; font-weight: 600; }
-            .questions { margin: 18px 0 20px; padding: 14px 16px; border: 1px solid #1f2937; border-radius: 14px; background: #0b0f19; }
-            .questions-title { font-size: 16px; margin: 0 0 10px; color: #e5e7eb; font-weight: 600; }
-            .conclusion { margin-top: 26px; padding-top: 16px; border-top: 1px solid #1f2937; }
-            .grid-block { margin: 18px 0; padding: 12px 14px; border: 1px dashed #1f2937; border-radius: 12px; }
-            .footer { margin-top: 36px; padding-top: 16px; border-top: 1px solid #1f2937; text-align: center; }
-            .footer-title { font-size: 11px; color: #9ca3af; }
-            .footer-url { font-size: 10px; color: #6b7280; margin-top: 6px; }
-          </style>
-          <div class="pdf-content">
-            ${shareImage ? `<img class="hero" src="${shareImage}" alt="" />` : ''}
-            <div style="margin-bottom: 24px;">
-              <h1 class="title">${inlineMdToHtml(pdfTitle)}</h1>
-              ${pdfSubtitle ? `<h2 class="subtitle">${inlineMdToHtml(pdfSubtitle)}</h2>` : ''}
-              ${pdfExcerpt ? `<p class="excerpt">${inlineMdToHtml(pdfExcerpt)}</p>` : ''}
-          </div>
-        `
-        
-        // Agregar cada sección del artículo
-        pdfSections.forEach((section) => {
-          htmlContent += renderSection(section)
-        })
-        
-        // Agregar pie de página
-        htmlContent += `
-          <div class="footer">
-            <p class="footer-title">${inlineMdToHtml(pdfTitle)} — Luis Virrueta</p>
-            <p class="footer-url">${shareUrl}</p>
-          </div>
-          </div>
-        `
-        
-        printContainer.innerHTML = htmlContent
-        document.body.appendChild(printContainer)
-        
-        // Generar el PDF
-        const canvas = await html2canvas(printContainer, {
-          scale: 2,
-          useCORS: true,
-          logging: false,
-          backgroundColor: '#0a0a0a'
-        })
-        
-        document.body.removeChild(printContainer)
-        
-        const imgData = canvas.toDataURL('image/png')
-        const pdf = new jsPDF('p', 'mm', 'a4')
-        
-        const pdfWidth = pdf.internal.pageSize.getWidth()
-        const pdfHeight = pdf.internal.pageSize.getHeight()
-        const imgWidth = canvas.width
-        const imgHeight = canvas.height
-        const ratio = pdfWidth / imgWidth
-        const firstPageTopMargin = 0
-        const firstPageBottomMargin = 16
-        const otherPagesTopMargin = 16
-        const otherPagesBottomMargin = 16
-        const backgroundColor = { r: 10, g: 10, b: 10 }
-        let sourceY = 0
-        let pageIndex = 0
-
-        const isBlankRow = (data, start, samples) => {
-          const tolerance = 8
-          for (let i = 0; i < samples; i += 1) {
-            const idx = start + i * 4
-            const r = data[idx]
-            const g = data[idx + 1]
-            const b = data[idx + 2]
-            if (
-              Math.abs(r - backgroundColor.r) > tolerance
-              || Math.abs(g - backgroundColor.g) > tolerance
-              || Math.abs(b - backgroundColor.b) > tolerance
-            ) {
-              return false
-            }
-          }
-          return true
-        }
-
-        const findSplitHeight = (maxHeightPx) => {
-          const scanWindow = 90
-          const scanStepY = 2
-          const scanStepX = 16
-          const ctx = canvas.getContext('2d')
-          if (!ctx) return maxHeightPx
-
-          const startY = Math.max(sourceY + maxHeightPx - scanWindow, sourceY)
-          const endY = sourceY + maxHeightPx - 1
-          const width = imgWidth
-          for (let y = endY; y >= startY; y -= scanStepY) {
-            const row = ctx.getImageData(0, y, width, 1).data
-            const samples = Math.floor(width / scanStepX)
-            let blank = true
-            for (let i = 0; i < samples; i += 1) {
-              const idx = i * scanStepX * 4
-              if (!isBlankRow(row, idx, 1)) {
-                blank = false
-                break
-              }
-            }
-            if (blank) {
-              return y - sourceY
-            }
-          }
-
-          return maxHeightPx
-        }
-
-        while (sourceY < imgHeight) {
-          const topMargin = pageIndex === 0 ? firstPageTopMargin : otherPagesTopMargin
-          const bottomMargin = pageIndex === 0 ? firstPageBottomMargin : otherPagesBottomMargin
-          const pageHeightMm = pdfHeight - topMargin - bottomMargin
-          const pageHeightPx = Math.floor(pageHeightMm / ratio)
-          const remainingPx = imgHeight - sourceY
-          const baseHeightPx = Math.min(pageHeightPx, remainingPx)
-          const splitHeightPx = remainingPx > pageHeightPx
-            ? findSplitHeight(baseHeightPx)
-            : baseHeightPx
-          const sliceHeightPx = Math.min(splitHeightPx, remainingPx)
-          const pageCanvas = document.createElement('canvas')
-          pageCanvas.width = imgWidth
-          pageCanvas.height = sliceHeightPx
-
-          const pageCtx = pageCanvas.getContext('2d')
-          if (pageCtx) {
-            pageCtx.drawImage(
-              canvas,
-              0,
-              sourceY,
-              imgWidth,
-              sliceHeightPx,
-              0,
-              0,
-              imgWidth,
-              sliceHeightPx
-            )
-          }
-
-          const pageData = pageCanvas.toDataURL('image/png')
-          if (pageIndex > 0) pdf.addPage()
-
-          pdf.setFillColor(10, 10, 10)
-          pdf.rect(0, 0, pdfWidth, pdfHeight, 'F')
-
-          const renderHeightMm = sliceHeightPx * ratio
-          pdf.addImage(pageData, 'PNG', 0, topMargin, pdfWidth, renderHeightMm)
-
-          sourceY += sliceHeightPx
-          pageIndex += 1
-        }
-        
-        // Generar nombre de archivo seguro
-        const filename = article.title
-          .toLowerCase()
-          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-          .replace(/[^a-z0-9\s-]/g, '')
-          .trim()
-          .replace(/\s+/g, '-')
-          .slice(0, 50) || 'articulo'
-        
-        pdf.save(`${filename}.pdf`)
-      } catch (error) {
-        console.error('Error al exportar PDF:', error)
-        alert('Hubo un error al exportar el PDF. Por favor, intenta de nuevo.')
-      }
-    }
-
-    const copyToClipboard = async () => {
-      try {
-        // Copiar el texto formateado completo (igual que cuando se comparte)
-        const textToCopy = `${shareTextFormatted}\n\n${shareUrl}`
-        await navigator.clipboard.writeText(textToCopy)
-      } catch {
-        // Fallback for older browsers / permissions
-        const input = document.createElement('textarea')
-        const textToCopy = `${shareTextFormatted}\n\n${shareUrl}`
-        input.value = textToCopy
-        input.setAttribute('readonly', 'true')
-        input.style.position = 'fixed'
-        input.style.top = '-1000px'
-        input.style.left = '-1000px'
-        document.body.appendChild(input)
-        input.focus()
-        input.select()
+    const handleShare = async () => {
+      if (navigator.share) {
         try {
-          document.execCommand('copy')
-        } finally {
-          document.body.removeChild(input)
+          const shareData = {
+            title: shareTitle,
+            text: shareTextFormatted,
+            url: shareUrl
+          }
+
+          if (shareImage) {
+            try {
+              const res = await fetch(shareImage, { mode: 'cors' })
+              const blob = await res.blob()
+              const file = new File([blob], 'articulo.jpg', { type: blob.type || 'image/jpeg' })
+              if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                shareData.files = [file]
+              }
+            } catch {
+              // Continue without image
+            }
+          }
+
+          await navigator.share(shareData)
+        } catch (err) {
+          if (err?.name !== 'AbortError') {
+            console.error('Error al compartir:', err)
+          }
         }
-      } finally {
-        setOpen(false)
+      } else {
+        // Fallback: copy to clipboard
+        try {
+          await navigator.clipboard.writeText(`${shareTextFormatted}\n\n${shareUrl}`)
+          alert('Enlace copiado al portapapeles')
+        } catch {
+          window.prompt('Copia este enlace:', shareUrl)
+        }
       }
     }
-
-    useEffect(() => {
-      if (!open) return
-      const onKeyDown = (e) => {
-        if (e.key === 'Escape') setOpen(false)
-      }
-      const onMouseDown = (e) => {
-        if (!rootRef.current) return
-        if (rootRef.current.contains(e.target)) return
-        setOpen(false)
-      }
-
-      document.addEventListener('keydown', onKeyDown)
-      document.addEventListener('mousedown', onMouseDown)
-      return () => {
-        document.removeEventListener('keydown', onKeyDown)
-        document.removeEventListener('mousedown', onMouseDown)
-      }
-    }, [open])
-
-    const encodedUrl = encodeURIComponent(shareUrl)
-    const encodedTitle = encodeURIComponent(shareTitle)
-    const encodedSubtitle = encodeURIComponent(shareSubtitle)
-    const encodedExcerpt = encodeURIComponent(shareExcerpt)
-    // WhatsApp con formato markdown
-    const encodedTextWhatsApp = encodeURIComponent(`${shareTextFormatted}\n\n${shareUrl}`)
-    // Otras redes sin formato
-    const encodedText = encodeURIComponent(`${shareTextPlain}\n\n${shareUrl}`)
-    const encodedTweet = encodeURIComponent(`${shareTitle}${shareSubtitle ? ` — ${shareSubtitle}` : ''}\n\n${shareExcerpt}`)
-    // LinkedIn con título y resumen
-    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&title=${encodedTitle}&summary=${encodedExcerpt}`
-    // Facebook con quote
-    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedTitle}${shareSubtitle ? ` — ${encodedSubtitle}` : ''}. ${encodedExcerpt}`
-
-    const items = [
-      ...(navigator.share ? [{
-        label: 'Compartir',
-        onClick: handleNativeShare,
-        Icon: Share2
-      }] : []),
-      {
-        label: 'PDF',
-        onClick: exportToPDF,
-        Icon: FileDown
-      },
-      {
-        label: 'Copiar',
-        onClick: copyToClipboard,
-        Icon: Copy
-      }
-    ]
 
     return (
-      <div ref={rootRef} className="relative">
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-white text-sm flex items-center gap-2 transition-all"
-          aria-haspopup="menu"
-          aria-expanded={open}
-        >
-          <span>{t('blogArticles.common.share')}</span>
-          <ChevronDown className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`} />
-        </button>
-
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              initial={{ opacity: 0, y: 8, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 8, scale: 0.98 }}
-              transition={{ duration: 0.15 }}
-              className="absolute right-0 mt-3 w-56 rounded-2xl bg-zinc-950/95 backdrop-blur-sm border border-white/10 shadow-lg shadow-black/40 overflow-hidden z-50"
-              role="menu"
-            >
-              {items.map(({ label, href, onClick, Icon }) => {
-                const commonClass = 'flex w-full items-center gap-3 px-4 py-3 text-sm text-white/80 hover:text-white hover:bg-white/5 transition-colors'
-                return href ? (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={commonClass}
-                    role="menuitem"
-                    onClick={() => setOpen(false)}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span>{label}</span>
-                  </a>
-                ) : (
-                  <button
-                    key={label}
-                    type="button"
-                    className={commonClass}
-                    role="menuitem"
-                    onClick={onClick}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span>{label}</span>
-                  </button>
-                )
-              })}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      <button
+        type="button"
+        onClick={handleShare}
+        className={`px-4 py-2 bg-gradient-to-r ${palette.bg} ${palette.hover} rounded-full text-white text-sm flex items-center gap-2 transition-all shadow-lg shadow-black/20 hover:shadow-xl hover:scale-105 active:scale-95`}
+      >
+        <Share2 className="w-4 h-4" />
+        <span>Compartir</span>
+      </button>
     )
   }
 
@@ -3573,7 +3196,7 @@ const BlogArticlePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-16 sm:pt-24 lg:pt-28 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-[60px] md:pt-[72px] lg:pt-24 overflow-x-hidden">
       <SEOHead
         title={seoTitle}
         description={seoDescription}
@@ -3611,14 +3234,14 @@ const BlogArticlePage = () => {
       />
 
       {/* Hero Image Section - SOLO LA IMAGEN */}
-      <section ref={heroRef} className="relative h-[36vh] sm:h-[50vh] lg:h-[95vh] overflow-hidden">
+      <section ref={heroRef} className="relative w-full h-[36vh] sm:h-[50vh] lg:aspect-video lg:h-auto lg:max-h-[80vh] overflow-hidden">
         {/* Background image (robusto con fallback) */}
-        {effectiveHeroImage && (
-          <div className="absolute inset-0 overflow-hidden">
+        {effectiveHeroImage ? (
+          <div className="absolute inset-0 overflow-hidden flex items-center justify-center">
             <img
               src={effectiveHeroImage}
               alt=""
-              className="absolute inset-0 w-full h-full object-cover object-center"
+              className="w-full h-full object-cover object-center"
               style={{ filter: 'saturate(1.05) contrast(1.06) brightness(1.20)' }}
               loading="eager"
               fetchpriority="high"
@@ -3636,7 +3259,11 @@ const BlogArticlePage = () => {
             {/* Bottom fade ligero (para unir con la sección de abajo) */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
           </div>
-        )}
+        ) : isEditMode ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-zinc-900 to-black border-b border-white/5">
+            <p className="text-white/30 text-lg">Sube una imagen de portada →</p>
+          </div>
+        ) : null}
 
         {isEditMode && (
           <div className="absolute inset-0 flex items-start justify-end p-4">
@@ -3686,7 +3313,7 @@ const BlogArticlePage = () => {
             </Link>
             
             <div className="flex items-center gap-2">
-              <ShareDropdown />
+              <ShareButton />
 
               <button
                 type="button"
@@ -3716,11 +3343,15 @@ const BlogArticlePage = () => {
               </button>
               <button
                 type="button"
-                disabled={isSaving}
+                disabled={isSaving || !!publishFeedback}
                 onClick={() => saveToSupabase({ publish: true })}
-                className="px-3 py-2 rounded-xl bg-gradient-to-r from-purple-500/60 to-fuchsia-500/60 hover:from-purple-500/80 hover:to-fuchsia-500/80 border border-white/10 text-white text-sm disabled:opacity-60"
+                className={`px-4 py-2 rounded-xl border border-white/10 text-white text-sm font-medium disabled:opacity-60 transition-all ${
+                  publishFeedback
+                    ? 'bg-emerald-500/60'
+                    : `bg-gradient-to-r ${draftGradient || 'from-purple-500/60 to-fuchsia-500/60'} hover:brightness-125`
+                }`}
               >
-                Publicar
+                {publishFeedback || (cmsRow?.is_published ? 'Actualizar' : 'Publicar')}
               </button>
 
               <div className="text-sm text-white/50">
@@ -3735,14 +3366,14 @@ const BlogArticlePage = () => {
       {/* Article Header - título, metadata, etc */}
       <section className="relative py-12 lg:py-16 px-4 sm:px-6 lg:px-20">
         {/* Fades de unión (arriba/abajo) para que no se vea el corte */}
-        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black via-black/75 to-transparent pointer-events-none" />
-        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black via-black/75 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black via-black/80 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none" />
 
-        {/* Glows behind title/meta (not behind the image) - PRO version */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className={`absolute top-8 left-1/2 -translate-x-1/2 w-[26rem] h-[26rem] bg-gradient-to-br ${isEditMode ? draftGradient : article.gradient} opacity-60 rounded-full blur-[70px] mix-blend-screen`} />
-          <div className={`absolute top-40 left-10 w-[20rem] h-[20rem] bg-gradient-to-br ${isEditMode ? draftGradient : article.gradient} opacity-45 rounded-full blur-[60px] mix-blend-screen`} />
-          <div className={`absolute top-44 right-8 w-[18rem] h-[18rem] bg-gradient-to-br ${isEditMode ? draftGradient : article.gradient} opacity-40 rounded-full blur-[55px] mix-blend-screen`} />
+        {/* Glows behind title/meta - degradados suaves fundidos arriba/abajo */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ maskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 70%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 70%, transparent 100%)' }}>
+          <div className={`absolute top-8 left-1/2 -translate-x-1/2 w-[26rem] h-[26rem] bg-gradient-to-br ${isEditMode ? draftGradient : article.gradient} opacity-50 rounded-full blur-[90px] mix-blend-screen`} />
+          <div className={`absolute top-40 left-10 w-[20rem] h-[20rem] bg-gradient-to-br ${isEditMode ? draftGradient : article.gradient} opacity-35 rounded-full blur-[80px] mix-blend-screen`} />
+          <div className={`absolute top-44 right-8 w-[18rem] h-[18rem] bg-gradient-to-br ${isEditMode ? draftGradient : article.gradient} opacity-30 rounded-full blur-[75px] mix-blend-screen`} />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto">
@@ -3753,7 +3384,7 @@ const BlogArticlePage = () => {
             transition={{ duration: 0.4, delay: 0.2 }}
             className="mb-6"
           >
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2 justify-center">
               <div className="relative">
                 <button
                   type="button"
@@ -3774,40 +3405,75 @@ const BlogArticlePage = () => {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="absolute top-full mt-2 left-0 z-50 bg-zinc-900 border border-white/20 rounded-xl shadow-2xl overflow-hidden min-w-[220px]"
+                      className="absolute top-full mt-2 left-0 z-50 bg-zinc-900 border border-white/20 rounded-xl shadow-2xl overflow-hidden min-w-[240px]"
                     >
-                      {[
-                        { value: 'philosophy', label: 'Filosofía' },
-                        { value: 'psychoanalysis', label: 'Psicoanálisis' },
-                        { value: 'psychology', label: 'Psicología' },
-                        { value: 'perception', label: 'Percepción' },
-                        { value: 'consciousness', label: 'Conciencia' },
-                        { value: 'metaphysics', label: 'Metafísica' },
-                        { value: 'reflections', label: 'Reflexiones' },
-                        { value: 'diary', label: 'Diario' },
-                        { value: 'ethics', label: 'Ética' },
-                        { value: 'existence', label: 'Existencia' },
-                        { value: 'epistemology', label: 'Epistemología' },
-                        { value: 'ontology', label: 'Ontología' },
-                        { value: 'aesthetics', label: 'Estética' },
-                        { value: 'phenomenology', label: 'Fenomenología' },
-                        { value: 'hermeneutics', label: 'Hermenéutica' }
-                      ].map((cat) => (
-                        <button
-                          key={cat.value}
-                          type="button"
-                          onClick={() => {
-                            setDraftCategory(cat.value)
-                            setIsDirty(true)
-                            setShowCategoryDropdown(false)
-                          }}
-                          className={`w-full px-4 py-2 text-left text-sm hover:bg-white/10 transition-colors ${
-                            draftCategory === cat.value ? 'bg-white/5 text-purple-400' : 'text-white/80'
-                          }`}
-                        >
-                          {cat.label}
-                        </button>
-                      ))}
+                      <div className="p-2 border-b border-white/10">
+                        <input
+                          type="text"
+                          value={categorySearch}
+                          onChange={(e) => setCategorySearch(e.target.value)}
+                          placeholder="Buscar categoría..."
+                          className="w-full px-3 py-2 text-sm bg-white/5 border border-white/10 rounded-lg text-white outline-none focus:border-white/30 placeholder:text-white/30"
+                          autoFocus
+                        />
+                      </div>
+                      <div className="max-h-[240px] overflow-y-auto">
+                        {(() => {
+                          // Merge default + saved categories (deduplicated)
+                          const merged = new Map()
+                          DEFAULT_CATEGORIES.forEach(c => merged.set(c.value, c))
+                          savedCategories.forEach(c => {
+                            if (c && c.value && !merged.has(c.value)) {
+                              merged.set(c.value, { value: c.value, label: c.label || c.value })
+                            }
+                          })
+                          const allCats = Array.from(merged.values())
+                          const q = categorySearch.trim().toLowerCase()
+                          const filtered = q ? allCats.filter((c) => c.label.toLowerCase().includes(q) || c.value.includes(q)) : allCats
+                          const exactMatch = allCats.some((c) => c.label.toLowerCase() === q || c.value === q)
+                          const showCreate = q.length > 0 && !exactMatch
+
+                          return (
+                            <>
+                              {showCreate && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const newValue = q.replace(/\s+/g, '-')
+                                    setDraftCategory(newValue)
+                                    setIsDirty(true)
+                                    setShowCategoryDropdown(false)
+                                    setCategorySearch('')
+                                  }}
+                                  className="w-full px-4 py-2.5 text-left text-sm hover:bg-white/10 transition-colors text-cyan-400 flex items-center gap-2 border-b border-white/10"
+                                >
+                                  <Plus className="w-3.5 h-3.5" /> Crear "{categorySearch.trim()}"
+                                </button>
+                              )}
+                              {filtered.map((cat) => (
+                                <button
+                                  key={cat.value}
+                                  type="button"
+                                  onClick={() => {
+                                    setDraftCategory(cat.value)
+                                    setIsDirty(true)
+                                    setShowCategoryDropdown(false)
+                                    setCategorySearch('')
+                                  }}
+                                  className={`w-full px-4 py-2 text-left text-sm hover:bg-white/10 transition-colors ${
+                                    draftCategory === cat.value ? 'bg-white/5 text-purple-400' : 'text-white/80'
+                                  }`}
+                                >
+                                  {cat.label}
+                                </button>
+                              ))}
+                              {filtered.length === 0 && !showCreate && (
+                                <div className="px-4 py-3 text-sm text-white/40">Sin coincidencias</div>
+                              )}
+                            </>
+                          )
+                        })()}
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -3825,19 +3491,33 @@ const BlogArticlePage = () => {
                     }}
                     className="w-8 h-8 rounded-full border-2 border-white/30 hover:scale-110 transition-transform"
                   style={{
-                    background:
-                      draftGradient === 'from-purple-500 to-fuchsia-500' ? 'linear-gradient(to bottom right, rgb(168, 85, 247), rgb(217, 70, 239))' :
-                      draftGradient === 'from-blue-500 to-cyan-500' ? 'linear-gradient(to bottom right, rgb(59, 130, 246), rgb(6, 182, 212))' :
-                      draftGradient === 'from-red-500 to-rose-500' ? 'linear-gradient(to bottom right, rgb(239, 68, 68), rgb(244, 63, 94))' :
-                      draftGradient === 'from-emerald-500 to-teal-500' ? 'linear-gradient(to bottom right, rgb(16, 185, 129), rgb(20, 184, 166))' :
-                      draftGradient === 'from-amber-500 to-orange-500' ? 'linear-gradient(to bottom right, rgb(245, 158, 11), rgb(249, 115, 22))' :
-                      draftGradient === 'from-indigo-500 to-violet-500' ? 'linear-gradient(to bottom right, rgb(99, 102, 241), rgb(139, 92, 246))' :
-                      draftGradient === 'from-pink-500 to-rose-500' ? 'linear-gradient(to bottom right, rgb(236, 72, 153), rgb(244, 63, 94))' :
-                      draftGradient === 'from-slate-600 to-zinc-700' ? 'linear-gradient(to bottom right, rgb(71, 85, 105), rgb(63, 63, 70))' :
-                      draftGradient === 'from-orange-500 to-red-500' ? 'linear-gradient(to bottom right, rgb(249, 115, 22), rgb(239, 68, 68))' :
-                      draftGradient === 'from-teal-500 to-cyan-500' ? 'linear-gradient(to bottom right, rgb(20, 184, 166), rgb(6, 182, 212))' :
-                      draftGradient === 'from-lime-500 to-green-500' ? 'linear-gradient(to bottom right, rgb(132, 204, 22), rgb(34, 197, 94))' :
-                      'linear-gradient(to bottom right, rgb(139, 92, 246), rgb(168, 85, 247))'
+                    background: (() => {
+                      const g = draftGradient || 'from-purple-500 to-fuchsia-500'
+                      const colorMap = {
+                        'from-purple-500 to-fuchsia-500': 'rgb(168,85,247), rgb(217,70,239)',
+                        'from-blue-500 to-cyan-500': 'rgb(59,130,246), rgb(6,182,212)',
+                        'from-sky-400 to-blue-500': 'rgb(56,189,248), rgb(59,130,246)',
+                        'from-red-500 to-rose-500': 'rgb(239,68,68), rgb(244,63,94)',
+                        'from-emerald-500 to-teal-500': 'rgb(16,185,129), rgb(20,184,166)',
+                        'from-amber-500 to-orange-500': 'rgb(245,158,11), rgb(249,115,22)',
+                        'from-yellow-500 to-amber-500': 'rgb(234,179,8), rgb(245,158,11)',
+                        'from-indigo-500 to-violet-500': 'rgb(99,102,241), rgb(139,92,246)',
+                        'from-pink-500 to-rose-500': 'rgb(236,72,153), rgb(244,63,94)',
+                        'from-fuchsia-500 to-pink-500': 'rgb(217,70,239), rgb(236,72,153)',
+                        'from-rose-500 to-orange-400': 'rgb(244,63,94), rgb(251,146,60)',
+                        'from-orange-500 to-red-500': 'rgb(249,115,22), rgb(239,68,68)',
+                        'from-teal-500 to-cyan-500': 'rgb(20,184,166), rgb(6,182,212)',
+                        'from-lime-500 to-green-500': 'rgb(132,204,22), rgb(34,197,94)',
+                        'from-violet-500 to-purple-500': 'rgb(139,92,246), rgb(168,85,247)',
+                        'from-violet-400 to-indigo-400': 'rgb(167,139,250), rgb(129,140,248)',
+                        'from-red-600 to-pink-600': 'rgb(220,38,38), rgb(219,39,119)',
+                        'from-cyan-400 to-teal-400': 'rgb(34,211,238), rgb(45,212,191)',
+                        'from-slate-600 to-zinc-700': 'rgb(71,85,105), rgb(63,63,70)',
+                        'from-green-400 to-cyan-400': 'rgb(74,222,128), rgb(34,211,238)'
+                      }
+                      const colors = colorMap[g] || 'rgb(168,85,247), rgb(217,70,239)'
+                      return `linear-gradient(to bottom right, ${colors})`
+                    })()
                   }}
                 />
 
@@ -3847,22 +3527,30 @@ const BlogArticlePage = () => {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="absolute top-full mt-3 left-0 z-50 bg-zinc-900/95 border border-white/20 rounded-2xl shadow-2xl p-6 backdrop-blur min-w-[280px] sm:min-w-[360px]"
+                      className="absolute top-full mt-3 left-0 z-50 bg-zinc-900/95 border border-white/20 rounded-2xl shadow-2xl p-6 backdrop-blur min-w-[280px] sm:min-w-[400px]"
                     >
-                      <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
+                      <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
                         {[
                           { label: 'Púrpura', value: 'from-purple-500 to-fuchsia-500', preview: 'bg-gradient-to-r from-purple-500 to-fuchsia-500' },
                           { label: 'Azul', value: 'from-blue-500 to-cyan-500', preview: 'bg-gradient-to-r from-blue-500 to-cyan-500' },
+                          { label: 'Cielo', value: 'from-sky-400 to-blue-500', preview: 'bg-gradient-to-r from-sky-400 to-blue-500' },
                           { label: 'Rojo', value: 'from-red-500 to-rose-500', preview: 'bg-gradient-to-r from-red-500 to-rose-500' },
                           { label: 'Verde', value: 'from-emerald-500 to-teal-500', preview: 'bg-gradient-to-r from-emerald-500 to-teal-500' },
                           { label: 'Ámbar', value: 'from-amber-500 to-orange-500', preview: 'bg-gradient-to-r from-amber-500 to-orange-500' },
+                          { label: 'Oro', value: 'from-yellow-500 to-amber-500', preview: 'bg-gradient-to-r from-yellow-500 to-amber-500' },
                           { label: 'Índigo', value: 'from-indigo-500 to-violet-500', preview: 'bg-gradient-to-r from-indigo-500 to-violet-500' },
                           { label: 'Rosa', value: 'from-pink-500 to-rose-500', preview: 'bg-gradient-to-r from-pink-500 to-rose-500' },
-                          { label: 'Gris', value: 'from-slate-600 to-zinc-700', preview: 'bg-gradient-to-r from-slate-600 to-zinc-700' },
+                          { label: 'Fucsia', value: 'from-fuchsia-500 to-pink-500', preview: 'bg-gradient-to-r from-fuchsia-500 to-pink-500' },
+                          { label: 'Coral', value: 'from-rose-500 to-orange-400', preview: 'bg-gradient-to-r from-rose-500 to-orange-400' },
                           { label: 'Naranja', value: 'from-orange-500 to-red-500', preview: 'bg-gradient-to-r from-orange-500 to-red-500' },
                           { label: 'Teal', value: 'from-teal-500 to-cyan-500', preview: 'bg-gradient-to-r from-teal-500 to-cyan-500' },
                           { label: 'Lima', value: 'from-lime-500 to-green-500', preview: 'bg-gradient-to-r from-lime-500 to-green-500' },
-                          { label: 'Violeta', value: 'from-violet-500 to-purple-500', preview: 'bg-gradient-to-r from-violet-500 to-purple-500' }
+                          { label: 'Violeta', value: 'from-violet-500 to-purple-500', preview: 'bg-gradient-to-r from-violet-500 to-purple-500' },
+                          { label: 'Lavanda', value: 'from-violet-400 to-indigo-400', preview: 'bg-gradient-to-r from-violet-400 to-indigo-400' },
+                          { label: 'Rubí', value: 'from-red-600 to-pink-600', preview: 'bg-gradient-to-r from-red-600 to-pink-600' },
+                          { label: 'Turquesa', value: 'from-cyan-400 to-teal-400', preview: 'bg-gradient-to-r from-cyan-400 to-teal-400' },
+                          { label: 'Gris', value: 'from-slate-600 to-zinc-700', preview: 'bg-gradient-to-r from-slate-600 to-zinc-700' },
+                          { label: 'Neón', value: 'from-green-400 to-cyan-400', preview: 'bg-gradient-to-r from-green-400 to-cyan-400' }
                         ].map((grad) => (
                           <button
                             key={grad.value}
@@ -3982,16 +3670,17 @@ const BlogArticlePage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
-            className="text-4xl lg:text-6xl font-bold text-white mb-4 leading-tight"
+            className="text-4xl lg:text-6xl font-bold text-white mb-4 leading-tight text-center"
             style={{ letterSpacing: '0.02em', fontWeight: 300 }}
           >
             {isEditMode ? (
               <input
                 value={draftTitle}
                 onChange={(e) => {
-                  setDraftTitle(toSentenceCase(e.target.value))
+                  setDraftTitle(e.target.value)
                   setIsDirty(true)
                 }}
+                onBlur={(e) => setDraftTitle(toSentenceCase(e.target.value))}
                 placeholder="Escribe el título aquí..."
                 autoFocus
                 className="w-full bg-transparent outline-none border-b border-white/10 focus:border-white/30 placeholder:text-white/30"
@@ -4007,15 +3696,16 @@ const BlogArticlePage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.4 }}
-              className="text-lg lg:text-xl text-white/70 mb-8 leading-relaxed font-light"
+              className="text-lg lg:text-xl text-white/70 mb-8 leading-relaxed font-light text-center"
             >
               {isEditMode ? (
                 <input
                   value={draftSubtitle}
                   onChange={(e) => {
-                    setDraftSubtitle(toSentenceCase(e.target.value))
+                    setDraftSubtitle(e.target.value)
                     setIsDirty(true)
                   }}
+                  onBlur={(e) => setDraftSubtitle(toSentenceCase(e.target.value))}
                   placeholder="Escribe el subtítulo aquí..."
                   className="w-full bg-transparent outline-none border-b border-white/10 focus:border-white/30 placeholder:text-white/40"
                 />
@@ -4030,7 +3720,7 @@ const BlogArticlePage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="flex flex-wrap items-center gap-6 text-white/60 mb-8"
+            className="flex flex-wrap items-center gap-6 text-white/60 mb-8 justify-center"
           >
             <div className="flex items-center gap-2">
               <User className="w-4 h-4" />
@@ -4094,7 +3784,7 @@ const BlogArticlePage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
-            className="flex flex-wrap gap-1.5 sm:gap-2 mb-8"
+            className="flex flex-wrap gap-1.5 sm:gap-2 mb-8 justify-center"
           >
             {(isEditMode ? (draftTags || []) : article.tags).map((tag, i) => (
               <span
@@ -4117,51 +3807,117 @@ const BlogArticlePage = () => {
             ))}
 
             {isEditMode && (
-              <span className="px-2 py-1 text-[11px] sm:px-3 sm:py-1.5 sm:text-xs bg-white/5 border border-white/10 rounded-full text-white/70 flex items-center gap-1 sm:gap-1.5">
+              <span className="relative px-2 py-1 text-[11px] sm:px-3 sm:py-1.5 sm:text-xs bg-white/5 border border-white/10 rounded-full text-white/70 flex items-center gap-1 sm:gap-1.5">
                 <input
                   value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
+                  onChange={(e) => {
+                    setTagInput(e.target.value)
+                    setShowTagSuggestions(true)
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ',') {
                       e.preventDefault()
                       addTagFromInput()
+                      setShowTagSuggestions(false)
                     }
+                    if (e.key === 'Escape') setShowTagSuggestions(false)
                   }}
-                  onBlur={() => addTagFromInput()}
+                  onFocus={() => setShowTagSuggestions(true)}
+                  onBlur={() => setTimeout(() => setShowTagSuggestions(false), 200)}
                   placeholder="+ tag"
-                  className="w-20 sm:w-28 bg-transparent outline-none"
+                  className="w-28 sm:w-36 bg-transparent outline-none"
                 />
+
+                {/* Tag autocomplete dropdown */}
+                {showTagSuggestions && (
+                  <div className="absolute top-full left-0 mt-2 z-50 bg-zinc-900 border border-white/20 rounded-xl shadow-2xl overflow-hidden min-w-[220px] max-h-[240px] overflow-y-auto">
+                    {(() => {
+                      const query = tagInput.trim().toLowerCase()
+                      const allTags = [...new Set([...DEFAULT_SUGGESTED_TAGS, ...savedTags])]
+                      const filtered = allTags.filter((s) => {
+                        if ((draftTags || []).includes(s)) return false
+                        if (!query) return true
+                        return s.toLowerCase().includes(query)
+                      })
+                      const exactExists = allTags.some((s) => s.toLowerCase() === query)
+                      const alreadyAdded = (draftTags || []).some((t) => t.toLowerCase() === query)
+                      const showAddNew = query.length > 0 && !exactExists && !alreadyAdded
+
+                      return (
+                        <>
+                          {showAddNew && (
+                            <button
+                              type="button"
+                              onMouseDown={(e) => e.preventDefault()}
+                              onClick={() => {
+                                addTagFromInput()
+                                setShowTagSuggestions(false)
+                              }}
+                              className="w-full px-4 py-2.5 text-left text-sm hover:bg-white/10 transition-colors text-cyan-400 flex items-center gap-2 border-b border-white/10"
+                            >
+                              <Plus className="w-3.5 h-3.5" /> Crear "{tagInput.trim()}"
+                            </button>
+                          )}
+                          {filtered.length > 0 ? filtered.map((suggestion) => (
+                            <button
+                              key={suggestion}
+                              type="button"
+                              onMouseDown={(e) => e.preventDefault()}
+                              onClick={() => {
+                                setDraftTags(Array.from(new Set([...(draftTags || []), suggestion])))
+                                setIsDirty(true)
+                                setTagInput('')
+                                setShowTagSuggestions(false)
+                              }}
+                              className="w-full px-4 py-2 text-left text-sm hover:bg-white/10 transition-colors text-white/80"
+                            >
+                              {suggestion}
+                            </button>
+                          )) : !showAddNew && (
+                            <div className="px-4 py-3 text-sm text-white/40">Sin coincidencias</div>
+                          )}
+                        </>
+                      )
+                    })()}
+                  </div>
+                )}
               </span>
             )}
 
-            {isEditMode && (
-              <div className="w-full mt-3 flex flex-wrap gap-1.5 sm:gap-2">
-                {SUGGESTED_TAGS.map((suggestion) => {
-                  const exists = (draftTags || []).includes(suggestion)
-                  return (
-                    <button
-                      key={suggestion}
-                      type="button"
-                      disabled={exists}
-                      onClick={() => {
-                        if (exists) return
-                        setDraftTags(Array.from(new Set([...(draftTags || []), suggestion])))
-                        setIsDirty(true)
-                      }}
-                      className={
-                        exists
-                          ? 'px-2 py-1 text-[11px] sm:px-3 sm:py-1.5 sm:text-xs bg-white/5 border border-white/10 rounded-full text-white/30 cursor-not-allowed'
-                          : 'px-2 py-1 text-[11px] sm:px-3 sm:py-1.5 sm:text-xs bg-white/5 border border-white/10 rounded-full text-white/60 hover:text-white/85 hover:border-white/20 transition-colors'
-                      }
-                      title={exists ? 'Ya está agregado' : 'Agregar tag'}
-                    >
-                      {suggestion}
-                    </button>
-                  )
-                })}
-              </div>
-            )}
           </motion.div>
+
+          {/* Slug Editor - Debajo de tags */}
+          {isEditMode && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, delay: 0.7 }}
+              className="mb-8"
+            >
+              <label className="text-xs text-white/40 mb-1.5 block">Slug (URL del artículo)</label>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-white/30">/blog/</span>
+                <input
+                  value={draftSlug}
+                  onChange={(e) => {
+                    const val = e.target.value
+                      .toLowerCase()
+                      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                      .replace(/[^a-z0-9\s-]/g, '')
+                      .replace(/\s+/g, '-')
+                      .replace(/-+/g, '-')
+                    setDraftSlug(val)
+                    setIsDirty(true)
+                  }}
+                  placeholder={slug !== 'nuevo' ? slug : 'se-generará-del-título'}
+                  className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white/90 text-sm outline-none focus:border-white/30 placeholder:text-white/25 font-mono"
+                />
+              </div>
+              <p className="text-[10px] text-white/30 mt-1.5">
+                URL: {window.location.origin}/blog/{draftSlug || slug}
+              </p>
+            </motion.div>
+          )}
 
           {/* Sección de Edición - Debajo de tags */}
           {isEditMode && (
@@ -4230,39 +3986,28 @@ const BlogArticlePage = () => {
         )}
       </AnimatePresence>
 
-      {/* CTA Section */}
-      <section className="relative py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-20">
-        <div className="max-w-4xl mx-auto">
+      {/* Comentarios del Blog */}
+      <BlogComments slug={slug} />
+
+      {/* CTA Consulta */}
+      <section className="py-12 px-4 sm:px-6 lg:px-20">
+        <div className="max-w-3xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
             viewport={{ once: true }}
-            className="relative bg-gradient-to-br from-pink-500/10 to-rose-500/10 backdrop-blur-sm border border-white/10 rounded-3xl p-8 sm:p-10 lg:p-12 text-center overflow-hidden min-h-[320px] sm:min-h-[280px] flex items-center"
           >
-            {/* Background gradient orb */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-pink-500/20 to-rose-500/20 rounded-full blur-3xl" />
-            
-            <div className="relative z-10 w-full">
-              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
-                {t('blogArticles.common.readyForProject')}
-              </h3>
-              <p className="text-base sm:text-lg text-white/70 mb-6 sm:mb-8 max-w-2xl mx-auto">
-                {t('blogArticles.common.applyPrinciples')}
-              </p>
-              <Link
-                to="/contacto"
-                className="inline-block px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-medium rounded-full hover:shadow-lg hover:shadow-pink-500/50 transition-all duration-300"
-              >
-                {t('blogArticles.common.startProject')}
-              </Link>
-            </div>
+            <p className="text-white/60 text-sm mb-3">¿Quieres profundizar en tu propio proceso?</p>
+            <Link
+              to="/tienda/8"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-medium rounded-full hover:shadow-lg hover:shadow-purple-500/40 transition-all duration-300"
+            >
+              Agenda una consulta individual
+            </Link>
           </motion.div>
         </div>
       </section>
-
-      {/* Newsletter Signup */}
-      <NewsletterSignup />
 
       {/* Related Articles */}
       <RelatedArticles 
@@ -4383,14 +4128,96 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
 
   const renderInlineMarkdown = (input) => {
     const text = String(input ?? '')
-      // Strip bidi control marks that can flip direction (RTL/LTR) for a single paragraph
-      // and cause it to overflow off-screen (often to the left on mobile).
       .replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069]/g, '')
-      // Strip other non-printing ASCII control chars (keep newlines)
       .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '')
       .replace(/[\u200B\u200C\u200D\uFEFF]/g, '')
       .replace(/[\u00A0\u2007\u202F]/g, ' ')
     if (!text) return null
+
+    // Pre-process neon/gradient tokens into React elements
+    const processEffects = (str, keyPrefix) => {
+      const parts = []
+      let remaining = str
+      let idx = 0
+
+      // Inject animation keyframes if needed
+      if (typeof document !== 'undefined' && !document.getElementById('rte-anim-styles-reader')) {
+        const style = document.createElement('style')
+        style.id = 'rte-anim-styles-reader'
+        style.textContent = `
+          @keyframes rte-shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+          @keyframes rte-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.7;transform:scale(1.05)}}
+          @keyframes rte-glow{0%,100%{text-shadow:0 0 5px currentColor,0 0 10px currentColor}50%{text-shadow:0 0 20px currentColor,0 0 40px currentColor,0 0 60px currentColor}}
+          @keyframes rte-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+          @keyframes rte-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+        `
+        document.head.appendChild(style)
+      }
+
+      while (remaining.length > 0) {
+        // Find next effect token
+        const neonMatch = remaining.match(/\{\{neon:(#[0-9a-fA-F]{3,8})\}\}(.+?)\{\{\/neon\}\}/)
+        const gradMatch = remaining.match(/\{\{gradient:(#[0-9a-fA-F]{3,8}):(#[0-9a-fA-F]{3,8})\}\}(.+?)\{\{\/gradient\}\}/)
+        const fontMatch = remaining.match(/\{\{font:([^}]+)\}\}(.+?)\{\{\/font\}\}/)
+        const animMatch = remaining.match(/\{\{anim:([a-z]+)\}\}(.+?)\{\{\/anim\}\}/)
+
+        const neonIdx = neonMatch ? remaining.indexOf(neonMatch[0]) : Infinity
+        const gradIdx = gradMatch ? remaining.indexOf(gradMatch[0]) : Infinity
+        const fontIdx = fontMatch ? remaining.indexOf(fontMatch[0]) : Infinity
+        const animIdx = animMatch ? remaining.indexOf(animMatch[0]) : Infinity
+
+        const minIdx = Math.min(neonIdx, gradIdx, fontIdx, animIdx)
+
+        if (minIdx === Infinity) {
+          if (remaining) parts.push(remaining)
+          break
+        }
+
+        if (minIdx === neonIdx && neonMatch) {
+          if (neonIdx > 0) parts.push(remaining.slice(0, neonIdx))
+          parts.push(
+            <span key={`${keyPrefix}-neon-${idx}`} style={{ color: neonMatch[1], textShadow: `0 0 7px ${neonMatch[1]}, 0 0 14px ${neonMatch[1]}, 0 0 28px ${neonMatch[1]}`, fontWeight: 500 }}>
+              {neonMatch[2]}
+            </span>
+          )
+          remaining = remaining.slice(neonIdx + neonMatch[0].length)
+        } else if (minIdx === gradIdx && gradMatch) {
+          if (gradIdx > 0) parts.push(remaining.slice(0, gradIdx))
+          parts.push(
+            <span key={`${keyPrefix}-grad-${idx}`} style={{ backgroundImage: `linear-gradient(135deg, ${gradMatch[1]}, ${gradMatch[2]})`, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 600 }}>
+              {gradMatch[3]}
+            </span>
+          )
+          remaining = remaining.slice(gradIdx + gradMatch[0].length)
+        } else if (minIdx === fontIdx && fontMatch) {
+          if (fontIdx > 0) parts.push(remaining.slice(0, fontIdx))
+          parts.push(
+            <span key={`${keyPrefix}-font-${idx}`} style={{ fontFamily: fontMatch[1] }}>
+              {fontMatch[2]}
+            </span>
+          )
+          remaining = remaining.slice(fontIdx + fontMatch[0].length)
+        } else if (minIdx === animIdx && animMatch) {
+          if (animIdx > 0) parts.push(remaining.slice(0, animIdx))
+          const animStyles = {
+            'shimmer': { background: 'linear-gradient(90deg,currentColor 0%,#f0f 20%,currentColor 40%)', backgroundSize: '200% 100%', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', animation: 'rte-shimmer 2s linear infinite', display: 'inline-block' },
+            'pulse': { animation: 'rte-pulse 2s ease-in-out infinite', display: 'inline-block' },
+            'glow': { animation: 'rte-glow 2s ease-in-out infinite', textShadow: '0 0 10px currentColor', display: 'inline-block' },
+            'bounce': { animation: 'rte-bounce 1s ease infinite', display: 'inline-block' },
+            'float': { animation: 'rte-float 3s ease-in-out infinite', display: 'inline-block' },
+          }
+          parts.push(
+            <span key={`${keyPrefix}-anim-${idx}`} style={animStyles[animMatch[1]] || { display: 'inline-block' }}>
+              {animMatch[2]}
+            </span>
+          )
+          remaining = remaining.slice(animIdx + animMatch[0].length)
+        }
+        idx++
+      }
+
+      return parts.length === 1 && typeof parts[0] === 'string' ? parts[0] : parts
+    }
 
     // Preserve line breaks
     const lines = text.split('\n')
@@ -4398,52 +4225,51 @@ const ArticleSection = ({ section, index, headingNumber, headingAnchorId, accent
       const parts = []
       let i = 0
 
-      const pushText = (value) => {
-        if (value) parts.push(value)
-      }
+      // First extract effects, then process bold/italic on text segments
+      const segments = processEffects(line, `ln${lineIndex}`)
+      const segArray = Array.isArray(segments) ? segments : [segments]
 
-      while (i < line.length) {
-        const boldAt = line.indexOf('**', i)
-
-        // find italic marker '*' that is not part of '**'
-        let italicAt = line.indexOf('*', i)
-        while (italicAt !== -1 && line[italicAt + 1] === '*') {
-          italicAt = line.indexOf('*', italicAt + 2)
-        }
-
-        const nextAt = Math.min(
-          boldAt === -1 ? Number.POSITIVE_INFINITY : boldAt,
-          italicAt === -1 ? Number.POSITIVE_INFINITY : italicAt
-        )
-
-        if (!Number.isFinite(nextAt)) {
-          pushText(line.slice(i))
-          break
-        }
-
-        pushText(line.slice(i, nextAt))
-
-        if (nextAt === boldAt) {
-          const closeAt = line.indexOf('**', boldAt + 2)
-          if (closeAt === -1) {
-            pushText(line.slice(boldAt))
-            break
-          }
-          const inner = line.slice(boldAt + 2, closeAt)
-          parts.push(<strong key={`b-${lineIndex}-${boldAt}`}>{inner}</strong>)
-          i = closeAt + 2
+      for (const seg of segArray) {
+        if (typeof seg !== 'string') {
+          parts.push(seg)
           continue
         }
 
-        // italic
-        const closeAt = line.indexOf('*', italicAt + 1)
-        if (closeAt === -1) {
-          pushText(line.slice(italicAt))
-          break
+        // Process bold/italic on text segment
+        let j = 0
+        const s = seg
+        while (j < s.length) {
+          const boldAt = s.indexOf('**', j)
+          let italicAt = s.indexOf('*', j)
+          while (italicAt !== -1 && s[italicAt + 1] === '*') {
+            italicAt = s.indexOf('*', italicAt + 2)
+          }
+
+          const nextAt = Math.min(
+            boldAt === -1 ? Infinity : boldAt,
+            italicAt === -1 ? Infinity : italicAt
+          )
+
+          if (!Number.isFinite(nextAt)) {
+            if (j < s.length) parts.push(s.slice(j))
+            break
+          }
+
+          if (j < nextAt) parts.push(s.slice(j, nextAt))
+
+          if (nextAt === boldAt) {
+            const closeAt = s.indexOf('**', boldAt + 2)
+            if (closeAt === -1) { parts.push(s.slice(boldAt)); break }
+            parts.push(<strong key={`b-${lineIndex}-${boldAt}`}>{s.slice(boldAt + 2, closeAt)}</strong>)
+            j = closeAt + 2
+            continue
+          }
+
+          const closeAt = s.indexOf('*', italicAt + 1)
+          if (closeAt === -1) { parts.push(s.slice(italicAt)); break }
+          parts.push(<em key={`i-${lineIndex}-${italicAt}`}>{s.slice(italicAt + 1, closeAt)}</em>)
+          j = closeAt + 1
         }
-        const inner = line.slice(italicAt + 1, closeAt)
-        parts.push(<em key={`i-${lineIndex}-${italicAt}`}>{inner}</em>)
-        i = closeAt + 1
       }
 
       return (

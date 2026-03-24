@@ -15,7 +15,7 @@ import jsPDF from 'jspdf'
 import { analyzeDiagnostic } from '../services/diagnosticRelacionalService'
 import { generateAccessToken, PRODUCT_LABELS, DATA_RETENTION_DAYS } from '../utils/accessToken'
 import { sendAccessEmails, sendResultsEmail, verifyStripeSession, sendPartnerInvite } from '../services/emailApiService'
-import { saveProgress, getProgress, savePurchase, saveResults } from '../services/firebaseAuthService'
+import { saveProgress, getProgress, savePurchase, saveResults, onAuthChange } from '../services/firebaseAuthService'
 import { useAuth } from '../context/AuthContext'
 import { createPurchase as createFirestorePurchase, saveTestProgress as saveFirestoreProgress, getUserProfile, updatePurchase as updateFirestorePurchase, savePartnerInvite } from '../services/firestoreService'
 import { User as UserIcon, Lock as LockIcon, Eye as EyeIcon, EyeOff as EyeOffIcon } from 'lucide-react'
@@ -736,7 +736,7 @@ const DiagnosticoRelacionalPage = () => {
   const [selectedPlan, setSelectedPlan] = useState(null) // 'descubre' | 'solo' | 'losdos' — selected on checkout
 
   // Auth-checkout inline auth state
-  const [authMode, setAuthMode] = useState('login') // 'login' | 'register'
+  const [authMode, setAuthMode] = useState('register') // 'login' | 'register'
   const [authName, setAuthName] = useState('')
   const [authEmail, setAuthEmail] = useState('')
   const [authPassword, setAuthPassword] = useState('')
@@ -837,6 +837,9 @@ const DiagnosticoRelacionalPage = () => {
   const [verifyingPayment, setVerifyingPayment] = useState(false)
   const [postPayPartnerEmail, setPostPayPartnerEmail] = useState('')
   const [postPayPartnerName, setPostPayPartnerName] = useState('')
+  const [postPayBuyerName, setPostPayBuyerName] = useState('')
+  const [postPayBuyerAge, setPostPayBuyerAge] = useState('')
+  const [postPayPartnerAge, setPostPayPartnerAge] = useState('')
   const [postPayInviteSent, setPostPayInviteSent] = useState(false)
   const [postPaySending, setPostPaySending] = useState(false)
   const [postPayError, setPostPayError] = useState('')
@@ -845,6 +848,7 @@ const DiagnosticoRelacionalPage = () => {
 
   // Test/dev mode: URL param
   const isDevMode = searchParams.get('test') === 'true' || searchParams.get('demo') === 'true'
+  const tipoParam = searchParams.get('tipo') // 'descubre' | 'solo' | null — pre-select from store
   const [stripeTestMode, setStripeTestMode] = useState(false)
 
   // Load user testMode from Firestore (admin-assigned)
@@ -963,7 +967,7 @@ const DiagnosticoRelacionalPage = () => {
         if (userEmail) sessionStorage.setItem('radiografia_buyer_email', userEmail)
         sessionStorage.setItem('radiografia_prefilled', 'true')
 
-        // Create Firestore purchase (or defer if firebaseUser not ready yet)
+        // Create Firestore purchase — wait for auth to resolve if needed
         let firestoreDocId = ''
         const purchaseData = {
           product: 'radiografia-pareja',
@@ -971,23 +975,37 @@ const DiagnosticoRelacionalPage = () => {
           stripeSessionId: sessionId,
           partnerEmail: null,
           partnerName: null,
+          kvToken: data.token || null,
         }
-        if (firebaseUser) {
+        // Persist purchase data to sessionStorage as safety net
+        sessionStorage.setItem('pending_firestore_purchase', JSON.stringify(purchaseData))
+
+        // Wait for Firebase auth to resolve (user is logged in but SDK may still be initializing)
+        let authUser = firebaseUser
+        if (!authUser) {
+          authUser = await new Promise(resolve => {
+            const unsub = onAuthChange(u => { unsub(); resolve(u) })
+            setTimeout(() => { unsub(); resolve(null) }, 8000)
+          })
+        }
+        if (authUser) {
           try {
-            firestoreDocId = await createFirestorePurchase(firebaseUser.uid, purchaseData)
+            firestoreDocId = await createFirestorePurchase(authUser.uid, purchaseData)
             sessionStorage.setItem('firestore_purchase_id', firestoreDocId)
+            sessionStorage.removeItem('pending_firestore_purchase')
           } catch (e) { console.error('Firestore purchase creation error:', e) }
-        } else {
-          // firebaseUser not ready yet (auth state loading) — defer creation
-          pendingPurchaseRef.current = purchaseData
-          // Also persist to sessionStorage as backup in case user navigates away
-          sessionStorage.setItem('pending_firestore_purchase', JSON.stringify(purchaseData))
         }
 
         // For losdos: show partner invite form instead of auto-navigating
         if (type === 'losdos') {
           setStage('thankyou')
           setVerifyingPayment(false)
+          // Pre-fill buyer name from auth or sessionStorage
+          const prefillName = savedNombre || authUser?.displayName || ''
+          if (prefillName) setPostPayBuyerName(prefillName)
+          if (savedEdad) setPostPayBuyerAge(savedEdad)
+          if (savedNombrePareja) setPostPayPartnerName(savedNombrePareja)
+          if (savedEdadPareja) setPostPayPartnerAge(savedEdadPareja)
           return
         }
 
@@ -1382,7 +1400,8 @@ const DiagnosticoRelacionalPage = () => {
   const handleNext = useCallback(() => {
     // Demo mode: limit to DEMO_QUESTION_LIMIT questions
     if (isDemo && !isPurchased && currentQuestion >= DEMO_QUESTION_LIMIT - 1) {
-      setStage('checkout')
+      const plan = tipoParam === 'descubre' ? 'descubre' : 'solo'
+      setSelectedPlan(plan); setPurchaseType(plan); setStage('auth-checkout')
       scrollToTop()
       return
     }
@@ -1712,8 +1731,8 @@ const DiagnosticoRelacionalPage = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       <SEOHead
-        title="Radiografía de Pareja: 12 Dimensiones Psicológicas Analizadas con IA - Luis Virrueta"
-        description="44 preguntas por voz analizadas desde la perspectiva de 12 psicólogos (Bowlby, Gottman, Sternberg). Radar, mapa de apego, triángulo del amor y PDF clínico profesional."
+        title="Radiografía de Pareja — 12 Dimensiones Psicológicas, 11 Autores - Luis Virrueta"
+        description="44 preguntas por voz analizadas desde la perspectiva de 11 autores en psicología de pareja (Bowlby, Gottman, Sternberg, Perel y más). Radar, mapa de apego, triángulo del amor y reporte descargable."
         url="/tienda/diagnostico-relacional"
       />
 
@@ -1793,7 +1812,7 @@ const DiagnosticoRelacionalPage = () => {
                     </p>
 
                     <motion.button
-                      onClick={() => { setStage('checkout'); scrollToTop() }}
+                      onClick={() => { const plan = tipoParam === 'descubre' ? 'descubre' : 'solo'; setSelectedPlan(plan); setPurchaseType(plan); setStage('auth-checkout'); scrollToTop() }}
                       whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                       className="px-7 sm:px-10 py-4 sm:py-5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base sm:text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20 whitespace-nowrap">
                       Comenzar mi radiografía <ArrowRight className="inline w-5 h-5 ml-1.5" />
@@ -1844,6 +1863,35 @@ const DiagnosticoRelacionalPage = () => {
                     ))}
                   </div>
                 </div>
+              </div>
+            </section>
+
+            {/* Demo results CTA */}
+            <section className="relative z-10 py-14 lg:py-20">
+              <div className="max-w-3xl mx-auto px-6 lg:px-12 text-center">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                  className="p-8 lg:p-12 rounded-2xl border border-violet-500/20 bg-gradient-to-br from-violet-500/[0.06] via-purple-500/[0.04] to-fuchsia-500/[0.03] shadow-2xl shadow-violet-500/5"
+                >
+                  <p className="text-violet-300/70 text-xs font-bold uppercase tracking-[0.25em] mb-4">Así se verá tu reporte</p>
+                  <h3 className="text-2xl lg:text-3xl font-light text-white mb-4" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>
+                    Reporte muestra
+                  </h3>
+                  <p className="text-white/55 text-sm font-light leading-relaxed mb-8 max-w-md mx-auto">
+                    Navega un reporte completo con las 12 dimensiones personales, las lecturas de 11 corrientes psicológicas y el análisis cruzado de pareja.
+                  </p>
+                  <button
+                    onClick={() => navigate('/tienda/radiografia-premium?demo=ventas')}
+                    className="group inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-sm font-medium hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/25 hover:shadow-violet-500/35 hover:scale-[1.02]"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                    Ver reporte muestra
+                    <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                  </button>
+                </motion.div>
               </div>
             </section>
 
@@ -2010,7 +2058,7 @@ const DiagnosticoRelacionalPage = () => {
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 className="text-center">
                 <motion.button
-                  onClick={() => { setStage('checkout'); scrollToTop() }}
+                  onClick={() => { const plan = tipoParam === 'descubre' ? 'descubre' : 'solo'; setSelectedPlan(plan); setPurchaseType(plan); setStage('auth-checkout'); scrollToTop() }}
                   whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                   className="px-8 sm:px-10 py-4 sm:py-5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base sm:text-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20 whitespace-nowrap">
                   Comenzar mi radiografía <ArrowRight className="inline w-5 h-5 ml-1.5" />
@@ -2181,14 +2229,24 @@ const DiagnosticoRelacionalPage = () => {
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 className="text-center pb-20">
                 <div className="max-w-4xl mx-auto mb-10 p-6 lg:p-8 rounded-2xl border border-violet-500/20 bg-gradient-to-r from-violet-600/[0.16] via-fuchsia-600/[0.12] to-cyan-600/[0.10]">
-                  <p className="text-violet-200/80 text-sm uppercase tracking-[0.15em] mb-3">Elige tu radiografía</p>
-                  <h2 className="text-3xl lg:text-4xl font-light text-white mb-3">¿Qué tipo de radiografía necesitas hoy?</h2>
-                  <p className="text-white/80 text-lg font-light mb-2 max-w-2xl mx-auto">La respuesta a por qué amas como amas: descubre tus patrones inconscientes y qué está pasando realmente en tu vínculo.</p>
-                  <p className="text-white/65 text-base font-light max-w-2xl mx-auto">Elige modalidad individual, pareja solo o los dos, y recibe un reporte claro para tomar decisiones con certeza.</p>
+                  {tipoParam ? (
+                    <>
+                      <p className="text-violet-200/80 text-sm uppercase tracking-[0.15em] mb-3">{tipoParam === 'descubre' ? 'Radiografía Personal' : 'Radiografía de Pareja'}</p>
+                      <h2 className="text-3xl lg:text-4xl font-light text-white mb-3">{tipoParam === 'descubre' ? 'Descubre tu forma de amar' : 'Entiende qué está pasando en tu relación'}</h2>
+                      <p className="text-white/80 text-lg font-light max-w-2xl mx-auto">La respuesta a por qué amas como amas: descubre tus patrones inconscientes y recibe un reporte claro para tomar decisiones con certeza.</p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-violet-200/80 text-sm uppercase tracking-[0.15em] mb-3">Tu radiografía</p>
+                      <h2 className="text-3xl lg:text-4xl font-light text-white mb-3">Descubre lo que está pasando en tu forma de amar</h2>
+                      <p className="text-white/80 text-lg font-light mb-2 max-w-2xl mx-auto">La respuesta a por qué amas como amas: descubre tus patrones inconscientes y qué está pasando realmente en tu vínculo.</p>
+                    </>
+                  )}
                 </div>
 
-                <div className="hidden sm:grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
+                <div className={`hidden sm:grid gap-5 max-w-4xl mx-auto ${tipoParam ? 'sm:grid-cols-1 max-w-lg' : 'sm:grid-cols-2'}`}>
                   {/* Radiografía de tu forma de amar */}
+                  {(!tipoParam || tipoParam === 'descubre') && (
                   <div className="rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left overflow-hidden">
                     <div className="py-4 px-8 bg-gradient-to-br from-amber-400 to-orange-500 min-h-[90px] flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-1.5">
@@ -2204,24 +2262,26 @@ const DiagnosticoRelacionalPage = () => {
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_DESCUBRE} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/65 text-sm font-light mb-5">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
-                    <ul className="space-y-2 mb-6">
+                    <p className="text-white/75 text-base font-light mb-5">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
+                    <ul className="space-y-2.5 mb-6">
                       {['Descubre por qué eliges siempre el mismo tipo de pareja', 'Mapa de tu estilo de apego y mecanismos de defensa', 'Radiografía de tus patrones inconscientes al amar', '40 preguntas guiadas por voz con IA', 'Análisis de 11 corrientes psicológicas sobre ti', 'Reporte PDF con gráficas y análisis descargable'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/65 text-sm font-light">
-                          <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                        <li key={i} className="flex items-start gap-2.5 text-white/80 text-base font-light">
+                          <Check className="w-4 h-4 text-violet-400/70 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
                       ))}
                     </ul>
                     <motion.button
-                      onClick={() => { setStage('checkout'); scrollToTop() }}
+                      onClick={() => { setSelectedPlan('descubre'); setPurchaseType('descubre'); setStage('auth-checkout'); scrollToTop() }}
                       whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-zinc-900 font-semibold text-base hover:from-amber-300 hover:to-orange-400 transition-all shadow-lg shadow-amber-600/20">
-                      Descubrir mi patrón
+                      Continuar
                     </motion.button>
                     </div>
                   </div>
+                  )}
                   {/* Radiografía de tu relación */}
+                  {(!tipoParam || tipoParam === 'solo') && (
                   <div>
                   <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-8 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
@@ -2237,25 +2297,27 @@ const DiagnosticoRelacionalPage = () => {
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_SOLO} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/65 text-sm font-light mb-5">Tú contestas · Análisis profundo de lo que está pasando en tu relación</p>
-                    <ul className="space-y-2 mb-6">
+                    <p className="text-white/75 text-base font-light mb-5">Tú contestas · Análisis profundo de lo que está pasando en tu relación</p>
+                    <ul className="space-y-2.5 mb-6">
                       {['Entiende qué dinámicas invisibles están desgastando tu relación', '40 preguntas guiadas por voz — tú contestas solo/a', 'Análisis de 11 corrientes psicológicas sobre tu caso', 'Diagnóstico de hacia dónde va tu relación si nada cambia', 'Autoanálisis: qué proyectas, qué repites, qué evitas', 'Reporte PDF profesional con radar y gráficas'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/65 text-sm font-light">
-                          <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                        <li key={i} className="flex items-start gap-2.5 text-white/80 text-base font-light">
+                          <Check className="w-4 h-4 text-violet-400/70 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
                       ))}
                     </ul>
                     <motion.button
-                      onClick={() => { setStage('checkout'); scrollToTop() }}
+                      onClick={() => { setSelectedPlan('solo'); setPurchaseType('solo'); setStage('auth-checkout'); scrollToTop() }}
                       whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
-                      Radiografiar mi relación
+                      Continuar
                     </motion.button>
                     </div>
                   </div>
                   </div>
-                  {/* Radiografía cruzada de pareja */}
+                  )}
+                  {/* Radiografía cruzada de pareja — hidden, preserved for future use */}
+                  {false && (
                   <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-8 bg-gradient-to-br from-blue-500 to-cyan-500 min-h-[90px] flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-1.5">
@@ -2270,28 +2332,30 @@ const DiagnosticoRelacionalPage = () => {
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_LOSDOS} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/65 text-sm font-light mb-5">Cada uno contesta por separado · 3 reportes: tuyo, suyo y cruzado</p>
-                    <ul className="space-y-2 mb-6">
+                    <p className="text-white/75 text-base font-light mb-5">Cada uno contesta por separado · 3 reportes: tuyo, suyo y cruzado</p>
+                    <ul className="space-y-2.5 mb-6">
                       {['Cada uno contesta 40 preguntas por separado, en privado', 'Reporte individual para cada uno con su propio análisis', 'Reporte cruzado: dónde chocan y dónde se complementan', 'Diagnóstico de la dinámica invisible entre los dos', 'Comparación de estilos de apego y lenguajes del amor', 'El punto de partida ideal antes de terapia de pareja'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/65 text-sm font-light">
-                          <Check className="w-3.5 h-3.5 text-cyan-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                        <li key={i} className="flex items-start gap-2.5 text-white/80 text-base font-light">
+                          <Check className="w-4 h-4 text-cyan-400/70 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
                       ))}
                     </ul>
                     <motion.button
-                      onClick={() => { setStage('checkout'); scrollToTop() }}
+                      onClick={() => { setSelectedPlan('losdos'); setPurchaseType('losdos'); setStage('auth-checkout'); scrollToTop() }}
                       whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-light text-base hover:from-blue-400 hover:to-cyan-400 transition-all shadow-lg shadow-cyan-600/20">
                       Empezar juntos
                     </motion.button>
                     </div>
                   </div>
+                  )}
                 </div>
 
                 {/* Mobile: stacked pricing cards */}
                 <div className="sm:hidden flex flex-col gap-5 max-w-sm mx-auto">
                   {/* Radiografía de tu forma de amar — Mobile */}
+                  {(!tipoParam || tipoParam === 'descubre') && (
                   <div className="rounded-2xl border border-white/[0.1] bg-zinc-950/60 text-left overflow-hidden">
                     <div className="py-4 px-7 bg-gradient-to-br from-amber-400 to-orange-500 min-h-[90px] flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-1.5">
@@ -2306,22 +2370,24 @@ const DiagnosticoRelacionalPage = () => {
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_DESCUBRE} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/65 text-sm font-light mb-5">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
-                    <ul className="space-y-2 mb-6">
+                    <p className="text-white/75 text-base font-light mb-5">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
+                    <ul className="space-y-2.5 mb-6">
                       {['Descubre por qué eliges siempre el mismo tipo de pareja', 'Mapa de tu estilo de apego y mecanismos de defensa', 'Radiografía de tus patrones inconscientes al amar', '40 preguntas guiadas por voz con IA', 'Análisis de 11 corrientes psicológicas sobre ti', 'Reporte PDF con gráficas y análisis descargable'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/65 text-sm font-light">
-                          <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                        <li key={i} className="flex items-start gap-2.5 text-white/80 text-base font-light">
+                          <Check className="w-4 h-4 text-violet-400/70 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
                       ))}
                     </ul>
-                    <motion.button onClick={() => { setStage('checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    <motion.button onClick={() => { setSelectedPlan('descubre'); setPurchaseType('descubre'); setStage('auth-checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-zinc-900 font-semibold text-base">
-                      Descubrir mi patrón
+                      Continuar
                     </motion.button>
                     </div>
                   </div>
+                  )}
                   {/* Pareja Solo — Mobile */}
+                  {(!tipoParam || tipoParam === 'solo') && (
                   <div>
                   <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-7 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
@@ -2337,23 +2403,25 @@ const DiagnosticoRelacionalPage = () => {
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_SOLO} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/65 text-sm font-light mb-5">Tú contestas · Análisis profundo de lo que está pasando en tu relación</p>
-                    <ul className="space-y-2 mb-6">
+                    <p className="text-white/75 text-base font-light mb-5">Tú contestas · Análisis profundo de lo que está pasando en tu relación</p>
+                    <ul className="space-y-2.5 mb-6">
                       {['Entiende qué dinámicas invisibles están desgastando tu relación', '40 preguntas guiadas por voz — tú contestas solo/a', 'Análisis de 11 corrientes psicológicas sobre tu caso', 'Diagnóstico de hacia dónde va tu relación si nada cambia', 'Autoanálisis: qué proyectas, qué repites, qué evitas', 'Reporte PDF profesional con radar y gráficas'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/65 text-sm font-light">
-                          <Check className="w-3.5 h-3.5 text-violet-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                        <li key={i} className="flex items-start gap-2.5 text-white/80 text-base font-light">
+                          <Check className="w-4 h-4 text-violet-400/70 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
                       ))}
                     </ul>
-                    <motion.button onClick={() => { setStage('checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    <motion.button onClick={() => { setSelectedPlan('solo'); setPurchaseType('solo'); setStage('auth-checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base">
-                      Radiografiar mi relación
+                      Continuar
                     </motion.button>
                     </div>
                   </div>
                   </div>
-                  {/* Pareja Los dos — Mobile */}
+                  )}
+                  {/* Pareja Los dos — Mobile — hidden, preserved for future */}
+                  {false && (
                   <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] text-left overflow-hidden">
                     <div className="py-4 px-7 bg-gradient-to-br from-blue-500 to-cyan-500 min-h-[90px] flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-1.5">
@@ -2368,21 +2436,22 @@ const DiagnosticoRelacionalPage = () => {
                       <p className="text-3xl font-light text-white">${PRODUCT_PRICE_LOSDOS} <span className="text-lg text-white/35">MXN</span></p>
                     </div>
                     <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/65 text-sm font-light mb-5">Cada uno contesta por separado · 3 reportes: tuyo, suyo y cruzado</p>
-                    <ul className="space-y-2 mb-6">
+                    <p className="text-white/75 text-base font-light mb-5">Cada uno contesta por separado · 3 reportes: tuyo, suyo y cruzado</p>
+                    <ul className="space-y-2.5 mb-6">
                       {['Cada uno contesta 40 preguntas por separado, en privado', 'Reporte individual para cada uno con su propio análisis', 'Reporte cruzado: dónde chocan y dónde se complementan', 'Diagnóstico de la dinámica invisible entre los dos', 'Comparación de estilos de apego y lenguajes del amor', 'El punto de partida ideal antes de terapia de pareja'].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-white/65 text-sm font-light">
-                          <Check className="w-3.5 h-3.5 text-cyan-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                        <li key={i} className="flex items-start gap-2.5 text-white/80 text-base font-light">
+                          <Check className="w-4 h-4 text-cyan-400/70 flex-shrink-0 mt-0.5" strokeWidth={2} />
                           {item}
                         </li>
                       ))}
                     </ul>
-                    <motion.button onClick={() => { setStage('checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    <motion.button onClick={() => { setSelectedPlan('losdos'); setPurchaseType('losdos'); setStage('auth-checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-light text-base">
                       Empezar juntos
                     </motion.button>
                     </div>
                   </div>
+                  )}
                 </div>
 
                 {/* Trust signals */}
@@ -2415,211 +2484,8 @@ const DiagnosticoRelacionalPage = () => {
           </motion.div>
         )}
 
-        {/* ═══════════════════════════════════════════════════════
-            STAGE: CHECKOUT — Stripe Payment Links
-        ═══════════════════════════════════════════════════════ */}
-        {stage === 'checkout' && (
-          <motion.div key="checkout" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="min-h-screen flex items-center justify-center px-6 pt-12 pb-20">
-            <div className="max-w-4xl w-full space-y-8">
-              <div className="text-center max-w-4xl mx-auto p-6 lg:p-8 rounded-2xl border border-violet-500/20 bg-gradient-to-r from-violet-600/[0.16] via-fuchsia-600/[0.12] to-cyan-600/[0.10]">
-                <CreditCard className="w-10 h-10 text-violet-400/50 mx-auto mb-4" />
-                <h2 className="text-3xl font-light text-white mb-2">¿Qué tipo de radiografía necesitas hoy?</h2>
-                <p className="text-white/80 text-base font-light mb-1">La respuesta a por qué amas como amas: descubre tus patrones inconscientes y qué está pasando realmente en tu vínculo.</p>
-                <p className="text-white/65 text-sm font-light">Elige modalidad individual, pareja solo o los dos, y recibe un reporte claro para tomar decisiones con certeza.</p>
-              </div>
+        {/* CHECKOUT STAGE REMOVED — auth-checkout is the single checkout page */}
 
-              {/* Pricing Cards with per-card promo codes */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                {/* Radiografía Individual */}
-                <div className="rounded-2xl border border-white/10 bg-zinc-950/60 overflow-hidden">
-                  <div className="py-4 px-7 bg-gradient-to-br from-amber-400 to-orange-500 min-h-[90px] flex flex-col justify-center">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <p className="text-zinc-900 text-xs uppercase tracking-[0.15em] font-bold">Individual — Sin pareja</p>
-                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-black/15 text-zinc-900 font-semibold">1 reporte</span>
-                    </div>
-                    <p className="text-zinc-900 text-sm font-bold leading-snug">Empieza por ti:<br/>entiende tu forma de amar.</p>
-                  </div>
-                  <div className="p-7 pt-5 space-y-5">
-                  <div>
-                    <div className="flex items-baseline gap-2 mb-1">
-                      <span className="text-white/30 text-lg line-through">$999</span>
-                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_DESCUBRE} <span className="text-lg text-white/35">MXN</span></p>
-                    </div>
-                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light">Tu mapa de patrones amorosos · No necesitas tener pareja</p>
-                  </div>
-                  <ul className="space-y-2">
-                    {['Descubre por qué eliges siempre el mismo tipo de pareja', 'Mapa de tu estilo de apego y mecanismos de defensa', 'Radiografía de tus patrones inconscientes al amar', '40 preguntas guiadas por voz con IA', 'Análisis de 11 corrientes psicológicas sobre ti', 'Reporte PDF con gráficas y análisis descargable'].map((item, i) => (
-                      <li key={i} className="flex items-start gap-2 text-white/50 text-sm font-light">
-                        <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="relative">
-                    <input type="text" value={cardPromoCodes.descubre}
-                      onChange={e => { setCardPromoCodes(p => ({ ...p, descubre: e.target.value })); setCardPromoErrors(p => ({ ...p, descubre: '' })); setCardPromoApplied(p => ({ ...p, descubre: null })) }}
-                      placeholder="Código promo"
-                      className="w-full px-3 py-2 pr-20 bg-white/[0.04] border border-white/10 rounded-lg text-white text-xs font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors" />
-                    <button onClick={() => handleApplyPromo('descubre')}
-                      disabled={!cardPromoCodes.descubre.trim() || promoValidating === 'descubre'}
-                      className="absolute right-1 top-1 bottom-1 px-3 rounded-md bg-violet-600/80 hover:bg-violet-500/80 text-white text-[11px] font-medium transition-colors disabled:opacity-30 disabled:cursor-default">
-                      {promoValidating === 'descubre' ? '...' : 'Aplicar'}
-                    </button>
-                  </div>
-                  {cardPromoErrors.descubre && <p className="text-red-400/70 text-xs">{cardPromoErrors.descubre}</p>}
-                  {cardPromoApplied.descubre && (
-                    <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/[0.08] border border-emerald-500/20">
-                      <CheckCircle className="w-3.5 h-3.5 text-emerald-400/70 flex-shrink-0" strokeWidth={2} />
-                      <span className="text-emerald-300/80 text-xs font-light">{cardPromoApplied.descubre.label}{cardPromoApplied.descubre.free ? ' · Gratis' : ` · -${cardPromoApplied.descubre.discountPercent}%`}</span>
-                    </div>
-                  )}
-                  <motion.button onClick={() => { setSelectedPlan('descubre'); setPurchaseType('descubre'); setStage('auth-checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-zinc-900 font-semibold text-base hover:from-amber-300 hover:to-orange-400 transition-all shadow-lg shadow-amber-600/20">
-                    Elegir este plan
-                  </motion.button>
-                  </div>
-                </div>
-
-                {/* Pareja — Solo */}
-                <div>
-                <div className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.04] to-fuchsia-500/[0.02] overflow-hidden">
-                  <div className="py-4 px-7 bg-gradient-to-br from-violet-600 to-fuchsia-600 min-h-[90px] flex flex-col justify-center">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Respondes tú</p>
-                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">1 reporte</span>
-                    </div>
-                    <p className="text-white text-sm font-bold leading-snug">Tienes pareja, pero tú haces<br/>todo el análisis.</p>
-                  </div>
-                  <div className="p-7 pt-5 space-y-5">
-                  <div>
-                    <div className="flex items-baseline gap-2 mb-1">
-                      <span className="text-white/30 text-lg line-through">$999</span>
-                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_SOLO} <span className="text-lg text-white/35">MXN</span></p>
-                    </div>
-                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light">Tú contestas · Análisis profundo de lo que está pasando</p>
-                  </div>
-                  <ul className="space-y-2">
-                    {['Entiende qué dinámicas invisibles están desgastando tu relación', '40 preguntas guiadas por voz — tú contestas solo/a', 'Análisis de 11 corrientes psicológicas sobre tu caso', 'Diagnóstico de hacia dónde va tu relación si nada cambia', 'Autoanálisis: qué proyectas, qué repites, qué evitas', 'Reporte PDF profesional con radar y gráficas'].map((item, i) => (
-                      <li key={i} className="flex items-start gap-2 text-white/50 text-sm font-light">
-                        <Check className="w-3.5 h-3.5 text-emerald-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="relative">
-                    <input type="text" value={cardPromoCodes.solo}
-                      onChange={e => { setCardPromoCodes(p => ({ ...p, solo: e.target.value })); setCardPromoErrors(p => ({ ...p, solo: '' })); setCardPromoApplied(p => ({ ...p, solo: null })) }}
-                      placeholder="Código promo"
-                      className="w-full px-3 py-2 pr-20 bg-white/[0.04] border border-white/10 rounded-lg text-white text-xs font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors" />
-                    <button onClick={() => handleApplyPromo('solo')}
-                      disabled={!cardPromoCodes.solo.trim() || promoValidating === 'solo'}
-                      className="absolute right-1 top-1 bottom-1 px-3 rounded-md bg-violet-600/80 hover:bg-violet-500/80 text-white text-[11px] font-medium transition-colors disabled:opacity-30 disabled:cursor-default">
-                      {promoValidating === 'solo' ? '...' : 'Aplicar'}
-                    </button>
-                  </div>
-                  {cardPromoErrors.solo && <p className="text-red-400/70 text-xs">{cardPromoErrors.solo}</p>}
-                  {cardPromoApplied.solo && (
-                    <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/[0.08] border border-emerald-500/20">
-                      <CheckCircle className="w-3.5 h-3.5 text-emerald-400/70 flex-shrink-0" strokeWidth={2} />
-                      <span className="text-emerald-300/80 text-xs font-light">{cardPromoApplied.solo.label}{cardPromoApplied.solo.free ? ' · Gratis' : ` · -${cardPromoApplied.solo.discountPercent}%`}</span>
-                    </div>
-                  )}
-                  <motion.button onClick={() => { setSelectedPlan('solo'); setPurchaseType('solo'); setStage('auth-checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-light text-base hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-600/20">
-                    Elegir este plan
-                  </motion.button>
-                  </div>
-                </div>
-                </div>
-
-                {/* Pareja — Los dos */}
-                <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.04] to-blue-500/[0.02] overflow-hidden">
-                  <div className="py-4 px-7 bg-gradient-to-br from-blue-500 to-cyan-500 min-h-[90px] flex flex-col justify-center">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <p className="text-white text-xs uppercase tracking-[0.15em] font-bold">Pareja — Responden los dos</p>
-                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold">3 reportes</span>
-                    </div>
-                    <p className="text-white text-sm font-bold leading-snug">Diagnóstico cruzado completo<br/>de ambos.</p>
-                  </div>
-                  <div className="p-7 pt-5 space-y-5">
-                  <div>
-                    <div className="flex items-baseline gap-2 mb-1">
-                      <span className="text-white/30 text-lg line-through">$1,999</span>
-                      <p className="text-3xl font-light text-white">${PRODUCT_PRICE_LOSDOS} <span className="text-lg text-white/35">MXN</span></p>
-                    </div>
-                    <p className="text-emerald-400/60 text-xs font-medium mb-1">-50% por lanzamiento</p>
-                    <p className="text-white/40 text-sm font-light">Cada uno contesta por separado · 3 reportes: tuyo, suyo y cruzado</p>
-                  </div>
-                  <ul className="space-y-2">
-                    {['Cada uno contesta 40 preguntas por separado, en privado', 'Reporte individual para cada uno con su propio análisis', 'Reporte cruzado: dónde chocan y dónde se complementan', 'Diagnóstico de la dinámica invisible entre los dos', 'Comparación de estilos de apego y lenguajes del amor', 'El punto de partida ideal antes de terapia de pareja'].map((item, i) => (
-                      <li key={i} className="flex items-start gap-2 text-white/50 text-sm font-light">
-                        <Check className="w-3.5 h-3.5 text-cyan-400/60 flex-shrink-0 mt-0.5" strokeWidth={2} />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="relative">
-                    <input type="text" value={cardPromoCodes.losdos}
-                      onChange={e => { setCardPromoCodes(p => ({ ...p, losdos: e.target.value })); setCardPromoErrors(p => ({ ...p, losdos: '' })); setCardPromoApplied(p => ({ ...p, losdos: null })) }}
-                      placeholder="Código promo"
-                      className="w-full px-3 py-2 pr-20 bg-white/[0.04] border border-white/10 rounded-lg text-white text-xs font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors" />
-                    <button onClick={() => handleApplyPromo('losdos')}
-                      disabled={!cardPromoCodes.losdos.trim() || promoValidating === 'losdos'}
-                      className="absolute right-1 top-1 bottom-1 px-3 rounded-md bg-cyan-600/80 hover:bg-cyan-500/80 text-white text-[11px] font-medium transition-colors disabled:opacity-30 disabled:cursor-default">
-                      {promoValidating === 'losdos' ? '...' : 'Aplicar'}
-                    </button>
-                  </div>
-                  {cardPromoErrors.losdos && <p className="text-red-400/70 text-xs">{cardPromoErrors.losdos}</p>}
-                  {cardPromoApplied.losdos && (
-                    <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/[0.08] border border-emerald-500/20">
-                      <CheckCircle className="w-3.5 h-3.5 text-emerald-400/70 flex-shrink-0" strokeWidth={2} />
-                      <span className="text-emerald-300/80 text-xs font-light">{cardPromoApplied.losdos.label}{cardPromoApplied.losdos.free ? ' · Gratis' : ` · -${cardPromoApplied.losdos.discountPercent}%`}</span>
-                    </div>
-                  )}
-                  <motion.button onClick={() => { setSelectedPlan('losdos'); setPurchaseType('losdos'); setStage('auth-checkout'); scrollToTop() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-light text-base hover:from-blue-400 hover:to-cyan-400 transition-all shadow-lg shadow-cyan-600/20">
-                    Elegir este plan
-                  </motion.button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Switch modo test + Volver */}
-              <div className="space-y-3">
-                {isAdmin && (
-                <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/[0.04] flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-amber-300/70 text-sm font-medium">Modo prueba</p>
-                    <p className="text-amber-300/35 text-xs mt-0.5">
-                      {stripeTestMode
-                        ? 'Activo — tarjeta: 4242 4242 4242 4242 · 12/34 · 123'
-                        : 'Desactivado — cobros reales'}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setStripeTestMode(p => !p)}
-                    className={`relative w-12 h-6 rounded-full transition-colors flex-shrink-0 ${
-                      stripeTestMode ? 'bg-amber-500' : 'bg-white/15'
-                    }`}>
-                    <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
-                      stripeTestMode ? 'translate-x-6' : 'translate-x-0'
-                    }`} />
-                  </button>
-                </div>
-                )}
-                <div className="text-center">
-                  <button onClick={() => { setStage('hero'); scrollToTop() }}
-                    className="text-white/20 text-xs hover:text-white/40 transition-colors">
-                    Volver
-                  </button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
 
         {/* ═══════════════════════════════════════════════════════
             STAGE: AUTH-CHECKOUT — Login/Register + Pay
@@ -2630,49 +2496,55 @@ const DiagnosticoRelacionalPage = () => {
             <div className="max-w-md w-full space-y-6">
 
               {/* Back */}
-              <button onClick={() => { setStage('checkout'); scrollToTop() }}
+              <button onClick={() => { setStage('hero'); scrollToTop() }}
                 className="flex items-center gap-2 text-white/40 text-sm hover:text-white/70 transition-colors">
                 <ArrowLeft className="w-4 h-4" />
-                Cambiar plan
+                Volver
               </button>
 
-              {/* Plan selected banner */}
-              <div className={`p-4 rounded-xl border ${
+              {/* Compact plan + price indicator */}
+              <div className={`rounded-xl border p-4 flex items-center justify-between ${
                 selectedPlan === 'descubre' ? 'border-amber-500/30 bg-amber-500/[0.06]' :
                 selectedPlan === 'losdos' ? 'border-cyan-500/30 bg-cyan-500/[0.06]' :
                 'border-violet-500/30 bg-violet-500/[0.06]'
               }`}>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className={`text-xs uppercase tracking-wider font-medium ${
-                      selectedPlan === 'descubre' ? 'text-amber-300' :
-                      selectedPlan === 'losdos' ? 'text-cyan-300' :
-                      'text-violet-300'
-                    }`}>
-                      {selectedPlan === 'descubre' ? 'Individual — Sin pareja' :
-                       selectedPlan === 'solo' ? 'Pareja — Respondes tú' :
-                       'Pareja — Responden los dos'}
-                    </p>
-                    <p className="text-white text-lg font-light mt-1">
-                      ${selectedPlan === 'losdos' ? (cardPromoApplied.losdos?.finalPrice ?? PRODUCT_PRICE_LOSDOS) :
-                        selectedPlan === 'solo' ? (cardPromoApplied.solo?.finalPrice ?? PRODUCT_PRICE_SOLO) :
-                        (cardPromoApplied.descubre?.finalPrice ?? PRODUCT_PRICE_DESCUBRE)} MXN
-                    </p>
-                  </div>
-                  <CheckCircle className={`w-6 h-6 ${
-                    selectedPlan === 'descubre' ? 'text-amber-400/60' :
-                    selectedPlan === 'losdos' ? 'text-cyan-400/60' :
-                    'text-violet-400/60'
-                  }`} />
+                <div>
+                  <p className={`text-xs uppercase tracking-wider font-medium ${
+                    selectedPlan === 'descubre' ? 'text-amber-300' :
+                    selectedPlan === 'losdos' ? 'text-cyan-300' :
+                    'text-violet-300'
+                  }`}>
+                    {selectedPlan === 'descubre' ? 'Radiografía Personal' :
+                     selectedPlan === 'solo' ? 'Radiografía de Pareja' :
+                     'Radiografía Cruzada'}
+                  </p>
+                  <p className="text-white text-lg font-light mt-1">
+                    ${selectedPlan === 'losdos' ? (cardPromoApplied.losdos?.finalPrice ?? PRODUCT_PRICE_LOSDOS) :
+                      selectedPlan === 'solo' ? (cardPromoApplied.solo?.finalPrice ?? PRODUCT_PRICE_SOLO) :
+                      (cardPromoApplied.descubre?.finalPrice ?? PRODUCT_PRICE_DESCUBRE)} MXN
+                  </p>
                 </div>
+                <CheckCircle className={`w-6 h-6 ${
+                  selectedPlan === 'descubre' ? 'text-amber-400/60' :
+                  selectedPlan === 'losdos' ? 'text-cyan-400/60' :
+                  'text-violet-400/60'
+                }`} />
               </div>
 
               {/* Auth section — only if NOT logged in */}
               {!firebaseUser ? (
                 <div className="space-y-4">
                   <div className="bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden">
-                    <div className="bg-gradient-to-r from-purple-600/20 to-fuchsia-600/20 px-5 py-3 border-b border-white/5">
-                      <p className="text-white text-sm font-medium">Crea tu cuenta para continuar</p>
+                    {/* Auth mode tabs */}
+                    <div className="flex border-b border-white/10">
+                      <button onClick={() => { setAuthMode('register'); setAuthError('') }}
+                        className={`flex-1 py-3 text-sm font-medium transition-colors ${authMode !== 'login' ? 'text-white bg-gradient-to-r from-purple-600/20 to-fuchsia-600/20 border-b-2 border-purple-500' : 'text-gray-500 hover:text-gray-300'}`}>
+                        Crear cuenta
+                      </button>
+                      <button onClick={() => { setAuthMode('login'); setAuthError('') }}
+                        className={`flex-1 py-3 text-sm font-medium transition-colors ${authMode === 'login' ? 'text-white bg-gradient-to-r from-purple-600/20 to-fuchsia-600/20 border-b-2 border-purple-500' : 'text-gray-500 hover:text-gray-300'}`}>
+                        Iniciar sesión
+                      </button>
                     </div>
 
                     <div className="p-5 space-y-4">
@@ -2683,54 +2555,94 @@ const DiagnosticoRelacionalPage = () => {
                         </div>
                       )}
 
-                      <form onSubmit={async (e) => {
-                        e.preventDefault()
-                        setAuthError('')
-                        setAuthLoading(true)
-                        if (!authName.trim()) { setAuthError('Ingresa tu nombre'); setAuthLoading(false); return }
-                        const result = await signUpWithEmail(authEmail, authPassword, authName.trim())
-                        if (result.success && result.needsVerification) {
-                          setAuthVerificationSent(true)
-                          setAuthLoading(false)
-                          return
-                        }
-                        if (!result.success) {
-                          setAuthError(result.error)
-                          setAuthLoading(false)
-                        }
-                      }} className="space-y-3">
-                        <div className="relative">
-                          <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                          <input type="text" placeholder="Tu nombre" value={authName}
-                            onChange={e => setAuthName(e.target.value)}
-                            autoComplete="name"
-                            className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors" />
-                        </div>
-                        <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                          <input type="email" placeholder="tu@email.com" value={authEmail}
-                            onChange={e => setAuthEmail(e.target.value)} required
-                            autoComplete="email"
-                            className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors" />
-                        </div>
-                        <div className="relative">
-                          <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                          <input type={authShowPassword ? 'text' : 'password'}
-                            placeholder="Crea una contraseña (mín. 6 caracteres)"
-                            value={authPassword} onChange={e => setAuthPassword(e.target.value)} required minLength={6}
-                            autoComplete="new-password"
-                            className="w-full pl-10 pr-10 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors" />
-                          <button type="button" onClick={() => setAuthShowPassword(!authShowPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
-                            {authShowPassword ? <EyeOffIcon className="w-4 h-4" /> : <EyeIcon className="w-4 h-4" />}
+                      {authMode === 'login' ? (
+                        /* ── Login form ── */
+                        <form onSubmit={async (e) => {
+                          e.preventDefault()
+                          setAuthError('')
+                          setAuthLoading(true)
+                          const result = await loginWithEmail(authEmail, authPassword)
+                          if (!result.success) {
+                            setAuthError(result.error)
+                            setAuthLoading(false)
+                          }
+                        }} className="space-y-3">
+                          <div className="relative">
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                            <input type="email" placeholder="tu@email.com" value={authEmail}
+                              onChange={e => setAuthEmail(e.target.value)} required
+                              autoComplete="email"
+                              className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors" />
+                          </div>
+                          <div className="relative">
+                            <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                            <input type={authShowPassword ? 'text' : 'password'}
+                              placeholder="Tu contraseña"
+                              value={authPassword} onChange={e => setAuthPassword(e.target.value)} required
+                              autoComplete="current-password"
+                              className="w-full pl-10 pr-10 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors" />
+                            <button type="button" onClick={() => setAuthShowPassword(!authShowPassword)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
+                              {authShowPassword ? <EyeOffIcon className="w-4 h-4" /> : <EyeIcon className="w-4 h-4" />}
+                            </button>
+                          </div>
+                          <button type="submit" disabled={authLoading}
+                            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white text-sm font-medium transition-all disabled:opacity-50 bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500">
+                            {authLoading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> :
+                              <>Iniciar sesión<ArrowRight className="w-4 h-4" /></>}
                           </button>
-                        </div>
-                        <button type="submit" disabled={authLoading}
-                          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white text-sm font-medium transition-all disabled:opacity-50 bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500">
-                          {authLoading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> :
-                            <>Crear mi cuenta<ArrowRight className="w-4 h-4" /></>}
-                        </button>
-                      </form>
+                        </form>
+                      ) : (
+                        /* ── Register form ── */
+                        <form onSubmit={async (e) => {
+                          e.preventDefault()
+                          setAuthError('')
+                          setAuthLoading(true)
+                          if (!authName.trim()) { setAuthError('Ingresa tu nombre'); setAuthLoading(false); return }
+                          const result = await signUpWithEmail(authEmail, authPassword, authName.trim())
+                          if (result.success && result.needsVerification) {
+                            setAuthVerificationSent(true)
+                            setAuthLoading(false)
+                            return
+                          }
+                          if (!result.success) {
+                            setAuthError(result.error)
+                            setAuthLoading(false)
+                          }
+                        }} className="space-y-3">
+                          <div className="relative">
+                            <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                            <input type="text" placeholder="Tu nombre" value={authName}
+                              onChange={e => setAuthName(e.target.value)}
+                              autoComplete="name"
+                              className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors" />
+                          </div>
+                          <div className="relative">
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                            <input type="email" placeholder="tu@email.com" value={authEmail}
+                              onChange={e => setAuthEmail(e.target.value)} required
+                              autoComplete="email"
+                              className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors" />
+                          </div>
+                          <div className="relative">
+                            <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                            <input type={authShowPassword ? 'text' : 'password'}
+                              placeholder="Crea una contraseña (mín. 6 caracteres)"
+                              value={authPassword} onChange={e => setAuthPassword(e.target.value)} required minLength={6}
+                              autoComplete="new-password"
+                              className="w-full pl-10 pr-10 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors" />
+                            <button type="button" onClick={() => setAuthShowPassword(!authShowPassword)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
+                              {authShowPassword ? <EyeOffIcon className="w-4 h-4" /> : <EyeIcon className="w-4 h-4" />}
+                            </button>
+                          </div>
+                          <button type="submit" disabled={authLoading}
+                            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white text-sm font-medium transition-all disabled:opacity-50 bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500">
+                            {authLoading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> :
+                              <>Crear mi cuenta<ArrowRight className="w-4 h-4" /></>}
+                          </button>
+                        </form>
+                      )}
 
                       <div className="flex items-center gap-3">
                         <div className="flex-1 h-px bg-white/10" />
@@ -2760,8 +2672,6 @@ const DiagnosticoRelacionalPage = () => {
                         </svg>
                         Continuar con Google
                       </button>
-
-                      <p className="text-center text-gray-500 text-xs">¿Ya tienes cuenta? <button onClick={() => { navigate('/registro'); }} className="text-purple-400 hover:text-purple-300 transition-colors">Inicia sesión</button></p>
                     </div>
                   </div>
                 </div>
@@ -2853,65 +2763,82 @@ const DiagnosticoRelacionalPage = () => {
                     </div>
                     <p className="text-emerald-300/50 text-xs">Sesión activa — tu compra se guardará en tu perfil</p>
                   </div>
-
-                  {/* Promo code section */}
-                  <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-5">
-                    <p className="text-white/50 text-xs uppercase tracking-wider mb-3">Código promocional</p>
-                    <div className="relative">
-                      <input type="text" value={cardPromoCodes[selectedPlan] || ''}
-                        onChange={e => { setCardPromoCodes(p => ({ ...p, [selectedPlan]: e.target.value })); setCardPromoErrors(p => ({ ...p, [selectedPlan]: '' })); setCardPromoApplied(p => ({ ...p, [selectedPlan]: null })) }}
-                        placeholder="¿Tienes un código?"
-                        className="w-full px-3 py-2.5 pr-20 bg-white/[0.04] border border-white/10 rounded-lg text-white text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors" />
-                      <button onClick={() => handleApplyPromo(selectedPlan)}
-                        disabled={!cardPromoCodes[selectedPlan]?.trim() || promoValidating === selectedPlan}
-                        className="absolute right-1 top-1 bottom-1 px-3 rounded-md bg-violet-600/80 hover:bg-violet-500/80 text-white text-[11px] font-medium transition-colors disabled:opacity-30 disabled:cursor-default">
-                        {promoValidating === selectedPlan ? '...' : 'Aplicar'}
-                      </button>
-                    </div>
-                    {cardPromoErrors[selectedPlan] && <p className="text-red-400/70 text-xs mt-2">{cardPromoErrors[selectedPlan]}</p>}
-                    {cardPromoApplied[selectedPlan] && (
-                      <div className="flex items-center gap-2 px-3 py-2 mt-2 rounded-lg bg-emerald-500/[0.08] border border-emerald-500/20">
-                        <CheckCircle className="w-3.5 h-3.5 text-emerald-400/70 flex-shrink-0" strokeWidth={2} />
-                        <span className="text-emerald-300/80 text-xs font-light">{cardPromoApplied[selectedPlan].label}{cardPromoApplied[selectedPlan].free ? ' · Gratis' : ` · -${cardPromoApplied[selectedPlan].discountPercent}%`}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Pay button */}
-                  <motion.button
-                    onClick={() => handlePurchase(selectedPlan)}
-                    disabled={checkoutLoading === selectedPlan}
-                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className={`w-full py-4 rounded-xl text-white font-medium text-base transition-all shadow-lg disabled:opacity-50 ${
-                      selectedPlan === 'descubre' ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-zinc-900 shadow-amber-600/20' :
-                      selectedPlan === 'losdos' ? 'bg-gradient-to-r from-blue-500 to-cyan-500 shadow-cyan-600/20' :
-                      'bg-gradient-to-r from-violet-600 to-fuchsia-600 shadow-violet-600/20'
-                    }`}>
-                    {checkoutLoading === selectedPlan ? 'Procesando...' :
-                     cardPromoApplied[selectedPlan]?.free ? 'Acceder gratis' :
-                     `Pagar $${cardPromoApplied[selectedPlan]?.finalPrice ??
-                       (selectedPlan === 'losdos' ? PRODUCT_PRICE_LOSDOS :
-                        selectedPlan === 'solo' ? PRODUCT_PRICE_SOLO :
-                        PRODUCT_PRICE_DESCUBRE)} MXN`}
-                  </motion.button>
-
-                  {/* Test mode toggle (same as checkout) */}
-                  {isAdmin && (
-                  <div className="p-3 rounded-xl border border-amber-500/20 bg-amber-500/[0.04] flex items-center justify-between gap-4">
-                    <div>
-                      <p className="text-amber-300/70 text-xs font-medium">Modo prueba</p>
-                      <p className="text-amber-300/35 text-[10px] mt-0.5">
-                        {stripeTestMode ? 'Activo — tarjeta: 4242 4242 4242 4242' : 'Desactivado — cobros reales'}
-                      </p>
-                    </div>
-                    <button onClick={() => setStripeTestMode(p => !p)}
-                      className={`relative w-10 h-5 rounded-full transition-colors flex-shrink-0 ${stripeTestMode ? 'bg-amber-500' : 'bg-white/15'}`}>
-                      <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${stripeTestMode ? 'translate-x-5' : 'translate-x-0'}`} />
-                    </button>
-                  </div>
-                  )}
                 </div>
               )}
+
+              {/* ── Promo code + Pay button — always visible ── */}
+              {(() => {
+                const isReady = firebaseUser && (emailVerified || firebaseUser.providerData?.some(p => p.providerId === 'google.com'))
+                const currentPrice = cardPromoApplied[selectedPlan]?.finalPrice ??
+                  (selectedPlan === 'losdos' ? PRODUCT_PRICE_LOSDOS :
+                   selectedPlan === 'solo' ? PRODUCT_PRICE_SOLO :
+                   PRODUCT_PRICE_DESCUBRE)
+                return (
+                  <div className="space-y-4">
+                    {/* Promo code section */}
+                    <div className={`bg-white/[0.03] border border-white/10 rounded-2xl p-5 transition-opacity ${isReady ? '' : 'opacity-60'}`}>
+                      <p className="text-white/50 text-xs uppercase tracking-wider mb-3">Código promocional</p>
+                      <div className="relative">
+                        <input type="text" value={cardPromoCodes[selectedPlan] || ''}
+                          onChange={e => { setCardPromoCodes(p => ({ ...p, [selectedPlan]: e.target.value })); setCardPromoErrors(p => ({ ...p, [selectedPlan]: '' })); setCardPromoApplied(p => ({ ...p, [selectedPlan]: null })) }}
+                          placeholder="¿Tienes un código?"
+                          disabled={!isReady}
+                          className="w-full px-3 py-2.5 pr-20 bg-white/[0.04] border border-white/10 rounded-lg text-white text-sm font-light placeholder:text-white/20 focus:border-violet-400/30 focus:outline-none transition-colors disabled:opacity-50" />
+                        <button onClick={() => handleApplyPromo(selectedPlan)}
+                          disabled={!isReady || !cardPromoCodes[selectedPlan]?.trim() || promoValidating === selectedPlan}
+                          className="absolute right-1 top-1 bottom-1 px-3 rounded-md bg-violet-600/80 hover:bg-violet-500/80 text-white text-[11px] font-medium transition-colors disabled:opacity-30 disabled:cursor-default">
+                          {promoValidating === selectedPlan ? '...' : 'Aplicar'}
+                        </button>
+                      </div>
+                      {cardPromoErrors[selectedPlan] && <p className="text-red-400/70 text-xs mt-2">{cardPromoErrors[selectedPlan]}</p>}
+                      {cardPromoApplied[selectedPlan] && (
+                        <div className="flex items-center gap-2 px-3 py-2 mt-2 rounded-lg bg-emerald-500/[0.08] border border-emerald-500/20">
+                          <CheckCircle className="w-3.5 h-3.5 text-emerald-400/70 flex-shrink-0" strokeWidth={2} />
+                          <span className="text-emerald-300/80 text-xs font-light">{cardPromoApplied[selectedPlan].label}{cardPromoApplied[selectedPlan].free ? ' · Gratis' : ` · -${cardPromoApplied[selectedPlan].discountPercent}%`}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Pay button — always visible */}
+                    <div className="relative">
+                      <motion.button
+                        onClick={() => isReady && handlePurchase(selectedPlan)}
+                        disabled={!isReady || checkoutLoading === selectedPlan}
+                        whileHover={isReady ? { scale: 1.02 } : {}} whileTap={isReady ? { scale: 0.98 } : {}}
+                        className={`w-full py-4 rounded-xl text-white font-medium text-base transition-all shadow-lg disabled:opacity-40 disabled:cursor-not-allowed ${
+                          selectedPlan === 'descubre' ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-zinc-900 shadow-amber-600/20' :
+                          selectedPlan === 'losdos' ? 'bg-gradient-to-r from-blue-500 to-cyan-500 shadow-cyan-600/20' :
+                          'bg-gradient-to-r from-violet-600 to-fuchsia-600 shadow-violet-600/20'
+                        }`}>
+                        {checkoutLoading === selectedPlan ? 'Procesando...' :
+                         cardPromoApplied[selectedPlan]?.free ? 'Acceder gratis' :
+                         `Pagar $${currentPrice} MXN`}
+                      </motion.button>
+                      {!isReady && (
+                        <p className="text-center text-white/30 text-[11px] mt-2 font-light">
+                          {!firebaseUser ? 'Crea tu cuenta arriba para activar el pago' : 'Verifica tu email para activar el pago'}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Test mode toggle (admin only) */}
+                    {isAdmin && (
+                    <div className="p-3 rounded-xl border border-amber-500/20 bg-amber-500/[0.04] flex items-center justify-between gap-4">
+                      <div>
+                        <p className="text-amber-300/70 text-xs font-medium">Modo prueba</p>
+                        <p className="text-amber-300/35 text-[10px] mt-0.5">
+                          {stripeTestMode ? 'Activo — tarjeta: 4242 4242 4242 4242' : 'Desactivado — cobros reales'}
+                        </p>
+                      </div>
+                      <button onClick={() => setStripeTestMode(p => !p)}
+                        className={`relative w-10 h-5 rounded-full transition-colors flex-shrink-0 ${stripeTestMode ? 'bg-amber-500' : 'bg-white/15'}`}>
+                        <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${stripeTestMode ? 'translate-x-5' : 'translate-x-0'}`} />
+                      </button>
+                    </div>
+                    )}
+                  </div>
+                )
+              })()}
             </div>
           </motion.div>
         )}
@@ -2995,11 +2922,31 @@ const DiagnosticoRelacionalPage = () => {
                     </p>
                   </div>
                   <div className="space-y-3">
-                    <div className="relative">
-                      <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                      <input type="text" placeholder="Nombre de tu pareja" value={postPayPartnerName}
-                        onChange={e => { setPostPayPartnerName(e.target.value); setPostPayError('') }}
-                        className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-cyan-500/50 focus:outline-none transition-colors" />
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="relative">
+                        <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                        <input type="text" placeholder="Tu nombre" value={postPayBuyerName}
+                          onChange={e => { setPostPayBuyerName(e.target.value); setPostPayError('') }}
+                          className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-cyan-500/50 focus:outline-none transition-colors" />
+                      </div>
+                      <div className="relative">
+                        <input type="text" inputMode="numeric" pattern="[0-9]*" placeholder="Tu edad" value={postPayBuyerAge}
+                          onChange={e => { setPostPayBuyerAge(sanitizeAge(e.target.value)); setPostPayError('') }}
+                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-cyan-500/50 focus:outline-none transition-colors" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="relative">
+                        <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                        <input type="text" placeholder="Nombre de tu pareja" value={postPayPartnerName}
+                          onChange={e => { setPostPayPartnerName(e.target.value); setPostPayError('') }}
+                          className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-cyan-500/50 focus:outline-none transition-colors" />
+                      </div>
+                      <div className="relative">
+                        <input type="text" inputMode="numeric" pattern="[0-9]*" placeholder="Edad de tu pareja" value={postPayPartnerAge}
+                          onChange={e => { setPostPayPartnerAge(sanitizeAge(e.target.value)); setPostPayError('') }}
+                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:border-cyan-500/50 focus:outline-none transition-colors" />
+                      </div>
                     </div>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -3011,19 +2958,32 @@ const DiagnosticoRelacionalPage = () => {
                   {postPayError && <p className="text-red-400 text-xs text-center">{postPayError}</p>}
                   <motion.button
                     onClick={async () => {
+                      if (!postPayBuyerName.trim()) { setPostPayError('Ingresa tu nombre'); return }
+                      if (!/^\d{1,2}$/.test(postPayBuyerAge)) { setPostPayError('Ingresa tu edad (número)'); return }
+                      if (!postPayPartnerName.trim()) { setPostPayError('Ingresa el nombre de tu pareja'); return }
+                      if (!/^\d{1,2}$/.test(postPayPartnerAge)) { setPostPayError('Ingresa la edad de tu pareja (número)'); return }
                       if (!postPayPartnerEmail.includes('@')) { setPostPayError('Ingresa un email válido'); return }
                       setPostPaySending(true)
                       setPostPayError('')
                       try {
-                        const savedNombre = sessionStorage.getItem('radiografia_nombre') || firebaseUser?.displayName || ''
                         await sendPartnerInvite({
                           partnerEmail: postPayPartnerEmail,
-                          partnerName: postPayPartnerName || '',
-                          buyerName: savedNombre,
+                          partnerName: postPayPartnerName,
+                          buyerName: postPayBuyerName,
                         })
-                        // Save partner data to sessionStorage + Firestore
+                        // Save profile data to sessionStorage
+                        sessionStorage.setItem('radiografia_nombre', postPayBuyerName)
+                        sessionStorage.setItem('radiografia_edad', postPayBuyerAge)
+                        sessionStorage.setItem('radiografia_nombre_pareja', postPayPartnerName)
+                        sessionStorage.setItem('radiografia_edad_pareja', postPayPartnerAge)
                         sessionStorage.setItem('radiografia_partner_email', postPayPartnerEmail)
                         sessionStorage.setItem('radiografia_partner_name', postPayPartnerName)
+                        const profileData = {
+                          nombre: postPayBuyerName,
+                          edad: postPayBuyerAge,
+                          nombrePareja: postPayPartnerName,
+                          edadPareja: postPayPartnerAge,
+                        }
                         if (firebaseUser) {
                           let firestoreId = sessionStorage.getItem('firestore_purchase_id')
                           // If Firestore purchase hasn't been created yet, create it now
@@ -3035,6 +2995,8 @@ const DiagnosticoRelacionalPage = () => {
                                 stripeSessionId: purchaseId || sessionStorage.getItem('diagnostico_relacional_purchase_id'),
                                 partnerEmail: postPayPartnerEmail,
                                 partnerName: postPayPartnerName,
+                                profileData,
+                                kvToken: accessToken || sessionStorage.getItem('diagnostico_relacional_token') || null,
                               })
                               sessionStorage.setItem('firestore_purchase_id', firestoreId)
                               pendingPurchaseRef.current = null
@@ -3043,13 +3005,14 @@ const DiagnosticoRelacionalPage = () => {
                             updateFirestorePurchase(firebaseUser.uid, firestoreId, {
                               partnerEmail: postPayPartnerEmail,
                               partnerName: postPayPartnerName,
+                              profileData,
                             }).catch(() => {})
                           }
                           // Save partner invite to top-level collection for partner registration lookup
                           savePartnerInvite(postPayPartnerEmail, {
                             buyerUid: firebaseUser.uid,
                             buyerPurchaseId: firestoreId,
-                            buyerName: sessionStorage.getItem('radiografia_nombre') || firebaseUser.displayName || '',
+                            buyerName: postPayBuyerName,
                             product: 'radiografia-pareja',
                             packageType: 'losdos',
                           }).catch(e => console.error('Save partner invite error:', e))
@@ -3062,7 +3025,7 @@ const DiagnosticoRelacionalPage = () => {
                         setPostPaySending(false)
                       }
                     }}
-                    disabled={postPaySending || !postPayPartnerEmail.includes('@') || !firebaseUser}
+                    disabled={postPaySending || !postPayPartnerEmail.includes('@') || !postPayBuyerName.trim() || !postPayBuyerAge || !postPayPartnerName.trim() || !postPayPartnerAge || !firebaseUser}
                     whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-medium text-sm transition-all shadow-lg shadow-cyan-600/20 disabled:opacity-50 disabled:cursor-not-allowed">
                     {postPaySending ? (
@@ -3226,6 +3189,7 @@ const DiagnosticoRelacionalPage = () => {
                             stripeSessionId: purchaseId || pid,
                             partnerEmail: purchaseType === 'losdos' ? (thankyouEmails[1] || '') : null,
                             partnerName: purchaseType === 'losdos' ? (thankYouProfile.nombrePareja || '') : null,
+                            kvToken: accessToken || sessionStorage.getItem('diagnostico_relacional_token') || null,
                           }).then(firestorePurchaseId => {
                             sessionStorage.setItem('firestore_purchase_id', firestorePurchaseId)
                             // For losdos — send partner invitation email

@@ -46,6 +46,8 @@ const RadiografiaPremiumPage = lazy(() => import('./pages/RadiografiaPremiumPage
 const PerfilPage = lazy(() => import('./pages/PerfilPage'))
 const RegistroPage = lazy(() => import('./pages/RegistroPage'))
 const FirebaseAuthActionPage = lazy(() => import('./pages/FirebaseAuthActionPage'))
+const AdminComentariosPage = lazy(() => import('./pages/AdminComentariosPage'))
+const AdminAnalyticsPage = lazy(() => import('./pages/AdminAnalyticsPage'))
 
 // Loading component
 const PageLoader = () => (
@@ -245,6 +247,16 @@ const AppContent = () => {
                 <CookiePolicyPage />
               } />
               
+              {/* Admin: Moderación de comentarios */}
+              <Route path="/admin/comentarios" element={
+                <AdminComentariosPage />
+              } />
+
+              {/* Admin: Analytics */}
+              <Route path="/admin/analytics" element={
+                <AdminAnalyticsPage />
+              } />
+
               {/* Aquí irán más rutas/páginas */}
             </Routes>
           </Suspense>

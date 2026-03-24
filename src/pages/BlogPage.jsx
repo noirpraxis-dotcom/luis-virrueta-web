@@ -1,7 +1,7 @@
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Brain, Zap, Eye, Plus, Lock, LogOut, X, AlertTriangle, Trash2, Edit } from 'lucide-react'
+import { Calendar, Clock, ArrowRight, Tag, User, TrendingUp, Sparkles, BookOpen, Brain, Zap, Eye, Plus, Lock, LogOut, X, AlertTriangle, Trash2, Edit, Search } from 'lucide-react'
 import SEOHead from '../components/SEOHead'
 import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
@@ -9,7 +9,7 @@ import { useAuth } from '../context/AuthContext'
 import DeleteConfirmModal from '../components/DeleteConfirmModal'
 import { getArticleContent } from '../data/blogArticlesContent'
 import { getLegacyBlogIndex } from '../data/blogIndex'
-import { getBlogArticles, deleteBlogArticle } from '../lib/supabase'
+import { getBlogArticles, deleteBlogArticle, trackPageView } from '../lib/supabase'
 // Updated: Dec 17, 2025 - New images for articles 17-20
 
 const HIDDEN_BLOG_SLUGS = new Set([
@@ -23,7 +23,7 @@ const HIDDEN_BLOG_SLUGS = new Set([
 
 const BlogPage = () => {
   const { t, currentLanguage } = useLanguage()
-  const { isAdmin, logout } = useAuth()
+  const { isAdmin } = useAuth()
   const heroRef = useRef(null)
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 })
   const [activeCategory, setActiveCategory] = useState('all')
@@ -34,7 +34,9 @@ const BlogPage = () => {
 
   const isUuid = (value) => {
     if (typeof value !== 'string') return false
-    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)
+    // Firestore auto-IDs are 20-char alphanumeric — also valid for delete
+    // Legacy IDs are numeric (23, 24, 36...). Anything non-numeric is a Firestore doc.
+    return !/^\d+$/.test(value)
   }
 
   const tryRemoveStorageByPublicUrl = async () => {
@@ -43,19 +45,59 @@ const BlogPage = () => {
 
   // Datos iniciales de blog posts (se cargan en useEffect)
   const [blogPosts, setBlogPosts] = useState([])
-  const categories = [
-    { id: 'all', label: t('blogPage.categories.all'), icon: BookOpen },
-    { id: 'philosophy', label: 'Filosofía', icon: Eye },
-    { id: 'psychology', label: t('blogPage.categories.psychology'), icon: Brain },
-    { id: 'psychoanalysis', label: 'Psicoanálisis', icon: Sparkles },
-    { id: 'perception', label: 'Percepción', icon: Zap },
-    { id: 'consciousness', label: 'Consciencia', icon: TrendingUp },
-  ]
+  const [blogLoading, setBlogLoading] = useState(true)
+  const [activeTag, setActiveTag] = useState(null)
+  const [tagSearch, setTagSearch] = useState('')
+  const tagSearchRef = useRef(null)
+
+  // Category label mapping (extensible — new categories from CMS auto-appear)
+  const CATEGORY_META = {
+    philosophy: { label: 'Filosofía', icon: Eye },
+    psychology: { label: 'Psicología', icon: Brain },
+    psychoanalysis: { label: 'Psicoanálisis', icon: Sparkles },
+    perception: { label: 'Percepción', icon: Zap },
+    consciousness: { label: 'Consciencia', icon: TrendingUp },
+    metaphysics: { label: 'Metafísica', icon: Sparkles },
+    reflections: { label: 'Reflexiones', icon: BookOpen },
+    diary: { label: 'Diario', icon: BookOpen },
+    ethics: { label: 'Ética', icon: Eye },
+    existence: { label: 'Existencia', icon: TrendingUp },
+  }
+
+  // Dynamic categories from actual articles
+  const categories = useMemo(() => {
+    const catSet = new Set()
+    blogPosts.forEach((p) => {
+      if (p.category) catSet.add(p.category)
+    })
+    const dynamic = Array.from(catSet)
+      .sort()
+      .map((id) => ({
+        id,
+        label: CATEGORY_META[id]?.label || id.charAt(0).toUpperCase() + id.slice(1),
+        icon: CATEGORY_META[id]?.icon || BookOpen,
+      }))
+    return [{ id: 'all', label: t('blogPage.categories.all'), icon: BookOpen }, ...dynamic]
+  }, [blogPosts, t])
+
+  // Dynamic tags from actual articles
+  const allTags = useMemo(() => {
+    const tagCount = {}
+    blogPosts.forEach((p) => {
+      (p.tags || []).forEach((tag) => {
+        const t = String(tag).trim()
+        if (t) tagCount[t] = (tagCount[t] || 0) + 1
+      })
+    })
+    return Object.entries(tagCount)
+      .sort((a, b) => b[1] - a[1])
+      .map(([tag]) => tag)
+  }, [blogPosts])
   // Helper function to get translated content
   const getPostContent = (slug) => {
     if (HIDDEN_BLOG_SLUGS.has(slug)) return { title: '', excerpt: '' }
     const content = getArticleContent(slug, currentLanguage)
-    console.log(`🌐 BlogPage - Getting content for: ${slug}, language: ${currentLanguage}`, content?.title)
+
     if (content) {
       return {
         title: content.title,
@@ -89,15 +131,16 @@ const BlogPage = () => {
     setIsDeleting(true)
     
     try {
-      // Solo se pueden eliminar artículos creados en el CMS.
-      if (!isUuid(deletingArticle.id)) {
-        alert('Este artículo es legacy/hardcoded y no se puede eliminar desde el CMS.')
+      const articleId = String(deletingArticle.id || '')
+      // Legacy articles have pure numeric IDs and no Firestore doc
+      if (/^\d+$/.test(articleId)) {
+        alert('Este artículo es legacy y no tiene registro en la base de datos. Contacta al desarrollador para eliminarlo.')
         handleCancelDelete()
         return
       }
 
       await tryRemoveStorageByPublicUrl()
-      await deleteBlogArticle(deletingArticle.id)
+      await deleteBlogArticle(articleId)
 
       // Eliminar del estado local
       setBlogPosts((prev) => prev.filter(post => post.id !== deletingArticle.id))
@@ -109,6 +152,11 @@ const BlogPage = () => {
       setIsDeleting(false)
     }
   }
+
+  // Registrar visita a la página del blog
+  useEffect(() => {
+    trackPageView({ path: '/blog', slug: null })
+  }, [])
 
   // Cargar blogs al iniciar
   useEffect(() => {
@@ -170,50 +218,52 @@ const BlogPage = () => {
 
     // Cargar datos iniciales (legacy/hardcoded)
     const initialBlogs = getLegacyBlogIndex(currentLanguage)
-    
-    // Cargar los datos iniciales
-    setBlogPosts(initialBlogs)
 
-    // Traer artículos desde Supabase (migrados / creados desde el CMS)
+    // Traer artículos desde Firebase (migrados / creados desde el CMS)
     const loadSupabaseArticles = async () => {
       try {
         const mergePreferLegacyMeta = (legacy, incoming) => {
           if (!legacy) return incoming
 
-          // Para artículos que ya existen hardcoded (legacy), NO permitimos que Supabase
-          // pise metadatos visuales si vienen vacíos/por defecto o inconsistentes.
-          const merged = { ...legacy, ...incoming }
+          // Start with legacy base, overlay incoming CMS data
+          const merged = { ...legacy }
 
-          // En artículos legacy, conservar copy curado (título/extract/metadata de tarjeta)
-          // para que Supabase no los pise con versiones viejas o genéricas.
-          merged.title = legacy.title || merged.title
-          merged.excerpt = legacy.excerpt || merged.excerpt
-          merged.author = legacy.author || merged.author
-          merged.readTime = legacy.readTime || merged.readTime
-          merged.date = legacy.date || merged.date
+          // ALWAYS use the Firestore id (needed for delete/edit)
+          merged.id = incoming.id
 
-          // Mantener gradientes/tags/categoría/rating/image del legacy a menos que incoming traiga algo útil.
+          // CMS data wins when it has been edited (non-empty)
+          merged.title = incoming.title || legacy.title
+          merged.excerpt = incoming.excerpt || legacy.excerpt
+          merged.author = incoming.author || legacy.author
+          merged.readTime = incoming.readTime || legacy.readTime
+          merged.date = incoming.date || legacy.date
+
+          // CMS image wins only if it's a valid HTTP URL; otherwise keep legacy
+          const incomingImgValid = incoming.image && /^https?:\/\//i.test(incoming.image)
+          merged.image = incomingImgValid ? incoming.image : (legacy.image || incoming.image || '')
+
+          // CMS category wins if set
+          merged.category = incoming.category || legacy.category
+
+          // CMS tags win if present
+          merged.tags = Array.isArray(incoming.tags) && incoming.tags.length > 0
+            ? incoming.tags
+            : (Array.isArray(legacy.tags) ? legacy.tags : [])
+
+          // Keep gradients from legacy as fallback, but allow CMS accent
           merged.gradient = legacy.gradient
           merged.borderGradient = legacy.borderGradient
+          merged.accent = incoming.accent || legacy.accent || null
 
-          merged.category = legacy.category
-
-          // En artículos legacy, conservar tags originales (los de Supabase suelen venir incompletos)
-          merged.tags = Array.isArray(legacy.tags) && legacy.tags.length > 0
-            ? legacy.tags
-            : (Array.isArray(incoming.tags) ? incoming.tags : [])
-
-          // Si Supabase trae rating 0/null, conservar legacy.
+          // Rating: incoming wins if positive
           const incomingRating = typeof incoming.rating === 'number' ? incoming.rating : null
           merged.rating = incomingRating && incomingRating > 0 ? incomingRating : legacy.rating
 
-          // En artículos legacy, conservar SIEMPRE la imagen original para evitar el bug
-          // de "todas las tarjetas con la misma imagen" cuando Supabase termina de cargar.
-          // CRÍTICO: NUNCA permitir que Supabase pise la imagen legacy hardcoded.
-          merged.image = legacy.image || ''
-
-          // Mantener el accent del legacy si existe; si no, usar el del CMS.
-          merged.accent = legacy.accent || incoming.accent || null
+          // CMS publish state
+          merged.isPublished = incoming.isPublished
+          merged.publishedAt = incoming.publishedAt || legacy.publishedAt
+          merged.createdAt = incoming.createdAt || legacy.createdAt
+          merged.content = incoming.content || legacy.content
 
           return merged
         }
@@ -273,8 +323,12 @@ const BlogPage = () => {
           })
 
         setBlogPosts(ordered)
+        setBlogLoading(false)
       } catch (err) {
-        console.warn('No se pudieron cargar artículos desde Supabase:', err)
+        console.warn('No se pudieron cargar artículos desde Firebase:', err)
+        // On error, show legacy articles as fallback
+        setBlogPosts(initialBlogs)
+        setBlogLoading(false)
       }
     }
 
@@ -338,9 +392,16 @@ const BlogPage = () => {
         return ts <= nowTs
       })
 
-  const filteredPosts = activeCategory === 'all'
-    ? visiblePosts
-    : visiblePosts.filter(post => post.category === activeCategory)
+  const filteredPosts = useMemo(() => {
+    let posts = visiblePosts
+    if (activeCategory !== 'all') {
+      posts = posts.filter(post => post.category === activeCategory)
+    }
+    if (activeTag) {
+      posts = posts.filter(post => (post.tags || []).some(t => t.toLowerCase() === activeTag.toLowerCase()))
+    }
+    return posts
+  }, [visiblePosts, activeCategory, activeTag])
   
   return (
     <>
@@ -354,39 +415,7 @@ const BlogPage = () => {
         tags={['blog', 'psicología', 'psicoanálisis', 'filosofía', 'inconsciente', 'percepción', 'consciencia', 'transformación']}
       />
       {/* Hero Section - Estilo AboutPage */}
-      {/* Header Admin Controls - Solo visible cuando isAdmin (login automático via header) */}
-      {isAdmin && (
-      <div className="fixed top-32 right-6 z-50">
-        <AnimatePresence>
-            <div className="flex items-center gap-3">
-              <motion.button
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  // Redirigir a un artículo nuevo en modo edición
-                  window.location.href = '/blog/nuevo?edit=true'
-                }}
-                className="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/10 to-fuchsia-500/10 backdrop-blur-lg border border-purple-500/30 hover:border-purple-400/60 rounded-full transition-all duration-300"
-              >
-                <Plus className="w-4 h-4 text-purple-400" />
-                <span className="text-xs text-purple-300 tracking-wide">Nuevo</span>
-              </motion.button>
-              <motion.button
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={logout}
-                className="group flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-lg border border-white/10 hover:border-red-500/50 rounded-full transition-all duration-300"
-              >
-                <LogOut className="w-4 h-4 text-white/60 group-hover:text-red-400 transition-colors" />
-              </motion.button>
-            </div>
-        </AnimatePresence>
-      </div>
-      )}
+      {/* Header Admin Controls - Removed: now using dashed card in grid */}
 
       <section ref={heroRef} className="relative pt-12 lg:pt-20 pb-40 lg:pb-56 px-6 lg:px-20 overflow-hidden">
         {/* Video de fondo */}
@@ -498,11 +527,10 @@ const BlogPage = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-wrap justify-center gap-3">
             {categories.map((cat) => {
-              const Icon = cat.icon
               return (
                 <motion.button
                   key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
+                  onClick={() => { setActiveCategory(cat.id); setActiveTag(null); setTagSearch('') }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className={`group flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all duration-300 ${
@@ -511,11 +539,54 @@ const BlogPage = () => {
                       : 'bg-white/5 text-white/60 border border-white/10 hover:border-white/30 hover:text-white/90'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
                   <span className="text-sm">{cat.label}</span>
                 </motion.button>
               )
             })}
+          </div>
+
+          {/* Tag search input */}
+          <div className="mt-4 pt-4 border-t border-white/5">
+            <div className="max-w-md mx-auto relative" ref={tagSearchRef}>
+              <input
+                type="text"
+                value={tagSearch}
+                onChange={(e) => setTagSearch(e.target.value)}
+                placeholder="Buscar por etiqueta..."
+                className="w-full px-4 py-2.5 pl-10 bg-white/5 border border-white/10 rounded-full text-sm text-white placeholder:text-white/30 outline-none focus:border-white/30 transition-colors"
+              />
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-white/30" />
+              {/* Matching tag suggestions */}
+              {tagSearch.trim() && (() => {
+                const q = tagSearch.trim().toLowerCase()
+                const matches = allTags.filter(t => t.toLowerCase().includes(q)).slice(0, 10)
+                return matches.length > 0 ? (
+                  <div className="absolute top-full mt-1 w-full bg-zinc-900/95 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-2xl z-50 max-h-[200px] overflow-y-auto">
+                    {matches.map((tag) => (
+                      <button
+                        key={tag}
+                        onClick={() => { setActiveTag(tag); setTagSearch('') }}
+                        className="w-full px-4 py-2.5 text-left text-sm text-white/80 hover:bg-white/10 transition-colors flex items-center gap-2"
+                      >
+                        <Tag className="w-3 h-3 text-white/40" />
+                        #{tag}
+                      </button>
+                    ))}
+                  </div>
+                ) : null
+              })()}
+            </div>
+            {/* Active tag chip */}
+            {activeTag && (
+              <div className="flex items-center gap-2 mt-3 justify-center">
+                <span className="px-3 py-1.5 text-xs rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 flex items-center gap-2">
+                  #{activeTag}
+                  <button onClick={() => setActiveTag(null)} className="hover:text-white transition-colors">
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -523,16 +594,51 @@ const BlogPage = () => {
       <section className="relative py-20 px-6 lg:px-20">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredPosts.map((post, index) => (
-              <BlogCard 
-                key={post.id} 
-                post={post} 
-                index={index}
-                isAdmin={isAdmin}
-                onDelete={handleDeleteClick}
-                onEdit={handleEditClick}
-              />
-            ))}
+            {/* Admin: Dashed card to create new post */}
+            {isAdmin && (
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="group relative cursor-pointer"
+                onClick={() => { window.location.href = '/blog/nuevo?edit=true' }}
+              >
+                <div className="relative bg-transparent border-2 border-dashed border-white/20 hover:border-purple-500/50 rounded-2xl overflow-hidden transition-all duration-500 h-full flex flex-col items-center justify-center min-h-[320px]">
+                  <div className="flex flex-col items-center gap-4 text-white/40 group-hover:text-purple-400 transition-colors duration-300">
+                    <Plus className="w-12 h-12" strokeWidth={1.5} />
+                    <span className="text-sm font-medium tracking-wide uppercase">Nuevo artículo</span>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+            {blogLoading ? (
+              // Loading skeleton cards
+              Array.from({ length: 6 }).map((_, i) => (
+                <div key={`skel-${i}`} className="animate-pulse">
+                  <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden h-full flex flex-col">
+                    <div className="aspect-[16/9] bg-white/5" />
+                    <div className="p-6 space-y-3">
+                      <div className="h-3 bg-white/10 rounded w-1/3" />
+                      <div className="h-5 bg-white/10 rounded w-full" />
+                      <div className="h-5 bg-white/10 rounded w-2/3" />
+                      <div className="h-3 bg-white/10 rounded w-full" />
+                      <div className="h-3 bg-white/10 rounded w-4/5" />
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              filteredPosts.map((post, index) => (
+                <BlogCard 
+                  key={post.slug || post.id} 
+                  post={post} 
+                  index={index}
+                  isAdmin={isAdmin}
+                  onDelete={handleDeleteClick}
+                  onEdit={handleEditClick}
+                />
+              ))
+            )}
           </div>
         </div>
       </section>
@@ -556,8 +662,7 @@ const BlogPage = () => {
 }
 const BlogCard = ({ post, index, isAdmin, onDelete, onEdit }) => {
   const { t, currentLanguage } = useLanguage()
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.2 })
+  const isDraft = isAdmin && !(post.isPublished ?? post.is_published ?? true)
 
   const resolvedImageSrc = useMemo(() => {
     const raw = typeof post.image === 'string' ? post.image.trim() : ''
@@ -575,77 +680,39 @@ const BlogCard = ({ post, index, isAdmin, onDelete, onEdit }) => {
     setCardImageError(false)
   }, [resolvedImageSrc])
 
-  // Mapeo de categorías (solo español)
-  const categoryLabels = {
-    'all': t('blogPage.categories.all'),
-    'design': t('blogPage.categories.design'),
-    'branding': t('blogPage.categories.branding'),
-    'psychology': t('blogPage.categories.psychology'),
-    'trends': t('blogPage.categories.trends'),
-    'perception': 'Percepción',
-    'Philosophy': 'Filosofía',
-    'philosophy': 'Filosofía',
-    'Psychoanalysis': 'Psicoanálisis',
-    'psychoanalysis': 'Psicoanálisis',
-    'Psicoanálisis': 'Psicoanálisis',
-    'Filosofía': 'Filosofía',
-    'Ethics': 'Ética',
-    'Ética': 'Ética',
-    'Spirituality': 'Espiritualidad',
-    'spirituality': 'Espiritualidad',
-    'Espiritualidad': 'Espiritualidad',
-    'Identity': 'Identidad',
-    'Identidad': 'Identidad',
-    'Existentialism': 'Existencialismo',
-    'Existencialismo': 'Existencialismo',
-    'Perception': 'Percepción',
-    'Percepción': 'Percepción',
-    'Consciousness': 'Consciencia',
-    'consciousness': 'Consciencia',
-    'Conciencia': 'Consciencia',
-    'Consciencia': 'Consciencia',
-    'Branding × Strategy': 'Branding × Estrategia',
-    'Branding × Estrategia': 'Branding × Estrategia',
-    'Phenomenology': 'Fenomenología',
-    'Fenomenología': 'Fenomenología',
-    'Love & Relationships': 'Amor y Relaciones',
-    'Amor y Relaciones': 'Amor y Relaciones',
-    'Ontology': 'Ontología',
-    'ontology': 'Ontología',
-    'Ontología': 'Ontología',
-    'ontología': 'Ontología',
-    'Metaphysics': 'Metafísica',
-    'metaphysics': 'Metafísica',
-    'Metafísica': 'Metafísica',
-    'metafísica': 'Metafísica',
-    'Reflections': 'Reflexiones',
-    'reflections': 'Reflexiones',
-    'Reflexiones': 'Reflexiones',
-    'reflexiones': 'Reflexiones',
-    'Diary': 'Diario',
-    'diary': 'Diario',
-    'Diario': 'Diario',
-    'diario': 'Diario',
-    'Poetry': 'Poesía',
-    'poetry': 'Poesía',
-    'Poesía': 'Poesía',
-    'poesía': 'Poesía'
-  }
-
-  const categoryLabel = categoryLabels[post.category]
-    || categoryLabels[String(post.category || '').toLowerCase()]
-    || 'Artículo'
+  // Category label resolution
+  const categoryLabel = (() => {
+    const raw = post.category
+    if (!raw) return 'Artículo'
+    const v = String(raw).trim().toLowerCase()
+    const map = {
+      philosophy: 'Filosofía', psychoanalysis: 'Psicoanálisis', psychology: 'Psicología',
+      perception: 'Percepción', consciousness: 'Conciencia', metaphysics: 'Metafísica',
+      reflections: 'Reflexiones', diary: 'Diario', ethics: 'Ética', existence: 'Existencia',
+      epistemology: 'Epistemología', ontology: 'Ontología', aesthetics: 'Estética',
+      phenomenology: 'Fenomenología', hermeneutics: 'Hermenéutica', spirituality: 'Espiritualidad',
+      identity: 'Identidad', design: 'Diseño', branding: 'Branding', trends: 'Tendencias',
+      poetry: 'Poesía'
+    }
+    // Check both raw and lowercased version; fallback to capitalize raw
+    return map[v] || map[raw] || raw.charAt(0).toUpperCase() + raw.slice(1)
+  })()
 
   return (
     <Link to={post.slug ? `/blog/${post.slug}` : '#'}>
       <motion.article
-        ref={ref}
-        initial={{ opacity: 0, y: 50 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, delay: index * 0.1 }}
-        className="group relative"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.3) }}
+        className={`group relative ${isDraft ? 'opacity-50 grayscale-[40%]' : ''}`}
       >
         <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-white/30 transition-all duration-500 h-full flex flex-col">
+        {/* Draft badge */}
+        {isDraft && (
+          <div className="absolute top-0 left-0 right-0 z-30 bg-amber-500/90 text-black text-xs font-bold text-center py-1 tracking-wider uppercase">
+            Borrador
+          </div>
+        )}
         {/* Image with gradient overlay */}
         <div className={`aspect-[16/9] bg-gradient-to-br ${post.gradient} relative overflow-hidden`}>
           {/* Imagen real del blog con Lazy Loading */}
